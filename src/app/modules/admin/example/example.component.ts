@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { Apollo, gql } from 'apollo-angular'
 
 @Component({
     selector     : 'example',
@@ -10,7 +11,22 @@ export class ExampleComponent
     /**
      * Constructor
      */
-    constructor()
+    constructor(private apollo: Apollo)
     {
+        this.apollo
+        .watchQuery({
+          query: gql`
+            {
+                player {
+                    id
+                    firstName
+                    lastName
+                }
+            }
+          `
+        })
+        .valueChanges.subscribe((result: any) => {
+            console.log(result);
+        })
     }
 }
