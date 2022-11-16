@@ -1,0 +1,25 @@
+<div class="card" [ngClass]="bgClass">
+  <div class="card-body">
+    <div class="row">
+      <div class="col mt-0" style="height: 60px">
+        <h5 class="card-title" style="font-size: 13px">{{ label }}</h5>
+      </div>
+      <div class="col mt-0">
+        <h5 class="card-title" style="font-size: 14px; height: 32px">
+          {{ cat }}
+        </h5>
+      </div>
+      <div style="display: flex; justify-content: space-around">
+        <h2 class="mt-1 mb-3">{{ count }}</h2>
+
+        <div class="col-green">
+          <img src="../../../../assets/images/icon-3.png" />
+        </div>
+      </div>
+
+      <div class="col mt-0">
+        <a *ngIf="detail" href="{{ link }}"> View Profile </a>
+      </div>
+    </div>
+  </div>
+</div>

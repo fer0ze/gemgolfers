@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular'
+import { FacadeService } from "../../../shared/services/facade.service";
+import { Constants, General } from "../../../shared/classes/general";
 
 @Component({
     selector     : 'example',
@@ -11,22 +13,36 @@ export class ExampleComponent
     /**
      * Constructor
      */
-    constructor(private apollo: Apollo)
+    constructor(private apollo: Apollo, private facadeService: FacadeService)
     {
-        this.apollo
-        .watchQuery({
-          query: gql`
-            {
-                player {
-                    id
-                    firstName
-                    lastName
-                }
-            }
-          `
-        })
-        .valueChanges.subscribe((result: any) => {
-            console.log(result);
-        })
+        // this.apollo
+        // .watchQuery({
+        //   query: gql`
+        //     {
+        //         player {
+        //             id
+        //             firstName
+        //             lastName
+        //         }
+        //     }
+        //   `
+        // })
+        // .valueChanges.subscribe((result: any) => {
+        //     console.log(result);
+        // })
+        this.getTournaments();
+    }
+
+    async getTournaments() {
+        let today: Date = new Date();
+        var dd = String(today.getDate()).padStart(2, "0");
+        var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+        var yyyy = today.getFullYear();
+
+        let todayDate: Date = General.parseToDate(mm + "/" + dd + "/" + yyyy);
+        
+        let dataTournamentsForCompleted = await this.facadeService.getTournamentsListForCompleted(todayDate);
+        let RecentTournaments = dataTournamentsForCompleted.CompletedRecently;
+        console.log(RecentTournaments);
     }
 }

@@ -1,0 +1,20 @@
+export interface TeeTime {
+    id: string;
+    clubId: string;
+    courseId: string;
+    bookingDate: Date;
+    startTime: string;
+    endTime: string;
+    interval: number
+    teeTimeSlot: TeeTimeSlot[];
+    allowNineHole: boolean;
+}
+
+export interface TeeTimeSlot {
+    id: string;
+    bookingId: string;
+    slotTime: string;
+    joinedMembers: number;
+    flightId: string;
+    strtingHole: number;
+}
