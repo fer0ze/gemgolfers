@@ -69,6 +69,15 @@ export const GetPlayersByClub = gql`
     }
   }
 `;
+export const getTotalPlayers = gql`
+  query PostsGetQuery($where: player_bool_exp!) {
+    AggregateQL: player_aggregate(where: $where) {
+      aggregate {
+        totalCount: count
+      }
+    }
+  }
+`;
 export const GetTotalFLightPlayed = gql`
   query PostsGetQuery($where: player_bool_exp!, $date: date!, $sdate: date!) {
     player(where: $where) {

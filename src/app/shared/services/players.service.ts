@@ -59,6 +59,30 @@ export class PlayersService {
         });
     });
   }
+  public getTotalPlayers(id: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .subscribe({
+          query: Query.getTotalPlayers,
+          variables: {
+            where: {
+              membership: {
+                clubId: {
+                  _eq: id,
+                },
+              },
+            },
+          },
+        })
+        .subscribe(({ data }) => {
+          if (!data) {
+            resolve(null);
+          } else {
+            resolve(data);
+          }
+        });
+    });
+  }
   public getTotalFlightPlayed(
     id: string,
     fromDate: string,

@@ -85,6 +85,7 @@ export class AuthSignInComponent implements OnInit
 
                     // Navigate to the redirect url
                     this._router.navigateByUrl(redirectURL);
+                    localStorage.setItem('adminClubID','-LUFS3FAg4OEhIiK0vgY');
 
                 },
                 (response) => {

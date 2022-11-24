@@ -189,6 +189,9 @@ export class FacadeService {
   getPlayersListByClub(id: string) {
     return this.playerService.getPlayersListByClub(id);
   }
+  getTotalPlayers(id: string) {
+    return this.playerService.getTotalPlayers(id);
+  }
 
   getPlayerHandicapListByPlayer(
     playerId: string,
@@ -410,7 +413,11 @@ export class FacadeService {
   getClubDashboardStatsForAdmin(todayDate: string) {
     return this.tournamentService.getClubDashboardStatsForAdmin(todayDate);
   }
-
+  
+  getTournamentCountsByClub(clubId:string){
+    return this.tournamentService.getTournamentCountsByClub(clubId);
+  }
+  
   LeaderboardOneTimeDataQuery(tournamentId: string, playerId: string) {
     return this.tournamentService.LeaderboardOneTimeDataQuery(
       tournamentId,
@@ -450,6 +457,7 @@ export class FacadeService {
   tournamentScoreLoader(id: string) {
     return this.tournamentService.tournamentScoreLoader(id);
   }
+  
 
   savePlayerHandicaps(
     handicap: PlayerHanidcap[],
@@ -647,6 +655,10 @@ export class FacadeService {
 
   copyPlayerScore(playerId: string, fromFlight: string, toFlight: string) {
     return this.flightsService.copyPlayerScore(playerId, fromFlight, toFlight);
+  }
+
+  getTotalFlights(clubId: string) {
+    return this.flightsService.getTotalFlights(clubId);
   }
 
   DeleteFlightsAndMembers(

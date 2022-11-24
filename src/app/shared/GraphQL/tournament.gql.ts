@@ -1322,3 +1322,14 @@ export const LeaderRoundQueryQL = gql`
   }
   ${LeaderQL}
 `;
+
+export const getTournamentCountsByClub = gql`
+ query getTournamentCountsByClub($where: tournament_bool_exp!) {
+  Count: tournament_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+`;
+
