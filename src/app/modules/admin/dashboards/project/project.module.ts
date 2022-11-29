@@ -16,6 +16,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { ProjectComponent } from 'app/modules/admin/dashboards/project/project.component';
 import { projectRoutes } from 'app/modules/admin/dashboards/project/project.routing';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -37,7 +38,10 @@ import { projectRoutes } from 'app/modules/admin/dashboards/project/project.rout
         NgApexchartsModule,
         TranslocoModule,
         SharedModule
-    ]
+    ],providers:[
+        DatePipe,
+       
+    ],
 })
 export class ProjectModule
 {

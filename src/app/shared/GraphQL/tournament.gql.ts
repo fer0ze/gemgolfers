@@ -920,9 +920,10 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
     ) {
       id
       startDate
+      
       FlightsQL: flights {
         id
-
+        ended
         MembersQL: members {
           flightId
           playerId

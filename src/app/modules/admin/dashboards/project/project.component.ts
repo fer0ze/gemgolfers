@@ -11,6 +11,10 @@ import { ApexOptions } from 'ng-apexcharts';
 import { ProjectService } from 'app/modules/admin/dashboards/project/project.service';
 import { TournamentsService } from 'app/shared/services/tournaments.service';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { labels, labelsPlayers } from 'app/shared/classes/general';
+import { trigger } from '@angular/animations';
+import { Player } from 'app/shared/models/player.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'project',
@@ -28,8 +32,21 @@ export class ProjectComponent implements OnInit, OnDestroy {
     data: any;
     tournamentCounts: any;
     flightCounts: any;
-    playerCounts: any;
+    flightCountsCal: any = 0;
+    flightCountsNotCal: any = 0;
+    yesterdayFlightCounts: any = 20;
+    playerAddedTodayCounts: any = 2;
+    playerCounts: any = 0;
+    showdata: Promise<any>;
+    _labels: any = labels;
+    _labelsPlayers: any = labelsPlayers;
+    _series: any = [];
+    _overview: any = [];
+    _seriesPlayers: any = [];
+    _overviewPlayers: any = [];
     selectedProject: string = 'ACME Corp. Backend App';
+    loggedInuser: Player;
+    newRounds: any = 0;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -38,8 +55,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     constructor(
         private _projectService: ProjectService,
         private _router: Router,
-        private _tournamentService: TournamentsService,
-        private _facadeService: FacadeService
+        private _facadeService: FacadeService,
+        private _datePipe: DatePipe
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -49,7 +66,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
-    ngOnInit() {
+    async ngOnInit() {
+        // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
+
         // Attach SVG fill fixer to all ApexCharts
         window['Apex'] = {
             chart: {
@@ -63,16 +82,26 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 },
             },
         };
+
+        let currentDate = new Date();
+        let startLastWeek = this.startOfLastWeek();
+        let lastDate = this.endOfWeek();
         this.fetchdata();
+        this.getDailyRounds(startLastWeek, lastDate);
+        this.getAllPlayers();
+        this.showdata = Promise.resolve(true);
+
         // Get the data
         this._projectService.data$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data) => {
                 // Store the data
                 this.data = data;
+                console.log(this.data);
 
                 // Prepare the chart data
-                this._prepareChartData();
+
+                console.log(this.showdata);
             });
     }
 
@@ -138,6 +167,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
      */
     private _prepareChartData(): void {
         // Github issues
+        console.log('b');
+
         this.chartGithubIssues = {
             chart: {
                 fontFamily: 'inherit',
@@ -162,7 +193,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
             grid: {
                 borderColor: 'var(--fuse-border)',
             },
-            labels: this.data.githubIssues.labels,
+            labels: this._labels,
             legend: {
                 show: false,
             },
@@ -171,7 +202,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                     columnWidth: '50%',
                 },
             },
-            series: this.data.githubIssues.series,
+            series: this._series,
             states: {
                 hover: {
                     filter: {
@@ -213,7 +244,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
             },
         };
 
-        // Task distribution
+        //Task distribution
         this.chartTaskDistribution = {
             chart: {
                 fontFamily: 'inherit',
@@ -227,7 +258,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                     enabled: false,
                 },
             },
-            labels: this.data.taskDistribution.labels,
+            labels: this._labelsPlayers,
             legend: {
                 position: 'bottom',
             },
@@ -241,7 +272,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                     },
                 },
             },
-            series: this.data.taskDistribution.series,
+            series: this._seriesPlayers,
             states: {
                 hover: {
                     filter: {
@@ -275,178 +306,178 @@ export class ProjectComponent implements OnInit, OnDestroy {
         };
 
         // Budget distribution
-        this.chartBudgetDistribution = {
-            chart: {
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'radar',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#818CF8'],
-            dataLabels: {
-                enabled: true,
-                formatter: (val: number): string | number => `${val}%`,
-                textAnchor: 'start',
-                style: {
-                    fontSize: '13px',
-                    fontWeight: 500,
-                },
-                background: {
-                    borderWidth: 0,
-                    padding: 4,
-                },
-                offsetY: -15,
-            },
-            markers: {
-                strokeColors: '#818CF8',
-                strokeWidth: 4,
-            },
-            plotOptions: {
-                radar: {
-                    polygons: {
-                        strokeColors: 'var(--fuse-border)',
-                        connectorColors: 'var(--fuse-border)',
-                    },
-                },
-            },
-            series: this.data.budgetDistribution.series,
-            stroke: {
-                width: 2,
-            },
-            tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: (val: number): string => `${val}%`,
-                },
-            },
-            xaxis: {
-                labels: {
-                    show: true,
-                    style: {
-                        fontSize: '12px',
-                        fontWeight: '500',
-                    },
-                },
-                categories: this.data.budgetDistribution.categories,
-            },
-            yaxis: {
-                max: (max: number): number =>
-                    parseInt((max + 10).toFixed(0), 10),
-                tickAmount: 7,
-            },
-        };
+        // this.chartBudgetDistribution = {
+        //     chart: {
+        //         fontFamily: 'inherit',
+        //         foreColor: 'inherit',
+        //         height: '100%',
+        //         type: 'radar',
+        //         sparkline: {
+        //             enabled: true,
+        //         },
+        //     },
+        //     colors: ['#818CF8'],
+        //     dataLabels: {
+        //         enabled: true,
+        //         formatter: (val: number): string | number => `${val}%`,
+        //         textAnchor: 'start',
+        //         style: {
+        //             fontSize: '13px',
+        //             fontWeight: 500,
+        //         },
+        //         background: {
+        //             borderWidth: 0,
+        //             padding: 4,
+        //         },
+        //         offsetY: -15,
+        //     },
+        //     markers: {
+        //         strokeColors: '#818CF8',
+        //         strokeWidth: 4,
+        //     },
+        //     plotOptions: {
+        //         radar: {
+        //             polygons: {
+        //                 strokeColors: 'var(--fuse-border)',
+        //                 connectorColors: 'var(--fuse-border)',
+        //             },
+        //         },
+        //     },
+        //     series: this.data.budgetDistribution.series,
+        //     stroke: {
+        //         width: 2,
+        //     },
+        //     tooltip: {
+        //         theme: 'dark',
+        //         y: {
+        //             formatter: (val: number): string => `${val}%`,
+        //         },
+        //     },
+        //     xaxis: {
+        //         labels: {
+        //             show: true,
+        //             style: {
+        //                 fontSize: '12px',
+        //                 fontWeight: '500',
+        //             },
+        //         },
+        //         categories: this.data.budgetDistribution.categories,
+        //     },
+        //     yaxis: {
+        //         max: (max: number): number =>
+        //             parseInt((max + 10).toFixed(0), 10),
+        //         tickAmount: 7,
+        //     },
+        // };
 
         // Weekly expenses
-        this.chartWeeklyExpenses = {
-            chart: {
-                animations: {
-                    enabled: false,
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#22D3EE'],
-            series: this.data.weeklyExpenses.series,
-            stroke: {
-                curve: 'smooth',
-            },
-            tooltip: {
-                theme: 'dark',
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.data.weeklyExpenses.labels,
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => `$${val}`,
-                },
-            },
-        };
+        // this.chartWeeklyExpenses = {
+        //     chart: {
+        //         animations: {
+        //             enabled: false,
+        //         },
+        //         fontFamily: 'inherit',
+        //         foreColor: 'inherit',
+        //         height: '100%',
+        //         type: 'line',
+        //         sparkline: {
+        //             enabled: true,
+        //         },
+        //     },
+        //     colors: ['#22D3EE'],
+        //     series: this.data.weeklyExpenses.series,
+        //     stroke: {
+        //         curve: 'smooth',
+        //     },
+        //     tooltip: {
+        //         theme: 'dark',
+        //     },
+        //     xaxis: {
+        //         type: 'category',
+        //         categories: this.data.weeklyExpenses.labels,
+        //     },
+        //     yaxis: {
+        //         labels: {
+        //             formatter: (val): string => `$${val}`,
+        //         },
+        //     },
+        // };
 
         // Monthly expenses
-        this.chartMonthlyExpenses = {
-            chart: {
-                animations: {
-                    enabled: false,
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#4ADE80'],
-            series: this.data.monthlyExpenses.series,
-            stroke: {
-                curve: 'smooth',
-            },
-            tooltip: {
-                theme: 'dark',
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.data.monthlyExpenses.labels,
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => `$${val}`,
-                },
-            },
-        };
+        // this.chartMonthlyExpenses = {
+        //     chart: {
+        //         animations: {
+        //             enabled: false,
+        //         },
+        //         fontFamily: 'inherit',
+        //         foreColor: 'inherit',
+        //         height: '100%',
+        //         type: 'line',
+        //         sparkline: {
+        //             enabled: true,
+        //         },
+        //     },
+        //     colors: ['#4ADE80'],
+        //     series: this.data.monthlyExpenses.series,
+        //     stroke: {
+        //         curve: 'smooth',
+        //     },
+        //     tooltip: {
+        //         theme: 'dark',
+        //     },
+        //     xaxis: {
+        //         type: 'category',
+        //         categories: this.data.monthlyExpenses.labels,
+        //     },
+        //     yaxis: {
+        //         labels: {
+        //             formatter: (val): string => `$${val}`,
+        //         },
+        //     },
+        // };
 
         // Yearly expenses
-        this.chartYearlyExpenses = {
-            chart: {
-                animations: {
-                    enabled: false,
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#FB7185'],
-            series: this.data.yearlyExpenses.series,
-            stroke: {
-                curve: 'smooth',
-            },
-            tooltip: {
-                theme: 'dark',
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.data.yearlyExpenses.labels,
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => `$${val}`,
-                },
-            },
-        };
+        // this.chartYearlyExpenses = {
+        //     chart: {
+        //         animations: {
+        //             enabled: false,
+        //         },
+        //         fontFamily: 'inherit',
+        //         foreColor: 'inherit',
+        //         height: '100%',
+        //         type: 'line',
+        //         sparkline: {
+        //             enabled: true,
+        //         },
+        //     },
+        //     colors: ['#FB7185'],
+        //     series: this.data.yearlyExpenses.series,
+        //     stroke: {
+        //         curve: 'smooth',
+        //     },
+        //     tooltip: {
+        //         theme: 'dark',
+        //     },
+        //     xaxis: {
+        //         type: 'category',
+        //         categories: this.data.yearlyExpenses.labels,
+        //     },
+        //     yaxis: {
+        //         labels: {
+        //             formatter: (val): string => `$${val}`,
+        //         },
+        //     },
+        // };
     }
 
     private async fetchdata() {
-        //Get the Tournaments Count
+        // Get the Tournaments Count
         this._facadeService
             .getTournamentCountsByClub(localStorage.getItem('adminClubID'))
-            .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
                 // Store the data
                 this.tournamentCounts = response.data['Count'].aggregate.count;
+                console.log('Thouranment');
             });
 
         //Get the Flights Count
@@ -456,13 +487,163 @@ export class ProjectComponent implements OnInit, OnDestroy {
             .subscribe((response) => {
                 // Store the data
                 this.flightCounts = response.data['Count'].aggregate.count;
+                console.log('Flight');
             });
 
-        //Get the Flights Count
+        // Get the Flights Count
         let data = await this._facadeService.getTotalPlayers(
             localStorage.getItem('adminClubID')
         );
         this.playerCounts = data.AggregateQL.aggregate.totalCount;
         console.log(this.playerCounts);
+        console.log('a');
+    }
+    endOfWeek() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 8));
+    }
+    startOfLastWeek() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 2));
+    }
+    async getDailyRounds(fromDate: Date, toDate: Date) {
+        // this.dailyStats = [];
+        // this.showtable = false;
+        // this.isLoading = true;
+        let dataPlayers = await this._facadeService.getDailyRoundsSingle(
+            localStorage.getItem('adminClubID'),
+            this._datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+            this._datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+        );
+        console.log(dataPlayers);
+
+        let myData: any[] = [];
+        let prevDate = null;
+        let memCounter = 0;
+        let totalFlights = 0;
+
+        let data = dataPlayers.TournamentsQL.sort(this.ComparatorDate);
+        for (let stats of data) {
+            if (stats.FlightsQL[0].ended) {
+                this.flightCountsCal++;
+            }
+            if (stats.startDate == prevDate) {
+                memCounter = memCounter + stats.FlightsQL[0].MembersQL.length;
+                totalFlights = totalFlights + stats.FlightsQL.length;
+
+                myData[myData.length - 1].membersCount = memCounter;
+                myData[myData.length - 1].totalFlights = totalFlights;
+                prevDate = stats.startDate;
+            } else {
+                memCounter = 0;
+                totalFlights = 0;
+                memCounter = memCounter + stats.FlightsQL[0].MembersQL.length;
+                totalFlights = totalFlights + stats.FlightsQL.length;
+
+                let obj = {
+                    date: stats.startDate,
+                    membersCount: memCounter,
+                    totalFlights: totalFlights,
+                };
+
+                myData.push(obj);
+                prevDate = stats.startDate;
+            }
+        }
+
+        console.log(myData);
+        let dataMembers: any[] = [];
+        let dataFlight: any[] = [];
+        for (let obj of myData) {
+            dataMembers.push(obj.membersCount);
+            dataFlight.push(obj.totalFlights);
+        }
+        this._series['last-week'] = [
+            {
+                data: dataMembers,
+                name: 'Members',
+                type: 'line',
+            },
+            {
+                data: dataFlight,
+                name: 'Flights',
+                type: 'column',
+            },
+        ];
+        //this._series['last-week'] = lastWeekData;
+        this._series['this-week'] = [
+            {
+                data: dataMembers,
+                name: 'Members',
+                type: 'line',
+            },
+            {
+                data: dataFlight,
+                name: 'Flights',
+                type: 'column',
+            },
+        ];
+        this.flightCountsNotCal =
+            dataPlayers.TournamentsQL.length - this.flightCountsCal;
+        this._overview['last-week'] = [
+            {
+                newIssues: dataPlayers.TournamentsQL.length,
+                closedIssues: this.flightCountsCal,
+                fixed: this.flightCountsNotCal,
+                wontfix: '1',
+                reopened: '2',
+                needstriage: '36',
+            },
+        ];
+        this._overview['this-week'] = [
+            {
+                newIssues: dataPlayers.TournamentsQL.length,
+                closedIssues: this.flightCountsCal,
+                fixed: this.flightCountsNotCal,
+                wontfix: '1',
+                reopened: '2',
+                needstriage: '36',
+            },
+        ];
+        console.log(this._series);
+        console.log(this._overview);
+        this._prepareChartData();
+
+        //this.showdata = Promise.resolve(true);
+        console.log(this.showdata);
+    }
+
+    async getAllPlayers() {
+        let players =
+            await this._facadeService.getClubMemberAggregateByCategroy(
+                localStorage.getItem('adminClubID')
+            );
+        console.log(players);
+        this._seriesPlayers['all'] = [
+            players.club[0].Amateurs.aggregate['count'],
+
+            players.club[0].Senior_Amateurs
+            .aggregate['count'],
+
+            players.club[0].Veterans.aggregate['count'],
+
+            players.club[0].Ladies.aggregate['count'],
+        ];
+        // this._overviewPlayers['all'] = [
+        //     players.club[0].Amateurs.aggregate['count'],
+
+        //     players.club[0].Professionals.aggregate['count'],
+
+        //     players.club[0].Veterans.aggregate['count'],
+
+        //     players.club[0].Ladies.aggregate['count'],
+        // ];
+        console.log(this._seriesPlayers);
+        
+    }
+    ComparatorDate(a, b) {
+        if (a['startDate'] < b['startDate']) return -1;
+        if (a['startDate'] > b['startDate']) return 1;
+        return 0;
     }
 }

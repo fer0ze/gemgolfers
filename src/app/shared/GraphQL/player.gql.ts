@@ -66,6 +66,9 @@ export const GetPlayersByClub = gql`
         playerId
         subscription
       }
+      membershipQL: membership{
+        suspended
+      }
     }
   }
 `;
