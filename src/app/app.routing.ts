@@ -75,7 +75,7 @@ export const appRoutes: Route[] = [
         },
         children   : [
             {path: 'dashboard', loadChildren: () => import('app/modules/admin/dashboards/project/project.module').then(m => m.ProjectModule)},
-            {path: 'players/view', loadChildren: () => import('app/modules/admin/players/player/player.module').then(m => m.PlayerModule)},
+            {path: 'players/view', loadChildren: () => import('app/modules/admin/players/players.module').then(m => m.PlayersModule)},
         ]
     }
 ];
