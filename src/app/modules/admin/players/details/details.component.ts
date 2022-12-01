@@ -45,7 +45,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
 
-    editMode: boolean = false;
+    editMode: boolean = true;
     tags: Tag[];
     tagsEditMode: boolean = false;
     filteredTags: Tag[];
@@ -92,22 +92,24 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this._activatedRoute.paramMap.subscribe((params) => {
             this.playerID = params.get('id');
         });
-        this.fetchData();
         this.contactForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
             gender: new FormControl('', [Validators.required]),
-            email: new FormControl('', [Validators.required]),
-            phoneNumbers: new FormControl('', [Validators.required]),
-            dateOfBirth: new FormControl('', [Validators.required]),
+            email: new FormControl(''),
+            phoneNumbers: new FormControl(''),
+            dateOfBirth: new FormControl(''),
             category: new FormControl(' ', [Validators.required]),
             handicap: new FormControl('', [Validators.required]),
             club: new FormControl('KGC', [Validators.required]),
             country: new FormControl('', [Validators.required]),
             membershipNo: new FormControl('', [Validators.required]),
-            status: new FormControl('', [Validators.required]),
-            notes: new FormControl('', [Validators.required]),
+            status: new FormControl('' ),
+            notes: new FormControl(''),
         });
+        this.fetchData();
+        
+
         this._contactsListComponent.matDrawer.open();
         this.contact = {
             id: this.playerID,
@@ -175,13 +177,15 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     updateContact(): void {
         // Get the contact object
         const contact = this.contactForm.getRawValue();
+        console.log(contact);
+        
 
         // Go through the contact object and clear empty values
-        contact.emails = contact.emails.filter((email) => email.email);
+        // contact.emails = contact.emails.filter((email) => email.email);
 
-        contact.phoneNumbers = contact.phoneNumbers.filter(
-            (phoneNumber) => phoneNumber.phoneNumber
-        );
+        // contact.phoneNumbers = contact.phoneNumbers.filter(
+        //     (phoneNumber) => phoneNumber.phoneNumber
+        // );
 
         // Update the contact on the server
         //this._contactsService.updateContact(contact.id, contact).subscribe(() => {
@@ -270,6 +274,25 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             await this._facadeService.getPlayerByID(this.playerID)
         );
         console.log(this.currentPlayer);
-        
+        if (this.currentPlayer.length > 0) {
+            this.editMode = true;
+            this.contactForm.setValue({
+                firstName: this.currentPlayer[0].firstName,
+                lastName: this.currentPlayer[0].lastName,
+                gender: this.currentPlayer[0].gender,
+                email: this.currentPlayer[0].email,
+                phoneNumbers: this.currentPlayer[0].phone,
+                dateOfBirth: this.currentPlayer[0].dob,
+                category: this.currentPlayer[0].playerCategory,
+                handicap: this.currentPlayer[0].handicap,
+                country: this.currentPlayer[0].countryCode,
+                notes: this.currentPlayer[0].extraData,
+                membershipNo: this.currentPlayer[0].membershipNumber,
+                club: this.currentPlayer[0].membership[0].club.name,
+
+                status: true,
+            });
+        }
+        this._changeDetectorRef.markForCheck();
     }
 }
