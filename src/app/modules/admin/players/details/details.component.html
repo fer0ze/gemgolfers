@@ -351,7 +351,7 @@
                             <mat-icon
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:briefcase'"
+                                [svgIcon]="'heroicons_solid:mail'"
                             ></mat-icon>
                             <input
                                 matInput
@@ -367,7 +367,7 @@
                             <mat-icon
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:briefcase'"
+                                [svgIcon]="'heroicons_solid:tag'"
                             ></mat-icon>
                             <input
                                 matInput
@@ -385,12 +385,29 @@
                             <mat-icon
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:briefcase'"
+                                [svgIcon]="'heroicons_solid:stop'"
                             ></mat-icon>
                             <input
                                 matInput
                                 formControlName="club"
                                 [placeholder]="'Club'"
+                                
+                            />
+                        </mat-form-field>
+                    </div>
+                    <!-- Membership -->
+                    <div class="mt-8">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Membership No</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:color-swatch'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                formControlName="membershipNo"
+                                [placeholder]="'Membership No '"
                                 
                             />
                         </mat-form-field>
@@ -403,14 +420,14 @@
                             <mat-icon
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:office-building'"
+                                [svgIcon]="'heroicons_solid:newspaper'"
                             ></mat-icon>
 
                             <mat-select
                                 formControlName="category"
                                 placeholder="Player Category"
                                 class="mr-1.5"
-                                matPrefix
+                               
                             >
                                 <mat-option
                                     *ngFor="let cat of playerCategories "
@@ -436,13 +453,13 @@
                                         <mat-icon
                                             matPrefix
                                             class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:mail'"
+                                            [svgIcon]="'heroicons_solid:map'"
                                         ></mat-icon>
                                         <mat-select
                                             formControlName="gender"
                                             placeholder="Gender"
                                             class="mr-1.5"
-                                            matPrefix
+                                           
                                         >
                                             <mat-option value="male">
                                                 <span class="flex items-center">
@@ -476,13 +493,13 @@
                                         <mat-icon
                                             matPrefix
                                             class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:mail'"
+                                            [svgIcon]="'heroicons_solid:cloud'"
                                         ></mat-icon>
                                         <mat-select
                                             formControlName="country"
                                             placeholder="Country"
                                             class="mr-1.5"
-                                            matPrefix
+                                            
                                         >
                                             <mat-option value="Pakistan">
                                                 <span class="flex items-center">
@@ -495,6 +512,46 @@
                                                 <span class="flex items-center">
                                                     <span class="ml-2"
                                                         >United Kingdom</span
+                                                    >
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <!-- Status -->
+                    <div class="mt-8">
+                        <div class="space-y-4">
+                            <ng-container>
+                                <div class="flex">
+                                    <mat-form-field
+                                        class="fuse-mat-no-subscript flex-auto"
+                                    >
+                                        <mat-label>Status</mat-label>
+                                        <mat-icon
+                                            matPrefix
+                                            class="hidden sm:flex icon-size-5"
+                                            [svgIcon]="'heroicons_solid:status-online'"
+                                        ></mat-icon>
+                                        <mat-select
+                                            formControlName="status"
+                                            placeholder="Status"
+                                            class="mr-1.5"
+                                            
+                                        >
+                                            <mat-option value="false">
+                                                <span class="flex items-center">
+                                                    <span class="ml-2"
+                                                        >Active</span
+                                                    >
+                                                </span>
+                                            </mat-option>
+                                            <mat-option value="true">
+                                                <span class="flex items-center">
+                                                    <span class="ml-2"
+                                                        >Disable</span
                                                     >
                                                 </span>
                                             </mat-option>
@@ -518,7 +575,7 @@
                                             matPrefix
                                             class="hidden sm:flex icon-size-5"
                                             [svgIcon]="
-                                                'heroicons_solid:briefcase'
+                                                'heroicons_solid:phone'
                                             "
                                         ></mat-icon>
                                         <input
@@ -648,7 +705,7 @@
                             class="ml-auto"
                             mat-button
                             [matTooltip]="'Cancel'"
-                            (click)="toggleEditMode(false)"
+                            (click)="cancel()"
                         >
                             Cancel
                         </button>
@@ -657,7 +714,7 @@
                             class="ml-2"
                             mat-flat-button
                             [color]="'primary'"
-                            
+                            [disabled]="contactForm.invalid"
                             [matTooltip]="'Save'"
                             (click)="updateContact()"
                         >

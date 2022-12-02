@@ -32,7 +32,14 @@ import {
 } from 'app/modules/admin/players/player/player.types';
 import { PlayerComponent } from '../player/player.component';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Player, PlayerCategory } from 'app/shared/models/player.model';
+import {
+    ClubMembership,
+    handicap_change_log,
+    Player,
+    PlayerCategory,
+} from 'app/shared/models/player.model';
+import { Constants, General, generateGemId, UniqueIdGenerator } from 'app/shared/classes/general';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'contacts-details',
@@ -55,12 +62,12 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     contacts: Contact[];
     countries: Country[];
     playerID: any;
-    cardsrc = 'assets/images/cards/14-640x480.jpg';
-    avatarsrc = 'assets/images/avatars/male-01.jpg';
+    cardsrc = 'assets/images/cards/02-320x200.jpg';
+    avatarsrc = 'assets/images/avatars/male-04.jpg';
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     currentPlayer: any = [];
-
+    loggedInuser: any;
     /**
      * Constructor
      */
@@ -73,6 +80,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         private _renderer2: Renderer2,
         private _facadeService: FacadeService,
         private _router: Router,
+        private datepipe: DatePipe,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef
     ) {}
@@ -101,14 +109,14 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             dateOfBirth: new FormControl(''),
             category: new FormControl(' ', [Validators.required]),
             handicap: new FormControl('', [Validators.required]),
-            club: new FormControl('KGC', [Validators.required]),
-            country: new FormControl('', [Validators.required]),
+            club: new FormControl('Karachi Golf Club', [Validators.required]),
+            country: new FormControl(''),
+            isClubAdmin: new FormControl('3', [Validators.required]),
             membershipNo: new FormControl('', [Validators.required]),
-            status: new FormControl('' ),
+            status: new FormControl('', [Validators.required]),
             notes: new FormControl(''),
         });
         this.fetchData();
-        
 
         this._contactsListComponent.matDrawer.open();
         this.contact = {
@@ -174,12 +182,198 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     /**
      * Update the contact
      */
-    updateContact(): void {
-        // Get the contact object
-        const contact = this.contactForm.getRawValue();
-        console.log(contact);
-        
+    async updateContact() {
+        let newFlag = true;
+        let checkEmail: any = [];
+        let checkPhone: any = [];
+        let emailPlayerId: string = '';
+        let phonePlayerId: string = '';
 
+        let Hdate = new Date();
+
+        let latest_date: any = this.datepipe.transform(
+            Hdate,
+            "yyyy-MM-ddThh:mm:ss.SSSSSS+00:00"
+          );
+        // Get the contact object
+
+        const contact = this.contactForm.getRawValue();
+        if (this.contactForm.valid) {
+            if (contact.email)
+                checkEmail = <Player>(
+                    await this._facadeService.getPlayerByEmail(contact.email)
+                );
+
+            if (contact.phoneNumbers)
+                checkPhone = <Player>(
+                    await this._facadeService.getPlayerByPhone(
+                        contact.phoneNumbers
+                    )
+                );
+
+            console.log(checkEmail);
+            if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
+
+            if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
+
+            if (
+                checkEmail.length > 0 &&
+                emailPlayerId !== '' &&
+                emailPlayerId !== this.playerID
+            ) {
+                const confirmation = this._fuseConfirmationService.open({
+                    title: 'Duplicate Email',
+                    message: 'Email alreday exist!',
+                    actions: {
+                        confirm: {
+                            label: 'Close',
+                        },
+                    },
+                });
+
+                return;
+            } else if (
+                checkPhone.length > 0 &&
+                phonePlayerId !== '' &&
+                phonePlayerId !== this.playerID
+            ) {
+                const confirmation = this._fuseConfirmationService.open({
+                    title: 'Duplicate Number',
+                    message: 'Number alreday exist!',
+                    actions: {
+                        confirm: {
+                            label: 'Close',
+                        },
+                    },
+                });
+
+                return;
+            } else if (
+                (checkEmail.length > 0 && this.playerID) ||
+                (checkPhone.length > 0 && this.playerID)
+            ) {
+                newFlag = false;
+            } else {
+            }
+        }
+        let clubMember: ClubMembership[] = [];
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+        let UniqueId: string = '';
+        let GEMId: string = '';
+
+        this.currentPlayer.length > 0
+            ? (GEMId = this.currentPlayer.gemId)
+            : (GEMId = generateGemId.generate(this.playerID));
+
+        //console.log(playerFormValue.playerClubMember);
+        let member: any = {
+            clubId: this.loggedInuser.adminClubId,
+            suspended: this.contactForm.get('status').value,
+        };
+        console.log(member);
+        clubMember.push(member);
+        const player: Player = {
+            id: this.playerID,
+            adminClubId: this.loggedInuser
+                ? this.loggedInuser.adminClubId
+                : null,
+            firebaseUid:
+                this.currentPlayer.length > 0
+                    ? this.currentPlayer.firebaseUid
+                    : null,
+            fcmToken:
+                this.currentPlayer.length > 0
+                    ? this.currentPlayer.fcmToken
+                    : null,
+            gemId: GEMId,
+            firstName: contact.firstName,
+            lastName: contact.lastName,
+            gender: contact.gender,
+            dob: General.parseToDate(contact.dateOfBirth),
+            picture: null,
+            email: contact.email,
+            phone: contact.phoneNumbers,
+            playerCategory: contact.category,
+            handicap: contact.handicap,
+            online: false,
+            countryCode: contact.country,
+            extraData: contact.notes,
+            userRole: 3,
+            membership: clubMember,
+            membershipNumber: contact.membershipNumber,
+        };
+        console.log(contact);
+
+        if (this.currentPlayer.length == 0) {
+            const isSuccess = <boolean>(
+                await this._facadeService.AddPlayer(player)
+            );
+            if (isSuccess) {
+                const confirmation = this._fuseConfirmationService.open({
+                    title: 'Player Added Successfully',
+                    message: 'Player has been added!',
+                    actions: {
+                        confirm: {
+                            label: 'Close',
+                        },
+                    },
+                });
+                this.reset();
+                //this.router.navigate(['/players']);
+            }
+        } else {
+            const isSuccess = <boolean>(
+                await this._facadeService.updatePlayer(player)
+            );
+
+            if (
+                this.currentPlayer[0].handicap !==
+                contact.handicap
+            ) {
+                const handicap_change_log: handicap_change_log = {
+                    id: UniqueIdGenerator.generate(),
+                    playerId: this.currentPlayer[0].id
+                        ? this.currentPlayer[0].id
+                        : null,
+                    newHandicap: contact.handicap
+                        ? contact.handicap
+                        : 0,
+                    oldHandicap: this.currentPlayer[0].handicap
+                        ? this.currentPlayer[0].handicap
+                        : 0,
+                    whs: false,
+                    dateTime: latest_date,
+                    remarks:  null,
+                    tournamentId: null,
+                    updaterId: this.loggedInuser.id,
+                };
+
+                console.log(handicap_change_log);
+                //this.handicapLog = handicap_change_log;
+
+                const remarksAdded = <boolean>(
+                    await this._facadeService.AddHandicapRemarks(
+                        handicap_change_log
+                    )
+                );
+                console.log(remarksAdded);
+            }
+
+            //console.log(isSuccess);
+            if (isSuccess) {
+                const confirmation = this._fuseConfirmationService.open({
+                    title: 'Player Updated Successfully',
+                    message: 'Player has been Updated!',
+                    actions: {
+                        confirm: {
+                            label: 'Close',
+                        },
+                    },
+                });
+            }
+        }
         // Go through the contact object and clear empty values
         // contact.emails = contact.emails.filter((email) => email.email);
 
@@ -194,6 +388,14 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         //this.toggleEditMode(false);
         // });
     }
+
+    public reset() {
+        // if (this.loggedInuser.userRole > 1) {
+        //   this.playerForm.get("playerClubMember").setValue(this.clubTitle);
+        // }
+
+        this.contactForm.reset();
+    }
     /**
      * Track by function for ngFor loops
      *
@@ -203,6 +405,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
+    cancel() {
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+    }
+
     /**
      * Delete the contact
      */
@@ -289,8 +495,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 notes: this.currentPlayer[0].extraData,
                 membershipNo: this.currentPlayer[0].membershipNumber,
                 club: this.currentPlayer[0].membership[0].club.name,
-
-                status: true,
+                isClubAdmin: this.currentPlayer[0].adminClubId ? '1' : '0',
+                status: this.currentPlayer[0].membership[0].suspended
+                    ? 'true'
+                    : 'false',
             });
         }
         this._changeDetectorRef.markForCheck();

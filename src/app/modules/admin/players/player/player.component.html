@@ -283,12 +283,13 @@
                                                     .suspended
                                         }"
                                     >
-                                        <span
+                                        <span *ngIf="transaction.membershipQL[0].suspended"
                                             class="leading-relaxed whitespace-nowrap"
-                                            >{{
-                                                transaction.membershipQL[0]
-                                                    .suspended
-                                            }}</span
+                                            >Disable</span
+                                        >
+                                        <span *ngIf="!transaction.membershipQL[0].suspended"
+                                            class="leading-relaxed whitespace-nowrap"
+                                            >Active</span
                                         >
                                     </span>
                                 </td>

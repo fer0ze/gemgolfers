@@ -18,7 +18,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PlayersComponent } from './players.component';
 import { PlayerComponent } from './player/player.component';
@@ -44,6 +44,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         MatInputModule,
         MatLuxonDateModule,
         MatSortModule,
+    
         MatMenuModule,
         MatProgressBarModule,
         ReactiveFormsModule,
@@ -71,7 +72,8 @@ import { ReactiveFormsModule } from '@angular/forms';
                     monthYearA11yLabel: 'LLLL yyyy'
                 }
             }
-        }
+        },
+        DatePipe,
     ]
 })
 export class PlayersModule

@@ -76,6 +76,20 @@ export class PlayerComponent implements OnInit {
             }
         });
 
+        this._fuseMediaWatcherService.onMediaChange$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(({ matchingAliases }) => {
+            // Set the drawerMode if the given breakpoint is active
+            if (matchingAliases.includes('lg')) {
+                this.drawerMode = 'side';
+            } else {
+                this.drawerMode = 'over';
+            }
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+
         this.fecthData();
         this.showTable = Promise.resolve(true);
     }
