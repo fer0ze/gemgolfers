@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+//import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -8,15 +8,15 @@ import { environment } from '../../../environments/environment';
 export class LogsService {
     
   log(msg: any) {
-    if(environment.debugging) {
-      console.log(new Date() + ": " + JSON.stringify(msg));
-    }
+    // if(environment.debugging) {
+    //   console.log(new Date() + ": " + JSON.stringify(msg));
+    // }
   }
 
   logObject(object: any) {
-    if(environment.debugging) {
-      console.log(new Date() + ": ");
-      console.log(object);
-    }
+    // if(environment.debugging) {
+    //   console.log(new Date() + ": ");
+    //   console.log(object);
+    // }
   }
 }
