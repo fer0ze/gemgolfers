@@ -3,7 +3,7 @@ import { Layout } from 'app/layout/layout.types';
 // Types
 export type Scheme = 'auto' | 'dark' | 'light';
 export type Screens = { [key: string]: string };
-export type Theme = 'theme-default' | string;
+export type Theme = 'theme-brand' | string;
 export type Themes = { id: string; name: string }[];
 
 /**
@@ -41,7 +41,7 @@ export const appConfig: AppConfig = {
         lg: '1280px',
         xl: '1440px'
     },
-    theme  : 'theme-default',
+    theme  : 'theme-brand',
     themes : [
         {
             id  : 'theme-default',

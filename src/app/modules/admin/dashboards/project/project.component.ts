@@ -33,11 +33,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
     tournamentCounts: any;
     flightCounts: any;
     flightCountsCal: any = 0;
+    membersCountsCal: any = 0;
     flightCountsNotCal: any = 0;
     yesterdayFlightCounts: any = 20;
     playerAddedTodayCounts: any = 2;
     playerCounts: any = 0;
-    showdata: Promise<any>;
+    showdata: Promise<boolean>;
     _labels: any = labels;
     _labelsPlayers: any = labelsPlayers;
     _series: any = [];
@@ -70,6 +71,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
         // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
 
         // Attach SVG fill fixer to all ApexCharts
+        this.showdata = Promise.resolve(true);
+        console.log(this.showdata);
+
         window['Apex'] = {
             chart: {
                 events: {
@@ -82,27 +86,25 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 },
             },
         };
-
+        this._prepareChartData();
         let currentDate = new Date();
-        let startLastWeek = this.startOfLastWeek();
-        let lastDate = this.endOfWeek();
+        let lastWeekSunday = this.lastWeekSunday();
+        let lastWeekMonday = this.lastWeekMonday();
+        //this.showdata = Promise.resolve(true);
         this.fetchdata();
-        this.getDailyRounds(startLastWeek, lastDate);
-        this.getAllPlayers();
-        this.showdata = Promise.resolve(true);
-
-        // Get the data
+        //  this.getDailyRounds(lastWeekSunday, lastWeekMonday);
+        //  this.getAllPlayers();
         this._projectService.data$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data) => {
                 // Store the data
                 this.data = data;
                 console.log(this.data);
-
-                // Prepare the chart data
-
-                console.log(this.showdata);
             });
+        this.showdata = Promise.resolve(true);
+        console.log(this.showdata);
+
+        // Get the data
     }
 
     /**
@@ -472,48 +474,36 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     private async fetchdata() {
         // Get the Tournaments Count
-        this._facadeService
-            .getTournamentCountsByClub(localStorage.getItem('adminClubID'))
-            .subscribe((response) => {
-                // Store the data
-                this.tournamentCounts = response.data['Count'].aggregate.count;
-                console.log('Thouranment');
-            });
+        this.showdata = Promise.resolve(false);
+        let tournamentCounts =
+            await this._facadeService.getTournamentCountsByClub(
+                localStorage.getItem('adminClubID')
+            );
+        this.tournamentCounts = tournamentCounts.Count.aggregate.count;
+
+        console.log(this.tournamentCounts);
 
         //Get the Flights Count
-        this._facadeService
-            .getTotalFlights(localStorage.getItem('adminClubID'))
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response) => {
-                // Store the data
-                this.flightCounts = response.data['Count'].aggregate.count;
-                console.log('Flight');
-            });
-
-        // Get the Flights Count
-        let data = await this._facadeService.getTotalPlayers(
+        let flightCounts = await this._facadeService.getTotalFlights(
             localStorage.getItem('adminClubID')
         );
-        this.playerCounts = data.AggregateQL.aggregate.totalCount;
+        this.flightCounts = flightCounts.Count.aggregate.count;
+        console.log(this.flightCounts);
+
+        // Get the Flights Count
+        let playerCounts = await this._facadeService.getTotalPlayers(
+            localStorage.getItem('adminClubID')
+        );
+        this.playerCounts = playerCounts.AggregateQL.aggregate.totalCount;
         console.log(this.playerCounts);
         console.log('a');
-    }
-    endOfWeek() {
-        let date = new Date();
-        return new Date(date.setDate(date.getDate() - 8));
-    }
-    startOfLastWeek() {
-        let date = new Date();
-        return new Date(date.setDate(date.getDate() - 2));
-    }
-    async getDailyRounds(fromDate: Date, toDate: Date) {
-        // this.dailyStats = [];
-        // this.showtable = false;
-        // this.isLoading = true;
-        let dataPlayers = await this._facadeService.getDailyRoundsSingle(
+
+        let lastWeekSunday = this.lastWeekSunday();
+        let lastWeekMonday = this.lastWeekMonday();
+        let dataPlayers: any = await this._facadeService.getDailyRoundsSingle(
             localStorage.getItem('adminClubID'),
-            this._datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
-            this._datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+            this._datePipe.transform(lastWeekSunday.toString(), 'yyyy-MM-dd'),
+            this._datePipe.transform(lastWeekMonday.toString(), 'yyyy-MM-dd')
         );
         console.log(dataPlayers);
 
@@ -523,12 +513,18 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let totalFlights = 0;
 
         let data = dataPlayers.TournamentsQL.sort(this.ComparatorDate);
+        //let data = dataPlayers.TournamentsQL;
+        let i = 0;
         for (let stats of data) {
-            if (stats.FlightsQL[0].ended) {
+            if (stats.FlightsQL.length > 0 && stats.FlightsQL[0].ended) {
                 this.flightCountsCal++;
             }
             if (stats.startDate == prevDate) {
-                memCounter = memCounter + stats.FlightsQL[0].MembersQL.length;
+                memCounter =
+                    memCounter +
+                    (stats.FlightsQL.length > 0 && stats.FlightsQL[0]
+                        ? stats.FlightsQL[0].MembersQL.length
+                        : 0);
                 totalFlights = totalFlights + stats.FlightsQL.length;
 
                 myData[myData.length - 1].membersCount = memCounter;
@@ -537,7 +533,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
             } else {
                 memCounter = 0;
                 totalFlights = 0;
-                memCounter = memCounter + stats.FlightsQL[0].MembersQL.length;
+                memCounter =
+                    memCounter +
+                    (stats.FlightsQL.length > 0 && stats.FlightsQL[0]
+                        ? stats.FlightsQL[0].MembersQL.length
+                        : 0);
                 totalFlights = totalFlights + stats.FlightsQL.length;
 
                 let obj = {
@@ -555,6 +555,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let dataMembers: any[] = [];
         let dataFlight: any[] = [];
         for (let obj of myData) {
+            this.membersCountsCal += obj.membersCount;
             dataMembers.push(obj.membersCount);
             dataFlight.push(obj.totalFlights);
         }
@@ -566,84 +567,77 @@ export class ProjectComponent implements OnInit, OnDestroy {
             },
             {
                 data: dataFlight,
-                name: 'Flights',
+                name: 'Rounds',
                 type: 'column',
             },
         ];
-        //this._series['last-week'] = lastWeekData;
-        this._series['this-week'] = [
-            {
-                data: dataMembers,
-                name: 'Members',
-                type: 'line',
-            },
-            {
-                data: dataFlight,
-                name: 'Flights',
-                type: 'column',
-            },
-        ];
+
         this.flightCountsNotCal =
             dataPlayers.TournamentsQL.length - this.flightCountsCal;
+        console.log(this._overview);
+
         this._overview['last-week'] = [
             {
                 newIssues: dataPlayers.TournamentsQL.length,
-                closedIssues: this.flightCountsCal,
-                fixed: this.flightCountsNotCal,
-                wontfix: '1',
-                reopened: '2',
+                closedIssues: this.membersCountsCal,
+                fixed: this.flightCountsCal,
+                wontfix: this.flightCountsNotCal,
+                reopened: '20',
                 needstriage: '36',
             },
         ];
-        this._overview['this-week'] = [
-            {
-                newIssues: dataPlayers.TournamentsQL.length,
-                closedIssues: this.flightCountsCal,
-                fixed: this.flightCountsNotCal,
-                wontfix: '1',
-                reopened: '2',
-                needstriage: '36',
-            },
-        ];
-        console.log(this._series);
-        console.log(this._overview);
+
         this._prepareChartData();
 
-        //this.showdata = Promise.resolve(true);
-        console.log(this.showdata);
-    }
-
-    async getAllPlayers() {
-        let players =
+        let players: any =
             await this._facadeService.getClubMemberAggregateByCategroy(
                 localStorage.getItem('adminClubID')
             );
+
         console.log(players);
         this._seriesPlayers['all'] = [
             players.club[0].Amateurs.aggregate['count'],
 
-            players.club[0].Senior_Amateurs
-            .aggregate['count'],
+            players.club[0].Senior_Amateurs.aggregate['count'],
 
             players.club[0].Veterans.aggregate['count'],
 
             players.club[0].Ladies.aggregate['count'],
         ];
-        // this._overviewPlayers['all'] = [
-        //     players.club[0].Amateurs.aggregate['count'],
 
-        //     players.club[0].Professionals.aggregate['count'],
-
-        //     players.club[0].Veterans.aggregate['count'],
-
-        //     players.club[0].Ladies.aggregate['count'],
-        // ];
         console.log(this._seriesPlayers);
-        
+        this.showdata = Promise.resolve(true);
     }
+
     ComparatorDate(a, b) {
         if (a['startDate'] < b['startDate']) return -1;
         if (a['startDate'] > b['startDate']) return 1;
         return 0;
+    }
+    lastWeekMonday() {
+        //let date = new Date();
+        //return new Date(date.setDate(date.getDate() - 8));
+        var date = new Date();
+        var day = date.getDay();
+        var prevMonday = new Date();
+        if (date.getDay() == 0) {
+            prevMonday.setDate(date.getDate() - 7);
+        } else {
+            prevMonday.setDate(date.getDate() - (day + 6));
+        }
+
+        return prevMonday;
+    }
+    lastWeekSunday() {
+        var date = new Date();
+        var day = date.getDay();
+        var prevSunday = new Date();
+        if (date.getDay() == 7) {
+            prevSunday.setDate(date.getDate() - 7);
+        } else {
+            prevSunday.setDate(date.getDate() - day);
+        }
+
+        return prevSunday;
     }
 }

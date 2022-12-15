@@ -57,6 +57,19 @@ const themes = {
     },
     'amber' : {
         primary: colors.amber
+    },
+    'blue':{
+        primary:colors.blue
+    },
+    'red':{
+        primary:colors.red
+    },
+    'yellow':{
+        primary:colors.yellow
+    
+    },
+    'Zinc':{
+        primary:colors.zinc
     }
 };
 

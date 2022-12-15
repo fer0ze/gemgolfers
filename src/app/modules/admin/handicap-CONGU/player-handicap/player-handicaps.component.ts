@@ -1,0 +1,328 @@
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FlightScores } from '../../../../shared/classes/FlightScores';
+import {
+    Constants,
+    General,
+    handicapAllocation,
+} from '../../../../shared/classes/general';
+
+import {
+    Player,
+    PlayerWHSHanidcap,
+} from '../../../../shared/models/player.model';
+import { Score } from '../../../../shared/classes/score';
+import { FacadeService } from '../../../../shared/services/facade.service';
+import { Flight } from '../../../../shared/models/flight.model';
+import { formatDate, Location } from '@angular/common';
+import { EMLINK } from 'constants';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { MatDrawerToggleResult } from '@angular/material/sidenav';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import {  HandicapsComponent } from '../CONGU/handicaps.component';
+@Component({
+    selector: 'app-player-handicap',
+    templateUrl: './player-handicaps.component.html',
+})
+export class PlayerHandicapComponent implements OnInit {
+
+    cardsrc = 'assets/images/cards/01-320x200.png';
+    dataSource: MatTableDataSource<any>;
+    displayedColumns : string[] = [
+        'id',
+        'updatedAt',
+        'grossScore',
+        'adjustedScore',
+        'score',
+        'oldHandicap',
+        'handicapDifference',
+        'handicap',
+    ];
+   
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    clubTitle: any;
+    showTable: Promise<any>;
+    private playerID: string;
+    loggedInuser: Player;
+    currentPlayer: Player;
+    playerFlightScores: FlightScores[] = [];
+    isLoading: boolean = true;
+    redTeeHI: number;
+    blueTeeHI: number;
+    whiteTeeHI: number;
+    blackTeeHI: number;
+    playerHandiData: any;
+    handicapHistory: any[] = [];
+    handicapHistoryDate: any[] = [];
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    currentPlayerHandicap: any;
+    length: any;
+    personLeads: any;
+    memerbershipNumber: any;
+    fullName: string;
+    constructor(
+        private location: Location,
+        public snackBar: MatSnackBar,
+        public dialog: MatDialog,
+        private _activatedRoute: ActivatedRoute,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _handicapComponent: HandicapsComponent,
+        private _facadeService: FacadeService,
+        private _router: Router
+    ) {}
+
+    async ngOnInit() {
+        this._handicapComponent.matDrawer.open();
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+
+        this._activatedRoute.paramMap.subscribe(async (params) => {
+            this.showTable = Promise.resolve(false);
+            this.playerID = params.get('id');       
+            this.fetchData();
+        });
+
+       
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
+    async fetchData(){
+        if (this.loggedInuser) {
+            let clubInfo: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
+
+            console.log(clubInfo);
+
+            this.clubTitle = clubInfo ? clubInfo.name : '';
+        }
+        if (this.playerID) {
+            // this.currentPlayerHandicap = <Player>(
+            //   await this.facadeService.getPlayerByID(this.playerID)
+            // );
+            // console.log(this.currentPlayerHandicap);
+            let club: any = this.loggedInuser.membership[0].club;
+            let courseID =
+                club.courses.length > 0
+                    ? club.courses[0].id
+                    : '-LUFS3FCQKOGpJ2IEHmf';
+            let courseRating: any = {
+                courseId: courseID,
+                courseHoleSets: 3,
+            };
+            let playerscore: any =
+                await this._facadeService.getPlayerFlightScores(this.playerID);
+            console.log(playerscore);
+            this.currentPlayer = playerscore.PlayerQL;
+            console.log(this.currentPlayer);
+            this.currentPlayerHandicap = this.currentPlayer[0];
+
+            this.playerHandiData = playerscore['HandicapQL'];
+            console.log(this.playerHandiData);
+            const slicedCongu = this.playerHandiData.slice(0, 20);
+            console.log(slicedCongu);
+
+            this.dataSource = new MatTableDataSource(slicedCongu);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            let newScores: any[] = [];
+            this.showTable = Promise.resolve(true);
+          
+        } else {
+            this.location.back();
+        }
+    }
+    /**
+     * Close the drawer
+     */
+    closeDrawer(): Promise<MatDrawerToggleResult> {
+        return this._handicapComponent.matDrawer.close();
+    }
+
+    cancel() {
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+    }
+    // public downloadAsPDFCongu() {
+    //     var doc = new jsPDF();
+    //     var col = [
+    //         'Sr.',
+    //         'Mem.No',
+    //         'Date',
+    //         'G.Score',
+    //         'Adj.Gross',
+    //         'Net',
+    //         'Crnt H/C',
+    //         "H'Cap Adj",
+    //         'Exact H/C',
+    //     ];
+    //     var rows = [];
+    //     doc.setFontSize(17);
+    //     doc.text(
+    //         'CONGU-Handicap Change-Log of ' +
+    //             this.currentPlayer[0].firstName +
+    //             ' ' +
+    //             this.currentPlayer[0].lastName,
+    //         14,
+    //         15
+    //     );
+    //     doc.setFontSize(18);
+    //     doc.setTextColor(100);
+
+    //     let count = 0;
+    //     this.playerHandiData = this.playerHandiData.slice(0, 20);
+    //     this.playerHandiData.forEach((element) => {
+    //         count++;
+    //         var temp = [
+    //             count,
+    //             this.currentPlayer[0].membershipNumber,
+    //             formatDate(
+    //                 element.tournamentQL.startDate,
+    //                 'mediumDate',
+    //                 'en-US'
+    //             ),
+    //             element.grossScore ? element.grossScore : '-',
+    //             element.adjustedScore ? element.adjustedScore : '-',
+    //             element.score,
+    //             element.oldHandicap,
+    //             Math.round((element.handicap - element.oldHandicap) * 10) / 10,
+    //             element.handicap,
+    //         ];
+    //         rows.push(temp);
+    //     });
+    //     //From HTML
+    //     doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+
+    //     // Open PDF document in new tab
+    //     doc.output('dataurlnewwindow');
+
+    //     // Download PDF document
+    //     //doc.save('flights.pdf');
+    // }
+    // public downloadAsPDFWHS() {
+    //     var doc = new jsPDF();
+    //     var col = [
+    //         'Sr.',
+    //         'Mem.No',
+    //         'Date',
+    //         'Score',
+    //         'Adj.Score',
+    //         'h/diff',
+    //         'h/index',
+    //     ];
+    //     var rows = [];
+    //     var rows = [];
+    //     doc.setFontSize(17);
+    //     doc.text(
+    //         'WHS-Handicap Change-Log of ' +
+    //             this.currentPlayer[0].firstName +
+    //             ' ' +
+    //             this.currentPlayer[0].lastName,
+    //         14,
+    //         15
+    //     );
+    //     doc.setFontSize(18);
+    //     // doc.setTextColor(100);
+
+    //     let count = 0;
+    //     this.personLeads.forEach((element) => {
+    //         count++;
+    //         // let flag = true;
+    //         // if (element.combined_handicap_id) {
+
+    //         //   for (let index in this.personLeads) {
+    //         //     if (this.personLeads[index].Handicap_id==element.combined_handicap_id) {
+    //         //       this.personLeads[index].noBorder=false;
+    //         //       element.noBorder=false;
+    //         //       break;
+    //         //     }
+    //         //   }
+
+    //         // }
+    //         let used: boolean = this.usedForHandicap.some((handicap) => {
+    //             return (
+    //                 handicap.used_handicap_id == element.Handicap_id ||
+    //                 handicap.combine_handicap_id == element.Handicap_id
+    //             );
+    //         });
+
+    //         var temp = [
+    //             count,
+    //             this.currentPlayer[0].membershipNumber,
+    //             formatDate(
+    //                 element.tournamentQL.startDate,
+    //                 'mediumDate',
+    //                 'en-US'
+    //             ),
+    //             element.score,
+    //             element.adjustedScore,
+    //             Math.round(element.handicapDifferential * 10) / 10,
+    //             Math.round(element.handicapIndex * 10) / 10,
+    //             element.highlight,
+    //             used,
+    //         ];
+    //         rows.push(temp);
+    //     });
+    //     // From HTML
+    //     let a = 1;
+    //     doc.autoTable(col, rows, {
+    //         startY: 25,
+    //         theme: 'grid',
+    //         didParseCell: function (data) {
+    //             if (data.row.raw[7] == true) {
+    //                 data.cell.styles.fillColor = [195, 249, 230];
+    //             }
+    //             a++;
+    //             if (data.row.raw[8] == true && a == 5) {
+    //                 data.cell.styles.fillColor = [249, 187, 147];
+    //                 //console.log(1);
+    //                 //a=false;
+    //             }
+    //             if (data.row.index == 1) {
+    //                 //console.log('assssssssssss');
+    //             }
+    //             console.log(data.row.index);
+
+    //             //console.log(a);
+    //         },
+    //     });
+    //     // doc.autoTable({
+    //     //   html: "#pdfTable",
+    //     //   startY: 25,
+    //     //   theme: "grid",
+    //     // });
+    //     // Open PDF document in new tab
+    //     doc.output('dataurlnewwindow');
+
+    //     // Download PDF document
+    //     //doc.save('flights.pdf');
+    // }
+}

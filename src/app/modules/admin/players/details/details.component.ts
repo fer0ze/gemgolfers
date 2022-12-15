@@ -22,7 +22,12 @@ import {
 } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { MatDrawerToggleResult } from '@angular/material/sidenav';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDrawer, MatDrawerToggleResult } from '@angular/material/sidenav';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import {
@@ -38,7 +43,12 @@ import {
     Player,
     PlayerCategory,
 } from 'app/shared/models/player.model';
-import { Constants, General, generateGemId, UniqueIdGenerator } from 'app/shared/classes/general';
+import {
+    Constants,
+    General,
+    generateGemId,
+    UniqueIdGenerator,
+} from 'app/shared/classes/general';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -62,7 +72,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     contacts: Contact[];
     countries: Country[];
     playerID: any;
-    cardsrc = 'assets/images/cards/02-320x200.jpg';
+    cardsrc = 'assets/images/cards/01-320x200.png';
     avatarsrc = 'assets/images/avatars/male-04.jpg';
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -97,9 +107,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this.playerCategories = this._facadeService.getPlayerCategories();
         console.log(this.playerCategories);
 
-        this._activatedRoute.paramMap.subscribe((params) => {
-            this.playerID = params.get('id');
-        });
         this.contactForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
@@ -116,9 +123,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             status: new FormControl('', [Validators.required]),
             notes: new FormControl(''),
         });
-        this.fetchData();
-
-        this._contactsListComponent.matDrawer.open();
         this.contact = {
             id: this.playerID,
             firstName: 'New Contact',
@@ -135,6 +139,13 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             notes: '',
             status: true,
         };
+        this._activatedRoute.paramMap.subscribe((params) => {
+            this.playerID = params.get('id');
+            this.fetchData();
+        });
+
+        this._contactsListComponent.matDrawer.open();
+
         console.log(this.contact);
     }
 
@@ -193,8 +204,8 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
         let latest_date: any = this.datepipe.transform(
             Hdate,
-            "yyyy-MM-ddThh:mm:ss.SSSSSS+00:00"
-          );
+            'yyyy-MM-ddThh:mm:ss.SSSSSS+00:00'
+        );
         // Get the contact object
 
         const contact = this.contactForm.getRawValue();
@@ -328,24 +339,19 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 await this._facadeService.updatePlayer(player)
             );
 
-            if (
-                this.currentPlayer[0].handicap !==
-                contact.handicap
-            ) {
+            if (this.currentPlayer[0].handicap !== contact.handicap) {
                 const handicap_change_log: handicap_change_log = {
                     id: UniqueIdGenerator.generate(),
                     playerId: this.currentPlayer[0].id
                         ? this.currentPlayer[0].id
                         : null,
-                    newHandicap: contact.handicap
-                        ? contact.handicap
-                        : 0,
+                    newHandicap: contact.handicap ? contact.handicap : 0,
                     oldHandicap: this.currentPlayer[0].handicap
                         ? this.currentPlayer[0].handicap
                         : 0,
                     whs: false,
                     dateTime: latest_date,
-                    remarks:  null,
+                    remarks: null,
                     tournamentId: null,
                     updaterId: this.loggedInuser.id,
                 };
@@ -475,32 +481,37 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    async fetchData() {
-        this.currentPlayer = <Player>(
-            await this._facadeService.getPlayerByID(this.playerID)
-        );
-        console.log(this.currentPlayer);
-        if (this.currentPlayer.length > 0) {
-            this.editMode = true;
-            this.contactForm.setValue({
-                firstName: this.currentPlayer[0].firstName,
-                lastName: this.currentPlayer[0].lastName,
-                gender: this.currentPlayer[0].gender,
-                email: this.currentPlayer[0].email,
-                phoneNumbers: this.currentPlayer[0].phone,
-                dateOfBirth: this.currentPlayer[0].dob,
-                category: this.currentPlayer[0].playerCategory,
-                handicap: this.currentPlayer[0].handicap,
-                country: this.currentPlayer[0].countryCode,
-                notes: this.currentPlayer[0].extraData,
-                membershipNo: this.currentPlayer[0].membershipNumber,
-                club: this.currentPlayer[0].membership[0].club.name,
-                isClubAdmin: this.currentPlayer[0].adminClubId ? '1' : '0',
-                status: this.currentPlayer[0].membership[0].suspended
-                    ? 'true'
-                    : 'false',
+    fetchData() {
+        this._facadeService
+            .getPlayerByID(this.playerID)
+            .subscribe((response) => {
+                this.currentPlayer = response['data'].player;
+
+                console.log(this.currentPlayer);
+                if (this.currentPlayer.length > 0) {
+                    this.editMode = true;
+                    this.contactForm.setValue({
+                        firstName: this.currentPlayer[0].firstName,
+                        lastName: this.currentPlayer[0].lastName,
+                        gender: this.currentPlayer[0].gender,
+                        email: this.currentPlayer[0].email,
+                        phoneNumbers: this.currentPlayer[0].phone,
+                        dateOfBirth: this.currentPlayer[0].dob,
+                        category: this.currentPlayer[0].playerCategory,
+                        handicap: this.currentPlayer[0].handicap,
+                        country: this.currentPlayer[0].countryCode,
+                        notes: this.currentPlayer[0].extraData,
+                        membershipNo: this.currentPlayer[0].membershipNumber,
+                        club: this.currentPlayer[0].membership[0].club.name,
+                        isClubAdmin: this.currentPlayer[0].adminClubId
+                            ? '1'
+                            : '0',
+                        status: this.currentPlayer[0].membership[0].suspended
+                            ? 'true'
+                            : 'false',
+                    });
+                }
+                this._changeDetectorRef.markForCheck();
             });
-        }
-        this._changeDetectorRef.markForCheck();
     }
 }

@@ -5,7 +5,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'dashboards',
         title: 'DashBoards',
-       
+
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
@@ -21,7 +21,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'tournaments',
         title: 'Tournament',
-        
+
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
@@ -41,29 +41,30 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
         ],
     },
-    {
-        id: 'leagues',
-        title: 'League',
-       
-        type: 'group',
-        icon: 'heroicons_outline:view-boards',
-        children: [
-            {
-                id: 'leagues.newleagues',
-                title: 'New League',
-                type: 'basic',
-                icon: 'heroicons_outline:academic-cap',
-                link: '/leagues/new',
-            },
-            {
-                id: 'leagues.viewleagues',
-                title: 'All Leagues',
-                type: 'basic',
-                icon: 'heroicons_outline:view-boards',
-                link: '/leagues/view',
-            },
-        ],
-    },
+    // },
+    // {
+    //     id: 'leagues',
+    //     title: 'League',
+
+    //     type: 'group',
+    //     icon: 'heroicons_outline:view-boards',
+    //     children: [
+    //         {
+    //             id: 'leagues.newleagues',
+    //             title: 'New League',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:academic-cap',
+    //             link: '/leagues/new',
+    //         },
+    //         {
+    //             id: 'leagues.viewleagues',
+    //             title: 'All Leagues',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:view-boards',
+    //             link: '/leagues/view',
+    //         },
+    //     ],
+    // },
     {
         id: 'players',
         title: 'Players',
@@ -71,18 +72,33 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon: 'heroicons_outline:menu-alt-2',
         children: [
             {
-                id: 'players.addnewPlayer',
-                title: 'New Player',
-                type: 'basic',
-                icon: 'heroicons_outline:check-circle',
-                link: '/players/new',
-            },
-            {
                 id: 'players.viewplayers',
                 title: 'All Players',
                 type: 'basic',
                 icon: 'heroicons_outline:user-group',
                 link: '/players/view/',
+            },
+        ],
+    },
+    {
+        id: 'dailyRounds',
+        title: 'DailyRound',
+        type: 'group',
+        icon: 'heroicons_outline:pencil-alt',
+        children: [
+            // {
+            //     id: 'dailyRounds.add',
+            //     title: 'New Round',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:check-circle',
+            //     link: '/dailyRounds/new',
+            // },
+            {
+                id: 'dailyRounds.WHS',
+                title: 'Daily-Rounds',
+                type: 'basic',
+                icon: 'heroicons_outline:view-boards',
+                link: '/dailyRounds',
             },
         ],
     },
@@ -104,32 +120,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'WHS',
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
-                link: '/leagues/WHS',
+                link: '/handicaps/WHS',
             },
         ],
     },
-    {
-        id: 'dailyRounds',
-        title: 'DailyRound',
-        type: 'group',
-        icon: 'heroicons_outline:pencil-alt',
-        children: [
-            {
-                id: 'dailyRounds.add',
-                title: 'New Round',
-                type: 'basic',
-                icon: 'heroicons_outline:check-circle',
-                link: '/dailyRounds/new',
-            },
-            {
-                id: 'dailyRounds.WHS',
-                title: 'Daily-Rounds',
-                type: 'basic',
-                icon: 'heroicons_outline:view-boards',
-                link: '/dailyRounds/view',
-            },
-        ],
-    },
+
     {
         id: 'reports',
         title: 'Report',

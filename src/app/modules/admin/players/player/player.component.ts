@@ -47,6 +47,7 @@ export class PlayerComponent implements OnInit {
         'Category',
         'Handicap',
         'Status',
+        'view',
         'Edit',
         'Delete',
     ];
@@ -54,7 +55,7 @@ export class PlayerComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     count: any = 0;
     showTable: Promise<any>;
-    contacts$: Observable<Contact[]>;
+    //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
@@ -144,5 +145,9 @@ export class PlayerComponent implements OnInit {
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
+    }
+    viewProfile(id:string):void{
+        console.log(id);
+        
     }
 }

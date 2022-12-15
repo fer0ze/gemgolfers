@@ -1,0 +1,240 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container
+        class="flex-auto h-full bg-card dark:bg-transparent"
+        (backdropClick)="onBackdropClicked()"
+    >
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full md:w-160 dark:bg-gray-900"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer
+        >
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+            <!-- Main -->
+            <div class="flex-auto">
+                <div
+                    class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
+                >
+                    <!-- Title -->
+                    <div>
+                        <div
+                            class="text-6xl font-extrabold tracking-tight leading-none mt-3"
+                        >
+                            WHS Handicap
+                        </div>
+                        <!-- <div class="ml-0.5 font-medium text-secondary">
+                          <ng-container *ngIf="this.count > 0">
+                              {{ this.count }}
+                          </ng-container>
+                          {{
+                              this.count
+                                  | i18nPlural
+                                      : {
+                                            "=0": "No contacts",
+                                            "=1": "contact",
+                                            other: "Members"
+                                        }
+                          }}
+                      </div> -->
+                    </div>
+
+                    <!-- Main actions -->
+                    <div class="flex items-center mt-8 sm:mt-0 md:mt-8">
+                        <!-- Search -->
+                        <div class="flex-auto">
+                            <mat-form-field
+                                class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50"
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:search'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    [formControl]="searchInputControl"
+                                    (keyup)="
+                                        getPlayerInformationByName(
+                                            $event.target.value
+                                        )
+                                    "
+                                    [autocomplete]="'off'"
+                                    [placeholder]="'Search player'"
+                                />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="xl:col-span-2 flex flex-col flex-auto bg-card shadow overflow-hidden relative"
+                >
+                    <div class="overflow-x-auto">
+                        <table
+                            class="w-full bg-transparent"
+                            id="a"
+                            mat-table
+                            [dataSource]="WHSSource"
+                            matSort
+                            (matSortChange)="onSortChanged($event)"
+                        >
+                            <!-- Serial Column -->
+                            <ng-container matColumnDef="id">
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                >
+                                    Sr.
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row; let i = index"
+                                >
+                                    <span
+                                        class="pr-6 font-medium text-sm text-secondary whitespace-nowrap"
+                                    >
+                                        {{ i + 1 }}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                    class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                >
+                                    Name
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span
+                                        (click)="redirectToDetails(row.id)"
+                                        class="pr-6 font-medium whitespace-nowrap underline underline-offset-1 cursor-pointer"
+                                        >{{
+                                            row.firstName + " " + row.lastName
+                                        }}</span
+                                    >
+                                    <!-- <img
+                                        *ngIf="row.subscriptionQL"
+                                        src="../../../assets/images/premium25.png"
+                                        alt="Premium Member"
+                                        title="Premium Member"
+                                    /> -->
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="membershipNumber">
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                    class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                >
+                                    Mem.No
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span
+                                        class="pr-6 font-medium whitespace-nowrap"
+                                    >
+                                        {{ row.membershipNumber }}
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <!-- Phone Column -->
+                            <ng-container matColumnDef="category">
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                    class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                >
+                                    Category
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span
+                                        class="pr-6 font-medium whitespace-nowrap"
+                                    >
+                                        {{ row.playerCategory }}
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <!-- Phone Column -->
+
+                            <!-- Phone Column -->
+                            <ng-container matColumnDef="handicapWhsIndex">
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                    class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                >
+                                    Handicap Index
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <span
+                                        class="pr-6 font-medium whitespace-nowrap"
+                                    >
+                                        {{
+                                            row.handicapWhsIndex != null
+                                                ? row.handicapWhsIndex
+                                                : "-"
+                                        }}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="details">
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                    class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                >
+                                    Details
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <a [routerLink]="['./', row.id]">
+                                        <button mat-icon-button color="primary">
+                                            <mat-icon class="mat-18"
+                                                >reorder</mat-icon
+                                            >
+                                        </button>
+                                    </a>
+                                </td>
+                            </ng-container>
+
+                            <tr
+                                mat-header-row
+                                *matHeaderRowDef="WHSColumns"
+                            ></tr>
+                            <tr
+                                class="order-row h-16 hover:bg-gray-100"
+                                mat-row
+                                *matRowDef="let row; columns: WHSColumns;"
+                            ></tr>
+                        </table>
+                        <mat-paginator
+                            [pageSize]="20"
+                            [pageSizeOptions]="[10, 20, 50, 100]"
+                        ></mat-paginator>
+                    </div>
+                    <!-- No contacts -->
+                    <!-- <ng-template *ngIf="displayNoRecords === false">
+                        <div
+                            class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+                        >
+                            No Member Found!
+                        </div>
+                    </ng-template> -->
+                </div>
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

@@ -76,6 +76,9 @@ export const appRoutes: Route[] = [
         children   : [
             {path: 'dashboard', loadChildren: () => import('app/modules/admin/dashboards/project/project.module').then(m => m.ProjectModule)},
             {path: 'players/view', loadChildren: () => import('app/modules/admin/players/players.module').then(m => m.PlayersModule)},
+            {path: 'dailyRounds', loadChildren: () => import('app/modules/admin/daily-rounds/daily-rounds.module').then(m => m.DailyRoundsModule)},
+            {path: 'handicaps/CONGU', loadChildren: () => import('app/modules/admin/handicap-CONGU/handicap.module').then(m => m.HandicapModule)},
+            {path: 'handicaps/WHS', loadChildren: () => import('app/modules/admin/handicap-WHS/handicap.module').then(m => m.HandicapModule)},
         ]
     }
 ];

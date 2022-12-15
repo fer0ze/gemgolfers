@@ -279,7 +279,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                   // console.log(data);
+                    // console.log(data);
                     resolve(data);
                 });
         });
@@ -397,23 +397,36 @@ export class TournamentsService {
                 });
         });
     }
-    public getTournamentCountsByClub(clubId: string) :any{
-        return this.apollo.subscribe({
-            query: Query.getTournamentCountsByClub,
-            variables: {
-                where: {
-                    _and: [
-                        {
-                            singleRound: {
-                                _eq: false,
-                            },
-                            clubId: {
-                                _eq: clubId,
-                            },
+    public getTournamentCountsByClub(clubId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTournamentCountsByClub,
+                    variables: {
+                        where: {
+                            _and: [
+                                {
+                                    singleRound: {
+                                        _eq: false,
+                                    },
+                                    clubId: {
+                                        _eq: clubId,
+                                    },
+                                },
+                            ],
                         },
-                    ],
-                },
-            },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data.tournament_by_pk);
+                    //console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        //console.log(data);
+                        resolve(data);
+                    }
+                });
         });
     }
 

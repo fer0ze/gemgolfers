@@ -7,10 +7,10 @@
             >
                 <!-- Avatar and name -->
                 <div class="flex flex-auto items-center min-w-0">
-                    <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+                    <div class="flex-0 w-20 h-25 rounded-full overflow-hidden">
                         <img
                             class="w-full h-full object-cover"
-                            src="assets/images/avatars/kgc-logo.jpg"
+                            src="assets/images/logo/kgc-logo.png"
                         />
                     </div>
                     <div class="flex flex-col min-w-0 ml-4">
@@ -37,14 +37,14 @@
                     >
                         <mat-icon
                             class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:tag'"
+                            [svgIcon]="'heroicons_solid:plus'"
                         ></mat-icon>
                         <span class="ml-2">New Round</span>
                     </button>
                     <button mat-flat-button [color]="'primary'">
                         <mat-icon
                             class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:user-group'"
+                            [svgIcon]="'heroicons_solid:plus'"
                         ></mat-icon>
                         <span class="ml-2">New Player</span>
                     </button>
@@ -226,7 +226,7 @@
                         <div
                             class="text-lg font-medium tracking-tight leading-6 truncate"
                         >
-                            Players
+                           Club Players
                         </div>
                         <!-- <div class="ml-2 -mt-2 -mr-3">
                                         <button
@@ -352,9 +352,6 @@
                                 <mat-button-toggle value="last-week"
                                     >Last Week</mat-button-toggle
                                 >
-                                <mat-button-toggle value="this-week"
-                                    >This Week</mat-button-toggle
-                                >
                             </mat-button-toggle-group>
                         </div>
                     </div>
@@ -430,7 +427,7 @@
                                     <div
                                         class="mt-1 text-sm sm:text-lg font-medium"
                                     >
-                                        Calculated
+                                        Round Players
                                     </div>
                                 </div>
                                 <!-- Fixed -->
@@ -449,7 +446,7 @@
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
                                     >
-                                        Not Calculated
+                                        Handicap Calculated
                                     </div>
                                 </div>
                                 <!-- Won't fix -->
@@ -468,7 +465,7 @@
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
                                     >
-                                        Won't Fix
+                                        Not Calculated
                                     </div>
                                 </div>
                                 <!-- Re-opened -->
@@ -487,7 +484,7 @@
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
                                     >
-                                        Re-opened
+                                        Edited
                                     </div>
                                 </div>
                                 <!-- Needs triage -->

@@ -155,18 +155,31 @@ export class FlightsService {
                 );
         });
     }
-    public getTotalFlights(clubId) {
-        return this.apollo.subscribe({
-            query: Query.getFlightTotal,
-            variables: {
-                where: {
-                    admin: {
-                        adminClubId: {
-                            _eq: clubId,
+    public getTotalFlights(clubId): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getFlightTotal,
+                    variables: {
+                        where: {
+                            admin: {
+                                adminClubId: {
+                                    _eq: clubId,
+                                },
+                            },
                         },
                     },
-                },
-            },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(data);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
         });
     }
 
