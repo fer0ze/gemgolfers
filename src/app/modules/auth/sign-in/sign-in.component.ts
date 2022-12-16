@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { Player } from 'app/shared/models/player.model';
+import { FacadeService } from 'app/shared/services/facade.service';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -29,7 +31,8 @@ export class AuthSignInComponent implements OnInit
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-        private _router: Router
+        private _router: Router,
+        private facade: FacadeService
     )
     {
     }
@@ -58,7 +61,7 @@ export class AuthSignInComponent implements OnInit
     /**
      * Sign in
      */
-    signIn(): void
+    async signIn()
     {
         // Return if the form is invalid
         if ( this.signInForm.invalid )
@@ -71,7 +74,9 @@ export class AuthSignInComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
-
+        let isAdmin = <Player>await this.facade.getPlayerByEmail('kgcadmin@gemgolfers.com');
+        localStorage.setItem("aXNMb2dnZWRJbg", JSON.stringify(isAdmin[0]));
+        localStorage.setItem('adminClubID','-LUFS3FAg4OEhIiK0vgY');
         // Sign in
         this._authService.signIn(this.signInForm.value)
             .subscribe(
@@ -85,7 +90,7 @@ export class AuthSignInComponent implements OnInit
 
                     // Navigate to the redirect url
                     this._router.navigateByUrl(redirectURL);
-                    localStorage.setItem('adminClubID','-LUFS3FAg4OEhIiK0vgY');
+                   
 
                 },
                 (response) => {
