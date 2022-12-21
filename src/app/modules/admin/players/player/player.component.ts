@@ -64,6 +64,8 @@ export class PlayerComponent implements OnInit {
         private _router: Router
     ) {}
     ngOnInit(): void {
+
+        this.fecthData();
         // Subscribe to MatDrawer opened change
         this.matDrawer.openedChange.subscribe((opened) => {
             if (!opened) {
@@ -91,7 +93,7 @@ export class PlayerComponent implements OnInit {
             this._changeDetectorRef.markForCheck();
         });
 
-        this.fecthData();
+
         this.showTable = Promise.resolve(true);
     }
 

@@ -1,0 +1,72 @@
+
+table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 500px;
+    border-spacing: unset;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+
+    tr.topheader {
+        background-color: #4e4c4b;
+        color: #fff;
+    }
+    
+    tr.topheader th {
+        padding: 5px;
+        font-weight: normal;
+    }
+    
+    tr.subhead {
+        font-family: monospace;
+        background-color: #E8E8E7;
+        color: #585858
+    }
+    
+    tr.subhead th {
+        border: solid 1px #fff;
+        font-weight: bold;
+        padding: 5px;
+    }
+
+    tr.scorebody {
+        font-family: monospace;
+        color: #585858
+    }
+
+    tr.scorebody td {
+        border: solid 1px #E8E8E7;
+        font-weight: bold;  
+        padding: 5px;
+        text-align: center;
+    }
+
+    tr.scorebody td input.empty {
+        background-color:  #f7f74f!important;
+        
+        width: 28px;
+    }
+
+    tr.scorebody td input.warn {
+        background-color:  #ff6464!important;
+        color: #fff;
+        
+        width: 28px;
+    }
+
+    tr.scorebody td input {
+        border: none;
+        text-align: center;
+        width: 30px;
+    }
+
+    td .mat-icon {
+        cursor: pointer;
+        font-size: 22px;
+    }
+
+}
+.example-spacer {
+    flex: 1 1 auto;
+  }

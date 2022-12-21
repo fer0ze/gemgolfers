@@ -79,6 +79,8 @@ export const appRoutes: Route[] = [
             {path: 'dailyRounds', loadChildren: () => import('app/modules/admin/daily-rounds/daily-rounds.module').then(m => m.DailyRoundsModule)},
             {path: 'handicaps/CONGU', loadChildren: () => import('app/modules/admin/handicap-CONGU/handicap.module').then(m => m.HandicapModule)},
             {path: 'handicaps/WHS', loadChildren: () => import('app/modules/admin/handicap-WHS/handicap.module').then(m => m.HandicapModule)},
+            {path: 'reports/dailyround', loadChildren: () => import('app/modules/admin/reports/daily-rounds-stats/daily-rounds-stats.module').then(m => m.DailyRoundsStatsModule)},
+            {path: 'reports/dailycard', loadChildren: () => import('app/modules/admin/reports/daily-starter-report/daily-starter-report.module').then(m => m.DailyStarterReportModule)},
         ]
     }
 ];

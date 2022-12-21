@@ -924,6 +924,8 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
       FlightsQL: flights {
         id
         ended
+        courseHoleSets
+        courseHoleSetsInverted
         MembersQL: members {
           flightId
           playerId
@@ -931,12 +933,8 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
             flightId
           }
           PlayerQL: player {
-            id
-            firstName
-            lastName
-            email
-            membershipNumber
-            handicap
+            
+            playerCategory
           }
         }
       }

@@ -12,14 +12,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
-// import { Apollo } from "apollo-angular";
 import {
     Player,
     ClubMembership,
     PlayerWHSHanidcap,
 } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
-//import { DialogOverviewComponent } from "../material-components/dialog-overview/dialog-overview.component";
 import {
     UniqueIdGenerator,
     generateGemId,
@@ -29,11 +27,6 @@ import {
 import { of, Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
-// import { read, utils } from "xlsx";
-// import * as jsPDF from "jspdf";
-// import "jspdf-autotable";
-// import { UserDetailsDilogueComponent } from "../material-components/user-details-dilogue/user-details-dilogue.component";
-// import { UserWHSDeatilsDialogueComponent } from "../material-components/user-whs-deatils-dialogue/user-whs-deatils-dialogue.component";
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 @Component({
@@ -58,8 +51,6 @@ export class HandicapsComponent implements OnInit {
         'details',
     ];
 
-    // WHSSource: MatTableDataSource<any>;
-    // WHSColumns = ["id", "name", "category", "handicapWhsIndex", "details"];
     count: any = 0;
     showTable: Promise<any>;
     clubItems: Promise<Player[]>;
@@ -88,7 +79,6 @@ export class HandicapsComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-   
 
     dataPlayers: any;
     index: any = 0;
@@ -113,6 +103,53 @@ export class HandicapsComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.currentDate = new Date();
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+        this.Players = [];
+
+        this._router.paramMap.subscribe((params) => {
+            this.filterCategory = params.get('category');
+        });
+        //console.log(this.filterCategory);
+
+        this.MembersCat = this.filterCategory;
+        console.log(this.MembersCat);
+        if (this.loggedInuser.userRole > 1) {
+            if (this.filterCategory)
+                this.dataPlayers =
+                    await this._facadeService.getPlayersListByClubAndCategory(
+                        this.loggedInuser.adminClubId,
+                        General.capitalizeFirstLetter(this.filterCategory)
+                    );
+            else {
+                this.dataPlayers =
+                    await this._facadeService.getPlayersListByClub(
+                        this.loggedInuser.adminClubId
+                    );
+                this.aggregate =
+                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                console.log(this.aggregate);
+                this.syncHandicapCongu();
+            }
+        } else {
+            if (this.filterCategory)
+                this.dataPlayers =
+                    await this._facadeService.getPlayerByCategory(
+                        General.capitalizeFirstLetter(this.filterCategory)
+                    );
+            else {
+                this.dataPlayers = await this._facadeService.getPlayersList();
+                console.log(this.dataPlayers);
+
+                this.aggregate =
+                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                console.log(this.aggregate);
+                this.syncHandicapCongu();
+            }
+        }
+        this.showTable = Promise.resolve(true);
         // Subscribe to MatDrawer opened change
         this.matDrawer.openedChange.subscribe((opened) => {
             if (!opened) {
@@ -141,73 +178,6 @@ export class HandicapsComponent implements OnInit {
 
         //this.fecthData();
 
-        this.currentDate = new Date();
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
-        this.Players = [];
-
-        this._router.paramMap.subscribe((params) => {
-            this.filterCategory = params.get('category');
-        });
-        //console.log(this.filterCategory);
-
-        this.MembersCat = this.filterCategory;
-        console.log(this.MembersCat);
-        // if (this.loggedInuser.adminClubId) {
-        //  if (this.loggedInuser.userRole == 1) {
-        // this.getAllMemberAggregateByCategroy(
-        //     this.loggedInuser.adminClubId
-        // );
-        // this.getSuperAdminStats();
-        // }
-        // this.getClubMemberAggregateByCategroy(
-        //     this.loggedInuser.adminClubId
-        // );
-
-        //dataTournaments = await this.facadeService.getClubActiveTournamentsList(todayDate.toDateString(), this.loggedInuser.adminClubId);
-        //}
-
-        if (this.loggedInuser.userRole > 1) {
-            if (this.filterCategory)
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByClubAndCategory(
-                        this.loggedInuser.adminClubId,
-                        General.capitalizeFirstLetter(this.filterCategory)
-                    );
-            else {
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByClub(
-                        this.loggedInuser.adminClubId
-                    );
-                this.aggregate =
-                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                console.log(this.aggregate);
-                this.syncHandicapCongu();
-
-                // this.WHSSource = new MatTableDataSource(this.HandicapIndex);
-                // console.log(this.WHSSource);
-                // this.WHSSource.sort = this.sort;
-                // setTimeout(() => (this.WHSSource.paginator = this.paginator), 1000);
-            }
-        } else {
-            if (this.filterCategory)
-                this.dataPlayers =
-                    await this._facadeService.getPlayerByCategory(
-                        General.capitalizeFirstLetter(this.filterCategory)
-                    );
-            else {
-                this.dataPlayers = await this._facadeService.getPlayersList();
-                console.log(this.dataPlayers);
-
-                this.aggregate =
-                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                console.log(this.aggregate);
-                this.syncHandicapCongu();
-            }
-        }
-        this.showTable = Promise.resolve(true);
-
         //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
     }
 
@@ -228,30 +198,6 @@ export class HandicapsComponent implements OnInit {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-    tabClicked(tab: any) {
-        this.index = 0;
-        this.player = [];
-        this.pageSize = 20;
-        if (tab.index == 1) {
-            this.syncHandicapWHS();
-            this.tabindex = 1;
-        } else {
-            // this.syncHandicapCongu();
-            this.tabindex = 0;
-        }
-    }
-
-    onPageFired(event) {
-        this.index = event.pageIndex * event.pageSize;
-        this.pageSize = event.pageSize;
-        console.log(this.index);
-
-        // this.syncHandicapCongu();
-        this.index = event.pageIndex * event.pageSize;
-        this.syncHandicapWHS();
-
-        console.log(event);
-    }
 
     syncHandicapCongu() {
         console.log(this.dataPlayers.player);
@@ -259,7 +205,7 @@ export class HandicapsComponent implements OnInit {
         let count = 0;
         this.player = [];
         for (let obj of this.dataPlayers.player) {
-            if (obj.handicapQL.length > 0 || obj.handicap>0) {
+            if (obj.handicapQL.length > 0 || obj.handicap > 0) {
                 let newobj = {
                     id: obj.id,
                     name: obj.firstName + ' ' + obj.lastName,
@@ -308,27 +254,7 @@ export class HandicapsComponent implements OnInit {
         this.isLoading = false;
         this.player = [];
     }
-    syncHandicapWHS() {
-        // console.log(this.index);
-        // let count = 0;
-        // for (
-        //     this.index;
-        //     this.index < this.dataPlayers.player.length;
-        //     this.index++
-        // ) {
-        //     console.log(this.index);
-        //     count++;
-        //     this.player.push(this.dataPlayers.player[this.index]);
-        //     if (count >= this.pageSize) break;
-        // }
-        // this.index = 0;
-        // console.log(this.index);
-        // console.log(this.player);
-        // this.WHSSource = new MatTableDataSource(this.player);
-        // this.WHSSource.sort = this.sort;
-        // this.isLoading = false;
-        // this.player = [];
-    }
+
     public onSortChanged(e) {
         if (e.active == 'handicap') {
             this.sorting = e.direction;
@@ -416,41 +342,7 @@ export class HandicapsComponent implements OnInit {
     //     // Download PDF document
     //     //doc.save('flights.pdf');
     // }
-    Comparatordsc(a, b) {
-        let handicapA =
-            a.handicapQL.length > 0
-                ? a.handicapQL[a.handicapQL.length - 1].handicap
-                : a.handicap;
-        let handicapb =
-            b.handicapQL.length > 0
-                ? b.handicapQL[b.handicapQL.length - 1].handicap
-                : b.handicap;
-        if (handicapA > handicapb) return -1;
-        if (handicapA < handicapb) return 1;
 
-        return 0;
-    }
-    Comparatorasc(a, b) {
-        let handicapA =
-            a.handicapQL.length > 0
-                ? a.handicapQL[a.handicapQL.length - 1].handicap
-                : a.handicap;
-        let handicapb =
-            b.handicapQL.length > 0
-                ? b.handicapQL[b.handicapQL.length - 1].handicap
-                : b.handicap;
-        if (handicapA < handicapb) return -1;
-        if (handicapA > handicapb) return 1;
-
-        return 0;
-    }
-
-    ComparatorascMember(a, b) {
-        if (a['membershipNumber'] < b['membershipNumber']) return -1;
-        if (a['membershipNumber'] > b['membershipNumber']) return 1;
-
-        return 0;
-    }
     redirectToHandicapDetails = (id: string) => {
         this.location.navigate(['./', id], {
             relativeTo: this._activatedRoute,
@@ -461,57 +353,12 @@ export class HandicapsComponent implements OnInit {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     };
-    // public downloadAsPDFWHS() {
-    //     var doc = new jsPDF();
-    //     var col = ['Sr.', 'M.No', 'Name', 'Category', 'HandicapIndex'];
-    //     var rows = [];
-    //     doc.setFontSize(30);
-    //     doc.text('WHS Handicap List', 15, 15);
-    //     doc.setFontSize(15);
-    //     doc.text('W.E.F:', 143, 15);
-    //     doc.text(
-    //         this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
-    //         160,
-    //         15
-    //     );
-    //     doc.setFontSize(15);
-    //     doc.setTextColor(100);
-
-    //     let count = 0;
-    //     this.dataPlayers.player.forEach((element) => {
-    //         if (
-    //             element.membershipNumber != null &&
-    //             element.membershipNumber != '' &&
-    //             (element.handicapWhsIndex != null || element.handicap > 0)
-    //         ) {
-    //             count++;
-    //             var temp = [
-    //                 count,
-    //                 element.membershipNumber,
-    //                 element.firstName + ' ' + element.lastName,
-    //                 element.playerCategory,
-    //                 element.handicapWhsIndex != null
-    //                     ? element.handicapWhsIndex
-    //                     : element.handicap,
-    //             ];
-    //             rows.push(temp);
-    //         }
-    //     });
-    //     // From HTML
-    //     doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
-
-    //     // Open PDF document in new tab
-    //     doc.output('dataurlnewwindow');
-
-    //     // Download PDF document
-    //     //doc.save('flights.pdf');
-    // }
 
     getPlayerInformationByName(filterValue: string) {
         console.log(filterValue);
         if (filterValue == '') {
             this.syncHandicapCongu();
-            this.syncHandicapWHS();
+            //this.syncHandicapWHS();
             return;
         }
         filterValue = filterValue.trim();
@@ -539,7 +386,7 @@ export class HandicapsComponent implements OnInit {
         console.log(filterValue);
         if (filterValue == '') {
             this.syncHandicapCongu();
-            this.syncHandicapWHS();
+            //this.syncHandicapWHS();
             return;
         }
         filterValue = filterValue.trim();
@@ -620,41 +467,6 @@ export class HandicapsComponent implements OnInit {
 
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
-        }
-    }
-
-    applyWHSFilter(filterValue: string) {
-        // filterValue = filterValue.trim(); // Remove whitespace
-        // filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        // this.WHSSource.filter = filterValue;
-
-        // if (this.WHSSource.paginator) {
-        //   this.WHSSource.paginator.firstPage();
-        // }
-        console.log(filterValue);
-        if (filterValue == '') {
-            this.syncHandicapCongu();
-            this.syncHandicapWHS();
-            return;
-        }
-        filterValue = filterValue.trim();
-        // let firstName = filterValue.substr(0,filterValue.indexOf(' '));
-        //  let secondName=filterValue.substr(filterValue.indexOf(' ')+1)
-        //  console.log("firstname="+firstName);
-        //  console.log("ScondName="+ secondName);
-
-        filterValue = filterValue.toLowerCase();
-        this.player = [];
-        if (filterValue.length > 3) {
-            for (let c of this.dataPlayers.player) {
-                c['fullname'] = c['firstName'] + ' ' + c['lastName'];
-                if (c['fullname'].toLowerCase().includes(filterValue)) {
-                    this.player.push(c);
-                    //this.selectPlayer = c;
-                }
-            }
-            console.log(this.player);
-            this.setDataSource(this.player);
         }
     }
 
@@ -763,59 +575,4 @@ export class HandicapsComponent implements OnInit {
 
         this.location.navigate(['/players/view/' + id]);
     };
-
-    showUserDetails(userDetails) {
-        console.log(userDetails);
-
-        // if (userDetails) {
-        //     const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
-        //         width: '600px',
-        //         data: { userDetails },
-        //     });
-        //     console.log(userDetails);
-
-        //     dialogRef.afterClosed().subscribe((result) => {
-        //         if (result) {
-        //             //console.log("record deleted.");
-        //             //this.delete(id);
-        //             //this.ngOnInit();
-        //         } else {
-        //             //console.log("cancel delete action");
-        //         }
-        //     });
-        // }
-
-        // this.facadeService.getPlayerByID(userDetails).then((response) => {
-        //   console.log(response);
-        // });
-    }
-
-    PlayerWHSDetails(userWHSDetailsDialogue) {
-        console.log(userWHSDetailsDialogue);
-
-        // if (userWHSDetailsDialogue) {
-        //     const dialogRef = this.dialog.open(
-        //         UserWHSDeatilsDialogueComponent,
-        //         {
-        //             width: '600px',
-        //             data: { userWHSDetailsDialogue },
-        //         }
-        //     );
-        //     console.log(userWHSDetailsDialogue);
-
-        //     dialogRef.afterClosed().subscribe((result) => {
-        //         if (result) {
-        //             //console.log("record deleted.");
-        //             //this.delete(id);
-        //             //this.ngOnInit();
-        //         } else {
-        //             //console.log("cancel delete action");
-        //         }
-        //     });
-        // }
-
-        // this.facadeService.getPlayerByID(userDetails).then((response) => {
-        //   console.log(response);
-        // });
-    }
 }

@@ -238,15 +238,8 @@ export class HandicapsComponent implements OnInit {
     syncHandicapWHS() {
         console.log(this.index);
 
-        for (
-            this.index;
-            this.index < this.dataPlayers.player.length;
-            this.index++
-        ) {
-            this.player.push(this.dataPlayers.player[this.index]);
-        }
-        this.index = 0;
-        this.WHSSource = new MatTableDataSource(this.player);
+      
+        this.WHSSource = new MatTableDataSource(this.dataPlayers.player);
         this.WHSSource.paginator = this.paginator;
         this.WHSSource.sort = this.sort;
         this.isLoading = false;

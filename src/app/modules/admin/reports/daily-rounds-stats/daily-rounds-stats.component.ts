@@ -1,0 +1,1399 @@
+import {
+    Component,
+    OnInit,
+    Inject,
+    ViewChild,
+    ElementRef,
+} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDrawer } from '@angular/material/sidenav';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Apollo } from 'apollo-angular';
+import { Player } from '../../../../shared/models/player.model';
+
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FacadeService } from '../../../../shared/services/facade.service';
+import { Constants, General } from '../../../../shared/classes/general';
+import { of } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { ApexOptions } from 'ng-apexcharts';
+import { ceil } from 'lodash';
+
+@Component({
+    selector: 'app-daily-rounds-stats',
+    templateUrl: './daily-rounds-stats.component.html',
+    styleUrls: ['./daily-rounds-stats.component.scss'],
+})
+export class DailyRoundsStatsComponent implements OnInit {
+
+  chartBudgetDistribution: ApexOptions = {};
+    chartGithubIssues: ApexOptions = {};
+    Leaderboard: any;
+    isLoading: boolean = false;
+    isClubAdmin: boolean = false;
+    showdata: Promise<boolean>;
+    lastActiveTab = 1;
+    noItemsInList = false;
+    loggedInuser: Player;
+    scheduleForm: FormGroup;
+    refresh: boolean = false;
+    minDate: Date;
+    maxDate: Date;
+    startingHole: string;
+    startTime: string;
+    RoundDate: string;
+    currentDate: string;
+    Players: Player[] = [];
+    file: File;
+    arrayBuffer: any;
+    customDate: any;
+    customDate2: any;
+    customValue: boolean;
+    dailyStats: any[] = [];
+    dailyStats2: any[] = [];
+    dailyStats3: any[] = [];
+    dailyStats4: any[] = [];
+    dailyStats5: any[] = [];
+    tournamentID: string;
+    filterPlayer: string = '';
+    filterCategory: string;
+    HandicapIndex: any[] = [];
+    weeklyRounds: any = [];
+    barChartDataAmateur: any[] = [];
+    barChartDataSenior: any[] = [];
+    barChartDataProfessional: any[] = [];
+    barChartDataLadies: any[] = [];
+    barChartDataVeteran: any[] = [];
+    barChartDataseniorsAmatuers: any[] = [];
+    barChartDataOthers: any[] = [];
+    barChartDataBefore1: any[] = [];
+    barChartDataAfter1: any[] = [];
+    barChartData9Holes: any[] = [];
+    barChartData18Holes: any[] = [];
+    barChartRedNine: any[] = [];
+    barChartBlueNine: any[] = [];
+    barChartYellowNine: any[] = [];
+    barChartRedfrontBlueback: any[] = [];
+    barChartBluefrontRedback: any[] = [];
+    barChartRedfrontYellowback: any[] = [];
+    barChartYellowfrontRedback: any[] = [];
+    barChartBluefrontYellowback: any[] = [];
+    barChartYellowfrontBlueback: any[] = [];
+
+    singleRound: any[] = [];
+    flightPlayers: any[] = [];
+    findex = 0;
+    showResult: boolean = false;
+    showtable: boolean = true;
+    matchPlayData: any[] = [];
+
+    amateurDates: any[] = [];
+    seniorDates: any[] = [];
+    ladiesDates: any[] = [];
+    veteransDates: any[] = [];
+    seniorsAmatuersDates: any[] = [];
+    professionalsDates: any[] = [];
+    otherDates: any[] = [];
+
+    before1Dates: any[] = [];
+    after1Dates: any[] = [];
+    holes9Dates: any[] = [];
+    holes18Dates: any[] = [];
+
+    redNineDates: any[] = [];
+    blueNineDates: any[] = [];
+    yellowNineDates: any[] = [];
+    redFrontblueBackDates: any[] = [];
+    blueFrontredBackDates: any[] = [];
+    redFrontyellowBackDates: any[] = [];
+    yellowFrontredBackDates: any[] = [];
+    blueFrontyellowBackDates: any[] = [];
+    yellowFrontblueBackDates: any[] = [];
+
+    _labels: any = [];
+    _series: any = [];
+    _HolesSetsseries: any = [];
+    _overview: any = [];
+    _seriesPlayers: any = [];
+    _overviewPlayers: any = [];
+
+    dataSource: MatTableDataSource<any>;
+    displayedColumns = [
+        'id',
+        'date',
+        'totalMembers',
+        'amateurs',
+        'professionals',
+        'ladies',
+        'veterans',
+        'seniors',
+        'seniorsAmatuers',
+        'others',
+    ];
+    //['id','name', 'dates','updatedHandicap','details'];
+    dataSource2: MatTableDataSource<any>;
+    displayedColumns2 = ['id', 'date', 'totalMembers', 'before1PM', 'after1PM'];
+
+    dataSource3: MatTableDataSource<any>;
+    displayedColumns3 = [
+        'id',
+        'date',
+        'totalMembers',
+        'nineHoles',
+        'eighteenHoles',
+    ];
+
+    dataSource4: MatTableDataSource<any>;
+    displayedColumns4 = [
+        'id',
+        'date',
+        'redNine',
+        'blueNine',
+        'yellowNine',
+        'redfrontBlueback',
+        'blueFrontRedback',
+        'redFrontYellowback',
+        'yellowFrontRedback',
+        'blueFrontYellowback',
+        'yellowFrontBlueback',
+    ];
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('fileInput') fileInputVariable: ElementRef;
+
+    constructor(
+        private datePipe: DatePipe,
+        private location: Router,
+        private fb: FormBuilder,
+        public snackBar: MatSnackBar,
+        private facadeService: FacadeService,
+        private router: Router,
+        private route: ActivatedRoute,
+        private apollo: Apollo,
+        private _formBuilder: FormBuilder
+    ) {}
+
+    public barChartOptions: any = {
+        scaleShowVerticalLines: false,
+        responsive: true,
+    };
+    public barChartLabels: string[] = []; // = ['March 23, 2019', 'March 24, 2019', 'April 05, 2019', 'April 23, 2019', 'Feb 23, 2020', 'Feb 24, 2020', 'March 13, 2020'];
+    public barChartType: string;
+    public barChartLegend: boolean;
+
+    public barChartData: any[] = [
+        {
+            data: this.barChartDataAmateur,
+            label: 'amateurs',
+            dates: this.amateurDates,
+        },
+        {
+            data: this.barChartDataSenior,
+            label: 'seniors',
+            dates: this.seniorDates,
+        },
+        {
+            data: this.barChartDataLadies,
+            label: 'ladies',
+            dates: this.ladiesDates,
+        },
+        {
+            data: this.barChartDataProfessional,
+            label: 'professionals',
+            dates: this.professionalsDates,
+        },
+        {
+            data: this.barChartDataVeteran,
+            label: 'veterans',
+            dates: this.veteransDates,
+        },
+    ];
+
+    public barChartOptions2: any = {
+        scaleShowVerticalLines: false,
+        responsive: true,
+    };
+    public barChartLabels2: string[] = []; // = ['March 23, 2019', 'March 24, 2019', 'April 05, 2019', 'April 23, 2019', 'Feb 23, 2020', 'Feb 24, 2020', 'March 13, 2020'];
+    public barChartType2: string;
+    public barChartLegend2: boolean;
+
+    public barChartData2: any[] = [
+        {
+            data: this.barChartDataBefore1,
+            label: 'before1PM',
+            dates: this.before1Dates,
+        },
+        {
+            data: this.barChartDataAfter1,
+            label: 'after1PM',
+            dates: this.after1Dates,
+        },
+    ];
+
+    public barChartOptions3: any = {
+        scaleShowVerticalLines: false,
+        responsive: true,
+    };
+
+    public barChartLabels3: string[] = []; // = ['March 23, 2019', 'March 24, 2019', 'April 05, 2019', 'April 23, 2019', 'Feb 23, 2020', 'Feb 24, 2020', 'March 13, 2020'];
+    public barChartType3: string;
+    public barChartLegend3: boolean;
+
+    public barChartData3: any[] = [
+        {
+            data: this.barChartData9Holes,
+            label: '9holes',
+            dates: this.holes9Dates,
+        },
+        {
+            data: this.barChartData18Holes,
+            label: '18holes',
+            dates: this.holes18Dates,
+        },
+    ];
+
+    public barChartOptions4: any = {
+        scaleShowVerticalLines: false,
+        responsive: true,
+    };
+    public barChartLabels4: string[] = []; // = ['March 23, 2019', 'March 24, 2019', 'April 05, 2019', 'April 23, 2019', 'Feb 23, 2020', 'Feb 24, 2020', 'March 13, 2020'];
+    public barChartType4: string;
+    public barChartLegend4: boolean;
+
+    public barChartData4: any[] = [
+        {
+            data: this.barChartRedNine,
+            label: 'redNine',
+            dates: this.redNineDates,
+        },
+        {
+            data: this.barChartBlueNine,
+            label: 'blueNine',
+            dates: this.blueNineDates,
+        },
+        {
+            data: this.barChartYellowNine,
+            label: 'yellowNine',
+            dates: this.yellowNineDates,
+        },
+        {
+            data: this.barChartRedfrontBlueback,
+            label: 'redfrontBlueback',
+            dates: this.redFrontblueBackDates,
+        },
+        {
+            data: this.barChartBluefrontRedback,
+            label: 'bluefrontRedback',
+            dates: this.blueFrontredBackDates,
+        },
+        {
+            data: this.barChartRedfrontYellowback,
+            label: 'RedfrontYellowback',
+            dates: this.redFrontyellowBackDates,
+        },
+        {
+            data: this.barChartYellowfrontRedback,
+            label: 'yellowfrontRedback',
+            dates: this.yellowFrontredBackDates,
+        },
+        {
+            data: this.barChartBluefrontYellowback,
+            label: 'bluefrontYellowback',
+            dates: this.blueFrontyellowBackDates,
+        },
+        {
+            data: this.barChartYellowfrontBlueback,
+            label: 'yellowfrontBlueback',
+            dates: this.yellowFrontblueBackDates,
+        },
+    ];
+
+    public courseholesets:any[]=[
+
+      'Red9','Blue9','Yell9','Red-Blu','Blu-Red','Red-Yel','Yel-Red','Blu-Yel','Yel-Blue'
+    ]
+
+    ngOnInit() {
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+        this.Players = [];
+
+        this.route.paramMap.subscribe((params) => {
+            this.filterCategory = params.get('category');
+        });
+
+        this.isLoading = true;
+        this.showResult = false;
+        this.showtable = false;
+
+        this.scheduleForm = this.fb.group({
+            BookingDate: ['', [Validators.required]],
+        });
+
+        console.log(this.scheduleForm);
+
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+
+        this.weeklyRounds = [];
+        of(this.weeklyRounds)
+            .pipe()
+            .subscribe(
+                async (data) => {
+                    var currentDate = new Date();
+                    currentDate.setDate(currentDate.getDate());
+
+                    var nxtDate = new Date();
+                    nxtDate.setDate(nxtDate.getDate() + 7);
+
+                    this.getDailyRounds(currentDate, this.endOfWeek());
+                },
+                (error) => (this.isLoading = false)
+            );
+    }
+
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
+
+    async getDailyRounds(fromDate: Date, toDate: Date) {
+        let dailyRoundsData: any[] = [];
+        this.singleRound.length = 0;
+        this.flightPlayers = [];
+        this.findex = 0;
+        this.dailyStats = [];
+        this.dailyStats2 = [];
+        this.dailyStats3 = [];
+        this.dailyStats4 = [];
+        this.dailyStats5 = [];
+        this.showtable = false;
+        this.showResult = false;
+        this.isLoading = true;
+
+        let dataPlayers = await this.facadeService.getDailyRoundsSingle(
+            this.loggedInuser.adminClubId,
+            this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+            this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+        );
+        console.log(dataPlayers);
+
+        if (dataPlayers.TournamentsQL) {
+            for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
+                const dailyStat2 = {
+                    date: dataPlayers.TournamentsQL[i].startDate,
+                    membersCount:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0
+                            ? dataPlayers.TournamentsQL[i].FlightsQL[0]
+                                  .MembersQL.length
+                            : 0,
+                    amateurs:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return (
+                                      a.PlayerQL.playerCategory == 'Amateurs'
+                                  );
+                              })
+                            : [],
+                    seniors:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return a.PlayerQL.playerCategory == 'Seniors';
+                              })
+                            : [],
+                    ladies:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return a.PlayerQL.playerCategory == 'Ladies';
+                              })
+                            : [],
+                    professionals:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return (
+                                      a.PlayerQL.playerCategory ==
+                                      'Professionals'
+                                  );
+                              })
+                            : [],
+                    veterans:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return (
+                                      a.PlayerQL.playerCategory == 'Veterans'
+                                  );
+                              })
+                            : [],
+                    seniorsAmatuers:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return (
+                                      a.PlayerQL.playerCategory ==
+                                      'Senior Amateurs'
+                                  );
+                              })
+                            : [],
+                    nulls:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[
+                                  i
+                              ].FlightsQL[0].MembersQL.filter((a) => {
+                                  return a.PlayerQL.playerCategory == null;
+                              })
+                            : [],
+                };
+                const  dailyStats5 = {
+                        date: dataPlayers.TournamentsQL[i].startDate,
+                        membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
+                        redNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 1 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red 9" : [],
+                        blueNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 2 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue 9" : [],
+                        yellowNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 8 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Yellow 9" : [],
+                        redfrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Blue Back 9" : [],
+                        blueFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Blue Front 9 - Red Back 9" : [],
+                        redFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Yellow Back 9" : [],
+                        yellowFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Red Back 9" : [],
+                        blueFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue Front 9 - Yellow Back 9" : [],
+                        yellowFrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Blue Back 9" : []
+                      };
+          
+                      this.dailyStats5.push(dailyStats5);
+                this.dailyStats2.push(dailyStat2);
+            }
+
+            this.dailyStats2 = this.dailyStats2.sort(this.Comparator);
+            this.dailyStats5 = this.dailyStats5.sort(this.Comparator);
+            this.isLoading = false;
+            this.showtable = true;
+        }
+
+        // if(dataPlayers.TournamentsQL){
+        //   for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
+        //     const  dailyStat3 = {
+        //       date: dataPlayers.TournamentsQL[i].startDate,
+        //       membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
+        //       before1PM : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].time < "13:00:00+00" : false,
+        //       after1PM : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].time >= "13:00:00+00"  : false
+        //     };
+
+        //     this.dailyStats3.push(dailyStat3);
+        //   }
+
+        //   this.dailyStats3 = this.dailyStats3.sort(this.Comparator);
+        //   this.isLoading = false;
+        //   this.showtable = true;
+        // }
+
+        // if(dataPlayers.TournamentsQL){
+        //   for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
+        //     const  dailyStats4 = {
+        //       date: dataPlayers.TournamentsQL[i].startDate,
+        //       membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
+        //       nineHoles : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 1 || dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 2 || dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 8  : false,
+        //       eighteenHoles : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets != 1 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets != 2 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets != 8  : false
+        //     };
+
+        //     this.dailyStats4.push(dailyStats4);
+        //   }
+
+        //   this.dailyStats4 = this.dailyStats4.sort(this.Comparator);
+        //   this.isLoading = false;
+        //   this.showtable = true;
+        // }
+
+        // if(dataPlayers.TournamentsQL){
+        //   for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
+        //     const  dailyStats5 = {
+        //       date: dataPlayers.TournamentsQL[i].startDate,
+        //       membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
+        //       redNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 1 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red 9" : [],
+        //       blueNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 2 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue 9" : [],
+        //       yellowNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 8 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Yellow 9" : [],
+        //       redfrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Blue Back 9" : [],
+        //       blueFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Blue Front 9 - Red Back 9" : [],
+        //       redFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Yellow Back 9" : [],
+        //       yellowFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Red Back 9" : [],
+        //       blueFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue Front 9 - Yellow Back 9" : [],
+        //       yellowFrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Blue Back 9" : []
+        //     };
+
+        //     this.dailyStats5.push(dailyStats5);
+        //   }
+
+        //   this.dailyStats5 = this.dailyStats5.sort(this.Comparator);
+        //   this.isLoading = false;
+        //   this.showtable = true;
+        // }
+
+        console.log(this.dailyStats2);
+        console.log(this.dailyStats3);
+        console.log(this.dailyStats4);
+        console.log(this.dailyStats5);
+        let myData: any[] = [];
+        let myData2: any[] = [];
+        let myData3: any[] = [];
+        let myData4: any[] = [];
+        let prevDate = null;
+        let memCounter = 0;
+        let amateurs = 0;
+        let seniors = 0;
+        let ladies = 0;
+        let professionals = 0;
+        let veterans = 0;
+        let seniorsAmatuers = 0;
+        let nulls = 0;
+        let before1PM = 0;
+        let after1PM = 0;
+        let nineHoles = 0;
+        let eighteenHoles = 0;
+        let redNine: number = 0;
+        let blueNine: number = 0;
+        let yellowNine: number = 0;
+        let redfrontBlueback: number = 0;
+        let blueFrontRedback: number = 0;
+        let redFrontYellowback: number = 0;
+        let yellowFrontRedback: number = 0;
+        let blueFrontYellowback: number = 0;
+        let yellowFrontBlueback: number = 0;
+        this.dataSource = null;
+        let index=0;
+        for (let stats of this.dailyStats2) {
+            if (stats.date == prevDate) {
+                memCounter = memCounter + stats.membersCount;
+                amateurs = amateurs + stats.amateurs.length;
+                seniors = seniors + stats.seniors.length;
+                ladies = ladies + stats.ladies.length;
+                professionals = professionals + stats.professionals.length;
+                veterans = veterans + stats.veterans.length;
+                seniorsAmatuers =
+                    seniorsAmatuers + stats.seniorsAmatuers.length;
+                nulls = nulls + stats.nulls.length;
+
+                myData[myData.length - 1].membersCount = memCounter;
+                myData[myData.length - 1].amateurs = amateurs;
+                myData[myData.length - 1].seniors = seniors;
+                myData[myData.length - 1].ladies = ladies;
+                myData[myData.length - 1].professionals = professionals;
+                myData[myData.length - 1].veterans = veterans;
+                myData[myData.length - 1].seniorsAmatuers = seniorsAmatuers;
+                myData[myData.length - 1].nulls = nulls;
+
+                //prevDate = stats.date;
+
+
+                   
+                redNine =  redNine + ((this.dailyStats5[index].redNine.length !== 0)?  Number(1) : 0);
+                blueNine = blueNine + ((this.dailyStats5[index].blueNine.length !== 0)?  Number(1) : 0 );
+                yellowNine = yellowNine + ((this.dailyStats5[index].yellowNine.length !== 0)?  Number(1) : 0);
+                redfrontBlueback = redfrontBlueback +       ((this.dailyStats5[index].redfrontBlueback.length !== 0)? Number(1) : 0);
+                blueFrontRedback = blueFrontRedback +         ((this.dailyStats5[index].blueFrontRedback.length !== 0)?  Number(1) : 0);
+                redFrontYellowback = redFrontYellowback +    ((this.dailyStats5[index].redFrontYellowback.length !== 0)?  Number(1) : 0);
+                yellowFrontRedback = yellowFrontRedback +    ((this.dailyStats5[index].yellowFrontRedback.length !== 0)?  Number(1) : 0);
+                blueFrontYellowback = blueFrontYellowback +  ((this.dailyStats5[index].blueFrontYellowback.length !== 0)?  Number(1) : 0);
+                yellowFrontBlueback = yellowFrontBlueback +  ((this.dailyStats5[index].yellowFrontBlueback.length !== 0)?  Number(1) : 0);
+                    myData4[myData4.length - 1].membersCount = memCounter;
+                    myData4[myData4.length - 1].redNine = redNine;
+                    myData4[myData4.length - 1].blueNine = blueNine;
+                    myData4[myData4.length - 1].yellowNine = yellowNine;
+                    myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback ;
+                    myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback ;
+                    myData4[myData4.length - 1].redFrontYellowback = redFrontYellowback ;
+                    myData4[myData4.length - 1].yellowFrontRedback = yellowFrontRedback ;
+                    myData4[myData4.length - 1].blueFrontYellowback= blueFrontYellowback;
+                    myData4[myData4.length - 1].yellowFrontBlueback= yellowFrontBlueback;
+
+                    prevDate = stats.date;
+            } else {
+                memCounter = 0;
+                amateurs = 0;
+                seniors = 0;
+                ladies = 0;
+                professionals = 0;
+                veterans = 0;
+                seniorsAmatuers = 0;
+                nulls = 0;
+                redNine = 0;
+                blueNine = 0;
+                yellowNine = 0;
+                redfrontBlueback = 0;
+                blueFrontRedback  = 0;
+                redFrontYellowback  = 0;
+                yellowFrontRedback  = 0;
+                blueFrontYellowback = 0;
+                yellowFrontBlueback = 0;
+
+                memCounter = memCounter + stats.membersCount;
+                amateurs = amateurs + stats.amateurs.length;
+                seniors = seniors + stats.seniors.length;
+                ladies = ladies + stats.ladies.length;
+                professionals = professionals + stats.professionals.length;
+                veterans = veterans + stats.veterans.length;
+                seniorsAmatuers =
+                    seniorsAmatuers + stats.seniorsAmatuers.length;
+                nulls = nulls + stats.nulls.length;
+
+                redNine =  redNine + ((this.dailyStats5[index].redNine.length !== 0)?  Number(1) : 0);
+                blueNine = blueNine + ((this.dailyStats5[index].blueNine.length !== 0)?  Number(1) : 0 );
+                yellowNine = yellowNine + ((this.dailyStats5[index].yellowNine.length !== 0)?  Number(1) : 0);
+                redfrontBlueback = redfrontBlueback + ((this.dailyStats5[index].redfrontBlueback.length !== 0)?  Number(1) : 0);
+                blueFrontRedback = blueFrontRedback + ((this.dailyStats5[index].blueFrontRedback.length !== 0)? Number(1) : 0);
+                redFrontYellowback = redFrontYellowback + ((this.dailyStats5[index].redFrontYellowback.length !== 0)? Number(1) : 0);
+                yellowFrontRedback = yellowFrontRedback + ((this.dailyStats5[index].yellowFrontRedback.length !== 0)? Number(1) : 0);
+                blueFrontYellowback = blueFrontYellowback +  ((this.dailyStats5[index].blueFrontYellowback.length !== 0)? Number(1) : 0);
+                yellowFrontBlueback = yellowFrontBlueback +  ((this.dailyStats5[index].yellowFrontBlueback.length !== 0)? Number(1) : 0);
+
+                let obj = {
+                    date: stats.date,
+                    membersCount: memCounter,
+                    amateurs: amateurs,
+                    seniors: seniors,
+                    ladies: ladies,
+                    professionals: professionals,
+                    veterans: veterans,
+                    seniorsAmatuers: seniorsAmatuers,
+                    nulls: nulls,
+                };
+                let obj4 =  {
+                  date: stats.date,
+                  redNine :  redNine,
+                  blueNine : blueNine,
+                  yellowNine : yellowNine,
+                  redfrontBlueback : redfrontBlueback,
+                  blueFrontRedback : blueFrontRedback,
+                  redFrontYellowback : redFrontYellowback,
+                  yellowFrontRedback : yellowFrontRedback,
+                  blueFrontYellowback : blueFrontYellowback,
+                  yellowFrontBlueback : yellowFrontBlueback
+                }
+
+                myData4.push(obj4);
+                myData.push(obj);
+                prevDate = stats.date;
+            }
+            index++;
+        }
+
+        console.log(myData);
+        console.log(myData4);
+
+        this.dataSource = null;
+        this.dataSource = new MatTableDataSource(myData);
+       // console.log(this.dataSource);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+                    this.dataSource4 = null;
+                    this.dataSource4 = new MatTableDataSource(myData4);
+
+                   // console.log(this.dataSource4)
+                    this.dataSource4.paginator = this.paginator;
+                    this.dataSource4.sort = this.sort;
+
+        this.barChartLabels = [];
+        this.barChartDataAmateur = [];
+        this.barChartDataSenior = [];
+        this.barChartDataProfessional = [];
+        this.barChartDataLadies = [];
+        this.barChartDataVeteran = [];
+        this.barChartDataseniorsAmatuers = [];
+        this.barChartDataOthers = [];
+        this.amateurDates = [];
+        this.seniorDates = [];
+        this.ladiesDates = [];
+        this.veteransDates = [];
+        this.professionalsDates = [];
+        this.seniorsAmatuersDates = [];
+        this.otherDates = [];
+        let dataMembers: any[] = [];
+        let dataMembers4: any[] = [];
+        let index4=0;
+        redNine = 0;
+        blueNine = 0;
+        yellowNine = 0;
+        redfrontBlueback = 0;
+        blueFrontRedback  = 0;
+        redFrontYellowback  = 0;
+        yellowFrontRedback  = 0;
+        blueFrontYellowback = 0;
+        yellowFrontBlueback = 0;
+        for (let data of myData) {  
+            dataMembers.push(data.membersCount);
+            this.barChartLabels.push(data.date);
+            this.barChartDataAmateur.push(data.amateurs);
+            this.barChartDataSenior.push(data.seniors);
+            this.barChartDataProfessional.push(data.professionals);
+            this.barChartDataLadies.push(data.ladies);
+            this.barChartDataVeteran.push(data.veterans);
+            this.barChartDataseniorsAmatuers.push(data.seniorsAmatuers);
+            this.barChartDataOthers.push(data.nulls);
+                      redNine+=myData4[index4].redNine;
+                      blueNine+=myData4[index4].blueNine;
+                      yellowNine+=myData4[index4].yellowNine;
+                      redfrontBlueback+=myData4[index4].redfrontBlueback;
+                      blueFrontRedback+=myData4[index4].blueFrontRedback;
+                      redFrontYellowback+=myData4[index4].redFrontYellowback;
+                      yellowFrontRedback+=myData4[index4].yellowFrontRedback;
+                      blueFrontYellowback+=myData4[index4].blueFrontYellowback;
+                      yellowFrontBlueback+=myData4[index4].yellowFrontBlueback;
+
+            if (data.amateurs > 0) {
+                this.amateurDates.push(data.date);
+            } else if (data.seniors > 0) {
+                this.seniorDates = data.date;
+            } else if (data.professionals > 0) {
+                this.professionalsDates.push(data.date);
+            } else if (data.veterans > 0) {
+                this.veteransDates.push(data.date);
+            } else if (data.ladies > 0) {
+                this.ladiesDates.push(data.date);
+            } else if (data.seniorsAmatuers > 0) {
+                this.seniorsAmatuersDates.push(data.date);
+            } else if (data.nulls > 0) {
+                this.otherDates.push(data.date);
+            }
+            index4++;
+        }
+
+        redNine=ceil(((redNine/dataPlayers.TournamentsQL.length)*100));
+        blueNine=ceil(((blueNine/dataPlayers.TournamentsQL.length)*100));
+        yellowNine=ceil(((yellowNine/dataPlayers.TournamentsQL.length)*100));
+        redfrontBlueback=ceil(((redfrontBlueback/dataPlayers.TournamentsQL.length)*100));
+        blueFrontRedback=ceil(((blueFrontRedback/dataPlayers.TournamentsQL.length)*100));
+        redFrontYellowback=ceil(((redFrontYellowback/dataPlayers.TournamentsQL.length)*100));
+        yellowFrontRedback=ceil(((yellowFrontRedback/dataPlayers.TournamentsQL.length)*100));
+        blueFrontYellowback=ceil(((blueFrontYellowback/dataPlayers.TournamentsQL.length)*100));
+        yellowFrontBlueback=ceil(((yellowFrontBlueback/dataPlayers.TournamentsQL.length)*100));
+        dataMembers4.push(redNine);
+        dataMembers4.push(yellowNine);
+        dataMembers4.push(blueNine);
+        dataMembers4.push(redfrontBlueback);
+        dataMembers4.push(blueFrontRedback);
+        dataMembers4.push(redFrontYellowback);
+        dataMembers4.push( yellowFrontRedback);
+        dataMembers4.push( yellowFrontBlueback);
+        dataMembers4.push( blueFrontYellowback);
+        this._HolesSetsseries=[
+          {
+            data: dataMembers4,
+            name: 'Hole-Set%',
+
+        },
+        ]
+        this._series['0'] = [
+            {
+                data: dataMembers,
+                name: 'Members',
+                type: 'line',
+            },
+            {
+                data: this.barChartDataAmateur,
+                name: 'amateurs',
+                type: 'column',
+            },
+            {
+                data: this.barChartDataSenior,
+                name: 'seniors',
+                type: 'column',
+            },
+            {
+                data: this.barChartDataLadies,
+                name: 'ladies',
+                type: 'column',
+            },
+            {
+                data: this.barChartDataProfessional,
+                name: 'professionals',
+                type: 'column',
+            },
+            {
+                data: this.barChartDataVeteran,
+                name: 'veterans',
+                type: 'column',
+            },
+            {
+                data: this.barChartDataVeteran,
+                name: 'seniors Amateurs',
+                type: 'column',
+            },
+            {
+                data: this.barChartDataOthers,
+                name: 'others',
+                type: 'column',
+            },
+        ];
+
+        console.log(this.barChartData);
+
+        this.barChartType = 'bar';
+        this.barChartLegend = true;
+
+        this.chart();
+        this.showdata = Promise.resolve(true);
+
+        // for(let stats of this.dailyStats3) {
+
+        //   if(stats.date == prevDate){
+
+        //     memCounter = memCounter + stats.membersCount;
+        //     if(stats.before1PM == true){
+        //     before1PM = before1PM + 1;
+        //     }
+        //     else{
+        //       after1PM = after1PM + 1;
+        //     }
+
+        //     myData2[myData2.length - 1].membersCount = memCounter;
+        //     myData2[myData2.length - 1].before1PM = before1PM;
+        //     myData2[myData2.length - 1].after1PM = after1PM;
+
+        //     prevDate = stats.date;
+        //   }
+        //   else {
+        //     memCounter = 0;
+        //     before1PM = 0;
+        //     after1PM = 0;
+
+        //     memCounter = memCounter + stats.membersCount;
+        //     if(stats.before1PM == true){
+        //       before1PM = before1PM + 1;
+        //       }
+        //       else{
+        //         after1PM = after1PM + 1;
+        //       }
+
+        //     let obj =  {
+        //       date: stats.date,
+        //       membersCount: memCounter,
+        //       before1PM: before1PM,
+        //       after1PM: after1PM
+        //     }
+
+        //     myData2.push(obj);
+        //     prevDate = stats.date;
+        //   }
+        // }
+
+        //     console.log(myData2);
+
+        //     this.dataSource2 = null;
+
+        //     this.dataSource2 = new MatTableDataSource(myData2);
+
+        //     console.log(this.dataSource2)
+        //     this.dataSource2.paginator = this.paginator;
+        //     this.dataSource2.sort = this.sort;
+
+        //     for(let data of myData2){
+
+        //       this.barChartLabels2.push(data.date);
+        //       this.barChartDataBefore1.push(data.before1PM);
+        //       this.barChartDataAfter1.push(data.after1PM);
+
+        //       if(data.before1PM > 0)
+        //       {
+        //         this.before1Dates.push(data.date);
+        //       }
+        //       else if(data.after1PM > 0)
+        //       {
+        //         this.after1Dates.push(data.date)
+        //       }
+
+        //   }
+
+        //   this.barChartType2 = 'bar';
+        //   this.barChartLegend2 = true;
+
+        //     for(let stats of this.dailyStats4) {
+
+        //       if(stats.date == prevDate){
+
+        //         memCounter = memCounter + stats.membersCount;
+
+        //         if(stats.nineHoles == true){
+        //           nineHoles = nineHoles + 1;
+        //           }
+        //           else{
+        //             eighteenHoles = eighteenHoles + 1;
+        //           }
+
+        //         myData3[myData3.length - 1].membersCount = memCounter;
+        //         myData3[myData3.length - 1].nineHoles = nineHoles;
+        //         myData3[myData3.length - 1].eighteenHoles = eighteenHoles;
+
+        //         prevDate = stats.date;
+        //       }
+        //       else {
+        //         memCounter = 0;
+        //         nineHoles = 0;
+        //         eighteenHoles = 0;
+
+        //         memCounter = memCounter + stats.membersCount;
+
+        //         if(stats.nineHoles == true){
+        //           nineHoles = nineHoles + 1;
+        //           }
+        //           else{
+        //             eighteenHoles = eighteenHoles + 1;
+        //           }
+
+        //         let obj =  {
+        //           date: stats.date,
+        //           membersCount: memCounter,
+        //           nineHoles: nineHoles,
+        //           eighteenHoles: eighteenHoles
+        //         }
+
+        //         myData3.push(obj);
+        //         prevDate = stats.date;
+        //       }
+        //     }
+
+        //         console.log(myData3);
+
+        //         this.dataSource3 = null;
+        //         this.dataSource3 = new MatTableDataSource(myData3);
+
+        //         console.log(this.dataSource3)
+        //         this.dataSource3.paginator = this.paginator;
+        //         this.dataSource3.sort = this.sort;
+
+        //         for(let data of myData3){
+
+        //           this.barChartLabels3.push(data.date);
+        //           this.barChartData9Holes.push(data.nineHoles);
+        //           this.barChartData18Holes.push(data.eighteenHoles);
+
+        //           if(data.nineHoles > 0)
+        //           {
+        //             this.holes9Dates.push(data.date);
+        //           }
+        //           else if(data.eighteenHoles > 0)
+        //           {
+        //             this.holes18Dates.push(data.date)
+        //           }
+
+        //       }
+
+        //       this.barChartType3 = 'bar';
+        //       this.barChartLegend3 = true;
+
+                // for(let stats of this.dailyStats5) {
+
+                //   if(stats.date == prevDate){
+
+                //     memCounter = memCounter + stats.membersCount;
+                //     redNine =  (stats.redNine.length !== 0)? Number(redNine) + Number(1) : 0;
+                //     blueNine = (stats.blueNine.length !== 0)? Number(blueNine) + Number(1) : 0 ;
+                //     yellowNine = (stats.yellowNine.length !== 0)? Number(yellowNine) + Number(1) : 0;
+                //     redfrontBlueback = (stats.redfrontBlueback.length !== 0)? Number(redfrontBlueback) + Number(1) : 0;
+                //     blueFrontRedback = (stats.blueFrontRedback.length !== 0)? Number(blueFrontRedback) + Number(1) : 0;
+                //     redFrontYellowback = (stats.redFrontYellowback.length !== 0)? Number(redFrontYellowback) + Number(1) : 0;
+                //     yellowFrontRedback = (stats.yellowFrontRedback.length !== 0)? Number(yellowFrontRedback) + Number(1) : 0;
+                //     blueFrontYellowback = (stats.blueFrontYellowback.length !== 0)? Number(blueFrontYellowback) + Number(1) : 0;
+                //     yellowFrontBlueback = (stats.yellowFrontBlueback.length !== 0)? Number(yellowFrontBlueback) + Number(1) : 0;
+
+                //     myData4[myData4.length - 1].membersCount = memCounter;
+                //     myData4[myData4.length - 1].redNine = redNine;
+                //     myData4[myData4.length - 1].blueNine = blueNine;
+                //     myData4[myData4.length - 1].yellowNine = yellowNine;
+                //     myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback ;
+                //     myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback ;
+                //     myData4[myData4.length - 1].redFrontYellowback = redFrontYellowback ;
+                //     myData4[myData4.length - 1].yellowFrontRedback = yellowFrontRedback ;
+                //     myData4[myData4.length - 1].blueFrontYellowback= blueFrontYellowback;
+                //     myData4[myData4.length - 1].yellowFrontBlueback= yellowFrontBlueback;
+
+                //     prevDate = stats.date;
+                //   }
+                //   else {
+
+                //     memCounter = 0;
+                //     redNine = 0;
+                //     blueNine = 0;
+                //     yellowNine = 0;
+                //     redfrontBlueback = 0;
+                //     blueFrontRedback  = 0;
+                //     redFrontYellowback  = 0;
+                //     yellowFrontRedback  = 0;
+                //     blueFrontYellowback = 0;
+                //     yellowFrontBlueback = 0;
+
+                //     memCounter = memCounter + stats.membersCount;
+                //     redNine =  redNine + stats.redNine;
+                //     blueNine = blueNine + stats.blueNine;
+                //     yellowNine = yellowNine + stats.yellowNine;
+                //     redfrontBlueback = redfrontBlueback + stats.redfrontBlueback;
+                //     blueFrontRedback = blueFrontRedback + stats.blueFrontRedback;
+                //     redFrontYellowback = redFrontYellowback + stats.redFrontYellowback;
+                //     yellowFrontRedback = yellowFrontRedback + stats.yellowFrontRedback;
+                //     blueFrontYellowback = blueFrontYellowback + stats.blueFrontYellowback;
+                //     yellowFrontBlueback = yellowFrontBlueback + stats.yellowFrontBlueback
+
+                //     let obj =  {
+                //       date: stats.date,
+                //       membersCount: memCounter,
+                //       redNine :  redNine,
+                //       blueNine : blueNine,
+                //       yellowNine : yellowNine,
+                //       redfrontBlueback : redfrontBlueback,
+                //       blueFrontRedback : blueFrontRedback,
+                //       redFrontYellowback : redFrontYellowback,
+                //       yellowFrontRedback : yellowFrontRedback,
+                //       blueFrontYellowback : blueFrontYellowback,
+                //       yellowFrontBlueback : yellowFrontBlueback
+                //     }
+
+                //     myData4.push(obj);
+                //     prevDate = stats.date;
+                //   }
+                // }
+
+        //             console.log(myData4);
+
+        //             this.dataSource4 = null;
+        //             this.dataSource4 = new MatTableDataSource(myData4);
+
+        //             console.log(this.dataSource4)
+        //             this.dataSource4.paginator = this.paginator;
+        //             this.dataSource4.sort = this.sort;
+
+        //             for(let data of myData4){
+
+                      // this.barChartLabels4.push(data.date);
+                      // this.barChartRedNine.push(data.redNine);
+                      // this.barChartYellowNine.push(data.yellowNine);
+                      // this.barChartBlueNine.push(data.blueNine);
+                      // this.barChartRedfrontBlueback.push(data.redfrontBlueback);
+                      // this.barChartBluefrontRedback.push(data.bluefrontRedback);
+                      // this.barChartRedfrontYellowback.push(data.RedfrontYellowback);
+                      // this.barChartYellowfrontRedback.push(data.yellowfrontRedback);
+                      // this.barChartBluefrontYellowback.push(data.blueFrontYellowback);
+                      // this.barChartYellowfrontBlueback.push(data.yellowFrontBlueback);
+
+                      // if(data.redNine > 0)
+                      // {
+                      //   this.redNineDates.push(data.date)
+                      // }
+                      // else if(data.yellowNine > 0)
+                      // {
+                      //   this.yellowNineDates = data.date
+                      // }
+                      // else if(data.blueNine > 0)
+                      // {
+                      //   this.blueNineDates.push(data.date)
+                      // }
+
+                      // else if(data.redfrontBlueback > 0)
+                      // {
+                      //   this.redFrontblueBackDates.push(data.date)
+                      // }
+
+                      // else if(data.bluefrontRedback > 0)
+                      // {
+                      //   this.blueFrontredBackDates.push(data.date)
+                      // }
+
+                      // else if(data.redfrontYellowback > 0)
+                      // {
+                      //   this.redFrontyellowBackDates.push(data.date)
+                      // }
+
+                      // else if(data.yellowfrontRedback > 0)
+                      // {
+                      //   this.yellowFrontredBackDates.push(data.date)
+                      // }
+
+                      // else if(data.bluefrontYellowback > 0)
+                      // {
+                      //   this.blueFrontyellowBackDates.push(data.date)
+                      // }
+
+                      // else if(data.yellowfrontblueback > 0)
+                      // {
+                      //   this.yellowFrontblueBackDates.push(data.date)
+                      // }
+
+        //           }
+
+        //           this.barChartType4 = 'bar';
+        //           this.barChartLegend4 = true;
+    }
+
+    Comparator(a, b) {
+        if (a['date'] < b['date']) return -1;
+        if (a['date'] > b['date']) return 1;
+        return 0;
+    }
+
+    endOfWeek() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 7));
+    }
+
+    endOfMonth() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 29));
+    }
+
+    Dailysetup(selectedValue) {
+        console.log(selectedValue);
+        if (selectedValue.value == Constants.DR_TODAY) {
+            this.customValue = false;
+            let currentDate = new Date();
+            this.getDailyRounds(currentDate, currentDate);
+        } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.endOfWeek();
+            console.log(currentDate);
+            console.log(lastDate);
+
+            this.getDailyRounds(currentDate, lastDate);
+        } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.endOfMonth();
+            console.log(currentDate);
+            console.log(lastDate);
+
+            this.getDailyRounds(currentDate, lastDate);
+        } else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.endOfMonth();
+            console.log(currentDate);
+            console.log(lastDate);
+
+            this.getDailyRounds(currentDate, lastDate);
+        } else if (selectedValue.value == Constants.DR_LAST_6_MONTH) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.endOfMonth();
+            console.log(currentDate);
+            console.log(lastDate);
+
+            this.getDailyRounds(currentDate, lastDate);
+        } else if (selectedValue.value == Constants.DR_CUSTOM) {
+            this.customValue = true;
+            // let currentDate = this.customDate.value;
+            // let lastDate = this.customDate2.value;
+            // console.log(currentDate)
+            // console.log(lastDate)
+            // this.getDailyRounds(currentDate,lastDate);
+        } else {
+        }
+    }
+
+    chart() {
+        this.chartGithubIssues = {
+            chart: {
+                fontFamily: 'inherit',
+                foreColor: 'inherit',
+                height: '100%',
+                type: 'line',
+                toolbar: {
+                    show: false,
+                },
+                zoom: {
+                    enabled: false,
+                },
+            },
+            colors: ['#A70606', '#DC5B11','#0F0F03','#061797','#DDDED8','#C109AE','#0A9928','#450707'],
+            dataLabels: {
+                enabled: true,
+                enabledOnSeries: [0],
+                background: {
+                    borderWidth: 0,
+                },
+            },
+            grid: {
+                borderColor: 'var(--fuse-border)',
+            },
+            labels: this.barChartLabels,
+            legend: {
+                show: false,
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%',
+                },
+            },
+            series: this._series,
+            states: {
+                hover: {
+                    filter: {
+                        type: 'darken',
+                        value: 0.75,
+                    },
+                },
+            },
+            stroke: {
+                width: [3, 0],
+            },
+            tooltip: {
+                followCursor: true,
+                theme: 'dark',
+            },
+            xaxis: {
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    color: 'var(--fuse-border)',
+                },
+                labels: {
+                    style: {
+                        colors: 'var(--fuse-text-secondary)',
+                    },
+                },
+                tooltip: {
+                    enabled: false,
+                },
+            },
+            yaxis: {
+                labels: {
+                    offsetX: -16,
+                    style: {
+                        colors: 'var(--fuse-text-secondary)',
+                    },
+                },
+            },
+        };
+
+         this.chartBudgetDistribution = {
+            chart: {
+                fontFamily: 'inherit',
+                foreColor: 'inherit',
+                height: '100%',
+                type: 'radar',
+                sparkline: {
+                    enabled: true,
+                },
+            },
+            colors: ['#818CF8'],
+            dataLabels: {
+                enabled: true,
+                formatter: (val: number): string | number => `${val}%`,
+                textAnchor: 'start',
+                style: {
+                    fontSize: '13px',
+                    fontWeight: 500,
+                },
+                background: {
+                    borderWidth: 0,
+                    padding: 4,
+                },
+                offsetY: -15,
+            },
+            markers: {
+                strokeColors: '#818CF8',
+                strokeWidth: 4,
+            },
+            plotOptions: {
+                radar: {
+                    polygons: {
+                        strokeColors: 'var(--fuse-border)',
+                        connectorColors: 'var(--fuse-border)',
+                    },
+                },
+            },
+            series: this._HolesSetsseries,
+            stroke: {
+                width: 2,
+            },
+            tooltip: {
+                theme: 'dark',
+                y: {
+                    formatter: (val: number): string => `${val}%`,
+                },
+            },
+            xaxis: {
+                labels: {
+                    show: true,
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: '500',
+                    },
+                },
+                categories: this.courseholesets,
+            },
+            yaxis: {
+                max: (max: number): number =>
+                    parseInt((max + 10).toFixed(0), 10),
+                tickAmount: 7,
+            },
+        };
+    }
+    onDatePick(item) {
+        console.log(item);
+        this.customDate = item;
+        if (this.customDate2) {
+            let currentDate = this.customDate.value;
+            let lastDate = this.customDate2.value;
+
+            console.log(currentDate);
+            console.log(lastDate);
+            this.getDailyRounds(currentDate, lastDate);
+        } else {
+        }
+    }
+
+    onDatePick2(item) {
+        console.log(item);
+        this.customDate2 = item;
+        if (this.customDate) {
+            let currentDate = this.customDate.value;
+            let lastDate = this.customDate2.value;
+
+            console.log(currentDate);
+            console.log(lastDate);
+            this.getDailyRounds(currentDate, lastDate);
+        } else {
+        }
+    }
+
+    public chartClicked(e: any): void {
+        // console.log(e);
+    }
+
+    public chartHovered(e: any): void {
+        // console.log(e);
+    }
+}
