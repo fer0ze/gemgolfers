@@ -59,6 +59,54 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListByClubCONGU(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersListByClubCONGU,
+                    variables: {
+                        where: {
+                            membership: {
+                                clubId: {
+                                    _eq: id,
+                                },
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getPlayersListByClubOnlyWHS(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersListByClubOnlyWHS,
+                    variables: {
+                        where: {
+                            membership: {
+                                clubId: {
+                                    _eq: id,
+                                },
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getTotalPlayers(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

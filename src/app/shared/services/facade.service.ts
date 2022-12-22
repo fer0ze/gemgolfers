@@ -84,6 +84,9 @@ export class FacadeService {
   getClubMemberAggregateByCategroy(id: string) {
     return this.clubService.getClubMemberAggregateByCategroy(id);
   }
+  getClubMemberAggregateByCategroyDashBoard(id: string) {
+    return this.clubService.getClubMemberAggregateByCategroyDashBoard(id);
+  }
 
   private _courseService: CoursesService;
 
@@ -188,6 +191,12 @@ export class FacadeService {
 
   getPlayersListByClub(id: string) {
     return this.playerService.getPlayersListByClub(id);
+  }
+  getPlayersListByClubCONGU(id: string) {
+    return this.playerService.getPlayersListByClubCONGU(id);
+  }
+  getPlayersListByClubOnlyWHS(id: string) {
+    return this.playerService.getPlayersListByClubOnlyWHS(id);
   }
   getTotalPlayers(id: string) {
     return this.playerService.getTotalPlayers(id);
@@ -725,6 +734,20 @@ export class FacadeService {
   }
   getDailyRoundsSingle(clubId: string, fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingle(
+      clubId,
+      fromDate,
+      toDate
+    );
+  }
+  getDailyRoundsStat(clubId: string, fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyRoundsStat(
+      clubId,
+      fromDate,
+      toDate
+    );
+  }
+  getDailyRoundsSingleDashboard(clubId: string, fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyRoundsSingleDashboard(
       clubId,
       fromDate,
       toDate

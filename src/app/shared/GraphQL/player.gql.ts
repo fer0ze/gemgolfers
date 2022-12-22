@@ -57,18 +57,44 @@ export const GetPlayersByClub = gql`
       phone
       email
       membershipNumber
-      handicapQL: handicap_history {
+      membershipQL: membership{
+        suspended
+      }
+    }
+  }
+`;
+export const getPlayersListByClubCONGU = gql`
+  query PostsGetQuery($where: player_bool_exp!) {
+    player(where: $where, order_by: { firstName: asc }) {
+      id
+      firstName
+      lastName
+      playerCategory
+      handicap
+      handicapWhsIndex
+      phone
+      email
+      membershipNumber
+      handicapQL: handicap_history(order_by: { updatedAt: desc } ,limit:1 ) {
         handicap
         oldHandicap
         updatedAt
       }
-      subscriptionQL: subscription {
-        playerId
-        subscription
-      }
-      membershipQL: membership{
-        suspended
-      }
+    }
+  }
+`;
+export const getPlayersListByClubOnlyWHS = gql`
+  query PostsGetQuery($where: player_bool_exp!) {
+    player(where: $where, order_by: { firstName: asc }) {
+      id
+      firstName
+      lastName
+      playerCategory
+      handicap
+      handicapWhsIndex
+      phone
+      email
+      membershipNumber
     }
   }
 `;

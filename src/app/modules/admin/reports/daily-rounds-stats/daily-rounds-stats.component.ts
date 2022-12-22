@@ -383,7 +383,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         this.showResult = false;
         this.isLoading = true;
 
-        let dataPlayers = await this.facadeService.getDailyRoundsSingle(
+        let dataPlayers = await this.facadeService.getDailyRoundsStat(
             this.loggedInuser.adminClubId,
             this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
             this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')

@@ -45,6 +45,7 @@ export class HandicapsComponent implements OnInit {
     WHSColumns = [
         'id',
         'name',
+        'email',
         'membershipNumber',
         'category',
         'handicapWhsIndex',
@@ -140,11 +141,11 @@ export class HandicapsComponent implements OnInit {
                     );
             else {
                 this.dataPlayers =
-                    await this._facadeService.getPlayersListByClub(
+                    await this._facadeService.getPlayersListByClubOnlyWHS(
                         this.loggedInuser.adminClubId
                     );
-                this.aggregate =
-                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                // this.aggregate =
+                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
                 console.log(this.aggregate);
                 this.syncHandicapWHS();
 
@@ -163,8 +164,8 @@ export class HandicapsComponent implements OnInit {
                 this.dataPlayers = await this._facadeService.getPlayersList();
                 console.log(this.dataPlayers);
 
-                this.aggregate =
-                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                // this.aggregate =
+                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
                 console.log(this.aggregate);
                 this.syncHandicapWHS();
             }

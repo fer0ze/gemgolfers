@@ -125,11 +125,11 @@ export class HandicapsComponent implements OnInit {
                     );
             else {
                 this.dataPlayers =
-                    await this._facadeService.getPlayersListByClub(
+                    await this._facadeService.getPlayersListByClubCONGU(
                         this.loggedInuser.adminClubId
                     );
-                this.aggregate =
-                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                // this.aggregate =
+                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
                 console.log(this.aggregate);
                 this.syncHandicapCongu();
             }
@@ -143,8 +143,8 @@ export class HandicapsComponent implements OnInit {
                 this.dataPlayers = await this._facadeService.getPlayersList();
                 console.log(this.dataPlayers);
 
-                this.aggregate =
-                    this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                // this.aggregate =
+                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
                 console.log(this.aggregate);
                 this.syncHandicapCongu();
             }

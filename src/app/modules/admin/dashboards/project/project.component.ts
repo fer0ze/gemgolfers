@@ -86,7 +86,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 },
             },
         };
-        this._prepareChartData();
+        //this._prepareChartData();
         let currentDate = new Date();
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
@@ -500,7 +500,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
-        let dataPlayers: any = await this._facadeService.getDailyRoundsSingle(
+        let dataPlayers: any = await this._facadeService.getDailyRoundsSingleDashboard(
             localStorage.getItem('adminClubID'),
             this._datePipe.transform(lastWeekSunday.toString(), 'yyyy-MM-dd'),
             this._datePipe.transform(lastWeekMonday.toString(), 'yyyy-MM-dd')
@@ -590,7 +590,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this._prepareChartData();
 
         let players: any =
-            await this._facadeService.getClubMemberAggregateByCategroy(
+            await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
                 localStorage.getItem('adminClubID')
             );
 

@@ -21,17 +21,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { DailyStarterReportComponent } from './daily-starter-report.component';
+
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { GolfReportComponent } from './golf-report.component';
+
 const dailystarterStatsRoutes: Route[] = [
     {
         path: '',
-        component: DailyStarterReportComponent,
+        component: GolfReportComponent,
     },
 ];
 
 @NgModule({
-    declarations: [DailyStarterReportComponent],
+    declarations: [GolfReportComponent],
     imports: [
         RouterModule.forChild(dailystarterStatsRoutes),
         MatButtonModule,
@@ -45,14 +47,14 @@ const dailystarterStatsRoutes: Route[] = [
         MatNativeDateModule,
         MatSelectModule,
         MatSnackBarModule,
-        MatPaginatorModule,
-       
         MatSidenavModule,
         MatOptionModule,
         MatSortModule,
         MatTableModule,
         MatTabsModule,
         NgApexchartsModule,
+        MatPaginatorModule,
+        MatSortModule,
         TranslocoModule,
         SharedModule,
         MatInputModule,
@@ -60,4 +62,4 @@ const dailystarterStatsRoutes: Route[] = [
     ],
     providers: [DatePipe],
 })
-export class DailyStarterReportModule {}
+export class GolfReportModule {}

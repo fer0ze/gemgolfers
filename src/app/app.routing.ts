@@ -81,6 +81,8 @@ export const appRoutes: Route[] = [
             {path: 'handicaps/WHS', loadChildren: () => import('app/modules/admin/handicap-WHS/handicap.module').then(m => m.HandicapModule)},
             {path: 'reports/dailyround', loadChildren: () => import('app/modules/admin/reports/daily-rounds-stats/daily-rounds-stats.module').then(m => m.DailyRoundsStatsModule)},
             {path: 'reports/dailycard', loadChildren: () => import('app/modules/admin/reports/daily-starter-report/daily-starter-report.module').then(m => m.DailyStarterReportModule)},
+            {path: 'reports/handicap', loadChildren: () => import('app/modules/admin/reports/updated-handicap-report/updated-handicap-report.module').then(m => m.UpdatedHandicapReportModule)},
+            {path: 'reports/players', loadChildren: () => import('app/modules/admin/reports/golf-report/golf-report.module').then(m => m.GolfReportModule)},
         ]
     }
 ];
