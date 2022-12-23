@@ -13,8 +13,8 @@ import {
   Constants,
   General,
 } from "../../../../shared/classes/general";
-// import * as jsPDF from "jspdf";
-// import "jspdf-autotable";
+import * as jsPDF from "jspdf";
+import "jspdf-autotable";
 // import { UserDetailsDilogueComponent } from "../../material-components/user-details-dilogue/user-details-dilogue.component";
 import { MatDialog } from "@angular/material/dialog";
 @Component({
@@ -188,7 +188,7 @@ export class GolfReportComponent implements OnInit {
   }
 
   public downloadAsPDF() {
-    var doc;
+    var doc =new jsPDF();
     var res = doc.autoTableHtmlToJson(document.getElementById("a"));
     var columns = [
       res.columns[0],

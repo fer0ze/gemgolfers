@@ -64,6 +64,15 @@
                                     [placeholder]="'Search player'"
                                 />
                             </mat-form-field>
+                            <div class="flex mt-4 justify-end -mb-4">
+                                <button mat-stroked-button (click)="downloadAsPDFCongu()">
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:dowload'"
+                                    ></mat-icon>
+                                    <span class="ml-2">Dowload Summary</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

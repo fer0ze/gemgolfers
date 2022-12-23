@@ -17,8 +17,8 @@ import { FacadeService } from "../../../../shared/services/facade.service";
 import { Constants } from "../../../../shared/classes/general";
 import { of } from "rxjs";
 import { DatePipe, formatDate } from "@angular/common";
-// import * as jsPDF from "jspdf";
-// import "jspdf-autotable";
+import * as jsPDF from "jspdf";
+import "jspdf-autotable";
 @Component({
   selector: "app-updated-handicap-report",
   templateUrl: "./updated-handicap-report.component.html",
@@ -547,7 +547,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
   };
 
   public downloadAsPDFCongu() {
-    var doc ;
+    var doc =new jsPDF();
     var col = [
       "Sr.",
       "M.No",
@@ -604,7 +604,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
     doc.save("CONGU-Handicap Change Log.pdf");
   }
   public downloadAsPDFWHS() {
-    var doc  ;
+    var doc =new jsPDF() ;
     var col = [
       "Sr.",
       "M.No",

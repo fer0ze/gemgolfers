@@ -14,6 +14,8 @@ import { FacadeService } from 'app/shared/services/facade.service';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import "jspdf-autotable";
+import * as jsPDF from "jspdf";
 import {
     Contact,
     Country,
@@ -38,6 +40,7 @@ export class PlayerComponent implements OnInit {
     displayNoRecords: boolean = true;
     selectedContact: Contact;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    Players:any=[];
     playersTableColumns: string[] = [
         'Sr',
         'Name',
@@ -114,6 +117,7 @@ export class PlayerComponent implements OnInit {
         );
         this.count = data.AggregateQL.aggregate.totalCount;
         console.log(data);
+        this.Players = data.player;
         this.playersDataSource = new MatTableDataSource(data.player);
         this.playersDataSource.paginator = this.paginator;
         this.playersDataSource.sort = this.sort;
@@ -152,4 +156,57 @@ export class PlayerComponent implements OnInit {
         console.log(id);
         
     }
+
+    downloadAllPlayers(): void {
+        var doc = new jsPDF();
+    
+        var col = [
+          "Sr.",
+          "Name",
+          "Phone",
+          "Email",
+          "Mem/No",
+          "Category",
+          "Handicap",
+        ];
+        var rows = [];
+        doc.setFontSize(18);
+        doc.text("Leaderboard Scores:", 15, 15);
+        doc.setFontSize(11);
+        doc.setTextColor(100);
+        var count = 0;
+        this.Players.forEach((element) => {
+          count++;
+          var temp = [
+            count,
+    
+            element.firstName + " " + element.lastName,
+            element.phone,
+            element.email,
+            element.membershipNumber,
+            element.playerCategory,
+            element.handicap,
+          ];
+          rows.push(temp);
+        });
+        // From HTML
+        doc.autoTable(col, rows, {
+          startY: 25,
+          theme: "grid",
+          columnStyles: {
+            0: { cellWidth: 12 },
+            1: { cellWidth: 35 },
+            2: { cellWidth: 30 },
+            3: { cellWidth: 45 },
+            4: { cellWidth: 20 },
+            5: { cellWidth: 30 },
+            6: { cellWidth: 20 },
+          
+            // etc
+          },
+        });
+    
+        // Open PDF document in new tab
+        doc.save("KGC-Gemgolfers-Players.pdf");
+      }
 }

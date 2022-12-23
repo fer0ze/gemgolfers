@@ -29,6 +29,8 @@ import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import "jspdf-autotable";
+import * as jsPDF from "jspdf";
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
@@ -260,88 +262,88 @@ export class HandicapsComponent implements OnInit {
             this.sorting = e.direction;
         }
     }
-    // public downloadAsPDFCongu() {
-    //     let holeObj = document.getElementById('a');
-    //     console.log(holeObj);
+    public downloadAsPDFCongu() {
+        let holeObj = document.getElementById('a');
+        console.log(holeObj);
 
-    //     var doc = new jsPDF();
-    //     var res = doc.autoTableHtmlToJson(document.getElementById('a'));
-    //     var columns = [
-    //         res.columns[0],
-    //         res.columns[1],
-    //         res.columns[2],
-    //         res.columns[3],
-    //         res.columns[4],
-    //         res.columns[5],
-    //         res.columns[6],
-    //         res.columns[7],
-    //     ];
+        var doc = new jsPDF();
+        var res = doc.autoTableHtmlToJson(document.getElementById('a'));
+        var columns = [
+            res.columns[0],
+            res.columns[1],
+            res.columns[2],
+            res.columns[3],
+            res.columns[4],
+            res.columns[5],
+            res.columns[6],
+            res.columns[7],
+        ];
 
-    //     var col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
-    //     var rows = [];
-    //     doc.setFontSize(30);
-    //     doc.text('Congu Handicap List', 15, 15);
-    //     doc.setFontSize(15);
-    //     doc.text('W.E.F:', 143, 15);
-    //     doc.text(
-    //         this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
-    //         160,
-    //         15
-    //     );
-    //     doc.setFontSize(15);
-    //     doc.setTextColor(100);
-    //     var sortarray = [...this.dataPlayers.player];
-    //     if (this.sorting == 'desc') {
-    //         sortarray.sort(this.Comparatordsc);
-    //     } else if (this.sorting == 'asc') {
-    //         sortarray.sort(this.Comparatorasc);
-    //     }
-    //     console.log(this.dataPlayers);
+        var col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
+        var rows = [];
+        doc.setFontSize(30);
+        doc.text('Congu Handicap List', 15, 15);
+        doc.setFontSize(15);
+        doc.text('W.E.F:', 143, 15);
+        doc.text(
+            this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
+            160,
+            15
+        );
+        doc.setFontSize(15);
+        doc.setTextColor(100);
+        var sortarray = [...this.dataPlayers.player];
+        // if (this.sorting == 'desc') {
+        //     sortarray.sort(this.Comparatordsc);
+        // } else if (this.sorting == 'asc') {
+        //     sortarray.sort(this.Comparatorasc);
+        // }
+        console.log(this.dataPlayers);
 
-    //     let count = 0;
-    //     sortarray.forEach((element) => {
-    //         if (
-    //             element.membershipNumber != null &&
-    //             element.membershipNumber != ''
-    //         ) {
-    //             if (
-    //                 element.handicapQL.length > 0 ||
-    //                 (element.playerCategory == 'Professionals' &&
-    //                     element.handicapQL.length == 0) ||
-    //                 element.handicapWhsIndex != null ||
-    //                 (element.handicap != null && element.handicap > 0)
-    //             ) {
-    //                 count++;
-    //                 var temp = [
-    //                     count,
-    //                     element.membershipNumber,
-    //                     element.firstName + ' ' + element.lastName,
-    //                     element.handicapQL.length > 0
-    //                         ? element.handicapQL[element.handicapQL.length - 1]
-    //                               .handicap
-    //                         : element.handicap,
-    //                     element.handicapQL.length > 0
-    //                         ? Math.round(
-    //                               element.handicapQL[
-    //                                   element.handicapQL.length - 1
-    //                               ].handicap
-    //                           )
-    //                         : Math.round(element.handicap),
-    //                 ];
-    //                 rows.push(temp);
-    //             }
-    //         }
-    //     });
-    //     // From HTML
-    //     doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
-    //     //  doc.autoTable(columns, res.data, { startY: 25, theme: "grid" });
+        let count = 0;
+        sortarray.forEach((element) => {
+            if (
+                element.membershipNumber != null &&
+                element.membershipNumber != ''
+            ) {
+                if (
+                    element.handicapQL.length > 0 ||
+                    (element.playerCategory == 'Professionals' &&
+                        element.handicapQL.length == 0) ||
+                    element.handicapWhsIndex != null ||
+                    (element.handicap != null && element.handicap > 0)
+                ) {
+                    count++;
+                    var temp = [
+                        count,
+                        element.membershipNumber,
+                        element.firstName + ' ' + element.lastName,
+                        element.handicapQL.length > 0
+                            ? element.handicapQL[element.handicapQL.length - 1]
+                                  .handicap
+                            : element.handicap,
+                        element.handicapQL.length > 0
+                            ? Math.round(
+                                  element.handicapQL[
+                                      element.handicapQL.length - 1
+                                  ].handicap
+                              )
+                            : Math.round(element.handicap),
+                    ];
+                    rows.push(temp);
+                }
+            }
+        });
+        // From HTML
+        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        //  doc.autoTable(columns, res.data, { startY: 25, theme: "grid" });
 
-    //     // Open PDF document in new tab
-    //     doc.output('dataurlnewwindow');
+        // Open PDF document in new tab
+        doc.output('dataurlnewwindow');
 
-    //     // Download PDF document
-    //     //doc.save('flights.pdf');
-    // }
+        // Download PDF document
+        //doc.save('flights.pdf');
+    }
 
     redirectToHandicapDetails = (id: string) => {
         this.location.navigate(['./', id], {

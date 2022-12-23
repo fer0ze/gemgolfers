@@ -78,6 +78,15 @@
                             <span class="ml-2 mr-1">Add</span>
                         </button>
                     </div>
+                    <div class="flex mt-4 justify-end -mb-4">
+                        <button mat-stroked-button (click)="downloadAllPlayers()">
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:dowload'"
+                            ></mat-icon>
+                            <span class="ml-2">Dowload Summary</span>
+                        </button>
+                    </div>
                 </div>
                 <div
                     class="xl:col-span-2 flex flex-col flex-auto bg-card shadow overflow-hidden relative"

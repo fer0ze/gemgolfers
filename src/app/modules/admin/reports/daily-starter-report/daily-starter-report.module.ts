@@ -46,7 +46,7 @@ const dailystarterStatsRoutes: Route[] = [
         MatSelectModule,
         MatSnackBarModule,
         MatPaginatorModule,
-       
+   
         MatSidenavModule,
         MatOptionModule,
         MatSortModule,

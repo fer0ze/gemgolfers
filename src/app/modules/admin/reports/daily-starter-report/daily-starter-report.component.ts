@@ -14,12 +14,13 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // import * as jsPDF from "jspdf";
 import { Player } from "../../../../shared/models/player.model";
-
+import "jspdf-autotable";
+import * as jsPDF from "jspdf";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { FacadeService } from "../../../../shared/services/facade.service";
 import { Constants } from "../../../../shared/classes/general";
 import { of } from "rxjs";
-import { DatePipe } from "@angular/common";
+import { DatePipe, JsonPipe } from "@angular/common";
 // import { DialogPlayerListComponent } from "../../material-components/dialog-player-list/dialog-player-list.component";
 
 @Component({
@@ -385,7 +386,7 @@ export class DailyStarterReportComponent implements OnInit {
     // }
   }
   public downloadAsPDF() {
-    var doc ;
+    var doc =new jsPDF();
     var res = doc.autoTableHtmlToJson(document.getElementById("pdfTable"));
     var columns = [
       res.columns[0],
@@ -429,7 +430,10 @@ export class DailyStarterReportComponent implements OnInit {
     let date = new Date();
     return new Date(date.setDate(date.getDate() - 29));
   }
-
+  yesterday() {
+    let date = new Date();
+    return new Date(date.setDate(date.getDate() - 1));
+  }
   Dailysetup(selectedValue) {
     console.log(selectedValue);
     if (selectedValue.value == Constants.DR_TODAY) {
@@ -452,7 +456,14 @@ export class DailyStarterReportComponent implements OnInit {
       console.log(lastDate);
 
       this.getDailyRounds(currentDate, lastDate);
-    } else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
+    }else if(selectedValue.value == Constants.DR_YESTERDAY){
+      this.customValue = false;
+     
+      let yesterdayDate = this.yesterday();
+      this.getDailyRounds(yesterdayDate, yesterdayDate);
+    } 
+    
+    else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
       this.customValue = false;
       let currentDate = new Date();
       let lastDate = this.endOfMonth();

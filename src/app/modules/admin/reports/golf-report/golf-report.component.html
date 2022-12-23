@@ -22,7 +22,7 @@
                             
                         >
                             <mat-select
-                                placeholder="Last_Week"
+                                placeholder="Yesterday"
                                 appearance="fill"
                                 (selectionChange)="Dailysetup($event)"
                             >
@@ -121,11 +121,11 @@
         class="sm:col-span-6 flex flex-col flex-auto p-6 m-8 bg-card shadow rounded-2xl overflow-hidden"
     >
         <div class="text-lg font-medium tracking-tight leading-6 truncate">
-            <div class="flex items-center justify-end ml-auto mb-1">
-                <button mat-stroked-button>
+            <div class="flex  justify-end ml-auto mb-1">
+                <button mat-stroked-button   (click)="downloadAsPDF()">
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:pencil-alt'"
+                        [svgIcon]="'heroicons_solid:dowload'"
                     ></mat-icon>
                     <span class="ml-2">Dowload Summary</span>
                 </button>

@@ -12,7 +12,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import "jspdf-autotable";
+import * as jsPDF from "jspdf";
 import {
     Player,
     ClubMembership,
@@ -378,51 +379,51 @@ export class HandicapsComponent implements OnInit {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     };
-    // public downloadAsPDFWHS() {
-    //     var doc = new jsPDF();
-    //     var col = ['Sr.', 'M.No', 'Name', 'Category', 'HandicapIndex'];
-    //     var rows = [];
-    //     doc.setFontSize(30);
-    //     doc.text('WHS Handicap List', 15, 15);
-    //     doc.setFontSize(15);
-    //     doc.text('W.E.F:', 143, 15);
-    //     doc.text(
-    //         this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
-    //         160,
-    //         15
-    //     );
-    //     doc.setFontSize(15);
-    //     doc.setTextColor(100);
+    public downloadAsPDFWHS() {
+        var doc = new jsPDF();
+        var col = ['Sr.', 'M.No', 'Name', 'Category', 'HandicapIndex'];
+        var rows = [];
+        doc.setFontSize(30);
+        doc.text('WHS Handicap List', 15, 15);
+        doc.setFontSize(15);
+        doc.text('W.E.F:', 143, 15);
+        doc.text(
+            this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
+            160,
+            15
+        );
+        doc.setFontSize(15);
+        doc.setTextColor(100);
 
-    //     let count = 0;
-    //     this.dataPlayers.player.forEach((element) => {
-    //         if (
-    //             element.membershipNumber != null &&
-    //             element.membershipNumber != '' &&
-    //             (element.handicapWhsIndex != null || element.handicap > 0)
-    //         ) {
-    //             count++;
-    //             var temp = [
-    //                 count,
-    //                 element.membershipNumber,
-    //                 element.firstName + ' ' + element.lastName,
-    //                 element.playerCategory,
-    //                 element.handicapWhsIndex != null
-    //                     ? element.handicapWhsIndex
-    //                     : element.handicap,
-    //             ];
-    //             rows.push(temp);
-    //         }
-    //     });
-    //     // From HTML
-    //     doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        let count = 0;
+        this.dataPlayers.player.forEach((element) => {
+            if (
+                element.membershipNumber != null &&
+                element.membershipNumber != '' &&
+                (element.handicapWhsIndex != null || element.handicap > 0)
+            ) {
+                count++;
+                var temp = [
+                    count,
+                    element.membershipNumber,
+                    element.firstName + ' ' + element.lastName,
+                    element.playerCategory,
+                    element.handicapWhsIndex != null
+                        ? element.handicapWhsIndex
+                        : element.handicap,
+                ];
+                rows.push(temp);
+            }
+        });
+        // From HTML
+        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
 
-    //     // Open PDF document in new tab
-    //     doc.output('dataurlnewwindow');
+        // Open PDF document in new tab
+        doc.output('dataurlnewwindow');
 
-    //     // Download PDF document
-    //     //doc.save('flights.pdf');
-    // }
+        // Download PDF document
+        //doc.save('flights.pdf');
+    }
 
     getPlayerInformationByName(filterValue: string) {
         console.log(filterValue);
