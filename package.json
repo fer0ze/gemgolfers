@@ -37,6 +37,7 @@
     "apexcharts": "3.35.5",
     "apollo-angular": "^4.1.0",
     "crypto-js": "3.3.0",
+    "firebase": "^9.15.0",
     "graphql": "^16.6.0",
     "highlight.js": "11.6.0",
     "jspdf": "^1.5.3",
