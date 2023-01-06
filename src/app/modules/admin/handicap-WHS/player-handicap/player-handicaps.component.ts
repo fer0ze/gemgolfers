@@ -141,13 +141,8 @@ export class PlayerHandicapComponent implements OnInit {
                 courseId: courseID,
                 courseHoleSets: 3,
             };
-            let playerscore: any;
-            this._facadeService
+            let playerscore=<Player> await this._facadeService
                 .getPlayerByID(this.playerID)
-                .subscribe((repsonse) => {
-                    console.log(repsonse);
-                    playerscore = repsonse['data'].player;
-                });
             console.log(playerscore);
 
             this.playerWHS = await this._facadeService.getPlayerWHS(

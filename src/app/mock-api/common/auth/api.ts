@@ -56,8 +56,16 @@ export class AuthMockApi {
             .reply(({ request }) => {
                 // Sign in successful
                 if (
-                    request.body.email === 'hughes.brian@company.com' &&
-                    request.body.password === 'admin'
+                    (request.body.email === 'kgcadmin@gemgolfers.com' &&
+                        request.body.password === 'GGkgc@dmin') ||
+                    (request.body.email === 'admin@defenceraya.com' &&
+                        request.body.password === 'dR@ya123') ||
+                    (request.body.email === 'tournament@e2esp.com' &&
+                        request.body.password === 'tester@gg') ||
+                    (request.body.email === 'admin@e2esp.com' &&
+                        request.body.password === 'tester@gg') ||
+                    (request.body.email === 'admin@lahoregymkhana.pk' &&
+                        request.body.password === 'Lgk@gemgolfers')
                 ) {
                     this.loggedInuser = JSON.parse(
                         localStorage.getItem(Constants.LOGGED_IN_USER)

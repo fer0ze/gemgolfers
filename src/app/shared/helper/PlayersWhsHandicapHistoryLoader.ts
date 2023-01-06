@@ -1,8 +1,8 @@
-import { PlayerHandicapWhs } from 'src/app/shared/classes/player-hanidcap-whs';
-import { CourseRating } from 'src/app/shared/classes/course-rating';
+import { PlayerHandicapWhs } from 'app/shared/classes/player-hanidcap-whs';
+import { CourseRating } from 'app/shared/classes/course-rating';
 
-import { FacadeService } from '../services/facade.service';
-import { Course } from '../classes/course';
+import { FacadeService } from 'app/shared/services/facade.service';
+import { Course } from 'app/shared/classes/course';
 
 export class PlayersWhsHandicapHistoryLoader {
 

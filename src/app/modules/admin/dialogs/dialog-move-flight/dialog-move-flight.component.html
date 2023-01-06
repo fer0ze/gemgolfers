@@ -1,0 +1,14 @@
+<div mat-dialog-content style="padding: 10px;">
+  <div><h3 color="primary">Move {{data.name}}</h3></div>
+  <div>Move to flight: <mat-form-field *ngIf="data.flights > 0">
+    <mat-select (selectionChange)="changeFlight($event)" [(value)]="selectedFlight">
+      <mat-option *ngFor="let flight of totalFlights" [value]="flight.Value">
+        {{flight.Text}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field></div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="selectedFlight" cdkFocusInitial>Move</button>
+</div>

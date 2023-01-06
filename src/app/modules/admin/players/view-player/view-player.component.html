@@ -1,0 +1,931 @@
+<div *ngIf="showdata | async" class="flex flex-col flex-auto min-w-0">
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div
+            class="w-full max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
+        >
+            <div
+                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div
+                    class="flex flex-col sm:flex-row items-start justify-around"
+                >
+                    <div
+                        class="text-lg font-medium tracking-tight leading-6 truncate"
+                    >
+                        Player Profile
+                    </div>
+                    <div
+                        class="text-lg font-medium tracking-tight leading-6 truncate"
+                    >
+                        Rounds Overview
+                    </div>
+                </div>
+                <div
+                    class="grid grid-cols-1 min-h-40 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 min-h-100 sm:mt-4"
+                >
+                    <!-- New vs. Closed -->
+                    <div class="flex flex-col flex-auto">
+                        <div class="font-medium text-secondary"></div>
+                        <div class="flex-auto grid grid-cols-1 gap-4 mt-6">
+                            <div
+                                class="col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-amber-50 gap-4 dark:bg-white dark:bg-opacity-5 dark:text-amber-400"
+                                *ngFor="let item of currentPlayer"
+                            >
+                                <div
+                                    class="text-4xl text-dark-800 sm:text-7xl font-semibold leading-none tracking-tight"
+                                >
+                                    <div *ngFor="let item of currentPlayer">
+                                        <div>
+                                            {{
+                                                item.firstName +
+                                                    " " +
+                                                    item.lastName
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    Category: {{ item.playerCategory }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    Club: {{ clubTitle }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    <i
+                                        _ngcontent-fmu-c143=""
+                                        class="material-icons"
+                                        >phone</i
+                                    >
+                                    {{ item.phone }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    Handicap: {{ item.handicap }}
+                                </div>
+
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    Country: {{ item.countryCode }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    MembrNo: {{ item.membershipNumber }}
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-4">
+                                        <!-- <h5 >564</h5> -->
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            [routerLinkActive]="'active'"
+                                            [routerLink]="[
+                                                '/players/update/' + playerID
+                                            ]"
+                                        >
+                                            <mat-icon class="nav-icon"
+                                                >edit</mat-icon
+                                            >Edit
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <!-- <h5 >18k</h5> -->
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            (click)="deletePlayer(item.id)"
+                                        >
+                                            <mat-icon class="nav-icon"
+                                                >delete</mat-icon
+                                            >Delete
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <!-- <h5 >565</h5> -->
+                                        <button
+                                            mat-raised-button
+                                            color="accent"
+                                            (click)="onCancel()"
+                                        >
+                                            <mat-icon class="nav-icon"
+                                                >arrow_back_ios</mat-icon
+                                            >Back
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Overview -->
+                    <div class="flex flex-col">
+                        <div class="flex-auto grid grid-cols-4 gap-4 mt-6">
+                            <!-- New issues -->
+                            <div
+                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400"
+                            >
+                                <div
+                                    class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
+                                >
+                                    {{
+                                        currentPlayer[0].handicap
+                                            | number : "1.0-0"
+                                    }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    Handicap Congu
+                                </div>
+                            </div>
+                            <!-- Closed -->
+                            <div
+                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500"
+                            >
+                                <div
+                                    class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
+                                >
+                                    {{
+                                        currentPlayer[0].handicapWhsIndex
+                                            | number : "1.1-1"
+                                    }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm sm:text-lg font-medium"
+                                >
+                                    Handicap WHS
+                                </div>
+                            </div>
+                            <!-- Fixed -->
+                            <div
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                            >
+                                <div
+                                    class="text-5xl font-semibold leading-none tracking-tight"
+                                >
+                                    {{ totalRounds }}
+                                </div>
+                                <div
+                                    class="mt-1 text-sm font-medium text-center"
+                                >
+                                    Total Rounds
+                                </div>
+                            </div>
+                            <!-- Won't fix -->
+                            <div
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                            >
+                                <div
+                                    class="text-5xl font-semibold leading-none tracking-tight"
+                                >
+                                    {{
+                                        shotsBirdiesPercent | number : "1.2-2"
+                                    }}%
+                                </div>
+                                <div
+                                    class="mt-1 text-sm font-medium text-center"
+                                >
+                                    Birdies
+                                </div>
+                            </div>
+                            <!-- Re-opened -->
+                            <div
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                            >
+                                <div
+                                    class="text-5xl font-semibold leading-none tracking-tight"
+                                >
+                                    {{ shotsParsPercent | number : "1.2-2" }}%
+                                </div>
+                                <div
+                                    class="mt-1 text-sm font-medium text-center"
+                                >
+                                    Pars
+                                </div>
+                            </div>
+                            <!-- Needs triage -->
+                            <div
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                            >
+                                <div
+                                    class="text-5xl font-semibold leading-none tracking-tight"
+                                >
+                                    {{ shotsBogeysPercent | number : "1.2-2" }}%
+                                </div>
+                                <div
+                                    class="mt-1 text-sm font-medium text-center"
+                                >
+                                    Bogeys
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Task distribution -->
+            <div
+                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div
+                    class="sm:col-span-2 lg:col-span-3 dark flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+                >
+                    <div
+                        class="flex items-center justify-between mt-10 ml-10 mr-6 sm:mr-10"
+                    >
+                        <div class="flex flex-col">
+                            <div
+                                class="mr-4 text-2xl md:text-3xl font-semibold tracking-tight leading-7"
+                            >
+                                Score Dashboard
+                            </div>
+                            <div class="font-medium text-secondary">
+                                Number of Rounds Scores
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-auto h-80">
+                        <apx-chart
+                            class="flex-auto w-full h-full"
+                            [chart]="chartVisitors.chart"
+                            [colors]="chartVisitors.colors"
+                            [series]="chartVisitors.series"
+                            [stroke]="chartVisitors.stroke"
+                            [tooltip]="chartVisitors.tooltip"
+                            [xaxis]="chartVisitors.xaxis"
+                            [yaxis]="chartVisitors.yaxis"
+                        ></apx-chart>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div
+                    class="flex flex-col sm:flex-row items-start justify-between"
+                >
+                    <div
+                        class="text-lg font-medium tracking-tight leading-6 truncate"
+                    >
+                        Handicap History
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto mt-6">
+                    <mat-tab-group
+                        color="accent"
+                        [selectedIndex]="0"
+                        mat-align-tabs="center"
+                    >
+                        <mat-tab label="CONGU">
+                            <table>
+                                <tbody>
+                                    <tr style="font-size: 20px">
+                                        <th>Playing H/C :</th>
+                                        <td style="padding: 20px">
+                                            {{
+                                                currentPlayer[0].handicap
+                                                    | number : "1.0-0"
+                                            }}
+                                        </td>
+                                        <th>, Actual H/C :</th>
+                                        <td>
+                                            {{
+                                                currentPlayer[0].handicap
+                                                    | number : "1.1-1"
+                                            }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div>&nbsp;</div>
+                            <div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        justify-content: space-between;
+                                    "
+                                >
+                                    <h3 class="primary-foreground">History</h3>
+                                    <mat-icon
+                                        aria-hidden="false"
+                                        aria-label="Dragable"
+                                        class="remove"
+                                        (click)="downloadAsPDFCongu()"
+                                        >picture_as_pdf</mat-icon
+                                    >
+                                </div>
+                                <!-- <mat-form-field appearance="outline">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                  </mat-form-field> -->
+                                <table
+                                    mat-table
+                                    [dataSource]="dataSource"
+                                    matSort
+                                >
+                                    <!-- Serial Column -->
+                                    <ng-container matColumnDef="id">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Sr.
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                        >
+                                            {{ i + 1 }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container
+                                        matColumnDef="tournamentTitle"
+                                    >
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Tournament
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.tournamentQL.title }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Extra Data Column -->
+                                    <ng-container matColumnDef="updatedAt">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Date
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.tournamentQL.startDate.substring(
+                                                    0,
+                                                    10
+                                                )
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="score">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Score
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.score }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="oldhandicap">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Before
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.oldHandicap }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="handicap">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            After
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.handicap }}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr
+                                        mat-header-row
+                                        *matHeaderRowDef="displayedColumns"
+                                    ></tr>
+                                    <tr
+                                        mat-row
+                                        *matRowDef="
+                                            let row;
+                                            columns: displayedColumns
+                                        "
+                                    ></tr>
+                                </table>
+                                <mat-paginator
+                                    [pageSize]="20"
+                                    [pageSizeOptions]="[10, 20, 50, 100]"
+                                ></mat-paginator>
+                                <mat-card
+                                    *ngIf="isLoading"
+                                    style="
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                    "
+                                >
+                                    <mat-progress-spinner
+                                        color="primary"
+                                        mode="indeterminate"
+                                    >
+                                    </mat-progress-spinner>
+                                </mat-card>
+
+                                <!-- <table id="pdfTable" class="table" #pdfTable>
+    <thead>
+      <tr>
+        
+        <th>Date</th>
+        <th>Score</th>
+        <th>Before</th>
+        <th>After</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of  playerHandiData">
+       
+        <td> {{item.updatedAt}} </td>
+        <td> {{item.score}} </td>
+        <td> {{item.oldHandicap}} </td>
+        <td> {{item.handicap}} </td>
+      </tr>
+    </tbody>
+  </table> -->
+
+                                <!-- <mat-paginator
+                      [pageSize]="20"
+                      [pageSizeOptions]="[10, 20, 50, 100]"
+                    ></mat-paginator> -->
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="WHS">
+                            <table>
+                                <tbody>
+                                    <tr style="font-size: 20px">
+                                        <th>Handicap Index</th>
+                                        <td style="padding: 20px">
+                                            {{
+                                                currentPlayer[0]
+                                                    .handicapWhsIndex
+                                                    | number : "1.1-1"
+                                            }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div
+                                                    class="class_name_round"
+                                                    style="
+                                                        background: #e8f901;
+                                                        color: black;
+                                                    "
+                                                >
+                                                    {{ this.whiteTeeHI }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="class_name_round"
+                                                    style="background: #113b9c"
+                                                >
+                                                    {{ this.blackTeeHI }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="class_name_round"
+                                                    style="
+                                                        background: #ffffff;
+                                                        border: 1px solid;
+                                                        color: black;
+                                                    "
+                                                >
+                                                    {{ this.blueTeeHI }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="class_name_round"
+                                                    style="background: #b00001"
+                                                >
+                                                    {{ this.redTeeHI }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        justify-content: space-between;
+                                    "
+                                >
+                                    <h3 class="primary-foreground">History</h3>
+                                    <mat-icon
+                                        aria-hidden="false"
+                                        aria-label="Dragable"
+                                        class="remove"
+                                        (click)="downloadAsPDFWHS()"
+                                        >picture_as_pdf</mat-icon
+                                    >
+                                </div>
+                                <!-- <mat-form-field appearance="outline">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+              </mat-form-field> -->
+                                <table
+                                    mat-table
+                                    [dataSource]="WHSSource"
+                                    matSort
+                                >
+                                    <!-- Serial Column -->
+                                    <ng-container matColumnDef="id">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Sr.
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            {{ i + 1 }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="tournament">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Tournament
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            {{ row.tournamentQL.title }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Extra Data Column -->
+                                    <ng-container matColumnDef="playedAt">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Date
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            {{ row.playedAt.substring(0, 10) }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="round">
+                        <th mat-header-cell *matHeaderCellDef >
+                          Round
+                        </th>
+                        <td
+                          mat-cell
+                          *matCellDef="let row; let i = index"
+                         
+                        >
+                          {{ row.round }}
+                        </td>
+                      </ng-container> -->
+
+                                    <ng-container matColumnDef="score">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Score
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            {{ row.score }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="adjustedScore">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            adj/Sc
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            {{ row.adjustedScore }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container
+                                        matColumnDef="handicapDifferential"
+                                    >
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            h/Diff
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            style="padding-left: 11px"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            <div
+                                                [ngClass]="{
+                                                    class_name: isHandicapUsed(
+                                                        row.Handicap_id
+                                                    )
+                                                }"
+                                            >
+                                                {{
+                                                    row.handicapDifferential
+                                                        | number : "1.1-1"
+                                                }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="handicapIndex">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            h/Index
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            [ngClass]="{
+                                                noBorderBotton: row.noBorder,
+                                                'primary-text': row.highlight
+                                            }"
+                                        >
+                                            {{
+                                                row.handicapIndex
+                                                    | number : "1.1-1"
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr
+                                        mat-header-row
+                                        *matHeaderRowDef="WHSColumns"
+                                    ></tr>
+                                    <tr
+                                        mat-row
+                                        *matRowDef="
+                                            let row;
+                                            columns: WHSColumns
+                                        "
+                                    ></tr>
+                                </table>
+                                <mat-paginator
+                                   #paginatorLegal="matPaginator"
+                                    [pageSize]="20"
+                                    [length]="this.personLeads.length"
+                                    aria-label="Select page"
+                                    [pageSizeOptions]="[ 20,40,80, 100]"
+                                ></mat-paginator>
+                                <mat-card
+                                    *ngIf="isLoading"
+                                    style="
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                    "
+                                >
+                                    <mat-progress-spinner
+                                        color="primary"
+                                        mode="indeterminate"
+                                    >
+                                    </mat-progress-spinner>
+                                </mat-card>
+
+                                
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+            <!-- Schedule -->
+            <div
+                class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div
+                    class="flex flex-col sm:flex-row items-start justify-between"
+                >
+                    <div
+                        class="text-lg font-medium tracking-tight leading-6 truncate"
+                    >
+                        Score History
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto mt-6">
+                    <ng-container>
+                        <mat-tab-group color="accent" mat-align-tabs="center">
+                            <mat-tab label="GROSS">
+                                <!-- <mat-form-field appearance="outline">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                </mat-form-field> -->
+                                <table
+                                    mat-table
+                                    [dataSource]="CONGUgrossSource"
+                                    matSort
+                                >
+                                    <!-- Serial Column -->
+
+                                    <ng-container matColumnDef="id">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Sr.
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                        >
+                                            {{ i + 1 }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Extra Data Column -->
+                                    <ng-container matColumnDef="updatedAt">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Date
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.date }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="score">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Score
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.gross }}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr
+                                        mat-header-row
+                                        *matHeaderRowDef="CONGUgrossColumns"
+                                    ></tr>
+                                    <tr
+                                        mat-row
+                                        *matRowDef="
+                                            let row;
+                                            columns: CONGUgrossColumns
+                                        "
+                                    ></tr>
+                                </table>
+                                <mat-paginator
+                                [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"
+                            ></mat-paginator>
+                            </mat-tab>
+
+                            <mat-tab label="NET">
+                                <!-- <mat-form-field appearance="outline">
+                                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                                </mat-form-field> -->
+                                <table
+                                    mat-table
+                                    [dataSource]="CONGUnetSource"
+                                    matSort
+                                >
+                                    <div>
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="id">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Sr.
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Extra Data Column -->
+                                        <ng-container matColumnDef="updatedAt">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Date
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.date }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="score">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.net }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="CONGUnetColumns"
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: CONGUnetColumns
+                                            "
+                                        ></tr>
+                                    </div>
+                                </table>
+                                <mat-paginator
+                                [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"
+                            ></mat-paginator>
+
+                                <!-- <mat-card
+                                        *ngIf="isLoading"
+                                        style="
+                                          display: flex;
+                                          justify-content: center;
+                                          align-items: center;
+                                        "
+                                      >
+                                        <mat-progress-spinner
+                                          color="primary"
+                                          mode="indeterminate"
+                                        >
+                                        </mat-progress-spinner>
+                                      </mat-card>
+               -->
+                                <!-- <table id="pdfTable" class="table" #pdfTable>
+                                <thead>
+                                <tr>
+                
+                                <th>Date</th>
+                                <th>adjustedScore</th>
+                                <th>handicapDifferential</th>
+                
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let item of playerWHSHistory">
+                
+                
+                                <td> {{item.playedAt}} </td>
+                                <td> {{item.adjustedScore}} </td>
+                                <td> {{item.handicapDifferential}} </td>
+                                </tr>
+                                </tbody>
+                                </table> -->
+
+                                <!-- <mat-paginator
+                                        [pageSize]="20"
+                                        [pageSizeOptions]="[10, 20, 50, 100]"
+                                      ></mat-paginator> -->
+                            </mat-tab>
+                        </mat-tab-group>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

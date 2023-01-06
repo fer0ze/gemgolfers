@@ -336,7 +336,8 @@ export class AddDailyRoundComponent implements OnInit {
 
   async searchPlayer(query) {
     let player;
-
+ console.log(this.starterForm.value);
+ 
     if (query) {
       player = <Player[]>(
         await this.facadeService.getPlayerByMembershipNumber(query)

@@ -46,9 +46,13 @@ export const GetSchedule = gql`
   query getSchedule($where: club_schedule_bool_exp!) {
     club_schedule(where: $where, order_by: { date: desc }) {
       id
-
       tournamentTitle
       date
+      matchFormat
+      description
+      course{
+        name
+      }
     }
   }
 `;

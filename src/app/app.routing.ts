@@ -75,7 +75,7 @@ export const appRoutes: Route[] = [
         },
         children   : [
             {path: 'dashboard', loadChildren: () => import('app/modules/admin/dashboards/project/project.module').then(m => m.ProjectModule)},
-            {path: 'players/view', loadChildren: () => import('app/modules/admin/players/players.module').then(m => m.PlayersModule)},
+            {path: 'players', loadChildren: () => import('app/modules/admin/players/players.module').then(m => m.PlayersModule)},
             {path: 'dailyRounds', loadChildren: () => import('app/modules/admin/daily-rounds/daily-rounds.module').then(m => m.DailyRoundsModule)},
             {path: 'handicaps/CONGU', loadChildren: () => import('app/modules/admin/handicap-CONGU/handicap.module').then(m => m.HandicapModule)},
             {path: 'handicaps/WHS', loadChildren: () => import('app/modules/admin/handicap-WHS/handicap.module').then(m => m.HandicapModule)},
@@ -83,6 +83,11 @@ export const appRoutes: Route[] = [
             {path: 'reports/dailycard', loadChildren: () => import('app/modules/admin/reports/daily-starter-report/daily-starter-report.module').then(m => m.DailyStarterReportModule)},
             {path: 'reports/handicap', loadChildren: () => import('app/modules/admin/reports/updated-handicap-report/updated-handicap-report.module').then(m => m.UpdatedHandicapReportModule)},
             {path: 'reports/players', loadChildren: () => import('app/modules/admin/reports/golf-report/golf-report.module').then(m => m.GolfReportModule)},
+            {path: 'feedback', loadChildren: () => import('app/modules/admin/feedback/feedback.module').then(m => m.FeedbackModule)},
+            {path: 'teetimes', loadChildren: () => import('app/modules/admin/tee-times/tee-times.module').then(m => m.TeeTimesModule)},
+            {path: 'tournaments', loadChildren: () => import('app/modules/admin/tournaments/tournaments.module').then(m => m.TournamentsModule)},
+            {path: 'tournaments/schedule', loadChildren: () => import('app/modules/admin/tournaments/schedule/schedule.module').then(m => m.ScheduleModule)},
+            {path: 'courses', loadChildren: () => import('app/modules/admin/course/course.module').then(m => m.CourseModule)},
         ]
     }
 ];

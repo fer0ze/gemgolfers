@@ -70,7 +70,7 @@ export class SearchMockApi
 
                 // Prepare the results array
                 const results = [];
-
+                
                 // If there are contacts results...
                 if ( contactsResults.length > 0 )
                 {

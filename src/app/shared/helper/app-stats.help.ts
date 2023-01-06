@@ -1,8 +1,8 @@
 import { Score } from '../classes/score';
-import { FlightScores } from 'src/app/shared/classes/FlightScores';
-import { Flight } from 'src/app/shared/models/flight.model';
-import { Course } from 'src/app/shared/models/course.model';
-import { ScoreStats } from 'src/app/shared/classes/ScoreStats';
+import { FlightScores } from 'app/shared/classes/FlightScores';
+import { Flight } from 'app/shared/models/flight.model';
+import { Course } from 'app/shared/models/course.model';
+import { ScoreStats } from 'app/shared/classes/ScoreStats';
 
 export class AppStats {
 

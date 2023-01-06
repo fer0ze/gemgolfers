@@ -33,8 +33,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
-
-
+import { MatTimepickerModule } from 'mat-timepicker';
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 @NgModule({
   declarations: [DailyRoundsComponent, AddDailyRoundComponent, AddPlayerDailyScoreComponent, ViewDailyRoundComponent,DialogAddExisitingPlayerComponent],
   imports: [
@@ -63,7 +63,8 @@ import { MatCardModule } from '@angular/material/card';
     MatTabsModule,
     MatSnackBarModule,
     MatToolbarModule,
-    MatDialogModule,
+    MatDialogModule,MatTimepickerModule,
+    AmazingTimePickerModule,
     MatTooltipModule,
     // FlexLayoutModule.withConfig({addFlexToParent: false})
   ],

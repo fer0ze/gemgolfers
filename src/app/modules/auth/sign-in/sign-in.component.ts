@@ -74,14 +74,16 @@ export class AuthSignInComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
-        let isAdmin = <Player>await this.facade.getPlayerByEmail('kgcadmin@gemgolfers.com');
+        let isAdmin = <Player>await this.facade.getPlayerByEmail(this.signInForm.value.email);
         localStorage.setItem("aXNMb2dnZWRJbg", JSON.stringify(isAdmin[0]));
         localStorage.setItem('adminClubID','-LUFS3FAg4OEhIiK0vgY');
         // Sign in
         this._authService.signIn(this.signInForm.value)
             .subscribe(
                 () => {
-
+ 
+                    console.log('2');
+                    
                     // Set the redirect url.
                     // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                     // to the correct page after a successful sign in. This way, that url can be set via

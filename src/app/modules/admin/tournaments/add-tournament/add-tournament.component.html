@@ -1,0 +1,1572 @@
+<div class="flex-auto">
+    <div class="bg-card">
+        <h2 class="mat-h2 p-4" color="mat-button primary">
+            <mat-icon
+                _ngcontent-c3=""
+                class="sidenav-icon mat-icon material-icons"
+                role="img"
+                aria-hidden="true"
+                >golf_course</mat-icon
+            >
+            {{ stepTitle }}
+        </h2>
+
+        <div class="container mx-10">
+            <form
+                class="register-form"
+                [formGroup]="formGroup ? formGroup : []"
+            >
+                <mat-horizontal-stepper
+                    #linearVerticalStepper
+                    formArrayName="formArray"
+                    [linear]="true"
+                >
+                    <mat-step
+                        formGroupName="0"
+                        [stepControl]="formArray?.get([0])"
+                    >
+                        <ng-template matStepLabel>
+                            <p>Tournament Setup</p>
+                        </ng-template>
+                        <div class="mt-6 sm:mt-0 md:mt-6">
+                            <div>
+                                <div
+                                    fxLayoutAlign="start center"
+                                    class="flex my-4 text-2xl"
+                                >
+                                    <h3>Tournament Name</h3>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center">
+                                <mat-form-field class="mx-4" class="mx-4">
+                                    <input
+                                        matInput
+                                        formControlName="titleFormCtrl"
+                                        required
+                                        placeholder="Tournament Name"
+                                    />
+                                    <mat-icon
+                                        class="primary-foreground"
+                                        matSuffix
+                                        *ngIf="
+                                            !formArray
+                                                ?.get([0])
+                                                .get('titleFormCtrl').invalid
+                                        "
+                                        >check_circle</mat-icon
+                                    >
+                                    <mat-error
+                                        >This field is required</mat-error
+                                    >
+                                </mat-form-field>
+
+                                <mat-form-field class="mx-4" class="mx-4">
+                                    <input
+                                        matInput
+                                        formControlName="prefixFormCtrl"
+                                        required
+                                        placeholder="Tournament Prefix"
+                                    />
+                                    <mat-icon
+                                        class="primary-foreground"
+                                        matSuffix
+                                        *ngIf="
+                                            !formArray
+                                                ?.get([0])
+                                                .get('prefixFormCtrl').invalid
+                                        "
+                                        >check_circle</mat-icon
+                                    >
+                                    <mat-error
+                                        >This field is required</mat-error
+                                    >
+                                </mat-form-field>
+                            </div>
+
+                            <div class="flex flex-row items-center">
+                                <div class="flex space-around">
+                                    <mat-label class="w-120 text-2xl"
+                                        >No. of Rounds</mat-label
+                                    >
+
+                                    <mat-radio-group
+                                        class="ml-10"
+                                        formControlName="numOfRounds"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        <mat-radio-button
+                                            [checked]="
+                                                currentTournament &&
+                                                currentTournament.noOfRounds ==
+                                                    1
+                                                    ? true
+                                                    : false
+                                            "
+                                            value="1"
+                                            >1</mat-radio-button
+                                        >
+                                        <mat-radio-button
+                                            [checked]="
+                                                currentTournament &&
+                                                currentTournament.noOfRounds ==
+                                                    2
+                                                    ? true
+                                                    : false
+                                            "
+                                            value="2"
+                                            >2</mat-radio-button
+                                        >
+                                        <mat-radio-button
+                                            [checked]="
+                                                currentTournament &&
+                                                currentTournament.noOfRounds ==
+                                                    3
+                                                    ? true
+                                                    : false
+                                            "
+                                            value="3"
+                                            >3</mat-radio-button
+                                        >
+                                        <mat-radio-button
+                                            [checked]="
+                                                currentTournament &&
+                                                currentTournament.noOfRounds ==
+                                                    4
+                                                    ? true
+                                                    : false
+                                            "
+                                            value="4"
+                                            >4</mat-radio-button
+                                        >
+                                    </mat-radio-group>
+                                </div>
+                                <div class="flex flex-auto">
+                                    <mat-form-field class="mx-4">
+                                        <mat-label>Club</mat-label>
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="clubsFormCtrl"
+                                            [matAutocomplete]="auto"
+                                            [readonly]="hideClubs"
+                                        />
+                                        <mat-autocomplete
+                                            #auto="matAutocomplete"
+                                            [displayWith]="displayFn"
+                                        >
+                                            <mat-option
+                                                *ngFor="
+                                                    let option of filteredClubOptions
+                                                        | async
+                                                "
+                                                [value]="option"
+                                            >
+                                                {{ option.name }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error>
+                                            Please select a club from list.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    fxLayoutAlign="start center"
+                                    class="flex my-4 text-2xl"
+                                >
+                                    <h3>Tournament Date</h3>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center">
+                                <mat-form-field class="mx-4">
+                                    <input
+                                        matInput
+                                        [matDatepicker]="picker"
+                                        [min]="minDate"
+                                        [max]="maxDate"
+                                        (dateChange)="datechange($event)"
+                                        formControlName="startDateFormCtrl"
+                                        placeholder="start date"
+                                        required
+                                    />
+                                    <mat-datepicker-toggle
+                                        matSuffix
+                                        [for]="picker"
+                                    ></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error
+                                        >This field is required</mat-error
+                                    >
+                                </mat-form-field>
+
+                                <mat-form-field class="mx-4">
+                                    <input
+                                        matInput
+                                        [matDatepicker]="picker2"
+                                        [min]="minDate"
+                                        [max]="maxDate"
+                                        (onChange)="datechange($event)"
+                                        formControlName="endDateFormCtrl"
+                                        placeholder="end a date"
+                                        required
+                                    />
+                                    <mat-datepicker-toggle
+                                        matSuffix
+                                        [for]="picker2"
+                                    ></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                    <mat-error
+                                        >This field is required</mat-error
+                                    >
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <div
+                                    class="flex my-4 text-2xl"
+                                    fxLayoutAlign="start center"
+                                >
+                                    <h3>Tournament Format</h3>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-row items-center">
+                                <div
+                                    *ngFor="
+                                        let url of courseFileds.controls;
+                                        let i = index
+                                    "
+                                    [formGroupName]="i"
+                                    class="flex flex-auto"
+                                >
+                                    <mat-form-field class="mx-4">
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="courseName"
+                                            [matAutocomplete]="auto"
+                                            placeholder="Course"
+                                        />
+                                        <mat-autocomplete
+                                            autoActiveFirstOption
+                                            #auto="matAutocomplete"
+                                            [displayWith]="displayCourseFn"
+                                            (optionSelected)="
+                                                getSelectedCourses(
+                                                    $event.option.value
+                                                )
+                                            "
+                                        >
+                                            <mat-option
+                                                *ngFor="
+                                                    let option of filteredCourseOptions
+                                                        | async
+                                                "
+                                                [value]="option"
+                                            >
+                                                {{ option.name }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error>
+                                            Please select a course from list.
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="mx-4">
+                                        <mat-select
+                                            class="w-full"
+                                            placeholder="Match Format"
+                                            formControlName="matchFormat"
+                                            (selectionChange)="texas($event)"
+                                        >
+                                            <mat-option value="MATCH_PLAY"
+                                                >MATCH_PLAY</mat-option
+                                            >
+                                            <mat-option value="STROKE_PLAY"
+                                                >STROKE_PLAY</mat-option
+                                            >
+                                            <mat-option value="STABLEFORD"
+                                                >STABLEFORD</mat-option
+                                            >
+                                            <mat-option value="TEXAS_SCRAMBLE"
+                                                >TAXES_SCRAMBLE</mat-option
+                                            >
+                                        </mat-select>
+                                        <mat-icon matSuffix>pages</mat-icon>
+                                    </mat-form-field>
+                                    <button
+                                        mat-button
+                                        type="button"
+                                        (click)="deleteCourseInfo(i)"
+                                        *ngIf="i > 0"
+                                    >
+                                        x
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div *ngIf="showCourseHole">
+                                <div fxLayoutAlign="start center">
+                                    <mat-label
+                                        >Select Course Hole Sets</mat-label
+                                    >
+                                </div>
+                                <div class="mx-4">
+                                    <mat-form-field>
+                                        <mat-select
+                                            class="w-full"
+                                            placeholder="Course"
+                                            formControlName="courseHoleSet"
+                                        >
+                                            <mat-option
+                                                *ngFor="
+                                                    let course of courseHoleSetNames
+                                                "
+                                                [value]="
+                                                    course.holeSets +
+                                                    '_' +
+                                                    course.inverted
+                                                "
+                                                >{{
+                                                    course.displayName
+                                                }}</mat-option
+                                            >
+                                        </mat-select>
+                                        <mat-icon matSuffix>place</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div
+                                *ngIf="this.showCat"
+                                style="margin-bottom: 30px"
+                            >
+                                <div>
+                                    <div
+                                        class="flex justify-center my-4 text-2xl"
+                                    >
+                                        <h3>Player Categories</h3>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="mx-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0 ng-star-inserted"
+                                >
+                                    <div
+                                        *ngFor="
+                                            let n of Categories;
+                                            let i = index
+                                        "
+                                    >
+                                        <mat-checkbox
+                                            formArrayName="clubctgies"
+                                            class="checkbox-margin"
+                                            (change)="
+                                                updateChkbxArray(
+                                                    n,
+                                                    i,
+                                                    $event.checked,
+                                                    'clubctgies'
+                                                )
+                                            "
+                                            value="n.id"
+                                            [checked]="n['checked']"
+                                            >{{ n.name }}</mat-checkbox
+                                        >
+                                    </div>
+                                </div>
+
+                                <div
+                                    fxLayout="column"
+                                    fxLayoutAlign="center center"
+                                    class="row"
+                                    *ngIf="isProAm"
+                                >
+                                    Handicap Ratio
+                                    <mat-form-field [style.margin-left.px]="30">
+                                        <mat-label>Handicap Ratio</mat-label>
+                                        <input
+                                            matInput
+                                            formControlName="handicapRatio"
+                                            type="number"
+                                        />
+                                        <mat-icon matSuffix
+                                            >aspect_ratio</mat-icon
+                                        >
+                                    </mat-form-field>
+                                </div>
+                                <div
+                                    fxLayout="column"
+                                    fxLayoutAlign="center stretch"
+                                    class="row"
+                                    *ngIf="isAmateur"
+                                >
+                                    <mat-checkbox
+                                        formControlName="handicapCats"
+                                        (change)="
+                                            handicapCategoriesSelection(
+                                                $event.checked
+                                            )
+                                        "
+                                        >Handicap Categories</mat-checkbox
+                                    >
+                                </div>
+                                <div
+                                    fxLayout="column"
+                                    fxLayoutAlign="center stretch"
+                                    class="row"
+                                    *ngIf="selected"
+                                >
+                                    <div
+                                        fxLayout="row"
+                                        fxLayoutGap="40px"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        Prize Category A:
+                                        <mat-form-field>
+                                            <input
+                                                matInput
+                                                formControlName="prizeCategoryA"
+                                                type="number"
+                                            />
+                                            <mat-icon matSuffix
+                                                >golf_course</mat-icon
+                                            >
+                                            <mat-hint>From 1 to</mat-hint>
+                                        </mat-form-field>
+                                        Prize Category B:
+                                        <mat-form-field>
+                                            <input
+                                                matInput
+                                                formControlName="prizeCategoryB"
+                                                type="number"
+                                            />
+                                            <mat-icon matSuffix
+                                                >golf_course</mat-icon
+                                            >
+                                            <mat-hint>till 18</mat-hint>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div
+                                    class="flex my-4 text-2xl"
+                                    *ngIf="!this.showCat"
+                                >
+                                    <h3>Handicap Allocation</h3>
+                                </div>
+                                <div *ngIf="!this.showCat" class="mx-4">
+                                    <mat-form-field>
+                                        <mat-select
+                                            class="w-full"
+                                            placeholder="Handicap...?"
+                                            formControlName="handicapAllocations"
+                                        >
+                                            <mat-option value="AS_IS"
+                                                >AS_IS</mat-option
+                                            >
+                                            <mat-option value="ONE_TENTH"
+                                                >1/10</mat-option
+                                            >
+                                            <mat-option value="ONE_TENTH_DEC"
+                                                >1/10 with Decimal</mat-option
+                                            >
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex my-4 text-2xl">
+                                    <h3>Score Management</h3>
+                                </div>
+                                <div class="mx-4">
+                                    <mat-form-field>
+                                        <mat-select
+                                            class="w-full"
+                                            placeholder="Who will enter score?"
+                                            formControlName="scoreManagement"
+                                            (selectionChange)="
+                                                setupMarshals($event.value)
+                                            "
+                                        >
+                                            <mat-option value="ONLY_PLAYERS"
+                                                >Only Players</mat-option
+                                            >
+                                            <mat-option value="ONLY_MARSHALS"
+                                                >Only Marshals</mat-option
+                                            >
+                                            <mat-option
+                                                value="PLAYERS_AND_MARSHALS"
+                                                >Players and
+                                                Marshals</mat-option
+                                            >
+                                        </mat-select>
+                                        <mat-icon matSuffix
+                                            >golf_course</mat-icon
+                                        >
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div *ngIf="isMarshals">
+                                <div
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    [ngStyle]="{ padding: '15px 0' }"
+                                >
+                                    <div fxLayoutAlign="start center">
+                                        <mat-label
+                                            >Marshals Start With</mat-label
+                                        >
+                                    </div>
+                                    <div>
+                                        <mat-form-field class="mx-4">
+                                            <input
+                                                matInput
+                                                formControlName="marshalStart"
+                                                maxlength="4"
+                                            />
+                                            <mat-icon matSuffix>face</mat-icon>
+                                            <mat-hint align="start"
+                                                >Marshals username prefix(Only 4
+                                                Char)</mat-hint
+                                            >
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxLayoutAlign="start center">
+                                        <mat-label>No. of Marshals</mat-label>
+                                    </div>
+                                    <div>
+                                        <mat-form-field appearnce="outline">
+                                            <input
+                                                matInput
+                                                formControlName="noofMarshals"
+                                                type="number"
+                                                min="1"
+                                                max="30"
+                                            />
+                                            <mat-icon matSuffix
+                                                >golf_course</mat-icon
+                                            >
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="createTournament()"
+                                    *ngIf="!editTournament"
+                                    style="
+                                        text-align: center;
+                                        justify-content: center;
+                                    "
+                                    [disabled]="!formGroup.valid"
+                                >
+                                    Create Tournament
+                                </button>
+                            </div>
+                            <div style="text-align: center">
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="editTournaments()"
+                                    style="
+                                        text-align: center;
+                                        justify-content: center;
+                                    "
+                                    *ngIf="editTournament"
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                            <div style="float: right">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="
+                                        getFormData(
+                                            linearVerticalStepper,
+                                            'next'
+                                        )
+                                    "
+                                >
+                                    Next >> Tournament Players
+                                </button>
+                            </div>
+                        </div>
+                    </mat-step>
+                    <mat-step (click)="tournamentMembersSetup()">
+                        <ng-template matStepLabel>Select Players</ng-template>
+                        <div class="flex flex-row">
+                            <div class="flex-auto">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="addPlayer()"
+                                >
+                                    Add New Player
+                                </button>
+                                &nbsp;
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="searchPlayer()"
+                                >
+                                    Add Existing Player
+                                </button>
+                            </div>
+                            <div>
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="saveTournamentMembers()"
+                                >
+                                    Save Selected Members
+                                </button>
+                                <!-- &nbsp; <button mat-raised-button color="accent" (click)="tournamentSetup()" matStepperPrevious>Tournament Setup << Back</button> &nbsp; <button mat-raised-button color="primary" (click)="flightsSetup(linearVerticalStepper, 'next')">Next >> Flights Setup</button> -->
+                            </div>
+                        </div>
+
+                        <div class="my-4">
+                           
+                                <div class="flex justify-start">
+                                    <span
+                                       
+                                        *ngFor="let catCount of categoryCounts"
+                                        ><span
+                                            class="catCount"
+                                            *ngIf="catCount.value > 0"
+                                            ><mat-icon>emoji_people</mat-icon
+                                            >{{ catCount.name }} :
+                                            {{ catCount.value }}</span
+                                        ></span
+                                    >
+                                </div>
+                           
+
+                           
+                                <div class="flex justify-end">
+                                    <span
+                                        
+                                        *ngFor="
+                                            let catCount of TMcategoryCounts
+                                        "
+                                        ><span
+                                            class="catCount"
+                                            *ngIf="catCount.value > 0"
+                                            ><mat-icon>emoji_people</mat-icon
+                                            >{{ catCount.name }} :
+                                            {{ catCount.value }}</span
+                                        ></span
+                                    >
+                                </div>
+                            
+                        </div>
+
+                        <div class="flex flex-row justify-between">
+                            <mat-card class="w-2/5 mt-8">
+                                <div class="flex">
+                                    <div>
+                                        <div class="mt-4">
+                                            <h2>Club Members</h2>
+                                        </div>
+                                    </div>
+                                    <div class="flex-auto mr-4">
+                                        <div>
+                                            <mat-form-field class="mx-4">
+                                                <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
+                                                <input
+                                                    matInput
+                                                    (keyup)="
+                                                        applyFilter(
+                                                            $event.target.value
+                                                        )
+                                                    "
+                                                    placeholder="Filter"
+                                                />
+                                                <mat-icon matPrefix
+                                                    >search</mat-icon
+                                                >
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator">
+                                    <table
+                                        mat-table
+                                        #dsort="matSort"
+                                        [dataSource]="dataSource"
+                                        matSort
+                                    >
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="firstName">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="let element"
+                                            >
+                                                {{ element.firstName }}
+                                                {{ element.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Handicap Column -->
+                                        <ng-container matColumnDef="handicap">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Handicap
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="let element"
+                                            >
+                                                {{ element.handicap }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Handicap Column -->
+                                        <ng-container
+                                            matColumnDef="playerCategory"
+                                        >
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Category
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="let element"
+                                            >
+                                                {{ element.playerCategory }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Checkbox Column -->
+                                        <ng-container matColumnDef="select">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                <mat-checkbox
+                                                    (change)="
+                                                        $event
+                                                            ? masterToggle()
+                                                            : null
+                                                    "
+                                                    [checked]="
+                                                        selection.hasValue() &&
+                                                        isAllSelected()
+                                                    "
+                                                    [indeterminate]="
+                                                        selection.hasValue() &&
+                                                        !isAllSelected()
+                                                    "
+                                                    [aria-label]="
+                                                        checkboxLabel()
+                                                    "
+                                                >
+                                                </mat-checkbox>
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                <mat-checkbox
+                                                    (click)="
+                                                        $event.stopPropagation()
+                                                    "
+                                                    (change)="
+                                                        $event
+                                                            ? selection.toggle(
+                                                                  row
+                                                              )
+                                                            : null;
+                                                        updateCategorySelection(
+                                                            $event,
+                                                            row
+                                                        )
+                                                    "
+                                                    [checked]="
+                                                        selection.isSelected(
+                                                            row
+                                                        )
+                                                    "
+                                                    [aria-label]="
+                                                        checkboxLabel(row)
+                                                    "
+                                                >
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="displayedColumns"
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumns
+                                            "
+                                            (click)="
+                                                updateCategorySelection(
+                                                    $event,
+                                                    row
+                                                );
+                                                selection.toggle(row)
+                                            "
+                                        ></tr>
+                                    </table>
+                                    <mat-paginator
+                                        [pageSize]="20"
+                                        [pageSizeOptions]="[10, 20, 50, 100]"
+                                    ></mat-paginator>
+                                </div>
+                            </mat-card>
+
+                            <mat-card class="w-2/5 mt-8">
+                                <div class="flex">
+                                    <div>
+                                        <div class="mt-4">
+                                            <h2>Tournament Members</h2>
+                                        </div>
+                                    </div>
+                                    <div class="flex-auto mr-4">
+                                        <div>
+                                            <mat-form-field class="mx-4">
+                                                <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
+                                                <input
+                                                    matInput
+                                                    (keyup)="
+                                                        applyMembersFilter(
+                                                            $event.target.value
+                                                        )
+                                                    "
+                                                    placeholder="Filter"
+                                                />
+                                                <mat-icon matPrefix
+                                                    >search</mat-icon
+                                                >
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator">
+                                    <table
+                                        mat-table
+                                        #msort="matSort"
+                                        [dataSource]="membersSource"
+                                        matSort
+                                    >
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="let element"
+                                            >
+                                                {{ element.firstName }}
+                                                {{ element.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Handicap Column -->
+                                        <ng-container matColumnDef="handicap">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Handicap
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="let element"
+                                            >
+                                                {{ element.handicap }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Handicap Column -->
+                                        <ng-container matColumnDef="category">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Category
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="let element"
+                                            >
+                                                {{ element.playerCategory }}
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="delete">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Remove
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                <span
+                                                    ><mat-icon
+                                                        aria-hidden="false"
+                                                        aria-label="Dragable"
+                                                        class="remove primary-foreground"
+                                                        (click)="
+                                                            removePlayer(row.id)
+                                                        "
+                                                        >delete_forever</mat-icon
+                                                    >
+                                                </span>
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Checkbox Column -->
+                                        <!-- <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)"
+                                        [aria-label]="checkboxLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container> -->
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="membersColumns"
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: membersColumns
+                                            "
+                                        ></tr>
+                                    </table>
+                                </div>
+                            </mat-card>
+                        </div>
+
+                        <mat-card
+                            *ngIf="isLoading"
+                            style="
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            "
+                        >
+                            <mat-progress-spinner
+                                color="primary"
+                                mode="indeterminate"
+                            >
+                            </mat-progress-spinner>
+                        </mat-card>
+                        <div class="mt-4">
+                            <div style="float: left">
+                                <button
+                                    mat-raised-button
+                                    color="accent"
+                                    (click)="tournamentSetup()"
+                                    matStepperPrevious
+                                >
+                                    Tournament Setup << Back
+                                </button>
+                            </div>
+                            <div style="float: right">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="
+                                        flightsSetup(
+                                            linearVerticalStepper,
+                                            'next'
+                                        )
+                                    "
+                                >
+                                    Next >> Flights Setup
+                                </button>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </mat-step>
+
+                    <mat-step
+                        formGroupName="1"
+                        (click)="flightsSetup(linearVerticalStepper, '')"
+                        [stepControl]="formArray?.get([1])"
+                    >
+                        <ng-template matStepLabel>
+                            <div>Flights Setup</div>
+                        </ng-template>
+                        <mat-tab-group mat-align-tabs="center">
+                            <mat-tab
+                                formArrayName="category"
+                                class="mb-20 separator"
+                                fxLayout="row"
+                                fxLayout.lt-md="column"
+                                fxLayoutGap="20px"
+                                *ngFor="
+                                    let url of categoryFormGroup.controls;
+                                    let i = index
+                                "
+                            >
+                                <ng-template mat-tab-label>{{
+                                    formArray.get([0]).get("clubctgies").value[
+                                        i
+                                    ].name
+                                }}</ng-template>
+                                <div [formGroupName]="i">
+                                    <mat-card style="margin-bottom: 25px">
+                                        <div
+                                            
+                                            fxLayout="row"
+                                            fxLayout.lt-md="column"
+                                            fxLayoutGap="20px"
+                                        >
+                                            <div fxLayoutAlign="center center">
+                                                <mat-label
+                                                    >Select Playing
+                                                    Dates:</mat-label
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <div
+                                           class="flex flex-row justify-evenly"
+                                        >
+                                            <div
+                                                formArrayName="playingDate"
+                                                *ngFor="
+                                                    let t of PlayingDateFormGroup(
+                                                        i
+                                                    ).controls;
+                                                    let w = index
+                                                "
+                                            >
+                                                <div [formGroupName]="w">
+                                                    <mat-checkbox
+                                                        class="checkbox-margin"
+                                                        value="t.id"
+                                                        matInput
+                                                        formControlName="playing"
+                                                        >{{
+                                                            t.value.Date
+                                                        }}</mat-checkbox
+                                                    >
+                                                   
+                                                    <mat-form-field
+                                                        class="mx-4"
+                                                    >
+                                                        <mat-select
+                                                        class="w-full"
+                                                            placeholder="18"
+                                                            formControlName="noofHoles"
+                                                        >
+                                                            <mat-option
+                                                                value="1_9"
+                                                                >1_9</mat-option
+                                                            >
+                                                            <mat-option
+                                                                value="10_18"
+                                                                >10_18</mat-option
+                                                            >
+                                                            <mat-option
+                                                                value="18"
+                                                                >18</mat-option
+                                                            >
+                                                        </mat-select>
+                                                        <mat-icon matSuffix
+                                                            >golf_course</mat-icon
+                                                        >
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+
+                                    <div
+                                        
+                                    >
+                                        <div>
+                                            <mat-card
+                                                style="margin-bottom: 25px"
+                                            >
+                                                <div
+                                                    class="flex flex-row items-center"
+                                                    
+                                                >
+                                                    <!-- <div  fxLayoutAlign="start center">
+                        <mat-label>Players / Flight</mat-label>
+                      </div>  -->
+                                                    
+                                                        <mat-form-field
+                                                            class="mx-4"
+                                                        >
+                                                            <mat-label
+                                                                >Players/Flight</mat-label
+                                                            >
+                                                            <input
+                                                                matInput
+                                                                formControlName="playersperFlight"
+                                                                type="number"
+                                                            />
+                                                            <mat-error
+                                                                >The input is
+                                                                required.</mat-error
+                                                            >
+                                                        </mat-form-field>
+                                                    
+                                                    <!-- <div  fxLayoutAlign="start center">
+                        <mat-label>Flights interval</mat-label>
+                      </div> -->
+                                                    
+                                                        <mat-form-field
+                                                            class="mx-4"
+                                                        >
+                                                            <mat-label
+                                                                >Flights
+                                                                interval</mat-label
+                                                            >
+                                                            <input
+                                                                matInput
+                                                                formControlName="flightsInterval"
+                                                                type="number"
+                                                                placeholder="Time in Minutes"
+                                                                min="1"
+                                                                max="30"
+                                                            />
+                                                            <mat-icon matSuffix
+                                                                >golf_course</mat-icon
+                                                            >
+                                                            
+                                                        </mat-form-field>
+                                                    
+                                                </div>
+
+                                                <div
+                                                    class="flex flex-row ml-4"
+                                                >
+                                                    <!-- <div  fxLayoutAlign="start start">
+                        <mat-label>Flights Time</mat-label>
+                      </div> -->
+                                                  
+                                                        <mat-radio-group
+class="w-full"
+                                                            formControlName="arrangements"
+                                                            fxLayoutAlign="start center"
+                                                        >
+                                                            <mat-radio-button
+                                                                value="0"
+                                                                >Flight Start
+                                                                Time</mat-radio-button
+                                                            >
+                                                            <mat-radio-button
+                                                                value="1"
+                                                                >Last Flight
+                                                                Time</mat-radio-button
+                                                            >
+                                                        </mat-radio-group>
+                                                   
+
+                                                    
+                                                        <mat-form-field
+                                                            class="mx-4"
+                                                        >
+                                                            <input
+                                                                type="time"
+                                                                matInput
+                                                                atp-time-picker
+                                                                value="{{
+                                                                    selectedTime
+                                                                }}"
+                                                                formControlName="flightStartTime"
+                                                            />
+                                                            <mat-error
+                                                                >The input is
+                                                                required.</mat-error
+                                                            >
+                                                        </mat-form-field>
+                                                    
+                                                </div>
+                                            </mat-card>
+
+                                            
+                                                <div
+                                                class="flex justify-between"
+                                                >
+                                                    <div
+                                                        fxLayoutAlign="start center"
+                                                    >
+                                                        <mat-label
+                                                            >Arrange
+                                                            By</mat-label
+                                                        >
+                                                    </div>
+                                                    <div>
+                                                        <mat-radio-group
+                                                            formControlName="arrangeBy"
+                                                            fxLayoutAlign="end center"
+                                                        >
+                                                            <mat-radio-button
+                                                                value="handicap"
+                                                                >Handicap</mat-radio-button
+                                                            >
+                                                            <mat-radio-button
+                                                                value="random"
+                                                                >Random</mat-radio-button
+                                                            >
+                                                        </mat-radio-group>
+                                                    </div>
+                                                    <div
+                                                        fxLayoutAlign="start center"
+                                                    >
+                                                        <mat-label
+                                                            >Starting
+                                                            Hole</mat-label
+                                                        >
+                                                    </div>
+                                                    <div>
+                                                        <mat-radio-group
+                                                            formControlName="startingHole"
+                                                            fxLayoutAlign="end center"
+                                                        >
+                                                            <mat-radio-button
+                                                                value="1_10"
+                                                                >1 &
+                                                                10</mat-radio-button
+                                                            >
+                                                            <mat-radio-button
+                                                                value="1"
+                                                                >1</mat-radio-button
+                                                            >
+                                                            <mat-radio-button
+                                                                value="shotgun"
+                                                                >Shotgun</mat-radio-button
+                                                            >
+                                                        </mat-radio-group>
+                                                    </div>
+                                                </div>
+                                          
+
+                                            <!-- <div class="mb-20 separator" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" [ngStyle]="{'padding': '15px 0'}">
+                      <div  fxLayoutAlign="start center">
+                        <mat-label>Score Management</mat-label>
+                      </div>
+                      <div >
+                        <mat-form-field class="mx-4">
+                          <mat-select placeholder="Who will enter score?" formControlName="scoreManagement" (selectionChange)="setupMarshals($event.value)">
+                            <mat-option value="ONLY_PLAYERS">Only Players</mat-option>
+                            <mat-option value="ONLY_MARSHALS">Only Marshals</mat-option>
+                            <mat-option value="PLAYERS_AND_MARSHALS">Players and Marshals</mat-option>
+                          </mat-select>
+                          <mat-icon matSuffix>golf_course</mat-icon>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div *ngIf="isMarshals">
+                      <div class="mb-20 separator" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" [ngStyle]="{'padding': '15px 0'}">
+                        <div  fxLayoutAlign="start center">
+                          <mat-label>Marshals Start With</mat-label>
+                        </div>
+                        <div >
+                          <mat-form-field class="mx-4">
+                            <input matInput formControlName="marshalStart" maxlength="4">
+                            <mat-icon matSuffix>face</mat-icon>
+                            <mat-hint align="start">Marshals username prefix</mat-hint>
+                          </mat-form-field>
+                        </div>
+                        <div  fxLayoutAlign="start center">
+                          <mat-label>No. of Marshals</mat-label>
+                        </div>
+                        <div >
+                          <mat-form-field appearnce="outline">
+                            <input matInput formControlName="noofMarshals" type="number" min="1" max="30">
+                            <mat-icon matSuffix>golf_course</mat-icon>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                        <div>
+                            <div style="float: left">
+                                <button
+                                    mat-raised-button
+                                    color="accent"
+                                    (click)="
+                                        getFormData(
+                                            linearVerticalStepper,
+                                            'back'
+                                        )
+                                    "
+                                >
+                                    Tournament Players << Back
+                                </button>
+                            </div>
+                            <div style="float: right">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="getSelectedPlayers()"
+                                    matStepperNext
+                                >
+                                    Next >> Flights Arrangement
+                                </button>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </mat-step>
+
+                    <mat-step (click)="flightArrangementSetup()">
+                        <ng-template matStepLabel
+                            >Flights Arrangement</ng-template
+                        >
+                        <div fxLayoutAlign="center center" class="actionPane">
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="addFlight()"
+                            >
+                                Add New Flight
+                            </button>
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="addFlightPlayer()"
+                            >
+                                Add Player
+                            </button>
+                            <!-- <input type="file" (change)="onFileChange($event)" style="width:190px;" />
+                <button mat-raised-button color="primary" (click)="parseFlightsData()">Import Flight</button> -->
+                        </div>
+
+                        <mat-tab-group mat-align-tabs="center">
+                            <mat-tab
+                                class="mb-20 separator"
+                                fxLayout="row"
+                                fxLayout.lt-md="column"
+                                fxLayoutGap="20px"
+                                *ngFor="let m of selectedMembers; let k = index"
+                            >
+                                <ng-template mat-tab-label>{{
+                                    m.title
+                                }}</ng-template>
+
+                                <div [formGroupName]="k">
+                                    <div
+                                        *ngIf="m.Members.length == 0"
+                                        [ngStyle]="{
+                                            margin: '5px',
+                                            'text-align': 'center',
+                                            border: 'solid 1px #3f50b5',
+                                            padding: '10px'
+                                        }"
+                                    >
+                                        There is no any player selected.
+                                    </div>
+                                    <div cdkDropListGroup id="manageFlights" class=" p-4 rounded-md">
+                                        <div
+                                            *ngFor="
+                                                let items of m.Members;
+                                                let i = index
+                                            "
+                                            class="bg-slate-100 p-3 mb-4 rounded-md"
+                                        >
+                                            <div
+                                                class="flightHeader primary-background"
+                                            >
+                                                <span>Flight: {{ i + 1 }}</span>
+                                                <span
+                                              
+                                                    ><input
+                                                        type="text"
+                                                        id="flight_{{ k }}_{{
+                                                            i
+                                                        }}_hole"
+                                                        value="{{
+                                                            getNextFlighttee(
+                                                                k,
+                                                                i,
+                                                                m.title,
+                                                                m.Members[i]
+                                                            )
+                                                        }}"
+                                                /></span>
+                                                <span
+                                              
+                                                    ><input
+                                                        type="time"
+                                                        id="flight_{{ k }}_{{
+                                                            i
+                                                        }}_time"
+                                                        (click)="
+                                                            getFC(
+                                                                $event,
+                                                                m.title
+                                                            )
+                                                        "
+                                                        atp-time-picker
+                                                        value="{{
+                                                            getNextFlightTime(
+                                                                k,
+                                                                i,
+                                                                m.title,
+                                                                m.Members[i]
+                                                            )
+                                                        }}"
+                                                /></span>
+                                            </div>
+                                            <div
+                                                cdkDropList
+                                                [cdkDropListData]="items"
+                                                (cdkDropListDropped)="
+                                                    drop($event)
+                                                "
+                                            >
+                                                <div class="moveableList">
+                                                    <div
+                                                        class="moveableFlights"
+                                                        *ngFor="
+                                                            let item of items;
+                                                            let j = index
+                                                        "
+                                                        cdkDrag
+                                                        [cdkDragData]="item"
+                                                    >
+                                                        <table width="100%">
+                                                            <tr>
+                                                                <td width="25%">
+                                                                    <span>{{
+                                                                        item[
+                                                                            "firstName"
+                                                                        ]
+                                                                    }}</span>
+                                                                </td>
+                                                                <td width="25%">
+                                                                    <span>{{
+                                                                        item[
+                                                                            "lastName"
+                                                                        ]
+                                                                    }}</span>
+                                                                </td>
+                                                                <td width="25%">
+                                                                    <span>{{
+                                                                        item[
+                                                                            "handicap"
+                                                                        ]
+                                                                    }}</span>
+                                                                </td>
+                                                                <td
+                                                                    width="25%"
+                                                                    style="
+                                                                        text-align: right;
+                                                                    "
+                                                                >
+                                                                    <span
+                                                                        ><mat-icon
+                                                                            aria-hidden="false"
+                                                                            aria-label="Dragable"
+                                                                            class="remove primary-foreground"
+                                                                            (click)="
+                                                                                removePlayer(
+                                                                                    i,
+                                                                                    j
+                                                                                )
+                                                                            "
+                                                                            >delete_forever</mat-icon
+                                                                        >
+                                                                        <mat-icon
+                                                                            aria-hidden="false"
+                                                                            aria-label="Dragable"
+                                                                            class="remove primary-foreground"
+                                                                            (click)="
+                                                                                movePlayer(
+                                                                                    i,
+                                                                                    j
+                                                                                )
+                                                                            "
+                                                                            >edit</mat-icon
+                                                                        ></span
+                                                                    >
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                        <div>
+                            <div style="float: left">
+                                <button
+                                    mat-raised-button
+                                    color="accent"
+                                    (click)="
+                                        flightsSetup(
+                                            linearVerticalStepper,
+                                            'back'
+                                        )
+                                    "
+                                >
+                                    Flights Setup << Back
+                                </button>
+                            </div>
+                            <div style="float: right">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="createFlights()"
+                                    [disabled]="selectedMembers.length == 0"
+                                >
+                                    Start Tournament
+                                </button>
+                            </div>
+                            <div style="clear: both"></div>
+                            <!-- <button type="button" mat-button (click)="linearVerticalStepper.reset()">Reset</button> -->
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
+            </form>
+        </div>
+    </div>
+</div>

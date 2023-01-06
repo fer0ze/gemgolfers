@@ -1,0 +1,2695 @@
+<div *ngIf="!isLoading">
+    <div fxLayout="row" fxLayoutGap="50px" style="margin-bottom: 15px">
+        <div fxFlex="80" fxHide.lt-sm fxLayout="column">
+            <div class="pageHead" fxLayout="row" fxLayoutGap="50px">
+                <div fxHide.lt-sm fxLayout="column">
+                    <div fxLayout="row">
+                        <h1 color="primary">{{ fullTournament?.title }}</h1>
+                        <button
+                            mat-icon-button
+                            (click)="redirectToTournamentSetup()"
+                            color="accent"
+                        >
+                            <mat-icon
+                                style="font-size: 34px; padding: 4px"
+                                class="mat-18"
+                                >edit</mat-icon
+                            >
+                        </button>
+                    </div>
+                    <h3 fxLayoutAlign="start">
+                        <mat-icon matSuffix style="color: red"
+                            >date_range</mat-icon
+                        >
+                        <span>{{ fullTournament?.startDate | date }}</span
+                        ><span
+                            class="sep"
+                            *ngIf="
+                                fullTournament?.startDate !=
+                                fullTournament?.endDate
+                            "
+                            >-</span
+                        ><span
+                            *ngIf="
+                                fullTournament?.startDate !=
+                                fullTournament?.endDate
+                            "
+                            >{{ fullTournament?.endDate | date }}</span
+                        >
+                        <span class="sep">|</span>
+                        <mat-icon matSuffix style="color: blue"
+                            >view_day</mat-icon
+                        >
+                        <span> No of Rounds:{{ noOfROund }}</span
+                        ><span class="sep">|</span>
+                        <mat-icon matSuffix style="color: green"
+                            >golf_course</mat-icon
+                        >
+                        <span> Match Format:{{ matchFormat }}</span
+                        ><span class="sep">|</span>
+                        <mat-icon matSuffix style="color: black"
+                            >supervised_user_circle</mat-icon
+                        >
+                        <span> Total Players:{{ totalPlayers }}</span>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div>
+            <!-- <div class="box" fxLayout="row" *ngFor="let t of this.category;let i=index">
+        <button mat-raised-button mat-button color="basic">
+          {{t.name }} Playing on {{t.date}},{{t.datea}}
+        </button>
+      </div>  -->
+            <div
+                *ngIf="tournamentPlayersAdd"
+                class="box"
+                fxLayout="row"
+                style="margin: 10px"
+            >
+                <a
+                    [routerLinkActive]="'active'"
+                    [routerLink]="['/tournaments/players/' + this.tournamentID]"
+                >
+                    <button mat-raised-button mat-button color="primary">
+                        Add Tournament Players
+                        <mat-icon matSuffix style="color: rgb(255, 255, 255)"
+                            >supervised_user_circle</mat-icon
+                        >
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="50px">
+        <div fxFlex="40" fxHide.lt-sm fxLayout="column">
+            <div fxLayout="row" fxLayoutGap="50px">
+                <div fxFlex fxHide.lt-sm fxLayout="column">
+                    <!-- <mat-card *ngIf="showImage" class="mat-elevation-z16">
+            <img
+              [src]="url | async"
+              width="100%"
+              alt="course"
+              style="border-radius: 10px"
+            />
+          </mat-card> -->
+                    <mat-card class="mat-elevation-z16">
+                        <img
+                            src="../../../../../assets/images/cards/{{ url }}"
+                            width="100%"
+                            alt="course"
+                            style="border-radius: 10px"
+                        />
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+
+        <div fxFlex="60" fxHide.lt-sm fxLayout="column">
+            <div class="content">
+                <div fxLayout="row wrap" fxLayoutGap="15px grid">
+                    <div
+                        [fxFlex]="100 / gridColumns + '%'"
+                        fxFlex.xs="100%"
+                        fxFlex.sm="33%"
+                        *ngFor="let s of membersStats"
+                    >
+                        <app-white-section
+                            [bgClass]="s.class"
+                            [icon]="'emoji_people'"
+                            [count]="s.count"
+                            [label]="s.title"
+                            [detail]="false"
+                            (click)="pop(s)"
+                        ></app-white-section>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div class="box">
+                    <button
+                        class="hover"
+                        mat-raised-button
+                        mat-button
+                        color="basic"
+                        (click)="showCourseDetails()"
+                    >
+                        Course Details
+                        <mat-icon matSuffix color="primary" title="Marshals"
+                            >golf_course</mat-icon
+                        >
+                    </button>
+                    <button
+                        class="hovera"
+                        mat-raised-button
+                        mat-button
+                        color="basic"
+                        (click)="redirectToLeaderboard()"
+                    >
+                        Leaderboard
+                        <mat-icon matSuffix color="primary" title="Marshals"
+                            >leaderboard</mat-icon
+                        >
+                    </button>
+
+                    <button
+                        class="hoverb"
+                        mat-raised-button
+                        mat-button
+                        color="basic"
+                        (click)="viewMarshalList()"
+                    >
+                        Marshals
+                        <mat-icon matSuffix color="primary" title="Marshals"
+                            >supervised_user_circle</mat-icon
+                        >
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- </mat-grid-tile>
+  </mat-grid-list> -->
+        <!-- </div> -->
+    </div>
+
+    <hr style="color: #000000de; margin-top: 30px" />
+    <mat-tab-group
+        color="accent"
+        [selectedIndex]="selected"
+        (selectedTabChange)="tabClicked($event)"
+        mat-align-tabs="center"
+    >
+        <mat-tab>
+            <ng-template mat-tab-label>DAY 1</ng-template>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+            >
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToflightManagement()"
+                >
+                    Flight Management
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToAttendance()"
+                >
+                    Attendance
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToScores()"
+                >
+                    Scores
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="primary"
+                    *ngIf="activeRound == 1 && this.showCloseBtn"
+                    (click)="closeRound()"
+                >
+                    Close Round 1
+                </button>
+            </div>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+                *ngIf="noOfRounds == 1 && playersUpdatedHandicap.length == 0"
+            >
+                <button
+                    mat-raised-button
+                    mat-button
+                    color="primary"
+                    *ngIf="activeRound > noOfRounds"
+                    (click)="redirectToHandicap()"
+                >
+                    Hanidcap Calculation
+                </button>
+            </div>
+            <!-- <mat-card
+        *ngIf="!round1Stats"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <mat-progress-spinner color="primary" mode="indeterminate">
+        </mat-progress-spinner>
+      </mat-card> -->
+
+            <div *ngIf="tournamentPlayersAdd" class="mb-20 profileDash">
+                <h2>Top Players</h2>
+                <div fxLayout="row " fxLayoutGap="15px grid">
+                    <div
+                        fxFlex.xs="35%"
+                        fxFlex.sm="17%"
+                        *ngFor="let s of topMembers"
+                    >
+                        <app-top-player-section
+                            [bgClass]="s.class"
+                            [icon]="'emoji_people'"
+                            [count]="s.handicap"
+                            [label]="s.title"
+                            [cat]="s.category"
+                            [detail]="true"
+                            link="{{ 'players/view/' + s.id }}"
+                        ></app-top-player-section>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="round1Stats">
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="10"></div>
+                    <div [fxFlex]="40">
+                        <h2>Average Score</h2>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore['par3Avg']"
+                                    [label]="'On Par 3'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore['par4Avg']"
+                                    [label]="'On Par 4'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore['par5Avg']"
+                                    [label]="'On Par 5'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                    </div>
+                    <div [fxFlex]="40">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>Average Score</mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <canvas
+                                    baseChart
+                                    width="500"
+                                    height="300"
+                                    [data]="pieChartData1"
+                                    [labels]="pieChartLabels"
+                                    [chartType]="pieChartType"
+                                    (chartHover)="chartHovered($event)"
+                                    (chartClick)="chartClicked($event)"
+                                ></canvas>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div [fxFlex]="10"></div>
+                </div>
+
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="100">
+                        <h2>% Score</h2>
+
+                        <!-- <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"> 
+             <div [fxFlex]="25" *ngIf="avgScore['shotsBirdiesPercent']"> 
+               <app-block-white-section [icon]="'emoji_people'" [data]="avgScore['shotsBirdiesPercent']" [label]="'Birdies'"></app-block-white-section> 
+             </div> 
+           
+           
+             <div [fxFlex]="25" *ngIf="avgScore['shotsParsPercent']"> 
+               <app-block-white-section [icon]="'emoji_people'" [data]="avgScore['shotsParsPercent']" [label]="'Pars'"></app-block-white-section> 
+             </div> 
+       
+        
+             <div [fxFlex]="25" *ngIf="avgScore['shotsBogeysPercent']"> 
+               <app-block-white-section [icon]="'emoji_people'" [data]="avgScore['shotsBogeysPercent']" [label]="'Bogeys'"></app-block-white-section> 
+             </div> 
+
+             <div [fxFlex]="25" *ngIf="avgScore['shotsDoubleBogeysPercent']"> 
+              <app-block-white-section [icon]="'emoji_people'" [data]="avgScore['shotsDoubleBogeysPercent']" [label]="'D. Bogeys'"></app-block-white-section> 
+            </div> 
+
+            <div [fxFlex]="33.33" *ngIf="avgScore['shotsThreeOrHigherPercent']"> 
+              <app-block-white-section [icon]="'emoji_people'" [data]="avgScore['shotsThreeOrHigherPercent']" [label]="'3 or Plus'"></app-block-white-section> 
+            </div> 
+           </div> -->
+
+                        <div class="content">
+                            <div fxLayout="row wrap" fxLayoutGap="15px grid">
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore['shotsBirdiesPercent']"
+                                        [label]="'Birdies'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore['shotsParsPercent']"
+                                        [label]="'Pars'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore['shotsBogeysPercent']"
+                                        [label]="'Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore['shotsDoubleBogeysPercent']
+                                        "
+                                        [label]="'D. Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore[
+                                                'shotsThreeOrHigherPercent'
+                                            ]
+                                        "
+                                        [label]="'3 or Plus'"
+                                    ></app-block-white-section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    *ngIf="tournamentPlayersAdd"
+                    class="mat-elevation-z8"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 GROSS</mat-card-title>
+                            </mat-card-header>
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeGross($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR1Gross"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.PlayerQL.firstName
+                                                        ? row.PlayerQL.firstName
+                                                        : "-"
+                                                }}
+                                                {{
+                                                    row.PlayerQL.lastName
+                                                        ? row.PlayerQL.lastName
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.value
+                                                        ? row.value.scoreR1
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.underR1
+                                                        ? row.value.underR1
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.holesPlayedR1
+                                                        ? row.value
+                                                              .holesPlayedR1
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR2Gross
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR2Gross
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 NET</mat-card-title>
+                            </mat-card-header>
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeNet($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR1NET"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.player.firstName }}
+                                                {{ row.value.player.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.scoreR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.underR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.holesPlayedR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR2NET
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR2NET
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab *ngIf="noOfRounds > 1" [disabled]="activeRound < 2">
+            <ng-template mat-tab-label>DAY 2</ng-template>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+            >
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToflightManagement()"
+                >
+                    Flight Management
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToAttendance()"
+                >
+                    Attendance
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToScores()"
+                >
+                    Scores
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="primary"
+                    *ngIf="activeRound == 2"
+                    (click)="closeRound()"
+                >
+                    Close Round 2
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="primary"
+                    *ngIf="activeRound == 2 && !scoreAdded"
+                    (click)="undoRound()"
+                >
+                    Undo Round 2
+                </button>
+                &nbsp;
+            </div>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+                *ngIf="noOfRounds == 2 && playersUpdatedHandicap.length == 0"
+            >
+                <button
+                    mat-raised-button
+                    mat-button
+                    color="primary"
+                    *ngIf="activeRound > noOfRounds"
+                    (click)="redirectToHandicap()"
+                >
+                    Hanidcap Calculation
+                </button>
+            </div>
+            <!-- <mat-card
+        *ngIf="!round2Stats"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <mat-progress-spinner color="primary" mode="indeterminate">
+        </mat-progress-spinner>
+      </mat-card> -->
+            <div class="mb-20 profileDash">
+                <h2>Top Players</h2>
+                <div fxLayout="row " fxLayoutGap="15px grid">
+                    <div
+                        fxFlex.xs="35%"
+                        fxFlex.sm="17%"
+                        *ngFor="let s of topMembers"
+                    >
+                        <app-top-player-section
+                            [bgClass]="s.class"
+                            [icon]="'emoji_people'"
+                            [count]="s.handicap"
+                            [label]="s.title"
+                            [cat]="s.category"
+                            [detail]="true"
+                            link="{{ 'players/view/' + s.id }}"
+                        ></app-top-player-section>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="round2Stats">
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="10"></div>
+                    <div [fxFlex]="40">
+                        <h2>Average Score</h2>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore2['par3Avg']"
+                                    [label]="'On Par 3'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore2['par4Avg']"
+                                    [label]="'On Par 4'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore2['par5Avg']"
+                                    [label]="'On Par 5'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [fxFlex]="40">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>Average Score</mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <canvas
+                                    baseChart
+                                    width="500"
+                                    height="300"
+                                    [data]="pieChartData2"
+                                    [labels]="pieChartLabels"
+                                    [chartType]="pieChartType"
+                                    (chartHover)="chartHovered($event)"
+                                    (chartClick)="chartClicked($event)"
+                                ></canvas>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="100">
+                        <!-- <mat-card>
+              <mat-card-header> 
+                <mat-card-title>% Score</mat-card-title> 
+              </mat-card-header> 
+             <div class="mb-20" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"> 
+               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsBirdiesPercent']"> 
+                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsBirdiesPercent']" [label]="'Birdies'"></app-block-white-section> 
+               </div> 
+               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsParsPercent']"> 
+                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsParsPercent']" [label]="'Pars'"></app-block-white-section> 
+               </div> 
+               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsBogeysPercent']"> 
+                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsBogeysPercent']" [label]="'Bogeys'"></app-block-white-section> 
+               </div> 
+
+              </div>
+            </mat-card> -->
+                        <h2>% Score</h2>
+                        <div class="content">
+                            <div fxLayout="row wrap" fxLayoutGap="15px grid">
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore2['shotsBirdiesPercent']
+                                        "
+                                        [label]="'Birdies'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore2['shotsParsPercent']"
+                                        [label]="'Pars'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore2['shotsBogeysPercent']"
+                                        [label]="'Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore2[
+                                                'shotsDoubleBogeysPercent'
+                                            ]
+                                        "
+                                        [label]="'D. Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore2[
+                                                'shotsThreeOrHigherPercent'
+                                            ]
+                                        "
+                                        [label]="'3 or Plus'"
+                                    ></app-block-white-section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="mb-20 profileDash" fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutGap="20px" > 
+            <div [fxFlex]="50"> 
+             <mat-card >
+          <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"> 
+               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsDoubleBogeysPercent']"> 
+                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsDoubleBogeysPercent']" [label]="'D. Bogeys'"></app-block-white-section> 
+               </div> 
+               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsThreeOrHigherPercent']"> 
+                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsThreeOrHigherPercent']" [label]="'3 or Plus'"></app-block-white-section> 
+               </div> 
+              </div>
+            </mat-card>
+           </div>
+         </div> -->
+                <div
+                    class="mat-elevation-z8"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 GROSS</mat-card-title>
+                            </mat-card-header>
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeGross($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR2Gross"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.PlayerQL.firstName
+                                                        ? row.PlayerQL.firstName
+                                                        : "-"
+                                                }}
+                                                {{
+                                                    row.PlayerQL.lastName
+                                                        ? row.PlayerQL.lastName
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.value
+                                                        ? row.value.scoreR2
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.underR2
+                                                        ? row.value.underR2
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.holesPlayedR2
+                                                        ? row.value
+                                                              .holesPlayedR2
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR2Gross
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR2Gross
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 NET</mat-card-title>
+                            </mat-card-header>
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeNet($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR2NET"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.player.firstName }}
+                                                {{ row.value.player.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.scoreR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.underR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.holesPlayedR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR2NET
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR2NET
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab *ngIf="noOfRounds > 2" [disabled]="activeRound < 3">
+            <ng-template mat-tab-label>DAY 3</ng-template>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+            >
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToflightManagement()"
+                >
+                    Flight Management
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToAttendance()"
+                >
+                    Attendance
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="accent"
+                    (click)="redirectToScores()"
+                >
+                    Scores
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="primary"
+                    *ngIf="activeRound == 3"
+                    (click)="closeRound()"
+                >
+                    Close Round 3
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    mat-button
+                    fxLayoutAlign="center center"
+                    color="primary"
+                    *ngIf="activeRound == 3 && !scoreAdded"
+                    (click)="undoRound()"
+                >
+                    Undo Round 3
+                </button>
+                &nbsp;
+            </div>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+                *ngIf="noOfRounds == 3 && playersUpdatedHandicap.length == 0"
+            >
+                <button
+                    mat-raised-button
+                    mat-button
+                    color="primary"
+                    *ngIf="activeRound > noOfRounds"
+                    (click)="redirectToHandicap()"
+                >
+                    Hanidcap Calculation
+                </button>
+            </div>
+            <!-- <mat-card
+        *ngIf="!round3Stats"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <mat-progress-spinner color="primary" mode="indeterminate">
+        </mat-progress-spinner>
+      </mat-card> -->
+            <div class="mb-20 profileDash">
+                <h2>Top Players</h2>
+                <div fxLayout="row " fxLayoutGap="15px grid">
+                    <div
+                        fxFlex.xs="35%"
+                        fxFlex.sm="17%"
+                        *ngFor="let s of topMembers"
+                    >
+                        <app-top-player-section
+                            [bgClass]="s.class"
+                            [icon]="'emoji_people'"
+                            [count]="s.handicap"
+                            [label]="s.title"
+                            [cat]="s.category"
+                            [detail]="true"
+                            link="{{ 'players/view/' + s.id }}"
+                        ></app-top-player-section>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="round3Stats">
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="40">
+                        <h2>Average Score</h2>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore3['par3Avg']"
+                                    [label]="'On Par 3'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore3['par4Avg']"
+                                    [label]="'On Par 4'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore3['par5Avg']"
+                                    [label]="'On Par 5'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                    </div>
+                    <div [fxFlex]="40">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>Average Score</mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <canvas
+                                    baseChart
+                                    width="500"
+                                    height="300"
+                                    [data]="pieChartData3"
+                                    [labels]="pieChartLabels"
+                                    [chartType]="pieChartType"
+                                    (chartHover)="chartHovered($event)"
+                                    (chartClick)="chartClicked($event)"
+                                ></canvas>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="100">
+                        <h2>% Score</h2>
+                        <div class="content">
+                            <div fxLayout="row wrap" fxLayoutGap="15px grid">
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore3['shotsBirdiesPercent']
+                                        "
+                                        [label]="'Birdies'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore3['shotsParsPercent']"
+                                        [label]="'Pars'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore3['shotsBogeysPercent']"
+                                        [label]="'Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore3[
+                                                'shotsDoubleBogeysPercent'
+                                            ]
+                                        "
+                                        [label]="'D. Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore3[
+                                                'shotsThreeOrHigherPercent'
+                                            ]
+                                        "
+                                        [label]="'3 or Plus'"
+                                    ></app-block-white-section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mat-elevation-z8"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 GROSS</mat-card-title>
+                            </mat-card-header>
+
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeGross($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR3Gross"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.PlayerQL.firstName
+                                                        ? row.PlayerQL.firstName
+                                                        : "-"
+                                                }}
+                                                {{
+                                                    row.PlayerQL.lastName
+                                                        ? row.PlayerQL.lastName
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.value
+                                                        ? row.value.scoreR3
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.underR3
+                                                        ? row.value.underR3
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{
+                                                    row.holesPlayedR3
+                                                        ? row.value
+                                                              .holesPlayedR3
+                                                        : "-"
+                                                }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR3Gross
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR3Gross
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 NET</mat-card-title>
+                            </mat-card-header>
+
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeNet($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR3NET"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.player.firstName }}
+                                                {{ row.value.player.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.scoreR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.underR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.holesPlayedR2 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR3NET
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR3NET
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab *ngIf="noOfRounds > 3" [disabled]="activeRound < 4">
+            <ng-template mat-tab-label>DAY 4</ng-template>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+            >
+                <button
+                    mat-raised-button
+                    fxLayoutAlign="center center"
+                    mat-button
+                    color="accent"
+                    (click)="redirectToflightManagement()"
+                >
+                    Flight Management
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    fxLayoutAlign="center center"
+                    mat-button
+                    color="accent"
+                    (click)="redirectToAttendance()"
+                >
+                    Attendance
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    fxLayoutAlign="center center"
+                    mat-button
+                    color="accent"
+                    (click)="redirectToScores()"
+                >
+                    Scores
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    fxLayoutAlign="center center"
+                    mat-button
+                    color="primary"
+                    *ngIf="activeRound == 4"
+                    (click)="closeRound()"
+                >
+                    Close Round 4
+                </button>
+                &nbsp;
+                <button
+                    mat-raised-button
+                    fxLayoutAlign="center center"
+                    mat-button
+                    color="primary"
+                    *ngIf="activeRound == 4 && !scoreAdded"
+                    (click)="undoRound()"
+                >
+                    Undo Round 4
+                </button>
+                &nbsp;
+            </div>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+                *ngIf="noOfRounds == 4 && playersUpdatedHandicap.length == 0"
+            >
+                <button
+                    mat-raised-button
+                    mat-button
+                    color="primary"
+                    *ngIf="activeRound > noOfRounds"
+                    (click)="redirectToHandicap()"
+                >
+                    Hanidcap Calculation
+                </button>
+            </div>
+            <mat-card
+                *ngIf="!round4Stats"
+                style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <mat-progress-spinner color="primary" mode="indeterminate">
+                </mat-progress-spinner>
+            </mat-card>
+            <div class="mb-20 profileDash">
+                <h2>Top Players</h2>
+                <div fxLayout="row " fxLayoutGap="15px grid">
+                    <div
+                        fxFlex.xs="35%"
+                        fxFlex.sm="17%"
+                        *ngFor="let s of topMembers"
+                    >
+                        <app-top-player-section
+                            [bgClass]="s.class"
+                            [icon]="'emoji_people'"
+                            [count]="s.handicap"
+                            [label]="s.title"
+                            [cat]="s.category"
+                            [detail]="true"
+                            link="{{ 'players/view/' + s.id }}"
+                        ></app-top-player-section>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="round4Stats">
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="40">
+                        <h2>Average Score</h2>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore4['par3Avg']"
+                                    [label]="'On Par 3'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore4['par4Avg']"
+                                    [label]="'On Par 4'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                        <div
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="20px"
+                        >
+                            <div [fxFlex]="33.33">
+                                <app-block-white-section
+                                    [icon]="'emoji_people'"
+                                    [data]="avgScore4['par5Avg']"
+                                    [label]="'On Par 5'"
+                                ></app-block-white-section>
+                            </div>
+                        </div>
+                    </div>
+                    <div [fxFlex]="40">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>Average Score</mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <canvas
+                                    baseChart
+                                    width="500"
+                                    height="300"
+                                    [data]="pieChartData4"
+                                    [labels]="pieChartLabels"
+                                    [chartType]="pieChartType"
+                                    (chartHover)="chartHovered($event)"
+                                    (chartClick)="chartClicked($event)"
+                                ></canvas>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div
+                    class="mb-20 profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="100">
+                        <h2>% Score</h2>
+                        <div class="content">
+                            <div fxLayout="row wrap" fxLayoutGap="15px grid">
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore4['shotsBirdiesPercent']
+                                        "
+                                        [label]="'Birdies'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore4['shotsParsPercent']"
+                                        [label]="'Pars'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="avgScore4['shotsBogeysPercent']"
+                                        [label]="'Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore4[
+                                                'shotsDoubleBogeysPercent'
+                                            ]
+                                        "
+                                        [label]="'D. Bogeys'"
+                                    ></app-block-white-section>
+                                </div>
+
+                                <div
+                                    [fxFlex]="100 / gridColumns + '%'"
+                                    fxFlex.xs="100%"
+                                    fxFlex.sm="33%"
+                                >
+                                    <app-block-white-section
+                                        [icon]="'emoji_people'"
+                                        [data]="
+                                            avgScore4[
+                                                'shotsThreeOrHigherPercent'
+                                            ]
+                                        "
+                                        [label]="'3 or Plus'"
+                                    ></app-block-white-section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mat-elevation-z8"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 GROSS</mat-card-title>
+                            </mat-card-header>
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeGross($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR4Gross"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.player.firstName }}
+                                                {{ row.value.player.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.scoreR4 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.underR4 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.holesPlayedR4 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR4Gross
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR1Gross
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+
+                    <div [fxFlex]="50">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>TOP 10 NET</mat-card-title>
+                            </mat-card-header>
+                            <mat-tab-group
+                                mat-align-tabs="center"
+                                (selectedTabChange)="onChangeNet($event)"
+                            >
+                                <mat-tab
+                                    class="mb-20 separator"
+                                    fxLayout="row"
+                                    fxLayout.lt-md="column"
+                                    fxLayoutGap="20px"
+                                    *ngFor="
+                                        let m of tournamentCategories;
+                                        let k = index
+                                    "
+                                >
+                                    <ng-template mat-tab-label>{{
+                                        m.category
+                                    }}</ng-template>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceR4NET"
+                                        matSort
+                                    >
+                                        <!-- Serial Column -->
+                                        <ng-container matColumnDef="pos">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Position
+                                            </th>
+                                            <td
+                                                mat-cell
+                                                *matCellDef="
+                                                    let row;
+                                                    let i = index
+                                                "
+                                            >
+                                                {{ i + 1 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Name Column -->
+                                        <ng-container matColumnDef="name">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Name
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.player.firstName }}
+                                                {{ row.value.player.lastName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Phone Column -->
+                                        <ng-container matColumnDef="gross">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Score
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.scoreR4 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Email Column -->
+                                        <ng-container matColumnDef="toPar">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                ToPar
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.underR4 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- Details Column -->
+                                        <ng-container matColumnDef="thru">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                            >
+                                                Thru
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.value.holesPlayedR4 }}
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                displayedColumnsR4NET
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: displayedColumnsR1NET
+                                            "
+                                        ></tr>
+                                    </table>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="fullTournament.activeRound > fullTournament.noOfRounds">
+            <ng-template mat-tab-label>Summary</ng-template>
+            <div
+                fxLayoutAlign="center center"
+                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
+            ></div>
+
+            <div
+                class="mat-elevation-z8"
+                fxFlex
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayout.lt-md="column"
+                fxLayoutGap="20px"
+            >
+                <div [fxFlex]="50">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>TOP 15 GROSS</mat-card-title>
+                        </mat-card-header>
+                        <mat-tab-group
+                            mat-align-tabs="center"
+                            (selectedTabChange)="onChangeGross($event)"
+                        >
+                            <mat-tab
+                                class="mb-20 separator"
+                                fxLayout="row"
+                                fxLayout.lt-md="column"
+                                fxLayoutGap="20px"
+                                *ngFor="
+                                    let m of tournamentCategories;
+                                    let k = index
+                                "
+                            >
+                                <ng-template mat-tab-label>{{
+                                    m.category
+                                }}</ng-template>
+                                <table
+                                    mat-table
+                                    [dataSource]="dataSourceTotalGross"
+                                    matSort
+                                >
+                                    <!-- Serial Column -->
+                                    <ng-container matColumnDef="pos">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Position
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                        >
+                                            {{ i + 1 }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="name">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.value.player.firstName }}
+                                            {{ row.value.player.lastName }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="R1gross">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R1
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR1
+                                                    ? row.value.scoreR1
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Email Column -->
+                                    <ng-container matColumnDef="R2gross">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R2
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR2
+                                                    ? row.value.scoreR2
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Details Column -->
+                                    <ng-container matColumnDef="R3gross">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R3
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR3
+                                                    ? row.value.scoreR3
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="R4gross">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R4
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR4
+                                                    ? row.value.scoreR4
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="total">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            total
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR1 +
+                                                    row.value.scoreR2 +
+                                                    row.value.scoreR3 +
+                                                    row.value.scoreR4
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr
+                                        mat-header-row
+                                        *matHeaderRowDef="
+                                            displayedColumnsTotalGross
+                                        "
+                                    ></tr>
+                                    <tr
+                                        mat-row
+                                        *matRowDef="
+                                            let row;
+                                            columns: displayedColumnsTotalGross
+                                        "
+                                    ></tr>
+                                </table>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </mat-card>
+                </div>
+
+                <div [fxFlex]="50">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>TOP 10 NET</mat-card-title>
+                        </mat-card-header>
+                        <mat-tab-group
+                            mat-align-tabs="center"
+                            (selectedTabChange)="onChangeNet($event)"
+                        >
+                            <mat-tab
+                                class="mb-20 separator"
+                                fxLayout="row"
+                                fxLayout.lt-md="column"
+                                fxLayoutGap="20px"
+                                *ngFor="
+                                    let m of tournamentCategories;
+                                    let k = index
+                                "
+                            >
+                                <ng-template mat-tab-label>{{
+                                    m.category
+                                }}</ng-template>
+                                <table
+                                    mat-table
+                                    [dataSource]="dataSourceTotalNET"
+                                    matSort
+                                >
+                                    <!-- Serial Column -->
+                                    <ng-container matColumnDef="pos">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Position
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                        >
+                                            {{ i + 1 }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="name">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.value.player.firstName }}
+                                            {{ row.value.player.lastName }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Phone Column -->
+                                    <ng-container matColumnDef="R1net">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R1
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR1
+                                                    ? row.value.scoreR1
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Email Column -->
+                                    <ng-container matColumnDef="R2net">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R2
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR2
+                                                    ? row.value.scoreR2
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Details Column -->
+                                    <ng-container matColumnDef="R3net">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R3
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR3
+                                                    ? row.value.scoreR3
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="R4net">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            R4
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR4
+                                                    ? row.value.scoreR4
+                                                    : null
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="total">
+                                        <th
+                                            mat-header-cell
+                                            *matHeaderCellDef
+                                            mat-sort-header
+                                        >
+                                            total
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{
+                                                row.value.scoreR1 +
+                                                    row.value.scoreR2 +
+                                                    row.value.scoreR3 +
+                                                    row.value.scoreR4
+                                            }}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr
+                                        mat-header-row
+                                        *matHeaderRowDef="
+                                            displayedColumnsTotalNET
+                                        "
+                                    ></tr>
+                                    <tr
+                                        mat-row
+                                        *matRowDef="
+                                            let row;
+                                            columns: displayedColumnsTotalNET
+                                        "
+                                    ></tr>
+                                </table>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </mat-card>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+<mat-card
+    *ngIf="isLoading"
+    style="display: flex; justify-content: center; align-items: center"
+>
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+</mat-card>

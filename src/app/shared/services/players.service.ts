@@ -306,16 +306,26 @@ export class PlayersService {
         });
     }
 
-    getPlayerByID(id: string) {
-        return this.apollo.subscribe<any>({
-            query: Query.GetPlayerByID,
-            variables: {
-                where: {
-                    id: {
-                        _eq: id,
+    getPlayerByID(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.GetPlayerByID,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: id,
+                            },
+                        },
                     },
-                },
-            },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
         });
     }
 

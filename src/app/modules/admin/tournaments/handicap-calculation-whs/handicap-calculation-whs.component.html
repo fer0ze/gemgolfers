@@ -1,0 +1,93 @@
+<div class="mb-20" fxLayout="row" fxLayoutGap="20px grid">
+  <div fxFlex="20">
+    <button mat-raised-button color="primary" (click)="calculateHandicap()" *ngIf="!handicapUpdated">Update Handicap</button>
+  </div>
+  <div fxFlex="60">
+    <!-- Course Rating: {{ courseRatingDisplay }}, 
+    Slope Rating: {{ slopeRatingDisplay }} <br />
+    Handicap Differential = (Adjusted Gross Score - Course Rating) x 113 + Slope Rating -->
+  </div>
+  <div fxFlex="20">
+    <mat-form-field appearance="outline">
+      <mat-select placeholder="Select Handicap System" (selectionChange)="switchHandicapSystem($event.value)" [(value)]="selected">
+        <mat-option value="congo">CONGU</mat-option>
+        <mat-option value="whs">WHS</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div>&nbsp;</div>
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+<table mat-table [dataSource]="dataSource" *ngIf="tournamentRounds == 1" matSort>
+
+    <!-- Serial Column -->
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Sr. </th>
+        <td mat-cell *matCellDef="let row; let i = index"> {{i + 1}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Player Name </th>
+      <td mat-cell *matCellDef="let row"> {{row.getName()}} </td>
+  </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="oldhandicap">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Handicap </th>
+      <td mat-cell *matCellDef="let row"> {{row.getOldHandicapString() | number : '1.1-1'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="scores">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Score </th>
+      <td mat-cell *matCellDef="let row"> {{row.scores}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="adjustedScores">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Adjusted Score </th>
+      <td mat-cell *matCellDef="let row"> {{row.adjustedScores}} </td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="handicapDifferential">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Handicap Differential </th>
+      <td mat-cell *matCellDef="let row"> {{row.getHandicapDifferential()}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner 
+  
+    color="primary" 
+    mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>
+<mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+
+<table class="mat-elevation-z8" id="playersWhs" *ngIf="handicapsWhs?.length > 0 && tournamentRounds > 1">
+  <thead>
+    <tr>
+      <th>POS.</th>
+      <th [ngStyle]="{'text-align': 'left'}">NAME</th>
+      <th>ROUND 1</th>
+      <th *ngIf="tournamentRounds > 1">ROUND 2</th>
+      <th *ngIf="tournamentRounds > 2">ROUND 3</th>
+      <th *ngIf="tournamentRounds > 3">ROUND 4</th>
+      <th>HC INDEX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of handicapsWhs; let i = index;">
+      <td>{{i + 1}}</td>
+      <td [ngStyle]="{'text-align': 'left'}">{{item.getName()}}</td>
+      <td>{{item.getScoreString(1) }}</td>
+      <td *ngIf="tournamentRounds > 1">{{item.getScoreString(2)}}</td>
+      <td *ngIf="tournamentRounds > 2">{{item.getScoreString(3)}}</td>
+      <td *ngIf="tournamentRounds > 3">{{item.getScoreString(4)}}</td>
+      <td>{{item.getHandicapIndexString() | number : '1.1-1' }}</td>
+    </tr>
+  </tbody>
+</table>

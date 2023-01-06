@@ -1,0 +1,152 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+  <div class="flex-auto">
+      <div
+          class="flex flex-col bg-card sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
+      >
+          <!-- Title -->
+          <div>
+              <div
+                  class="text-6xl font-extrabold tracking-tight leading-none mt-3"
+              >
+                 Courses
+              </div>
+          </div>
+
+          <!-- Main actions -->
+          <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+              <!-- Search -->
+              <div class="flex-auto">
+                  <mat-form-field
+                      class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50"
+                  >
+                      <mat-icon
+                          class="icon-size-5"
+                          matPrefix
+                          [svgIcon]="'heroicons_solid:search'"
+                      ></mat-icon>
+                      <input
+                          matInput
+                          
+                          (keyup)="applyFilter($event.target.value)"
+                          [autocomplete]="'off'"
+                          [placeholder]="'Search'"
+                      />
+                  </mat-form-field>
+              </div>
+              <!-- Add contact button -->
+              <button
+                  class="ml-4"
+                  mat-flat-button
+                  [color]="'primary'"
+                  [routerLinkActive]="'active'"
+                  [routerLink]="['/courses/add']"
+              >
+                  <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                  <span class="ml-2 mr-1">Add</span>
+              </button>
+          </div>
+      </div>
+      <div class="overflow-x-auto bg-card">
+        <table class="w-full bg-transparent" mat-table [dataSource]="dataSource" matSort>
+          <!-- Serial Column -->
+          <ng-container matColumnDef="id">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef>Sr.</th>
+            <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
+          </ng-container>
+    
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="textLink">{{ row.name }}</span>
+             
+            </td>
+          </ng-container>
+    
+          <!-- Phone Column -->
+          <ng-container matColumnDef="noOfHoles">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef mat-sort-header>NoOfHoles</th>
+            <td mat-cell *matCellDef="let row">{{ row.noOfHoles }}</td>
+          </ng-container>
+    
+          <!-- Email Column -->
+          <ng-container matColumnDef="par">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef mat-sort-header>Par</th>
+            <td mat-cell *matCellDef="let row">{{ row.par }}</td>
+          </ng-container>
+    
+          <ng-container matColumnDef="courseRating">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef mat-sort-header>Course Rating</th>
+            <td mat-cell *matCellDef="let row">{{ row.courseRating }}</td>
+          </ng-container>
+    
+          <!-- Extra Data Column -->
+          <ng-container matColumnDef="slopeRating">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef mat-sort-header>Slope Rating</th>
+            <td mat-cell *matCellDef="let row">{{ row.slopeRating }}</td>
+          </ng-container>
+    
+          <!-- handicap Column -->
+          <ng-container matColumnDef="city">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
+            <td mat-cell *matCellDef="let row">
+              <span>{{ row.city }}</span>
+            </td>
+          </ng-container>
+    
+          <!-- Details Column -->
+          <!-- <ng-container matColumnDef="details">
+              <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef> Details </th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-icon-button color="primary" (click)="redirectToDetails(row.id)">
+                    <mat-icon class="mat-18">reorder</mat-icon>
+                </button>
+              </td>
+            </ng-container> -->
+    
+          <ng-container matColumnDef="update">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef>Edit</th>
+            <td mat-cell *matCellDef="let element">
+              <span
+                                        class="pr-6 font-medium whitespace-nowrap"
+                                    >
+              <a [routerLinkActive]="'active'" [routerLink]="['/course/view/'+element.id]" >
+                <button mat-icon-button color="accent">
+                  <mat-icon
+                                                [svgIcon]="
+                                                    'heroicons_outline:pencil'
+                                                "
+                                                color="primary"
+                                            ></mat-icon>
+                </button>
+              </a>
+              </span>
+            </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="delete">
+            <th   class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef>Del</th>
+            <td mat-cell *matCellDef="let transaction">
+              <span
+                  class="pr-6 font-medium whitespace-nowrap cursor-pointer"
+              >
+                  <mat-icon
+                      [svgIcon]="'heroicons_solid:delete'"
+                      color="warn"
+                  ></mat-icon>
+              </span>
+          </td>
+          </ng-container>
+    
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row   class="order-row h-16 hover:bg-gray-100" *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator
+          [pageSize]="20"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+      ></mat-paginator>
+      </div>
+      
+  </div>
+</div>
+

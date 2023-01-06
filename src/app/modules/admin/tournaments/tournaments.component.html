@@ -1,0 +1,664 @@
+<div class="flex-auto">
+    <!-- Header -->
+
+    <div class="bg-card">
+        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+            <div
+                class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12"
+            >
+                <!-- Avatar and name -->
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="flex-0 w-20 h-25 rounded-full overflow-hidden">
+                        <img
+                            class="w-full h-full object-cover"
+                            src="assets/images/logo/kgc-logo.png"
+                        />
+                    </div>
+                    <div class="flex flex-col min-w-0 ml-4">
+                        <ng-container>
+                            <div
+                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate"
+                            >
+                                Welcome to the Tournaments
+                            </div>
+                        </ng-container>
+                        <div class="flex items-center">
+                            <div
+                                class="ml-1.5 leading-6 truncate text-secondary"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <button
+                        class="bg-accent"
+                        mat-flat-button
+                        [color]="'accent'"
+                        [routerLinkActive]="'active'"
+                        [routerLink]="['/tournaments/add']"
+                    >
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:plus-circle'"
+                        ></mat-icon>
+                        <span class="ml-2">New Tournament</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Project selector -->
+            <!-- <div
+              class="relative flex self-start pt-2 pb-1 pl-5 pr-4 cursor-pointer overflow-hidden rounded-t-xl border border-b-0 bg-default"
+              matRipple
+              [matMenuTriggerFor]="projectsMenu">
+              <div class="flex items-center">
+                  <div class="overflow-hidden">
+                      <div class="font-medium leading-6 truncate">{{selectedProject}}</div>
+                  </div>
+                  <div class="flex items-center justify-center pl-2">
+                      <mat-icon
+                          class="icon-size-5"
+                          [svgIcon]="'heroicons_solid:chevron-down'"></mat-icon>
+                  </div>
+              </div> -->
+            <!-- <mat-menu
+                  #projectsMenu="matMenu"
+                  [xPosition]="'before'">
+                  <button
+                      mat-menu-item
+                      (click)="selectedProject='ACME Corp. Backend App'">ACME Corp. Backend App
+                  </button>
+                  <button
+                      mat-menu-item
+                      (click)="selectedProject='ACME Corp. Frontend App'">ACME Corp. Frontend App
+                  </button>
+                  <button
+                      mat-menu-item
+                      (click)="selectedProject='Creapond'">Creapond
+                  </button>
+                  <button
+                      mat-menu-item
+                      (click)="selectedProject='Withinpixels'">Withinpixels
+                  </button>
+              </mat-menu> -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <div class="flex-auto border-t -mt-px pt-2 sm:pt-6">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <mat-tab-group
+                color="accent"
+                class="sm:px-2"
+                [selectedIndex]="selected"
+                (selectedTabChange)="tabClicked($event)"
+                mat-align-tabs="center"
+            >
+                <mat-tab label="COMPLETED">
+                    <mat-form-field>
+                        <input
+                            matInput
+                            (keyup)="applyFilter($event.target.value)"
+                            placeholder="Filter"
+                        />
+                    </mat-form-field>
+                    <ng-template matTabContent class="width-full">
+                        <div class="mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" matSort>
+                                <!-- Serial Column -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Sr.
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        *matCellDef="let row; let i = index"
+                                    >
+                                        {{ i + 1 }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="title">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Title
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.title }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Phone Column -->
+                                <ng-container matColumnDef="date">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Date
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.startDate }} -
+                                        {{ row.endDate }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Phone Column -->
+                                <ng-container matColumnDef="noOfRounds">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Rounds
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.noOfRounds }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Details Column -->
+                                <ng-container matColumnDef="details">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Details
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <button
+                                            mat-icon-button
+                                            color="primary"
+                                            (click)="redirectToDetails(row.id)"
+                                        >
+                                            <mat-icon class="mat-18"
+                                                >reorder</mat-icon
+                                            >
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Delete
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button
+                                            mat-icon-button
+                                            color="warn"
+                                            (click)="
+                                                deleteTournament(element.id)
+                                            "
+                                        >
+                                            <mat-icon class="mat-18"
+                                                >delete</mat-icon
+                                            >
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="handicap">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        H/C - WHS
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button
+                                            mat-icon-button
+                                            color="warn"
+                                            (click)="
+                                                handicapList(
+                                                    element.HandicapCalculated,
+                                                    null,
+                                                    false
+                                                )
+                                            "
+                                        >
+                                            <mat-icon
+                                                class="mat-18"
+                                                [ngClass]="{
+                                                    active:
+                                                        element
+                                                            .HandicapCalculated
+                                                            .length > 0,
+                                                    disabled:
+                                                        element
+                                                            .HandicapCalculated
+                                                            .length == 0
+                                                }"
+                                                >check_circle</mat-icon
+                                            >
+                                        </button>
+                                        <button
+                                            *ngIf="
+                                                element.PlayerHandicapWhs
+                                                    .length > 0
+                                            "
+                                            mat-icon-button
+                                            color="warn"
+                                            (click)="
+                                                handicapList(
+                                                    null,
+                                                    element.PlayerHandicapWhs,
+                                                    true
+                                                )
+                                            "
+                                        >
+                                            <mat-icon
+                                                class="mat-18"
+                                                [ngClass]="{
+                                                    active:
+                                                        element
+                                                            .HandicapCalculated
+                                                            .length > 0,
+                                                    disabled:
+                                                        element
+                                                            .HandicapCalculated
+                                                            .length == 0
+                                                }"
+                                                >check_circle</mat-icon
+                                            >
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr
+                                    mat-header-row
+                                    *matHeaderRowDef="displayedColumns"
+                                ></tr>
+                                <tr
+                                    mat-row
+                                    *matRowDef="
+                                        let row;
+                                        columns: displayedColumns
+                                    "
+                                ></tr>
+                            </table>
+                            <mat-card
+                                *ngIf="isLoading"
+                                style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
+                                <mat-progress-spinner
+                                    color="primary"
+                                    mode="indeterminate"
+                                >
+                                </mat-progress-spinner>
+                            </mat-card>
+
+                            <mat-paginator
+                                [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"
+                            ></mat-paginator>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="LIVE">
+                    <mat-form-field>
+                        <input
+                            matInput
+                            (keyup)="applyFilterUpComing($event.target.value)"
+                            placeholder="Filter"
+                        />
+                    </mat-form-field>
+                    <ng-template matTabContent>
+                        <div class="mat-elevation-z8">
+                            <table
+                                mat-table
+                                [dataSource]="dataSourceUpComing"
+                                matSort
+                            >
+                                <!-- Serial Column -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Sr.
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        *matCellDef="let row; let i = index"
+                                    >
+                                        {{ i + 1 }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="title">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Title
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.title }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Phone Column -->
+                                <ng-container matColumnDef="date">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Date
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.startDate }} -
+                                        {{ row.endDate }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Phone Column -->
+                                <ng-container matColumnDef="noOfRounds">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Rounds
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.noOfRounds }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Details Column -->
+                                <ng-container matColumnDef="details">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Details
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <button
+                                            mat-icon-button
+                                            color="primary"
+                                            (click)="redirectToDetails(row.id)"
+                                        >
+                                            <mat-icon class="mat-18"
+                                                >reorder</mat-icon
+                                            >
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- <ng-container matColumnDef="update">
+          <th mat-header-cell *matHeaderCellDef> Update </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="accent" (click)="redirectToUpdate(element.id)">
+                <mat-icon class="mat-18">edit</mat-icon>
+            </button>
+          </td>
+        </ng-container> -->
+
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Delete
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button
+                                            mat-icon-button
+                                            color="warn"
+                                            (click)="
+                                                deleteTournament(element.id)
+                                            "
+                                        >
+                                            <mat-icon class="mat-18"
+                                                >delete</mat-icon
+                                            >
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr
+                                    mat-header-row
+                                    *matHeaderRowDef="displayedColumnsUpComing"
+                                ></tr>
+                                <tr
+                                    mat-row
+                                    *matRowDef="
+                                        let row;
+                                        columns: displayedColumnsUpComing
+                                    "
+                                ></tr>
+                            </table>
+
+                            <mat-card
+                                *ngIf="isLoadingUpComing"
+                                style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
+                                <mat-progress-spinner
+                                    color="primary"
+                                    mode="indeterminate"
+                                >
+                                </mat-progress-spinner>
+                            </mat-card>
+
+                            <mat-paginator
+                                [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"
+                            ></mat-paginator>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="SCHEDULED">
+                    <mat-form-field>
+                        <input
+                            matInput
+                            (keyup)="applyFilter($event.target.value)"
+                            placeholder="Filter"
+                        />
+                    </mat-form-field>
+                    <ng-template matTabContent>
+                        <div class="mat-elevation-z8">
+                            <table
+                                mat-table
+                                [dataSource]="dataSourceSchedule"
+                                matSort
+                            >
+                                <!-- Serial Column -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Sr.
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        *matCellDef="let row; let i = index"
+                                    >
+                                        {{ i + 1 }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Title Column -->
+                                <ng-container matColumnDef="tournamentTitle">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Title
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.tournamentTitle }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Course Column -->
+                                <ng-container matColumnDef="course">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Course
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.course.name }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Date Column -->
+                                <ng-container matColumnDef="date">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Date
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.date }}
+                                    </td>
+                                </ng-container>
+
+                                <tr
+                                    mat-header-row
+                                    *matHeaderRowDef="displayedColumnsSchedule"
+                                ></tr>
+                                <tr
+                                    mat-row
+                                    *matRowDef="
+                                        let row;
+                                        columns: displayedColumnsSchedule
+                                    "
+                                ></tr>
+                            </table>
+                            <mat-card
+                                *ngIf="isLoadingSchedule"
+                                style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
+                                <mat-progress-spinner
+                                    color="primary"
+                                    mode="indeterminate"
+                                >
+                                </mat-progress-spinner>
+                            </mat-card>
+
+                            <mat-paginator
+                                [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"
+                            ></mat-paginator>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+
+                <mat-tab label="INCOMPLETE">
+                    <mat-form-field>
+                        <input
+                            matInput
+                            (keyup)="applyFilter($event.target.value)"
+                            placeholder="Filter"
+                        />
+                    </mat-form-field>
+                    <ng-template matTabContent>
+                        <div class="mat-elevation-z8">
+                            <table
+                                mat-table
+                                [dataSource]="dataSourceIncomplete"
+                                matSort
+                            >
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Sr.
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        *matCellDef="let row; let i = index"
+                                    >
+                                        {{ i + 1 }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="title">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Title
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.title }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Phone Column -->
+                                <ng-container matColumnDef="date">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Date
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.startDate }} -
+                                        {{ row.endDate }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Phone Column -->
+                                <ng-container matColumnDef="noOfRounds">
+                                    <th
+                                        mat-header-cell
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Rounds
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row.noOfRounds }}
+                                    </td>
+                                </ng-container>
+
+                                <tr
+                                    mat-header-row
+                                    *matHeaderRowDef="
+                                        displayedColumnsIncomplete
+                                    "
+                                ></tr>
+                                <tr
+                                    mat-row
+                                    *matRowDef="
+                                        let row;
+                                        columns: displayedColumnsIncomplete
+                                    "
+                                ></tr>
+                            </table>
+                            <mat-card
+                                *ngIf="isLoadingSchedule"
+                                style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
+                                <mat-progress-spinner
+                                    color="primary"
+                                    mode="indeterminate"
+                                >
+                                </mat-progress-spinner>
+                            </mat-card>
+
+                            <mat-paginator
+                                [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"
+                            ></mat-paginator>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>

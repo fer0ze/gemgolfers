@@ -1,4 +1,4 @@
-import { CourseRating } from 'src/app/shared/classes/course-rating';
+import { CourseRating } from 'app/shared/classes/course-rating';
 
 export class PlayerHandicapWhs {
     private playerId: string;

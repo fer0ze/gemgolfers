@@ -426,6 +426,9 @@ export class FacadeService {
   getTournamentCountsByClub(clubId:string){
     return this.tournamentService.getTournamentCountsByClub(clubId);
   }
+  getTournamentCountsByClubAll(){
+    return this.tournamentService.getTournamentCountsByClubAll();
+  }
   
   LeaderboardOneTimeDataQuery(tournamentId: string, playerId: string) {
     return this.tournamentService.LeaderboardOneTimeDataQuery(

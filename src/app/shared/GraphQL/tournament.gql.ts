@@ -90,7 +90,7 @@ export const LeaderboardSubscription = gql`
 `;
 
 export const tournamentDashBoard = gql`
-    subscription LeaderboardSimpleSubscription($tournamentPrefix: String!) {
+    query LeaderboardSimpleSubscription($tournamentPrefix: String!) {
         TournamentQL: tournament(
             where: {
                 _or: [
@@ -1415,6 +1415,15 @@ export const LeaderRoundQueryQL = gql`
 `;
 
 export const getTournamentCountsByClub = gql`
+    query getTournamentCountsByClub($where: tournament_bool_exp!) {
+        Count: tournament_aggregate(where: $where) {
+            aggregate {
+                count
+            }
+        }
+    }
+`;
+export const getTournamentCountsByClubAll = gql`
     query getTournamentCountsByClub($where: tournament_bool_exp!) {
         Count: tournament_aggregate(where: $where) {
             aggregate {

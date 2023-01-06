@@ -412,7 +412,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
     cancel() {
-        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+        this._router.navigate(['/players'], { relativeTo: this._activatedRoute });
     }
 
     /**
@@ -481,11 +481,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    fetchData() {
-        this._facadeService
-            .getPlayerByID(this.playerID)
-            .subscribe((response) => {
-                this.currentPlayer = response['data'].player;
+   async fetchData() {
+        this.currentPlayer=<Player> await this._facadeService
+            .getPlayerByID(this.playerID);
+           
 
                 console.log(this.currentPlayer);
                 if (this.currentPlayer.length > 0) {
@@ -512,6 +511,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                     });
                 }
                 this._changeDetectorRef.markForCheck();
-            });
+          
     }
 }

@@ -11,7 +11,7 @@ import { ApexOptions } from 'ng-apexcharts';
 import { ProjectService } from 'app/modules/admin/dashboards/project/project.service';
 import { TournamentsService } from 'app/shared/services/tournaments.service';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { labels, labelsPlayers } from 'app/shared/classes/general';
+import { Constants, labels, labelsPlayers } from 'app/shared/classes/general';
 import { trigger } from '@angular/animations';
 import { Player } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
@@ -69,7 +69,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
      */
     async ngOnInit() {
         // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
-
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+          );
         // Attach SVG fill fixer to all ApexCharts
         this.showdata = Promise.resolve(true);
         console.log(this.showdata);
@@ -475,24 +477,34 @@ export class ProjectComponent implements OnInit, OnDestroy {
     private async fetchdata() {
         // Get the Tournaments Count
         this.showdata = Promise.resolve(false);
-        let tournamentCounts =
-            await this._facadeService.getTournamentCountsByClub(
-                localStorage.getItem('adminClubID')
+        let tournamentCounts ;
+        if(this.loggedInuser.userRole==1)
+        {
+             tournamentCounts =
+            await this._facadeService.getTournamentCountsByClubAll(
+                
             );
+        }else{
+             tournamentCounts =
+            await this._facadeService.getTournamentCountsByClub(
+                this.loggedInuser.adminClubId
+            );
+        }
+       
         this.tournamentCounts = tournamentCounts.Count.aggregate.count;
 
         console.log(this.tournamentCounts);
 
         //Get the Flights Count
         let flightCounts = await this._facadeService.getTotalFlights(
-            localStorage.getItem('adminClubID')
+             this.loggedInuser.adminClubId
         );
         this.flightCounts = flightCounts.Count.aggregate.count;
         console.log(this.flightCounts);
 
         // Get the Flights Count
         let playerCounts = await this._facadeService.getTotalPlayers(
-            localStorage.getItem('adminClubID')
+             this.loggedInuser.adminClubId
         );
         this.playerCounts = playerCounts.AggregateQL.aggregate.totalCount;
         console.log(this.playerCounts);
@@ -501,7 +513,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
         let dataPlayers: any = await this._facadeService.getDailyRoundsSingleDashboard(
-            localStorage.getItem('adminClubID'),
+             this.loggedInuser.adminClubId,
             this._datePipe.transform(lastWeekSunday.toString(), 'yyyy-MM-dd'),
             this._datePipe.transform(lastWeekMonday.toString(), 'yyyy-MM-dd')
         );
@@ -591,7 +603,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
         let players: any =
             await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
-                localStorage.getItem('adminClubID')
+                this.loggedInuser.adminClubId
             );
 
         console.log(players);

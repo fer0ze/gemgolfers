@@ -26,7 +26,7 @@ export class CanDeactivateContactsDetails implements CanDeactivate<ContactsDetai
         // If the next state doesn't contain '/contacts'
         // it means we are navigating away from the
         // contacts app
-        if ( !nextState.url.includes('/players') )
+        if ( !nextState.url.includes('players') )
         {
             // Let it navigate
             return true;

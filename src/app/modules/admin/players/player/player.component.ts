@@ -130,7 +130,7 @@ export class PlayerComponent implements OnInit {
 
         let id = UniqueIdGenerator.generate();
 
-        this._router.navigate(['./', id], { relativeTo: this._activatedRoute });
+        this._router.navigate(['./view/', id], { relativeTo: this._activatedRoute });
         // });
         // Go to the new contact
 
@@ -139,13 +139,13 @@ export class PlayerComponent implements OnInit {
     }
     onBackdropClicked(): void {
         // Go back to the list
-        this._router.navigate(['./'], { relativeTo: this._activatedRoute });
+        this._router.navigate(['/players']);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
     updatePlayer(id:string):void{
-        this._router.navigate(['./', id], { relativeTo: this._activatedRoute });
+        this._router.navigate(['./view/', id], { relativeTo: this._activatedRoute });
         // });
         // Go to the new contact
 

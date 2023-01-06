@@ -1,0 +1,39 @@
+<div mat-dialog-content>
+  <h2 color="accent">{{scheduleInfo.tournamentTitle}}</h2>
+  <div class="mb-4" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="60">
+      <strong>Course:</strong>
+    </div>
+    <div [fxFlex]="40">
+      <strong>Match Format:</strong>
+    </div>
+  </div>
+  <div class="mb-4" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="60">
+      <mat-icon matSuffix>golf_course</mat-icon> {{scheduleInfo.course.name}}
+    </div>
+    <div [fxFlex]="40">
+      {{scheduleInfo.matchFormat}}
+    </div>
+  </div>
+  <div class="mb-4" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="50">
+      <strong>Date:</strong>
+    </div>
+  </div>
+  <div class="mb-4" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="50">
+      <mat-icon matSuffix>date_range</mat-icon> {{scheduleInfo.date}}
+    </div>
+  </div>
+  <div class="mb-4" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="100">
+      <strong>Description:</strong>
+    </div>
+  </div>
+  <div class="mb-4" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="100">
+      {{scheduleInfo.description}}
+    </div>
+  </div>
+</div>

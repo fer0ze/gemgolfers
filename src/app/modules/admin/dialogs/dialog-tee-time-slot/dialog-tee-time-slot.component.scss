@@ -1,0 +1,53 @@
+table {
+    width: 100%;
+
+    .white {
+        color: white;
+    }
+    td {
+        text-align: left;
+        width: 33.33%;
+    }
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-icon.disabled {
+    color: #d3d3d3;
+    cursor: default;
+}
+.mat-icon.active {
+    color: greenyellow;
+    cursor: pointer;
+}
+
+.membersList {
+    background-color: #efefef;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 1px;
+    margin: 5px;
+}
+
+.mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+    flex-grow: 3;
+}
+
+.mat-expansion-panel-header-description {
+    flex-grow: 0;
+}
+
+.partial {
+    background-color: #f66d00!important;
+}
+
+.full {
+    background-color: #479944!important;
+}

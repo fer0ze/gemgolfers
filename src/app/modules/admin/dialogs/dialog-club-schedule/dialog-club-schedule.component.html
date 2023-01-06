@@ -1,0 +1,60 @@
+<div mat-dialog-content>
+  <h3>Add Schedule</h3>
+  <form [formGroup]="scheduleForm">
+  <div  fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+    <!-- <div [fxFlex]="33.33">
+      <mat-label>Players/Flight:</mat-label>
+      <mat-form-field>
+        <input matInput formControlName="courseId">
+      </mat-form-field>
+    </div> -->
+    <div [fxFlex]="50">
+      <mat-form-field appearance="outline">
+      <input matInput formControlName="tournamentTitle" placeholder="Tournament Title" required>
+        <mat-error>The input is required.</mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex]="50">
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Course" formControlName="courseId">
+          <mat-option *ngFor="let course of Courses" [value]='course.id'>{{course.name}}</mat-option>
+        </mat-select>
+        <mat-icon matSuffix>place</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+  <div  fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+    <div [fxFlex]="50">
+      <mat-form-field appearance="outline">
+        <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" formControlName="date" placeholder="Schedule Date" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>This field is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex]="50">
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Match Format" formControlName="matchFormat">
+          <mat-option value="MATCH_PLAY">MATCH_PLAY</mat-option>
+          <mat-option value="STROKE_PLAY">STROKE_PLAY</mat-option>
+          <mat-option value="STABLEFORD">STABLEFORD</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+  </div>
+
+  <div  fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+    <div [fxFlex]="100">
+      <mat-form-field appearance="outline">
+        <textarea matInput placeholder="Description" formControlName="description"></textarea>
+        <mat-error>The input is required.</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="refresh">Close</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!scheduleForm.valid" cdkFocusInitial>Add Schedule</button>
+</div>

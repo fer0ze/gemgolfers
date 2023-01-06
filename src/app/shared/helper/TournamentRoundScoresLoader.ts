@@ -1,16 +1,15 @@
-import { PlayerHandicapWhs } from 'src/app/shared/classes/player-hanidcap-whs';
+import { PlayerHandicapWhs } from 'app/shared/classes/player-hanidcap-whs';
 
-import { Player, IPlayerHandicapWhs } from 'src/app/shared/models/player.model';
-import { Tournament } from 'src/app/shared/models/tournament.model';
-import { Flight } from 'src/app/shared/models/flight.model';
-import { Course } from 'src/app/shared/models/course.model';
-import { CourseRating } from 'src/app/shared/classes/course-rating';
-import { Hole } from 'src/app/shared/models/hole.model';
-import { Score } from 'src/app/shared/models/score.model';
+import { Player, IPlayerHandicapWhs } from 'app/shared/models/player.model';
+import { Tournament } from 'app/shared/models/tournament.model';
+import { Flight } from 'app/shared/models/flight.model';
+import { Course } from 'app/shared/models/course.model';
+import { CourseRating } from 'app/shared/classes/course-rating';
+import { Hole } from 'app/shared/models/hole.model';
+import { Score } from 'app/shared/models/score.model';
 import { FlightManagerQL } from '../fragments/flight.fragment';
 
 import { FacadeService } from '../services/facade.service';
-import { stringify } from '@angular/core/src/util';
 import { AsyncAction } from 'rxjs/internal/scheduler/AsyncAction';
 import { General } from '../classes/general';
 

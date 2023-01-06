@@ -1,0 +1,60 @@
+table {
+    width: 100%;
+
+    td {
+
+      .mat-icon {
+        color: #2b8e2a;
+        cursor: pointer;
+      }
+
+      .moveableBox td {
+        width: 25%;
+      }
+      .mat-cell{
+          padding: 0px 0px 0px 15px;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+      }
+    }
+
+    tr {
+        cursor: pointer;
+    }
+  }
+
+  .selectedPlayer {
+    background-color: #ffffff;
+}
+
+  .example-container {
+    height: 400px;
+    overflow: auto;
+  }
+
+div span {
+    padding: 5px;
+}
+mat-form-field, button {
+    margin-right: 2%;
+}
+mat-card-title{
+    text-align: center;
+}
+mat-radio-button {
+    margin-right: 20px;
+}
+#plalyerInfoBox {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+}
+td.mat-cell{
+    padding: 0px 0px 0px 15px;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+}
+.box{
+  display: flex;
+  justify-content: center;
+}

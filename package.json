@@ -23,6 +23,8 @@
     "@angular/compiler": "14.2.4",
     "@angular/compiler-cli": "14.2.4",
     "@angular/core": "14.2.4",
+    "@angular/fire": "^5.1.2",
+    "@angular/flex-layout": "^7.0.0-beta.19",
     "@angular/forms": "14.2.4",
     "@angular/material": "14.2.3",
     "@angular/material-luxon-adapter": "14.2.3",
@@ -31,6 +33,7 @@
     "@angular/router": "14.2.4",
     "@apollo/client": "^3.7.1",
     "@ngneat/transloco": "4.1.1",
+    "amazing-time-picker": "^1.8.0",
     "apexcharts": "3.35.5",
     "apollo-angular": "^4.1.0",
     "crypto-js": "3.3.0",
@@ -40,6 +43,7 @@
     "jspdf-autotable": "^3.5.3",
     "lodash-es": "4.17.21",
     "luxon": "3.0.4",
+    "mat-timepicker": "^5.1.7",
     "ng-apexcharts": "1.7.1",
     "ngx-markdown": "13.1.0",
     "ngx-quill": "19.0.1",
@@ -48,6 +52,7 @@
     "rxjs": "7.5.7",
     "tslib": "2.4.0",
     "typescript": "4.7.4",
+    "xlsx": "^0.15.3",
     "zone.js": "0.11.8"
   },
   "devDependencies": {

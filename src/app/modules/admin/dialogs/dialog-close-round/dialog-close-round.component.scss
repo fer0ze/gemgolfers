@@ -1,0 +1,17 @@
+.mat-form-field, .mat-radio-button {
+    margin: 0 5px!important;
+}
+
+
+mat-radio-button {
+    .mat-radio-label {
+        padding-right: 10px!important;
+    }
+}
+
+.separator {
+    border-bottom: 1px dashed #479944;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    margin: 16px;
+  }

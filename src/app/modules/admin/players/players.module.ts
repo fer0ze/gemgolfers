@@ -25,13 +25,17 @@ import { PlayerComponent } from './player/player.component';
 import { ContactsDetailsComponent } from './details/details.component';
 import { playerRoutes } from './players.routing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ViewPlayerComponent } from './view-player/view-player.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 @NgModule({
     declarations: [
        PlayersComponent,
        PlayerComponent,
-       ContactsDetailsComponent
+       ContactsDetailsComponent,ViewPlayerComponent
     ],
     imports     : [
         RouterModule.forChild(playerRoutes),
@@ -42,15 +46,17 @@ import { ReactiveFormsModule } from '@angular/forms';
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatTabsModule,
         MatLuxonDateModule,
         MatSortModule,
-    
+    MatSnackBarModule,
         MatMenuModule,
         MatProgressBarModule,
         ReactiveFormsModule,
         MatRadioModule,
         MatRippleModule,
         MatSelectModule,
+        NgApexchartsModule,
         MatSidenavModule,
         MatTableModule,
         MatTooltipModule,

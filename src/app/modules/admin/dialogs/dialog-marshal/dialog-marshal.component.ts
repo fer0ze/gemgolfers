@@ -1,0 +1,67 @@
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { Marshal } from 'app/shared/models/player.model';
+
+import * as jsPDF from 'jspdf'; 
+import 'jspdf-autotable';
+
+@Component({
+  selector: 'app-dialog-marshal',
+  templateUrl: './dialog-marshal.component.html',
+  styleUrls: ['./dialog-marshal.component.scss']
+})
+export class DialogMarshalComponent implements OnInit {
+  dataSource: MatTableDataSource<Marshal>;
+  displayedColumns = ['id', 'email', 'password'];
+  public response: any;
+  marshalList: Marshal[] = [];
+
+  constructor(
+      public dialogRef: MatDialogRef<DialogMarshalComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  ngOnInit() {
+    this.marshalList = this.data.marshals;
+
+    this.dataSource = new MatTableDataSource(this.marshalList);
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+
+    if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public downloadAsPDF() {
+    var doc = new jsPDF()
+
+    doc.setFontSize(18);
+    doc.text("Marshal's Login Detail:", 15, 15);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+
+    // From HTML
+    doc.autoTable({ 
+      html: '#pdfTable', 
+      startY: 25,
+      theme: 'grid',
+      useCss: false,
+    });
+  
+    // Open PDF document in new tab
+    doc.output('dataurlnewwindow');
+
+    // Download PDF document  
+    //doc.save('flights.pdf');
+  }
+
+  onNoClick(): void {
+      this.dialogRef.close();
+  }
+
+}
