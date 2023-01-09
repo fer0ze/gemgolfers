@@ -1,0 +1,260 @@
+// table {
+//     width: 100%;
+//     overflow-x: auto;
+//     overflow-y: hidden;
+//     min-width: 500px;
+// }
+
+// .mat-form-field {
+//     font-size: 14px;
+//     width: 100%;
+// }
+
+// td,
+// th {
+//     span {
+//         text-align: center;
+//     }
+
+//     .textLink {
+//         text-decoration: underline;
+//         cursor: pointer;
+//     }
+
+// }
+
+// th.mat-header-cell {
+//     text-align: left;
+//     max-width: 300px;
+//     font-weight: bold;
+// }
+table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 500px;
+    border-spacing: unset;
+    border-collapse: collapse;
+    border-radius: 0px;
+    margin: 0px;
+  
+    tr.topheader {
+      background-color: #b7b7b7;
+      color: #585858;
+    }
+  
+    tr.topheader th {
+      padding: 5px;
+      font-weight: normal;
+    }
+  
+    tr.subhead {
+      font-family: monospace;
+      background-color: #e8e8e7;
+      color: #585858;
+    }
+  
+    tr.subhead th {
+      border: solid 1px #fff;
+      font-weight: bold;
+      padding: 5px;
+    }
+  
+    tr.scorebody {
+      font-family: monospace;
+      color: #585858;
+    }
+  
+    tr.scorebody td {
+      border: solid 1px #e8e8e7;
+      font-weight: bold;
+      padding: 5px;
+      text-align: center;
+      background-color: #fff !important;
+    }
+  
+    tr.scorebody td .title {
+      text-align: left;
+    }
+  
+    tr.scorebody td input.empty {
+      background-color: #f7f74f !important;
+  
+      width: 28px;
+    }
+  
+    tr.scorebody td input.warn {
+      background-color: #ff6464 !important;
+      color: #fff;
+  
+      width: 28px;
+    }
+  
+    tr.scorebody td input {
+      border: none;
+      text-align: center;
+      width: 30px;
+    }
+  
+    td .mat-icon {
+      cursor: pointer;
+      font-size: 22px;
+    }
+  }
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 30px;
+    border: 1px solid #deebfd;
+    box-shadow: -8px 12px 18px 0 #dadee8;
+    padding: 20px;
+  }
+  
+  // table th {
+  //     padding: 0 10px;
+  //     vertical-align: middle;
+  //     background-color: #f5f5f5;
+  //     color: #666;
+  //     font-weight: 500;
+  //     border: none;
+  // }
+  
+  .paddingClass {
+    padding-bottom: 20px;
+  }
+  
+  .ngxTableHeader {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    border-color: #e6e9ed;
+    background-color: #ebebee;
+    min-width: 800px;
+    height: 70px;
+  }
+  
+  .ngxTableHeader .header-buttons {
+    position: absolute;
+    right: 30px;
+    list-style: none;
+    margin-bottom: 0px;
+    cursor: pointer;
+  }
+  
+  .buttonClass {
+    background-color: #3f51b5;
+    border-radius: 30px;
+    color: aliceblue;
+  }
+  
+  .mat-mini-fab .mat-button-wrapper {
+    padding: 1px 0;
+    display: inline-block;
+    line-height: 24px;
+  }
+  
+  .buttonClass[_ngcontent-c10] {
+    background-color: #3f51b5;
+    border-radius: 30px;
+    color: aliceblue;
+    cursor: pointer;
+  }
+  
+  // .mat-icon {
+  //     background-repeat: no-repeat;
+  //     display: inline-block;
+  //     fill: currentColor;
+  //     height: 30px;
+  //     width: 31px;
+  // }
+  // .material-icons {
+  //     font-family: 'Material Icons';
+  //     font-weight: normal;
+  //     font-style: normal;
+  //     font-size: 31px;
+  //     line-height: 1;
+  //     letter-spacing: normal;
+  //     text-transform: none;
+  //     display: inline-block;
+  //     white-space: nowrap;
+  //     word-wrap: normal;
+  //     direction: ltr;
+  //     -webkit-font-feature-settings: 'liga';
+  //     -webkit-font-smoothing: antialiased;
+  // }
+  
+  .mat-class {
+    padding-bottom: 0px;
+    padding-top: 5px;
+  }
+  
+  .mat-class-table {
+    margin-top: 60px;
+  }
+  
+  .field-background-color {
+    background-color: #4e4c4b;
+  }
+  
+  .mat-raised-button {
+    box-sizing: border-box;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    outline: 0;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 10px;
+    overflow: visible;
+    transform: translate3d(0, 0, 0);
+    transition: background 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+      box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .th-color {
+    color: #ebeaef;
+  }
+  
+  // .mat-mini-fab .mat-button-wrapper {
+  //     padding: 4px 0;
+  //     display: inline-block;
+  //     line-height: 24px;
+  // }
+  
+  .tooltipStyle {
+    font-size: 16px;
+    background: #b71c1c;
+  }
+  
+  .scoreCardBox {
+    background: #ffffff !important;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+  
+  .trues {
+    background: #dbdbdb !important;
+  }
+  
+  .falses {
+    background: #ffffff !important;
+  }
+  

@@ -308,6 +308,30 @@ export class TournamentsService {
                 });
         });
     }
+    public getDailyRoundsSingleDashboardAll(
+       
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // console.log(clubId);
+        // console.log(fromDate);
+        // console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.DailyRoundsSingleDashboardQueryQLsAll,
+                    variables: {
+                        
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // console.log(data);
+                    resolve(data);
+                });
+        });
+    }
     public getDailyRoundsSingleDashboard(
         clubId: string,
         fromDate: string,

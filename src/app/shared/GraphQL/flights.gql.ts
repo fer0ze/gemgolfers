@@ -334,6 +334,15 @@ export const getFlightTotal = gql`
   }
 }
 `;
+export const getFlightTotalAll = gql`
+ query getFlightTotal {
+  Count: flight_aggregate {
+    aggregate {
+      count
+    }
+  }
+}
+`;
 export const MarkPlayerAttendance = gql`
   mutation markPlayerAttendance(
     $where: flight_member_bool_exp!

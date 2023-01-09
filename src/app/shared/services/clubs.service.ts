@@ -128,6 +128,18 @@ export class ClubsService {
         });
     });
   }
+  getClubMemberAggregateByCategroyDashBoardAll(): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.getClubMemberAggregateByCategroyDashBoardAll,
+         
+        })
+        .valueChanges.subscribe(({ data }) => {
+          resolve(data);
+        });
+    });
+  }
 
   public AddClub(club: Club): Promise<boolean> {
     return new Promise((resolve) => {

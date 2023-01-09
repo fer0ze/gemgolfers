@@ -88,6 +88,8 @@ export const appRoutes: Route[] = [
             {path: 'tournaments', loadChildren: () => import('app/modules/admin/tournaments/tournaments.module').then(m => m.TournamentsModule)},
             {path: 'tournaments/schedule', loadChildren: () => import('app/modules/admin/tournaments/schedule/schedule.module').then(m => m.ScheduleModule)},
             {path: 'courses', loadChildren: () => import('app/modules/admin/course/course.module').then(m => m.CourseModule)},
+            {path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
+            {path: 'leaderboard', loadChildren: () => import('app/modules/admin/leaderboard/leaderboard.module').then(m => m.LeaderboardModule)},
         ]
     }
 ];

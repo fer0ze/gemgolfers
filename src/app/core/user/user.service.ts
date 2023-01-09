@@ -48,6 +48,8 @@ export class UserService
     {
         return this._httpClient.get<User>('api/common/user').pipe(
             tap((user) => {
+                console.log(user);
+                
                 this._user.next(user);
             })
         );

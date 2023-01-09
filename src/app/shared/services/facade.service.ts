@@ -87,6 +87,9 @@ export class FacadeService {
   getClubMemberAggregateByCategroyDashBoard(id: string) {
     return this.clubService.getClubMemberAggregateByCategroyDashBoard(id);
   }
+  getClubMemberAggregateByCategroyDashBoardAll() {
+    return this.clubService.getClubMemberAggregateByCategroyDashBoardAll();
+  }
 
   private _courseService: CoursesService;
 
@@ -200,6 +203,9 @@ export class FacadeService {
   }
   getTotalPlayers(id: string) {
     return this.playerService.getTotalPlayers(id);
+  }
+  getTotalPlayersAll() {
+    return this.playerService.getTotalPlayersAll();
   }
 
   getPlayerHandicapListByPlayer(
@@ -672,6 +678,9 @@ export class FacadeService {
   getTotalFlights(clubId: string) {
     return this.flightsService.getTotalFlights(clubId);
   }
+  getTotalFlightsAll() {
+    return this.flightsService.getTotalFlightsAll();
+  }
 
   DeleteFlightsAndMembers(
     flightIdsToRemove: string[],
@@ -752,6 +761,13 @@ export class FacadeService {
   getDailyRoundsSingleDashboard(clubId: string, fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleDashboard(
       clubId,
+      fromDate,
+      toDate
+    );
+  }
+  getDailyRoundsSingleDashboardAll( fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyRoundsSingleDashboardAll(
+      
       fromDate,
       toDate
     );

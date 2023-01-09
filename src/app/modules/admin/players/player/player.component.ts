@@ -23,8 +23,9 @@ import {
 } from 'app/modules/admin/players/player/player.types';
 import { query } from '@angular/animations';
 import { MatDrawer } from '@angular/material/sidenav';
-import { UniqueIdGenerator } from '../../../../shared/classes/general';
+import { Constants, UniqueIdGenerator } from '../../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Player } from 'app/shared/models/player.model';
 
 @Component({
     selector: 'app-player',
@@ -58,6 +59,7 @@ export class PlayerComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     count: any = 0;
     showTable: Promise<any>;
+    loggedInuser: Player;
     //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
@@ -67,7 +69,9 @@ export class PlayerComponent implements OnInit {
         private _router: Router
     ) {}
     ngOnInit(): void {
-
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
         this.fecthData();
         // Subscribe to MatDrawer opened change
         this.matDrawer.openedChange.subscribe((opened) => {
@@ -113,7 +117,7 @@ export class PlayerComponent implements OnInit {
 
     async fecthData() {
         let data = await this._facadeService.getPlayersListByClub(
-            localStorage.getItem('adminClubID')
+            this.loggedInuser.adminClubId
         );
         this.count = data.AggregateQL.aggregate.totalCount;
         console.log(data);

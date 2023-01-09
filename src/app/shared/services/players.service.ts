@@ -107,6 +107,22 @@ export class PlayersService {
                 });
         });
     }
+    public getTotalPlayersAll(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTotalPlayersAll,
+                   
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getTotalPlayers(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

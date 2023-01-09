@@ -107,6 +107,15 @@ export const getTotalPlayers = gql`
     }
   }
 `;
+export const getTotalPlayersAll = gql`
+  query PostsGetQuery {
+    AggregateQL: player_aggregate {
+      aggregate {
+        totalCount: count
+      }
+    }
+  }
+`;
 export const GetTotalFLightPlayed = gql`
   query PostsGetQuery($where: player_bool_exp!, $date: date!, $sdate: date!) {
     player(where: $where) {

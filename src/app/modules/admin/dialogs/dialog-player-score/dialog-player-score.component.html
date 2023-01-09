@@ -1,0 +1,122 @@
+<div>
+  
+  <h2 *ngIf="this.isTaxes" style="text-align: center;">TEAM :{{playerName}}</h2>
+  <div  class="box" *ngIf="this.isTaxes">
+    <div
+   
+      *ngFor="let t of this.players; let i = index"
+    >
+      <button
+        mat-raised-button
+        mat-button
+        style="color: snow; background-color: #171d54;margin-right: 3px;
+           border-radius: 4px;
+            margin-bottom: 6px;
+            width: 260px;
+            height: 37px;border-color: white;
+            font-size: 17px;
+            "
+      >
+        {{t.firstName}} {{t.lastName}} ({{t.handicap}})
+      </button>
+    </div>
+  </div>
+  <h2  *ngIf=" this.isTaxesScoreBor" style="text-align: center;">TEAM PLAYERS:</h2>
+  <div  class="box" *ngIf=" this.isTaxesScoreBor">
+    <div
+   
+      *ngFor="let t of this.players; let i = index"
+    >
+      <button
+        mat-raised-button
+        mat-button
+        style="color: snow; background-color: #135364;margin-right: 3px;
+           border-radius: 4px;
+            margin-bottom: 6px;
+            width: 260px;
+            height: 49px;border-color: white;
+            font-size: 17px;
+            "
+      >
+        {{t.firstName}} 
+      </button>
+    </div>
+  </div>
+  <div>
+  <table *ngIf="!this.isTaxesScoreBor" class="mat-elevation-z8">
+    <thead>
+      <tr *ngFor="let item of scoreHeader" class="topheader">
+        <th></th>
+        <th *ngFor="let hole of item.courseHoles9">{{hole?.holeNo}}</th>
+        <th *ngIf="item.courseHoles9.length > 0">out</th>
+        <th *ngFor="let hole of item.courseHoles18">{{hole?.holeNo}}</th>
+        <th *ngIf="item.courseHoles18.length > 0">in</th>
+        <th *ngFor="let hole of item.courseHoles27">{{hole?.holeNo}}</th>
+        <th *ngIf="item.courseHoles27.length > 0">out</th>
+        <th *ngFor="let hole of item.courseHoles36">{{hole?.holeNo}}</th>
+        <th *ngIf="item.courseHoles36.length > 0">in</th>
+        <th>total</th>
+      </tr>
+      <tr *ngFor="let item of scoreHeader" class="subhead">
+        <th>Yardage</th>
+        <th *ngFor="let yard of item.yardage9">{{yard}}</th>
+        <th *ngIf="item.yardage9.length > 0">{{item.yardage9Total}}</th>
+        <th *ngFor="let yard of item.yardage18">{{yard}}</th>
+        <th *ngIf="item.yardage18.length > 0">{{item.yardage18Total}}</th>
+        <th *ngFor="let yard of item.yardage27">{{yard}}</th>
+        <th *ngIf="item.yardage27.length > 0">{{item.yardage27Total}}</th>
+        <th *ngFor="let yard of item.yardage36">{{yard}}</th>
+        <th *ngIf="item.yardage36.length > 0">{{item.yardage36Total}}</th>
+        <th>{{item.yardageTotal}}</th>
+      </tr>
+      <tr *ngFor="let item of scoreHeader" class="subhead">
+        <th>Par</th>
+        <th *ngFor="let hole of item.courseHoles9">{{hole?.par}}</th>
+        <th *ngIf="item.courseHoles9.length > 0">{{item.par9}}</th>
+        <th *ngFor="let hole of item.courseHoles18">{{hole?.par}}</th>
+        <th *ngIf="item.courseHoles18.length > 0">{{item.par18}}</th>
+        <th *ngFor="let hole of item.courseHoles27">{{hole?.par}}</th>
+        <th *ngIf="item.courseHoles27.length > 0">{{item.par27}}</th>
+        <th *ngFor="let hole of item.courseHoles36">{{hole?.par}}</th>
+        <th *ngIf="item.courseHoles36.length > 0">{{item.par36}}</th>
+        <th>{{item.parTotal}}</th>
+      </tr>
+      <tr *ngFor="let item of scoreHeader" class="subhead">
+        <th>Index</th>
+        <th *ngFor="let hole of item.courseHoles9">{{hole?.index}}</th>
+        <th *ngIf="item.courseHoles9.length > 0"></th>
+        <th *ngFor="let hole of item.courseHoles18">{{hole?.index}}</th>
+        <th *ngIf="item.courseHoles18.length > 0"></th>
+        <th *ngFor="let hole of item.courseHoles27">{{hole?.index}}</th>
+        <th *ngIf="item.courseHoles27.length > 0"></th>
+        <th *ngFor="let hole of item.courseHoles36">{{hole?.index}}</th>
+        <th *ngIf="item.courseHoles36.length > 0"></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of allScores; let i = index;" class="scorebody" [ngClass]="{'scorebody': item.scoring,'scorebodyred': !item.scoring}">
+        <td *ngIf="data.round > 0 && !data.team">Round {{data.round}}</td>
+        <td *ngIf="data.round == 0 && !data.team">Round {{i + 1}}</td>
+        <td *ngIf="data.team">{{item.name}}</td>
+        <!-- for per hole calculation <td *ngFor="let score of item.Hole9Scores; let i = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[i]}">{{score}}</td> --> 
+        <td *ngFor="let score of item.Hole9Scores; let i = index;">{{score}}</td>
+        <td *ngIf="item.Hole9Scores.length > 0"><span>{{item.hole9Total}}</span></td>
+        <td *ngFor="let score of item.Hole18Scores; let j = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[j + 9]}">{{score}}</td>
+        <td *ngIf="item.Hole18Scores.length > 0"><span>{{item.hole18Total}}</span></td>
+        <td *ngFor="let score of item.Hole27Scores; let k = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[k + 18]}">{{score}}</td>
+        <td *ngIf="item.Hole27Scores.length > 0"><span>{{item.hole27Total}}</span></td>
+        <td *ngFor="let score of item.Hole36Scores; let l = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[l + 27]}">{{score}}</td>
+        <td *ngIf="item.Hole36Scores.length > 0"><span>{{item.hole36Total}}</span></td>
+        <td><span>{{item.holesTotal}}</span></td>
+      </tr>
+  </tbody>
+  </table>
+  </div>
+  <mat-card *ngIf="isLoading && !this.isTaxesScoreBor" style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner 
+      color="primary" 
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+</div>

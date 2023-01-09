@@ -194,6 +194,41 @@ export const getClubMemberAggregateByCategroyDashBoard = gql`
     }
   }
 `;
+export const getClubMemberAggregateByCategroyDashBoardAll = gql`
+  query playersByClub {
+    club {
+      Amateurs: members_aggregate(
+        where: { player: { playerCategory: { _eq: "Amateurs" } } }
+      ) {
+        aggregate {
+          count
+        }
+      }
+      Senior_Amateurs: members_aggregate(
+        where: { player: { playerCategory: { _eq: "Senior Amateurs" } } }
+      ) {
+        aggregate {
+          count
+        }
+      }
+
+      Veterans: members_aggregate(
+        where: { player: { playerCategory: { _eq: "Veterans" } } }
+      ) {
+        aggregate {
+          count
+        }
+      }
+      Ladies: members_aggregate(
+        where: { player: { playerCategory: { _eq: "Ladies" } } }
+      ) {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+`;
 
 export const AddScheduleMutation = gql`
   mutation insertClubSchedule($objects: [club_schedule_insert_input!]!) {

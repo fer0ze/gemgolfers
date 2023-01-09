@@ -70,8 +70,12 @@ export class AuthMockApi {
                     this.loggedInuser = JSON.parse(
                         localStorage.getItem(Constants.LOGGED_IN_USER)
                     );
+                    let clubInfo: any = (this.loggedInuser.membership.length > 0)? this.loggedInuser.membership[0].club : null;
+                    let logo = (clubInfo && clubInfo.logo)? clubInfo.logo : "e2esp.png";
                     this._user.email = this.loggedInuser.email;
                     this._user.name = this.loggedInuser.fullName;
+                    this._user.avatar='assets/images/logo/'+logo+'';
+                    
                     return [
                         200,
                         {

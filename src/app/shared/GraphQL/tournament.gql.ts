@@ -1002,6 +1002,33 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
         }
     }
 `;
+export const DailyRoundsSingleDashboardQueryQLsAll = gql`
+    query ClubSingleRoundFlightsQuery(
+      
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        TournamentsQL: tournament(
+            where: {
+             
+                singleRound: { _eq: true }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+           
+            startDate
+            FlightsQL: flights {
+                ended
+                MembersQL: members {
+                    attendance
+                }
+            }
+        }
+    }
+`;
 export const DailyRoundsSingleDashboardQueryQLs = gql`
     query ClubSingleRoundFlightsQuery(
         $clubId: String!

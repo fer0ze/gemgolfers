@@ -1,0 +1,87 @@
+table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 500px;
+    border-spacing: unset;
+    border-collapse: collapse;
+
+    tr.topheader {
+        background-color: #406325;
+        color: #fff;
+    }
+    
+    tr.topheader th {
+        padding: 5px;
+        font-weight: normal;
+    }
+    
+    tr.subhead {
+        font-family: monospace;
+        background-color: #E8E8E7;
+        color: #585858
+    }
+    
+    tr.subhead th {
+        border: solid 1px #fff;
+        font-weight: bold;
+        padding: 5px;
+    }
+
+    tr.scorebody {
+        font-family: monospace;
+        color: #585858
+    }
+
+    tr.scorebody td {
+        border: solid 1px #E8E8E7;
+        font-weight: bold;  
+        padding: 8px;
+        text-align: center;
+        color: #518681;
+        
+        span {
+            color: #4e4c4b;
+        }
+    }
+
+    tr.scorebody td input {
+        border: none;
+        text-align: center;
+    }
+
+    tr.scorebodyred {
+        font-family: monospace;
+        color: red!important;
+    }
+
+    tr.scorebodyred td {
+        border: solid 1px #E8E8E7;
+        font-weight: bold;  
+        padding: 8px;
+        text-align: center;
+        color: red!important;
+        
+        span {
+            color: #4e4c4b;
+        }
+    }
+
+    tr.scorebodyred td input {
+        border: none;
+        text-align: center;
+    }
+
+    td .mat-icon {
+        cursor: pointer;
+        font-size: 22px;
+    }
+
+}
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  .box{
+    display: flex;
+    justify-content: center;
+  }

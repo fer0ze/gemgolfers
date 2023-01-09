@@ -155,6 +155,25 @@ export class FlightsService {
                 );
         });
     }
+    public getTotalFlightsAll(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getFlightTotalAll,
+                    
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(data);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
     public getTotalFlights(clubId): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
