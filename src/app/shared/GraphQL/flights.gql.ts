@@ -270,7 +270,7 @@ export const moveFlightsPlayerMutation = gql`
 `;
 
 export const FlightManagersQuery = gql`
-  subscription FlightManagersQuery($tournamentId: String!) {
+  query FlightManagersQuery($tournamentId: String!) {
     TournamentQL: tournament(where: { id: { _eq: $tournamentId } }) {
       id
       courseId

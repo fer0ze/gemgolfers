@@ -698,8 +698,8 @@ export class FacadeService {
     return this.flightsService.moveFlightsPlayer(flightMembersToSave);
   }
 
-  getTournamentsFlights(playerId: string, tournamentId: string) {
-    return this.flightsService.getTournamentsFlights(playerId, tournamentId);
+  getTournamentsFlights( tournamentId: string) {
+    return this.flightsService.getTournamentsFlights( tournamentId);
   }
 
   markPlayerAttendance(flightId: string, playerId: string, status: boolean) {

@@ -139,7 +139,7 @@ export class FlightManagementComponent implements OnInit {
     });
 
     let dataFullTournament = await this.facadeService.getTournamentsFlights(
-      this.loggedInuser.id,
+     
       this.tournamentID
     );
 
@@ -873,7 +873,7 @@ export class FlightManagementComponent implements OnInit {
     }
 
     let dataFullTournament = await this.facadeService.getTournamentsFlights(
-      this.loggedInuser.id,
+    
       this.tournamentID
     );
     this.tournamentInfo = dataFullTournament.TournamentQL;
@@ -1185,7 +1185,7 @@ export class FlightManagementComponent implements OnInit {
     );
 
     let dataFullTournament = await this.facadeService.getTournamentsFlights(
-      this.loggedInuser.id,
+     
       this.tournamentID
     );
     this.tournamentInfo = dataFullTournament.TournamentQL;

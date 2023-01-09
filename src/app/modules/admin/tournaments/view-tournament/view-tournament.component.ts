@@ -198,6 +198,7 @@ export class ViewTournamentComponent implements OnInit {
         });
 
         if (this.tournamentID) {
+            this.url = 'golfcourse.jpg';
             this.dataFullTournament =
                 await this.facadeService.tournamentDashBoard(this.tournamentID);
             console.log(this.dataFullTournament);
@@ -315,10 +316,10 @@ export class ViewTournamentComponent implements OnInit {
                         this.dataFullTournament['TournamentQL'][0]
                             .CategoriesQL[0].category
                     );
-                    this.NetData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
+                //    await this.NetData(
+                //         this.dataFullTournament['TournamentQL'][0]
+                //             .CategoriesQL[0].category
+                //     );
                 }
             } else if (this.selected == 2) {
                 this.getRound3stats(3);

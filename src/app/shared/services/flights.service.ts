@@ -160,7 +160,6 @@ export class FlightsService {
             this.apollo
                 .subscribe({
                     query: Query.getFlightTotalAll,
-                    
                 })
                 .subscribe(
                     ({ data }) => {
@@ -258,16 +257,12 @@ export class FlightsService {
         });
     }
 
-    public getTournamentsFlights(
-        playerId: string,
-        tournamentId: string
-    ): Promise<any> {
+    public getTournamentsFlights(tournamentId: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe({
                     query: Query.FlightManagersQuery,
                     variables: {
-                        //'playerId': playerId,
                         tournamentId: tournamentId,
                     },
                 })

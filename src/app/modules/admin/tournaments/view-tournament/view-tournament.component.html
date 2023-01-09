@@ -1,5 +1,5 @@
-<div *ngIf="!isLoading">
-    <div fxLayout="row" fxLayoutGap="50px" style="margin-bottom: 15px">
+<div *ngIf="!isLoading" class="p-8 bg-card" style="width: -webkit-fill-available;">
+    <div >
         <div fxFlex="80" fxHide.lt-sm fxLayout="column">
             <div class="pageHead" fxLayout="row" fxLayoutGap="50px">
                 <div fxHide.lt-sm fxLayout="column">
@@ -61,7 +61,7 @@
           {{t.name }} Playing on {{t.date}},{{t.datea}}
         </button>
       </div>  -->
-            <div
+            <!-- <div
                 *ngIf="tournamentPlayersAdd"
                 class="box"
                 fxLayout="row"
@@ -78,7 +78,7 @@
                         >
                     </button>
                 </a>
-            </div>
+            </div> -->
         </div>
     </div>
     <div fxLayout="row" fxLayoutGap="50px">
@@ -95,7 +95,7 @@
           </mat-card> -->
                     <mat-card class="mat-elevation-z16">
                         <img
-                            src="../../../../../assets/images/cards/{{ url }}"
+                            src="../../../../../assets/images/logo/{{url}}"
                             width="100%"
                             alt="course"
                             style="border-radius: 10px"
@@ -115,7 +115,7 @@
                         *ngFor="let s of membersStats"
                     >
                         <app-white-section
-                            [bgClass]="s.class"
+                            [bgClass]="asd"
                             [icon]="'emoji_people'"
                             [count]="s.count"
                             [label]="s.title"
@@ -174,6 +174,7 @@
 
     <hr style="color: #000000de; margin-top: 30px" />
     <mat-tab-group
+    class=" pt-4"
         color="accent"
         [selectedIndex]="selected"
         (selectedTabChange)="tabClicked($event)"
@@ -783,29 +784,18 @@
                     Undo Round 2
                 </button>
                 &nbsp;
-            </div>
-            <div
-                fxLayoutAlign="center center"
-                [ngStyle]="{ 'padding-bottom': '10px', padding: '20px 0' }"
-                *ngIf="noOfRounds == 2 && playersUpdatedHandicap.length == 0"
-            >
-                <button
+                 <button
                     mat-raised-button
                     mat-button
                     color="primary"
-                    *ngIf="activeRound > noOfRounds"
+                    *ngIf="noOfRounds == 2 && playersUpdatedHandicap.length == 0 && activeRound > noOfRounds"
                     (click)="redirectToHandicap()"
                 >
                     Hanidcap Calculation
                 </button>
             </div>
-            <!-- <mat-card
-        *ngIf="!round2Stats"
-        style="display: flex; justify-content: center; align-items: center"
-      >
-        <mat-progress-spinner color="primary" mode="indeterminate">
-        </mat-progress-spinner>
-      </mat-card> -->
+         
+           
             <div class="mb-20 profileDash">
                 <h2>Top Players</h2>
                 <div fxLayout="row " fxLayoutGap="15px grid">
@@ -826,16 +816,15 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="round2Stats">
+            <div *ngIf="round2Stats" class="centerDiv" >
                 <div
                     class="mb-20 profileDash"
-                    fxFlex
-                    fxLayout="row"
+                    id="asaasd"
                     fxLayout.lt-md="column"
                     fxLayoutGap="20px"
                 >
                     <div [fxFlex]="10"></div>
-                    <div [fxFlex]="40">
+                    <div [fxFlex]="40" class="centerDiv">
                         <h2>Average Score</h2>
                         <div
                             fxFlex
@@ -905,28 +894,13 @@
                 <div
                     class="mb-20 profileDash"
                     fxFlex
+                    id="aaaaa"
                     fxLayout="row"
                     fxLayout.lt-md="column"
                     fxLayoutGap="20px"
                 >
                     <div [fxFlex]="100">
-                        <!-- <mat-card>
-              <mat-card-header> 
-                <mat-card-title>% Score</mat-card-title> 
-              </mat-card-header> 
-             <div class="mb-20" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"> 
-               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsBirdiesPercent']"> 
-                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsBirdiesPercent']" [label]="'Birdies'"></app-block-white-section> 
-               </div> 
-               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsParsPercent']"> 
-                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsParsPercent']" [label]="'Pars'"></app-block-white-section> 
-               </div> 
-               <div [fxFlex]="33.33" *ngIf="avgScore2['shotsBogeysPercent']"> 
-                 <app-block-white-section [icon]="'emoji_people'" [data]="avgScore2['shotsBogeysPercent']" [label]="'Bogeys'"></app-block-white-section> 
-               </div> 
-
-              </div>
-            </mat-card> -->
+                        
                         <h2>% Score</h2>
                         <div class="content">
                             <div fxLayout="row wrap" fxLayoutGap="15px grid">
@@ -2686,10 +2660,4 @@
         </mat-tab>
     </mat-tab-group>
 </div>
-<mat-card
-    *ngIf="isLoading"
-    style="display: flex; justify-content: center; align-items: center"
->
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
-</mat-card>
+

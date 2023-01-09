@@ -136,10 +136,14 @@ table {
 }
 
 .profileDash {
-  background-color: #f4f4f4;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+    /* background-color: #f4f4f4; */
+    padding: 6px;
+    width: -webkit-fill-available !important;
+    /* border-radius: 10px; */
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-bottom: 10px;
+    /* width: 56%; */
 
   h2 {
     color: #78912c;
@@ -547,9 +551,12 @@ user agent stylesheet div {
   width: 100%;
 }
 .box {
-  display: flex;
+  display: flex !important;
 
   margin: 13px;
+}
+.centerDiv {
+  display: block !important;
 }
 .box > * {
   flex: 1 1 100px;
