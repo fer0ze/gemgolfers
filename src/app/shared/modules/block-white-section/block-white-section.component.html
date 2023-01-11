@@ -1,27 +1,37 @@
 <div class="card mini-stats-wid">
-<div class="card-body">
-    <div class="media">
-        <div class="media-body">
-           <div class="profileDash" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-              <div fxFlex="33.33"> 
-                <div class="mini-stat-icon avatar-sm rounded-circle align-self-center">
-                    <span class="avatar-title primary-background">
-                      <mat-icon class="nav-icon">{{icon}}</mat-icon>
-                    </span>
-                 </div>
+    <div class="card-body">
+        <div class="media">
+            <div class="media-body">
+                <div
+                    class="profileDash"
+                    fxFlex
+                    fxLayout="row"
+                    fxLayout.lt-md="column"
+                    fxLayoutGap="20px"
+                >
+                    <div fxFlex="33.33">
+                        <div
+                            class="mini-stat-icon avatar-sm rounded-circle align-self-center"
+                        >
+                            <span class="avatar-title primary-background">
+                                <mat-icon class="nav-icon">{{ icon }}</mat-icon>
+                            </span>
+                        </div>
+                    </div>
+                    <div fxFlex="33.33" class="center">
+                        <div>
+                            <p class="text-muted font-weight-medium">
+                                {{ label }}
+                            </p>
+                        </div>
+                    </div>
+                    <div fxFlex="33.33" class="center">
+                        <div>
+                            <p>{{ data | number : "1.2-2" }}</p>
+                        </div>
+                    </div>
                 </div>
-                <div fxFlex="33.33"> 
-                  <div >
-                      <p class="text-muted font-weight-medium">{{label}}</p>
-                  </div>
-                </div>
-                <div fxFlex="33.33">
-                  <div >
-                      <p>{{ data | number : '1.2-2'}}</p>
-                 </div>
-              </div>
-           </div>
+            </div>
         </div>
-      </div>
-  </div>
+    </div>
 </div>

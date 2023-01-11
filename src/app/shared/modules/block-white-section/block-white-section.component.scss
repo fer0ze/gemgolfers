@@ -8,10 +8,9 @@
     background-clip: border-box;
     border: 0 solid #f6f6f6;
     border-radius: 1.25rem;
-    margin-bottom: 24px;
-    box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03);
-    width: 350px;
-    padding: 15px;
+    margin-bottom: 8px;
+    background-color: #f1f5f9;
+    padding: 2px;
 }
 
 .card-body {
@@ -57,6 +56,9 @@
 
 .rounded-circle {
     border-radius: 50%!important;
+}
+.center{
+    margin-top: 14px;
 }
 
 .mini-stats-wid .mini-stat-icon:after, .mini-stats-wid .mini-stat-icon:before {

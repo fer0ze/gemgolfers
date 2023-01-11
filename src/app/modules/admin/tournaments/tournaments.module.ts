@@ -52,6 +52,8 @@ import { WhiteSectionModule } from "app/shared/modules/white-section/white-secti
 import { TopPlayerModule } from "app/shared/modules/top-player-section/top-player.module";
 import { BlockWhiteSectionComponent } from "app/shared/modules/block-white-section/block-white-section.component";
 import { BlockWhiteSectionModule } from "app/shared/modules/block-white-section/block-white-section.module";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { NgApexchartsModule } from "ng-apexcharts";
 @NgModule({
   declarations: [
     TournamentsComponent,
@@ -69,10 +71,12 @@ import { BlockWhiteSectionModule } from "app/shared/modules/block-white-section/
   ],
   imports: [
     CommonModule,
+    NgApexchartsModule,
     TournamentsRoutingModule,
     ReactiveFormsModule,
     MatTableModule,
     MatFormFieldModule,
+    MatButtonToggleModule,
     MatPaginatorModule,
     MatInputModule,
     WhiteSectionModule,
