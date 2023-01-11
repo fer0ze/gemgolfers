@@ -97,6 +97,7 @@ export class ViewTournamentComponent implements OnInit {
     SeniorsCount:number=0;
     VeteransCount:number=0;
 LadiesCount:number=0;
+mainSelected:number=0;
     par3Avg2: number;
     par4Avg2: number;
     par5Avg2: number;
@@ -554,6 +555,17 @@ LadiesCount:number=0;
         this.NetData(this.selectedCategory);
     }
     tabClicked(tab: any) {
+        if (tab.index == 0) {
+            this.getRound1stats(1);
+            this.GrossData(this.tournamentCategories[0].category);
+            this.NetData(this.tournamentCategories[0].category);
+        } else if (tab.index == 1) this.getRound2stats(2);
+        else if (tab.index == 2) this.getRound3stats(3);
+        else if (tab.index == 3) this.getRound4stats(4);
+        else {
+        }
+    }
+    maintabClicked(tab: any) {
         if (tab.index == 0) {
             this.getRound1stats(1);
             this.GrossData(this.tournamentCategories[0].category);

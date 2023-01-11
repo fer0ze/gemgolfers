@@ -394,7 +394,8 @@
                 </div>
             </div>
             <div class="flex">
-                <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+                <mat-tab-group [selectedIndex]="mainSelected"
+                (selectedTabChange)="maintabClicked($event)"  mat-stretch-tabs="false" mat-align-tabs="start">
                     <mat-tab label="Tournament"></mat-tab>
                     <mat-tab label="Flight Management"></mat-tab>
                     <mat-tab label="Scores"></mat-tab>

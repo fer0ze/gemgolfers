@@ -30,7 +30,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'New Tournament',
                 type: 'basic',
                 icon: 'heroicons_outline:academic-cap',
-                link: '/tournaments/new',
+                link: '/tournaments/add',
             },
             {
                 id: 'tournaments.schedule',
