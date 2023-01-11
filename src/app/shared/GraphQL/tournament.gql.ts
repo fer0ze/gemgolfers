@@ -123,7 +123,7 @@ export const tournamentDashBoard = gql`
                 order_by: [{ flightRound: asc }, { flightNo: asc }]
             ) {
                 flightRound
-
+time
                 flightNo
                 name {
                     name
@@ -237,6 +237,7 @@ export const GetTournamentsForAdminCompeleted = gql`
             startDate
             endDate
             noOfRounds
+            matchFormat
             HandicapCalculated: player_handicaps {
                 handicap
                 oldHandicap
@@ -345,6 +346,7 @@ export const GetTournamnetListForCompleted = gql`
             title
             startDate
             endDate
+            matchFormat
             noOfRounds
             HandicapCalculated: player_handicaps {
                 handicap

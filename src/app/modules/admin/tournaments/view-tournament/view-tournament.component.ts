@@ -64,6 +64,7 @@ export class ViewTournamentComponent implements OnInit {
     tournamentPlayersAdd: boolean = true;
     showCloseBtn: boolean = true;
     categories: TournamentCategory[] = [];
+    FlightsQL: any[] = [];
     selectedMembers: Player[][] = [];
     activeTournamentMembers: TournamentMember[] = [];
     runningFlights: number = 0;
@@ -91,7 +92,11 @@ export class ViewTournamentComponent implements OnInit {
     cuttFlag: number = 0;
     tournamentCategories: any;
     leaderAllRoundData: any;
-
+    AmateursCount:number=0;
+    JuniorsCount:number=0;
+    SeniorsCount:number=0;
+    VeteransCount:number=0;
+LadiesCount:number=0;
     par3Avg2: number;
     par4Avg2: number;
     par5Avg2: number;
@@ -159,7 +164,7 @@ export class ViewTournamentComponent implements OnInit {
     ];
 
     dataSourceMembersStatus: MatTableDataSource<any>;
-    displayedColumnsMembersStatus = ['id', 'name', 'status'];
+    displayedColumnsMembersStatus = [ 'name', 'category','handicap'];
     storagePath: string;
 
     // Pie
@@ -268,6 +273,9 @@ export class ViewTournamentComponent implements OnInit {
                 this.activeRound = this.fullTournament.activeRound;
                 this.noOfRounds = this.fullTournament.noOfRounds;
                 this.categories = this.fullTournament.CategoriesQL;
+                this.FlightsQL=this.fullTournament.FlightsQL;
+
+
                 // this.playersUpdatedHandicap =
                 //   this.fullTournament.HandicapCalculated;
 
@@ -458,7 +466,26 @@ export class ViewTournamentComponent implements OnInit {
                     // const distinctThings = m.filter((thing, i, arr) => {
                     //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
                     // });
+                      if(c.category=='Amateurs'){
+                        this.AmateursCount=m.length;
 
+                      }
+                      if(c.category.includes('Junior')){
+                        this.JuniorsCount=m.length
+
+                      }
+                      if(c.category.includes('Senior')){
+                        this.SeniorsCount=m.length
+
+                      }
+                      if(c.category=='Veterans'){
+                        this.VeteransCount=m.length;
+
+                      }
+                      if(c.category=='Ladies'){
+                        this.LadiesCount=m.length
+
+                      }
                     {
                         this.totalMembers += m.length;
                         let stat: any = {
@@ -497,6 +524,7 @@ export class ViewTournamentComponent implements OnInit {
                     count++;
                 }
                 console.log(this.topMembers);
+                this.dataSourceMembersStatus=new MatTableDataSource(this.topMembers);
 
                 let activeFights = this.fullTournament.FlightsQL.filter((a) => {
                     return a.flightRound == this.activeRound;

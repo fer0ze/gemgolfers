@@ -4,20 +4,16 @@ table {
     overflow-y: hidden;
     min-width: 290px;
 
-    td {
-        button {
-            .mat-icon.disabled {
-                color: #d3d3d3;
-                cursor: default;
-            }
-            .mat-icon.active {
-                color: green;
-                cursor: pointer;
-            }
-        }
-    }
+    
 }
-
+.disabled {
+    color: #d3d3d3;
+    cursor: default;
+}
+.active {
+    color: green  !important;
+    cursor: pointer;
+}
 .mat-tab-group {
     .mat-tab-body-content {
         padding: 30px!important;
