@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit ,Input} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import { Player } from "app/shared/models/player.model";
@@ -26,6 +26,9 @@ import { of } from "rxjs";
   styleUrls: ["./matchplay.component.scss"],
 })
 export class MatchplayComponent implements OnInit {
+  
+  @Input()
+	tournamentID: string;
   myPlayer: Player;
   isLoading: Boolean = true;
   loggedInuser: Player;
@@ -39,7 +42,7 @@ export class MatchplayComponent implements OnInit {
   currentRoundFlights: any[] = [];
   roundFlights: any[] = [];
   //scoreHeader: any[] = [];
-  tournamentID: string;
+  //tournamentID: string;
   filterPlayer: string = "";
   coursesList: any[] = [];
   selectedCourse: string = "";
@@ -68,7 +71,7 @@ export class MatchplayComponent implements OnInit {
     });
 
     this.route.paramMap.subscribe((params) => {
-      this.tournamentID = params.get("id");
+      //this.tournamentID = params.get("id");
     });
 
     of(this.matchPlayData)

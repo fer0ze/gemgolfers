@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -54,6 +54,9 @@ import { DialogMoveFlightComponent } from "../../dialogs/dialog-move-flight/dial
   styleUrls: ["./flight-management.component.scss"],
 })
 export class FlightManagementComponent implements OnInit {
+
+  @Input()
+	tournamentID: string;
   dataSource: MatTableDataSource<any>;
   dataSources: MatTableDataSource<any>;
   displayedColumns = [
@@ -85,11 +88,12 @@ export class FlightManagementComponent implements OnInit {
   tournamentInfo: any;
   tournamentMember: any[] = [];
   selectedMembers: Player[][] = [];
-  tournamentID: string;
+  //tournamentID: string;
   isLoading: boolean = true;
   preFlightTime: string;
-  flightRound: number = 1;
+  flightRound: number = 0;
   activeRound: number;
+  noOfRounds: number;
   tRounds: TournamentRounds[] = [];
   roundFlights: any[] = [];
   copyScoreInfo: any[] = [];
@@ -134,10 +138,11 @@ export class FlightManagementComponent implements OnInit {
     );
     console.log(this.loggedInuser);
 
-    this.route.paramMap.subscribe((params) => {
-      this.tournamentID = params.get("id");
-    });
-
+    // this.route.paramMap.subscribe((params) => {
+    //   this.tournamentID = params.get("id");
+    // });
+  console.log(this.tournamentID);
+  
     let dataFullTournament = await this.facadeService.getTournamentsFlights(
      
       this.tournamentID
@@ -145,6 +150,7 @@ export class FlightManagementComponent implements OnInit {
 
     this.tournamentInfo = dataFullTournament.TournamentQL;
     this.activeRound = this.tournamentInfo[0].activeRound;
+    this.noOfRounds = this.tournamentInfo[0].noOfRounds;
 
     console.log(this.tournamentInfo[0]);
     let selectedClubId: string =
@@ -164,8 +170,8 @@ export class FlightManagementComponent implements OnInit {
 
     this.syncClubMembers();
     if (this.tournamentInfo[0].activeRound > this.tournamentInfo[0].noOfRounds)
-      this.flightRound = this.tournamentInfo[0].noOfRounds;
-    else this.flightRound = this.tournamentInfo[0].activeRound;
+    // this.flightRound = this.tournamentInfo[0].noOfRounds;
+    // else this.flightRound = this.tournamentInfo[0].activeRound;
     if (this.tournamentInfo[0]["matchFormat"] == matchFormat.TEXAS_SCRAMBLE) {
       this.showTeams = true;
     }
@@ -419,7 +425,7 @@ export class FlightManagementComponent implements OnInit {
 
   changeRound(item) {
     //console.log("Selected value: " + item.value);
-    this.flightRound = item.value;
+    this.flightRound = item.index;
     this.roundFlights = [];
     this.selectedMembers = [];
 
@@ -495,12 +501,19 @@ export class FlightManagementComponent implements OnInit {
   }
 
   async getSelectedPlayers() {
+    this.selectedMembers=[];
     if (this.tournamentInfo[0].FlightManagerQLi.length > 0) {
-      this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
-        (a) => {
-          return a.flightRound == this.flightRound;
-        }
-      );
+      if(this.flightRound==0)
+      {
+        this.roundFlights = this.tournamentInfo[0].FlightManagerQLi;
+      }else{
+        this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
+          (a) => {
+            return a.flightRound == this.flightRound;
+          }
+        );
+        
+      }
 
       let outer = 0;
 

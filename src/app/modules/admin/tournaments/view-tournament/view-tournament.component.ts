@@ -263,7 +263,7 @@ export class ViewTournamentComponent implements OnInit {
                         'members'
                     ].length;
                 this.showCloseBtn = false;
-                this.tournamentPlayersAdd = false;
+                this.tournamentPlayersAdd = true;
             }
 
             this.fullTournament = this.dataFullTournament.TournamentQL[0];
@@ -381,6 +381,7 @@ export class ViewTournamentComponent implements OnInit {
 
     calculateStatistics() {
         this.FlightsQL = [];
+        this.topMembers=[];
         this.FlightsQL = this.fullTournament.FlightsQL.splice(0, 7);
         let totalPlayers =
             this.dataFullTournament['TournamentQL'][0]['members'];
@@ -440,25 +441,25 @@ export class ViewTournamentComponent implements OnInit {
                 // const distinctThings = m.filter((thing, i, arr) => {
                 //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
                 // });
-                if (c.category == 'Amateurs') {
+                if (c.name == 'Amateurs') {
                     this.AmateursCount = m.length;
                 }
-                if (c.category.includes('Junior')) {
+                if (c.name.toLowerCase().includes('Junior')) {
                     this.JuniorsCount = m.length;
                 }
-                if (c.category.includes('Senior')) {
+                if (c.name.toLowerCase().includes('Senior')) {
                     this.SeniorsCount = m.length;
                 }
-                if (c.category == 'Veterans') {
+                if (c.name == 'Veterans') {
                     this.VeteransCount = m.length;
                 }
-                if (c.category == 'Ladies') {
+                if (c.name == 'Ladies') {
                     this.LadiesCount = m.length;
                 }
                 {
                     this.totalMembers += m.length;
                     let stat: any = {
-                        title: c.category,
+                        title: c.name,
                         count: m.length,
                         class: colors[index],
                     };
@@ -558,9 +559,11 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics1() {
         this.FlightsQL = [];
+        this.topMembers=[];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 1;
         });
+        this.FlightsQL.splice(0,7);
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -590,9 +593,11 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics2() {
         this.FlightsQL = [];
+        this.topMembers=[];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 2;
         });
+        this.FlightsQL.splice(0,6);
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -622,9 +627,11 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics3() {
         this.FlightsQL = [];
+        this.topMembers=[];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 3;
         });
+        this.FlightsQL.splice(0,6);
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -654,9 +661,11 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics4() {
         this.FlightsQL = [];
+        this.topMembers=[];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 4;
         });
+        this.FlightsQL.splice(0,6);
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {

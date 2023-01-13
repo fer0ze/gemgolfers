@@ -39,36 +39,36 @@ table {
     margin: 0px;
   
     tr.topheader {
-      background-color: #b7b7b7;
-      color: #585858;
+     
+      color: white;
     }
   
     tr.topheader th {
-      padding: 5px;
+      padding: 10px;
       font-weight: normal;
     }
   
     tr.subhead {
       font-family: monospace;
-      background-color: #e8e8e7;
-      color: #585858;
+  
+      color: white;
     }
   
     tr.subhead th {
-      border: solid 1px #fff;
+     
       font-weight: bold;
-      padding: 5px;
+      padding: 10px;
     }
   
     tr.scorebody {
       font-family: monospace;
-      color: #585858;
+      color: rgb(25, 24, 24);
     }
   
     tr.scorebody td {
-      border: solid 1px #e8e8e7;
+  
       font-weight: bold;
-      padding: 5px;
+      padding: 10px;
       text-align: center;
       background-color: #fff !important;
     }
@@ -127,7 +127,16 @@ table {
   .paddingClass {
     padding-bottom: 20px;
   }
-  
+  .class_name_round {
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    height: 34px;
+    background: #294c1b;
+    color: #fff;
+    border-radius: 50%;
+    padding-top: 7px;
+  }
   .ngxTableHeader {
     padding: 10px 20px;
     display: flex;

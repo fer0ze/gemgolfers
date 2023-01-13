@@ -54,6 +54,7 @@ import { BlockWhiteSectionComponent } from "app/shared/modules/block-white-secti
 import { BlockWhiteSectionModule } from "app/shared/modules/block-white-section/block-white-section.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgApexchartsModule } from "ng-apexcharts";
+import { MatchplayComponent } from "../matchplay/matchplay.component";
 @NgModule({
   declarations: [
     TournamentsComponent,
@@ -66,7 +67,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
     DialogMoveFlightComponent,
     DialogOverviewComponent,
     DialogPlayerComponent,
-    DialogPlayerListComponent,
+    DialogPlayerListComponent,MatchplayComponent,
     ViewTournamentComponent,DialogMarshalComponent,DialogPlayingCategoryComponent,DialogCourseDetailsComponent,DialogCloseRoundComponent,
   ],
   imports: [
