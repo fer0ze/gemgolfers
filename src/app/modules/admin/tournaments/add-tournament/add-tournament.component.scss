@@ -1,76 +1,179 @@
-.container{
-    padding: 0px;
-    .register-form{
+.container {
+  padding: 0px;
 
-      ::ng-deep .mat-horizontal-stepper-header-container {
-        background-color: #f5f5f5;
-        border-radius: 5px;
-        margin-bottom: 40px;
-        }
+  .register-form {
 
-        // .separator {
-        //   border-bottom: 1px dashed #f5f5f5;
-        // }
-        // .separator{
-        //   width: 34%;
-        // }
-
-       
-        
-        .row{
-            margin-bottom: 20px;            
-              h3{
-                  margin-bottom: 10px !important;
-              }              
-        }
-        pre{
-            width: 300px;
-            background-color: #FAFAFA;
-        }
-        .checkbox-margin {
-            margin: 0 5px!important;
-        }
-
-        .tournamentPlayers {
-          margin: 10px;
-        }
-        .fullWidth {
-          width: 100%;
-        }
-
-      .gridContainer {
-          padding: 16px;
-      }
-      
-      .gridContainer > mat-card {
-          margin-bottom: 16px;
-      }
-      
-      .gridContainer .column-label {
-          margin-right: 8px;
-          font-size: 1rem;
-      }
+    ::ng-deep .mat-horizontal-stepper-wrapper{
+      display: flex;
+      flex-direction: row !important;
+    }
+   
+    ::ng-deep .mat-horizontal-stepper-header-container {
+      background-color: #aad8ff;
+      // border-radius: 5px;
+      // margin-bottom: 40px;
+      width: 16rem;
+       display: block !important;
+      // flex-direction: column;
+      // align-items: baseline;
 
     }
+    ::ng-deep .mat-horizontal-content-container{
+      overflow: hidden;
+      background: #f2f9ff;
+      padding: 0 24px 24px 24px;
+      width: 86%;
+    }
+    ::ng-deep .mat-stepper-horizontal-line {
+      border-top-width: 0px !important;
+    }
+    ::ng-deep .mat-tab-group {
+      flex-direction: row;
+    }
 
-    .catCount {
-      background: #f66d00;
-      padding: 10px;
+    ::ng-deep .mat-tab-header {
+      border-bottom: none;
+    }
+
+    ::ng-deep .mat-tab-header-pagination {
+      display: none !important;
+    }
+
+    ::ng-deep .mat-tab-labels {
+      flex-direction: column;
+    }
+
+    ::ng-deep .mat-ink-bar {
+      height: 100%;
+      left: 98% !important;
+    }
+
+    ::ng-deep .mat-tab-body-wrapper {
+      flex: 1 1 auto;
+    }
+
+    .separator {
+      border-bottom: 1px dashed #f5f5f5;
+    }
+
+    .separator {
+      width: 34%;
+    }
+
+
+
+    .row {
+      margin-bottom: 20px;
+
+      h3 {
+        margin-bottom: 10px !important;
+      }
+    }
+
+    pre {
+      width: 300px;
+      background-color: #FAFAFA;
+    }
+
+    .checkbox-margin {
+      margin: 0 5px !important;
+    }
+
+    .tournamentPlayers {
+      margin: 10px;
+    }
+
+    .fullWidth {
+      width: 100%;
+    }
+
+    .gridContainer {
+      padding: 16px;
+    }
+
+    .gridContainer>mat-card {
+      margin-bottom: 16px;
+    }
+
+    .gridContainer .column-label {
+      margin-right: 8px;
+      font-size: 1rem;
+    }
+
+  }
+
+  .catCount {
+    background: #f66d00;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px;
+    color: #fff;
+    font-size: 14px;
+    display: inline-flex;
+  }
+
+  .mat-form-field {
+    // min-width: 325px;
+    width: 100%;
+  }
+
+  .flightHeader {
+    padding: 10px;
+    color: #fff;
+
+    input {
+      width: 100px;
+      margin: 0 10px;
+      padding: 3px;
       border-radius: 5px;
-      margin: 5px;
-      color: #fff;
-      font-size: 14px;
-      display: inline-flex;
     }
-    
-    .mat-form-field {
-        // min-width: 325px;
-        width: 100%;
+  }
+
+  .social {
+    min-width: auto;
+  }
+
+  mat-radio-button {
+    margin-right: 20px;
+  }
+
+  mat-grid-tile {
+    background: lightblue;
+  }
+
+  table {
+    width: 100%;
+
+
+    .mat-icon.remove {
+      cursor: pointer;
+      text-align: right;
     }
+  }
+
+  .moveableList {
+    /* width: 500px; */
+    width: 100%;
+    display: block;
+
+  }
+
+
+  #manageFlights {
+    margin: 0 auto;
 
     .flightHeader {
-      padding:10px;
-      color:#fff;
+      padding: 10px;
+      color: rgb(2, 1, 1);
+      background-color: #047b9c;
+      border-radius: 4px;
+
+      .mat-icon.remove {
+        color: #fff;
+        cursor: pointer;
+        text-align: right;
+      }
+
       input {
         width: 100px;
         margin: 0 10px;
@@ -78,135 +181,89 @@
         border-radius: 5px;
       }
     }
+  }
 
-    .social{
-        min-width: auto;
+  .moveableFlights {
+    padding: 7px 10px;
+    border: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: move;
+
+    margin: 5px 0px 5px 0px;
+    border-radius: 4px;
+
+    .mat-icon.remove {
+      cursor: pointer;
     }
-    mat-radio-button {
-        margin-right: 20px;
-    }
-    mat-grid-tile {
-        background: lightblue;
-    }
-    table {
-        width: 100%;
-        
 
-        .mat-icon.remove {
-          cursor: pointer;
-          text-align: right;
-        }
-      }
+  }
 
-      .moveableList {
-        /* width: 500px; */
-        width: 100%;
-        display: block;
-       
-      }
-    
-      
-      #manageFlights {
-        margin:0 auto;
-        
-        .flightHeader {
-          padding:10px;
-          color:rgb(2, 1, 1);
-          background-color: #047b9c;
-          border-radius: 4px;
-          
-          .mat-icon.remove {
-            color: #fff;
-            cursor: pointer;
-            text-align: right;
-          }
-    
-          input {
-            width: 100px;
-            margin: 0 10px;
-            padding: 3px;
-            border-radius: 5px;
-          }
-        }
-      }
-      
-      .moveableFlights {
-        padding: 7px 10px;
-        border: solid 1px #ccc;
-        color: rgba(0, 0, 0, 0.87);
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        box-sizing: border-box;
-        cursor: move;
-        
-        margin: 5px 0px 5px 0px;
-        border-radius: 4px;
-    
-        .mat-icon.remove {
-          cursor: pointer;
-        }
-        
-      }
-      
-      .cdk-drag-preview {
-        box-sizing: border-box;
-        border-radius: 4px;
-        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                    0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                    0 3px 14px 2px rgba(0, 0, 0, 0.12);
-      }
-      
-      .cdk-drag-placeholder {
-        opacity: 0;
-      }
-      
-      .cdk-drag-animating {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-      }
-      
-      .example-box:last-child {
-        border: none;
-      }
-      
-      .moveableList.cdk-drop-list-dragging .moveableFlights:not(.cdk-drag-placeholder) {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-      }
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+      0 8px 10px 1px rgba(0, 0, 0, 0.14),
+      0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
 
-      .actionPane {
-        margin: 0 0 10px 0;
-      }
-    
-      .actionPane > button {
-        margin-right: 10px;
-      }
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
 
-      .stickyBox {
-        box-shadow: 0px 5px 6px 0px #868080;
-        position: fixed;
-        top: 100px;
-        right: 0;
-        width: 150px;
-        z-index: 1;
-        padding: 10px;
-        color: #fff;
-      }     
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .example-box:last-child {
+    border: none;
+  }
+
+  .moveableList.cdk-drop-list-dragging .moveableFlights:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .actionPane {
+    margin: 0 0 10px 0;
+  }
+
+  .actionPane>button {
+    margin-right: 10px;
+  }
+
+  .stickyBox {
+    box-shadow: 0px 5px 6px 0px #868080;
+    position: fixed;
+    top: 100px;
+    right: 0;
+    width: 150px;
+    z-index: 1;
+    padding: 10px;
+    color: #fff;
+  }
 }
-.separators{
+
+.separators {
   width: 170px;
 }
-.flight_tee{
+
+.flight_tee {
   color: black;
   background-color: white;
   max-width: 17%;
   border-radius: 4px;
   height: 54px;
 }
-.span_tee{
+
+.span_tee {
   height: 40px;
   margin-left: 9px;
 }
+
 .mat-form-field-flex {
   display: inline-flex;
   align-items: baseline;
@@ -214,11 +271,13 @@
   width: 30%;
   height: 54px;
 }
+
 .mat-select {
   display: inline-block;
   width: 52%;
   outline: 0;
 }
+
 .mat-select-value {
   display: table-cell;
   max-width: 0;
@@ -228,31 +287,38 @@
   white-space: nowrap;
   color: white;
 }
+
 .mat-select-placeholder {
   color: white;
-}.mat-select-arrow {
+}
+
+.mat-select-arrow {
   color: white;
 }
+
 // .mat-select-value {
 //   color: rgb(255 252 252 / 87%);
 // }
-.center{
+.center {
   justify-content: center;
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
   font-size: 30%;
 
 }
-matStepLabel{
+
+matStepLabel {
   justify-content: center;
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
   font-size: 30%;
 }
-.mat-step-icon-state-number mat-step-icon mat-step-icon-selected{
+
+.mat-step-icon-state-number mat-step-icon mat-step-icon-selected {
   display: none;
 }
-.header{
+
+.header {
   background-color: #f0eded;
   height: 73px;
   border-radius: 8px;
@@ -263,10 +329,31 @@ matStepLabel{
   text-align: center;
   padding-top: 0.1px;
   font-size: 15px;
-.header .header-form{
-  background-color: #f5f5f5;
-  border-radius: 5px;
-  margin-bottom: 40px;
-  justify-content: center;
+
+  .header .header-form {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    margin-bottom: 40px;
+    justify-content: center;
+  }
 }
-}   
+
+// :host /deep/ .mat-tab-group {
+//   flex-direction: row;
+// }
+// :host /deep/ .mat-tab-header {
+//   border-bottom: none;
+// }
+// :host /deep/ .mat-tab-header-pagination {
+//   display: none !important;
+// }
+// :host /deep/ .mat-tab-labels {
+//   flex-direction: column;
+// }
+// :host /deep/ .mat-ink-bar {
+//   height: 100%;
+//   left: 98% !important;
+// }
+// :host /deep/ .mat-tab-body-wrapper {
+//   flex: 1 1 auto;
+// }

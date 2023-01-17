@@ -39,17 +39,21 @@ table {
     margin: 0px;
   
     tr.topheader {
-     
+      font-size: medium;
+      font-weight: bold;
       color: white;
+      height: 8px !important
     }
   
     tr.topheader th {
       padding: 10px;
-      font-weight: normal;
+      font-weight: bold;
     }
   
     tr.subhead {
-      font-family: monospace;
+      font-size: medium;
+      font-weight: bold;
+      height: 4px !important;
   
       color: white;
     }
@@ -77,23 +81,12 @@ table {
       text-align: left;
     }
   
-    tr.scorebody td input.empty {
-      background-color: #f7f74f !important;
   
-      width: 28px;
-    }
-  
-    tr.scorebody td input.warn {
-      background-color: #ff6464 !important;
-      color: #fff;
-  
-      width: 28px;
-    }
   
     tr.scorebody td input {
       border: none;
       text-align: center;
-      width: 30px;
+      width: 20px;
     }
   
     td .mat-icon {
@@ -130,12 +123,11 @@ table {
   .class_name_round {
     display: inline-block;
     text-align: center;
-    width: 30px;
+    width: 31px;
     height: 34px;
-    background: #294c1b;
-    color: #fff;
+    border: 2px solid #0c64d1;
     border-radius: 50%;
-    padding-top: 7px;
+    padding-top: 5px;
   }
   .ngxTableHeader {
     padding: 10px 20px;
@@ -146,7 +138,18 @@ table {
     min-width: 800px;
     height: 70px;
   }
-  
+ .empty {
+    background-color: #f7f74f !important;
+
+ 
+  }
+
+ .warn {
+    background-color: #ff6464 !important;
+    color: #fff;
+
+    
+  }
   .ngxTableHeader .header-buttons {
     position: absolute;
     right: 30px;

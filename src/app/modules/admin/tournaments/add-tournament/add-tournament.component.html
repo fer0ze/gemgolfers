@@ -11,16 +11,18 @@
             {{ stepTitle }}
         </h2>
 
-        <div class="container mx-10">
+        <div class="container ">
             <form
                 class="register-form"
                 [formGroup]="formGroup ? formGroup : []"
             >
+            
                 <mat-horizontal-stepper
                     #linearVerticalStepper
                     formArrayName="formArray"
                     [linear]="true"
                 >
+                <div>
                     <mat-step
                         formGroupName="0"
                         [stepControl]="formArray?.get([0])"
@@ -584,7 +586,7 @@
                                     Save Changes
                                 </button>
                             </div>
-                            <div style="float: right">
+                            <!-- <div style="float: right">
                                 <button
                                     mat-raised-button
                                     color="primary"
@@ -597,7 +599,7 @@
                                 >
                                     Next >> Tournament Players
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </mat-step>
                     <mat-step (click)="tournamentMembersSetup()">
@@ -995,7 +997,7 @@
                             </mat-progress-spinner>
                         </mat-card>
                         <div class="mt-4">
-                            <div style="float: left">
+                            <!-- <div style="float: left">
                                 <button
                                     mat-raised-button
                                     color="accent"
@@ -1004,8 +1006,8 @@
                                 >
                                     Tournament Setup << Back
                                 </button>
-                            </div>
-                            <div style="float: right">
+                            </div> -->
+                            <!-- <div style="float: right">
                                 <button
                                     mat-raised-button
                                     color="primary"
@@ -1018,7 +1020,7 @@
                                 >
                                     Next >> Flights Setup
                                 </button>
-                            </div>
+                            </div> -->
                             <div style="clear: both"></div>
                         </div>
                     </mat-step>
@@ -1325,7 +1327,7 @@ class="w-full"
                             </mat-tab>
                         </mat-tab-group>
                         <div>
-                            <div style="float: left">
+                            <!-- <div style="float: left">
                                 <button
                                     mat-raised-button
                                     color="accent"
@@ -1338,8 +1340,8 @@ class="w-full"
                                 >
                                     Tournament Players << Back
                                 </button>
-                            </div>
-                            <div style="float: right">
+                            </div> -->
+                            <!-- <div style="float: right">
                                 <button
                                     mat-raised-button
                                     color="primary"
@@ -1348,7 +1350,7 @@ class="w-full"
                                 >
                                     Next >> Flights Arrangement
                                 </button>
-                            </div>
+                            </div> -->
                             <div style="clear: both"></div>
                         </div>
                     </mat-step>
@@ -1537,7 +1539,7 @@ class="w-full"
                             </mat-tab>
                         </mat-tab-group>
                         <div>
-                            <div style="float: left">
+                            <!-- <div style="float: left">
                                 <button
                                     mat-raised-button
                                     color="accent"
@@ -1550,7 +1552,7 @@ class="w-full"
                                 >
                                     Flights Setup << Back
                                 </button>
-                            </div>
+                            </div> -->
                             <div style="float: right">
                                 <button
                                     mat-raised-button
@@ -1565,6 +1567,7 @@ class="w-full"
                             <!-- <button type="button" mat-button (click)="linearVerticalStepper.reset()">Reset</button> -->
                         </div>
                     </mat-step>
+                </div>
                 </mat-horizontal-stepper>
             </form>
         </div>

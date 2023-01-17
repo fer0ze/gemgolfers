@@ -30,7 +30,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-  declarations: [LeaderboardComponent],
+  declarations: [],
   imports: [
     CommonModule,
     LeaderboardRoutingModule,

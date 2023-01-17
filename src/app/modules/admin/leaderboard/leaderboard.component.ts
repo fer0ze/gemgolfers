@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation, ViewChild, Input } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MatPaginator } from '@angular/material/paginator';
@@ -38,7 +38,10 @@ import { DialogPlayerScoreComponent } from "../dialogs/dialog-player-score/dialo
   styleUrls: ["./leaderboard.component.scss"],
 })
 export class LeaderboardComponent implements OnInit {
-  private tournamentID: string;
+
+  @Input()
+	tournamentID: string;
+  // private tournamentID: string;
   Leaderboard: any;
   private noOfHolesInCourse: number = 18;
   activeRound: number;
@@ -115,7 +118,7 @@ export class LeaderboardComponent implements OnInit {
     public facadeService: FacadeService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getOnLoadData();
 
     const source = interval(60000 * 30);
@@ -125,7 +128,7 @@ export class LeaderboardComponent implements OnInit {
   async getOnLoadData() {
     this.route.paramMap.subscribe((params) => {
       //console.log(params.get("id"));
-      this.tournamentID = params.get("id");
+      //this.tournamentID = params.get("id");
     });
 
     // if(this.tournamentID == "gcc")
@@ -350,7 +353,7 @@ export class LeaderboardComponent implements OnInit {
       if (this.Leaderboard.cutOffCriteria != null) {
         if ("cutOff" in this.Leaderboard.cutOffCriteria) {
           if (
-            this.cutOffLine.score > 0 &&
+            this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
             this.cutOffLine.type == "GROSS" &&
             this.cutOffLine.copymembers == null
           ) {
@@ -404,7 +407,7 @@ export class LeaderboardComponent implements OnInit {
               }
             }
           } else if (
-            this.cutOffLine.score > 0 &&
+            this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
             this.cutOffLine.type == "NET" &&
             this.cutOffLine.copymembers == null
           ) {
@@ -451,7 +454,7 @@ export class LeaderboardComponent implements OnInit {
                 this.net.push(this.allMatchResults[leader]);
               }
             }
-          } else if (this.cutOffLine.copymembers > 0) {
+          } else if ( this.cutOffList["cutOff"].length >0 && this.cutOffLine.copymembers > 0) {
             for (let leader in this.allMatchResults) {
               let remove: any;
               if (this.checkRoundCut(this.allMatchResults[leader]) == true) {

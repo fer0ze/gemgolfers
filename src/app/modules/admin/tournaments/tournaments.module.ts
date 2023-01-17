@@ -55,6 +55,9 @@ import { BlockWhiteSectionModule } from "app/shared/modules/block-white-section/
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgApexchartsModule } from "ng-apexcharts";
 import { MatchplayComponent } from "../matchplay/matchplay.component";
+import { LeaderboardComponent } from "../leaderboard/leaderboard.component";
+import { GraphQLModule } from "app/graphql.module";
+import { ApolloModule } from "apollo-angular";
 @NgModule({
   declarations: [
     TournamentsComponent,
@@ -63,7 +66,7 @@ import { MatchplayComponent } from "../matchplay/matchplay.component";
     CalculateHandicapComponent,
     DialogHanidcapListComponent,
     HandicapCalculationWhsComponent,
-    PlayerManagementComponent,
+    PlayerManagementComponent,LeaderboardComponent,
     DialogMoveFlightComponent,
     DialogOverviewComponent,
     DialogPlayerComponent,
@@ -83,6 +86,7 @@ import { MatchplayComponent } from "../matchplay/matchplay.component";
     WhiteSectionModule,
     TopPlayerModule,
     MatButtonModule,
+    GraphQLModule,
     BlockWhiteSectionModule,
     MatIconModule,
     MatSortModule,
@@ -101,7 +105,7 @@ import { MatchplayComponent } from "../matchplay/matchplay.component";
     MatTabsModule,
     MatSnackBarModule,
     MatToolbarModule,
-    DragDropModule,
+    DragDropModule,ApolloModule,
     MatDialogModule,
     FormsModule,
     MatAutocompleteModule,

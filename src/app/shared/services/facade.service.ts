@@ -195,6 +195,9 @@ export class FacadeService {
   getPlayersListByClub(id: string) {
     return this.playerService.getPlayersListByClub(id);
   }
+  getPlayersListForTournament(id: string) {
+    return this.playerService.getPlayersListForTournament(id);
+  }
   getPlayersListByClubCONGU(id: string) {
     return this.playerService.getPlayersListByClubCONGU(id);
   }

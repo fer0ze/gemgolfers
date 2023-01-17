@@ -63,6 +63,19 @@ export const GetPlayersByClub = gql`
     }
   }
 `;
+export const getPlayersList = gql`
+  query PostsGetQuery($where: player_bool_exp!) {
+    player(where: $where, order_by: { firstName: asc }) {
+      id
+      firstName
+      lastName
+      playerCategory
+      handicap    
+      email
+      membershipNumber
+    }
+  }
+`;
 export const getPlayersListByClubCONGU = gql`
   query PostsGetQuery($where: player_bool_exp!) {
     player(where: $where, order_by: { firstName: asc }) {

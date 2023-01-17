@@ -59,6 +59,30 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListForTournament(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersList,
+                    variables: {
+                        where: {
+                            membership: {
+                                clubId: {
+                                    _eq: id,
+                                },
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getPlayersListByClubCONGU(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -918,7 +942,7 @@ export class PlayersService {
             { id: 9, name: 'Ladies' },
             { id: 10, name: 'Junior Ladies' },
             { id: 11, name: 'Pro-Am' },
-            { id: 11, name: 'AGC Members & PAF Officers' },
+            { id: 12, name: 'AGC Members & PAF Officers' },
         ];
 
         return CLUB_CATEGORIES;

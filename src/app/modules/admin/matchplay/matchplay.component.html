@@ -206,7 +206,7 @@
                     <div *ngIf="!this.showTaxes">
                         <div
                             *ngFor="let flight of flightPlayers; let i = index"
-                            class="scoreCardBox mx-4 mb-5 flex flex-col mt-4 shadow rounded-2xl overflow-hidden bg-card ng-star-inserted falses ng-star-inserted"
+                            class="scoreCardBox mx-4 mb-5 flex flex-col mt-4 shadow rounded-2xl overflow-hidden ng-star-inserted falses ng-star-inserted"
                             [ngClass]="{
                                 trues: flight.ended == true,
                                 falses: flight.ended == false
@@ -233,9 +233,9 @@
                                     
                                 </div> -->
                             </div>
-                            <table>
+                            <table class="mat-table">
                                 <thead class="bg-blue-400">
-                                    <tr class="topheader">
+                                    <tr class="topheader mat-header-row">
                                         <th class="rounded-tl-lg">Flight {{ i + 1 }}</th>
                                         <th
                                             *ngFor="
@@ -304,7 +304,7 @@
                                         <th class="rounded-tr-lg">total</th>
                                        
                                     </tr>
-                                    <tr class="subhead">
+                                    <tr class="subhead mat-header-row">
                                         <th>Yardage</th>
                                         <th
                                             *ngFor="
@@ -523,7 +523,13 @@
                                                 let i = index
                                             "
                                         >
-                                            <span  class="class_name_round"
+                                            <span  class="class_name_round" [ngClass]="{
+                                                empty:
+                                                    score == '' &&
+                                                    item.holesPlayed >
+                                                        0,
+                                                warn: score > 9
+                                            }"
                                                 ><input
                                                     (input)="
                                                         onGross9Change(
@@ -542,18 +548,12 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    [ngClass]="{
-                                                        empty:
-                                                            score == '' &&
-                                                            item.holesPlayed >
-                                                                0,
-                                                        warn: score > 9
-                                                    }"
+                                                    
                                             /></span>
                                         </td>
                                         
                                         <td>
-                                          <span  class="class_name_round" style="background-color: #a30000;">
+                                          <span  class="class_name_round" style="border: 3px solid rgb(4, 78, 50); width: 36px;">
                                           <input
                                                   type="text"
                                                   id="gross9total_{{
@@ -576,7 +576,13 @@
                                                 let i = index
                                             "
                                         >
-                                            <span  class="class_name_round"
+                                            <span  class="class_name_round" [ngClass]="{
+                                                empty:
+                                                    score == '' &&
+                                                    item.holesPlayed >
+                                                        0,
+                                                warn: score > 9
+                                            }"
                                                 ><input
                                                     type="text"
                                                     (input)="
@@ -595,13 +601,7 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    [ngClass]="{
-                                                        empty:
-                                                            score == '' &&
-                                                            item.holesPlayed >
-                                                                0,
-                                                        warn: score > 9
-                                                    }"
+                                                    
                                             /></span>
                                         </td>
                                        
@@ -625,7 +625,7 @@
 
                                        
                                         <td>
-                                          <span class="class_name_round" style="background-color: #a30000;">
+                                          <span class="class_name_round" style="    border: 3px solid red;    width: 36px;">
                                             <input
                                                 type="text"
                                                 id="grosstotal_{{
@@ -697,16 +697,16 @@
                     <div *ngIf="this.showTaxes">
                         <div
                             *ngFor="let flight of flightPlayers; let i = index"
-                            class="scoreCardBox mx-4 mb-5 mt-4 flex flex-col shadow rounded-2xl overflow-hidden bg-card ng-star-inserted falses ng-star-inserted"
+                            class="scoreCardBox mx-4 mb-5 mt-4 flex flex-col shadow rounded-2xl overflow-hidden  ng-star-inserted falses ng-star-inserted"
                             [ngClass]="{
                                 trues: flight.ended == true,
                                 falses: flight.ended == false
                             }"
                         >
-                            <table>
-                                <thead>
-                                    <tr class="topheader">
-                                        <th>Team {{ i + 1 }}</th>
+                            <table  class="mat-table">
+                                <thead class="bg-blue-400">
+                                    <tr class="topheader mat-header-row">
+                                        <th  class="rounded-tl-lg">Team {{ i + 1 }}</th>
                                         <th
                                             *ngFor="
                                                 let hole of flight.header
@@ -771,9 +771,9 @@
                                         >
                                             in
                                         </th>
-                                        <th>total</th>
+                                        <th class="rounded-tr-lg">total</th>
                                     </tr>
-                                    <tr class="subhead">
+                                    <tr class="subhead mat-header-row">
                                         <th>Yardage</th>
                                         <th
                                             *ngFor="
@@ -912,7 +912,7 @@
                                         <th>{{ flight.header.parTotal }}</th>
                                     </tr>
                                     <tr class="subhead">
-                                        <th>Index</th>
+                                        <th class="rounded-bl-lg">Index</th>
                                         <th
                                             *ngFor="
                                                 let hole of flight.header
@@ -970,7 +970,7 @@
                                             "
                                         ></th>
 
-                                        
+                                        <th class="rounded-br-lg"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -995,6 +995,13 @@
                                             "
                                         >
                                             <span
+                                            [ngClass]="{
+                                                empty:
+                                                    score == '' &&
+                                                    flight.holesPlayed >
+                                                        0,
+                                                warn: score > 9
+                                            }"
                                                 ><input
                                                     (input)="
                                                         onGross9Change(
@@ -1013,13 +1020,7 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    [ngClass]="{
-                                                        empty:
-                                                            score == '' &&
-                                                            flight.holesPlayed >
-                                                                0,
-                                                        warn: score > 9
-                                                    }"
+                                                    
                                             /></span>
                                         </td>
                                         <td>
@@ -1043,7 +1044,13 @@
                                                 let i = index
                                             "
                                         >
-                                            <span
+                                            <span [ngClass]="{
+                                                empty:
+                                                    score == '' &&
+                                                    flight.holesPlayed >
+                                                        0,
+                                                warn: score > 9
+                                            }"
                                                 ><input
                                                     type="text"
                                                     (input)="
@@ -1062,13 +1069,7 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    [ngClass]="{
-                                                        empty:
-                                                            score == '' &&
-                                                            flight.holesPlayed >
-                                                                0,
-                                                        warn: score > 9
-                                                    }"
+                                                    
                                             /></span>
                                         </td>
                                         <td>

@@ -33,6 +33,7 @@ import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-ov
 import { DialogPlayingCategoryComponent } from '../../dialogs/dialog-playing-category/dialog-playing-category.component';
 import { DialogMarshalComponent } from '../../dialogs/dialog-marshal/dialog-marshal.component';
 import { ApexOptions } from 'ng-apexcharts';
+import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 
 @Component({
     selector: 'app-view-tournament',
@@ -108,7 +109,7 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab3: boolean = false;
     showMainTab4: boolean = false;
     showMainTab5: boolean = false;
-
+    tournamentMember: any;
     dataFullTournament: any;
     cuttFlag: number = 0;
     tournamentCategories: any;
@@ -227,7 +228,9 @@ export class ViewTournamentComponent implements OnInit {
 
     async ngOnInit() {
         //console.log(this.route.snapshot.paramMap.get("id"));
-
+        this.loggedInUser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
@@ -382,7 +385,13 @@ export class ViewTournamentComponent implements OnInit {
     calculateStatistics() {
         this.FlightsQL = [];
         this.topMembers=[];
-        this.FlightsQL = this.fullTournament.FlightsQL.splice(0, 7);
+        if(this.fullTournament.FlightsQL.length>6) {
+            this.FlightsQL = this.fullTournament.FlightsQL.splice(0, 7);
+        }else{
+            this.FlightsQL = this.fullTournament.FlightsQL;
+
+        }
+        // this.FlightsQL.splice(0,6);
         let totalPlayers =
             this.dataFullTournament['TournamentQL'][0]['members'];
         console.log(totalPlayers);
@@ -563,7 +572,9 @@ export class ViewTournamentComponent implements OnInit {
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 1;
         });
-        this.FlightsQL.splice(0,7);
+        if(this.FlightsQL.length>6) {
+            this.FlightsQL.splice(0,6);
+        }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -597,7 +608,9 @@ export class ViewTournamentComponent implements OnInit {
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 2;
         });
-        this.FlightsQL.splice(0,6);
+        if(this.FlightsQL.length>6) {
+            this.FlightsQL.splice(0,6);
+        }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -631,7 +644,9 @@ export class ViewTournamentComponent implements OnInit {
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 3;
         });
-        this.FlightsQL.splice(0,6);
+        if(this.FlightsQL.length>6) {
+            this.FlightsQL.splice(0,6);
+        }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -665,7 +680,9 @@ export class ViewTournamentComponent implements OnInit {
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 4;
         });
-        this.FlightsQL.splice(0,6);
+        if(this.FlightsQL.length>6) {
+            this.FlightsQL.splice(0,6);
+        }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
             for (let obj of c['MembersQL']) {
@@ -757,7 +774,9 @@ export class ViewTournamentComponent implements OnInit {
             this.showMainTab2 = false;
             this.showMainTab3 = false;
             this.showMainTab4 = false;
+            this.getTournamentMembers();
             this.showMainTab5 = true;
+
         }
     }
 
@@ -1508,9 +1527,7 @@ export class ViewTournamentComponent implements OnInit {
         //let fcnter = 0;
         console.log(criteria);
         this.changer++;
-        this.loggedInUser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+        
 
         let tournamentFlightMembers: FlightMembers[];
         let teeBox: number;
@@ -2079,4 +2096,68 @@ export class ViewTournamentComponent implements OnInit {
         this.dataSourceTotalNET.paginator = this.paginator;
         this.dataSourceTotalNET.sort = this.sort;
     }
+
+   async getTournamentMembers()  {
+    let dataFullTournaments = await this.facadeService.getTournamentMembers(
+        this.tournamentID
+      );
+      console.log(dataFullTournaments);
+  
+      this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+   }
+   applyMembersFilter(filterValue: string){
+    if (filterValue == "") {
+        this.getTournamentMembers();
+        return;
+    }
+      filterValue = filterValue.toLowerCase();
+      let players=[];
+      if (filterValue.length >= 3) {
+        for (let c of this.tournamentMember) {
+          c["fullname"] = c.player["firstName"] + " " + c.player["lastName"];
+          if (c["fullname"].toLowerCase().includes(filterValue)) {
+            players.push(c);
+          } else if (
+            c.player["membershipNumber"] &&
+            c.player["membershipNumber"].toLowerCase().toString().includes(filterValue)
+          ) {
+            players.push(c);
+          }  else if (
+            c.player["playerCategory"] &&
+            c.player["playerCategory"].toLowerCase().toString().includes(filterValue)
+          ) {
+            players.push(c);
+          } else if (
+            c.player["email"] &&
+            c.player["email"].toLowerCase().toString().includes(filterValue)
+          ) {
+            players.push(c);
+          }
+        }
+        this.tournamentMember=players;
+        //console.log(this.player);
+        // this.setDataSource(this.player);
+      }
+   }
+   async playerList() {
+    let datas = await this.facadeService.getPlayersListForTournament(
+        this.loggedInUser.adminClubId
+    );
+    const dialogRef = this.dialog.open(DialogPlayerListComponent, {
+      data: { players: datas.player,tournamentID:this.tournamentID },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result) {
+        //console.log("record deleted.");
+         console.log(result);
+        // this.clubMembers.push(result);
+        // console.log(this.clubMembers);
+        // this.syncClubMembers();
+      } else {
+        //console.log("cancel delete action");
+      }
+    });
+  }
 }
