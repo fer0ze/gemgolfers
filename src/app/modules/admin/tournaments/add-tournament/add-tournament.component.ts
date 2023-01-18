@@ -2035,7 +2035,7 @@ export class AddTournamentComponent implements OnInit {
                     this.tournamentMembers.push(selectionArray[index]);
 
                 let member: any = {
-                    tournamentId: '-NKviB8CxjtGUK-1bv_J',
+                    tournamentId: this.tournamentID,
                     playerId: selectionArray[index].id,
                     status: true,
                 };
