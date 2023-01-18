@@ -61,6 +61,7 @@ export const appRoutes: Route[] = [
         },
         children   : [
             {path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)},
+            {path: 'leaderboard', loadChildren: () => import('app/modules/admin/mainleaderboard/mainleaderboard.module').then(m => m.MainLeaderboardModule)},
         ]
     },
 
@@ -89,7 +90,7 @@ export const appRoutes: Route[] = [
             {path: 'tournaments/schedule', loadChildren: () => import('app/modules/admin/tournaments/schedule/schedule.module').then(m => m.ScheduleModule)},
             {path: 'courses', loadChildren: () => import('app/modules/admin/course/course.module').then(m => m.CourseModule)},
             //{path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
-            //{path: 'leaderboard', loadChildren: () => import('app/modules/admin/leaderboard/leaderboard.module').then(m => m.LeaderboardModule)},
+            
         ]
     }
 ];

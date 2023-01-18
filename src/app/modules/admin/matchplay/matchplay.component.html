@@ -8,7 +8,7 @@
         <mat-tab label="Over View">
             <div class="flex-auto">
                 <div
-                    class="flex flex-col sm:flex-row md:flex-col flex-auto bg-card justify-between py-8 px-6 md:px-8 border-b"
+                    class="flex flex-col sm:flex-row md:flex-col flex-auto  justify-between py-8 px-6 md:px-8 border-b"
                 >
                     <!-- <div class="flex">
                         <div>
@@ -56,7 +56,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            &nbsp;
+                           
                             <mat-form-field
                                 *ngIf="currentRoundFlights.length > 0"
                             >
@@ -82,7 +82,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            &nbsp;
+                           
                             <mat-form-field *ngIf="coursesList.length > 1">
                                 <mat-select
                                     (selectionChange)="changeCourse($event)"
@@ -100,13 +100,13 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="flex-auto">
+                        <div class="flex flex-row">
                             <form
                                 class="example-container"
                                 [formGroup]="filters"
                             >
                                 <mat-form-field
-                                    class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50"
+                                class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
                                 >
                                     <input
                                         matInput
@@ -116,15 +116,14 @@
                                     />
                                 </mat-form-field>
                             </form>
-                        </div>
-                        <div>
+                       
                             <button
-                                mat-raised-button
-                                color="primary"
+                            mat-raised-button
+                            color="primary"
                                 class="mx-2"
                                 (click)="filterPlayerFlight(true)"
                             >
-                                <mat-icon matSuffix>search</mat-icon>
+                                Search 
                             </button>
                             <button
                                 mat-raised-button
@@ -148,7 +147,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              &nbsp;
+             
               <mat-form-field *ngIf="currentRoundFlights.length > 0">
                 <mat-select
                   (selectionChange)="changeFlight($event)"
@@ -164,7 +163,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              &nbsp;
+             
               <mat-form-field *ngIf="coursesList.length > 1">
                 <mat-select
                   (selectionChange)="changeCourse($event)"
@@ -212,29 +211,9 @@
                                 falses: flight.ended == false
                             }"
                         >
-                            <div
-                                class="flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-green-400 transition-shadow ease-in-out duration-150"
-                            >
-                                <!-- <div>
-                                    <div class="font-medium px-3">Team {{ i + 1 }}</div>
-
-
-                                    <div  class="flex flex-row px-4 m-2">
-                                      <div
-                                      *ngFor="
-                                          let hole of flight.header
-                                              .courseHoles9
-                                      "
-                                     
-                                  >
-                                      {{ hole?.holeNo }}
-                              </div>
-                                    </div>
-                                    
-                                </div> -->
-                            </div>
+                            
                             <table class="mat-table">
-                                <thead class="bg-blue-400">
+                                <thead class="bg-blue-500">
                                     <tr class="topheader mat-header-row">
                                         <th class="rounded-tl-lg">Flight {{ i + 1 }}</th>
                                         <th
@@ -994,7 +973,7 @@
                                                 let i = index
                                             "
                                         >
-                                            <span
+                                            <span class="class_name_round"
                                             [ngClass]="{
                                                 empty:
                                                     score == '' &&
@@ -1024,6 +1003,7 @@
                                             /></span>
                                         </td>
                                         <td>
+                                            <span  class="class_name_round" style="border: 3px solid rgb(4, 78, 50); width: 36px;">
                                             <input
                                                 type="text"
                                                 id="gross9total_{{
@@ -1037,6 +1017,7 @@
                                                 "
                                                 disabled="disabled"
                                             />
+                                            </span>
                                         </td>
                                         <td
                                             *ngFor="
@@ -1044,7 +1025,7 @@
                                                 let i = index
                                             "
                                         >
-                                            <span [ngClass]="{
+                                            <span  class="class_name_round" [ngClass]="{
                                                 empty:
                                                     score == '' &&
                                                     flight.holesPlayed >
@@ -1073,6 +1054,7 @@
                                             /></span>
                                         </td>
                                         <td>
+                                            <span  class="class_name_round">
                                             <input
                                                 type="text"
                                                 id="gross18total_{{
@@ -1088,8 +1070,10 @@
                                                 "
                                                 disabled="disabled"
                                             />
+                                            </span>
                                         </td>
                                         <td>
+                                            <span class="class_name_round" style="    border: 3px solid red;    width: 36px;">
                                             <input
                                                 type="text"
                                                 id="grosstotal_{{
@@ -1103,6 +1087,7 @@
                                                 "
                                                 disabled="disabled"
                                             />
+                                            </span>
                                         </td>
                                         <!-- <td>
                   <mat-icon

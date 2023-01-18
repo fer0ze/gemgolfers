@@ -1,0 +1,1425 @@
+<div
+    class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
+    cdkScrollable
+>
+    <div
+        class="relative flex-0 py-8 px-4 sm:p-16 overflow-hidden bg-gray-800 dark"
+    >
+        <svg
+            class="absolute inset-0 pointer-events-none"
+            viewBox="0 0 960 540"
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMax slice"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g
+                class="text-gray-700 opacity-25"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="100"
+            >
+                <circle r="234" cx="196" cy="23"></circle>
+                <circle r="234" cx="790" cy="491"></circle>
+            </g>
+        </svg>
+        <div class="flex flex-row justify-around mt-3">
+        <div class="flex-0  w-40  h-25  overflow-hidden">
+            <img
+                src="assets/images/logo/Blue and Green Golf Club Sports Logo.png"
+                alt="Logo"
+            />
+        </div>
+        <div class="z-10 relative flex flex-col items-center">
+            <h2 class="text-2xl font-semibold">GemGolfers Tournament Module</h2>
+            <div
+                class="mt-1 text-5xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
+            >
+                Leaderboard
+            </div>
+            <div
+                class="max-w-2xl mt-6 sm:text-2xl text-center tracking-tight text-secondary"
+            >
+                Our app will step you through the process of a building
+                tournaments, or adding new formats to existing tournaments.
+            </div>
+        </div>
+        <div class="flex-0 w-40 h-25  overflow-hidden">
+            <img
+                class="w-full h-full object-cover"
+                src="assets/images/logo/{{ clubLogo }}"
+                alt="user"
+            />
+        </div>
+    </div>
+    </div>
+    <!-- <div class="webLogo flex flex-row justify-around mt-3">
+            <div class="flex-0 w-40 h-25  overflow-hidden">
+                <img
+                    class="w-full h-full object-cover"
+                    src="assets/images/logo/{{ clubLogo }}"
+                    alt="user"
+                />
+            </div>
+
+            <div class="flex items-center">
+                <h2 style="text-align: center">{{ Leaderboard?.title }}</h2>
+                <h3 style="    /* text-align: center; */
+                font-size: 63px;
+                font-family: fantasy;
+                font-weight: 600;
+                align-items: center;">LEADERBOARD</h3>
+            </div>
+            <div class="flex-0  h-25  overflow-hidden">
+                <img
+                    src="http://gemgolfers.com/wp-content/uploads/2019/01/gem-logo.png"
+                    alt="Logo"
+                />
+            </div>
+        </div> -->
+
+    <!-- <div class="leaderSubHead" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="75">
+          <div fxLayoutAlign="start center"><h3 fxLayoutAlign="start"><mat-icon matSuffix>date_range</mat-icon>&nbsp;<span>{{Leaderboard?.startDate | date}}</span><span class="sep" *ngIf="Leaderboard?.startDate != Leaderboard?.endDate"> &nbsp;|&nbsp; </span><span *ngIf="Leaderboard?.startDate != Leaderboard?.endDate">{{Leaderboard?.endDate | date}}</span></h3></div>
+          <div id="title" fxLayoutAlign="start center"><h2>{{Leaderboard?.title}}</h2></div>
+  </div>
+  <div [fxFlex]="25" fxLayoutAlign="end start" class="webLogo">
+    <img src="http://gemgolfers.com/wp-content/uploads/2019/01/gem-logo.png" alt="Logo" width="250" />
+  </div>
+  </div>-->
+    <div class="flex flex-auto p-6 sm:p-10">
+        <div
+            class="flex flex-col flex-auto w-full max-w-7xl sm:max-w-5xl mx-auto"
+        >
+            <div
+                class="mt-3 flex flex-col sm:flex-row items-center justify-between mb-2 sm:mt-0 sm:ml-2"
+            >
+                <mat-button-toggle-group
+                    value="1"
+                    (change)="selectionChanged($event)"
+                    *ngIf="
+                        matchFormat != 'BEST_THREE' &&
+                        matchFormat != 'COMBINE_ALL' &&
+                        !selectedCategory?.text.includes('Professionals')
+                    "
+                >
+                    <mat-button-toggle value="1">GROSS</mat-button-toggle>
+                    <mat-button-toggle value="2">NET</mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <mat-form-field
+                    *ngIf="eventCategories.length > 1"
+                    class="fuse-mat-no-subscript w-full sm:w-36"
+                >
+                    <!--  && flightRound != 0 -->
+                    <mat-select
+                        (selectionChange)="changeCategory($event)"
+                        [(value)]="selectedCategoryValue"
+                    >
+                        <mat-option
+                            *ngFor="let item of eventCategories"
+                            [value]="item['Value']"
+                        >
+                            {{ item["Text"] }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field
+                    *ngIf="
+                        Leaderboard?.multiFormat || Leaderboard?.subTournament
+                    "
+                    class="fuse-mat-no-subscript w-full sm:w-36"
+                >
+                    <mat-select
+                        (selectionChange)="changeTournament($event)"
+                        [(value)]="selectedSubTournament"
+                    >
+                        <mat-option [value]="0">----------</mat-option>
+                        <mat-option [value]="'pgfnatamt20-21'"
+                            >60th National Amateur Golf Championship
+                            20-21</mat-option
+                        >
+                        <mat-option [value]="'pgfnateam2021'"
+                            >Inter Association Team Match</mat-option
+                        >
+                        <!-- <mat-option *ngFor="let round of subTournamentDetail" [value]="round.Value">
+              {{round.Text}}
+            </mat-option> -->
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field
+                    *ngIf="Leaderboard?.noOfRounds > 1"
+                    class="fuse-mat-no-subscript w-full sm:w-36"
+                >
+                    <mat-select
+                        (selectionChange)="changeRound($event)"
+                        [(value)]="flightRound"
+                    >
+                        <mat-option [value]="0">All Rounds</mat-option>
+                        <mat-option
+                            *ngFor="let round of tRounds"
+                            [value]="round.Value"
+                        >
+                            {{ round.Text }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div id="leaderboard">
+                <!---Table For Round Wise in Gross------------------------------------------------------------------------------->
+                <!-- <table class="mat-elevation-z8" id="customers" *ngIf="isGross  && !this.showTaxes">
+      <thead>
+        <tr>
+          <th>POS.</th>
+          <th [ngStyle]="{ 'text-align': 'left' }">PLAYER</th>
+          <th>GROSS</th>
+          <th>TO PAR</th>
+          <th>THRU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of grossLeaders">
+          <td>{{ item.position }}</td>
+          <td [ngStyle]="{ 'text-align': 'left' }">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.lt-md="column"
+              fxLayoutGap="20px"
+            >
+              <div [fxFlex]="75">
+                <span class="person">{{ item.name }}</span>
+                <span *ngIf="item.handicap > 0" class="smaller"
+                  >({{ item.handicap }})</span
+                >
+                <span *ngIf="item.extraData" class="smaller"
+                  >({{ item.extraData }})</span
+                >
+              </div>
+              <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
+                <mat-icon
+                  (click)="
+                    viewPlayerScore(
+                      item.courseId,
+                      item.holeSets,
+                      item.playerId,
+                      item.holeSetsInverted,
+                      'gross'
+                    )
+                  "
+                  matSuffix
+                  a
+                  >zoom_in</mat-icon
+                >
+              </div>
+            </div>
+          </td>
+          <td>{{ item.score }}</td>
+          <td>
+            <strong *ngIf="item.under > 0">+</strong
+            ><strong *ngIf="item.under < 0" style="color: red">{{
+              item.under
+            }}</strong
+            ><strong *ngIf="item.under > 0">{{ item.under }}</strong
+            ><strong *ngIf="item.under == 0">E</strong>
+          </td>
+          <td>
+            <strong *ngIf="item.holes == 18">F</strong
+            ><strong *ngIf="item.holes < 18">{{ item.holes }}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table> -->
+
+                <ul class="responsive-table" *ngIf="isGross && !this.showTaxes">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">PLAYER</div>
+                        <div class="col col-3">GROSS</div>
+                        <div class="col col-4">TO PAR</div>
+                        <div class="col col-5">THRU</div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of grossLeaders">
+                        <div class="col col-1" data-label="Job Id">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            {{ item.score }}
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.under }}
+                        </div>
+                        <div class="col col-5" data-label="Payment Status">
+                            {{ item.holes }}
+                        </div>
+                    </li>
+                </ul>
+
+                <!---Table For Taxes Scramble in Gross---------------------------------1---------------------------------------------->
+                <!-- <table  class="mat-elevation-z8" id="customers" *ngIf="isGross  && this.showTaxes">
+      <thead>
+        <tr>
+          <th>POS.</th>
+          <th [ngStyle]="{ 'text-align': 'left' }">TEAM</th>
+          <th>GROSS</th>
+          <th>TO PAR</th>
+          <th>THRU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of grossLeaders">
+          <td>{{ item.position }}</td>
+          <td [ngStyle]="{ 'text-align': 'left' }">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.lt-md="column"
+              fxLayoutGap="20px"
+            >
+              <div [fxFlex]="75">
+                <span class="person">{{ item.name }}</span>
+                <span *ngIf="item.handicap > 0" class="smaller"
+                  >({{ item.handicap }})</span
+                >
+                <span *ngIf="item.extraData" class="smaller"
+                  >({{ item.extraData }})</span
+                >
+              </div>
+              <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
+                <mat-icon
+                  (click)="
+                    viewPlayerScore(
+                      item.courseId,
+                      item.holeSets,
+                      item.playerId,
+                      item.holeSetsInverted,
+                      'gross'
+                    )
+                  "
+                  matSuffix
+                  a
+                  >zoom_in</mat-icon
+                >
+              </div>
+            </div>
+          </td>
+          <td>{{ item.score }}</td>
+          <td>
+            <strong *ngIf="item.under > 0">+</strong
+            ><strong *ngIf="item.under < 0" style="color: red">{{
+              item.under
+            }}</strong
+            ><strong *ngIf="item.under > 0">{{ item.under }}</strong
+            ><strong *ngIf="item.under == 0">E</strong>
+          </td>
+          <td>
+            <strong *ngIf="item.holes == 18">F</strong
+            ><strong *ngIf="item.holes < 18">{{ item.holes }}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table> -->
+                <ul class="responsive-table" *ngIf="isGross && this.showTaxes">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">TEAM</div>
+                        <div class="col col-3">GROSS</div>
+                        <div class="col col-4">TO PAR</div>
+                        <div class="col col-5">THRU</div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of grossLeaders">
+                        <div class="col col-1" data-label="Job Id">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            {{ item.score }}
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.under }}
+                        </div>
+                        <div class="col col-5" data-label="Payment Status">
+                            {{ item.holes }}
+                        </div>
+                    </li>
+                </ul>
+                <!--------------------Table for Taxes Scramble In Net---------------------2------------------------------>
+                <!-- <table  class="mat-table" *ngIf="isNet  && this.showTaxes">
+      <thead>
+        <tr>
+          <th>POS.</th>
+          <th [ngStyle]="{ 'text-align': 'left' }">TEAM</th>
+          <th>NET</th>
+          <th>TO PAR</th>
+          <th>THRU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of netLeaders">
+          <td >{{ item.position }}</td>
+          <td  [ngStyle]="{ 'text-align': 'left' }">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.lt-md="column"
+              fxLayoutGap="20px"
+            >
+              <div [fxFlex]="75">
+                <span class="person">{{ item.name }}</span>
+                <span *ngIf="item.handicap > 0" class="smaller"
+                  >({{ item.handicap }})</span
+                >
+                <span *ngIf="item.extraData" class="smaller"
+                  >({{ item.extraData }})</span
+                >
+              </div>
+              <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
+                <mat-icon
+                  (click)="
+                    viewPlayerScore(
+                      item.courseId,
+                      item.holeSets,
+                      item.playerId,item.holeSetsInverted,
+                      'net'
+                    )
+                  "
+                  matSuffix
+                  a
+                  >zoom_in</mat-icon
+                >
+              </div>
+            </div>
+          </td>
+          <td >{{ item.score }}</td>
+          <td >
+            <strong *ngIf="item.under > 0">+</strong
+            ><strong *ngIf="item.under < 0" style="color: red">{{
+              item.under
+            }}</strong
+            ><strong *ngIf="item.under > 0">{{ item.under }}</strong
+            ><strong *ngIf="item.under == 0">E</strong>
+          </td>
+          <td >
+            <strong *ngIf="item.holes == 18">F</strong
+            ><strong *ngIf="item.holes < 18">{{ item.holes }}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table> -->
+
+                <ul class="responsive-table" *ngIf="isNet && this.showTaxes">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">TEAM</div>
+                        <div class="col col-3">NET</div>
+                        <div class="col col-4">TO PAR</div>
+                        <div class="col col-5">THRU</div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of netLeaders">
+                        <div class="col col-1" data-label="Job Id">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            {{ item.score }}
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.under }}
+                        </div>
+                        <div class="col col-5" data-label="Payment Status">
+                            {{ item.holes }}
+                        </div>
+                    </li>
+                </ul>
+
+                <!---Table For RoundWise in Net------------------------------------------------------------------------------->
+                <!-- <table class="mat-table" *ngIf="isNet && !this.showTaxes">
+      <thead>
+        <tr>
+          <th>POS.</th>
+          <th [ngStyle]="{ 'text-align': 'left' }">PLAYER</th>
+          <th>NET</th>
+          <th>TO PAR</th>
+          <th>THRU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of netLeaders">
+          <td class="line-1">{{ item.position }}</td>
+          <td class="line-2" [ngStyle]="{ 'text-align': 'left' }">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.lt-md="column"
+              fxLayoutGap="20px"
+            >
+              <div [fxFlex]="75">
+                <span class="person">{{ item.name }}</span>
+                <span *ngIf="item.handicap > 0" class="smaller"
+                  >({{ item.handicap }})</span
+                >
+                <span *ngIf="item.extraData" class="smaller"
+                  >({{ item.extraData }})</span
+                >
+              </div>
+              <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
+                <mat-icon
+                  (click)="
+                    viewPlayerScore(
+                      item.courseId,
+                      item.holeSets,
+                      item.playerId,item.holeSetsInverted,
+                      'net'
+                    )
+                  "
+                  matSuffix
+                  a
+                  >zoom_in</mat-icon
+                >
+              </div>
+            </div>
+          </td>
+          <td class="line-3">{{ item.score }}</td>
+          <td class="line-4">
+            <strong *ngIf="item.under > 0">+</strong
+            ><strong *ngIf="item.under < 0" style="color: red">{{
+              item.under
+            }}</strong
+            ><strong *ngIf="item.under > 0">{{ item.under }}</strong
+            ><strong *ngIf="item.under == 0">E</strong>
+          </td>
+          <td class="line-5">
+            <strong *ngIf="item.holes == 18">F</strong
+            ><strong *ngIf="item.holes < 18">{{ item.holes }}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table> -->
+
+                <ul class="responsive-table" *ngIf="isNet && !this.showTaxes">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">PLAYER</div>
+                        <div class="col col-3">NET</div>
+                        <div class="col col-4">TO PAR</div>
+                        <div class="col col-5">THRU</div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of netLeaders">
+                        <div class="col col-1" data-label="Job Id">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            {{ item.score }}
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.under }}
+                        </div>
+                        <div class="col col-5" data-label="Payment Status">
+                            {{ item.holes }}
+                        </div>
+                    </li>
+                </ul>
+                <!---Table For All Round  in Gross------------------------------------------------------------------------------->
+
+                <!-- <table class="mat-table" *ngIf="allRoundGrossScore">
+                <thead>
+                    <tr *ngIf="allLeadersGross.length > 0">
+                        <th>POS.</th>
+                        <th [ngStyle]="{ 'text-align': 'left' }">PLAYER</th>
+                        <th>TOTAL</th>
+                        <th>R1</th>
+                        <th *ngIf="activeRound >= 2">R2</th>
+                        <th *ngIf="activeRound >= 3 && totalRounds >= 3">R3</th>
+                        <th *ngIf="activeRound >= 4 && totalRounds == 4">R4</th>
+                        <th *ngIf="activeRound <= totalRounds">THRU</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of allLeadersGross">
+                        <td class="line-1">{{ item.position }}</td>
+                        <td class="line-2" [ngStyle]="{ 'text-align': 'left' }">
+                            <div
+                                fxFlex
+                                fxLayout="row"
+                                fxLayout.lt-md="column"
+                                fxLayoutGap="20px"
+                            >
+                                <div [fxFlex]="75">
+                                    <span class="person">{{ item.name }}</span>
+                                    <span
+                                        *ngIf="item.handicap > 0"
+                                        class="smaller"
+                                        >({{ item.handicap }})</span
+                                    >
+                                    <span *ngIf="item.extraData" class="smaller"
+                                        >({{ item.extraData }})</span
+                                    >
+                                </div>
+                                <div
+                                    [fxFlex]="25"
+                                    fxLayoutAlign="end end"
+                                    class="webLogo"
+                                >
+                                    <mat-icon
+                                        *ngIf="!teamMatch"
+                                        (click)="
+                                            viewPlayerScore(
+                                                item.courseId,
+                                                item.holeSets,
+                                                item.playerId,
+                                                item.holeSetsInverted,
+                                                'gross'
+                                            )
+                                        "
+                                        matSuffix
+                                        a
+                                        >zoom_in</mat-icon
+                                    >
+                                </div>
+                            </div>
+                        </td> -->
+
+                <!---Table DATA in Gross----------------->
+                <!-- <td class="line-3">
+                            <strong *ngIf="item.AllGrossUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllGrossUnder < 0"
+                                style="color: red"
+                                >{{ item.AllGrossUnder }}</strong
+                            ><strong *ngIf="item.AllGrossUnder > 0">{{
+                                item.AllGrossUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
+                        </td>
+                        <td class="line-4">
+                            <strong>{{ item.TotalGross1 }}</strong>
+                        </td>
+                        <td class="line-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-6"
+                            *ngIf="activeRound >= 2 && totalRounds >= 2"
+                        >
+                            <strong>{{ item.TotalGross2 }}</strong> -->
+                <!-- <td class="line-6" *ngIf="activeRound == 2">
+            <strong *ngIf="item.TotalGrossUnder2 > 0">+</strong
+            ><strong *ngIf="item.TotalGrossUnder2 < 0" style="color: red">{{
+              item.TotalGrossUnder2
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder2 > 0">{{
+              item.TotalGrossUnder2
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder2 == 0">E</strong>
+          </td> -->
+                <!-- </td>
+
+                        <td class="line-7" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-7"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            <strong>{{ item.TotalGross3 }}</strong>
+                        </td> -->
+                <!-- <td  class="line-7" *ngIf="activeRound == 3 ">
+            <strong *ngIf="item.TotalGrossUnder3 >= 0">+</strong
+            ><strong *ngIf="item.TotalGrossUnder3 <= 0" style="color: red">{{
+              item.TotalGrossUnder3
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder3 > 0">{{
+              item.TotalGrossUnder3
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder3 == 0">E</strong>
+          </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong
+                            ><strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-7"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            <strong>{{ item.TotalGross4 }}</strong>
+                        </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 4 ">
+            <strong *ngIf="item.TotalGrossUnder4 > 0">+</strong
+            ><strong *ngIf="item.TotalGrossUnder4 < 0" style="color: red">{{
+              item.TotalGrossUnder4
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder4 > 0">{{
+              item.TotalGrossUnder4
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder4 == 0">E</strong>
+          </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+
+                <ul
+                    class="responsive-table"
+                    id="all"
+                    *ngIf="allRoundGrossScore"
+                >
+                    <li class="table-header" *ngIf="allLeadersGross.length > 0">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">PLAYER</div>
+                        <div class="col col-3">TOTAL</div>
+                        <div class="col col-4">R1</div>
+                        <div class="col col-5" *ngIf="activeRound >= 2">R2</div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            R3
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            R4
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound <= totalRounds"
+                        >
+                            THRU
+                        </div>
+                    </li>
+                    <li
+                        class="table-row hover:bg-gray-100"
+                        *ngFor="let item of allLeadersGross"
+                    >
+                        <div class="col col-1" data-label="Job Id">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            <strong *ngIf="item.AllGrossUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllGrossUnder < 0"
+                                style="color: red"
+                                >{{ item.AllGrossUnder }}</strong
+                            ><strong *ngIf="item.AllGrossUnder > 0">{{
+                                item.AllGrossUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.TotalGross1 ? item.TotalGross1 : "-" }}
+                        </div>
+                        <!-- <div class="col col-5" data-label="1" *ngIf="activeRound == 1">
+                        <strong *ngIf="item.holes1 == 18">F</strong
+                        ><strong *ngIf="item.holes1 < 18">{{
+                            item.holes1
+                        }}</strong>
+                    </div> -->
+                        <div
+                            class="col col-5"
+                            data-label="2"
+                            *ngIf="activeRound >= 2 && totalRounds >= 2"
+                        >
+                            {{ item.TotalGross2 }}
+                        </div>
+                        <!-- <div class="col col-5" data-label="3" *ngIf="activeRound == 2">
+                        <strong *ngIf="item.holes2 == 18">F</strong
+                        ><strong *ngIf="item.holes2 < 18">{{
+                            item.holes2
+                        }}</strong>
+                    </div> -->
+                        <div
+                            data-label="4"
+                            class="col col-5"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            {{ item.TotalGross3 }}
+                        </div>
+                        <!-- <div class="col col-5" data-label="5" *ngIf="activeRound == 3">
+                        <strong *ngIf="item.holes3 == 18">F</strong>
+                        <strong *ngIf="item.holes3 < 18">{{
+                            item.holes3
+                        }}</strong>
+                    </div> -->
+                        <div
+                            class="col col-5"
+                            data-label="6"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            {{ item.TotalGross4 }}
+                        </div>
+                        <!-- <div class="col col-5" data-label="7" *ngIf="activeRound == 4">
+                        <strong *ngIf="item.holes4 == 18">F</strong
+                        ><strong *ngIf="item.holes4 < 18">{{
+                            item.holes4
+                        }}</strong>
+                    </div> -->
+                    </li>
+                </ul>
+                <!---Table For CUT ALL PLAYERS in Gross------------------------------------------------------------------------------->
+
+                <!-- <table
+                class="mat-table"
+                *ngIf="activeRound > 1 && allRoundCutOff && !teamMatch"
+            >
+                
+                <thead>
+                    <tr *ngIf="isCuttOffRequired">
+                        <th colspan="8" class="cutOff">
+                            CUT ROUND
+                            {{
+                                activeRound > totalRounds
+                                    ? totalRounds
+                                    : activeRound - 1
+                            }}
+                            {{
+                                cuttOffScore > 0
+                                    ? " on Score +" + cuttOffScore
+                                    : ""
+                            }}
+                            {{ " and ties" }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of allLeadersCutOffGross"> -->
+                <!-- <td>{{item.position}}</td> -->
+
+                <!-- <td class="line-1">-</td>
+                        <td class="line-2" [ngStyle]="{ 'text-align': 'left' }">
+                            <span class="person">{{ item.name }}</span>
+                            <span *ngIf="item.handicap > 0" class="smaller"
+                                >({{ item.handicap }})</span
+                            >
+
+                            <span *ngIf="item.extraData" class="smaller"
+                                >({{ item.extraData }})</span
+                            >
+                        </td>
+                        <td class="line-3">
+                            <strong *ngIf="item.AllGrossUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllGrossUnder < 0"
+                                style="color: red"
+                                >{{ item.AllGrossUnder }}</strong
+                            ><strong *ngIf="item.AllGrossUnder > 0">{{
+                                item.AllGrossUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
+                        </td>
+                        <td class="line-4">
+                            <strong>{{ item.TotalGross1 }}</strong>
+                        </td>
+                        <td class="line-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-6"
+                            *ngIf="activeRound > 2 && totalRounds >= 2"
+                        >
+                            <strong>{{ item.TotalGross2 }}</strong>
+                        </td> -->
+                <!-- <td class="line-6" *ngIf="activeRound == 2">
+            <strong *ngIf="item.TotalGrossUnder2 > 0">+</strong
+            ><strong *ngIf="item.TotalGrossUnder2 < 0" style="color: red">{{
+              item.TotalGrossUnder2
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder2 > 0">{{
+              item.TotalGrossUnder2
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder2 == 0">E</strong>
+          </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-7"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            <strong>{{ item.TotalGross3 }}</strong>
+                        </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 3 && totalRounds == 3">
+            <strong *ngIf="item.TotalGrossUnder3 > 0">+</strong
+            ><strong *ngIf="item.TotalGrossUnder3 < 0" style="color: red">{{
+              item.TotalGrossUnder3
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder3 > 0">{{
+              item.TotalGrossUnder3
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder3 == 0">E</strong>
+          </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong
+                            ><strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-7"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            <strong>{{ item.TotalGross4 }}</strong>
+                        </td> -->
+                <!-- <td  class="line-7" *ngIf="activeRound == 4 && totalRounds == 4">
+            <strong *ngIf="item.TotalGrossUnder4 > 0">+</strong
+            ><strong *ngIf="item.TotalGrossUnder4 < 0" style="color: red">{{
+              item.TotalGrossUnder4
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder4 > 0">{{
+              item.TotalGrossUnder4
+            }}</strong
+            ><strong *ngIf="item.TotalGrossUnder4 == 0">E</strong>
+          </td> -->
+                <!-- <td class="line-7" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+
+                <ul
+                    class="responsive-table"
+                    *ngIf="activeRound > 1 && allRoundCutOff && !teamMatch"
+                >
+                    <li class="table-header" *ngIf="isCuttOffRequired">
+                        <div class="col col-1">
+                            CUT ROUND
+                            {{
+                                activeRound > totalRounds
+                                    ? totalRounds
+                                    : activeRound - 1
+                            }}
+                            {{
+                                cuttOffScore > 0
+                                    ? " on Score +" + cuttOffScore
+                                    : ""
+                            }}
+                            {{ " and ties" }}
+                        </div>
+                    </li>
+                    <li
+                        class="table-row"
+                        *ngFor="let item of allLeadersCutOffGross"
+                    >
+                        <div class="col col-1" data-label="Job Id">-</div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            <strong *ngIf="item.AllGrossUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllGrossUnder < 0"
+                                style="color: red"
+                                >{{ item.AllGrossUnder }}</strong
+                            ><strong *ngIf="item.AllGrossUnder > 0">{{
+                                item.AllGrossUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.TotalGross1 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 2 && totalRounds >= 2"
+                        >
+                            {{ item.TotalGross2 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            {{ item.TotalGross3 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong>
+                            <strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            {{ item.TotalGross4 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </div>
+                    </li>
+                </ul>
+                <!---Table For All Players in NET------------------------------------------------------------------------------->
+
+                <!-- <table class="mat-table" *ngIf="allRoundNetScore">
+                <thead>
+                    <tr>
+                        <th>POS.</th>
+                        <th [ngStyle]="{ 'text-align': 'left' }">PLAYER</th>
+                        <th>TOTAL</th>
+                        <th>R1</th>
+                        <th *ngIf="activeRound >= 2">R2</th>
+                        <th *ngIf="activeRound >= 3 && totalRounds >= 3">R3</th>
+                        <th *ngIf="activeRound >= 4 && totalRounds == 4">R4</th>
+                        <th *ngIf="activeRound <= totalRounds">THRU</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of allLeadersNet">
+                        <td class="line-1">{{ item.positionNet }}</td>
+                        <td class="line-2" [ngStyle]="{ 'text-align': 'left' }">
+                            <div
+                                fxFlex
+                                fxLayout="row"
+                                fxLayout.lt-md="column"
+                                fxLayoutGap="20px"
+                            >
+                                <div [fxFlex]="75">
+                                    <span class="person">{{ item.name }}</span>
+                                    <span
+                                        *ngIf="item.handicap > 0"
+                                        class="smaller"
+                                        >({{ item.handicap }})</span
+                                    >
+                                    <span *ngIf="item.extraData" class="smaller"
+                                        >({{ item.extraData }})</span
+                                    >
+                                </div>
+                                <div
+                                    [fxFlex]="25"
+                                    fxLayoutAlign="end end"
+                                    class="webLogo"
+                                >
+                                    <mat-icon
+                                        *ngIf="!teamMatch"
+                                        (click)="
+                                            viewPlayerScore(
+                                                item.courseId,
+                                                item.holeSets,
+                                                item.playerId,
+                                                item.holeSetsInverted,
+                                                'net'
+                                            )
+                                        "
+                                        matSuffix
+                                        a
+                                        >zoom_in</mat-icon
+                                    >
+                                </div>
+                            </div>
+                        </td> -->
+
+                <!---Table DATA------------>
+                <!-- <td class="line-3">
+                            <strong *ngIf="item.AllNetUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllNetUnder < 0"
+                                style="color: red"
+                                >{{ item.AllNetUnder }}</strong
+                            ><strong *ngIf="item.AllNetUnder > 0">{{
+                                item.AllNetUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllNetUnder == 0">E</strong>
+                        </td>
+                        <td class="line-4">
+                            <strong>{{ item.TotalNet1 }}</strong>
+                        </td>
+                        <td class="line-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </td>
+                        <td class="line-6" *ngIf="activeRound >= 2">
+                            <strong>{{ item.TotalNet2 }}</strong>
+                        </td>
+                        
+                        <td class="line-7" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </td>
+
+                        <td class="line-7" *ngIf="activeRound >= 3">
+                            <strong>{{ item.TotalNet3 }}</strong>
+                        </td>
+                       
+                        <td class="line-7" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong
+                            ><strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </td>
+                        <td
+                            class="line-7"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            <strong>{{ item.TotalNet4 }}</strong>
+                        </td>
+                       
+                        <td class="line-7" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+                <ul class="responsive-table" *ngIf="allRoundNetScore">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">PLAYER</div>
+                        <div class="col col-3">TOTAL</div>
+                        <div class="col col-4">R1</div>
+                        <div class="col col-5" *ngIf="activeRound >= 2">R2</div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            R3
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            R4
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound <= totalRounds"
+                        >
+                            THRU
+                        </div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of allLeadersNet">
+                        <div class="col col-1" data-label="Job Id">
+                            {{ item.positionNet }}
+                        </div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            <strong *ngIf="item.AllNetUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllNetUnder < 0"
+                                style="color: red"
+                                >{{ item.AllNetUnder }}</strong
+                            ><strong *ngIf="item.AllNetUnder > 0">{{
+                                item.AllNetUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllNetUnder == 0">E</strong>
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.TotalNet1 }}
+                        </div>
+                        <!-- <div class="col col-5" *ngIf="activeRound == 1">
+                        <strong *ngIf="item.holes1 == 18">F</strong
+                        ><strong *ngIf="item.holes1 < 18">{{
+                            item.holes1
+                        }}</strong>
+                    </div> -->
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 2 && totalRounds >= 2"
+                        >
+                            {{ item.TotalNet2 }}
+                        </div>
+                        <!-- <div class="col col-5" *ngIf="activeRound == 2">
+                        <strong *ngIf="item.holes2 == 18">F</strong
+                        ><strong *ngIf="item.holes2 < 18">{{
+                            item.holes2
+                        }}</strong>
+                    </div> -->
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            {{ item.TotalNet3 }}
+                        </div>
+                        <!-- <div class="col col-5" *ngIf="activeRound == 3">
+                        <strong *ngIf="item.holes3 == 18">F</strong>
+                        <strong *ngIf="item.holes3 < 18">{{
+                            item.holes3
+                        }}</strong>
+                    </div> -->
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            {{ item.TotalNet4 }}
+                        </div>
+                        <!-- <div class="col col-5" *ngIf="activeRound == 4">
+                        <strong *ngIf="item.holes4 == 18">F</strong
+                        ><strong *ngIf="item.holes4 < 18">{{
+                            item.holes4
+                        }}</strong>
+                    </div> -->
+                    </li>
+                </ul>
+
+                <!---Table For CUT in NET------------------------------------------------------------------------------>
+
+                <!-- <table
+                class="mat-table"
+                *ngIf="activeRound > 1 && allRoundCutOffNet && !teamMatch"
+            >
+              
+                <thead>
+                    <tr *ngIf="isCuttOffRequired">
+                        <th colspan="8" class="cutOff">
+                            CUT ROUND
+                            {{
+                                activeRound > totalRounds
+                                    ? totalRounds
+                                    : activeRound - 1
+                            }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of allLeadersCutOffNet">
+          
+                        <td class="line-1">-</td>
+                        <td class="line-2" [ngStyle]="{ 'text-align': 'left' }">
+                            <span class="person">{{ item.name }}</span>
+                            <span *ngIf="item.handicap > 0" class="smaller"
+                                >({{ item.handicap }})</span
+                            >
+                            <span *ngIf="item.extraData" class="smaller"
+                                >({{ item.extraData }})</span
+                            >
+                        </td>
+                        <td class="line-3">
+                            <strong *ngIf="item.AllNetUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllNetUnder < 0"
+                                style="color: red"
+                                >{{ item.AllNetUnder }}</strong
+                            ><strong *ngIf="item.AllNetUnder > 0">{{
+                                item.AllNetUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllNetUnder == 0">E</strong>
+                        </td>
+                        <td class="line-4">
+                            <strong>{{ item.TotalNet1 }}</strong>
+                        </td>
+                        <td class="line-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </td>
+                        <td class="line-6" *ngIf="activeRound > 2">
+                            <strong>{{ item.TotalNet2 }}</strong>
+                        </td>
+                        <td class="line-6" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.TotalNetUnder2 > 0">+</strong
+                            ><strong
+                                *ngIf="item.TotalNetUnder2 < 0"
+                                style="color: red"
+                                >{{ item.TotalNetUnder2 }}</strong
+                            ><strong *ngIf="item.TotalNetUnder2 > 0">{{
+                                item.TotalNetUnder2
+                            }}</strong
+                            ><strong *ngIf="item.TotalNetUnder2 == 0">E</strong>
+                        </td>
+                        <td class="line-7" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </td>
+                        <td class="line-7" *ngIf="activeRound > 3">
+                            <strong>{{ item.TotalNet3 }}</strong>
+                        </td>
+                        <td class="line-7" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.TotalNetUnder3 > 0">+</strong
+                            ><strong
+                                *ngIf="item.TotalNetUnder3 < 0"
+                                style="color: red"
+                                >{{ item.TotalNetUnder3 }}</strong
+                            ><strong *ngIf="item.TotalNetUnder3 > 0">{{
+                                item.TotalNetUnder3
+                            }}</strong
+                            ><strong *ngIf="item.TotalNetUnder3 == 0">E</strong>
+                        </td>
+                        <td class="line-7" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong
+                            ><strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </td>
+                        <td *ngIf="activeRound > 4">
+                            <strong>{{ item.TotalNet4 }}</strong>
+                        </td>
+                        <td class="line-7" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.TotalNetUnder4 > 0">+</strong
+                            ><strong
+                                *ngIf="item.TotalNetUnder4 < 0"
+                                style="color: red"
+                                >{{ item.TotalNetUnder4 }}</strong
+                            ><strong *ngIf="item.TotalNetUnder4 > 0">{{
+                                item.TotalNetUnder4
+                            }}</strong
+                            ><strong *ngIf="item.TotalNetUnder4 == 0">E</strong>
+                        </td>
+                        <td class="line-7" *ngIf="activeRound >= 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+
+                <ul
+                    class="responsive-table"
+                    *ngIf="activeRound > 1 && allRoundCutOffNet && !teamMatch"
+                >
+                    <li class="table-header" *ngIf="isCuttOffRequired">
+                        <div class="col col-1">
+                            CUT ROUND
+                            {{
+                                activeRound > totalRounds
+                                    ? totalRounds
+                                    : activeRound - 1
+                            }}
+                        </div>
+                    </li>
+                    <li
+                        class="table-row"
+                        *ngFor="let item of allLeadersCutOffNet"
+                    >
+                        <div class="col col-1" data-label="Job Id">-</div>
+                        <div class="col col-2" data-label="Customer Name">
+                            {{ item.name }}-({{ item.handicap }})
+                        </div>
+                        <div class="col col-3" data-label="Amount">
+                            <strong *ngIf="item.AllNetUnder > 0">+</strong
+                            ><strong
+                                *ngIf="item.AllNetUnder < 0"
+                                style="color: red"
+                                >{{ item.AllNetUnder }}</strong
+                            ><strong *ngIf="item.AllNetUnder > 0">{{
+                                item.AllNetUnder
+                            }}</strong
+                            ><strong *ngIf="item.AllNetUnder == 0">E</strong>
+                        </div>
+                        <div class="col col-4" data-label="Payment Status">
+                            {{ item.TotalNet1 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 2 && totalRounds >= 2"
+                        >
+                            {{ item.TotalNet2 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 3 && totalRounds >= 3"
+                        >
+                            {{ item.TotalNet3 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong>
+                            <strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </div>
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
+                            {{ item.TotalNet4 }}
+                        </div>
+                        <div class="col col-5" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- <mat-card
+                *ngIf="isLoading"
+                style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <mat-progress-spinner color="primary" mode="indeterminate">
+                </mat-progress-spinner>
+            </mat-card> -->
+            </div>
+        </div>
+    </div>
+</div>

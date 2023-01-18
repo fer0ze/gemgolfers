@@ -90,7 +90,7 @@ export class ViewTournamentComponent implements OnInit {
     chartavgScore3: number[] = [];
     chartavgScore4: number[] = [];
     selectedCategory: any;
-
+    clubLogo:any;
     par3Avg1: number;
     par4Avg1: number;
     par5Avg1: number;
@@ -231,6 +231,9 @@ export class ViewTournamentComponent implements OnInit {
         this.loggedInUser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
+        let clubInfo: any = (this.loggedInUser.membership.length > 0) ? this.loggedInUser.membership[0].club : null;
+
+        this.clubLogo = (clubInfo && clubInfo.logo) ? clubInfo.logo : "e2esp.png";
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
@@ -847,13 +850,15 @@ export class ViewTournamentComponent implements OnInit {
                 General.precisionRound(this.avgScore['par4Avg'], 2),
                 General.precisionRound(this.avgScore['par5Avg'], 2),
             ];
+            this.roundsStats = true;
         } else {
             this.pieChartData1 = [0.01, 0.01, 0.01];
+            this.roundsStats = false;
         }
 
         this.chart();
 
-        this.roundsStats = true;
+       
     }
     getRound1stats(round: number) {
         if (this.round1Stats) return;
