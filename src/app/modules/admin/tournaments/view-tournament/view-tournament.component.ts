@@ -34,6 +34,7 @@ import { DialogPlayingCategoryComponent } from '../../dialogs/dialog-playing-cat
 import { DialogMarshalComponent } from '../../dialogs/dialog-marshal/dialog-marshal.component';
 import { ApexOptions } from 'ng-apexcharts';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
     selector: 'app-view-tournament',
@@ -41,8 +42,18 @@ import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dial
     styleUrls: ['./view-tournament.component.scss'],
 })
 export class ViewTournamentComponent implements OnInit {
+    @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
+    drawerMode: 'side' | 'over';
     private tournamentID: string;
     playersCatgery: any;
+    dataSource: MatTableDataSource<any>;
+    membersColumns = [
+        "firstName",
+        "lastName",
+        "handicap",
+        "playerCategory",
+        "select",
+      ];
     private noOfHolesInCourse: number = 18;
     fullTournament: any;
     isLoading: boolean = true;
@@ -243,6 +254,7 @@ export class ViewTournamentComponent implements OnInit {
             this.dataFullTournament =
                 await this.facadeService.tournamentDashBoard(this.tournamentID);
             console.log(this.dataFullTournament);
+            this.getTournamentMembers();
             this.noOfROund =
                 this.dataFullTournament['TournamentQL'][0].noOfRounds;
 
@@ -2109,6 +2121,10 @@ export class ViewTournamentComponent implements OnInit {
       console.log(dataFullTournaments);
   
       this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+    
+      this.dataSource = new MatTableDataSource(this.tournamentMember);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
    }
    applyMembersFilter(filterValue: string){
     if (filterValue == "") {
@@ -2164,5 +2180,11 @@ export class ViewTournamentComponent implements OnInit {
         //console.log("cancel delete action");
       }
     });
+  }
+  closeDrawer(){
+    this.matDrawer.close();
+  }
+  selectedTee(a,b){
+
   }
 }

@@ -47,6 +47,7 @@ import { DialogPlayerComponent } from "../../dialogs/dialog-player/dialog-player
 import { DialogPlayerListComponent } from "../../dialogs/dialog-player-list/dialog-player-list.component";
 import { DialogOverviewComponent } from "../../dialogs/dialog-overview/dialog-overview.component";
 import { DialogMoveFlightComponent } from "../../dialogs/dialog-move-flight/dialog-move-flight.component";
+import { ViewTournamentComponent } from "../view-tournament/view-tournament.component";
 
 @Component({
   selector: "app-flight-management",
@@ -59,6 +60,7 @@ export class FlightManagementComponent implements OnInit {
 	tournamentID: string;
   dataSource: MatTableDataSource<any>;
   dataSources: MatTableDataSource<any>;
+  drawerMode: 'side' | 'over';
   displayedColumns = [
     "firstName",
     "lastName",
@@ -81,6 +83,7 @@ export class FlightManagementComponent implements OnInit {
   selection = new SelectionModel<Player>(true, []);
   public formGroup: FormGroup;
   public contactList: FormArray;
+  showFiller = false;
   showCategory: boolean = true;
   newFlights: any[] = [];
   categoryCounts: any = [];
@@ -124,6 +127,7 @@ export class FlightManagementComponent implements OnInit {
     public snackBar: MatSnackBar,
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
+      private _viewTournamentComponent: ViewTournamentComponent,
     private facadeService: FacadeService
   ) {}
 
@@ -1213,9 +1217,13 @@ export class FlightManagementComponent implements OnInit {
 
     //console.log(tournamentFlights);
   }
+  editFlight(id){
+    this.router.navigate(['./manage/', id], { relativeTo: this.route });
 
+  }
   addFlight() {
     //console.log(this.selectedMembers.length);
+  this._viewTournamentComponent.matDrawer.open();
     this.selectedMembers[this.selectedMembers.length] = [];
     this.selectedMembers[this.selectedMembers.length - 1]["id"] =
       UniqueIdGenerator.generate();

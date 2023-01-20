@@ -108,7 +108,7 @@ import { ApolloModule } from "apollo-angular";
     DragDropModule,ApolloModule,
     MatDialogModule,
     FormsModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule,MatSidenavModule,
     AmazingTimePickerModule,
     FlexLayoutModule,
   ],
