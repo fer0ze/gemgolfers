@@ -780,7 +780,7 @@
                         {{ item.position }}
                     </div>
                     <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                        {{ item.name }}-(HC: {{ item.handicap }})
                     </div>
                     <div class="col col-3" data-label="Amount">
                         <strong *ngIf="item.AllGrossUnder > 0">+</strong
@@ -796,24 +796,24 @@
                     <div  class="col col-4" data-label="Payment Status">
                         {{ item.TotalGross1 ? item.TotalGross1 : '-' }}
                     </div>
-                    <!-- <div class="col col-5" data-label="1" *ngIf="activeRound == 1">
+                    <div class="col col-5" data-label="1" *ngIf="activeRound == 1">
                         <strong *ngIf="item.holes1 == 18">F</strong
                         ><strong *ngIf="item.holes1 < 18">{{
                             item.holes1
                         }}</strong>
-                    </div> -->
+                    </div>
                     <div
                         class="col col-5" data-label="2"
                         *ngIf="activeRound >= 2 && totalRounds >= 2"
                     >
                         {{ item.TotalGross2 }}
                     </div>
-                    <!-- <div class="col col-5" data-label="3" *ngIf="activeRound == 2">
+                    <div class="col col-5" data-label="3" *ngIf="activeRound == 2">
                         <strong *ngIf="item.holes2 == 18">F</strong
                         ><strong *ngIf="item.holes2 < 18">{{
                             item.holes2
                         }}</strong>
-                    </div> -->
+                    </div>
                     <div
                     data-label="4"
                         class="col col-5"
@@ -821,24 +821,24 @@
                     >
                         {{ item.TotalGross3 }}
                     </div>
-                    <!-- <div class="col col-5" data-label="5" *ngIf="activeRound == 3">
+                    <div class="col col-5" data-label="5" *ngIf="activeRound == 3">
                         <strong *ngIf="item.holes3 == 18">F</strong>
                         <strong *ngIf="item.holes3 < 18">{{
                             item.holes3
                         }}</strong>
-                    </div> -->
+                    </div>
                     <div
                         class="col col-5" data-label="6"
                         *ngIf="activeRound >= 4 && totalRounds == 4"
                     >
                         {{ item.TotalGross4 }}
                     </div>
-                    <!-- <div class="col col-5" data-label="7" *ngIf="activeRound == 4">
+                    <div class="col col-5" data-label="7" *ngIf="activeRound == 4">
                         <strong *ngIf="item.holes4 == 18">F</strong
                         ><strong *ngIf="item.holes4 < 18">{{
                             item.holes4
                         }}</strong>
-                    </div> -->
+                    </div>
                 </li>
             </ul>
             <!---Table For CUT ALL PLAYERS in Gross------------------------------------------------------------------------------->
@@ -1217,48 +1217,48 @@
                     <div class="col col-4" data-label="Payment Status">
                         {{ item.TotalNet1 }}
                     </div>
-                    <!-- <div class="col col-5" *ngIf="activeRound == 1">
+                    <div class="col col-5" *ngIf="activeRound == 1">
                         <strong *ngIf="item.holes1 == 18">F</strong
                         ><strong *ngIf="item.holes1 < 18">{{
                             item.holes1
                         }}</strong>
-                    </div> -->
+                    </div>
                     <div
                         class="col col-5"
                         *ngIf="activeRound >= 2 && totalRounds >= 2"
                     >
                         {{ item.TotalNet2 }}
                     </div>
-                    <!-- <div class="col col-5" *ngIf="activeRound == 2">
+                    <div class="col col-5" *ngIf="activeRound == 2">
                         <strong *ngIf="item.holes2 == 18">F</strong
                         ><strong *ngIf="item.holes2 < 18">{{
                             item.holes2
                         }}</strong>
-                    </div> -->
+                    </div>
                     <div
                         class="col col-5"
                         *ngIf="activeRound >= 3 && totalRounds >= 3"
                     >
                         {{ item.TotalNet3 }}
                     </div>
-                    <!-- <div class="col col-5" *ngIf="activeRound == 3">
+                    <div class="col col-5" *ngIf="activeRound == 3">
                         <strong *ngIf="item.holes3 == 18">F</strong>
                         <strong *ngIf="item.holes3 < 18">{{
                             item.holes3
                         }}</strong>
-                    </div> -->
+                    </div>
                     <div
                         class="col col-5"
                         *ngIf="activeRound >= 4 && totalRounds == 4"
                     >
                         {{ item.TotalNet4 }}
                     </div>
-                    <!-- <div class="col col-5" *ngIf="activeRound == 4">
+                    <div class="col col-5" *ngIf="activeRound == 4">
                         <strong *ngIf="item.holes4 == 18">F</strong
                         ><strong *ngIf="item.holes4 < 18">{{
                             item.holes4
                         }}</strong>
-                    </div> -->
+                    </div>
                 </li>
             </ul>
 

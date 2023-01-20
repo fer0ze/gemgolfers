@@ -365,9 +365,9 @@ export class MatchplayComponent implements OnInit {
 
     //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
     //console.log(holesQLs);
-    let course = "-LUFS3FCQKOGpJ2IEHmf";
+    let courseID:any =this.matchPlayData['courseId'];
     let selectedCourseHoleSet =
-      await this.facadeService.getCourseHoleSetsForCourse(course);
+      await this.facadeService.getCourseHoleSetsForCourse(courseID);
     this.courseHoleSetNames = selectedCourseHoleSet["course_hole_sets"];
     holesQLs = this.getHolesSets(
       holeSets,
@@ -514,6 +514,7 @@ export class MatchplayComponent implements OnInit {
       //console.log("Flight ID: " + flightData.id);
       let membersQLs: any = flightData.MembersQL;
       let singleFlight: any[] = [];
+      let courseHoleSetTitle;
       let flightHeader = await this.setupMatchplayHeader(
         flightData.courseId,
         flightData.courseHoleSets !== 0 ? flightData.courseHoleSets:3,
@@ -545,14 +546,14 @@ export class MatchplayComponent implements OnInit {
               return el.holeNo == i + 1;
             });
 
-            console.log(courseHole);
+           // console.log(courseHole);
 
             let hole = playerScore.find((a) => {
               return (
                 a.holeId == (courseHole.length > 0 ? courseHole[0].id : "")
               );
             });
-            console.log(hole);
+           // console.log(hole);
 
             if (hole) {
               playerHole9Score[i] = hole.grossScore;
@@ -566,18 +567,18 @@ export class MatchplayComponent implements OnInit {
               return el.holeNo == i + 9 + 1;
             });
 
-            console.log(i + 9 + 1);
-            console.log(courseHole);
+            // console.log(i + 9 + 1);
+            // console.log(courseHole);
 
             let hole = playerScore.find((a) => {
-              console.log(a.holeId + "<---->" + courseHole[0].id);
-              console.log(courseHole.length > 0 ? courseHole[0].id : "");
+             // console.log(a.holeId + "<---->" + courseHole[0].id);
+             // console.log(courseHole.length > 0 ? courseHole[0].id : "");
               return (
                 a.holeId == (courseHole.length > 0 ? courseHole[0].id : "")
               );
             });
 
-            console.log(hole);
+            //console.log(hole);
 
             if (hole) {
               playerHole18Score[i] = hole.grossScore;
@@ -590,7 +591,15 @@ export class MatchplayComponent implements OnInit {
 
           //console.log(playerHole9Score);
           //console.log(playerHole18Score);
-
+        
+          if ( this.courseHoleSetNames) {
+            courseHoleSetTitle = this.courseHoleSetNames.find((a) => {
+              return (
+                a.holeSets == flightData.courseHoleSets &&
+                a.inverted == flightData.courseHoleSetsInverted
+              );
+            });
+          }
           let LeaderGross: any = {
             flightId: flightData.id,
             courseId: flightData.courseId,
@@ -676,7 +685,16 @@ export class MatchplayComponent implements OnInit {
 
           //console.log(playerHole9Score);
           //console.log(playerHole18Score);
-
+        
+          if ( this.courseHoleSetNames) {
+            courseHoleSetTitle = this.courseHoleSetNames.find((a) => {
+              return (
+                a.holeSets == flightData.courseHoleSets &&
+                a.inverted == flightData.courseHoleSetsInverted
+              );
+            });
+          }
+    
           let LeaderGross: any = {
             teamName: flightData["FlightName"].name,
             flightId: flightData.id,
@@ -703,6 +721,14 @@ export class MatchplayComponent implements OnInit {
         ? flightData["FlightName"].name
         : ""),
         (this.flightPlayers[findex]["flightId"] = flightData.id);
+        this.flightPlayers[findex]["courseHoleSetTitle"] =
+        courseHoleSetTitle ? courseHoleSetTitle.displayName : "";
+      this.flightPlayers[findex]["courseHoleSetKey"] =
+        courseHoleSetTitle
+          ? flightData.courseHoleSets + "_" + flightData.courseHoleSetsInverted
+          : "";
+          this.flightPlayers[findex]["courseTee"] =
+          courseHoleSetTitle ? flightData.tee : "";
       this.flightPlayers[findex]["Hole9Scores"] =
         this.flightPlayers[findex][0].Hole9Scores;
       this.flightPlayers[findex]["Hole18Scores"] =

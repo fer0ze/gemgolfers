@@ -8,7 +8,7 @@
         <mat-tab label="Over View">
             <div class="flex-auto">
                 <div
-                    class="flex flex-col sm:flex-row md:flex-col flex-auto  justify-between py-8 px-6 md:px-8 border-b"
+                    class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
                 >
                     <!-- <div class="flex">
                         <div>
@@ -43,7 +43,7 @@
 
                     <div class="flex">
                         <div>
-                            <mat-form-field *ngIf="totalRounds > 1">
+                            <mat-form-field  *ngIf="totalRounds > 1">
                                 <mat-select
                                     (selectionChange)="changeRound($event)"
                                     [(value)]="flightRound"
@@ -56,8 +56,8 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                           
-                            <mat-form-field
+
+                            <mat-form-field class="mx-1"
                                 *ngIf="currentRoundFlights.length > 0"
                             >
                                 <mat-select
@@ -82,7 +82,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                           
+
                             <mat-form-field *ngIf="coursesList.length > 1">
                                 <mat-select
                                     (selectionChange)="changeCourse($event)"
@@ -106,7 +106,7 @@
                                 [formGroup]="filters"
                             >
                                 <mat-form-field
-                                class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
+                                    class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
                                 >
                                     <input
                                         matInput
@@ -116,20 +116,22 @@
                                     />
                                 </mat-form-field>
                             </form>
-                       
+
                             <button
-                            mat-raised-button
-                            color="primary"
+                                mat-raised-button
+                                color="primary"
                                 class="mx-2"
                                 (click)="filterPlayerFlight(true)"
                             >
-                                Search 
+                                Search
                             </button>
                             <button
+                                color="primary"
+                                class="mx-2"
                                 mat-raised-button
                                 (click)="filterPlayerFlight(false)"
                             >
-                                <mat-icon matSuffix>clear</mat-icon>
+                                Clear
                             </button>
                         </div>
                     </div>
@@ -211,11 +213,97 @@
                                 falses: flight.ended == false
                             }"
                         >
-                            
+                            <div
+                                id="flight.ended"
+                                class="flex flex-col sm:flex-row md:flex-auto flex-auto bg-card justify-between py-3 rounded-t-md border-b"
+                            >
+                                <div class="flex">
+                                    <div>
+                                        <mat-form-field class="w-80 mx-2">
+                                            <mat-select
+                                                placeholder="Course Hole Set"
+                                                [(value)]="
+                                                    flight.courseHoleSetKey
+                                                "
+                                                [disabled]="flight.ended"
+                                            >
+                                                <mat-option
+                                                    *ngFor="
+                                                        let course of courseHoleSetNames
+                                                    "
+                                                    [value]="
+                                                        course.holeSets +
+                                                        '_' +
+                                                        course.inverted
+                                                    "
+                                                    >{{
+                                                        course.displayName
+                                                    }}</mat-option
+                                                >
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div>
+                                        <mat-form-field class="w-80 mx-2">
+                                            <mat-select
+                                                placeholder="Round Tee"
+                                                [(value)]="flight.courseTee"
+                                                [disabled]="flight.ended"
+                                            >
+                                                <mat-option value="AMATEURS"
+                                                    >Amateurs</mat-option
+                                                >
+                                                <mat-option value="LADIES"
+                                                    >Ladies</mat-option
+                                                >
+                                                <mat-option value="SENIORS"
+                                                    >Seniors</mat-option
+                                                >
+                                                <mat-option
+                                                    value="PROFESSIONALS"
+                                                    >Professionals</mat-option
+                                                >
+                                                <mat-option value="VETERANS"
+                                                    >Veterans</mat-option
+                                                >
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="flex mr-3">
+                                    <div fxFlexFill fxLayoutAlign="end center">
+                                        <div
+                                            style="
+                                                text-align: right;
+                                                margin: 10px 0;
+                                            "
+                                        >
+                                            <button
+                                                mat-raised-button
+                                                class="save-btn"
+                                                color="primary"
+                                                *ngIf="
+                                                    flightRound == activeRound
+                                                "
+                                                (click)="
+                                                    saveFlightScore(
+                                                        flight.flightId
+                                                    )
+                                                "
+                                            >
+                                                Save Score
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <table class="mat-table">
                                 <thead class="bg-blue-500">
                                     <tr class="topheader mat-header-row">
-                                        <th class="rounded-tl-lg">Flight {{ i + 1 }}</th>
+                                        <th class="rounded-tl-lg">
+                                            Flight {{ i + 1 }}
+                                        </th>
                                         <th
                                             *ngFor="
                                                 let hole of flight.header
@@ -280,8 +368,9 @@
                                         >
                                             in
                                         </th>
-                                        <th class="rounded-tr-lg">total</th>
-                                       
+                                        <th>total</th>
+                                        <th class="rounded-tr-lg"></th>
+
                                     </tr>
                                     <tr class="subhead mat-header-row">
                                         <th>Yardage</th>
@@ -352,7 +441,7 @@
                                         <th>
                                             {{ flight.header.yardageTotal }}
                                         </th>
-                                        
+                                        <th></th>
                                     </tr>
                                     <tr class="subhead">
                                         <th>Par</th>
@@ -421,7 +510,7 @@
                                             {{ flight.header.par36 }}
                                         </th>
                                         <th>{{ flight.header.parTotal }}</th>
-                                        
+                                        <th></th>
                                     </tr>
                                     <tr class="subhead">
                                         <th class="rounded-bl-lg">Index</th>
@@ -481,7 +570,7 @@
                                                     .length > 0
                                             "
                                         ></th>
-                                        
+                                        <th></th>
                                         <th class="rounded-br-lg"></th>
                                     </tr>
                                 </thead>
@@ -502,13 +591,14 @@
                                                 let i = index
                                             "
                                         >
-                                            <span  class="class_name_round" [ngClass]="{
-                                                empty:
-                                                    score == '' &&
-                                                    item.holesPlayed >
-                                                        0,
-                                                warn: score > 9
-                                            }"
+                                            <span
+                                                class="class_name_round"
+                                                [ngClass]="{
+                                                    empty:
+                                                        score == '' &&
+                                                        item.holesPlayed > 0,
+                                                    warn: score > 9
+                                                }"
                                                 ><input
                                                     (input)="
                                                         onGross9Change(
@@ -527,27 +617,35 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    
                                             /></span>
                                         </td>
-                                        
+
                                         <td>
-                                          <span  class="class_name_round" style="border: 3px solid rgb(4, 78, 50); width: 36px;">
-                                          <input
-                                                  type="text"
-                                                  id="gross9total_{{
-                                                      item.playerId
-                                                  }}"
-                                                  value="{{ item.gross9Total }}"
-                                                  style="
-                                                      width: 30px;
-                                                      pointer-events: none;
-                                                      font-weight: bold;
-                                                  "
-                                                  disabled="disabled"
-                                              />
+                                            <span
+                                                class="class_name_round"
+                                                style="
+                                                    border: 3px solid
+                                                        rgb(4, 78, 50);
+                                                    width: 36px;
+                                                "
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="gross9total_{{
+                                                        item.playerId
+                                                    }}"
+                                                    value="{{
+                                                        item.gross9Total
+                                                    }}"
+                                                    style="
+                                                        width: 30px;
+                                                        pointer-events: none;
+                                                        font-weight: bold;
+                                                    "
+                                                    disabled="disabled"
+                                                />
                                             </span>
-                                          </td>
+                                        </td>
 
                                         <td
                                             *ngFor="
@@ -555,13 +653,14 @@
                                                 let i = index
                                             "
                                         >
-                                            <span  class="class_name_round" [ngClass]="{
-                                                empty:
-                                                    score == '' &&
-                                                    item.holesPlayed >
-                                                        0,
-                                                warn: score > 9
-                                            }"
+                                            <span
+                                                class="class_name_round"
+                                                [ngClass]="{
+                                                    empty:
+                                                        score == '' &&
+                                                        item.holesPlayed > 0,
+                                                    warn: score > 9
+                                                }"
                                                 ><input
                                                     type="text"
                                                     (input)="
@@ -580,45 +679,53 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    
                                             /></span>
                                         </td>
-                                       
-                                          <td>
-                                            <span  class="class_name_round">
-                                            <input
-                                                type="text"
-                                                id="gross18total_{{
-                                                    item.playerId
-                                                }}"
-                                                value="{{ item.gross18Total }}"
-                                                style="
-                                                    width: 30px;
-                                                    pointer-events: none;
-                                                    font-weight: bold;
-                                                "
-                                                disabled="disabled"
-                                            />
-                                          </span>
+
+                                        <td>
+                                            <span class="class_name_round">
+                                                <input
+                                                    type="text"
+                                                    id="gross18total_{{
+                                                        item.playerId
+                                                    }}"
+                                                    value="{{
+                                                        item.gross18Total
+                                                    }}"
+                                                    style="
+                                                        width: 30px;
+                                                        pointer-events: none;
+                                                        font-weight: bold;
+                                                    "
+                                                    disabled="disabled"
+                                                />
+                                            </span>
                                         </td>
 
-                                       
                                         <td>
-                                          <span class="class_name_round" style="    border: 3px solid red;    width: 36px;">
-                                            <input
-                                                type="text"
-                                                id="grosstotal_{{
-                                                    item.playerId
-                                                }}"
-                                                value="{{ item.grossTotal }}"
+                                            <span
+                                                class="class_name_round"
                                                 style="
-                                                    width: 30px;
-                                                    pointer-events: none;
-                                                    font-weight: bold;
+                                                    border: 3px solid red;
+                                                    width: 36px;
                                                 "
-                                                disabled="disabled"
-                                            />
-                                          </span>
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="grosstotal_{{
+                                                        item.playerId
+                                                    }}"
+                                                    value="{{
+                                                        item.grossTotal
+                                                    }}"
+                                                    style="
+                                                        width: 30px;
+                                                        pointer-events: none;
+                                                        font-weight: bold;
+                                                    "
+                                                    disabled="disabled"
+                                                />
+                                            </span>
                                         </td>
                                         <td>
                                             <mat-icon
@@ -638,8 +745,8 @@
                                             >
                                         </td>
                                     </tr>
-                                    
-                                    <tr>
+
+                                    <!-- <tr>
                                         <td>
                                             <button
                                                 mat-raised-button
@@ -656,7 +763,7 @@
                                                 Save Score
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                 </tbody>
                                 <!-- <tbody>
               <tr *ngFor="let item of flight" class="scorebody">
@@ -676,16 +783,18 @@
                     <div *ngIf="this.showTaxes">
                         <div
                             *ngFor="let flight of flightPlayers; let i = index"
-                            class="scoreCardBox mx-4 mb-5 mt-4 flex flex-col shadow rounded-2xl overflow-hidden  ng-star-inserted falses ng-star-inserted"
+                            class="scoreCardBox mx-4 mb-5 mt-4 flex flex-col shadow rounded-2xl overflow-hidden ng-star-inserted falses ng-star-inserted"
                             [ngClass]="{
                                 trues: flight.ended == true,
                                 falses: flight.ended == false
                             }"
                         >
-                            <table  class="mat-table">
+                            <table class="mat-table">
                                 <thead class="bg-blue-400">
                                     <tr class="topheader mat-header-row">
-                                        <th  class="rounded-tl-lg">Team {{ i + 1 }}</th>
+                                        <th class="rounded-tl-lg">
+                                            Team {{ i + 1 }}
+                                        </th>
                                         <th
                                             *ngFor="
                                                 let hole of flight.header
@@ -973,14 +1082,14 @@
                                                 let i = index
                                             "
                                         >
-                                            <span class="class_name_round"
-                                            [ngClass]="{
-                                                empty:
-                                                    score == '' &&
-                                                    flight.holesPlayed >
-                                                        0,
-                                                warn: score > 9
-                                            }"
+                                            <span
+                                                class="class_name_round"
+                                                [ngClass]="{
+                                                    empty:
+                                                        score == '' &&
+                                                        flight.holesPlayed > 0,
+                                                    warn: score > 9
+                                                }"
                                                 ><input
                                                     (input)="
                                                         onGross9Change(
@@ -999,24 +1108,32 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    
                                             /></span>
                                         </td>
                                         <td>
-                                            <span  class="class_name_round" style="border: 3px solid rgb(4, 78, 50); width: 36px;">
-                                            <input
-                                                type="text"
-                                                id="gross9total_{{
-                                                    flight.flightId
-                                                }}"
-                                                value="{{ flight.gross9Total }}"
+                                            <span
+                                                class="class_name_round"
                                                 style="
-                                                    width: 30px;
-                                                    pointer-events: none;
-                                                    font-weight: bold;
+                                                    border: 3px solid
+                                                        rgb(4, 78, 50);
+                                                    width: 36px;
                                                 "
-                                                disabled="disabled"
-                                            />
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="gross9total_{{
+                                                        flight.flightId
+                                                    }}"
+                                                    value="{{
+                                                        flight.gross9Total
+                                                    }}"
+                                                    style="
+                                                        width: 30px;
+                                                        pointer-events: none;
+                                                        font-weight: bold;
+                                                    "
+                                                    disabled="disabled"
+                                                />
                                             </span>
                                         </td>
                                         <td
@@ -1025,13 +1142,14 @@
                                                 let i = index
                                             "
                                         >
-                                            <span  class="class_name_round" [ngClass]="{
-                                                empty:
-                                                    score == '' &&
-                                                    flight.holesPlayed >
-                                                        0,
-                                                warn: score > 9
-                                            }"
+                                            <span
+                                                class="class_name_round"
+                                                [ngClass]="{
+                                                    empty:
+                                                        score == '' &&
+                                                        flight.holesPlayed > 0,
+                                                    warn: score > 9
+                                                }"
                                                 ><input
                                                     type="text"
                                                     (input)="
@@ -1050,43 +1168,50 @@
                                                         numberOnly($event)
                                                     "
                                                     value="{{ score }}"
-                                                    
                                             /></span>
                                         </td>
                                         <td>
-                                            <span  class="class_name_round">
-                                            <input
-                                                type="text"
-                                                id="gross18total_{{
-                                                    flight.flightId
-                                                }}"
-                                                value="{{
-                                                    flight.gross18Total
-                                                }}"
-                                                style="
-                                                    width: 30px;
-                                                    pointer-events: none;
-                                                    font-weight: bold;
-                                                "
-                                                disabled="disabled"
-                                            />
+                                            <span class="class_name_round">
+                                                <input
+                                                    type="text"
+                                                    id="gross18total_{{
+                                                        flight.flightId
+                                                    }}"
+                                                    value="{{
+                                                        flight.gross18Total
+                                                    }}"
+                                                    style="
+                                                        width: 30px;
+                                                        pointer-events: none;
+                                                        font-weight: bold;
+                                                    "
+                                                    disabled="disabled"
+                                                />
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="class_name_round" style="    border: 3px solid red;    width: 36px;">
-                                            <input
-                                                type="text"
-                                                id="grosstotal_{{
-                                                    flight.flightId
-                                                }}"
-                                                value="{{ flight.grossTotal }}"
+                                            <span
+                                                class="class_name_round"
                                                 style="
-                                                    width: 30px;
-                                                    pointer-events: none;
-                                                    font-weight: bold;
+                                                    border: 3px solid red;
+                                                    width: 36px;
                                                 "
-                                                disabled="disabled"
-                                            />
+                                            >
+                                                <input
+                                                    type="text"
+                                                    id="grosstotal_{{
+                                                        flight.flightId
+                                                    }}"
+                                                    value="{{
+                                                        flight.grossTotal
+                                                    }}"
+                                                    style="
+                                                        width: 30px;
+                                                        pointer-events: none;
+                                                        font-weight: bold;
+                                                    "
+                                                    disabled="disabled"
+                                                />
                                             </span>
                                         </td>
                                         <!-- <td>
@@ -1099,7 +1224,7 @@
                   >
                 </td> -->
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td class="pl-4 pt-2">
                                             <button
                                                 mat-raised-button
@@ -1117,7 +1242,7 @@
                                                 Save Score
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                 </tbody>
                                 <!-- <tbody>
             <tr *ngFor="let item of flight" class="scorebody">

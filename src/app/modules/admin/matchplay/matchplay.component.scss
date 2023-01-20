@@ -29,71 +29,78 @@
 //     font-weight: bold;
 // }
 table {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    min-width: 500px;
-    border-spacing: unset;
-    border-collapse: collapse;
-    border-radius: 0px;
-    margin: 0px;
-  
-    tr.topheader {
-      font-size: medium;
-      font-weight: bold;
-      color: white;
-      height: 8px !important
-    }
-  
-    tr.topheader th {
-      padding: 10px;
-      font-weight: bold;
-    }
-  
-    tr.subhead {
-      font-size: medium;
-      font-weight: bold;
-      height: 4px !important;
-  
-      color: white;
-    }
-  
-    tr.subhead th {
-     
-      font-weight: bold;
-      padding: 10px;
-    }
-  
-    tr.scorebody {
-      font-family: monospace;
-      color: rgb(25, 24, 24);
-    }
-  
-    tr.scorebody td {
-  
-      font-weight: bold;
-      padding: 10px;
-      text-align: center;
-      background-color: #fff !important;
-    }
-  
-    tr.scorebody td .title {
-      text-align: left;
-    }
-  
-  
-  
-    tr.scorebody td input {
-      border: none;
-      text-align: center;
-      width: 20px;
-    }
-  
-    td .mat-icon {
-      cursor: pointer;
-      font-size: 22px;
-    }
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 500px;
+  border-spacing: unset;
+  border-collapse: collapse;
+  border-radius: 0px;
+  margin: 0px;
+
+  tr.topheader {
+    background-color: #1e587a;
+    color: #ffffff;
   }
+
+  tr.topheader th {
+    padding: 5px;
+    font-weight: normal;
+  }
+
+  tr.subhead {
+    font-family: monospace;
+    background-color: #1e587a;
+    color: #ffffff;
+  }
+
+  tr.subhead th {
+    border: solid 1px #fff;
+    font-weight: bold;
+    padding: 5px;
+  }
+
+  tr.scorebody {
+    font-family: monospace;
+    color: #585858;
+  }
+
+  tr.scorebody td {
+    border: solid 1px #e8e8e7;
+    font-weight: bold;
+    padding: 5px;
+    text-align: center;
+    background-color: #fff !important;
+  }
+
+  tr.scorebody td .title {
+    text-align: left;
+  }
+
+  tr.scorebody td input.empty {
+    background-color: #f7f74f !important;
+
+    width: 28px;
+  }
+
+  tr.scorebody td input.warn {
+    background-color: #ff6464 !important;
+    color: #fff;
+
+    width: 28px;
+  }
+
+  tr.scorebody td input {
+    border: none;
+    text-align: center;
+    width: 30px;
+  }
+
+  td .mat-icon {
+    cursor: pointer;
+    font-size: 22px;
+  }
+}
   .example-spacer {
     flex: 1 1 auto;
   }
