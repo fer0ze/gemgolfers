@@ -23,12 +23,12 @@
                     <div
                         class="flex items-center justify-between w-full max-w-3xl mx-auto pt-6"
                     >
-                        <h3>Create Flights</h3>
+                        <h2 class="font-extrabold text-lg">Create Flights</h2>
                         <button (click)="closeDrawer()">
                             <mat-icon
-                                class="text-white"
-                                [svgIcon]="'heroicons_outline:x'"
-                            ></mat-icon>
+                         
+                            [svgIcon]="'heroicons_outline:x'"
+                        ></mat-icon>
                         </button>
                     </div>
                 </div>
@@ -40,32 +40,30 @@
                             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                         >
                             <div
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-col flex-auto bg-card overflow-hidden"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-row flex-auto bg-card overflow-hidden"
                             >
-                                <h3>Flight Number:</h3>
+                                <h3 class="font-extrabold">Flight Number:</h3>
                                 <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 w-24 mt-4 sm:mt-0"
+                                    class="fuse-mat-no-subscript mx-2 mb-2 w-24 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:gift'"
-                                    ></mat-icon>
-                                    <input value="{{ 1 }}" matInput #query />
+                                    <input
+                                        value="{{ flight.flightNo }}"
+                                        matInput
+                                        #query
+                                    />
                                 </mat-form-field>
                             </div>
                             <div
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-col flex-auto bg-card overflow-hidden"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-row flex-auto bg-card overflow-hidden"
                             >
-                                <h3>Flight Tee:</h3>
+                                <h3 class="font-extrabold">Flight Tee:</h3>
                                 <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 w-24 mt-4 sm:mt-0"
+                                    class="fuse-mat-no-subscript mb-2 mx-2 w-40 mt-4 sm:mt-0"
                                 >
                                     <mat-select
                                         class="w-100"
-                                       
-                                        value="AMATEURS"
+                                        value="{{ flight.tee }}"
                                         (selectionChange)="
                                             selectedTee($event, 2)
                                         "
@@ -88,44 +86,32 @@
                                 </mat-form-field>
                             </div>
                             <div
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-col flex-auto bg-card overflow-hidden"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-row flex-auto bg-card overflow-hidden"
                             >
-                                <h3>Flight Time:</h3>
+                                <h3 class="font-extrabold">Flight Time:</h3>
                                 <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 w-24 mt-4 sm:mt-0"
+                                    class="fuse-mat-no-subscript mx-2 mb-2 w-24 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:clock'"
-                                    ></mat-icon>
                                     <input
                                         type="time"
-                                        
                                         atp-time-picker
-                                        value="{{2}}"
+                                        value="{{ flight.time }}"
                                         matInput
                                         #query
                                     />
                                 </mat-form-field>
                             </div>
                             <div
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-col flex-auto bg-card overflow-hidden"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-3 items-center flex flex-row flex-auto bg-card overflow-hidden"
                             >
-                                <h3>Flight Hole:</h3>
+                                <h3 class="font-extrabold">Flight Hole:</h3>
                                 <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 w-24 mt-4 sm:mt-0"
+                                    class="fuse-mat-no-subscript mx-2 mb-2 w-24 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:flag'"
-                                    ></mat-icon>
                                     <input
-                                      
-                                        value="{{2 }}"
+                                        value="{{ flight.startingHole }}"
                                         matInput
                                         #query
                                     />
@@ -135,7 +121,7 @@
                                 class="sm:col-span-2 md:col-span-2 lg:col-span-6 flex flex-col flex-auto bg-card overflow-hidden"
                             >
                                 <div
-                                    class="flex flex-col sm:flex-row items-start justify-between"
+                                    class="flex flex-col sm:flex-row items-start justify-center"
                                 >
                                     <div
                                         class="text-lg font-medium tracking-tight leading-6 truncate"
@@ -146,14 +132,164 @@
                                 <div
                                     class="flex flex-col flex-auto mt-2 overflow-x-auto"
                                 >
-                                    <table></table>
+                                    <table
+                                        mat-table
+                                        [dataSource]="dataSourceFlightMembers"
+                                        matSort
+                                    >
+                                        <!-- firstname Column -->
+                                        <ng-container matColumnDef="firstName">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                firstName
+                                            </th>
+                                            <td
+                                                [ngClass]="{
+                                                    empty: row.status == true,
+                                                    nonempty:
+                                                        row.status == false
+                                                }"
+                                                mat-cell
+                                                *matCellDef="let row"
+                                            >
+                                                {{ row.firstName }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- lastname Column -->
+                                        <ng-container matColumnDef="lastName">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                lastName
+                                            </th>
+                                            <td
+                                                [ngClass]="{
+                                                    empty: row.status == true,
+                                                    nonempty:
+                                                        row.status == false
+                                                }"
+                                                mat-cell
+                                                *matCellDef="let row"
+                                            >
+                                                {{ row.lastName }}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container
+                                            matColumnDef="playerCategory"
+                                        >
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                category
+                                            </th>
+                                            <td
+                                                [ngClass]="{
+                                                    empty: row.status == true,
+                                                    nonempty:
+                                                        row.status == false
+                                                }"
+                                                mat-cell
+                                                *matCellDef="let row"
+                                            >
+                                                {{ row.playerCategory }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- hanidcap Column -->
+                                        <ng-container matColumnDef="handicap">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                handicap
+                                            </th>
+                                            <td
+                                                [ngClass]="{
+                                                    empty: row.status == true,
+                                                    nonempty:
+                                                        row.status == false
+                                                }"
+                                                mat-cell
+                                                *matCellDef="let row"
+                                            >
+                                                {{ row.handicap }}
+                                            </td>
+                                        </ng-container>
+
+                                        <!-- hanidcap Column -->
+                                        <ng-container matColumnDef="select">
+                                            <th
+                                                mat-header-cell
+                                                *matHeaderCellDef
+                                                mat-sort-header
+                                            >
+                                                Action
+                                            </th>
+                                            <td
+                                                [ngClass]="{
+                                                    empty: row.status == true,
+                                                    nonempty:
+                                                        row.status == false
+                                                }"
+                                                mat-cell
+                                                *matCellDef="let row"
+                                            >
+                                            <mat-icon
+                                            [svgIcon]="'heroicons_solid:delete'"
+                                            color="warn cursor-pointer"
+                                            (click)="moveTournamentMember(
+                                                row.id
+                                            )"
+                                        ></mat-icon>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr
+                                            mat-header-row
+                                            *matHeaderRowDef="
+                                                flightsmembersColumns
+                                            "
+                                        ></tr>
+                                        <tr
+                                            mat-row
+                                            *matRowDef="
+                                                let row;
+                                                columns: flightsmembersColumns
+                                            "
+                                        ></tr>
+                                    </table>
                                 </div>
+                            </div>
+                            <div
+                            class="sm:col-span-2 md:col-span-2 lg:col-span-6 flex flex-col flex-auto bg-card overflow-hidden"
+                        >
+                            <div
+                                class="flex flex-col sm:flex-row items-start justify-center"
+                            >
+                                <div
+                                    class="text-lg font-medium tracking-tight leading-6 truncate"
+                                >
+                                <button mat-raised-button color="primary" (click)="saveFlight()">
+                                        
+                                    Save 
+                                </button>
+                                </div>
+                            </div>
                             </div>
                             <div
                                 class="sm:col-span-2 md:col-span-2 lg:col-span-6 flex flex-col flex-auto bg-card overflow-hidden"
                             >
                                 <div
-                                    class="flex flex-col sm:flex-row items-start justify-between"
+                                    class="flex flex-col sm:flex-row items-start justify-center"
                                 >
                                     <div
                                         class="text-lg font-medium tracking-tight leading-6 truncate"
@@ -270,7 +406,7 @@
                                                 *matHeaderCellDef
                                                 mat-sort-header
                                             >
-                                                Arrived?
+                                                Action
                                             </th>
                                             <td
                                                 [ngClass]="{
@@ -284,10 +420,10 @@
                                                 <mat-icon
                                                     aria-hidden="false"
                                                     aria-label="Dragable"
-                                                    class="remove"
+                                                    class="remove cursor-pointer"
                                                     (click)="
-                                                        moveTournamentMember(
-                                                            row.player
+                                                    saveTournamentPlayer(
+                                                            row.id
                                                         )
                                                     "
                                                     >edit</mat-icon
@@ -416,7 +552,7 @@
                         >
                             <mat-icon
                                 class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:mail'"
+                                [svgIcon]="'heroicons_solid:leaderBoard'"
                             ></mat-icon>
                             <span class="ml-2">Leaderboard</span>
                         </button>
@@ -427,7 +563,7 @@
                         >
                             <mat-icon
                                 class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:cog'"
+                                [svgIcon]="'heroicons_solid:marshals'"
                             ></mat-icon>
                             <span class="ml-2">Marshals</span>
                         </button>

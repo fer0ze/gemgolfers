@@ -252,6 +252,13 @@ export const DeleteFlightsAndMembersMutation = gql`
     }
   }
 `;
+export const DeleteFlightMembersMutation = gql`
+  mutation DeleteFlightMembersMutation( $membersDeleteExpression: flight_member_bool_exp!) {
+    DeleteFlightMembers: delete_flight_member(where: $membersDeleteExpression) {
+      AffectedRowsQL: affected_rows
+    }
+  }
+`;
 
 export const moveFlightsPlayerMutation = gql`
   mutation moveFlightsPlayerMutation(

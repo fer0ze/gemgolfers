@@ -17,7 +17,7 @@
                             "
                         >
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-100 flex rounded-l-lg flex-col flex-auto p-6"
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                             >
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                                 >Flight: {{ i + 1 }}</span
@@ -296,7 +296,7 @@
                             "
                         >
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-100 flex rounded-l-lg flex-col flex-auto p-6"
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                             >
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
@@ -381,7 +381,15 @@
                                         #query
                                     />
                                 </mat-form-field>
-                                <button (click)="editFlight(items.id)">
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="editFlight(items.id)"
+                                >
+                                    <mat-icon
+                                        [svgIcon]="'heroicons_outline:pencil'"
+                                        color="primary"
+                                    ></mat-icon>
                                     edit
                                 </button>
 
@@ -591,7 +599,7 @@
                             "
                         >
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-100 flex rounded-l-lg flex-col flex-auto p-6"
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                             >
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
@@ -676,7 +684,17 @@
                                         #query
                                     />
                                 </mat-form-field>
-
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="editFlight(items.id)"
+                                >
+                                    <mat-icon
+                                        [svgIcon]="'heroicons_outline:pencil'"
+                                        color="primary"
+                                    ></mat-icon>
+                                    edit
+                                </button>
                                 <!-- <span
                             ><input
                                 style="width: 24px"
@@ -883,7 +901,7 @@
                             "
                         >
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-100 flex rounded-l-lg flex-col flex-auto p-6"
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                             >
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
@@ -968,6 +986,18 @@
                                         #query
                                     />
                                 </mat-form-field>
+
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="editFlight(items.id)"
+                                >
+                                    <mat-icon
+                                        [svgIcon]="'heroicons_outline:pencil'"
+                                        color="primary"
+                                    ></mat-icon>
+                                    edit
+                                </button>
 
                                 <!-- <span
                             ><input
@@ -1175,7 +1205,7 @@
                             "
                         >
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-100 flex rounded-l-lg flex-col flex-auto p-6"
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                             >
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
@@ -1260,6 +1290,18 @@
                                         #query
                                     />
                                 </mat-form-field>
+
+                                <button
+                                    mat-raised-button
+                                    color="warn"
+                                    (click)="editFlight(items.id)"
+                                >
+                                    <mat-icon
+                                        [svgIcon]="'heroicons_outline:pencil'"
+                                        color="primary"
+                                    ></mat-icon>
+                                    edit
+                                </button>
 
                                 <!-- <span
                             ><input

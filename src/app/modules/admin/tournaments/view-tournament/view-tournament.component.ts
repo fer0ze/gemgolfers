@@ -47,13 +47,21 @@ export class ViewTournamentComponent implements OnInit {
     private tournamentID: string;
     playersCatgery: any;
     dataSource: MatTableDataSource<any>;
+    dataSourceFlightMembers: MatTableDataSource<any>;
     membersColumns = [
-        "firstName",
-        "lastName",
-        "handicap",
-        "playerCategory",
-        "select",
-      ];
+        'firstName',
+        'lastName',
+        'handicap',
+        'playerCategory',
+        'select',
+    ];
+    flightsmembersColumns = [
+        'firstName',
+        'lastName',
+        'handicap',
+        'playerCategory',
+        'select',
+    ];
     private noOfHolesInCourse: number = 18;
     fullTournament: any;
     isLoading: boolean = true;
@@ -64,6 +72,8 @@ export class ViewTournamentComponent implements OnInit {
     changer: number = 0;
     totalMembers: number = 0;
     webLogo: string;
+    flightid: any;
+    flight: any = [];
     membersData: Player[] = [];
     allPlayers: Player[] = [];
     membersStats: any[] = [];
@@ -101,7 +111,7 @@ export class ViewTournamentComponent implements OnInit {
     chartavgScore3: number[] = [];
     chartavgScore4: number[] = [];
     selectedCategory: any;
-    clubLogo:any;
+    clubLogo: any;
     par3Avg1: number;
     par4Avg1: number;
     par5Avg1: number;
@@ -242,9 +252,12 @@ export class ViewTournamentComponent implements OnInit {
         this.loggedInUser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-        let clubInfo: any = (this.loggedInUser.membership.length > 0) ? this.loggedInUser.membership[0].club : null;
+        let clubInfo: any =
+            this.loggedInUser.membership.length > 0
+                ? this.loggedInUser.membership[0].club
+                : null;
 
-        this.clubLogo = (clubInfo && clubInfo.logo) ? clubInfo.logo : "e2esp.png";
+        this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
@@ -399,12 +412,11 @@ export class ViewTournamentComponent implements OnInit {
 
     calculateStatistics() {
         this.FlightsQL = [];
-        this.topMembers=[];
-        if(this.fullTournament.FlightsQL.length>6) {
+        this.topMembers = [];
+        if (this.fullTournament.FlightsQL.length > 6) {
             this.FlightsQL = this.fullTournament.FlightsQL.splice(0, 7);
-        }else{
+        } else {
             this.FlightsQL = this.fullTournament.FlightsQL;
-
         }
         // this.FlightsQL.splice(0,6);
         let totalPlayers =
@@ -583,12 +595,12 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics1() {
         this.FlightsQL = [];
-        this.topMembers=[];
+        this.topMembers = [];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 1;
         });
-        if(this.FlightsQL.length>6) {
-            this.FlightsQL.splice(0,6);
+        if (this.FlightsQL.length > 6) {
+            this.FlightsQL.splice(0, 6);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -619,12 +631,12 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics2() {
         this.FlightsQL = [];
-        this.topMembers=[];
+        this.topMembers = [];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 2;
         });
-        if(this.FlightsQL.length>6) {
-            this.FlightsQL.splice(0,6);
+        if (this.FlightsQL.length > 6) {
+            this.FlightsQL.splice(0, 6);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -655,12 +667,12 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics3() {
         this.FlightsQL = [];
-        this.topMembers=[];
+        this.topMembers = [];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 3;
         });
-        if(this.FlightsQL.length>6) {
-            this.FlightsQL.splice(0,6);
+        if (this.FlightsQL.length > 6) {
+            this.FlightsQL.splice(0, 6);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -691,12 +703,12 @@ export class ViewTournamentComponent implements OnInit {
     }
     calculateStatistics4() {
         this.FlightsQL = [];
-        this.topMembers=[];
+        this.topMembers = [];
         this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == 4;
         });
-        if(this.FlightsQL.length>6) {
-            this.FlightsQL.splice(0,6);
+        if (this.FlightsQL.length > 6) {
+            this.FlightsQL.splice(0, 6);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -791,7 +803,6 @@ export class ViewTournamentComponent implements OnInit {
             this.showMainTab4 = false;
             this.getTournamentMembers();
             this.showMainTab5 = true;
-
         }
     }
 
@@ -869,8 +880,6 @@ export class ViewTournamentComponent implements OnInit {
         }
 
         this.chart();
-
-       
     }
     getRound1stats(round: number) {
         if (this.round1Stats) return;
@@ -1544,7 +1553,6 @@ export class ViewTournamentComponent implements OnInit {
         //let fcnter = 0;
         console.log(criteria);
         this.changer++;
-        
 
         let tournamentFlightMembers: FlightMembers[];
         let teeBox: number;
@@ -2114,77 +2122,195 @@ export class ViewTournamentComponent implements OnInit {
         this.dataSourceTotalNET.sort = this.sort;
     }
 
-   async getTournamentMembers()  {
-    let dataFullTournaments = await this.facadeService.getTournamentMembers(
-        this.tournamentID
-      );
-      console.log(dataFullTournaments);
-  
-      this.tournamentMember = dataFullTournaments.TournamentMemberQL;
-    
-      this.dataSource = new MatTableDataSource(this.tournamentMember);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-   }
-   applyMembersFilter(filterValue: string){
-    if (filterValue == "") {
-        this.getTournamentMembers();
-        return;
+    async getTournamentMembers() {
+        let dataFullTournaments = await this.facadeService.getTournamentMembers(
+            this.tournamentID
+        );
+        console.log(dataFullTournaments);
+
+        this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+
+        this.dataSource = new MatTableDataSource(this.tournamentMember);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
     }
-      filterValue = filterValue.toLowerCase();
-      let players=[];
-      if (filterValue.length >= 3) {
-        for (let c of this.tournamentMember) {
-          c["fullname"] = c.player["firstName"] + " " + c.player["lastName"];
-          if (c["fullname"].toLowerCase().includes(filterValue)) {
-            players.push(c);
-          } else if (
-            c.player["membershipNumber"] &&
-            c.player["membershipNumber"].toLowerCase().toString().includes(filterValue)
-          ) {
-            players.push(c);
-          }  else if (
-            c.player["playerCategory"] &&
-            c.player["playerCategory"].toLowerCase().toString().includes(filterValue)
-          ) {
-            players.push(c);
-          } else if (
-            c.player["email"] &&
-            c.player["email"].toLowerCase().toString().includes(filterValue)
-          ) {
-            players.push(c);
-          }
+    applyMembersFilter(filterValue: string) {
+        if (filterValue == '') {
+            this.getTournamentMembers();
+            return;
         }
-        this.tournamentMember=players;
-        //console.log(this.player);
-        // this.setDataSource(this.player);
-      }
-   }
-   async playerList() {
-    let datas = await this.facadeService.getPlayersListForTournament(
-        this.loggedInUser.adminClubId
-    );
-    const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-      data: { players: datas.player,tournamentID:this.tournamentID },
-    });
+        filterValue = filterValue.toLowerCase();
+        let players = [];
+        if (filterValue.length >= 3) {
+            for (let c of this.tournamentMember) {
+                c['fullname'] =
+                    c.player['firstName'] + ' ' + c.player['lastName'];
+                if (c['fullname'].toLowerCase().includes(filterValue)) {
+                    players.push(c);
+                } else if (
+                    c.player['membershipNumber'] &&
+                    c.player['membershipNumber']
+                        .toLowerCase()
+                        .toString()
+                        .includes(filterValue)
+                ) {
+                    players.push(c);
+                } else if (
+                    c.player['playerCategory'] &&
+                    c.player['playerCategory']
+                        .toLowerCase()
+                        .toString()
+                        .includes(filterValue)
+                ) {
+                    players.push(c);
+                } else if (
+                    c.player['email'] &&
+                    c.player['email']
+                        .toLowerCase()
+                        .toString()
+                        .includes(filterValue)
+                ) {
+                    players.push(c);
+                }
+            }
+            this.tournamentMember = players;
+            //console.log(this.player);
+            // this.setDataSource(this.player);
+        }
+    }
+    async playerList() {
+        let datas = await this.facadeService.getPlayersListForTournament(
+            this.loggedInUser.adminClubId
+        );
+        const dialogRef = this.dialog.open(DialogPlayerListComponent, {
+            data: { players: datas.player, tournamentID: this.tournamentID },
+        });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-      if (result) {
-        //console.log("record deleted.");
-         console.log(result);
-        // this.clubMembers.push(result);
-        // console.log(this.clubMembers);
-        // this.syncClubMembers();
-      } else {
-        //console.log("cancel delete action");
-      }
-    });
-  }
-  closeDrawer(){
-    this.matDrawer.close();
-  }
-  selectedTee(a,b){
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(result);
+            if (result) {
+                //console.log("record deleted.");
+                console.log(result);
+                // this.clubMembers.push(result);
+                // console.log(this.clubMembers);
+                // this.syncClubMembers();
+            } else {
+                //console.log("cancel delete action");
+            }
+        });
+    }
+    closeDrawer() {
+        this.matDrawer.close();
+    }
+    selectedTee(a, b) {}
+    async getFlightId(id: string) {
+        this.flightid = id;
+        let SelectedFLight: any = [];
+        let flightPlayers: any[] = [];
+        SelectedFLight = await this.facadeService.singleRoundFlightsQuery(
+            this.flightid
+        );
+        this.flight = SelectedFLight.FlightsQL[0];
+        this.flight.MembersQL.forEach((element) => {
+            flightPlayers.push(element['PlayerQL']);
+        });
+        this.dataSourceFlightMembers = new MatTableDataSource(flightPlayers);
+        this.dataSourceFlightMembers.sort = this.sort;
+        console.log(this.flight);
 
-  }
+        // console.log(this.flightid);
+    }
+
+    async moveTournamentMember(playerId) {
+        console.log(playerId);
+        let count = 0;
+        this.flight.MembersQL.forEach((element) => {
+            if (element['PlayerQL'].id == playerId) {
+                this.flight.MembersQL.splice(count, 1);
+            }
+            count++;
+        });
+        let result = <any>(
+            await this.facadeService.DeleteFlightMembers(
+                this.flightid,
+                playerId
+            )
+        );
+        console.log(result);
+        if (result) {
+            this.snackBar.open('Tournament members have been saved.', 'x', {
+                duration: 5000,
+            });
+        }
+
+        this.getFlightId(this.flightid);
+    }
+
+    async saveTournamentPlayer(playerID: string) {
+        let member: any = {
+            tournamentId: this.tournamentID,
+            playerId: playerID,
+            status: true,
+        };
+        let result = <any>(
+            await this.facadeService.insertTournamentMember(member)
+        );
+        this.getFlightId(this.flightid);
+        if (result) {
+            this.snackBar.open('Tournament members have been saved.', 'x', {
+                duration: 5000,
+            });
+        }
+    }
+    async saveFlight() {
+        // console.log('flight saved');
+        // let flight: any = {
+        //     id: currentFlightId,
+        //     tournamentId: this.tournamentID,
+        //     courseId:
+        //       roundFlightData.length > 0
+        //         ? roundFlightData[0].courseId
+        //         : this.tournamentInfo[0].courseId,
+        //     adminId:
+        //       roundFlightData.length > 0
+        //         ? roundFlightData[0].adminId
+        //         : this.tournamentInfo[0].adminId,
+        //     courseHoleSets:
+        //       roundFlightData.length > 0 ? roundFlightData[0].courseHoleSets : 0,
+        //     flightNo: runningFlightcounter,
+        //     flightRound: this.flightRound,
+        //     startingHole: startingHole,
+        //     tee: roundFlightData.length > 0 ? roundFlightData[0].tee : "AMATEURS",
+        //     tee_id: roundFlightData.length > 0 ? roundFlightData[0].tee_id : "1",
+        //     date:
+        //       roundFlightData.length > 0
+        //         ? roundFlightData[0].date
+        //         : this.tournamentInfo[0].startDate,
+        //     time: startTime,
+        //     ended: false,
+        //   };
+
+
+
+        //   if (this.showTeams == true) {
+        //     console.log(true);
+      
+        //     save = <boolean>await this.facadeService.SaveTournamentFlightforTaxes(
+        //       this.tournamentID,
+        //       flightName,
+        //       tournamentFlights,
+      
+        //       flightMembersToSave
+        //     );
+        //   } else {
+        //     console.log(false);
+      
+        //     save = <boolean>await this.facadeService.SaveTournamentFlight(
+        //         this.tournamentID,
+        //       tournamentFlights,
+      
+        //       flightMembersToSave
+        //     );
+        //   }
+    }
 }

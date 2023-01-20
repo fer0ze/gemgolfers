@@ -20,22 +20,13 @@ const routes: Routes = [
         component: AddTournamentComponent,
     },
     {
+        path: 'manage/:id',
+        component: ViewTournamentComponent,
+    },
+    {
         path: 'view/:id',
         component: ViewTournamentComponent,
-        children: [
-            {
-                path: 'view/:id',
-                component: ViewTournamentComponent,
-                children: [
-                    {
-                        path: 'manage/:id',
-                        component: ViewTournamentComponent,
-                    },
-                ],
-            },
-        ],
     },
-
     {
         path: 'add/:id',
         component: AddTournamentComponent,

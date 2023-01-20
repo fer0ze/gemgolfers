@@ -1218,8 +1218,10 @@ export class FlightManagementComponent implements OnInit {
     //console.log(tournamentFlights);
   }
   editFlight(id){
-    this.router.navigate(['./manage/', id], { relativeTo: this.route });
-
+    // this.router.navigate(['/tournaments/manage/', id], { relativeTo: this.route });
+    
+    this._viewTournamentComponent.getFlightId(id);
+    this._viewTournamentComponent.matDrawer.open();
   }
   addFlight() {
     //console.log(this.selectedMembers.length);

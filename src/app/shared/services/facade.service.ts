@@ -701,6 +701,10 @@ export class FacadeService {
     return this.flightsService.moveFlightsPlayer(flightMembersToSave);
   }
 
+  DeleteFlightMembers(flightid:any,flightMembersToRemove: any) {
+    return this.flightsService.DeleteFlightMembers(flightid,flightMembersToRemove);
+  }
+
   getTournamentsFlights( tournamentId: string) {
     return this.flightsService.getTournamentsFlights( tournamentId);
   }

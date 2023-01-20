@@ -256,6 +256,43 @@ export class FlightsService {
                 );
         });
     }
+    public DeleteFlightMembers(
+        flightid: any,
+        flightMembersToRemove: any
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteFlightMembersMutation,
+                    variables: {
+                        where: {
+                            _and: [
+                                {
+                                    flightId: {
+                                        _eq: flightid,
+                                    },
+                                },
+                                {
+                                    playerId: {
+                                        _eq: flightMembersToRemove,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
 
     public getTournamentsFlights(tournamentId: string): Promise<any> {
         return new Promise((resolve) => {
