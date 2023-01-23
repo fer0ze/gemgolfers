@@ -1,3 +1,4 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
 <mat-drawer-container class="flex-auto h-full dark:bg-transparent">
     <mat-drawer
         class="w-full md:w-160 dark:bg-gray-900"
@@ -245,7 +246,8 @@
                                             >
                                             <mat-icon
                                             [svgIcon]="'heroicons_solid:delete'"
-                                            color="warn cursor-pointer"
+                                            color="'warn'"
+                                            class="cursor-pointer"
                                             (click)="moveTournamentMember(
                                                 row.id
                                             )"
@@ -418,15 +420,15 @@
                                                 *matCellDef="let row"
                                             >
                                                 <mat-icon
-                                                    aria-hidden="false"
-                                                    aria-label="Dragable"
-                                                    class="remove cursor-pointer"
+                                                [svgIcon]="'heroicons_solid:move'"
+                                                    class=" ml-1 remove cursor-pointer"
+
                                                     (click)="
                                                     saveTournamentPlayer(
-                                                            row.id
+                                                            row.player
                                                         )
                                                     "
-                                                    >edit</mat-icon
+                                                    ></mat-icon
                                                 >
                                             </td>
                                         </ng-container>
@@ -455,6 +457,7 @@
             </ng-container>
         </div>
     </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
     <div *ngIf="!isLoading" class="flex flex-col flex-auto min-w-0">
         <div class="bg-card">
             <div
@@ -4332,4 +4335,6 @@
             </div>
         </div>
     </div>
+    </mat-drawer-content>
 </mat-drawer-container>
+</div>

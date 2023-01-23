@@ -51,6 +51,22 @@ export const SaveTournamentFlightsMutation = gql`
     }
   }
 `;
+export const SaveFlightsMembersMutation = gql`
+  mutation SaveFlightsMembersMutation(
+    $flightMembersToSave: [flight_member_insert_input!]!
+  ) {
+   
+    FlightMembersEntryQLi: insert_flight_member(
+      objects: $flightMembersToSave
+      on_conflict: {
+        constraint: flight_member_pkey
+        update_columns: [flightId, playerId, playingTee, tee_id, attendance]
+      }
+    ) {
+      AffectedRowsQLi: affected_rows
+    }
+  }
+`;
 
 export const SaveTournamentFlightsMutationsForTaxes = gql`
   mutation SaveTournamentFlightsMutation(

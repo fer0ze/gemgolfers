@@ -128,6 +128,34 @@ export class FlightsService {
                 );
         });
     }
+    public saveFlightMembers(
+        flightId:string,
+        flightMembersToSave: any
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.SaveFlightsMembersMutation,
+                    variables: {
+                    
+                    
+
+                       
+                        flightMembersToSave: flightMembersToSave,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
     public copyPlayerScore(
         playerId: string,
         fromFlight: string,

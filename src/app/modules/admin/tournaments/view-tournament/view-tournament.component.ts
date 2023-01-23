@@ -267,7 +267,7 @@ export class ViewTournamentComponent implements OnInit {
             this.dataFullTournament =
                 await this.facadeService.tournamentDashBoard(this.tournamentID);
             console.log(this.dataFullTournament);
-            this.getTournamentMembers();
+            // this.getTournamentMembers();
             this.noOfROund =
                 this.dataFullTournament['TournamentQL'][0].noOfRounds;
 
@@ -2207,6 +2207,7 @@ export class ViewTournamentComponent implements OnInit {
         this.flightid = id;
         let SelectedFLight: any = [];
         let flightPlayers: any[] = [];
+        this.getTournamentMembers();
         SelectedFLight = await this.facadeService.singleRoundFlightsQuery(
             this.flightid
         );
@@ -2246,21 +2247,47 @@ export class ViewTournamentComponent implements OnInit {
         this.getFlightId(this.flightid);
     }
 
-    async saveTournamentPlayer(playerID: string) {
-        let member: any = {
-            tournamentId: this.tournamentID,
-            playerId: playerID,
-            status: true,
-        };
-        let result = <any>(
-            await this.facadeService.insertTournamentMember(member)
+    async saveTournamentPlayer(player: any) {
+        let flightMembersToSave: any[] = [];
+        console.log(player);
+        let roundTeeId: any = General.getPlayersTe(
+            player.playerCategory ? player.playerCategory : 'AMATEURS'
         );
-        this.getFlightId(this.flightid);
-        if (result) {
-            this.snackBar.open('Tournament members have been saved.', 'x', {
-                duration: 5000,
-            });
+
+        let FM: any = {
+            playerId: player.id,
+            flightId: this.flightid,
+            attendance: true,
+            playingTee: roundTeeId.result ? roundTeeId.result : 'AMATEURS',
+            tee_id: roundTeeId.id,
+        };
+        flightMembersToSave.push(FM);
+
+        let save: boolean = <boolean>(
+            await this.facadeService.saveFlightMembers(
+                this.flightid,
+                flightMembersToSave
+            )
+        );
+        if (save) {
+            this.getFlightId(this.flightid);
+            this.snackBar.open(
+                'Flights Member have been saved and updated successfully.',
+                'x',
+                {
+                    duration: 5000,
+                }
+            );
         }
+        // let result = <any>(
+        //     await this.facadeService.saveFlightMembers(member)
+        // );
+        // this.getFlightId(this.flightid);
+        // if (result) {
+        //     this.snackBar.open('Tournament members have been saved.', 'x', {
+        //         duration: 5000,
+        //     });
+        // }
     }
     async saveFlight() {
         // console.log('flight saved');
@@ -2289,26 +2316,19 @@ export class ViewTournamentComponent implements OnInit {
         //     time: startTime,
         //     ended: false,
         //   };
-
-
-
         //   if (this.showTeams == true) {
         //     console.log(true);
-      
         //     save = <boolean>await this.facadeService.SaveTournamentFlightforTaxes(
         //       this.tournamentID,
         //       flightName,
         //       tournamentFlights,
-      
         //       flightMembersToSave
         //     );
         //   } else {
         //     console.log(false);
-      
         //     save = <boolean>await this.facadeService.SaveTournamentFlight(
         //         this.tournamentID,
         //       tournamentFlights,
-      
         //       flightMembersToSave
         //     );
         //   }

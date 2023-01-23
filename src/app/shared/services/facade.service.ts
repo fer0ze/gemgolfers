@@ -670,6 +670,15 @@ export class FacadeService {
       flightMembersToSave
     );
   }
+  saveFlightMembers(
+    flightId:string,
+    flightMembersToSave: any
+  ) {
+    return this.flightsService.saveFlightMembers(
+      flightId,
+      flightMembersToSave
+    );
+  }
   createNextRoundFlights(flights: Flight[]) {
     return this.flightsService.createNextRoundFlights(flights);
   }
