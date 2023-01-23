@@ -579,14 +579,14 @@
                                     <button
                                         mat-raised-button
                                         color="primary"
-                                        (click)="createTournament()"
+                                        (click)="createTournament(linearVerticalStepper)"
                                         *ngIf="!editTournament"
                                         style="
                                             text-align: center;
                                             justify-content: center;
                                         "
                                         [disabled]="!formGroup.valid"
-                                        matStepperNext
+                                       
                                     >
                                         Create Tournament
                                     </button>

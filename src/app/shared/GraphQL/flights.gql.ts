@@ -8,6 +8,34 @@ import {
   TournamentMemberCategoryQL,
 } from "../fragments/tournament.fragment";
 
+export const SaveRoundFlightsMutation = gql`
+  mutation SaveRoundFlightsMutation(
+   
+    $flightsToSave: [flight_insert_input!]!
+
+  ) {
+    FlightEntryQLi: insert_flight(
+      objects: $flightsToSave
+      on_conflict: {
+        constraint: flight_pkey
+        update_columns: [
+          courseId
+          courseHoleSets
+          flightNo
+          flightRound
+          startingHole
+          tee
+          date
+          tee_id
+          time
+          ended
+        ]
+      }
+    ) {
+      AffectedRowsQLi: affected_rows
+    }
+  }
+`;
 export const SaveTournamentFlightsMutation = gql`
   mutation SaveTournamentFlightsMutation(
     $tournamentId: String!

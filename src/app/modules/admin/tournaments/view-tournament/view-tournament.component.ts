@@ -45,6 +45,8 @@ export class ViewTournamentComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     private tournamentID: string;
+    private newFlightID: string;
+    private flightRound: string;
     playersCatgery: any;
     dataSource: MatTableDataSource<any>;
     dataSourceFlightMembers: MatTableDataSource<any>;
@@ -99,6 +101,7 @@ export class ViewTournamentComponent implements OnInit {
     activeTournamentMembers: TournamentMember[] = [];
     runningFlights: number = 0;
     teetime: number = 0;
+    flightNumber: number = 0;
     scoreAdded: boolean = false;
     avgScore: number[] = [];
     avgScore1: number[] = [];
@@ -2127,7 +2130,7 @@ export class ViewTournamentComponent implements OnInit {
             this.tournamentID
         );
         console.log(dataFullTournaments);
-
+        this.flightNumber = this.fullTournament.FlightsQL.length + 1;
         this.tournamentMember = dataFullTournaments.TournamentMemberQL;
 
         this.dataSource = new MatTableDataSource(this.tournamentMember);
@@ -2201,8 +2204,36 @@ export class ViewTournamentComponent implements OnInit {
     }
     closeDrawer() {
         this.matDrawer.close();
+        this.flight = [];
+        this.flightid = null;
+        this.dataSourceFlightMembers = null;
     }
-    selectedTee(a, b) {}
+    selectedTee(event, flightId) {
+        console.log(flightId);
+        let target = event.source.selected._element.nativeElement;
+        let selectedData = {
+            value: event.value,
+            text: target.innerText.trim(),
+        };
+        // console.log(this.roundFlights);
+        if (this.flight) {
+            let roundTeeId: any = General.getPlayersTe(selectedData.text);
+
+            if (this.flight.id === flightId) {
+                this.flight.tee = selectedData.value;
+                this.flight.tee_id = roundTeeId.id;
+            }
+        }
+    }
+    onfligthNumberChange(event) {
+        this.flight.flightNo = event;
+    }
+    onfligthTimeChange(event) {
+        this.flight.time = event;
+    }
+    onfligthHoleChange(event) {
+        this.flight.startingHole = event;
+    }
     async getFlightId(id: string) {
         this.flightid = id;
         let SelectedFLight: any = [];
@@ -2221,16 +2252,34 @@ export class ViewTournamentComponent implements OnInit {
 
         // console.log(this.flightid);
     }
+    async getnewFlightId(id: string) {
+        this.newFlightID = id;
+        let SelectedFLight: any = [];
+        let flightPlayers: any[] = [];
+        this.getTournamentMembers();
+        SelectedFLight = await this.facadeService.singleRoundFlightsQuery(
+            this.newFlightID
+        );
+        this.flight = SelectedFLight.FlightsQL[0];
+        this.flight.MembersQL.forEach((element) => {
+            flightPlayers.push(element['PlayerQL']);
+        });
+        this.dataSourceFlightMembers = new MatTableDataSource(flightPlayers);
+        this.dataSourceFlightMembers.sort = this.sort;
+        console.log(this.flight);
 
-    async moveTournamentMember(playerId) {
+        // console.log(this.flightid);
+    }
+
+    async removeFlightMembers(playerId) {
         console.log(playerId);
         let count = 0;
-        this.flight.MembersQL.forEach((element) => {
-            if (element['PlayerQL'].id == playerId) {
-                this.flight.MembersQL.splice(count, 1);
-            }
-            count++;
-        });
+        // this.flight.MembersQL.forEach((element) => {
+        //     if (element['PlayerQL'].id == playerId) {
+        //         this.flight.MembersQL.splice(count, 1);
+        //     }
+        //     count++;
+        // });
         let result = <any>(
             await this.facadeService.DeleteFlightMembers(
                 this.flightid,
@@ -2239,14 +2288,40 @@ export class ViewTournamentComponent implements OnInit {
         );
         console.log(result);
         if (result) {
-            this.snackBar.open('Tournament members have been saved.', 'x', {
+            this.snackBar.open('Flights members have been removed.', 'x', {
                 duration: 5000,
             });
         }
 
         this.getFlightId(this.flightid);
     }
+    getFlightTime(items: any) {
+        let flightTime: string = '00:00';
 
+        try {
+            if (items.time) {
+                let dateNow: Date = new Date(
+                    Constants.DEFAULT_DATE + ' ' + items.time.substr(0, 5)
+                );
+
+                var h = dateNow.getHours();
+                var m = dateNow.getMinutes();
+
+                flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
+            }
+        } catch {
+            flightTime = '00:00';
+        }
+
+        return flightTime;
+    }
+    createFlight(index: any) {
+        this.flightRound = index;
+        this.flight.startingHole = 1;
+        this.flight.tee = 'AMATEURS';
+
+        this.newFlightID = UniqueIdGenerator.generate();
+    }
     async saveTournamentPlayer(player: any) {
         let flightMembersToSave: any[] = [];
         console.log(player);
@@ -2256,21 +2331,61 @@ export class ViewTournamentComponent implements OnInit {
 
         let FM: any = {
             playerId: player.id,
-            flightId: this.flightid,
+            flightId: this.flightid ? this.flightid : this.newFlightID,
             attendance: true,
             playingTee: roundTeeId.result ? roundTeeId.result : 'AMATEURS',
             tee_id: roundTeeId.id,
         };
         flightMembersToSave.push(FM);
+        let save: boolean;
+        if (this.flightid) {
+            save = <boolean>(
+                await this.facadeService.saveFlightMembers(
+                    this.flightid ? this.flightid : this.newFlightID,
+                    flightMembersToSave
+                )
+            );
+        } else {
+            let flight: any = {
+                id: this.newFlightID,
+                tournamentId: this.tournamentID,
+                courseId: this.fullTournament.CourseQL.id,
+                adminId: this.fullTournament.adminId,
+                courseHoleSets: this.fullTournament.courseHoleSets
+                    ? this.fullTournament.courseHoleSets
+                    : 3,
+                flightNo: this.flightNumber,
+                flightRound: this.flightRound,
+                startingHole: this.flight.startingHole,
+                tee: this.flight.length > 0 ? this.flight.tee : 'AMATEURS',
+                tee_id: this.flight.length > 0 ? this.flight.tee_id : '1',
+                date:
+                    this.flight.length > 0
+                        ? this.flight.date
+                        : this.dataFullTournament['TournamentQL'][0].startDate,
+                time: this.flight.time,
+                ended: false,
+            };
+            await this.facadeService.SaveRoundFlight(flight);
+            save = <boolean>(
+                await this.facadeService.saveFlightMembers(
+                    this.newFlightID,
+                    flightMembersToSave
+                )
+            );
+        }
 
-        let save: boolean = <boolean>(
-            await this.facadeService.saveFlightMembers(
-                this.flightid,
-                flightMembersToSave
-            )
-        );
-        if (save) {
+        if (save && this.flightid) {
             this.getFlightId(this.flightid);
+            this.snackBar.open(
+                'Flights Member have been saved and updated successfully.',
+                'x',
+                {
+                    duration: 5000,
+                }
+            );
+        } else {
+            this.getnewFlightId(this.newFlightID);
             this.snackBar.open(
                 'Flights Member have been saved and updated successfully.',
                 'x',
@@ -2290,47 +2405,61 @@ export class ViewTournamentComponent implements OnInit {
         // }
     }
     async saveFlight() {
-        // console.log('flight saved');
-        // let flight: any = {
-        //     id: currentFlightId,
-        //     tournamentId: this.tournamentID,
-        //     courseId:
-        //       roundFlightData.length > 0
-        //         ? roundFlightData[0].courseId
-        //         : this.tournamentInfo[0].courseId,
-        //     adminId:
-        //       roundFlightData.length > 0
-        //         ? roundFlightData[0].adminId
-        //         : this.tournamentInfo[0].adminId,
-        //     courseHoleSets:
-        //       roundFlightData.length > 0 ? roundFlightData[0].courseHoleSets : 0,
-        //     flightNo: runningFlightcounter,
-        //     flightRound: this.flightRound,
-        //     startingHole: startingHole,
-        //     tee: roundFlightData.length > 0 ? roundFlightData[0].tee : "AMATEURS",
-        //     tee_id: roundFlightData.length > 0 ? roundFlightData[0].tee_id : "1",
-        //     date:
-        //       roundFlightData.length > 0
-        //         ? roundFlightData[0].date
-        //         : this.tournamentInfo[0].startDate,
-        //     time: startTime,
-        //     ended: false,
-        //   };
-        //   if (this.showTeams == true) {
-        //     console.log(true);
-        //     save = <boolean>await this.facadeService.SaveTournamentFlightforTaxes(
-        //       this.tournamentID,
-        //       flightName,
-        //       tournamentFlights,
-        //       flightMembersToSave
-        //     );
-        //   } else {
-        //     console.log(false);
-        //     save = <boolean>await this.facadeService.SaveTournamentFlight(
-        //         this.tournamentID,
-        //       tournamentFlights,
-        //       flightMembersToSave
-        //     );
-        //   }
+        console.log('flight saved');
+        let flight: any;
+        if (this.flightid) {
+            flight = {
+                id: this.flightid,
+                tournamentId: this.tournamentID,
+                courseId: this.fullTournament.CourseQL.id,
+                adminId: this.flight.adminId,
+                courseHoleSets:
+                    this.flight.length > 0 ? this.flight.courseHoleSets : 3,
+                flightNo: this.flight.flightNo,
+                flightRound: this.flight.flightRound,
+                startingHole: this.flight.startingHole,
+                tee: this.flight.length > 0 ? this.flight.tee : 'AMATEURS',
+                tee_id: this.flight.length > 0 ? this.flight.tee_id : '1',
+                date:
+                    this.flight.length > 0
+                        ? this.flight.date
+                        : this.dataFullTournament['TournamentQL'][0].startDate,
+                time: this.flight.time,
+                ended: false,
+            };
+        } else {
+            flight = {
+                id: this.newFlightID,
+                tournamentId: this.tournamentID,
+                courseId: this.fullTournament.CourseQL.id,
+                adminId: this.fullTournament.adminId,
+                courseHoleSets: this.fullTournament.courseHoleSets
+                    ? this.fullTournament.courseHoleSets
+                    : 3,
+                flightNo: this.flightNumber,
+                flightRound: this.flightRound,
+                startingHole: this.flight.startingHole,
+                tee: this.flight.length > 0 ? this.flight.tee : 'AMATEURS',
+                tee_id: this.flight.length > 0 ? this.flight.tee_id : '1',
+                date:
+                    this.flight.length > 0
+                        ? this.flight.date
+                        : this.dataFullTournament['TournamentQL'][0].startDate,
+                time: this.flight.time,
+                ended: false,
+            };
+        }
+        let save = <boolean>await this.facadeService.SaveRoundFlight(flight);
+        if (save) {
+            this.getFlightId(this.flightid);
+            this.snackBar.open(
+                'Flights have been saved and updated successfully.',
+                'x',
+                {
+                    duration: 5000,
+                }
+            );
+        }
+        // }
     }
 }

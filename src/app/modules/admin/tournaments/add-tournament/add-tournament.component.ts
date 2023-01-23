@@ -1496,7 +1496,7 @@ export class AddTournamentComponent implements OnInit {
         return courseHoleSet;
     }
 
-    async createTournament() {
+    async createTournament(stepper: MatStepper) {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
@@ -1746,6 +1746,8 @@ export class AddTournamentComponent implements OnInit {
                         console.log(this.clubMembers);
 
                         this.syncClubMembers();
+
+                        stepper.next();
 
                         //console.log(this.clubMembers);
 

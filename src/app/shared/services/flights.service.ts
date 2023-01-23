@@ -128,6 +128,29 @@ export class FlightsService {
                 );
         });
     }
+    public SaveRoundFlight(  
+        flightsToSave: any,
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.SaveRoundFlightsMutation,
+                    variables: {
+                        flightsToSave: flightsToSave,     
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
     public saveFlightMembers(
         flightId:string,
         flightMembersToSave: any
@@ -293,7 +316,7 @@ export class FlightsService {
                 .mutate<any>({
                     mutation: Query.DeleteFlightMembersMutation,
                     variables: {
-                        where: {
+                        membersDeleteExpression: {
                             _and: [
                                 {
                                     flightId: {

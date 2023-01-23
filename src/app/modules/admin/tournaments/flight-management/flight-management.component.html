@@ -281,7 +281,7 @@
                     <button
                         mat-raised-button
                         color="primary"
-                        (click)="addFlight()"
+                        (click)="addFlight(1)"
                     >
                         Add New Flight
                     </button>
@@ -562,15 +562,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center mb-4">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="saveFlights()"
-                    >
-                        Save Changes
-                    </button>
-                </div>
+                
             </mat-tab>
             <mat-tab
                 *ngIf="noOfRounds > 1"
@@ -581,7 +573,7 @@
                     <button
                         mat-raised-button
                         color="primary"
-                        (click)="addFlight()"
+                        (click)="addFlight(2)"
                     >
                         Add New Flight
                     </button>
@@ -861,15 +853,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center mb-4">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="saveFlights()"
-                    >
-                        Save Changes
-                    </button>
-                </div>
+                
             </mat-tab>
             <mat-tab
                 *ngIf="noOfRounds > 2"
@@ -880,7 +864,7 @@
                     <button
                         mat-raised-button
                         color="primary"
-                        (click)="addFlight()"
+                        (click)="addFlight(3)"
                     >
                         Add New Flight
                     </button>
@@ -1162,15 +1146,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center mb-4">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="saveFlights()"
-                    >
-                        Save Changes
-                    </button>
-                </div>
+                
             </mat-tab>
             <mat-tab
                 *ngIf="noOfRounds > 3"
@@ -1181,7 +1157,7 @@
                     <button
                         mat-raised-button
                         color="primary"
-                        (click)="addFlight()"
+                        (click)="addFlight(4)"
                     >
                         Add New Flight
                     </button>
@@ -1463,15 +1439,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center mb-4">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="saveFlights()"
-                    >
-                        Save Changes
-                    </button>
-                </div>
+                
             </mat-tab>
         </mat-tab-group>
     </div>

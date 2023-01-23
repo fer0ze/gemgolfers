@@ -1223,56 +1223,58 @@ export class FlightManagementComponent implements OnInit {
     this._viewTournamentComponent.getFlightId(id);
     this._viewTournamentComponent.matDrawer.open();
   }
-  addFlight() {
+  addFlight(index:any) {
     //console.log(this.selectedMembers.length);
+    this._viewTournamentComponent.getTournamentMembers();
+    this._viewTournamentComponent.createFlight(index);
   this._viewTournamentComponent.matDrawer.open();
-    this.selectedMembers[this.selectedMembers.length] = [];
-    this.selectedMembers[this.selectedMembers.length - 1]["id"] =
-      UniqueIdGenerator.generate();
-    this.selectedMembers[this.selectedMembers.length - 1]["time"] = "09:00";
-    this.selectedMembers[this.selectedMembers.length - 1]["firstName"] =
-      "Team Name";
-    this.selectedMembers[this.selectedMembers.length - 1]["adminId"] = this
-      .roundFlights.length
-      ? this.roundFlights[0]["adminId"]
-      : this.tournamentInfo[0].adminId;
-    this.selectedMembers[this.selectedMembers.length - 1]["courseHoleSets"] =
-      this.roundFlights.length
-        ? this.roundFlights[0]["courseHoleSets"]
-        : this.tournamentInfo[0].courseHoleSets;
-    this.selectedMembers[this.selectedMembers.length - 1][
-      "courseHoleSetsInverted"
-    ] = this.roundFlights.length
-      ? this.roundFlights[0]["courseHoleSetsInverted"]
-      : this.tournamentInfo[0].courseHoleSetsInverted;
-    this.selectedMembers[this.selectedMembers.length - 1]["courseId"] = this
-      .roundFlights.length
-      ? this.roundFlights[0]["courseId"]
-      : this.tournamentInfo[0].courseId;
-    this.selectedMembers[this.selectedMembers.length - 1]["tournamentId"] = this
-      .roundFlights.length
-      ? this.roundFlights[0]["tournamentId"]
-      : this.tournamentInfo[0].id;
-    this.selectedMembers[this.selectedMembers.length - 1]["startingHole"] = "1";
-    this.selectedMembers[this.selectedMembers.length - 1]["tee"] = "";
-    this.selectedMembers[this.selectedMembers.length - 1]["flightRound"] =
-      this.flightRound;
-    this.selectedMembers[this.selectedMembers.length - 1]["date"] = this
-      .roundFlights.length
-      ? this.roundFlights[0]["date"]
-      : this.tournamentInfo[0].startDate;
-    this.selectedMembers[this.selectedMembers.length - 1]["flightNo"] = this
-      .selectedMembers.length
-      ? this.selectedMembers.length
-      : 1;
-    this.selectedMembers[this.selectedMembers.length - 1]["tee_id"] = "1";
+    // this.selectedMembers[this.selectedMembers.length] = [];
+    // this.selectedMembers[this.selectedMembers.length - 1]["id"] =
+    //   UniqueIdGenerator.generate();
+    // this.selectedMembers[this.selectedMembers.length - 1]["time"] = "09:00";
+    // this.selectedMembers[this.selectedMembers.length - 1]["firstName"] =
+    //   "Team Name";
+    // this.selectedMembers[this.selectedMembers.length - 1]["adminId"] = this
+    //   .roundFlights.length
+    //   ? this.roundFlights[0]["adminId"]
+    //   : this.tournamentInfo[0].adminId;
+    // this.selectedMembers[this.selectedMembers.length - 1]["courseHoleSets"] =
+    //   this.roundFlights.length
+    //     ? this.roundFlights[0]["courseHoleSets"]
+    //     : this.tournamentInfo[0].courseHoleSets;
+    // this.selectedMembers[this.selectedMembers.length - 1][
+    //   "courseHoleSetsInverted"
+    // ] = this.roundFlights.length
+    //   ? this.roundFlights[0]["courseHoleSetsInverted"]
+    //   : this.tournamentInfo[0].courseHoleSetsInverted;
+    // this.selectedMembers[this.selectedMembers.length - 1]["courseId"] = this
+    //   .roundFlights.length
+    //   ? this.roundFlights[0]["courseId"]
+    //   : this.tournamentInfo[0].courseId;
+    // this.selectedMembers[this.selectedMembers.length - 1]["tournamentId"] = this
+    //   .roundFlights.length
+    //   ? this.roundFlights[0]["tournamentId"]
+    //   : this.tournamentInfo[0].id;
+    // this.selectedMembers[this.selectedMembers.length - 1]["startingHole"] = "1";
+    // this.selectedMembers[this.selectedMembers.length - 1]["tee"] = "";
+    // this.selectedMembers[this.selectedMembers.length - 1]["flightRound"] =
+    //   this.flightRound;
+    // this.selectedMembers[this.selectedMembers.length - 1]["date"] = this
+    //   .roundFlights.length
+    //   ? this.roundFlights[0]["date"]
+    //   : this.tournamentInfo[0].startDate;
+    // this.selectedMembers[this.selectedMembers.length - 1]["flightNo"] = this
+    //   .selectedMembers.length
+    //   ? this.selectedMembers.length
+    //   : 1;
+    // this.selectedMembers[this.selectedMembers.length - 1]["tee_id"] = "1";
 
-    //this.newFlight.push(this.selectedMembers[this.selectedMembers.length - 1]);
-    //console.log(this.newFlight.id);
-    this.newFlights[this.addFlightNum] =
-      this.selectedMembers[this.selectedMembers.length - 1];
-    console.log(this.newFlights[this.addFlightNum]);
-    this.addFlightNum++;
+    // //this.newFlight.push(this.selectedMembers[this.selectedMembers.length - 1]);
+    // //console.log(this.newFlight.id);
+    // this.newFlights[this.addFlightNum] =
+    //   this.selectedMembers[this.selectedMembers.length - 1];
+    // console.log(this.newFlights[this.addFlightNum]);
+    // this.addFlightNum++;
     //console.log(this.selectedMembers.length);
     //this.selectedMembers[this.selectedMembers.length - 1].push(player);
     //console.log(this.selectedMembers);

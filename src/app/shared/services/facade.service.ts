@@ -670,6 +670,16 @@ export class FacadeService {
       flightMembersToSave
     );
   }
+  SaveRoundFlight(
+   
+    flightsToSave: any,
+
+  ) {
+    return this.flightsService.SaveRoundFlight(
+    
+      flightsToSave
+    );
+  }
   saveFlightMembers(
     flightId:string,
     flightMembersToSave: any
