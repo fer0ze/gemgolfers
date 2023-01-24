@@ -513,7 +513,7 @@ export class AddTournamentComponent implements OnInit {
     }
     createPlayingDate(date: string): FormGroup {
         return this._formBuilder.group({
-            Date: [date, Validators.required],
+            Date: [date],
             playing: [false, Validators.required],
             noofHoles: ['18', Validators.required],
         });
@@ -524,10 +524,8 @@ export class AddTournamentComponent implements OnInit {
     }
 
     PlayingDateFormGroup(index) {
-        const catControls = (<FormArray>(
-            this.formArray.get([1]).get('category')
-        )) as FormArray;
-        console.log(catControls);
+        var catControls = this.categoryFormGroup;
+        //console.log(catControls);
         console.log(catControls.controls[index].get('playingDate'));
 
         return <FormArray>catControls.controls[index].get('playingDate');
@@ -621,7 +619,7 @@ export class AddTournamentComponent implements OnInit {
                 'playingDate'
             ) as FormArray;
 
-            newControl.push(this.createPlayingDate(i));
+            newControl.push(this.createPlayingDate(i.toString()));
         }
     }
 
@@ -1149,27 +1147,27 @@ export class AddTournamentComponent implements OnInit {
             console.log(person);
 
             console.log(this.formArray.get([1]).get('category'));
-            for (let j in this.formArray.get([1]).get('category').value[i]
-                .playingDate) {
-                let sDte =
-                    this.formArray
-                        .get([1])
-                        .get('category')
-                        .value[i].playingDate[j].Date.substring(6, 10) +
-                    this.formArray
-                        .get([1])
-                        .get('category')
-                        .value[i].playingDate[j].Date.substring(3, 5) +
-                    this.formArray
-                        .get([1])
-                        .get('category')
-                        .value[i].playingDate[j].Date.substring(0, 2);
-                this.formArray.get([1]).get('category').value[i].playingDate[
-                    j
-                ].Date = sDte;
+            // for (let j in this.formArray.get([1]).get('category').value[i]
+            //     .playingDate) {
+            //     let sDte =
+            //         this.formArray
+            //             .get([1])
+            //             .get('category')
+            //             .value[i].playingDate[j].Date.substring(6, 10) +
+            //         this.formArray
+            //             .get([1])
+            //             .get('category')
+            //             .value[i].playingDate[j].Date.substring(3, 5) +
+            //         this.formArray
+            //             .get([1])
+            //             .get('category')
+            //             .value[i].playingDate[j].Date.substring(0, 2);
+            //     this.formArray.get([1]).get('category').value[i].playingDate[
+            //         j
+            //     ].Date = sDte;
 
-                //this.formArray.get([1]).get("category").value[i].playingDate[j].Date = this.datePipe.transform(this.formArray.get([1]).get("category").value[i].playingDate[j].Date, 'yyyyMMdd');
-            }
+            //     //this.formArray.get([1]).get("category").value[i].playingDate[j].Date = this.datePipe.transform(this.formArray.get([1]).get("category").value[i].playingDate[j].Date, 'yyyyMMdd');
+            // }
             console.log(this.formArray.get([1]).get('category').value[i]);
             let flightSettingsStatus: any =
                 await this.facadeService.updateFlightSettings(
@@ -1216,6 +1214,7 @@ export class AddTournamentComponent implements OnInit {
             'dd-MM-yyyy'
         );
         console.log(Pdate);
+        //Pdate=Pdate.replace('-');
 
         FilteredPL = this.tournamentMembers.filter((a) => {
             return a.playerCategory == PLcategory;
