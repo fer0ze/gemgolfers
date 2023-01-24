@@ -86,7 +86,7 @@ export class AddTournamentComponent implements OnInit {
     formGroup: FormGroup;
     filteredClubOptions: Observable<Club[]>;
     filteredCourseOptions: Observable<Course[]>;
-    selectedIndex:any=0;
+    selectedIndex: any = 0;
     nameFormGroup: FormGroup;
     emailFormGroup: FormGroup;
     loggedInuser: Player;
@@ -227,7 +227,10 @@ export class AddTournamentComponent implements OnInit {
                     ],
                     courseInfo: this._formBuilder.array([
                         this._formBuilder.group({
-                            courseName: ['', [Validators.required,RequireMatch]],
+                            courseName: [
+                                '',
+                                [Validators.required, RequireMatch],
+                            ],
                             matchFormat: [Constants.MF_STROKE_PLAY],
                         }),
                     ]),
@@ -434,13 +437,13 @@ export class AddTournamentComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.Clubs.slice()))
             );
-            // this.formArray
-            // .get([0])
-            // .get('courseInfo')
-            // .get([0])
-            // .get('courseName').valueChanges.subscribe(newValue=>{
-            //     this.filteredCourseOptions = this.filterValues(newValue);
-            // })
+        // this.formArray
+        // .get([0])
+        // .get('courseInfo')
+        // .get([0])
+        // .get('courseName').valueChanges.subscribe(newValue=>{
+        //     this.filteredCourseOptions = this.filterValues(newValue);
+        // })
         this.filteredCourseOptions = this.formArray
             .get([0])
             .get('courseInfo')
@@ -455,8 +458,7 @@ export class AddTournamentComponent implements OnInit {
                     name ? this._filterCourse(name) : this.Courses.slice()
                 )
             );
-            console.log(this.filteredCourseOptions);
-           
+        console.log(this.filteredCourseOptions);
 
         const currentYear = new Date().getFullYear();
         if (!this.tournamentID) {
@@ -473,9 +475,9 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
-    filterValues(search: string):any {
+    filterValues(search: string): any {
         console.log('aaa');
-        
+
         // return this.filteredCourseOptions.filter(value=>
         // value.naem.toLowerCase().indexOf(search.toLowerCase()) === 0);
     }
@@ -647,7 +649,7 @@ export class AddTournamentComponent implements OnInit {
 
     private _filter(value: string): Club[] {
         console.log(value);
-        
+
         if (value) {
             const filterValue = value.toLowerCase();
 
@@ -661,10 +663,10 @@ export class AddTournamentComponent implements OnInit {
 
     private _filterCourse(value: string): Course[] {
         console.log(value);
-        
+
         if (value) {
             const filterValue = value.toLowerCase();
-               
+
             return this.Courses.filter(
                 (option) => option.name.toLowerCase().indexOf(filterValue) >= 0
             );
@@ -672,24 +674,27 @@ export class AddTournamentComponent implements OnInit {
 
         return this.Courses;
     }
-    courseChnage(values){
-        if(values.length>0)
-        {
-            this.filteredCourseOptions=this.formArray
-            .get([0])
-            .get('courseInfo')
-            .get([0])
-            .get('courseName')
-            .valueChanges.pipe(
-                startWith(''),
-                map((value:any) =>
-                    typeof value === 'string' ? value : value ? value.name : ''
-                ),
-                map((name :any) =>
-                    name ? this._filterCourse(name) : this.Courses.slice()
-                )
-            );
-        }else{
+    courseChnage(values) {
+        if (values.length > 0) {
+            this.filteredCourseOptions = this.formArray
+                .get([0])
+                .get('courseInfo')
+                .get([0])
+                .get('courseName')
+                .valueChanges.pipe(
+                    startWith(''),
+                    map((value: any) =>
+                        typeof value === 'string'
+                            ? value
+                            : value
+                            ? value.name
+                            : ''
+                    ),
+                    map((name: any) =>
+                        name ? this._filterCourse(name) : this.Courses.slice()
+                    )
+                );
+        } else {
             //this.filteredCourseOptions=this.Courses.slice();
         }
     }
@@ -1118,10 +1123,10 @@ export class AddTournamentComponent implements OnInit {
         this.courseFileds.removeAt(index);
     }
 
-    async getSelectedPlayers(index) {
+    async getSelectedPlayers(index, stepper: MatStepper) {
         console.log(index);
-        this.selectedIndex=++index;
         
+
         //console.log(this.selection.selected.length);
         this.flightArrangementSetup();
         this.selectedMembers = [];
@@ -1174,7 +1179,14 @@ export class AddTournamentComponent implements OnInit {
                 );
             console.log(flightSettingsStatus);
         }
-
+        if (
+            index <
+            this.formArray.get([0]).get('clubctgies').value.length - 1
+        ) {
+            this.selectedIndex = ++index;
+        } else {
+            stepper.next();
+        }
         console.log(this.selectedMembers);
     }
 
@@ -2114,26 +2126,28 @@ export class AddTournamentComponent implements OnInit {
             this.syncClubMembers();
             this.categoryCounts = [];
             if (!this.setupInitialized) {
-              for (
-                  let i = 0;
-                  i < this.formArray.get([0]).get('clubctgies').value.length;
-                  i++
-              ) {
-                  this.addFlightField(
-                      this.formArray.get([0]).get('clubctgies').value[i].name
-                  );
-              }
-              console.log(this.formArray.get([0]).get('clubctgies').value.length);
-              for (
-                  let i = 0;
-                  i < this.formArray.get([0]).get('clubctgies').value.length;
-                  i++
-              ) {
-                  this.addplayingDate(i);
-              }
-  
-              this.setupInitialized = true;
-          }
+                for (
+                    let i = 0;
+                    i < this.formArray.get([0]).get('clubctgies').value.length;
+                    i++
+                ) {
+                    this.addFlightField(
+                        this.formArray.get([0]).get('clubctgies').value[i].name
+                    );
+                }
+                console.log(
+                    this.formArray.get([0]).get('clubctgies').value.length
+                );
+                for (
+                    let i = 0;
+                    i < this.formArray.get([0]).get('clubctgies').value.length;
+                    i++
+                ) {
+                    this.addplayingDate(i);
+                }
+
+                this.setupInitialized = true;
+            }
         }
     }
 
@@ -2766,7 +2780,7 @@ export class AddTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             console.log(result);
-            if (result.length==1) {
+            if (result.length == 1) {
                 //console.log("record deleted.");
                 console.log(result);
 
@@ -2797,40 +2811,37 @@ export class AddTournamentComponent implements OnInit {
                         }
                     );
                 }
-            } else if(result.length>1) {
-                result.forEach(element => {
-                    
-              
-                let founded = this.tournamentMembers.filter((a) => {
-                    return a.id ==element.player.id;
+            } else if (result.length > 1) {
+                result.forEach((element) => {
+                    let founded = this.tournamentMembers.filter((a) => {
+                        return a.id == element.player.id;
+                    });
+                    console.log(founded);
+
+                    if (founded.length == 0) {
+                        let tournamentMember: TournamentMember[] = [];
+
+                        let member: any = {
+                            tournamentId: this.tournamentID,
+                            playerId: element.player.id,
+                            status: true,
+                        };
+
+                        tournamentMember.push(member);
+                        this.saveMembers(tournamentMember);
+                        this.tournamentMembers.push(element.player);
+                        this.syncTournamentMembers();
+                    } else {
+                        this.snackBar.open(
+                            'Player already exist in the list.',
+                            'x',
+                            {
+                                duration: 5000,
+                            }
+                        );
+                    }
                 });
-                console.log(founded);
-
-                if (founded.length == 0) {
-                    let tournamentMember: TournamentMember[] = [];
-
-                    let member: any = {
-                        tournamentId: this.tournamentID,
-                        playerId:element.player.id,
-                        status: true,
-                    };
-
-                    tournamentMember.push(member);
-                    this.saveMembers(tournamentMember);
-                    this.tournamentMembers.push(element.player);
-                    this.syncTournamentMembers();
-                } else {
-                    this.snackBar.open(
-                        'Player already exist in the list.',
-                        'x',
-                        {
-                            duration: 5000,
-                        }
-                    );
-                }
-            });
-            }else{
-
+            } else {
             }
         });
     }

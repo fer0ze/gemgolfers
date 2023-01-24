@@ -1110,6 +1110,7 @@
                                         let url of categoryFormGroup.controls;
                                         let i = index
                                     "
+                                    id="manage i"
                                 >
                                     <ng-template mat-tab-label>{{
                                         formArray.get([0]).get("clubctgies")
@@ -1365,7 +1366,7 @@
                                         <button
                                             mat-raised-button
                                             color="primary"
-                                            (click)="getSelectedPlayers(i)"
+                                            (click)="getSelectedPlayers(i,linearVerticalStepper)"
                                         >
                                             Save Flights
                                         </button>
