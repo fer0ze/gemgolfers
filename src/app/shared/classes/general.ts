@@ -81,58 +81,65 @@ export class General {
 
     public static getPlayersTe(teeName: String) {
         const Course_Tee = [
-            { id: '1', name: 'Amateurs', result: 'AMATEURS' },
-            { id: '1', name: 'BLUE', result: 'AMATEURS' },
-            { id: '1', name: 'Blue', result: 'AMATEURS' },
-            { id: '1', name: 'AMATEURS', result: 'AMATEURS' },
-            { id: '5', name: 'VETERANS', result: 'VETERANS' },
-            { id: '5', name: 'Veterans', result: 'VETERANS' },
-            {
-                id: '2',
-                name: 'Ladies',
-                result: 'LADIES',
-            },
-            {
-                id: '2',
-                name: 'LADIES',
-                result: 'LADIES',
-            },
-            {
-                id: '3',
-                name: 'Seniors',
-                result: 'SENIORS',
-            },
-            {
-                id: '3',
-                name: 'Yellow',
-                result: 'SENIORS',
-            },
-            {
-                id: '3',
-                name: 'YELLOW',
-                result: 'SENIORS',
-            },
-            { id: '2', name: 'Red', result: 'LADIES' },
-            { id: '2', name: 'RED', result: 'LADIES' },
-            { id: '4', name: 'Professionals', result: 'PROFESSIONALS' },
-            { id: '4', name: 'PROFESSIONALS', result: 'PROFESSIONALS' },
-            {
-                id: '3',
-                name: 'SENIORS',
-                result: 'SENIORS',
-            },
-            { id: '2', name: 'Junior Amateurs', result: 'LADIES' },
-            { id: '2', name: 'Junior Ladies', result: 'LADIES' },
-            { id: '2', name: 'JUNIOR LADIES', result: 'LADIES' },
-            { id: '2', name: 'Junior Professionals', result: 'LADIES' },
-            { id: '2', name: 'Junior', result: 'LADIES' },
-            { id: '3', name: 'Senior Amateurs', result: 'SENIORS' },
-            { id: '3', name: 'Senior Professionals', result: 'SENIORS' },
+          { id: "1", name: "Amateurs", result: "AMATEURS" },
+          { id: "1", name: "BLUE", result: "AMATEURS" },
+          { id: "1", name: "Blue", result: "AMATEURS" },
+          { id: "1", name: "AMATEURS", result: "AMATEURS" },
+          { id: "5", name: "VETERANS", result: "VETERANS" },
+          { id: "5", name: "Veterans", result: "VETERANS" },
+          { id: "5", name: "Veterans ", result: "VETERANS" },
+          { id: "5", name: " Veterans ", result: "VETERANS" },
+          {
+            id: "2",
+            name: "Ladies",
+            result: "LADIES",
+          },
+          {
+            id: "2",
+            name: "LADIES",
+            result: "LADIES",
+          },
+          {
+            id: "3",
+            name: "Seniors",
+            result: "SENIORS",
+          },
+          {
+            id: "3",
+            name: "Yellow",
+            result: "SENIORS",
+          },
+          {
+            id: "3",
+            name: "YELLOW",
+            result: "SENIORS",
+          },
+          { id: "2", name: "Red", result: "LADIES" },
+          { id: "2", name: "RED", result: "LADIES" },
+          { id: "4", name: "Professionals", result: "PROFESSIONALS" },
+          { id: "4", name: "PROFESSIONALS", result: "PROFESSIONALS" },
+          {
+            id: "3",
+            name: "SENIORS",
+            result: "SENIORS",
+          },
+          { id: "2", name: "Junior Amateurs", result: "LADIES" },
+          { id: "2", name: "Junior Ladies", result: "LADIES" },
+          { id: "2", name: "JUNIOR LADIES", result: "LADIES" },
+          { id: "2", name: "Junior Professionals", result: "LADIES" },
+          { id: "2", name: "Junior Boy(18-21)", result: "LADIES" },
+          { id: "2", name: "Junior Boy(16-18)", result: "LADIES" },
+          { id: "2", name: "Junior Boy(12-16)", result: "LADIES" },
+          { id: "2", name: "Junior Girl(16-21)", result: "LADIES" },
+          { id: "2", name: "Junior Gril(12-16)", result: "LADIES" },
+          { id: "2", name: "Junior", result: "LADIES" },
+          { id: "3", name: "Senior Amateurs", result: "SENIORS" },
+          { id: "3", name: "Senior Professionals", result: "SENIORS" },
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
-
+    
         return ID;
-    }
+      }
 
     public static getCourseTeeId(tee: string) {
         const Course_Tee = [

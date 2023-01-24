@@ -1,170 +1,183 @@
 <div mat-dialog-content>
-  <form [formGroup]="cutOffform" (ngSubmit)="onSubmit()">
-    <mat-tab-group mat-align-tabs="center">
-      <mat-tab
-        formArrayName="category"
-        class="mb-20 separator"
-        fxLayout="row"
-        fxLayout.lt-md="column"
-        fxLayoutGap="20px"
-        *ngFor="let url of categoryFormGroup.controls; let i = index"
-      >
-        <ng-template mat-tab-label>{{
-          categoryList.value[i].name
-        }}</ng-template>
-
-        <div [formGroupName]="i">
-          <div>
-            <div
-              class="mb-50 separator"
-              fxFlex
-              fxLayout="row"
-              fxLayout.lt-md="column"
-              fxLayoutGap="10px"
+    <form [formGroup]="cutOffform" (ngSubmit)="onSubmit()">
+        <mat-tab-group mat-align-tabs="center">
+            <mat-tab
+                formArrayName="category"
+                class="mb-20 separator"
+                fxLayout="column"
+                fxLayout.lt-md="column"
+                fxLayoutGap="20px"
+                *ngFor="let url of categoryFormGroup.controls; let i = index"
             >
-              <div [fxFlex]="30">
-                <mat-label>Make auto Groups/Flights?</mat-label>
-              </div>
-              <div [fxFlex]="70">
-                <mat-radio-group
-                  fxLayoutAlign="start center"
-                  formControlName="playing"
-                  (change)="selectionChange($event, categoryList.value[i].name)"
-                >
-                  <mat-radio-button value="0">NO</mat-radio-button>
-                  <mat-radio-button value="1"
-                    >YES (Flights will be make based on Gross or Net
-                    score)</mat-radio-button
-                  >
-                </mat-radio-group>
-              </div>
-            </div>
-            <div
-              *ngIf="catArray[categoryList.value[i].name].value"
-              class="mb-20"
-              fxLayout="row"
-              fxLayout.lt-md="column"
-              fxLayoutGap="20px"
-            >
-              <!-- <div class="mb-20" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
-                  <div [fxFlex]="50">
-                    <mat-label>Playing : </mat-label>
-                    <mat-checkbox  class="checkbox-margin"  (change)checkBoxSelection()value="t.id" matInput formControlName="playing"></mat-checkbox>
-                  </div>
-                </div> -->
+                <ng-template mat-tab-label>{{
+                    categoryList.value[i].name
+                }}</ng-template>
 
-              <div>
-                <div
-                  class="mb-20"
-                  fxFlex
-                  fxLayout="row"
-                  fxLayout.lt-md="column"
-                  fxLayoutGap="10px"
-                >
-                  <div [fxFlex]="33.33">
-                    <mat-label>Players/Flight:</mat-label>
-                    <mat-form-field>
-                      <input matInput formControlName="players" type="number" />
-                    </mat-form-field>
-                  </div>
-                  <div [fxFlex]="33.33">
-                    <mat-label>Flight Start Time:</mat-label>
-                    <mat-form-field>
-                      <input
-                        type="time"
-                        matInput
-                        atp-time-picker
-                        formControlName="time"
-                      />
-                      <mat-error>The input is required.</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div [fxFlex]="33.33">
-                    <mat-label>Flights interval (Minutes)</mat-label>
-                    <mat-form-field>
-                      <input
-                        type="number"
-                        matInput
-                        formControlName="interval"
-                      />
-                      <mat-error>The input is required.</mat-error>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div
-                  class="mb-20"
-                  fxFlex
-                  fxLayout="row"
-                  fxLayout.lt-md="column"
-                  fxLayoutGap="10px"
-                >
-                  <div [fxFlex]="33.33">
-                    <mat-label>Starting Hole:</mat-label>
-                    <mat-radio-group
-                      formControlName="tee"
-                      fxLayoutAlign="start center"
-                      style="padding-top: 10px"
-                    >
-                      <mat-radio-button value="1_10">1-10</mat-radio-button>
-                      <mat-radio-button value="1">1</mat-radio-button>
-                    </mat-radio-group>
-                  </div>
-                  <div [fxFlex]="33.33">
-                    <mat-label>Cut off score based on:</mat-label>
-                    <mat-radio-group
-                      formControlName="type"
-                      fxLayoutAlign="start center"
-                      style="padding-top: 10px"
-                    >
-                      <mat-radio-button value="GROSS">GROSS</mat-radio-button>
-                      <mat-radio-button value="NET">NET</mat-radio-button>
-                    </mat-radio-group>
-                  </div>
-                  <div [fxFlex]="33.33">
-                    <mat-label>Flights Order:</mat-label>
-                    <mat-radio-group
-                      formControlName="order"
-                      fxLayoutAlign="start center"
-                      style="padding-top: 10px"
-                    >
-                      <mat-radio-button value="asc">Ascending</mat-radio-button>
-                      <mat-radio-button value="desc"
-                        >Descending</mat-radio-button
-                      >
-                    </mat-radio-group>
-                  </div>
-                </div>
-                <div
-                  fxFlex
-                  fxLayout="row"
-                  fxLayout.lt-md="column"
-                  fxLayoutGap="20px"
-                >
-                  <div [fxFlex]="50" style="margin-top:17px">
-                    <mat-label>Cut Off Score (Total Par)</mat-label>
-                    <mat-form-field>
-                      <input
-                        type="number"
-                        matInput
-                        formControlName="cuttScore"
-                        value=""
-                      />
-                      <mat-error>The input is required.</mat-error>
-                    </mat-form-field>
-                  </div>
+                <div [formGroupName]="i">
+                    <div class="flex flex-col">
+                        <div
+                            class="separator"
+                            fxFlex
+                            fxLayout="row"
+                            fxLayout.lt-md="column"
+                            fxLayoutGap="10px"
+                        >
+                            <div [fxFlex]="30">
+                                <mat-label>Make auto Groups/Flights?</mat-label>
+                            </div>
+                            <div [fxFlex]="70">
+                                <mat-radio-group
+                                    fxLayoutAlign="start center"
+                                    formControlName="playing"
+                                    (change)="
+                                        selectionChange(
+                                            $event,
+                                            categoryList.value[i].name
+                                        )
+                                    "
+                                >
+                                    <mat-radio-button value="0"
+                                        >NO</mat-radio-button
+                                    >
+                                    <mat-radio-button value="1"
+                                        >YES (Flights will be make based on
+                                        Gross or Net score)</mat-radio-button
+                                    >
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div class="grid" *ngIf="catArray[categoryList.value[i].name].value">
+                            
 
-                  <div [fxFlex]="50">
-                    <mat-label>Copy Flights</mat-label>
+                            <div  class="flex flex-row ">
+                                <div class="flex flex-row ">
+                                    <mat-label class="pt-3">Players/Flight:</mat-label>
+                                    <mat-form-field>
+                                        <input
+                                            matInput
+                                            formControlName="players"
+                                            type="number"
+                                        />
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-row ">
+                                    <mat-label>Flight Start Time:</mat-label>
+                                    <mat-form-field>
+                                        <input
+                                            type="time"
+                                            matInput
+                                            atp-time-picker
+                                            formControlName="time"
+                                        />
+                                        <mat-error
+                                            >The input is required.</mat-error
+                                        >
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-row ">
+                                    <mat-label
+                                        >Flights interval (Minutes)</mat-label
+                                    >
+                                    <mat-form-field>
+                                        <input
+                                            type="number"
+                                            matInput
+                                            formControlName="interval"
+                                        />
+                                        <mat-error
+                                            >The input is required.</mat-error
+                                        >
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div
+                            class="flex flex-row my-4"
+                            >
+                                <div class="flex flex-col px-10">
+                                    <mat-label>Starting Hole:</mat-label>
+                                    <mat-radio-group
+                                        formControlName="tee"
+                                        fxLayoutAlign="start center"
+                                        style="padding-top: 10px"
+                                    >
+                                        <mat-radio-button value="1_10"
+                                            >1-10</mat-radio-button
+                                        >
+                                        <mat-radio-button value="1"
+                                            >1</mat-radio-button
+                                        >
+                                    </mat-radio-group>
+                                </div>
+                                <div class="flex flex-col px-10">
+                                    <mat-label
+                                        >Cut off score based on:</mat-label
+                                    >
+                                    <mat-radio-group
+                                        formControlName="type"
+                                        fxLayoutAlign="start center"
+                                        style="padding-top: 10px"
+                                    >
+                                        <mat-radio-button value="GROSS"
+                                            >GROSS</mat-radio-button
+                                        >
+                                        <mat-radio-button value="NET"
+                                            >NET</mat-radio-button
+                                        >
+                                    </mat-radio-group>
+                                </div>
+                                <div class="flex flex-col px-10">
+                                    <mat-label>Flights Order:</mat-label>
+                                    <mat-radio-group
+                                        formControlName="order"
+                                        fxLayoutAlign="start center"
+                                        style="padding-top: 10px"
+                                    >
+                                        <mat-radio-button value="asc"
+                                            >Ascending</mat-radio-button
+                                        >
+                                        <mat-radio-button value="desc"
+                                            >Descending</mat-radio-button
+                                        >
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                            <div
+                            class="flex flex-row my-2"
+                            >
+                                <div class="flex flex-row ">
+                                    <mat-label class="pt-4"
+                                        >Cut Off Score (Total Par)</mat-label
+                                    >
+                                    <mat-form-field>
+                                        <input
+                                            type="number"
+                                            matInput
+                                            formControlName="cuttScore"
+                                            value=""
+                                        />
+                                        <mat-error
+                                            >The input is required.</mat-error
+                                        >
+                                    </mat-form-field>
+                                </div>
 
-                    <mat-radio-group formControlName="copyFlights">
-                      <mat-radio-button value="No">No</mat-radio-button>
-                      <mat-radio-button value="Yes">Yes</mat-radio-button>
-                    </mat-radio-group>
-                   
-                  </div>
-                </div>
+                                <div class="flex flex-row ml-12 pt-4">
+                                    <mat-label>Copy Flights</mat-label>
 
-                <!-- <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+                                    <mat-radio-group
+                                        formControlName="copyFlights"
+                                    >
+                                        <mat-radio-button value="No"
+                                            >No</mat-radio-button
+                                        >
+                                        <mat-radio-button value="Yes"
+                                            >Yes</mat-radio-button
+                                        >
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+
+                            <!-- <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
               <div [fxFlex]="100">
               <div formArrayName="category"
                 *ngFor="let contact of categoryFormGroup.controls; let i = index;">
@@ -179,23 +192,22 @@
               </div>
                 </div>
               </div> -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </form>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button (click)="onNoClick()">Cancel</button>
-  <button
-    mat-raised-button
-    color="primary"
-    [mat-dialog-close]="cutOffform.value"
-    [disabled]="!cutOffform.valid"
-    cdkFocusInitial
-  >
-    Close Round
-  </button>
+    <button mat-raised-button (click)="onNoClick()">Cancel</button>
+    <button
+        mat-raised-button
+        color="primary"
+        [mat-dialog-close]="cutOffform.value"
+        [disabled]="!cutOffform.valid"
+        cdkFocusInitial
+    >
+        Close Round
+    </button>
 </div>

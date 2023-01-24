@@ -238,7 +238,10 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-row items-center">
+                                <div
+                                    class="flex flex-row items-center"
+                                    formArrayName="courseInfo"
+                                >
                                     <div
                                         *ngFor="
                                             let url of courseFileds.controls;
@@ -251,9 +254,14 @@
                                             <input
                                                 type="text"
                                                 matInput
-                                                formControlName="courseName"
+                                                (keyup)="
+                                                    courseChnage(
+                                                        $event.target.value
+                                                    )
+                                                "
+                                                [formControlName]="courseName"
                                                 [matAutocomplete]="auto"
-                                                placeholder="Course"
+                                                placeholder="Course Name"
                                             />
                                             <mat-autocomplete
                                                 autoActiveFirstOption
@@ -306,14 +314,6 @@
                                             </mat-select>
                                             <mat-icon matSuffix>pages</mat-icon>
                                         </mat-form-field>
-                                        <button
-                                            mat-button
-                                            type="button"
-                                            (click)="deleteCourseInfo(i)"
-                                            *ngIf="i > 0"
-                                        >
-                                            x
-                                        </button>
                                     </div>
                                 </div>
 
@@ -631,7 +631,7 @@
                             <ng-template class="cursor-pointer" matStepLabel
                                 >Select Players</ng-template
                             >
-                            <div class="flex flex-row mt-4">
+                            <div class="flex flex-row mt-8">
                                 <div class="flex-auto">
                                     <button
                                         mat-raised-button
@@ -1098,6 +1098,7 @@
                             <mat-tab-group
                                 class="mt-5 row-change"
                                 mat-align-tabs="center"
+                                [(selectedIndex)]="selectedIndex"
                             >
                                 <mat-tab
                                     formArrayName="category"
@@ -1190,18 +1191,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div
-                                                class="py-0.5 ml-4 px-3 rounded-full text-sm w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500"
-                                            >
-                                                Day 1 Flights
-                                            </div>
-                                            <div
-                                                class="ml-4 text-slate-600 font-extrabold"
-                                            >
-                                                Note*: These are only Day 1
-                                                Flights. Remaining Flights are
-                                                generated according to the cut.
-                                            </div>
                                         </mat-card>
 
                                         <div>
@@ -1209,6 +1198,19 @@
                                                 <mat-card
                                                     style="margin-bottom: 30px"
                                                 >
+                                                    <div
+                                                        class="py-0.5 ml-4 px-3 rounded-full text-sm w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500"
+                                                    >
+                                                        Day 1 Flights
+                                                    </div>
+                                                    <div
+                                                        class="ml-5 mt-1 mb-4 text-slate-600 font-extrabold"
+                                                    >
+                                                        Note*: These are only
+                                                        Day 1 Flights. Remaining
+                                                        Flights are generated
+                                                        according to the cut.
+                                                    </div>
                                                     <div
                                                         class="flex flex-row items-center"
                                                     >
@@ -1356,47 +1358,17 @@
                                                         </div>
                                                     </div>
                                                 </mat-card>
-
-                                                <!-- <div class="mb-20 separator" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" [ngStyle]="{'padding': '15px 0'}">
-                      <div  fxLayoutAlign="start center">
-                        <mat-label>Score Management</mat-label>
-                      </div>
-                      <div >
-                        <mat-form-field class="mx-4">
-                          <mat-select placeholder="Who will enter score?" formControlName="scoreManagement" (selectionChange)="setupMarshals($event.value)">
-                            <mat-option value="ONLY_PLAYERS">Only Players</mat-option>
-                            <mat-option value="ONLY_MARSHALS">Only Marshals</mat-option>
-                            <mat-option value="PLAYERS_AND_MARSHALS">Players and Marshals</mat-option>
-                          </mat-select>
-                          <mat-icon matSuffix>golf_course</mat-icon>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div *ngIf="isMarshals">
-                      <div class="mb-20 separator" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" [ngStyle]="{'padding': '15px 0'}">
-                        <div  fxLayoutAlign="start center">
-                          <mat-label>Marshals Start With</mat-label>
-                        </div>
-                        <div >
-                          <mat-form-field class="mx-4">
-                            <input matInput formControlName="marshalStart" maxlength="4">
-                            <mat-icon matSuffix>face</mat-icon>
-                            <mat-hint align="start">Marshals username prefix</mat-hint>
-                          </mat-form-field>
-                        </div>
-                        <div  fxLayoutAlign="start center">
-                          <mat-label>No. of Marshals</mat-label>
-                        </div>
-                        <div >
-                          <mat-form-field appearnce="outline">
-                            <input matInput formControlName="noofMarshals" type="number" min="1" max="30">
-                            <mat-icon matSuffix>golf_course</mat-icon>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div> -->
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="flex justify-center my-12">
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            (click)="getSelectedPlayers(i)"
+                                        >
+                                            Save Flights
+                                        </button>
                                     </div>
                                 </mat-tab>
                             </mat-tab-group>
@@ -1415,7 +1387,7 @@
                                     Tournament Players << Back
                                 </button>-->
                             <!-- </div>  -->
-                            <div class="flex justify-center my-12">
+                            <!-- <div class="flex justify-center my-12">
                                 <button
                                     mat-raised-button
                                     color="primary"
@@ -1424,7 +1396,7 @@
                                 >
                                     Save Flights
                                 </button>
-                            </div>
+                            </div> -->
                             <!-- <div style="clear: both"></div> -->
                             <!-- </div> -->
                         </mat-step>
@@ -1523,7 +1495,7 @@
                                                             #query
                                                         />
                                                     </mat-form-field>
-                                                   
+
                                                     <mat-form-field
                                                         class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                                         [floatLabel]="'always'"
@@ -1564,6 +1536,9 @@
                                                             "
                                                         ></mat-icon>
                                                         <input
+                                                            style="
+                                                                min-width: 6rem;
+                                                            "
                                                             type="time"
                                                             id="flight_{{
                                                                 k

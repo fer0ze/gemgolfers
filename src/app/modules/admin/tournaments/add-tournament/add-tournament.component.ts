@@ -7,6 +7,7 @@ import {
     FormArray,
     Validators,
 } from '@angular/forms';
+import { filter } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { Club } from '../../../../shared/models/club.model';
@@ -85,7 +86,7 @@ export class AddTournamentComponent implements OnInit {
     formGroup: FormGroup;
     filteredClubOptions: Observable<Club[]>;
     filteredCourseOptions: Observable<Course[]>;
-
+    selectedIndex:any=0;
     nameFormGroup: FormGroup;
     emailFormGroup: FormGroup;
     loggedInuser: Player;
@@ -226,7 +227,7 @@ export class AddTournamentComponent implements OnInit {
                     ],
                     courseInfo: this._formBuilder.array([
                         this._formBuilder.group({
-                            courseName: ['', [RequireMatch]],
+                            courseName: ['', [Validators.required,RequireMatch]],
                             matchFormat: [Constants.MF_STROKE_PLAY],
                         }),
                     ]),
@@ -433,12 +434,18 @@ export class AddTournamentComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.Clubs.slice()))
             );
-
+            // this.formArray
+            // .get([0])
+            // .get('courseInfo')
+            // .get([0])
+            // .get('courseName').valueChanges.subscribe(newValue=>{
+            //     this.filteredCourseOptions = this.filterValues(newValue);
+            // })
         this.filteredCourseOptions = this.formArray
             .get([0])
-            .get('courseInfo')!
+            .get('courseInfo')
             .get([0])
-            .get('courseName')!
+            .get('courseName')
             .valueChanges.pipe(
                 startWith(''),
                 map((value) =>
@@ -448,6 +455,8 @@ export class AddTournamentComponent implements OnInit {
                     name ? this._filterCourse(name) : this.Courses.slice()
                 )
             );
+            console.log(this.filteredCourseOptions);
+           
 
         const currentYear = new Date().getFullYear();
         if (!this.tournamentID) {
@@ -462,6 +471,13 @@ export class AddTournamentComponent implements OnInit {
                 .get('clubsFormCtrl')
                 .updateValueAndValidity();
         }
+    }
+
+    filterValues(search: string):any {
+        console.log('aaa');
+        
+        // return this.filteredCourseOptions.filter(value=>
+        // value.naem.toLowerCase().indexOf(search.toLowerCase()) === 0);
     }
 
     // addplayingDates(category: any){
@@ -630,6 +646,8 @@ export class AddTournamentComponent implements OnInit {
     }
 
     private _filter(value: string): Club[] {
+        console.log(value);
+        
         if (value) {
             const filterValue = value.toLowerCase();
 
@@ -642,9 +660,11 @@ export class AddTournamentComponent implements OnInit {
     }
 
     private _filterCourse(value: string): Course[] {
+        console.log(value);
+        
         if (value) {
             const filterValue = value.toLowerCase();
-
+               
             return this.Courses.filter(
                 (option) => option.name.toLowerCase().indexOf(filterValue) >= 0
             );
@@ -652,7 +672,27 @@ export class AddTournamentComponent implements OnInit {
 
         return this.Courses;
     }
-
+    courseChnage(values){
+        if(values.length>0)
+        {
+            this.filteredCourseOptions=this.formArray
+            .get([0])
+            .get('courseInfo')
+            .get([0])
+            .get('courseName')
+            .valueChanges.pipe(
+                startWith(''),
+                map((value:any) =>
+                    typeof value === 'string' ? value : value ? value.name : ''
+                ),
+                map((name :any) =>
+                    name ? this._filterCourse(name) : this.Courses.slice()
+                )
+            );
+        }else{
+            //this.filteredCourseOptions=this.Courses.slice();
+        }
+    }
     checkDate(cat) {
         console.log(cat);
         if (this.editTournament == true) {
@@ -1078,7 +1118,10 @@ export class AddTournamentComponent implements OnInit {
         this.courseFileds.removeAt(index);
     }
 
-    async getSelectedPlayers() {
+    async getSelectedPlayers(index) {
+        console.log(index);
+        this.selectedIndex=++index;
+        
         //console.log(this.selection.selected.length);
         this.flightArrangementSetup();
         this.selectedMembers = [];
