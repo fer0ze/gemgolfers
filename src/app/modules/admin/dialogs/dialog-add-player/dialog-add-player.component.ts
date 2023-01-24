@@ -230,6 +230,7 @@ async executePlayerCreation(playerFormValue:any)  {
   }
 
   this.response = player;
+  this.dialogRef.close(this.response);
   console.log(this.response)
 }
 

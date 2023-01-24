@@ -170,7 +170,18 @@ export const GetPlayerByID = gql`
 export const GetPlayerByFilter = gql`
   query PostsGetQuery($where: player_bool_exp!) {
     player(where: $where) {
-      ...PlayerQL
+      id
+      fullName
+      firstName
+      lastName
+      handicap
+      playerCategory
+      membershipNumber
+      membership{
+        club{
+          name
+        }
+      }
       subscriptionQL: subscription {
         playerId
         subscription
@@ -183,7 +194,18 @@ export const GetPlayerByFilter = gql`
 export const GetPlayerByMembershipNumber = gql`
   query PostsGetQuery($where: player_bool_exp!) {
     player(where: $where) {
-      ...PlayerQL
+      id
+      fullName
+      firstName
+      lastName
+      handicap
+      playerCategory
+      membershipNumber
+      membership{
+        club{
+          name
+        }
+      }
       subscriptionQL: subscription {
         playerId
         subscription
@@ -196,7 +218,18 @@ export const GetPlayerByMembershipNumber = gql`
 export const GetPlayerByFirstName = gql`
   query PostsGetQuery($where: player_bool_exp!) {
     player(where: $where) {
-      ...PlayerQL
+      id
+      fullName
+      firstName
+      lastName
+      handicap
+      playerCategory
+      membershipNumber
+      membership{
+        club{
+          name
+        }
+      }
       subscriptionQL: subscription {
         playerId
         subscription
@@ -699,7 +732,18 @@ export const searchPlayerForTournamentQL = gql`
         ]
       }
     ) {
-      ...PlayerQL
+      id
+      fullName
+      firstName
+      lastName
+      handicap
+      playerCategory
+      membershipNumber
+      membership{
+        club{
+          name
+        }
+      }
     }
   }
   ${PlayerQL}

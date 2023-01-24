@@ -1,12 +1,12 @@
-<div mat-dialog-content *ngIf="!response">
+<div  *ngIf="!response">
   <section fxLayout="row wrap" fxLayoutAlign="center center">
     <mat-card fxFlex="80%" fxFlex.xs="100%">
       <mat-card-header>
           <mat-card-title class="mat-button mat-accent">{{frmTitle}}</mat-card-title>
       </mat-card-header>
       <form [formGroup]="playerForm" autocomplete="off" novalidate (ngSubmit)="createPlayer(playerForm.value)" fxLayout="column wrap"
-      fxLayoutAlign="center center" fxLayoutGap="10px">
-      <mat-card-content fxLayoutGap="10px">
+      fxLayoutAlign="center center" >
+      <mat-card-content >
           <mat-form-field>
             <input matInput type="text" placeholder="First Name" formControlName="firstName" id="firstName">
             <mat-hint align="end">Not more then 60 characters long.</mat-hint>
@@ -107,7 +107,7 @@
       </mat-card-content>
       
           <mat-card-actions align="center">
-              <button mat-raised-button color="primary" [disabled]="!playerForm.valid">Save</button>
+              <button mat-raised-button color="primary"  [disabled]="!playerForm.valid" cdkFocusInitial>Save</button>
               <button type="button" mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
           </mat-card-actions>
       
@@ -115,7 +115,7 @@
   </mat-card>
   </section>
 </div>
-<div mat-dialog-actions>
+<!-- <div mat-dialog-actions>
   <button mat-raised-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button color="primary"  [disabled]="!response" cdkFocusInitial>Add player to list</button>
-</div>
+  <button mat-raised-button color="primary" [mat-dialog-close]="response" [disabled]="!response" cdkFocusInitial>Add player to list</button>
+</div> -->

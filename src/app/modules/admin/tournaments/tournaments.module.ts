@@ -58,6 +58,7 @@ import { MatchplayComponent } from '../matchplay/matchplay.component';
 import { LeaderboardComponent } from '../leaderboard/leaderboard.component';
 import { GraphQLModule } from 'app/graphql.module';
 import { ApolloModule } from 'apollo-angular';
+import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-add-player.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -69,6 +70,7 @@ import { ApolloModule } from 'apollo-angular';
         PlayerManagementComponent,
         LeaderboardComponent,
         DialogMoveFlightComponent,
+        DialogAddPlayerComponent,
         DialogOverviewComponent,
         DialogPlayerComponent,
         DialogPlayerListComponent,

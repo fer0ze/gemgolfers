@@ -14,6 +14,7 @@
       // margin-bottom: 40px;
       width: 16rem;
        display: block !important;
+       min-height: 100vh;
       // flex-direction: column;
       // align-items: baseline;
 
@@ -164,7 +165,7 @@
 
     .flightHeader {
       padding: 10px;
-      color: rgb(2, 1, 1);
+     
       background-color: #047b9c;
       border-radius: 4px;
 
@@ -177,7 +178,7 @@
       input {
         width: 100px;
         margin: 0 10px;
-        padding: 3px;
+       color: black;
         border-radius: 5px;
       }
     }

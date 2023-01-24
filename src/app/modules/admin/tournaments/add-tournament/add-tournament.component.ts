@@ -481,7 +481,7 @@ export class AddTournamentComponent implements OnInit {
             ],
             arrangements: ['0', Validators.required],
             startingHole: ['1_10', Validators.required],
-            flightsInterval: ['0'],
+            flightsInterval: [''],
 
             playingDate: this._formBuilder.array([]),
         });
@@ -1150,7 +1150,8 @@ export class AddTournamentComponent implements OnInit {
 
         let FilteredPL: Player[] = [];
         let flightTime: any = '9:00 AM';
-        let flightTee: any = '1';
+        let flightTee: any = 'AMATEURS';
+        let flightTeeID: any = '1';
 
         let cnter = 0;
         let outer = 0;
@@ -1207,6 +1208,7 @@ export class AddTournamentComponent implements OnInit {
                 tempSelMembers = [];
                 tempSelMembers = selMembers;
                 tempSelMembers[index]['tee'] = flightTee;
+                tempSelMembers[index]['tee_id'] = 1;
                 tempSelMembers[index]['time'] = this.atpTime
                     ? this.atpTime
                     : flightTime;
@@ -2087,7 +2089,7 @@ export class AddTournamentComponent implements OnInit {
                   this.addplayingDate(i);
               }
   
-              //this.setupInitialized = true;
+              this.setupInitialized = true;
           }
         }
     }
@@ -2684,7 +2686,7 @@ export class AddTournamentComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 //console.log("record deleted.");
-                //console.log(result);
+                console.log(result);
                 this.clubMembers.push(result);
                 //console.log(this.clubMembers);
                 this.syncClubMembers();
@@ -2721,12 +2723,12 @@ export class AddTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             console.log(result);
-            if (result) {
+            if (result.length==1) {
                 //console.log("record deleted.");
                 console.log(result);
 
                 let founded = this.tournamentMembers.filter((a) => {
-                    return a.id == result.player.id;
+                    return a.id == result[0].player.id;
                 });
                 console.log(founded);
 
@@ -2735,13 +2737,13 @@ export class AddTournamentComponent implements OnInit {
 
                     let member: any = {
                         tournamentId: this.tournamentID,
-                        playerId: result.player.id,
+                        playerId: result[0].player.id,
                         status: true,
                     };
 
                     tournamentMember.push(member);
                     this.saveMembers(tournamentMember);
-                    this.tournamentMembers.push(result.player);
+                    this.tournamentMembers.push(result[0].player);
                     this.syncTournamentMembers();
                 } else {
                     this.snackBar.open(
@@ -2752,8 +2754,40 @@ export class AddTournamentComponent implements OnInit {
                         }
                     );
                 }
-            } else {
-                //console.log("cancel delete action");
+            } else if(result.length>1) {
+                result.forEach(element => {
+                    
+              
+                let founded = this.tournamentMembers.filter((a) => {
+                    return a.id ==element.player.id;
+                });
+                console.log(founded);
+
+                if (founded.length == 0) {
+                    let tournamentMember: TournamentMember[] = [];
+
+                    let member: any = {
+                        tournamentId: this.tournamentID,
+                        playerId:element.player.id,
+                        status: true,
+                    };
+
+                    tournamentMember.push(member);
+                    this.saveMembers(tournamentMember);
+                    this.tournamentMembers.push(element.player);
+                    this.syncTournamentMembers();
+                } else {
+                    this.snackBar.open(
+                        'Player already exist in the list.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
+                }
+            });
+            }else{
+
             }
         });
     }
