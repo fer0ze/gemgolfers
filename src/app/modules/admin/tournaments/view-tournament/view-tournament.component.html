@@ -26,7 +26,8 @@
                             </button>
                         </div>
                     </div>
-                    <div *ngIf="flightid"
+                    <div
+                        *ngIf="flightid"
                         class="relative flex flex-col flex-auto items-center px-6 sm:px-12"
                     >
                         <div class="w-full max-w-3xl">
@@ -521,7 +522,7 @@
                         </div>
                     </div>
                     <div
-                    *ngIf="!flightid"
+                        *ngIf="!flightid"
                         class="relative flex flex-col flex-auto items-center px-6 sm:px-12"
                     >
                         <div class="w-full max-w-3xl">
@@ -1552,7 +1553,6 @@
                                                             value="members"
                                                             >Members</mat-button-toggle
                                                         >
-                                                       
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -1785,7 +1785,6 @@
                                                             value="today"
                                                             >Today</mat-button-toggle
                                                         >
-                                                        
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -2154,19 +2153,22 @@
                             Hanidcap Calculation
                         </button>
                     </div> -->
-                    <div class="flex flex-auto justify-end">
-                        <button
-                        mat-raised-button
-                        mat-button
-                       class="my-3 float-right"
-                        color="warn"
-                        *ngIf="activeRound == 1 && this.showCloseBtn"
-                        (click)="closeRound()"
-                    >
-                        Close Round 1
-                    </button>
-                    </div>
-                    
+                                    <div class="flex flex-auto justify-end">
+                                        <button
+                                            mat-raised-button
+                                            mat-button
+                                            class="my-3 float-right"
+                                            color="warn"
+                                            *ngIf="
+                                                activeRound == 1 &&
+                                                this.showCloseBtn
+                                            "
+                                            (click)="closeRound()"
+                                        >
+                                            Close Round 1
+                                        </button>
+                                    </div>
+
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                     >
@@ -2196,7 +2198,6 @@
                                                             value="members"
                                                             >Members</mat-button-toggle
                                                         >
-                                                       
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -2429,7 +2430,6 @@
                                                             value="today"
                                                             >Today</mat-button-toggle
                                                         >
-                                                        
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -2802,16 +2802,27 @@
                                 Hanidcap Calculation
                             </button>
                         </div> -->
-                        <button
-                        mat-raised-button
-                        mat-button
-                       class="my-3 float-right"
-                        color="warn"
-                        *ngIf="activeRound == 2"
-          (click)="closeRound()"
-                    >
-                        Close Round 2
-                    </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        class="my-3 float-right"
+                                        color="warn"
+                                        *ngIf="activeRound == 2"
+                                        (click)="closeRound()"
+                                    >
+                                        Close Round 2
+                                    </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        fxLayoutAlign="center center"
+                                        color="primary"
+                                        class="my-3 float-right"
+                                        *ngIf="activeRound == 2 && !scoreAdded"
+                                        (click)="undoRound()"
+                                    >
+                                        Undo Round 2
+                                    </button>
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                     >
@@ -2841,7 +2852,6 @@
                                                             value="members"
                                                             >Members</mat-button-toggle
                                                         >
-                                                       
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -3074,7 +3084,6 @@
                                                             value="today"
                                                             >Today</mat-button-toggle
                                                         >
-                                                        
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -3446,16 +3455,26 @@
                                 Hanidcap Calculation
                             </button>
                         </div> -->
-                        <button
-                    mat-raised-button
-                    mat-button
-                   class="my-3 float-right"
-                    color="warn"
-                    *ngIf="activeRound == 3 "
-                    (click)="closeRound()"
-                >
-                    Close Round 3
-                </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        class="my-3 float-right"
+                                        color="warn"
+                                        *ngIf="activeRound == 3"
+                                        (click)="closeRound()"
+                                    >
+                                        Close Round 3
+                                    </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        color="primary"
+                                        class="my-3 float-right"
+                                        *ngIf="activeRound == 3 && !scoreAdded"
+                                        (click)="undoRound()"
+                                    >
+                                        Undo Round 3
+                                    </button>
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                     >
@@ -3485,7 +3504,6 @@
                                                             value="members"
                                                             >Members</mat-button-toggle
                                                         >
-                                                       
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -3718,7 +3736,6 @@
                                                             value="today"
                                                             >Today</mat-button-toggle
                                                         >
-                                                        
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -4091,16 +4108,27 @@
                                 Hanidcap Calculation
                             </button>
                         </div> -->
-                        <button
-                    mat-raised-button
-                    mat-button
-                   class="my-3 float-right"
-                    color="primary"
-                    *ngIf="activeRound == 4"
-                    (click)="closeRound()"
-                >
-                    Close Round 4
-                </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        class="my-3 float-right"
+                                        color="primary"
+                                        *ngIf="activeRound == 4"
+                                        (click)="closeRound()"
+                                    >
+                                        Close Round 4
+                                    </button>
+                                    <button
+                                        mat-raised-button
+                                        fxLayoutAlign="center center"
+                                        mat-button
+                                        color="primary"
+                                        class="my-3 float-right"
+                                        *ngIf="activeRound == 4 && !scoreAdded"
+                                        (click)="undoRound()"
+                                    >
+                                        Undo Round 4
+                                    </button>
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                     >
@@ -4130,7 +4158,6 @@
                                                             value="members"
                                                             >Members</mat-button-toggle
                                                         >
-                                                       
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -4363,7 +4390,6 @@
                                                             value="today"
                                                             >Today</mat-button-toggle
                                                         >
-                                                        
                                                     </mat-button-toggle-group>
                                                 </div>
                                             </div>
@@ -5305,11 +5331,13 @@
                                         class="col col-2 font-medium"
                                         data-label="Customer Name"
                                     >
-                                        {{ row.player["firstName"] }} {{
-                                            row.player["lastName"]
-                                        }}
+                                        {{ row.player["firstName"] }}
+                                        {{ row.player["lastName"] }}
                                     </div>
-                                    <div class="col col-3 font-medium" data-label="Amount">
+                                    <div
+                                        class="col col-3 font-medium"
+                                        data-label="Amount"
+                                    >
                                         {{ row.player["email"] }}
                                     </div>
                                     <div
