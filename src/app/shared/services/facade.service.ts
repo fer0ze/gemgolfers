@@ -242,6 +242,9 @@ export class FacadeService {
   getPlayerByEmail(email: string) {
     return this.playerService.getPlayerByEmail(email);
   }
+  getPlayerByEmailLogin(email: string) {
+    return this.playerService.getPlayerByEmailLogin(email);
+  }
 
   getPlayerByMembershipNumberForSearch(
     clubID: string,

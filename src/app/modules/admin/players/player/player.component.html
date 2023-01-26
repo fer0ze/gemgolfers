@@ -382,9 +382,10 @@
                                 class="order-row h-16 hover:bg-gray-100"
                                 mat-row
                                 *matRowDef="
-                                    let row;
-                                    columns: playersTableColumns
+                                let row;
+                                columns: playersTableColumns
                                 "
+                                (click)="viewProfile(row.id)"
                                 
                             ></tr>
                         </table>

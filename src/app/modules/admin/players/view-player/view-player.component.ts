@@ -72,6 +72,7 @@ export class ViewPlayerComponent implements OnInit {
     CONGUnetColumns = ['id', 'updatedAt', 'score'];
     dataSource: MatTableDataSource<any>;
     totalRounds:any=0;
+    ConguScoreLength:any=0;
     _labels: any = [
         '06 Dec - 13 Dec',
         '14 Dec - 21 Dec',
@@ -446,13 +447,14 @@ export class ViewPlayerComponent implements OnInit {
                 //console.log(this.barChartDataGross);
                 //console.log(this.barChartDataNet);
                 //console.log(this.barChartData);
-
+                this.ConguScoreLength=newScores.length;
                 this.CONGUgrossSource = new MatTableDataSource(newScores);
-                //this.CONGUgrossSource.paginator = this.paginator;
-                // this.dataSource.sort = this.sort;
+                this.CONGUgrossSource.sort=this.sort;
+               // this.CONGUgrossSource.paginator = this.paginatorLegal;
+               // this.dataSource.sort = this.sort;
 
                 this.CONGUnetSource = new MatTableDataSource(newScores);
-                //this.CONGUnetSource.paginator = this.paginator;
+                this.CONGUnetSource.paginator = this.paginator;
 
                 if (scores.length == 0) {
                     // Do not add flights without score
@@ -632,7 +634,10 @@ export class ViewPlayerComponent implements OnInit {
         //   console.log(id);
         // }
     }
+    onPageFired(event)
+    {
 
+    }
     deletePlayer(playerId: string): void {
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',

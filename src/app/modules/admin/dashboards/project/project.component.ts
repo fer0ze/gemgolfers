@@ -11,7 +11,12 @@ import { ApexOptions } from 'ng-apexcharts';
 import { ProjectService } from 'app/modules/admin/dashboards/project/project.service';
 import { TournamentsService } from 'app/shared/services/tournaments.service';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Constants, labels, labelsPlayers } from 'app/shared/classes/general';
+import {
+    Constants,
+    labels,
+    labelsPlayers,
+    UniqueIdGenerator,
+} from 'app/shared/classes/general';
 import { trigger } from '@angular/animations';
 import { Player } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
@@ -59,7 +64,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _facadeService: FacadeService,
         private _datePipe: DatePipe
-    ) { }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -73,9 +78,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-        let clubInfo: any = (this.loggedInuser.membership.length > 0) ? this.loggedInuser.membership[0].club : null;
+        let clubInfo: any =
+            this.loggedInuser.membership.length > 0
+                ? this.loggedInuser.membership[0].club
+                : null;
 
-        this.clubLogo = (clubInfo && clubInfo.logo) ? clubInfo.logo : "e2esp.png";
+        this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
         // Attach SVG fill fixer to all ApexCharts
         this.showdata = Promise.resolve(true);
         console.log(this.showdata);
@@ -478,69 +486,86 @@ export class ProjectComponent implements OnInit, OnDestroy {
         // };
     }
 
+    addNewRound() {
+        this._router.navigate(['/dailyRounds/add-daily-rounds']);
+    }
+    addNewPlayer() {
+        this._router.navigate([
+            '/players/view/' + UniqueIdGenerator.generate(),
+        ]);
+    }
     private async fetchdata() {
         // Get the Tournaments Count
         this.showdata = Promise.resolve(false);
         let tournamentCounts;
-        let flightCounts ;
+        let flightCounts;
         let playerCounts;
-        let dataPlayers: any ;
-        let players: any ;
+        let dataPlayers: any;
+        let players: any;
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
         if (this.loggedInuser.userRole == 1) {
             tournamentCounts =
                 await this._facadeService.getTournamentCountsByClubAll();
-                 //Get the Flights Count
-         flightCounts = await this._facadeService.getTotalFlightsAll(
-        );
-        playerCounts = await this._facadeService.getTotalPlayersAll(
-        );
-        dataPlayers = await this._facadeService.getDailyRoundsSingleDashboardAll(
-            this._datePipe.transform(lastWeekSunday.toString(), 'yyyy-MM-dd'),
-            this._datePipe.transform(lastWeekMonday.toString(), 'yyyy-MM-dd')
-        );
-        players=   await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll(
-            
-        );
+            //Get the Flights Count
+            flightCounts = await this._facadeService.getTotalFlightsAll();
+            playerCounts = await this._facadeService.getTotalPlayersAll();
+            dataPlayers =
+                await this._facadeService.getDailyRoundsSingleDashboardAll(
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                );
+            players =
+                await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
         } else {
             tournamentCounts =
                 await this._facadeService.getTournamentCountsByClub(
                     this.loggedInuser.adminClubId
                 );
-                 //Get the Flights Count
-         flightCounts = await this._facadeService.getTotalFlights(
-            this.loggedInuser.adminClubId
-        );
-        // Get the Flights Count
-         playerCounts = await this._facadeService.getTotalPlayers(
-            this.loggedInuser.adminClubId
-        );
-        dataPlayers = await this._facadeService.getDailyRoundsSingleDashboard(
-            this.loggedInuser.adminClubId,
-            this._datePipe.transform(lastWeekSunday.toString(), 'yyyy-MM-dd'),
-            this._datePipe.transform(lastWeekMonday.toString(), 'yyyy-MM-dd')
-        );
-       
-        players=   await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
+            //Get the Flights Count
+            flightCounts = await this._facadeService.getTotalFlights(
                 this.loggedInuser.adminClubId
             );
+            // Get the Flights Count
+            playerCounts = await this._facadeService.getTotalPlayers(
+                this.loggedInuser.adminClubId
+            );
+            dataPlayers =
+                await this._facadeService.getDailyRoundsSingleDashboard(
+                    this.loggedInuser.adminClubId,
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                );
+
+            players =
+                await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
+                    this.loggedInuser.adminClubId
+                );
         }
 
         this.tournamentCounts = tournamentCounts.Count.aggregate.count;
 
         console.log(this.tournamentCounts);
 
-       
         this.flightCounts = flightCounts.Count.aggregate.count;
         console.log(this.flightCounts);
 
-        
         this.playerCounts = playerCounts.AggregateQL.aggregate.totalCount;
         console.log(this.playerCounts);
         console.log('a');
 
-       
         console.log(dataPlayers);
 
         let myData: any[] = [];
@@ -624,8 +649,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
         ];
 
         this._prepareChartData();
-
-        
 
         console.log(players);
         this._seriesPlayers['all'] = [

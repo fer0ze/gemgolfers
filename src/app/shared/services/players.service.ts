@@ -462,6 +462,24 @@ export class PlayersService {
                 });
         });
     }
+    getPlayerByEmailLogin(email: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .watchQuery<any>({
+                    query: Query.getPlayerByEmailLogin,
+                    variables: {
+                        where: {
+                            email: {
+                                _eq: email,
+                            },
+                        },
+                    },
+                })
+                .valueChanges.subscribe(({ data }) => {
+                    resolve(data.player);
+                });
+        });
+    }
 
     getPlayerByFirstName(firstName: string): Promise<any> {
         return new Promise((resolve) => {

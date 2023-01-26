@@ -802,8 +802,12 @@
                                         "
                                     ></tr>
                                 </table>
-                                <mat-paginator
-                                [pageSize]="20"
+                                <mat-paginator 
+                                
+                                [pageSize]="10"
+                                [pageIndex]="0"
+                                (page)="onPageFired($event)"
+                                [length]="this.ConguScoreLength"
                                 [pageSizeOptions]="[10, 20, 50, 100]"
                             ></mat-paginator>
                             </mat-tab>

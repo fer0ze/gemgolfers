@@ -190,6 +190,18 @@ export const GetPlayerByFilter = gql`
   }
   ${PlayerQL}
 `;
+export const getPlayerByEmailLogin = gql`
+  query PostsGetQuery($where: player_bool_exp!) {
+    player(where: $where) {
+      ...PlayerQL
+      subscriptionQL: subscription {
+        playerId
+        subscription
+      }
+    }
+  }
+  ${PlayerQL}
+`;
 
 export const GetPlayerByMembershipNumber = gql`
   query PostsGetQuery($where: player_bool_exp!) {

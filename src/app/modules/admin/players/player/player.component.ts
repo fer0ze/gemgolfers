@@ -157,7 +157,7 @@ export class PlayerComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
     viewProfile(id:string):void{
-        console.log(id);
+        this._router.navigate(['/players/viewProfile/'+id])
         
     }
 
