@@ -351,7 +351,7 @@ export class MainLeaderboardComponent implements OnInit {
       let netAllArray: any[] = [];
       let grossCutOffArray: any[] = [];
       let netCutOffArray: any[] = [];
-      if (this.Leaderboard.cutOffCriteria != null) {
+      if (Object.keys(this.Leaderboard.cutOffCriteria).length>0) {
         if ("cutOff" in this.Leaderboard.cutOffCriteria) {
           if (
             this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
