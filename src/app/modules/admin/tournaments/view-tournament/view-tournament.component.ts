@@ -1314,7 +1314,7 @@ export class ViewTournamentComponent implements OnInit {
 
                     console.log(getResult.category[cats]);
                     let copyflights: any = [];
-                    if (this.fullTournament.cutOffCriteria) {
+                    if (Object.keys(this.fullTournament.cutOffCriteria).length>0) {
                         for (let cut of this.fullTournament.cutOffCriteria[
                             'cutOff'
                         ]) {
