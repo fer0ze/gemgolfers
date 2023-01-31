@@ -137,6 +137,7 @@ time
                         playerCategory
                         firstName
                         lastName
+                        handicap
                     }
                     ScoresQL: scores(where: { grossScore: { _gt: 0 } }) {
                         grossScore

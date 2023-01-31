@@ -115,6 +115,7 @@ export class FlightManagementComponent implements OnInit {
   teamName: string;
   dataPlayers: any;
   index: any = 0;
+  selectedIndex: any = 0;
   aggregate = 0;
   pageSize: any = 20;
   clubMembers: any[] = [];
@@ -155,6 +156,7 @@ export class FlightManagementComponent implements OnInit {
     this.tournamentInfo = dataFullTournament.TournamentQL;
     this.activeRound = this.tournamentInfo[0].activeRound;
     this.noOfRounds = this.tournamentInfo[0].noOfRounds;
+    this.selectedIndex=this.activeRound-1;
 
     console.log(this.tournamentInfo[0]);
     let selectedClubId: string =
@@ -429,7 +431,7 @@ export class FlightManagementComponent implements OnInit {
 
   changeRound(item) {
     //console.log("Selected value: " + item.value);
-    this.flightRound = item.index;
+    this.flightRound = item.index+1;
     this.roundFlights = [];
     this.selectedMembers = [];
 

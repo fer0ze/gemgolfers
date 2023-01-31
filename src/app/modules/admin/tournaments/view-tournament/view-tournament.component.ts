@@ -315,18 +315,22 @@ export class ViewTournamentComponent implements OnInit {
                     this.webLogo = this.fullTournament.webLogoUrl;
                 else this.webLogo = Constants.DEFAULT_CLUB_LOGO;
 
-                if (this.activeRound > this.noOfRounds)
-                    if (this.fullTournament.prefix)
-                        //this.selected = this.noOfRounds - 1;
+                if (this.activeRound > this.noOfRounds) {
+                    if (this.fullTournament.prefix) {
+                        this.selected = this.noOfRounds - 1;
                         //else //this.selected = this.activeRound - 1;
 
                         this.leaderboardUrl =
                             'https://app.gemgolfers.com/leaderboard/' +
                             this.fullTournament.prefix;
-                    else
+                    } else {
                         this.leaderboardUrl =
                             'https://app.gemgolfers.com/leaderboard/' +
                             this.tournamentID;
+                    }
+                } else {
+                    this.selected = this.activeRound - 1;
+                }
                 if (
                     this.dataFullTournament['TournamentQL'][0]['CategoriesQL']
                         .length == 0
@@ -338,74 +342,52 @@ export class ViewTournamentComponent implements OnInit {
             } else this.router.navigate(['/tournaments/']);
 
             //console.log(this.fullTournament);
-
-            if (this.selected == 0) {
-                this.getRoundsstats();
-                this.calculateStatistics();
-                if (this.tournamentPlayersAdd) {
-                    this.GrossData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                    // this.NetData(
-                    //     this.dataFullTournament['TournamentQL'][0]
-                    //         .CategoriesQL[0].category
-                    // );
+            if (this.activeRound > this.noOfRounds) {
+                if (this.selected == 0) {
+                    this.getRound1stats(1);
+                    this.calculateStatistics1();
+                   
+                } else if (this.selected == 1) {
+                    this.getRound2stats(2);
+                    this.calculateStatistics2();
+                    
+                } else if (this.selected == 2) {
+                    this.getRound3stats(3);
+                    this.calculateStatistics3();
+                  
+                } else if (this.selected == 3) {
+                    this.getRound4stats(4);
+                    this.calculateStatistics4();
+                } else {
+                    this.getRound4stats(4);
+                    this.calculateStatistics4();
                 }
-            } else if (this.selected == 1) {
-                this.getRound1stats(1);
-                this.calculateStatistics1();
-                if (this.tournamentPlayersAdd) {
-                    this.GrossData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                    //    await this.NetData(
-                    //         this.dataFullTournament['TournamentQL'][0]
-                    //             .CategoriesQL[0].category
-                    //     );
+            }else{
+                if (this.activeRound == 0) {
+                    this.getRoundsstats();
+                    this.calculateStatistics();
+                   
+                } else if (this.activeRound == 1) {
+                    this.getRound1stats(1);
+                    this.calculateStatistics1();
+                   
+                } else if (this.activeRound == 2) {
+                    this.getRound2stats(2);
+                    this.calculateStatistics2();
+                    
+                } else if (this.activeRound == 3) {
+                    this.getRound3stats(3);
+                    this.calculateStatistics3();
+                  
+                } else if (this.activeRound == 4) {
+                    this.getRound4stats(4);
+                    this.calculateStatistics4();
+                } else {
+                    this.getRound4stats(4);
+                    this.calculateStatistics4();
                 }
-            } else if (this.selected == 2) {
-                this.getRound2stats(2);
-                this.calculateStatistics2();
-                if (this.tournamentPlayersAdd) {
-                    this.GrossData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                    this.NetData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                }
-            } else if (this.selected == 3) {
-                this.getRound3stats(3);
-                this.calculateStatistics3();
-                if (this.tournamentPlayersAdd) {
-                    this.GrossData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                    this.NetData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                }
-            } else if (this.selected == 4) {
-                this.getRound4stats(4);
-                this.calculateStatistics4();
-                if (this.tournamentPlayersAdd) {
-                    this.GrossData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                    this.NetData(
-                        this.dataFullTournament['TournamentQL'][0]
-                            .CategoriesQL[0].category
-                    );
-                }
-            } else {
             }
+            
 
             //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
         } else {
@@ -417,11 +399,11 @@ export class ViewTournamentComponent implements OnInit {
         this.FlightsQL = [];
         this.topMembers = [];
         if (this.fullTournament.FlightsQL.length > 6) {
-            this.FlightsQL = this.fullTournament.FlightsQL.splice(0, 7);
+            this.FlightsQL = this.fullTournament.FlightsQL.slice(0, 7);
         } else {
             this.FlightsQL = this.fullTournament.FlightsQL;
         }
-        // this.FlightsQL.splice(0,6);
+        // this.FlightsQL.slice(0,6);
         let totalPlayers =
             this.dataFullTournament['TournamentQL'][0]['members'];
         console.log(totalPlayers);
@@ -603,7 +585,7 @@ export class ViewTournamentComponent implements OnInit {
             return a.flightRound == 1;
         });
         if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(0, 6);
+            this.FlightsQL.splice(6, this.FlightsQL.length);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -639,7 +621,7 @@ export class ViewTournamentComponent implements OnInit {
             return a.flightRound == 2;
         });
         if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(0, 6);
+            this.FlightsQL.splice(6, this.FlightsQL.length);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -675,7 +657,7 @@ export class ViewTournamentComponent implements OnInit {
             return a.flightRound == 3;
         });
         if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(0, 6);
+            this.FlightsQL.splice(6, this.FlightsQL.length);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -711,7 +693,7 @@ export class ViewTournamentComponent implements OnInit {
             return a.flightRound == 4;
         });
         if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(0, 6);
+            this.FlightsQL.splice(6, this.FlightsQL.length);
         }
         let totalPlayers = [];
         for (const c of this.FlightsQL) {
@@ -1314,7 +1296,10 @@ export class ViewTournamentComponent implements OnInit {
 
                     console.log(getResult.category[cats]);
                     let copyflights: any = [];
-                    if (Object.keys(this.fullTournament.cutOffCriteria).length>0) {
+                    if (
+                        Object.keys(this.fullTournament.cutOffCriteria).length >
+                        0
+                    ) {
                         for (let cut of this.fullTournament.cutOffCriteria[
                             'cutOff'
                         ]) {

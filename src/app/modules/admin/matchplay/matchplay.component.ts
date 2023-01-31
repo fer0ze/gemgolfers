@@ -48,10 +48,16 @@ export class MatchplayComponent implements OnInit {
     courseHoleSet: number = 0;
     subTournaments: any[];
     showTaxes: boolean = false;
+    active: boolean = false;
     flightPlayers: any[] = [];
     filters: FormGroup;
     contactList: FormArray;
     selectedTeamName: boolean = false;
+    showRound1: boolean = false;
+    showRound2: boolean = false;
+    showRound3: boolean = false;
+    showRound4: boolean = false;
+    selectedIndex: any = 0;
 
     constructor(
         private router: Router,
@@ -97,7 +103,19 @@ export class MatchplayComponent implements OnInit {
 
                     this.activeRound = tournamentData.activeRound;
                     this.totalRounds = tournamentData.noOfRounds;
+                    this.selectedIndex=this.activeRound-1;
 
+                    if(this.activeRound==1)
+                       this.showRound1=true;
+                    else if(this.activeRound==2)
+                       this.showRound2=true;
+                    else if(this.activeRound==3)
+                       this.showRound3=true;
+                    else if(this.activeRound==4)
+                       this.showRound4=true;
+                    else 
+                       this.showRound4=true;
+                
                     this.subTournaments = tournamentData.SubTournamentsQL;
 
                     if (tournamentData.activeRound > tournamentData.noOfRounds)
@@ -166,19 +184,31 @@ export class MatchplayComponent implements OnInit {
 
     changeRound(item) {
         //console.log("Selected value: " + item.value);
-        this.flightRound = item.value;
+        if(this.active){
 
-        this.ddSelectedFlight = '0';
-        this.roundFlights = [];
-        //this.scoreHeader = [];
+            this.flightRound = item.index+1;
+            if(this.flightRound==1)
+               this.showRound1=true;
+            else if(this.flightRound==2)
+               this.showRound2=true;
+            else if(this.flightRound==3)
+               this.showRound3=true;
+            else if(this.flightRound==4)
+               this.showRound4=true;
 
-        this.flightPlayers = [];
-        //this.currentRoundFlights = [];
-
-        this.parseSubscriptionResponse();
+            this.ddSelectedFlight = '0';
+            this.roundFlights = [];
+            //this.scoreHeader = [];
+   
+            this.flightPlayers = [];
+            //this.currentRoundFlights = [];
+   
+            this.parseSubscriptionResponse();
+        }
     }
 
     private parseSubscriptionResponse(): boolean {
+    
         if (this.matchPlayData == null) {
             return false;
         }
@@ -321,207 +351,6 @@ export class MatchplayComponent implements OnInit {
                 this.setupMatchplayData(this.roundFlights, 2, true);
             }
         }
-    }
-
-    private async setupMatchplayHeader(
-        courseId: string,
-        holeSets: number,
-        courseHoleSetsInverted: boolean
-    ) {
-        let dataLeaderboard = await this.facadeService.getCourseInformation(
-            courseId
-        );
-        this.isLoading = false;
-        if (dataLeaderboard.course.length <= 0) return;
-
-        let flightHeader: any[] = [];
-        this.isLoading = false;
-        this.courseHoleSet = holeSets;
-
-        //if(this.courseHoleSet == 3) this.courseHoleSet = 12;
-
-        let courseHoles9: Hole[] = [];
-        let courseHoles18: Hole[] = [];
-        let courseHoles27: Hole[] = [];
-        let courseHoles36: Hole[] = [];
-
-        let yardage9: number[] = [];
-        let yardage18: number[] = [];
-        let yardage27: number[] = [];
-        let yardage36: number[] = [];
-
-        let yardage9Total: number = 0;
-        let yardage18Total: number = 0;
-        let yardage27Total: number = 0;
-        let yardage36Total: number = 0;
-
-        let par9: number = 0;
-        let par18: number = 0;
-        let par27: number = 0;
-        let par36: number = 0;
-
-        let courseQLs: any = dataLeaderboard.course[0];
-        let holesQLs: any = courseQLs.HolesQL;
-
-        var isPresent = this.coursesList.some(function (el) {
-            return el.id === courseQLs.id;
-        });
-
-        if (!isPresent) {
-            let courseInfo: any = {
-                id: courseQLs.id,
-                name: courseQLs.name,
-            };
-            this.coursesList.push(courseInfo);
-        }
-
-        //console.log(this.coursesList);
-
-        holesQLs = holesQLs.sort(this.Comparator);
-
-        //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
-        //console.log(holesQLs);
-        let courseID: any = this.matchPlayData['courseId'];
-        let selectedCourseHoleSet =
-            await this.facadeService.getCourseHoleSetsForCourse(courseID);
-        this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
-        holesQLs = this.getHolesSets(
-            holeSets,
-            holesQLs,
-            courseHoleSetsInverted,
-            this.courseHoleSetNames
-        );
-        for (let holeQL of holesQLs) {
-            //let teeDistance = JSON.parse(holeQL.teeDistances);
-            let teeDistance = holeQL.teeDistances;
-
-            if (holeQL.holeNo < 10) {
-                yardage9Total += parseInt(teeDistance.blue);
-                par9 += holeQL.par;
-                yardage9.push(parseInt(teeDistance.blue));
-
-                courseHoles9.push(holeQL);
-            } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
-                yardage18.push(parseInt(teeDistance.blue));
-                yardage18Total += parseInt(teeDistance.blue);
-                par18 += holeQL.par;
-
-                courseHoles18.push(holeQL);
-            } else {
-            }
-        }
-
-        let parTotal: number =
-            Number(par9) + Number(par18) + Number(par27) + Number(par36);
-        let yardageTotal: number =
-            Number(yardage9Total) +
-            Number(yardage18Total) +
-            Number(yardage27Total) +
-            Number(yardage36Total);
-
-        let scoreHeader: any = {
-            courseHoles9: courseHoles9,
-            courseHoles18: courseHoles18,
-            courseHoles27: courseHoles27,
-            courseHoles36: courseHoles36,
-            yardage9: yardage9,
-            yardage18: yardage18,
-            yardage27: yardage27,
-            yardage36: yardage36,
-            yardage9Total: yardage9Total,
-            yardage18Total: yardage18Total,
-            yardage27Total: yardage27Total,
-            yardage36Total: yardage36Total,
-            par9: par9,
-            par18: par18,
-            par27: par27,
-            par36: par36,
-            parTotal: parTotal,
-            yardageTotal: yardageTotal,
-        };
-        //console.log(scoreHeader);
-        flightHeader.push(scoreHeader);
-        return scoreHeader;
-        //console.log(this.scoreHeader);
-    }
-
-    public getHolesSets(
-        courseHoleSets: number,
-        holes,
-        isCourseHoleSetsInverted: boolean,
-        holesSets
-    ) {
-        let arrayOfHoleSet: any = [];
-        if (courseHoleSets == 0) {
-            return;
-        }
-        for (let obj of holesSets) {
-            if (
-                obj.holeSets == courseHoleSets &&
-                isCourseHoleSetsInverted == obj.inverted
-            ) {
-                if (obj.backId == null) {
-                    let counter = 1;
-                    for (let i of holes) {
-                        if (obj.id == i.holeSetId) {
-                            let singleHole: any = {
-                                id: i.id,
-                                courseId: i.courseId,
-                                holeNo: counter,
-                                par: i.par,
-                                index: i.index,
-                                teeDistances: i.teeDistances,
-                                holeSetId: i.holeSetId,
-                            };
-                            arrayOfHoleSet.push(singleHole);
-                            counter++;
-                        }
-                    }
-                } else {
-                    let holesSetA = holesSets.find(
-                        (x) => x.holeSets == obj.frontId
-                    );
-                    let holesSetB = holesSets.find(
-                        (x) => x.holeSets == obj.backId
-                    );
-                    console.log(holesSetA);
-                    console.log(holesSetB);
-                    let counter = 1;
-                    for (let i of holes) {
-                        if (holesSetA.id == i.holeSetId) {
-                            let singleHole: any = {
-                                id: i.id,
-                                courseId: i.courseId,
-                                holeNo: counter,
-                                par: i.par,
-                                index: i.index,
-                                teeDistances: i.teeDistances,
-                                holeSetId: i.holeSetId,
-                            };
-                            arrayOfHoleSet.push(singleHole);
-                            counter++;
-                        }
-                    }
-                    let counterA = 10;
-                    for (let i of holes) {
-                        if (holesSetB.id == i.holeSetId) {
-                            let singleHole: any = {
-                                id: i.id,
-                                courseId: i.courseId,
-                                holeNo: counterA,
-                                par: i.par,
-                                index: i.index,
-                                teeDistances: i.teeDistances,
-                                holeSetId: i.holeSetId,
-                            };
-                            arrayOfHoleSet.push(singleHole);
-                            counterA++;
-                        }
-                    }
-                }
-            }
-        }
-        return arrayOfHoleSet;
     }
     private async setupMatchplayData(
         flightsQLs: any[],
@@ -790,7 +619,209 @@ export class MatchplayComponent implements OnInit {
             findex++;
         }
         console.log(this.flightPlayers);
+        this.active=true;
     }
+    private async setupMatchplayHeader(
+        courseId: string,
+        holeSets: number,
+        courseHoleSetsInverted: boolean
+    ) {
+        let dataLeaderboard = await this.facadeService.getCourseInformation(
+            courseId
+        );
+        this.isLoading = false;
+        if (dataLeaderboard.course.length <= 0) return;
+
+        let flightHeader: any[] = [];
+        this.isLoading = false;
+        this.courseHoleSet = holeSets;
+
+        //if(this.courseHoleSet == 3) this.courseHoleSet = 12;
+
+        let courseHoles9: Hole[] = [];
+        let courseHoles18: Hole[] = [];
+        let courseHoles27: Hole[] = [];
+        let courseHoles36: Hole[] = [];
+
+        let yardage9: number[] = [];
+        let yardage18: number[] = [];
+        let yardage27: number[] = [];
+        let yardage36: number[] = [];
+
+        let yardage9Total: number = 0;
+        let yardage18Total: number = 0;
+        let yardage27Total: number = 0;
+        let yardage36Total: number = 0;
+
+        let par9: number = 0;
+        let par18: number = 0;
+        let par27: number = 0;
+        let par36: number = 0;
+
+        let courseQLs: any = dataLeaderboard.course[0];
+        let holesQLs: any = courseQLs.HolesQL;
+
+        var isPresent = this.coursesList.some(function (el) {
+            return el.id === courseQLs.id;
+        });
+
+        if (!isPresent) {
+            let courseInfo: any = {
+                id: courseQLs.id,
+                name: courseQLs.name,
+            };
+            this.coursesList.push(courseInfo);
+        }
+
+        //console.log(this.coursesList);
+
+        holesQLs = holesQLs.sort(this.Comparator);
+
+        //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
+        //console.log(holesQLs);
+        let courseID: any = this.matchPlayData['courseId'];
+        let selectedCourseHoleSet =
+            await this.facadeService.getCourseHoleSetsForCourse(courseID);
+        this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
+        holesQLs = this.getHolesSets(
+            holeSets,
+            holesQLs,
+            courseHoleSetsInverted,
+            this.courseHoleSetNames
+        );
+        for (let holeQL of holesQLs) {
+            //let teeDistance = JSON.parse(holeQL.teeDistances);
+            let teeDistance = holeQL.teeDistances;
+
+            if (holeQL.holeNo < 10) {
+                yardage9Total += parseInt(teeDistance.blue);
+                par9 += holeQL.par;
+                yardage9.push(parseInt(teeDistance.blue));
+
+                courseHoles9.push(holeQL);
+            } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
+                yardage18.push(parseInt(teeDistance.blue));
+                yardage18Total += parseInt(teeDistance.blue);
+                par18 += holeQL.par;
+
+                courseHoles18.push(holeQL);
+            } else {
+            }
+        }
+
+        let parTotal: number =
+            Number(par9) + Number(par18) + Number(par27) + Number(par36);
+        let yardageTotal: number =
+            Number(yardage9Total) +
+            Number(yardage18Total) +
+            Number(yardage27Total) +
+            Number(yardage36Total);
+
+        let scoreHeader: any = {
+            courseHoles9: courseHoles9,
+            courseHoles18: courseHoles18,
+            courseHoles27: courseHoles27,
+            courseHoles36: courseHoles36,
+            yardage9: yardage9,
+            yardage18: yardage18,
+            yardage27: yardage27,
+            yardage36: yardage36,
+            yardage9Total: yardage9Total,
+            yardage18Total: yardage18Total,
+            yardage27Total: yardage27Total,
+            yardage36Total: yardage36Total,
+            par9: par9,
+            par18: par18,
+            par27: par27,
+            par36: par36,
+            parTotal: parTotal,
+            yardageTotal: yardageTotal,
+        };
+        //console.log(scoreHeader);
+        flightHeader.push(scoreHeader);
+        return scoreHeader;
+        //console.log(this.scoreHeader);
+    }
+
+    public getHolesSets(
+        courseHoleSets: number,
+        holes,
+        isCourseHoleSetsInverted: boolean,
+        holesSets
+    ) {
+        let arrayOfHoleSet: any = [];
+        if (courseHoleSets == 0) {
+            return;
+        }
+        for (let obj of holesSets) {
+            if (
+                obj.holeSets == courseHoleSets &&
+                isCourseHoleSetsInverted == obj.inverted
+            ) {
+                if (obj.backId == null) {
+                    let counter = 1;
+                    for (let i of holes) {
+                        if (obj.id == i.holeSetId) {
+                            let singleHole: any = {
+                                id: i.id,
+                                courseId: i.courseId,
+                                holeNo: counter,
+                                par: i.par,
+                                index: i.index,
+                                teeDistances: i.teeDistances,
+                                holeSetId: i.holeSetId,
+                            };
+                            arrayOfHoleSet.push(singleHole);
+                            counter++;
+                        }
+                    }
+                } else {
+                    let holesSetA = holesSets.find(
+                        (x) => x.holeSets == obj.frontId
+                    );
+                    let holesSetB = holesSets.find(
+                        (x) => x.holeSets == obj.backId
+                    );
+                    console.log(holesSetA);
+                    console.log(holesSetB);
+                    let counter = 1;
+                    for (let i of holes) {
+                        if (holesSetA.id == i.holeSetId) {
+                            let singleHole: any = {
+                                id: i.id,
+                                courseId: i.courseId,
+                                holeNo: counter,
+                                par: i.par,
+                                index: i.index,
+                                teeDistances: i.teeDistances,
+                                holeSetId: i.holeSetId,
+                            };
+                            arrayOfHoleSet.push(singleHole);
+                            counter++;
+                        }
+                    }
+                    let counterA = 10;
+                    for (let i of holes) {
+                        if (holesSetB.id == i.holeSetId) {
+                            let singleHole: any = {
+                                id: i.id,
+                                courseId: i.courseId,
+                                holeNo: counterA,
+                                par: i.par,
+                                index: i.index,
+                                teeDistances: i.teeDistances,
+                                holeSetId: i.holeSetId,
+                            };
+                            arrayOfHoleSet.push(singleHole);
+                            counterA++;
+                        }
+                    }
+                }
+            }
+        }
+        return arrayOfHoleSet;
+    }
+    
 
     viewPlayerScore(flight: any) {
         console.log(flight);
