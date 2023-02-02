@@ -631,7 +631,10 @@
                                                         'TEXAS_SCRAMBLE',
                                                     'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500':
                                                         scheduleItem.matchFormat ===
-                                                        'STROKE_PLAY'
+                                                        'MATCH_PLAY',
+                                                    'text-red-800 bg-red-100 dark:text-red-50 dark:bg-red-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'TWO_BALL_BEST_BALL'
                                                 }"
                                             >
                                                 {{ scheduleItem.matchFormat }}
