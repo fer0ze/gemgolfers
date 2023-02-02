@@ -13,7 +13,11 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
         lastName
     }
     TournamentQL: tournament_by_pk(id: $flightId) {
-        ...TournamentQL
+        id
+        courseId
+        noOfRounds
+        activeRound
+        matchFormat
         SubTournamentsQL: sub_tournaments {
             SubTournamentQL: sub_tournament {
                 SubTournamentFlightsQL: flights {
@@ -24,28 +28,27 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                     }
                 }
             }
-        }
-        OwnRoleManagerQL: role_managers(where: {playerId: {_eq: $playerId}}) {
-            ...TournamentRoleManagerQL
-        }
+        } 
         FlightsQL: flights(
             order_by: [
                 {flightRound: asc},
                 {flightNo: asc}
             ]
-            ) {
+        ) {
             ...FlightQL
             MembersQL: members {
                 PlayerQL: player {
-                    ...PlayerQL
+                    firstName
+                    lastName
+                    fullName
+                    handicap
+                    id
                 }
                 ScoresQL: scores(order_by:
                     {hole: {holeNo: asc}}
                 ) {
-                    ...ScoreQL
-                    DetailQL: detail {
-                        ...ScoreDetailQL
-                    }
+                    grossScore
+                    holeId
                 }
             }
         }

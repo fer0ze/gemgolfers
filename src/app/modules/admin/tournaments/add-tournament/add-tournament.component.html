@@ -20,6 +20,7 @@
                     #linearVerticalStepper
                     formArrayName="formArray"
                     [linear]="true"
+                    (selectionChange)="onStepChange($event)"
                 >
                     <div>
                         <mat-step
@@ -627,7 +628,7 @@
                             </div> -->
                             </div>
                         </mat-step>
-                        <mat-step (click)="tournamentMembersSetup()">
+                        <mat-step [stepControl]="valid1" (click)="tournamentMembersSetup()">
                             <ng-template class="cursor-pointer" matStepLabel
                                 >Select Players</ng-template
                             >
@@ -1090,7 +1091,7 @@
                         <mat-step
                             formGroupName="1"
                             (click)="flightsSetup(linearVerticalStepper, '')"
-                            [stepControl]="valid3"
+                            [stepControl]="valid2"
                         >
                             <ng-template matStepLabel>
                                 <div>Flights Setup</div>
@@ -1113,14 +1114,13 @@
                                     id="manage i"
                                 >
                                     <ng-template mat-tab-label>{{
-                                        formArray.get([0]).get("clubctgies")
-                                            .value[i].name
+                                        formArray.get([1]).get('category').value[i].name
                                     }}</ng-template>
                                     <div
                                         [formGroupName]="i"
                                         class="mt-4 overflow-hidden"
                                     >
-                                        <mat-card style="margin-bottom: 30px">
+                                        <!-- <mat-card style="margin-bottom: 30px">
                                             <div
                                                 fxLayout="row"
                                                 fxLayout.lt-md="column"
@@ -1192,7 +1192,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </mat-card>
+                                        </mat-card> -->
 
                                         <div>
                                             <div>
@@ -1283,9 +1283,7 @@
                                                                 type="time"
                                                                 matInput
                                                                 atp-time-picker
-                                                                value="{{
-                                                                    selectedTime
-                                                                }}"
+                                                                
                                                                 formControlName="flightStartTime"
                                                             />
                                                             <mat-error

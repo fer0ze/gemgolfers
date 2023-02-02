@@ -311,19 +311,22 @@
                     <div class="col col-5">THRU</div>
                 </li>
                 <li class="table-row" *ngFor="let item of grossLeaders">
-                    <div class="col col-1" data-label="Job Id">
+                    <div class="col col-1" >
                         {{ item.position }}
                     </div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-2" >
+                        {{ item.name }}
+                        <div>
+                            HC:({{ item.handicap }})
+                        </div>
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         {{ item.score }}
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.under }}
                     </div>
-                    <div class="col col-5" data-label="Payment Status">
+                    <div class="col col-5" >
                         {{ item.holes }}
                     </div>
                 </li>
@@ -402,19 +405,23 @@
                     <div class="col col-5">THRU</div>
                 </li>
                 <li class="table-row" *ngFor="let item of grossLeaders">
-                    <div class="col col-1" data-label="Job Id">
+                    <div class="col col-1" >
                         {{ item.position }}
                     </div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-2" >
+                        {{ item.name }}
+                        <div>
+                            HC:{{ item.handicap }}
+                        </div>
+                        
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         {{ item.score }}
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.under }}
                     </div>
-                    <div class="col col-5" data-label="Payment Status">
+                    <div class="col col-5" >
                         {{ item.holes }}
                     </div>
                 </li>
@@ -492,19 +499,21 @@
                     <div class="col col-5">THRU</div>
                 </li>
                 <li class="table-row" *ngFor="let item of netLeaders">
-                    <div class="col col-1" data-label="Job Id">
+                    <div class="col col-1" >
                         {{ item.position }}
                     </div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-2" >
+                        {{ item.name }}<div>
+                            HC:{{ item.handicap }}
+                        </div>
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         {{ item.score }}
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.under }}
                     </div>
-                    <div class="col col-5" data-label="Payment Status">
+                    <div class="col col-5" >
                         {{ item.holes }}
                     </div>
                 </li>
@@ -583,19 +592,21 @@
                     <div class="col col-5">THRU</div>
                 </li>
                 <li class="table-row" *ngFor="let item of netLeaders">
-                    <div class="col col-1" data-label="Job Id">
+                    <div class="col col-1" >
                         {{ item.position }}
                     </div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-2" >
+                        {{ item.name }}<div>
+                            HC:{{ item.handicap }}
+                        </div>
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         {{ item.score }}
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.under }}
                     </div>
-                    <div class="col col-5" data-label="Payment Status">
+                    <div class="col col-5" >
                         {{ item.holes }}
                     </div>
                 </li>
@@ -776,13 +787,13 @@
                     </div>
                 </li>
                 <li class="table-row hover:bg-gray-100" *ngFor="let item of allLeadersGross">
-                    <div class="col col-1" data-label="Job Id">
+                    <div class="col col-1" >
                         {{ item.position }}
                     </div>
-                    <div class="col col-2" data-label="Customer Name">
+                    <div class="col col-2" >
                         {{ item.name }}-(HC: {{ item.handicap }})
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         <strong *ngIf="item.AllGrossUnder > 0">+</strong
                         ><strong
                             *ngIf="item.AllGrossUnder < 0"
@@ -793,7 +804,7 @@
                         }}</strong
                         ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
                     </div>
-                    <div  class="col col-4" data-label="Payment Status">
+                    <div  class="col col-4" >
                         {{ item.TotalGross1 ? item.TotalGross1 : '-' }}
                     </div>
                     <div class="col col-5" data-label="1" *ngIf="activeRound == 1">
@@ -993,11 +1004,13 @@
                     class="table-row"
                     *ngFor="let item of allLeadersCutOffGross"
                 >
-                    <div class="col col-1" data-label="Job Id">-</div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-1" >-</div>
+                    <div class="col col-2" >
+                        {{ item.name }}<div>
+                            HC:{{ item.handicap }}
+                        </div>
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         <strong *ngIf="item.AllGrossUnder > 0">+</strong
                         ><strong
                             *ngIf="item.AllGrossUnder < 0"
@@ -1008,7 +1021,7 @@
                         }}</strong
                         ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.TotalGross1 }}
                     </div>
                     <div class="col col-5" *ngIf="activeRound == 1">
@@ -1197,13 +1210,15 @@
                     </div>
                 </li>
                 <li class="table-row" *ngFor="let item of allLeadersNet">
-                    <div class="col col-1" data-label="Job Id">
+                    <div class="col col-1" >
                         {{ item.positionNet }}
                     </div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-2" >
+                        {{ item.name }}<div>
+                            HC:{{ item.handicap }}
+                        </div>
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         <strong *ngIf="item.AllNetUnder > 0">+</strong
                         ><strong
                             *ngIf="item.AllNetUnder < 0"
@@ -1214,7 +1229,7 @@
                         }}</strong
                         ><strong *ngIf="item.AllNetUnder == 0">E</strong>
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.TotalNet1 }}
                     </div>
                     <div class="col col-5" *ngIf="activeRound == 1">
@@ -1393,11 +1408,13 @@
                     </div>
                 </li>
                 <li class="table-row" *ngFor="let item of allLeadersCutOffNet">
-                    <div class="col col-1" data-label="Job Id">-</div>
-                    <div class="col col-2" data-label="Customer Name">
-                        {{ item.name }}-({{ item.handicap }})
+                    <div class="col col-1" >-</div>
+                    <div class="col col-2" >
+                        {{ item.name }}<div>
+                            HC:{{ item.handicap }}
+                        </div>
                     </div>
-                    <div class="col col-3" data-label="Amount">
+                    <div class="col col-3" >
                         <strong *ngIf="item.AllNetUnder > 0">+</strong
                         ><strong
                             *ngIf="item.AllNetUnder < 0"
@@ -1408,7 +1425,7 @@
                         }}</strong
                         ><strong *ngIf="item.AllNetUnder == 0">E</strong>
                     </div>
-                    <div class="col col-4" data-label="Payment Status">
+                    <div class="col col-4" >
                         {{ item.TotalNet1 }}
                     </div>
                     <div class="col col-5" *ngIf="activeRound == 1">

@@ -1,0 +1,25 @@
+mat-form-field {
+    margin-left: 20px;
+}
+.center{
+    display: inline-block;
+    justify-content: center;
+    
+}
+.mat-checkbox-layout .mat-checkbox-label {
+    line-height: 24px;
+    margin-right: 15px;
+}
+.mat-checkbox-inner-container {
+    display: flex;
+    height: 15px;
+    line-height: 0;
+    margin: auto;
+    margin-right: 11px;
+    order: 0;
+    position: relative;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 14px;
+    flex-shrink: 0;
+}

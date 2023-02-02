@@ -346,15 +346,12 @@ export class ViewTournamentComponent implements OnInit {
                 if (this.selected == 0) {
                     this.getRound1stats(1);
                     this.calculateStatistics1();
-                   
                 } else if (this.selected == 1) {
                     this.getRound2stats(2);
                     this.calculateStatistics2();
-                    
                 } else if (this.selected == 2) {
                     this.getRound3stats(3);
                     this.calculateStatistics3();
-                  
                 } else if (this.selected == 3) {
                     this.getRound4stats(4);
                     this.calculateStatistics4();
@@ -362,23 +359,19 @@ export class ViewTournamentComponent implements OnInit {
                     this.getRound4stats(4);
                     this.calculateStatistics4();
                 }
-            }else{
+            } else {
                 if (this.activeRound == 0) {
                     this.getRoundsstats();
                     this.calculateStatistics();
-                   
                 } else if (this.activeRound == 1) {
                     this.getRound1stats(1);
                     this.calculateStatistics1();
-                   
                 } else if (this.activeRound == 2) {
                     this.getRound2stats(2);
                     this.calculateStatistics2();
-                    
                 } else if (this.activeRound == 3) {
                     this.getRound3stats(3);
                     this.calculateStatistics3();
-                  
                 } else if (this.activeRound == 4) {
                     this.getRound4stats(4);
                     this.calculateStatistics4();
@@ -387,7 +380,6 @@ export class ViewTournamentComponent implements OnInit {
                     this.calculateStatistics4();
                 }
             }
-            
 
             //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
         } else {
@@ -815,7 +807,7 @@ export class ViewTournamentComponent implements OnInit {
             finalScoreStats.getShotsDoubleBogeysPercent();
 
         this.chartavgScore.push(
-            Math.floor(finalScoreStats.par3Stats.getAvgScores())
+            Math.floor(Number(finalScoreStats.par3Stats.getAvgScores()))
         );
         this.chartavgScore.push(
             Math.floor(finalScoreStats.par4Stats.getAvgScores())
@@ -893,6 +885,21 @@ export class ViewTournamentComponent implements OnInit {
             finalScoreStats.getShotsDoubleBogeysPercent();
 
         this.chartavgScore1.push(
+            Math.round(finalScoreStats.getShotsBirdiesPercent())
+        );
+        this.chartavgScore1.push(
+            Math.floor(finalScoreStats.getShotsParsPercent())
+        );
+        this.chartavgScore1.push(
+            Math.floor(finalScoreStats.getShotsBogeysPercent())
+        );
+        this.chartavgScore1.push(
+            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
+        );
+        this.chartavgScore1.push(
+            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
+        );
+        this.chartavgScore1.push(
             Math.floor(finalScoreStats.par3Stats.getAvgScores())
         );
         this.chartavgScore1.push(
@@ -901,30 +908,16 @@ export class ViewTournamentComponent implements OnInit {
         this.chartavgScore1.push(
             Math.floor(finalScoreStats.par5Stats.getAvgScores())
         );
-        this.chartavgScore1.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore1.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore1.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore1.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore1.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
+
         this._series['0'] = [
             {
                 data: this.chartavgScore1,
-                name: 'Members',
+                name: 'Average',
                 type: 'line',
             },
             {
                 data: this.chartavgScore1,
-                name: 'Rounds',
+                name: 'Average',
                 type: 'column',
             },
         ];
@@ -970,6 +963,21 @@ export class ViewTournamentComponent implements OnInit {
         this.avgScore2['shotsDoubleBogeysPercent'] =
             finalScoreStats.getShotsDoubleBogeysPercent();
         this.chartavgScore2.push(
+            Math.floor(finalScoreStats.getShotsBirdiesPercent())
+        );
+        this.chartavgScore2.push(
+            Math.floor(finalScoreStats.getShotsParsPercent())
+        );
+        this.chartavgScore2.push(
+            Math.floor(finalScoreStats.getShotsBogeysPercent())
+        );
+        this.chartavgScore2.push(
+            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
+        );
+        this.chartavgScore2.push(
+            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
+        );
+        this.chartavgScore2.push(
             Math.floor(finalScoreStats.par3Stats.getAvgScores())
         );
         this.chartavgScore2.push(
@@ -978,21 +986,19 @@ export class ViewTournamentComponent implements OnInit {
         this.chartavgScore2.push(
             Math.floor(finalScoreStats.par5Stats.getAvgScores())
         );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
+
+        this._series['0'] = [
+            {
+                data: this.chartavgScore2,
+                name: 'Average',
+                type: 'line',
+            },
+            {
+                data: this.chartavgScore2,
+                name: 'Average',
+                type: 'column',
+            },
+        ];
 
         // this.pieChartData2 = [
         //   General.precisionRound(this.avgScore2["par3Avg"], 2),
@@ -1009,6 +1015,7 @@ export class ViewTournamentComponent implements OnInit {
             this.pieChartData2 = [0.01, 0.01, 0.01];
         }
         this.round2Stats = true;
+        this.chart();
     }
 
     getRound3stats(round: number) {
@@ -1036,6 +1043,21 @@ export class ViewTournamentComponent implements OnInit {
         this.avgScore3['shotsDoubleBogeysPercent'] =
             finalScoreStats.getShotsDoubleBogeysPercent();
         this.chartavgScore3.push(
+            Math.floor(finalScoreStats.getShotsBirdiesPercent())
+        );
+        this.chartavgScore3.push(
+            Math.floor(finalScoreStats.getShotsParsPercent())
+        );
+        this.chartavgScore3.push(
+            Math.floor(finalScoreStats.getShotsBogeysPercent())
+        );
+        this.chartavgScore3.push(
+            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
+        );
+        this.chartavgScore3.push(
+            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
+        );
+        this.chartavgScore3.push(
             Math.floor(finalScoreStats.par3Stats.getAvgScores())
         );
         this.chartavgScore3.push(
@@ -1044,21 +1066,19 @@ export class ViewTournamentComponent implements OnInit {
         this.chartavgScore3.push(
             Math.floor(finalScoreStats.par5Stats.getAvgScores())
         );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
+
+        this._series['0'] = [
+            {
+                data: this.chartavgScore3,
+                name: 'Average',
+                type: 'line',
+            },
+            {
+                data: this.chartavgScore3,
+                name: 'Average',
+                type: 'column',
+            },
+        ];
         if (finalScoreStats['grossTotal'] != 0) {
             this.pieChartData3 = [
                 General.precisionRound(this.avgScore3['par3Avg'], 2),
@@ -1068,7 +1088,7 @@ export class ViewTournamentComponent implements OnInit {
         } else {
             this.pieChartData3 = [0.01, 0.01, 0.01];
         }
-
+        this.chart();
         this.round3Stats = true;
     }
 
@@ -1097,6 +1117,21 @@ export class ViewTournamentComponent implements OnInit {
         this.avgScore4['shotsDoubleBogeysPercent'] =
             finalScoreStats.getShotsDoubleBogeysPercent();
         this.chartavgScore4.push(
+        Math.floor(finalScoreStats.getShotsBirdiesPercent())
+        );
+        this.chartavgScore4.push(
+            Math.floor(finalScoreStats.getShotsParsPercent())
+        );
+        this.chartavgScore4.push(
+            Math.floor(finalScoreStats.getShotsBogeysPercent())
+        );
+        this.chartavgScore4.push(
+            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
+        );
+        this.chartavgScore4.push(
+            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
+        );
+        this.chartavgScore4.push(
             Math.floor(finalScoreStats.par3Stats.getAvgScores())
         );
         this.chartavgScore4.push(
@@ -1105,21 +1140,19 @@ export class ViewTournamentComponent implements OnInit {
         this.chartavgScore4.push(
             Math.floor(finalScoreStats.par5Stats.getAvgScores())
         );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
+
+        this._series['0'] = [
+            {
+                data: this.chartavgScore4,
+                name: 'Average',
+                type: 'line',
+            },
+            {
+                data: this.chartavgScore4,
+                name: 'Average',
+                type: 'column',
+            },
+        ];
         if (finalScoreStats['grossTotal'] != 0) {
             this.pieChartData4 = [
                 General.precisionRound(this.avgScore4['par3Avg'], 2),
@@ -1129,6 +1162,7 @@ export class ViewTournamentComponent implements OnInit {
         } else {
             this.pieChartData4 = [0.01, 0.01, 0.01];
         }
+        this.chart();
         this.round4Stats = true;
     }
 

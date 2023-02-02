@@ -1,7 +1,7 @@
 import { ParStats } from './ParStats';
 import { Score } from './score';
 
-export class ScoreStats {
+export class  ScoreStats {
     private playedHoles: number = 0;
     private parTotal: number = 0;
     private grossTotal: number = 0;

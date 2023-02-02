@@ -79,21 +79,20 @@ table {
 
   tr.scorebody td input.empty {
     background-color: #f7f74f !important;
-
-    width: 28px;
+    color: #fff;
+    border: none !important;
   }
 
   tr.scorebody td input.warn {
-    background-color: #ff6464 !important;
+    background-color: #ff0d0d !important;
     color: #fff;
-
-    width: 28px;
+    border: none !important;
   }
 
   tr.scorebody td input {
     border: none;
     text-align: center;
-    width: 30px;
+    width: 28px;
   }
 
   td .mat-icon {
@@ -132,7 +131,7 @@ table {
     text-align: center;
     width: 31px;
     height: 34px;
-    border: 2px solid #0c64d1;
+    border: 2px solid #00397e;
     border-radius: 50%;
     padding-top: 5px;
   }
@@ -147,13 +146,15 @@ table {
   }
  .empty {
     background-color: #f7f74f !important;
-
+    color: #fff;
+    border: none !important;
  
   }
 
  .warn {
-    background-color: #ff6464 !important;
-    color: #fff;
+  background-color: #ff0d0d !important;
+  color: #fff;
+  border: none !important;
 
     
   }

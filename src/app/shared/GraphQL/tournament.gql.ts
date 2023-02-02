@@ -40,6 +40,7 @@ export const LeaderboardSubscription = gql`
             noOfRounds
             webLogoUrl
             matchFormat
+            tee_id
             FlightsQL: flights(
                 order_by: [{ flightRound: asc }, { flightNo: asc }]
             ) {
@@ -126,7 +127,7 @@ export const tournamentDashBoard = gql`
                 order_by: [{ flightRound: asc }, { flightNo: asc }]
             ) {
                 flightRound
-time
+                time
                 flightNo
                 name {
                     name
@@ -1023,14 +1024,9 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
     }
 `;
 export const DailyRoundsSingleDashboardQueryQLsAll = gql`
-    query ClubSingleRoundFlightsQuery(
-      
-        $fromDate: date!
-        $toDate: date!
-    ) {
+    query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
         TournamentsQL: tournament(
             where: {
-             
                 singleRound: { _eq: true }
                 _and: [
                     { startDate: { _gte: $toDate } }
@@ -1038,7 +1034,6 @@ export const DailyRoundsSingleDashboardQueryQLsAll = gql`
                 ]
             }
         ) {
-           
             startDate
             FlightsQL: flights {
                 ended
@@ -1065,7 +1060,6 @@ export const DailyRoundsSingleDashboardQueryQLs = gql`
                 ]
             }
         ) {
-           
             startDate
             FlightsQL: flights {
                 ended
@@ -1463,10 +1457,11 @@ export const LeaderRoundQueryQL = gql`
 
 export const getTournamentCountsByClub = gql`
     query getTournamentCountsByClub($where: tournament_bool_exp!) {
-        Count: tournament_aggregate(where: $where) {
-            aggregate {
-                count
-            }
+        Count: tournament(where: $where) {
+            id
+            title
+            matchFormat
+            noOfRounds
         }
     }
 `;
@@ -1475,6 +1470,96 @@ export const getTournamentCountsByClubAll = gql`
         Count: tournament_aggregate(where: $where) {
             aggregate {
                 count
+            }
+        }
+    }
+`;
+
+export const getallDashboard = gql`
+    query geteverything(
+        $adminClubId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        TournamentQL: tournament(
+            where: {
+                _and: [
+                    {
+                        singleRound: { _eq: false }
+                        clubId: { _eq: $adminClubId }
+                    }
+                ]
+            },
+            order_by: [{ startDate: desc }]
+        ) {
+            id
+            title
+            matchFormat
+            noOfRounds
+        }
+        Count: flight_aggregate(
+            where: { admin: { adminClubId: { _eq: $adminClubId } } }
+        ) {
+            aggregate {
+                count
+            }
+        }
+        AggregateQL: player_aggregate(
+            where: { membership: { clubId: { _eq: $adminClubId } } }
+        ) {
+            aggregate {
+                totalCount: count
+            }
+        }
+        club(where: { id: { _eq: $adminClubId } }) {
+            Amateurs: members_aggregate(
+                where: { player: { playerCategory: { _eq: "Amateurs" } } }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+            Senior_Amateurs: members_aggregate(
+                where: {
+                    player: { playerCategory: { _eq: "Senior Amateurs" } }
+                }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+
+            Veterans: members_aggregate(
+                where: { player: { playerCategory: { _eq: "Veterans" } } }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+            Ladies: members_aggregate(
+                where: { player: { playerCategory: { _eq: "Ladies" } } }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+        }
+        TournamentsQLs: tournament(
+            where: {
+                clubId: { _eq: $adminClubId }
+                singleRound: { _eq: true }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            startDate
+            FlightsQL: flights {
+                ended
+                MembersQL: members {
+                    attendance
+                }
             }
         }
     }

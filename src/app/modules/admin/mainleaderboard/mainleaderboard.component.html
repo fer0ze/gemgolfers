@@ -2,9 +2,7 @@
     class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
     cdkScrollable
 >
-    <div
-        class="relative flex-0 py-8 px-4  overflow-hidden bg-gray-800 dark"
-    >
+    <div class="relative flex-0 py-8 px-4 overflow-hidden bg-gray-800 dark">
         <svg
             class="absolute inset-0 pointer-events-none"
             viewBox="0 0 960 540"
@@ -23,35 +21,37 @@
                 <circle r="234" cx="790" cy="491"></circle>
             </g>
         </svg>
-        <div class="flex flex-row justify-around mt-3">
-        <div class="flex-0  w-40  h-25  overflow-hidden">
-            <img
-                src="assets/images/logo/Blue and Green Golf Club Sports Logo.png"
-                alt="Logo"
-            />
-        </div>
-        <div class="z-10 relative flex flex-col items-center">
-            <h2 class="text-2xl font-semibold">GemGolfers Tournament Module</h2>
-            <div
-                class="mt-1 text-5xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
-            >
-                Leaderboard
+        <div class="flex flex-row justify-around mt-3 logo">
+            <div class="flex-0 w-40 h-25 logo-1 overflow-hidden">
+                <img
+                    src="assets/images/logo/Blue and Green Golf Club Sports Logo.png"
+                    alt="Logo"
+                />
             </div>
-            <div
-                class="max-w-2xl mt-6 sm:text-2xl text-center tracking-tight text-secondary"
-            >
-                Our app will step you through the process of a building
-                tournaments, or adding new formats to existing tournaments.
+            <div class="z-10 relative flex flex-col items-center">
+                <h2 class="text-2xl font-semibold">
+                    {{ Leaderboard?.title }}
+                </h2>
+                <div
+                    class="mt-1 text-5xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
+                >
+                    Leaderboard
+                </div>
+                <div
+                    class="max-w-2xl mt-6 sm:text-2xl text-center tracking-tight text-secondary"
+                >
+                    Our app will step you through the process of a building
+                    tournaments, or adding new formats to existing tournaments.
+                </div>
+            </div>
+            <div class="flex-0 w-44 h-48 pt-16 logo-2 overflow-hidden">
+                <img
+                    class="object-cover"
+                    src="assets/images/logo/{{ clubLogo }}"
+                    alt="user"
+                />
             </div>
         </div>
-        <div class="flex-0 w-40 h-25  overflow-hidden">
-            <img
-                class="w-full h-full object-cover"
-                src="assets/images/logo/{{ clubLogo }}"
-                alt="user"
-            />
-        </div>
-    </div>
     </div>
     <!-- <div class="webLogo flex flex-row justify-around mt-3">
             <div class="flex-0 w-40 h-25  overflow-hidden">
@@ -102,6 +102,7 @@
                         matchFormat != 'COMBINE_ALL' &&
                         !selectedCategory?.text.includes('Professionals')
                     "
+                    class="toogle"
                 >
                     <mat-button-toggle value="1">GROSS</mat-button-toggle>
                     <mat-button-toggle value="2">NET</mat-button-toggle>
@@ -109,7 +110,7 @@
 
                 <mat-form-field
                     *ngIf="eventCategories.length > 1"
-                    class="fuse-mat-no-subscript w-full sm:w-36"
+                    class="fuse-mat-no-subscript mat-form w-full sm:w-36"
                 >
                     <!--  && flightRound != 0 -->
                     <mat-select
@@ -129,7 +130,7 @@
                     *ngIf="
                         Leaderboard?.multiFormat || Leaderboard?.subTournament
                     "
-                    class="fuse-mat-no-subscript w-full sm:w-36"
+                    class="fuse-mat-no-subscript .mat-form w-full sm:w-36"
                 >
                     <mat-select
                         (selectionChange)="changeTournament($event)"
@@ -200,7 +201,7 @@
                 >
               </div>
               <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
-                <mat-icon
+                <mat-iccursor-pointer on
                   (click)="
                     viewPlayerScore(
                       item.courseId,
@@ -239,23 +240,41 @@
                         <div class="col col-1">POS.</div>
                         <div class="col col-2">PLAYER</div>
                         <div class="col col-3">GROSS</div>
-                        <div class="col col-4">TO PAR</div>
+                        <div class="col col-4">PAR</div>
                         <div class="col col-5">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of grossLeaders">
-                        <div class="col col-1" data-label="Job Id">
+                        <div class="col col-1">
                             {{ item.position }}
                         </div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             {{ item.score }}
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.under }}
                         </div>
-                        <div class="col col-5" data-label="Payment Status">
+                        <div class="col col-5">
                             {{ item.holes }}
                         </div>
                     </li>
@@ -292,7 +311,7 @@
                 >
               </div>
               <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
-                <mat-icon
+                <mat-iccursor-pointer on
                   (click)="
                     viewPlayerScore(
                       item.courseId,
@@ -334,19 +353,37 @@
                         <div class="col col-5">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of grossLeaders">
-                        <div class="col col-1" data-label="Job Id">
+                        <div class="col col-1">
                             {{ item.position }}
                         </div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             {{ item.score }}
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.under }}
                         </div>
-                        <div class="col col-5" data-label="Payment Status">
+                        <div class="col col-5">
                             {{ item.holes }}
                         </div>
                     </li>
@@ -382,7 +419,7 @@
                 >
               </div>
               <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
-                <mat-icon
+                <mat-iccursor-pointer on
                   (click)="
                     viewPlayerScore(
                       item.courseId,
@@ -424,19 +461,37 @@
                         <div class="col col-5">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of netLeaders">
-                        <div class="col col-1" data-label="Job Id">
+                        <div class="col col-1">
                             {{ item.position }}
                         </div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             {{ item.score }}
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.under }}
                         </div>
-                        <div class="col col-5" data-label="Payment Status">
+                        <div class="col col-5">
                             {{ item.holes }}
                         </div>
                     </li>
@@ -473,7 +528,7 @@
                 >
               </div>
               <div [fxFlex]="25" fxLayoutAlign="end end" class="webLogo">
-                <mat-icon
+                <mat-iccursor-pointer on
                   (click)="
                     viewPlayerScore(
                       item.courseId,
@@ -515,19 +570,37 @@
                         <div class="col col-5">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of netLeaders">
-                        <div class="col col-1" data-label="Job Id">
+                        <div class="col col-1">
                             {{ item.position }}
                         </div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             {{ item.score }}
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.under }}
                         </div>
-                        <div class="col col-5" data-label="Payment Status">
+                        <div class="col col-5">
                             {{ item.holes }}
                         </div>
                     </li>
@@ -574,7 +647,7 @@
                                     class="webLogo"
                                 >
                                     <mat-icon
-                                        *ngIf="!teamMatch"
+                                        *ngIf="cursor-pointer !teamMatch"
                                         (click)="
                                             viewPlayerScore(
                                                 item.courseId,
@@ -689,7 +762,7 @@
                     id="all"
                     *ngIf="allRoundGrossScore"
                 >
-                    <li class="table-header" >
+                    <li class="table-header">
                         <div class="col col-1">POS.</div>
                         <div class="col col-2">PLAYER</div>
                         <div class="col col-3">TOTAL</div>
@@ -718,13 +791,31 @@
                         class="table-row hover:bg-gray-100"
                         *ngFor="let item of allLeadersGross"
                     >
-                        <div class="col col-1" data-label="Job Id">
+                        <div class="col col-1">
                             {{ item.position }}
                         </div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             <strong *ngIf="item.AllGrossUnder > 0">+</strong
                             ><strong
                                 *ngIf="item.AllGrossUnder < 0"
@@ -735,54 +826,51 @@
                             }}</strong
                             ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.TotalGross1 ? item.TotalGross1 : "-" }}
                         </div>
-                        <div class="col col-5" data-label="1" *ngIf="activeRound == 1">
-                        <strong *ngIf="item.holes1 == 18">F</strong
-                        ><strong *ngIf="item.holes1 < 18">{{
-                            item.holes1
-                        }}</strong>
-                    </div>
+                        <div class="col col-5" *ngIf="activeRound == 1">
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </div>
                         <div
                             class="col col-5"
-                            data-label="2"
                             *ngIf="activeRound >= 2 && totalRounds >= 2"
                         >
                             {{ item.TotalGross2 }}
                         </div>
-                        <div class="col col-5" data-label="3" *ngIf="activeRound == 2">
-                        <strong *ngIf="item.holes2 == 18">F</strong
-                        ><strong *ngIf="item.holes2 < 18">{{
-                            item.holes2
-                        }}</strong>
-                    </div>
+                        <div class="col col-5" *ngIf="activeRound == 2">
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </div>
                         <div
-                            data-label="4"
                             class="col col-5"
                             *ngIf="activeRound >= 3 && totalRounds >= 3"
                         >
                             {{ item.TotalGross3 }}
                         </div>
-                        <div class="col col-5" data-label="5" *ngIf="activeRound == 3">
-                        <strong *ngIf="item.holes3 == 18">F</strong>
-                        <strong *ngIf="item.holes3 < 18">{{
-                            item.holes3
-                        }}</strong>
-                    </div>
+                        <div class="col col-5" *ngIf="activeRound == 3">
+                            <strong *ngIf="item.holes3 == 18">F</strong>
+                            <strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </div>
                         <div
                             class="col col-5"
-                            data-label="6"
                             *ngIf="activeRound >= 4 && totalRounds == 4"
                         >
                             {{ item.TotalGross4 }}
                         </div>
-                        <div class="col col-5" data-label="7" *ngIf="activeRound == 4">
-                        <strong *ngIf="item.holes4 == 18">F</strong
-                        ><strong *ngIf="item.holes4 < 18">{{
-                            item.holes4
-                        }}</strong>
-                    </div>
+                        <div class="col col-5" *ngIf="activeRound == 4">
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </div>
                     </li>
                 </ul>
                 <!---Table For CUT ALL PLAYERS in Gross------------------------------------------------------------------------------->
@@ -939,11 +1027,12 @@
                         class="table-row"
                         *ngFor="let item of allLeadersCutOffGross"
                     >
-                        <div class="col col-1" data-label="Job Id">-</div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-1">-</div>
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs">HC:{{ item.handicap }}</div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             <strong *ngIf="item.AllGrossUnder > 0">+</strong
                             ><strong
                                 *ngIf="item.AllGrossUnder < 0"
@@ -954,7 +1043,7 @@
                             }}</strong
                             ><strong *ngIf="item.AllGrossUnder == 0">E</strong>
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.TotalGross1 }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 1">
@@ -1043,7 +1132,7 @@
                                     class="webLogo"
                                 >
                                     <mat-icon
-                                        *ngIf="!teamMatch"
+                                        *ngIf="cursor-pointer !teamMatch"
                                         (click)="
                                             viewPlayerScore(
                                                 item.courseId,
@@ -1146,13 +1235,31 @@
                         </div>
                     </li>
                     <li class="table-row" *ngFor="let item of allLeadersNet">
-                        <div class="col col-1" data-label="Job Id">
+                        <div class="col col-1">
                             {{ item.positionNet }}
                         </div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             <strong *ngIf="item.AllNetUnder > 0">+</strong
                             ><strong
                                 *ngIf="item.AllNetUnder < 0"
@@ -1163,15 +1270,15 @@
                             }}</strong
                             ><strong *ngIf="item.AllNetUnder == 0">E</strong>
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.TotalNet1 }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 1">
-                        <strong *ngIf="item.holes1 == 18">F</strong
-                        ><strong *ngIf="item.holes1 < 18">{{
-                            item.holes1
-                        }}</strong>
-                    </div>
+                            <strong *ngIf="item.holes1 == 18">F</strong
+                            ><strong *ngIf="item.holes1 < 18">{{
+                                item.holes1
+                            }}</strong>
+                        </div>
                         <div
                             class="col col-5"
                             *ngIf="activeRound >= 2 && totalRounds >= 2"
@@ -1179,11 +1286,11 @@
                             {{ item.TotalNet2 }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 2">
-                        <strong *ngIf="item.holes2 == 18">F</strong
-                        ><strong *ngIf="item.holes2 < 18">{{
-                            item.holes2
-                        }}</strong>
-                    </div>
+                            <strong *ngIf="item.holes2 == 18">F</strong
+                            ><strong *ngIf="item.holes2 < 18">{{
+                                item.holes2
+                            }}</strong>
+                        </div>
                         <div
                             class="col col-5"
                             *ngIf="activeRound >= 3 && totalRounds >= 3"
@@ -1191,11 +1298,11 @@
                             {{ item.TotalNet3 }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 3">
-                        <strong *ngIf="item.holes3 == 18">F</strong>
-                        <strong *ngIf="item.holes3 < 18">{{
-                            item.holes3
-                        }}</strong>
-                    </div>
+                            <strong *ngIf="item.holes3 == 18">F</strong>
+                            <strong *ngIf="item.holes3 < 18">{{
+                                item.holes3
+                            }}</strong>
+                        </div>
                         <div
                             class="col col-5"
                             *ngIf="activeRound >= 4 && totalRounds == 4"
@@ -1203,11 +1310,11 @@
                             {{ item.TotalNet4 }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 4">
-                        <strong *ngIf="item.holes4 == 18">F</strong
-                        ><strong *ngIf="item.holes4 < 18">{{
-                            item.holes4
-                        }}</strong>
-                    </div>
+                            <strong *ngIf="item.holes4 == 18">F</strong
+                            ><strong *ngIf="item.holes4 < 18">{{
+                                item.holes4
+                            }}</strong>
+                        </div>
                     </li>
                 </ul>
 
@@ -1345,11 +1452,29 @@
                         class="table-row"
                         *ngFor="let item of allLeadersCutOffNet"
                     >
-                        <div class="col col-1" data-label="Job Id">-</div>
-                        <div class="col col-2" data-label="Customer Name">
-                            {{ item.name }}-({{ item.handicap }})
+                        <div class="col col-1">-</div>
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                HC:{{ item.handicap }}
+                                <div
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    (click)="
+                                        viewPlayerScore(
+                                            item.name,
+                                            item.courseId,
+                                            item.holeSets,
+                                            item.playerId,
+                                            item.holeSetsInverted,
+                                            'gross'
+                                        )
+                                    "
+                                >
+                                    view score
+                                </div>
+                            </div>
                         </div>
-                        <div class="col col-3" data-label="Amount">
+                        <div class="col col-3">
                             <strong *ngIf="item.AllNetUnder > 0">+</strong
                             ><strong
                                 *ngIf="item.AllNetUnder < 0"
@@ -1360,7 +1485,7 @@
                             }}</strong
                             ><strong *ngIf="item.AllNetUnder == 0">E</strong>
                         </div>
-                        <div class="col col-4" data-label="Payment Status">
+                        <div class="col col-4">
                             {{ item.TotalNet1 }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 1">

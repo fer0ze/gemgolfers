@@ -10,16 +10,16 @@
                     <div class="flex-0 w-20 h-25 rounded-full overflow-hidden">
                         <img
                             class="w-full h-full object-cover"
-                            src="assets/images/logo/{{clubLogo}}" alt="user"
+                            src="assets/images/logo/{{ clubLogo }}"
+                            alt="user"
                         />
                     </div>
                     <div class="flex flex-col min-w-0 ml-4">
-                        <ng-container >
+                        <ng-container>
                             <div
                                 class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate"
                             >
-                               Welcome Back-{{this.loggedInuser.fullName
-                                }}
+                                Welcome Back-{{ this.loggedInuser.fullName }}
                             </div>
                         </ng-container>
                         <div class="flex items-center">
@@ -34,7 +34,7 @@
                     <button
                         class="bg-accent"
                         mat-flat-button
-                        (click)="addNewRound()" 
+                        (click)="addNewRound()"
                         [color]="'accent'"
                     >
                         <mat-icon
@@ -43,7 +43,11 @@
                         ></mat-icon>
                         <span class="ml-2">New Round</span>
                     </button>
-                    <button mat-flat-button  (click)="addNewPlayer()"  [color]="'primary'">
+                    <button
+                        mat-flat-button
+                        (click)="addNewPlayer()"
+                        [color]="'primary'"
+                    >
                         <mat-icon
                             class="icon-size-5"
                             [svgIcon]="'heroicons_solid:add-member'"
@@ -228,7 +232,7 @@
                         <div
                             class="text-lg font-medium tracking-tight leading-6 truncate"
                         >
-                           Club Players
+                            Club Players
                         </div>
                         <!-- <div class="ml-2 -mt-2 -mr-3">
                                         <button
@@ -361,9 +365,9 @@
                         class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
                     >
                         <!-- New vs. Closed -->
-                        <div class="flex flex-col flex-auto">
+                        <div    class="flex flex-col flex-auto">
                             <div class="font-medium text-secondary"></div>
-                            <div class="flex flex-col flex-auto">
+                            <div *ngIf="loading" class="flex flex-col flex-auto">
                                 <apx-chart
                                     class="flex-auto w-full h-80"
                                     [chart]="chartGithubIssues.chart"
@@ -389,7 +393,7 @@
                             </div>
                         </div>
                         <!-- Overview -->
-                        <div class="flex flex-col">
+                        <div  *ngIf="loading" class="flex flex-col">
                             <div class="font-medium text-secondary">
                                 Overview
                             </div>
@@ -514,7 +518,7 @@
                 </div>
                 <!-- Task distribution -->
                 <div
-                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                *ngIf="loading" class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                 >
                     <div
                         class="flex flex-col sm:flex-row items-start justify-between"
@@ -532,11 +536,7 @@
                             [labels]="chartTaskDistribution.labels"
                             [legend]="chartTaskDistribution.legend"
                             [plotOptions]="chartTaskDistribution.plotOptions"
-                            [series]="
-                                chartTaskDistribution.series[
-                                   'all'
-                                ]
-                            "
+                            [series]="chartTaskDistribution.series['all']"
                             [states]="chartTaskDistribution.states"
                             [stroke]="chartTaskDistribution.stroke"
                             [theme]="chartTaskDistribution.theme"
@@ -553,12 +553,10 @@
                             <div
                                 class="text-5xl font-semibold leading-none tracking-tighter"
                             >
-                                {{
-                                    234
-                                }}
+                                {{ 234 }}
                             </div>
                             <div class="mt-1 text-center text-secondary">
-                               Premimum Players
+                                Premimum Players
                             </div>
                         </div>
                         <div
@@ -567,30 +565,28 @@
                             <div
                                 class="text-5xl font-semibold leading-none tracking-tighter"
                             >
-                                {{
-                                    this.playerCounts
-                                }}
+                                {{ this.playerCounts }}
                             </div>
                             <div class="mt-1 text-center text-secondary">
-                               Total Players
+                                Total Players
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Schedule -->
                 <div
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                            >
-                                <div
-                                    class="flex flex-col sm:flex-row items-start justify-between"
-                                >
-                                    <div
-                                        class="text-lg font-medium tracking-tight leading-6 truncate"
-                                    >
-                                        Schedule
-                                    </div>
-                                    <div class="mt-3 sm:mt-0 sm:ml-2">
-                                        <mat-button-toggle-group
+                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                >
+                    <div
+                        class="flex flex-col sm:flex-row items-start justify-between"
+                    >
+                        <div
+                            class="text-lg font-medium tracking-tight leading-6 truncate"
+                        >
+                            Tournaments
+                        </div>
+                        <div class="mt-3 sm:mt-0 sm:ml-2">
+                            <!-- <mat-button-toggle-group
                                             value="today"
                                             #scheduleDaySelector="matButtonToggleGroup"
                                         >
@@ -600,87 +596,86 @@
                                             <mat-button-toggle value="tomorrow"
                                                 >Tomorrow</mat-button-toggle
                                             >
-                                        </mat-button-toggle-group>
+                                        </mat-button-toggle-group> -->
+                        </div>
+                    </div>
+                    <div class="flex flex-col mt-2 divide-y">
+                        <ng-container
+                            *ngFor="
+                                let scheduleItem of tournaments;
+                                trackBy: trackByFn
+                            "
+                        >
+                            <div
+                                class="flex flex-row items-center justify-between py-4 px-0.5"
+                            >
+                                <div class="flex flex-col">
+                                    <div class="font-medium">
+                                        {{ scheduleItem.title }}
                                     </div>
-                                </div>
-                                <div class="flex flex-col mt-2 divide-y">
-                                    <ng-container
-                                        *ngFor="
-                                            let scheduleItem of data.schedule[
-                                                scheduleDaySelector.value
-                                            ];
-                                            trackBy: trackByFn
-                                        "
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3"
                                     >
-                                        <div
-                                            class="flex flex-row items-center justify-between py-4 px-0.5"
-                                        >
-                                            <div class="flex flex-col">
-                                                <div class="font-medium">
-                                                    {{ scheduleItem.title }}
-                                                </div>
-                                                <div
-                                                    class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3"
-                                                >
-                                                    <ng-container
-                                                        *ngIf="
-                                                            scheduleItem.time
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="flex items-center"
-                                                        >
-                                                            <mat-icon
-                                                                class="icon-size-5 text-hint"
-                                                                [svgIcon]="
-                                                                    'heroicons_solid:clock'
-                                                                "
-                                                            ></mat-icon>
-                                                            <div
-                                                                class="ml-1.5 text-md text-secondary"
-                                                            >
-                                                                {{
-                                                                    scheduleItem.time
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-container
-                                                        *ngIf="
-                                                            scheduleItem.location
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="flex items-center"
-                                                        >
-                                                            <mat-icon
-                                                                class="icon-size-5 text-hint"
-                                                                [svgIcon]="
-                                                                    'heroicons_solid:location-marker'
-                                                                "
-                                                            ></mat-icon>
-                                                            <div
-                                                                class="ml-1.5 text-md text-secondary"
-                                                            >
-                                                                {{
-                                                                    scheduleItem.location
-                                                                }}
-                                                            </div>
-                                                        </div>
-                                                    </ng-container>
-                                                </div>
+                                        <ng-container>
+                                            <div
+                                                class="py-0.5 px-3 rounded-full text-sm font-semibold"
+                                                [ngClass]="{
+                                                    'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'STROKE_PLAY',
+                                                    'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'STABLEFORD',
+                                                    'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'TEXAS_SCRAMBLE',
+                                                    'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'STROKE_PLAY'
+                                                }"
+                                            >
+                                                {{ scheduleItem.matchFormat }}
                                             </div>
-                                            <button mat-icon-button>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="scheduleItem.noOfRounds"
+                                        >
+                                            <div class="flex items-center">
                                                 <mat-icon
+                                                    class="icon-size-5 text-hint"
                                                     [svgIcon]="
-                                                        'heroicons_solid:chevron-right'
+                                                        'heroicons_solid:clipboard'
                                                     "
                                                 ></mat-icon>
-                                            </button>
-                                        </div>
-                                    </ng-container>
+                                                <div
+                                                    class="ml-1.5 text-md text-secondary"
+                                                >
+                                                    {{
+                                                        scheduleItem.noOfRounds
+                                                    }} Rounds
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
                                 </div>
+                                <a
+                                    [routerLinkActive]="'active'"
+                                    [routerLink]="[
+                                        '/tournaments/view/' + scheduleItem.id
+                                    ]"
+                                >
+                                    <button mat-icon-button>
+                                        <mat-icon
+                                            [svgIcon]="
+                                                'heroicons_solid:chevron-right'
+                                            "
+                                        ></mat-icon>
+                                    </button>
+                                </a>
                             </div>
+                        </ng-container>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -7,21 +7,21 @@ table {
     border-collapse: collapse;
 
     tr.topheader {
-        background-color: #406325;
+        background-color: #0d273a;
         color: #fff;
     }
-    
+
     tr.topheader th {
         padding: 5px;
         font-weight: normal;
     }
-    
+
     tr.subhead {
         font-family: monospace;
         background-color: #E8E8E7;
         color: #585858
     }
-    
+
     tr.subhead th {
         border: solid 1px #fff;
         font-weight: bold;
@@ -35,11 +35,11 @@ table {
 
     tr.scorebody td {
         border: solid 1px #E8E8E7;
-        font-weight: bold;  
+        font-weight: bold;
         padding: 8px;
         text-align: center;
         color: #518681;
-        
+
         span {
             color: #4e4c4b;
         }
@@ -52,16 +52,16 @@ table {
 
     tr.scorebodyred {
         font-family: monospace;
-        color: red!important;
+        color: red !important;
     }
 
     tr.scorebodyred td {
         border: solid 1px #E8E8E7;
-        font-weight: bold;  
+        font-weight: bold;
         padding: 8px;
         text-align: center;
-        color: red!important;
-        
+        color: red !important;
+
         span {
             color: #4e4c4b;
         }
@@ -78,10 +78,44 @@ table {
     }
 
 }
+
 .example-spacer {
     flex: 1 1 auto;
-  }
-  .box{
+}
+
+.box {
     display: flex;
     justify-content: center;
-  }
+}
+
+.eagle {
+    background-color: rgb(230, 171, 7);
+    span{
+        color: white !important;
+
+    }
+}
+
+.birdy {
+    background-color: rgb(192, 0, 0);
+    span{
+        color: white !important;
+
+    }
+}
+
+.bogey {
+    background-color: rgb(121, 121, 121);
+    span{
+        color: white !important;
+
+    }
+}
+
+.doublebogey {
+    background-color: rgb(0, 52, 148);
+    span{
+        color: white !important;
+
+    }
+}

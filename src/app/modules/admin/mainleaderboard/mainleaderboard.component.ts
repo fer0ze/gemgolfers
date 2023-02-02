@@ -2226,94 +2226,96 @@ export class MainLeaderboardComponent implements OnInit {
         }
         ////console.log(this.allMatchResults);
     }
-
     viewPlayerScore(
+        name: string,
         courseId: string,
         courseHoleSets: string,
         playerId: string,
         holeSetsInverted: string,
         scoreType: string
-    ) {
+      ) {
         let playerGrossScore: any;
         let playerNetScore: any;
         let playerPerTeam: any[];
         let team: boolean = false;
         let removed: string[] = [];
         //console.log(playerId);
-
+    
         if (this.flightRound == 0) {
-            playerGrossScore = this.grossAllLeaders.filter((g) => {
-                return g.playerId == playerId;
-            });
-
-            playerNetScore = this.netAllLeaders.filter((g) => {
-                return g.playerId == playerId;
-            });
+          playerGrossScore = this.grossAllLeaders.filter((g) => {
+            return g.playerId == playerId;
+          });
+    
+          playerNetScore = this.netAllLeaders.filter((g) => {
+            return g.playerId == playerId;
+          });
         } else {
-            playerGrossScore = this.grossLeaders.filter((g) => {
-                return g.playerId == playerId;
-            });
-
-            playerNetScore = this.netLeaders.filter((g) => {
-                return g.playerId == playerId;
-            });
+          playerGrossScore = this.grossLeaders.filter((g) => {
+            return g.playerId == playerId;
+          });
+    
+          playerNetScore = this.netLeaders.filter((g) => {
+            return g.playerId == playerId;
+          });
         }
         playerPerTeam = this.Leaderboard.FlightsQL.filter((a) => {
-            return a.id == playerId;
+          return a.id == playerId;
         });
-
+    
         ////console.log(playerGrossScore);
         if (
-            this.teamMatch &&
-            (this.matchFormat == matchFormat.BEST_THREE ||
-                this.matchFormat == matchFormat.COMBINE_ALL)
+          this.teamMatch &&
+          (this.matchFormat == matchFormat.BEST_THREE ||
+            this.matchFormat == matchFormat.COMBINE_ALL)
         ) {
-            removed =
-                playerGrossScore.length > 0 && playerGrossScore[0].removedScore
-                    ? playerGrossScore[0].removedScore
-                    : [];
-            playerGrossScore =
-                playerGrossScore.length > 0
-                    ? playerGrossScore[0].holeScores
-                    : [];
-            playerNetScore =
-                playerNetScore.length > 0 ? playerNetScore[0].holeScores : [];
-
-            if (!removed) removed = [];
-
-            team = true;
+          removed =
+            playerGrossScore.length > 0 && playerGrossScore[0].removedScore
+              ? playerGrossScore[0].removedScore
+              : [];
+          playerGrossScore =
+            playerGrossScore.length > 0 ? playerGrossScore[0].holeScores : [];
+          playerNetScore =
+            playerNetScore.length > 0 ? playerNetScore[0].holeScores : [];
+    
+          if (!removed) removed = [];
+    
+          team = true;
         }
         if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-            const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-                data: {
-                    course: courseId,
-                    players: playerPerTeam[0]['MembersQL'],
-                    holeSets: courseHoleSets,
-                    courseHoleSetsInverted: holeSetsInverted,
-                    allGross: playerGrossScore,
-                    allNet: playerNetScore,
-                    round: this.flightRound,
-                    type: scoreType,
-                    team: team,
-                    removed: removed,
-                },
-            });
+          const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
+            data: {
+              name: name,
+              tee_id: this.Leaderboard.tee_id,
+              course: courseId,
+              players: playerPerTeam[0]["MembersQL"],
+              holeSets: courseHoleSets,
+              courseHoleSetsInverted: holeSetsInverted,
+              allGross: playerGrossScore,
+              allNet: playerNetScore,
+              round: this.flightRound,
+              type: scoreType,
+              team: team,
+              removed: removed,
+            },
+          });
         } else {
-            const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-                data: {
-                    course: courseId,
-                    holeSets: courseHoleSets,
-                    allGross: playerGrossScore,
-                    courseHoleSetsInverted: holeSetsInverted,
-                    allNet: playerNetScore,
-                    round: this.flightRound,
-                    type: scoreType,
-                    team: team,
-                    removed: removed,
-                },
-            });
+          const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
+            data: {
+              name: name,
+              tee_id: this.Leaderboard.tee_id,
+              course: courseId,
+              holeSets: courseHoleSets,
+              allGross: playerGrossScore,
+              courseHoleSetsInverted: holeSetsInverted,
+              allNet: playerNetScore,
+              round: this.flightRound,
+              type: scoreType,
+              team: team,
+              removed: removed,
+            },
+          });
         }
-    }
+      }
 
     private createTexasScrampleLeaders(
         flightsQLs: any[],

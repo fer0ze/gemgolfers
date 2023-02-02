@@ -121,6 +121,11 @@ export const GetCourseInformation = gql`
         
       HolesQL: holes {
         ...HoleQL
+        HoleMetaQL:meta{
+          hole_id
+          tee_distance
+          tee_id
+        }
       }
       TeesQL: tees {
         name_by_club

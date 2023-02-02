@@ -794,6 +794,13 @@ export class FacadeService {
       toDate
     );
   }
+  getAll(clubId: string, fromDate: string, toDate: string) {
+    return this.tournamentService.getAll(
+      clubId,
+      fromDate,
+      toDate
+    );
+  }
   getDailyRoundsSingleDashboardAll( fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleDashboardAll(
       

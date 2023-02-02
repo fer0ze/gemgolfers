@@ -2056,7 +2056,7 @@
                                                                 'emoji_people'
                                                             "
                                                             [data]="
-                                                                avgScore[
+                                                                avgScore1[
                                                                     'par3Avg'
                                                                 ]
                                                             "
@@ -2071,7 +2071,7 @@
                                                                 'emoji_people'
                                                             "
                                                             [data]="
-                                                                avgScore[
+                                                                avgScore1[
                                                                     'par4Avg'
                                                                 ]
                                                             "
@@ -2086,7 +2086,7 @@
                                                                 'emoji_people'
                                                             "
                                                             [data]="
-                                                                avgScore[
+                                                                avgScore1[
                                                                     'par5Avg'
                                                                 ]
                                                             "
@@ -4602,6 +4602,7 @@
                     <div class="w-full max-w-screen-xl mx-auto">
                         <app-matchplay
                             [tournamentID]="tournamentID"
+                            [courseID]="this.fullTournament.courseId"
                         ></app-matchplay>
                     </div>
                 </div>

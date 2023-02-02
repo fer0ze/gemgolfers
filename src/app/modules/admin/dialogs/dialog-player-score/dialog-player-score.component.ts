@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FacadeService } from "app/shared/services/facade.service";
-import { Hole } from "app/shared/models/hole.model";
-import { Constants } from "app/shared/classes/general";
+import { FacadeService } from "../../../../shared/services/facade.service";
+import { Hole } from "../../../../shared/models/hole.model";
+import { Constants } from "../../../../shared/classes/general";
 import { of } from "rxjs";
+import { Player } from "app/shared/models/player.model";
 
 @Component({
   selector: "app-dialog-player-score",
@@ -19,6 +20,7 @@ export class DialogPlayerScoreComponent implements OnInit {
   isTaxes: boolean = false;
   allScores: any[] = [];
   courseHoleSet = 0;
+  loggedInuser: Player;
   courseHoleSetNames;
   playerName: string;
   isTaxesScoreBor: boolean = false;
@@ -34,9 +36,15 @@ export class DialogPlayerScoreComponent implements OnInit {
     if (this.data.players && this.data.players.length > 0) {
       this.isTaxes = true;
     }
-    let course = "-LUFS3FCQKOGpJ2IEHmf";
+    this.loggedInuser = JSON.parse(
+      localStorage.getItem(Constants.LOGGED_IN_USER)
+    );
+    // let club:any = this.loggedInuser.membership[0].club;
+    // let courseID =
+    // club.courses.length > 0 ? club.courses[0].id : "-LUFS3FCQKOGpJ2IEHmf";
+    let courseID = this.data["course"];
     let selectedCourseHoleSet =
-      await this.facadeService.getCourseHoleSetsForCourse(course);
+      await this.facadeService.getCourseHoleSetsForCourse(courseID);
     this.courseHoleSetNames = selectedCourseHoleSet["course_hole_sets"];
     console.log(this.courseHoleSetNames);
     //  console.log(this.data.allNet);
@@ -92,6 +100,7 @@ export class DialogPlayerScoreComponent implements OnInit {
       //   this.data.courseHoleSetsInverted
       // );
       holesQLs = this.getHolesSets(
+        this.data.tee_id,
         this.data.holeSets,
         holesQLs,
         this.data.courseHoleSetsInverted,
@@ -102,14 +111,14 @@ export class DialogPlayerScoreComponent implements OnInit {
         let teeDistance = holeQL.teeDistances;
 
         if (holeQL.holeNo < 10) {
-          yardage9Total += parseInt(teeDistance.blue);
+          yardage9Total += parseInt(teeDistance);
           par9 += holeQL.par;
-          yardage9.push(parseInt(teeDistance.blue));
+          yardage9.push(parseInt(teeDistance));
 
           courseHoles9.push(holeQL);
         } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
-          yardage18.push(parseInt(teeDistance.blue));
-          yardage18Total += parseInt(teeDistance.blue);
+          yardage18.push(parseInt(teeDistance));
+          yardage18Total += parseInt(teeDistance);
           par18 += holeQL.par;
 
           courseHoles18.push(holeQL);
@@ -148,6 +157,7 @@ export class DialogPlayerScoreComponent implements OnInit {
 
       this.scoreHeader.push(scoreHeader);
       console.log(this.scoreHeader);
+      console.log(this.scoreHeader[0].courseHoles9[0]['par']);
       if (this.data.type == Constants.SCORE_GROSS) this.grossScoreCard();
       else this.netScoreCard();
     }
@@ -409,6 +419,7 @@ export class DialogPlayerScoreComponent implements OnInit {
   }
 
   public getHolesSets(
+    tee_id:string,
     courseHoleSets: number,
     holes,
     isCourseHoleSetsInverted: boolean,
@@ -427,13 +438,16 @@ export class DialogPlayerScoreComponent implements OnInit {
           let counter = 1;
           for (let i of holes) {
             if (obj.id == i.holeSetId) {
+              let tee_distance=i.HoleMetaQL.filter((a)=>{
+                return a.tee_id==tee_id
+               })
               let singleHole: any = {
                 id: i.id,
                 courseId: i.courseId,
                 holeNo: counter,
                 par: i.par,
                 index: i.index,
-                teeDistances: i.teeDistances,
+                teeDistances: tee_distance[0].tee_distance,
                 holeSetId: i.holeSetId,
               };
               arrayOfHoleSet.push(singleHole);
@@ -448,13 +462,16 @@ export class DialogPlayerScoreComponent implements OnInit {
           let counter = 1;
           for (let i of holes) {
             if (holesSetA.id == i.holeSetId) {
+              let tee_distance=i.HoleMetaQL.filter((a)=>{
+                return a.tee_id==tee_id
+               })
               let singleHole: any = {
                 id: i.id,
                 courseId: i.courseId,
                 holeNo: counter,
                 par: i.par,
                 index: i.index,
-                teeDistances: i.teeDistances,
+                teeDistances: tee_distance[0].tee_distance,
                 holeSetId: i.holeSetId,
               };
               arrayOfHoleSet.push(singleHole);
@@ -464,13 +481,16 @@ export class DialogPlayerScoreComponent implements OnInit {
           let counterA = 10;
           for (let i of holes) {
             if (holesSetB.id == i.holeSetId) {
+              let tee_distance=i.HoleMetaQL.filter((a)=>{
+                return a.tee_id==tee_id
+               })
               let singleHole: any = {
                 id: i.id,
                 courseId: i.courseId,
                 holeNo: counterA,
                 par: i.par,
                 index: i.index,
-                teeDistances: i.teeDistances,
+                teeDistances: tee_distance[0].tee_distance,
                 holeSetId: i.holeSetId,
               };
               arrayOfHoleSet.push(singleHole);

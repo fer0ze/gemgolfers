@@ -44,6 +44,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     playerAddedTodayCounts: any = 2;
     playerCounts: any = 0;
     showdata: Promise<boolean>;
+    loading: boolean=false;
     _labels: any = labels;
     _labelsPlayers: any = labelsPlayers;
     _series: any = [];
@@ -55,6 +56,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     newRounds: any = 0;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     clubLogo: string;
+    tournaments: any;
 
     /**
      * Constructor
@@ -105,17 +107,18 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
         //this.showdata = Promise.resolve(true);
-        this.fetchdata();
+         this.fetchdata();
         //  this.getDailyRounds(lastWeekSunday, lastWeekMonday);
         //  this.getAllPlayers();
-        this._projectService.data$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((data) => {
-                // Store the data
-                this.data = data;
-                console.log(this.data);
-            });
+        // this._projectService.data$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((data) => {
+        //         // Store the data
+        //         this.data = data;
+        //         console.log(this.data);
+        //     });
         this.showdata = Promise.resolve(true);
+        this.loading=true;
         console.log(this.showdata);
 
         // Get the data
@@ -502,6 +505,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let playerCounts;
         let dataPlayers: any;
         let players: any;
+        let getall: any;
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
         if (this.loggedInuser.userRole == 1) {
@@ -524,45 +528,61 @@ export class ProjectComponent implements OnInit, OnDestroy {
             players =
                 await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
         } else {
-            tournamentCounts =
-                await this._facadeService.getTournamentCountsByClub(
-                    this.loggedInuser.adminClubId
-                );
-            //Get the Flights Count
-            flightCounts = await this._facadeService.getTotalFlights(
-                this.loggedInuser.adminClubId
-            );
-            // Get the Flights Count
-            playerCounts = await this._facadeService.getTotalPlayers(
-                this.loggedInuser.adminClubId
-            );
-            dataPlayers =
-                await this._facadeService.getDailyRoundsSingleDashboard(
-                    this.loggedInuser.adminClubId,
-                    this._datePipe.transform(
-                        lastWeekSunday.toString(),
-                        'yyyy-MM-dd'
-                    ),
-                    this._datePipe.transform(
-                        lastWeekMonday.toString(),
-                        'yyyy-MM-dd'
-                    )
-                );
+            // tournamentCounts =
+            //     await this._facadeService.getTournamentCountsByClub(
+            //         this.loggedInuser.adminClubId
+            //     );
+            // //Get the Flights Count
+            // flightCounts = await this._facadeService.getTotalFlights(
+            //     this.loggedInuser.adminClubId
+            // );
+            // // Get the Flights Count
+            // playerCounts = await this._facadeService.getTotalPlayers(
+            //     this.loggedInuser.adminClubId
+            // );
+            // dataPlayers =
+            //     await this._facadeService.getDailyRoundsSingleDashboard(
+            //         this.loggedInuser.adminClubId,
+            //         this._datePipe.transform(
+            //             lastWeekSunday.toString(),
+            //             'yyyy-MM-dd'
+            //         ),
+            //         this._datePipe.transform(
+            //             lastWeekMonday.toString(),
+            //             'yyyy-MM-dd'
+            //         )
+            //     );
 
-            players =
-                await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
-                    this.loggedInuser.adminClubId
-                );
+            // players =
+            //     await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
+            //         this.loggedInuser.adminClubId
+            //     );
+            getall = await this._facadeService.getAll(
+                this.loggedInuser.adminClubId,
+                this._datePipe.transform(
+                    lastWeekSunday.toString(),
+                    'yyyy-MM-dd'
+                ),
+                this._datePipe.transform(
+                    lastWeekMonday.toString(),
+                    'yyyy-MM-dd'
+                )
+            );
         }
 
-        this.tournamentCounts = tournamentCounts.Count.aggregate.count;
+        this.tournamentCounts = getall.TournamentQL.length;
+        if (this.tournamentCounts > 6)
+            this.tournaments = getall.TournamentQL.splice(
+                0,
+                6
+            );
 
         console.log(this.tournamentCounts);
 
-        this.flightCounts = flightCounts.Count.aggregate.count;
+        this.flightCounts = getall.Count.aggregate.count;
         console.log(this.flightCounts);
 
-        this.playerCounts = playerCounts.AggregateQL.aggregate.totalCount;
+        this.playerCounts = getall.AggregateQL.aggregate.totalCount;
         console.log(this.playerCounts);
         console.log('a');
 
@@ -573,7 +593,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let memCounter = 0;
         let totalFlights = 0;
 
-        let data = dataPlayers.TournamentsQL.sort(this.ComparatorDate);
+        let data = getall.TournamentsQLs.sort(this.ComparatorDate);
         //let data = dataPlayers.TournamentsQL;
         let i = 0;
         for (let stats of data) {
@@ -634,12 +654,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
         ];
 
         this.flightCountsNotCal =
-            dataPlayers.TournamentsQL.length - this.flightCountsCal;
+        getall.TournamentsQLs.length - this.flightCountsCal;
         console.log(this._overview);
 
         this._overview['last-week'] = [
             {
-                newIssues: dataPlayers.TournamentsQL.length,
+                newIssues: getall.TournamentsQLs.length,
                 closedIssues: this.membersCountsCal,
                 fixed: this.flightCountsCal,
                 wontfix: this.flightCountsNotCal,
@@ -652,13 +672,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
         console.log(players);
         this._seriesPlayers['all'] = [
-            players.club[0].Amateurs.aggregate['count'],
+            getall.club[0].Amateurs.aggregate['count'],
 
-            players.club[0].Senior_Amateurs.aggregate['count'],
+            getall.club[0].Senior_Amateurs.aggregate['count'],
 
-            players.club[0].Veterans.aggregate['count'],
+            getall.club[0].Veterans.aggregate['count'],
 
-            players.club[0].Ladies.aggregate['count'],
+            getall.club[0].Ladies.aggregate['count'],
         ];
 
         console.log(this._seriesPlayers);

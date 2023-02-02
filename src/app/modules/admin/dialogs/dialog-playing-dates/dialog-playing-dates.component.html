@@ -1,0 +1,32 @@
+<div mat-dialog-content>
+  <div
+    class="mb-4 separator flex flex-col"
+    
+  >
+    <div class="flex my-2 p-1 justify-center flex-row">
+      <h2 class="font-bold text-lg">
+        {{
+          this.category.length > 1
+            ? this.categoryDate[0]["cat"].name
+            : this.category[0]["cat"].name
+        }}
+        Playing Date
+      </h2>
+    </div>
+    <div class="flex mt-3 p-4 justify-center flex-row" >
+      <div *ngFor="let t of this.date; let w = index">
+        <div class="w-32" style="margin-right: 15px">
+          <mat-checkbox matInput (change)="dateChange($event, t)">{{
+            t.dates
+          }}</mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="flex justify-center">
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button [mat-dialog-close]="playingDates" cdkFocusInitial>
+    Yes
+  </button>
+</div>
