@@ -1489,7 +1489,7 @@ export const getallDashboard = gql`
                         clubId: { _eq: $adminClubId }
                     }
                 ]
-            },
+            }
             order_by: [{ startDate: desc }]
         ) {
             id
@@ -1547,6 +1547,75 @@ export const getallDashboard = gql`
         TournamentsQLs: tournament(
             where: {
                 clubId: { _eq: $adminClubId }
+                singleRound: { _eq: true }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            startDate
+            FlightsQL: flights {
+                ended
+                MembersQL: members {
+                    attendance
+                }
+            }
+        }
+    }
+`;
+export const getAllAdmin = gql`
+    query geteverything($fromDate: date!, $toDate: date!) {
+        TournamentQL: tournament(
+            where: { singleRound: { _eq: false } }
+            order_by: [{ startDate: desc }]
+        ) {
+            id
+            title
+            matchFormat
+            noOfRounds
+        }
+        Count: flight_aggregate {
+            aggregate {
+                count
+            }
+        }
+        AggregateQL: player_aggregate {
+            aggregate {
+                totalCount: count
+            }
+        }
+
+        Amateurs: player_aggregate(
+            where: { playerCategory: { _eq: "Amateurs" } }
+        ) {
+            aggregate {
+                count
+            }
+        }
+        Senior_Amateurs: player_aggregate(
+            where: { playerCategory: { _eq: "Senior Amateurs" } }
+        ) {
+            aggregate {
+                count
+            }
+        }
+
+        Veterans: player_aggregate(
+            where: { playerCategory: { _eq: "Veterans" } }
+        ) {
+            aggregate {
+                count
+            }
+        }
+        Ladies: player_aggregate(where: { playerCategory: { _eq: "Ladies" } }) {
+            aggregate {
+                count
+            }
+        }
+
+        TournamentsQLs: tournament(
+            where: {
                 singleRound: { _eq: true }
                 _and: [
                     { startDate: { _gte: $toDate } }

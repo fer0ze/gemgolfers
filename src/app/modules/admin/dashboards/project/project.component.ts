@@ -509,13 +509,25 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
         if (this.loggedInuser.userRole == 1) {
-            tournamentCounts =
-                await this._facadeService.getTournamentCountsByClubAll();
-            //Get the Flights Count
-            flightCounts = await this._facadeService.getTotalFlightsAll();
-            playerCounts = await this._facadeService.getTotalPlayersAll();
-            dataPlayers =
-                await this._facadeService.getDailyRoundsSingleDashboardAll(
+            // tournamentCounts =
+            //     await this._facadeService.getTournamentCountsByClubAll();
+            // //Get the Flights Count
+            // flightCounts = await this._facadeService.getTotalFlightsAll();
+            // playerCounts = await this._facadeService.getTotalPlayersAll();
+            // dataPlayers =
+            //     await this._facadeService.getDailyRoundsSingleDashboardAll(
+            //         this._datePipe.transform(
+            //             lastWeekSunday.toString(),
+            //             'yyyy-MM-dd'
+            //         ),
+            //         this._datePipe.transform(
+            //             lastWeekMonday.toString(),
+            //             'yyyy-MM-dd'
+            //         )
+            //     );
+            // players =
+            //     await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
+                getall = await this._facadeService.getAllAdmin(
                     this._datePipe.transform(
                         lastWeekSunday.toString(),
                         'yyyy-MM-dd'
@@ -525,8 +537,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
                         'yyyy-MM-dd'
                     )
                 );
-            players =
-                await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
         } else {
             // tournamentCounts =
             //     await this._facadeService.getTournamentCountsByClub(
@@ -671,15 +681,28 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this._prepareChartData();
 
         console.log(players);
-        this._seriesPlayers['all'] = [
-            getall.club[0].Amateurs.aggregate['count'],
+        if (this.loggedInuser.userRole == 1) {
 
-            getall.club[0].Senior_Amateurs.aggregate['count'],
-
-            getall.club[0].Veterans.aggregate['count'],
-
-            getall.club[0].Ladies.aggregate['count'],
-        ];
+            this._seriesPlayers['all'] = [
+                getall.Amateurs.aggregate['count'],
+    
+                getall.Senior_Amateurs.aggregate['count'],
+    
+                getall.Veterans.aggregate['count'],
+    
+                getall.Ladies.aggregate['count'],
+            ];
+        }else{
+            this._seriesPlayers['all'] = [
+                getall.club[0].Amateurs.aggregate['count'],
+    
+                getall.club[0].Senior_Amateurs.aggregate['count'],
+    
+                getall.club[0].Veterans.aggregate['count'],
+    
+                getall.club[0].Ladies.aggregate['count'],
+            ];
+        }
 
         console.log(this._seriesPlayers);
         this.showdata = Promise.resolve(true);

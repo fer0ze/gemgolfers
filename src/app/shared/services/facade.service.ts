@@ -801,6 +801,12 @@ export class FacadeService {
       toDate
     );
   }
+  getAllAdmin( fromDate: string, toDate: string) {
+    return this.tournamentService.getAllAdmin(
+      fromDate,
+      toDate
+    );
+  }
   getDailyRoundsSingleDashboardAll( fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleDashboardAll(
       
