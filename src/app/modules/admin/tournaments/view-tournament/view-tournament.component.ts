@@ -143,6 +143,11 @@ export class ViewTournamentComponent implements OnInit {
     SeniorsCount: number = 0;
     VeteransCount: number = 0;
     LadiesCount: number = 0;
+    AmateursPlayingDates:any[]=[];
+    SeniorsPlayingDates:any[]=[];
+    JuniorsPlayingDates:any[]=[];
+    VeteransPlayingDates:any[]=[];
+    LadiesPlayingDates:any[]=[];
     mainSelected: number = 0;
     par3Avg2: number;
     par4Avg2: number;
@@ -342,9 +347,11 @@ export class ViewTournamentComponent implements OnInit {
             } else this.router.navigate(['/tournaments/']);
 
             //console.log(this.fullTournament);
+            this.calculateStatistics();
             if (this.activeRound > this.noOfRounds) {
                 if (this.selected == 0) {
                     this.getRound1stats(1);
+                    
                     this.calculateStatistics1();
                 } else if (this.selected == 1) {
                     this.getRound2stats(2);
@@ -362,9 +369,10 @@ export class ViewTournamentComponent implements OnInit {
             } else {
                 if (this.activeRound == 0) {
                     this.getRoundsstats();
-                    this.calculateStatistics();
+                    //this.calculateStatistics();
                 } else if (this.activeRound == 1) {
                     this.getRound1stats(1);
+                    //this.calculateStatistics();
                     this.calculateStatistics1();
                 } else if (this.activeRound == 2) {
                     this.getRound2stats(2);
@@ -456,12 +464,14 @@ export class ViewTournamentComponent implements OnInit {
                 // });
                 if (c.name == 'Amateurs') {
                     this.AmateursCount = m.length;
+
                 }
                 if (c.name.toLowerCase().includes('Junior')) {
                     this.JuniorsCount = m.length;
                 }
                 if (c.name.toLowerCase().includes('Senior')) {
                     this.SeniorsCount = m.length;
+                   
                 }
                 if (c.name == 'Veterans') {
                     this.VeteransCount = m.length;
@@ -529,18 +539,40 @@ export class ViewTournamentComponent implements OnInit {
                 // });
                 if (c.category == 'Amateurs') {
                     this.AmateursCount = m.length;
+                    if(c.flightSettings && c.flightSettings['playingDate'].length>0)
+                    for(let obj of c.flightSettings['playingDate']){
+                        this.AmateursPlayingDates.push(obj)
+                    }
+                    
                 }
                 if (c.category.includes('Junior')) {
                     this.JuniorsCount = m.length;
+                   
+                    if(c.flightSettings && c.flightSettings['playingDate'].length>0)
+                    for(let obj of c.flightSettings['playingDate']){
+                        this.JuniorsPlayingDates.push(obj)
+                    }
                 }
                 if (c.category.includes('Senior')) {
                     this.SeniorsCount = m.length;
+                    if(c.flightSettings && c.flightSettings['playingDate'].length>0)
+                    for(let obj of c.flightSettings['playingDate']){
+                        this.SeniorsPlayingDates.push(obj)
+                    }
                 }
                 if (c.category == 'Veterans') {
                     this.VeteransCount = m.length;
+                    if(c.flightSettings && c.flightSettings['playingDate'].length>0)
+                    for(let obj of c.flightSettings['playingDate']){
+                        this.VeteransPlayingDates.push(obj)
+                    }
                 }
                 if (c.category == 'Ladies') {
                     this.LadiesCount = m.length;
+                    if(c.flightSettings && c.flightSettings['playingDate'].length>0)
+                    for(let obj of c.flightSettings['playingDate']){
+                        this.LadiesPlayingDates.push(obj)
+                    }
                 }
                 {
                     this.totalMembers += m.length;

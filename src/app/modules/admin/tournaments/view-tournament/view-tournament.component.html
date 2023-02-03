@@ -1201,17 +1201,20 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex items-baseline justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
                                         >
-                                            Attending:
+                                            Playing Dates:
                                         </div>
                                         <div
                                             class="ml-1.5 text-lg font-semibold"
+                                            *ngFor="
+                                                let s of AmateursPlayingDates
+                                            "
                                         >
-                                            {{ this.AmateursCount }}
+                                            {{ s.dates }}
                                         </div>
                                     </div>
                                 </div>
@@ -1256,17 +1259,20 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex items-baseline justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
                                         >
-                                            Attending:
+                                            Playing Dates:
                                         </div>
                                         <div
                                             class="ml-1.5 text-lg font-semibold"
+                                            *ngFor="
+                                                let s of SeniorsPlayingDates
+                                            "
                                         >
-                                            {{ this.SeniorsCount }}
+                                            {{ s.dates }}
                                         </div>
                                     </div>
                                 </div>
@@ -1311,17 +1317,20 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex items-baseline justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
                                         >
-                                            Attending:
+                                            Playing Dates:
                                         </div>
                                         <div
                                             class="ml-1.5 text-lg font-semibold"
+                                            *ngFor="
+                                                let s of JuniorsPlayingDates
+                                            "
                                         >
-                                            {{ this.JuniorsCount }}
+                                            {{ s.dates }}
                                         </div>
                                     </div>
                                 </div>
@@ -1366,17 +1375,20 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex items-baseline justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
                                         >
-                                            Attending:
+                                            Playing Dates:
                                         </div>
                                         <div
                                             class="ml-1.5 text-lg font-semibold"
+                                            *ngFor="
+                                                let s of VeteransPlayingDates
+                                            "
                                         >
-                                            {{ this.VeteransCount }}
+                                            {{ s.dates }}
                                         </div>
                                     </div>
                                 </div>
@@ -1421,17 +1433,18 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex items-baseline justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
                                         >
-                                            Attending:
+                                            Playing Dates:
                                         </div>
                                         <div
                                             class="ml-1.5 text-lg font-semibold"
+                                            *ngFor="let s of LadiesPlayingDates"
                                         >
-                                            {{ this.LadiesCount }}
+                                            {{ s.dates }}
                                         </div>
                                     </div>
                                 </div>
@@ -1478,16 +1491,16 @@
                                     <div
                                         class="flex items-baseline justify-center w-full mt-5 text-secondary"
                                     >
-                                        <div
+                                        <!-- <div
                                             class="text-md font-medium truncate"
                                         >
-                                            Attending:
+                                            Players
                                         </div>
                                         <div
                                             class="ml-1.5 text-lg font-semibold"
                                         >
                                             {{ this.membersData.length }}
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1522,10 +1535,8 @@
                             [selectedIndex]="selected"
                             (selectedTabChange)="tabClicked($event)"
                         >
-                            
                             <mat-tab label="Day 1" *ngIf="noOfRounds >= 1">
                                 <ng-template matTabContent>
-                                
                                     <div class="flex flex-auto justify-end">
                                         <button
                                             mat-raised-button

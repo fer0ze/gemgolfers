@@ -491,7 +491,7 @@ export class AddTournamentComponent implements OnInit {
 
     createCategory(cat: any): FormGroup {
         return this._formBuilder.group({
-            name: [cat ? cat : '', Validators.compose([Validators.required])],
+            name: [cat ? cat.name : '', Validators.compose([Validators.required])],
             playersperFlight: ['3', Validators.compose([Validators.required])],
             flightStartTime: ['08:00 AM', Validators.required],
             arrangeBy: ['handicap', Validators.required],
@@ -502,7 +502,7 @@ export class AddTournamentComponent implements OnInit {
             startingHole: ['1_10', Validators.required],
             flightsInterval: ['10'],
 
-            playingDate: this._formBuilder.array([]),
+            playingDate: this.checkDate(cat),
         });
     }
     setState(control: FormControl, state: boolean) {
@@ -704,7 +704,7 @@ export class AddTournamentComponent implements OnInit {
         }
         this.datesPlaying = [];
         for (let i of this.dates) {
-            if (i.id == cat.id) {
+            if (i.id == cat.id || i.name== cat.name) {
                 this.datesPlaying.push(i['playingDates']);
             }
         }
@@ -935,7 +935,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             for (let i of this.currentTournament['categories']) {
                 if (i.category == cat.name) {
-                    flag = this.yoyo(cat);
+                    flag = this.checkUpdatesofDates(cat);
                     console.log(flag);
                     if (flag) {
                         return i.flightSettings;
@@ -954,7 +954,7 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
-    public yoyo(cat): boolean {
+    public checkUpdatesofDates(cat): boolean {
         for (let j of this.dates) {
             if (j.name == cat.name) {
                 return false;
@@ -1154,7 +1154,7 @@ this.editTournament=true;
                             this.addFlightField(
                                 this.formArray.get([0]).get('clubctgies').value[
                                     i
-                                ].name
+                                ]
                             );
                         }
                     }
@@ -1213,6 +1213,9 @@ this.editTournament=true;
             //     //this.formArray.get([1]).get("category").value[i].playingDate[j].Date = this.datePipe.transform(this.formArray.get([1]).get("category").value[i].playingDate[j].Date, 'yyyyMMdd');
             // }
             console.log(this.formArray.get([1]).get('category').value[i]);
+            this.formArray.get([1]).get('category').value[i].playingDate=this.checkDate(this.formArray.get([1]).get('category').value[i]);
+            console.log( this.formArray.get([1]).get('category').value[i].playingDate);
+            
             let flightSettingsStatus: any =
                 await this.facadeService.updateFlightSettings(
                     this.tournamentID,
@@ -1481,7 +1484,7 @@ this.editTournament=true;
                     ) {
                         this.addFlightField(
                             this.formArray.get([0]).get('clubctgies').value[i]
-                                .name
+                                
                         );
                     }
                 }
@@ -1702,10 +1705,10 @@ this.editTournament=true;
                 category: this.formArray.get([0]).value.clubctgies[index].name,
                 handicapLimits: TCdata ? TCdata : null,
                 prizeInformation: prizeInfo ? prizeInfo : null,
-                // flightSettings: this.checkDate(
-                //   this.formArray.get([0]).value.clubctgies[index]
-                // ),
-                flightSettings: null,
+                flightSettings: this.checkDate(
+                  this.formArray.get([0]).value.clubctgies[index]
+                ),
+                //flightSettings: null,
             };
 
             tournamentCats.push(tc);
@@ -1991,10 +1994,10 @@ this.editTournament=true;
                 category: this.formArray.get([0]).value.clubctgies[index].name,
                 handicapLimits: TCdata ? TCdata : null,
                 prizeInformation: prizeInfo ? prizeInfo : null,
-                // flightSettings: this.checkDate(
-                //   this.formArray.get([0]).value.clubctgies[index]
-                // ),
-                flightSettings: null,
+                flightSettings: this.checkDate(
+                  this.formArray.get([0]).value.clubctgies[index]
+                ),
+                //flightSettings: null,
             };
             console.log(tc);
             // let json= JSON.stringify(tc.flightSettings);
@@ -2183,8 +2186,8 @@ this.editTournament=true;
                 duration: 5000,
             });
             this.valid1.reset();
-            // this.syncTournamentMembers();
-            // this.syncClubMembers();
+            this.syncTournamentMembers();
+             this.syncClubMembers();
             //this.categoryCounts = [];
             
                 // console.log(

@@ -170,10 +170,10 @@
                     <td
                         *ngFor="let score of item.Hole9Scores; let i = index"
                         [ngClass]="{
-                            eagle: (score - scoreHeader[0].courseHoles9[i]['par'])==-2,
-                            birdy: (score - scoreHeader[0].courseHoles9[i]['par'])==-1,
-                            bogey : score - scoreHeader[0].courseHoles9[i]['par']==1,
-                            doublebogey: score - scoreHeader[0].courseHoles9[i]['par']==2 
+                            eagle: (score - scoreHeader[0].courseHoles18[i]['par'])==-2,
+                            birdy: (score - scoreHeader[0].courseHoles18[i]['par'])==-1,
+                            bogey : score - scoreHeader[0].courseHoles18[i]['par']==1,
+                            doublebogey: score - scoreHeader[0].courseHoles18[i]['par']==2 
                         }"
                     >
                         <span class="class_name_round">
@@ -189,7 +189,10 @@
                     <td
                         *ngFor="let score of item.Hole18Scores; let j = index"
                         [ngClass]="{
-                            scorebodyred: item.playerId == data.removed[j + 9]
+                            eagle: (score - scoreHeader[0].courseHoles9[i]['par'])==-2,
+                            birdy: (score - scoreHeader[0].courseHoles9[i]['par'])==-1,
+                            bogey : score - scoreHeader[0].courseHoles9[i]['par']==1,
+                            doublebogey: score - scoreHeader[0].courseHoles9[i]['par']==2 
                         }"
                     >
                         <span>
