@@ -113,10 +113,16 @@ export class ViewPlayerComponent implements OnInit {
     // @ViewChild(MatSort) Wsort: MatSort;
     // @ViewChild('fileInput') WfileInputVariable: ElementRef;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('paginatorLegal') paginatorLegal: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    @ViewChild('fileInput') fileInputVariable: ElementRef;
+   // @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('paginatorConguHistory') paginatorConguHistory: MatPaginator;
+    @ViewChild('paginatorWHSHistory') paginatorWHSHistory: MatPaginator;
+    @ViewChild('paginatorScoreConguHistory') paginatorScoreConguHistory: MatPaginator;
+    @ViewChild('paginatorScoreWHSHistory') paginatorScoreWHSHistory: MatPaginator;
+    @ViewChild('asort') asort: MatSort;
+    @ViewChild('bsort') bsort: MatSort;
+    @ViewChild('csort') csort: MatSort;
+    @ViewChild('dsort') dsort: MatSort;
+   
     chartVisitors: ApexOptions;
     constructor(
         private router: Router,
@@ -316,8 +322,8 @@ export class ViewPlayerComponent implements OnInit {
 
             this.WHSSource = new MatTableDataSource(this.personLeads);
 
-            this.WHSSource.paginator = this.paginatorLegal;
-            this.WHSSource.sort = this.sort;
+            this.WHSSource.paginator = this.paginatorWHSHistory;
+            this.WHSSource.sort = this.bsort;
 
             let playerscore: any =
                 await this.facadeService.getPlayerFlightScores(this.playerID);
@@ -373,8 +379,8 @@ export class ViewPlayerComponent implements OnInit {
             const slicedCongu = this.playerHandiData.slice(0, 20);
 
             this.dataSource = new MatTableDataSource(slicedCongu);
-            this.dataSource.paginator = this.paginator;
-             this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginatorConguHistory;
+            this.dataSource.sort = this.asort;
             let newScores: any[] = [];
             for (let memberQL of memberQLs) {
                 let flightQL: any = memberQL.FlightQL;
@@ -449,12 +455,13 @@ export class ViewPlayerComponent implements OnInit {
                 //console.log(this.barChartData);
                 this.ConguScoreLength=newScores.length;
                 this.CONGUgrossSource = new MatTableDataSource(newScores);
-                this.CONGUgrossSource.sort=this.sort;
-               // this.CONGUgrossSource.paginator = this.paginatorLegal;
-               // this.dataSource.sort = this.sort;
-
+                this.CONGUgrossSource.paginator = this.paginatorScoreConguHistory;
+                this.CONGUgrossSource.sort=this.csort;
+                // this.dataSource.sort = this.sort;
+                
                 this.CONGUnetSource = new MatTableDataSource(newScores);
-                this.CONGUnetSource.paginator = this.paginator;
+                this.CONGUnetSource.paginator = this.paginatorScoreWHSHistory;
+                this.CONGUnetSource.sort=this.dsort;
 
                 if (scores.length == 0) {
                     // Do not add flights without score

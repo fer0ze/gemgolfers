@@ -65,6 +65,10 @@ export class TournamentsComponent implements OnInit {
     TournamentsUpComing: Tournament[] = [];
     TournamentsSchedule: Tournament[] = [];
     TournamentsIncomplete: Tournament[] = [];
+    copiedcompletedTournaments: Tournament[] = [];
+    copiedTournamentsUpComing: Tournament[] = [];
+    copiedTournamentsSchedule: Tournament[] = [];
+    copiedTournamentsIncomplete: Tournament[] = [];
     myTournament: Tournament;
     loggedInuser: Player;
     isLoading: boolean = true;
@@ -165,50 +169,82 @@ export class TournamentsComponent implements OnInit {
     filterByCategory($event) {
         console.log($event);
         if (this.loggedInuser.userRole >= 2) {
-          if ($event.value == 1) {
-              this.getTournamentLive();
-          } else if ($event.value == 2) {
-              this.getTournamentSchedule();
-          } else if ($event.value == 3) {
-              this.getTournamentIncompelete();
-          } else {
-              this.getTournamentCompeleted();
-          }
-      } else {
-          if ($event.value == 1) {
-              this.getTournamentLiveForAdmin();
-          } else if ($event.value == 2) {
-              this.getTournamentScheduleForAdmin();
-          } else if ($event.value == 3) {
-              this.getTournamentIncompeleteForAdmin();
-          } else {
-              this.getTournamentCompeletedForAdmin();
-          }
-      }
+            if ($event.value == 1) {
+                this.selected = 1;
+                this.getTournamentLive();
+            } else if ($event.value == 2) {
+                this.selected = 2;
+                this.getTournamentSchedule();
+            } else if ($event.value == 3) {
+                this.selected = 3;
+                this.getTournamentIncompelete();
+            } else {
+                this.selected = 0;
+                this.getTournamentCompeleted();
+            }
+        } else {
+            if ($event.value == 1) {
+                this.selected = 1;
+                this.getTournamentLiveForAdmin();
+            } else if ($event.value == 2) {
+                this.selected = 2;
+                this.getTournamentScheduleForAdmin();
+            } else if ($event.value == 3) {
+                this.selected = 3;
+                this.getTournamentIncompeleteForAdmin();
+            } else {
+                this.selected = 0;
+                this.getTournamentCompeletedForAdmin();
+            }
+        }
     }
     filterByQuery(query) {
         console.log(query);
-            }
+        if (query.length > 3) {
+            this.Tournaments = this.Tournaments.filter((obj) => {
+                return obj.title
+                    .toString()
+                    .toLowerCase()
+                    .includes(query.toString().toLowerCase());
+            });
+        } else if (query == '' && this.selected == 0) {
+            this.Tournaments = this.copiedcompletedTournaments;
+        } else if (query == '' && this.selected == 1) {
+            this.Tournaments = this.copiedTournamentsUpComing;
+        } else if (query == '' && this.selected == 2) {
+            this.Tournaments = this.copiedTournamentsSchedule;
+        } else if (query == '' && this.selected == 3) {
+            this.Tournaments = this.copiedTournamentsIncomplete;
+        }
+    }
     tabClicked(tab: any) {
         console.log(tab);
         if (this.loggedInuser.userRole >= 2) {
             if (tab.index == 1) {
+                this.selected = 1;
                 this.getTournamentLive();
             } else if (tab.index == 2) {
+                this.selected = 2;
                 this.getTournamentSchedule();
             } else if (tab.index == 3) {
+                this.selected = 3;
                 this.getTournamentIncompelete();
             } else {
+                this.selected = 0;
                 this.getTournamentCompeleted();
             }
         } else {
             if (tab.index == 1) {
+                this.selected = 1;
                 this.getTournamentLiveForAdmin();
             } else if (tab.index == 2) {
+                this.selected = 2;
                 this.getTournamentScheduleForAdmin();
             } else if (tab.index == 3) {
+                this.selected = 3;
                 this.getTournamentIncompeleteForAdmin();
             } else {
+                this.selected = 0;
                 this.getTournamentCompeletedForAdmin();
             }
         }
@@ -229,6 +265,7 @@ export class TournamentsComponent implements OnInit {
         this.isIncompletedLoading = false;
         this.isLoadingUpComing = false;
         this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+        this.copiedcompletedTournaments = this.Tournaments;
         this.dataSource = new MatTableDataSource(this.Tournaments);
         this.isLoading = false;
         // Assign the data to the data source for the table to render
@@ -254,6 +291,7 @@ export class TournamentsComponent implements OnInit {
         console.log(dataTournamentsLive);
 
         this.Tournaments = dataTournamentsLive.ActiveTournaments;
+        this.copiedTournamentsUpComing = this.Tournaments;
     }
     async getTournamentSchedule() {
         let today: Date = new Date();
@@ -270,6 +308,7 @@ export class TournamentsComponent implements OnInit {
         console.log(dataTournamentsLive);
 
         this.Tournaments = dataTournamentsLive.Scheduled;
+        this.copiedTournamentsSchedule = this.Tournaments;
 
         //console.log("change source");
     }
@@ -286,7 +325,8 @@ export class TournamentsComponent implements OnInit {
                 todayDate,
                 this.loggedInuser.adminClubId
             );
-        this.Tournaments = dataTournamentsLive.Scheduled;
+        this.Tournaments = dataTournamentsLive.Incomplete;
+        this.copiedTournamentsIncomplete = this.Tournaments;
 
         //console.log("change source");
     }
@@ -304,6 +344,7 @@ export class TournamentsComponent implements OnInit {
         this.isIncompletedLoading = false;
         this.isLoadingUpComing = false;
         this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+        this.copiedcompletedTournaments = this.Tournaments;
         this.dataSource = new MatTableDataSource(this.Tournaments);
         this.isLoading = false;
         // Assign the data to the data source for the table to render
@@ -328,6 +369,7 @@ export class TournamentsComponent implements OnInit {
         console.log(dataTournamentsForLive);
 
         this.Tournaments = dataTournamentsForLive.ActiveTournaments;
+        this.copiedTournamentsUpComing = this.Tournaments;
     }
 
     async getTournamentScheduleForAdmin() {
@@ -345,6 +387,7 @@ export class TournamentsComponent implements OnInit {
 
         this.Tournaments;
         dataTournamentsForSchedule.Scheduled;
+        this.copiedTournamentsSchedule = this.Tournaments;
     }
 
     async getTournamentIncompeleteForAdmin() {
@@ -359,6 +402,7 @@ export class TournamentsComponent implements OnInit {
                 todayDate
             );
         this.Tournaments = dataTournamentsForIncomplete.Scheduled;
+        this.copiedTournamentsIncomplete = this.Tournaments;
     }
 
     applyFilter(filterValue: string) {

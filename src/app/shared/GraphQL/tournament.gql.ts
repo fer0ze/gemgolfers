@@ -432,7 +432,7 @@ export const GetTournamnetListForSchedule = gql`
 `;
 export const GetTournamnetListForIncomplete = gql`
     query PostsGetQuery($endDate: date!, $clubId: String!) {
-        Scheduled: club_schedule(
+        Incomplete: club_schedule(
             where: {
                 _and: [{ date: { _gt: $endDate }, clubId: { _eq: $clubId } }]
             }

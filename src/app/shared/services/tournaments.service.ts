@@ -197,7 +197,7 @@ export class TournamentsService {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe({
-                    query: Query.GetTournamnetListForSchedule,
+                    query: Query.GetTournamnetListForIncomplete,
                     variables: {
                         endDate: endDate,
                         clubId: clubId,
