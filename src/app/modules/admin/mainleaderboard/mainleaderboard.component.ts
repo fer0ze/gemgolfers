@@ -2285,7 +2285,7 @@ export class MainLeaderboardComponent implements OnInit {
           const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
               name: name,
-              tee_id: this.Leaderboard.tee_id,
+              tee_id: this.Leaderboard.tee_id!=null?this.Leaderboard.tee_id:1,
               course: courseId,
               players: playerPerTeam[0]["MembersQL"],
               holeSets: courseHoleSets,
@@ -2302,7 +2302,7 @@ export class MainLeaderboardComponent implements OnInit {
           const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
               name: name,
-              tee_id: this.Leaderboard.tee_id,
+              tee_id: this.Leaderboard.tee_id!=null?this.Leaderboard.tee_id:1,
               course: courseId,
               holeSets: courseHoleSets,
               allGross: playerGrossScore,

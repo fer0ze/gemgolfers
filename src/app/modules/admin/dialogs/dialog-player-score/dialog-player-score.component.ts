@@ -447,7 +447,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                 holeNo: counter,
                 par: i.par,
                 index: i.index,
-                teeDistances: tee_distance[0].tee_distance,
+                teeDistances: tee_distance.length>0 ?tee_distance[0].tee_distance :'0',
                 holeSetId: i.holeSetId,
               };
               arrayOfHoleSet.push(singleHole);
@@ -471,7 +471,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                 holeNo: counter,
                 par: i.par,
                 index: i.index,
-                teeDistances: tee_distance[0].tee_distance,
+                teeDistances:  tee_distance.length>0 ?tee_distance[0].tee_distance :'0',
                 holeSetId: i.holeSetId,
               };
               arrayOfHoleSet.push(singleHole);
@@ -490,7 +490,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                 holeNo: counterA,
                 par: i.par,
                 index: i.index,
-                teeDistances: tee_distance[0].tee_distance,
+                teeDistances:  tee_distance.length>0 ?tee_distance[0].tee_distance :'0',
                 holeSetId: i.holeSetId,
               };
               arrayOfHoleSet.push(singleHole);
