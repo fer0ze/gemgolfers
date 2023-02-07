@@ -14,8 +14,8 @@ import { FacadeService } from 'app/shared/services/facade.service';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import "jspdf-autotable";
-import * as jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 import {
     Contact,
     Country,
@@ -23,7 +23,10 @@ import {
 } from 'app/modules/admin/players/player/player.types';
 import { query } from '@angular/animations';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Constants, UniqueIdGenerator } from '../../../../shared/classes/general';
+import {
+    Constants,
+    UniqueIdGenerator,
+} from '../../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from 'app/shared/models/player.model';
 
@@ -41,7 +44,7 @@ export class PlayerComponent implements OnInit {
     displayNoRecords: boolean = true;
     selectedContact: Contact;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    Players:any=[];
+    Players: any = [];
     playersTableColumns: string[] = [
         'Sr',
         'Name',
@@ -79,7 +82,6 @@ export class PlayerComponent implements OnInit {
                 // Remove the selected contact when drawer closed
                 //this.selectedContact = null;
                 console.log(opened);
-                
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -87,19 +89,18 @@ export class PlayerComponent implements OnInit {
         });
 
         this._fuseMediaWatcherService.onMediaChange$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(({ matchingAliases }) => {
-            // Set the drawerMode if the given breakpoint is active
-            if (matchingAliases.includes('lg')) {
-                this.drawerMode = 'side';
-            } else {
-                this.drawerMode = 'over';
-            }
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(({ matchingAliases }) => {
+                // Set the drawerMode if the given breakpoint is active
+                if (matchingAliases.includes('lg')) {
+                    this.drawerMode = 'side';
+                } else {
+                    this.drawerMode = 'over';
+                }
 
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        });
-
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
 
         this.showTable = Promise.resolve(true);
     }
@@ -116,10 +117,15 @@ export class PlayerComponent implements OnInit {
     }
 
     async fecthData() {
-        let data = await this._facadeService.getPlayersListByClub(
-            this.loggedInuser.adminClubId
-        );
-        this.count = data.AggregateQL.aggregate.totalCount;
+        let data:any;
+        if (this.loggedInuser.userRole == 1) {
+            data = await this._facadeService.getPlayersList();
+        } else {
+           data = await this._facadeService.getPlayersListByClub(
+                this.loggedInuser.adminClubId
+            );
+        }
+        this.count = data.player.length;
         console.log(data);
         this.Players = data.player;
         this.playersDataSource = new MatTableDataSource(data.player);
@@ -131,10 +137,11 @@ export class PlayerComponent implements OnInit {
      * Create contact
      */
     createPlayer(): void {
-
         let id = UniqueIdGenerator.generate();
 
-        this._router.navigate(['./view/', id], { relativeTo: this._activatedRoute });
+        this._router.navigate(['./view/', id], {
+            relativeTo: this._activatedRoute,
+        });
         // });
         // Go to the new contact
 
@@ -148,69 +155,70 @@ export class PlayerComponent implements OnInit {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-    updatePlayer(id:string):void{
-        this._router.navigate(['./view/', id], { relativeTo: this._activatedRoute });
+    updatePlayer(id: string): void {
+        this._router.navigate(['./view/', id], {
+            relativeTo: this._activatedRoute,
+        });
         // });
         // Go to the new contact
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-    viewProfile(id:string):void{
-        this._router.navigate(['/players/viewProfile/'+id])
-        
+    viewProfile(id: string): void {
+        this._router.navigate(['/players/viewProfile/' + id]);
     }
 
     downloadAllPlayers(): void {
         var doc = new jsPDF();
-    
+
         var col = [
-          "Sr.",
-          "Name",
-          "Phone",
-          "Email",
-          "Mem/No",
-          "Category",
-          "Handicap",
+            'Sr.',
+            'Name',
+            'Phone',
+            'Email',
+            'Mem/No',
+            'Category',
+            'Handicap',
         ];
         var rows = [];
         doc.setFontSize(18);
-        doc.text("Leaderboard Scores:", 15, 15);
+        doc.text('Leaderboard Scores:', 15, 15);
         doc.setFontSize(11);
         doc.setTextColor(100);
         var count = 0;
         this.Players.forEach((element) => {
-          count++;
-          var temp = [
-            count,
-    
-            element.firstName + " " + element.lastName,
-            element.phone,
-            element.email,
-            element.membershipNumber,
-            element.playerCategory,
-            element.handicap,
-          ];
-          rows.push(temp);
+            count++;
+            var temp = [
+                count,
+
+                element.firstName + ' ' + element.lastName,
+                element.phone,
+                element.email,
+                element.membershipNumber,
+                element.playerCategory,
+                element.handicap,
+            ];
+            rows.push(temp);
         });
         // From HTML
         doc.autoTable(col, rows, {
-          startY: 25,
-          theme: "grid",
-          columnStyles: {
-            0: { cellWidth: 12 },
-            1: { cellWidth: 35 },
-            2: { cellWidth: 30 },
-            3: { cellWidth: 45 },
-            4: { cellWidth: 20 },
-            5: { cellWidth: 30 },
-            6: { cellWidth: 20 },
-          
-            // etc
-          },
+            startY: 25,
+            theme: 'grid',
+            columnStyles: {
+                0: { cellWidth: 12 },
+                1: { cellWidth: 35 },
+                2: { cellWidth: 30 },
+                3: { cellWidth: 45 },
+                4: { cellWidth: 20 },
+                5: { cellWidth: 30 },
+                6: { cellWidth: 20 },
+
+                // etc
+            },
         });
-    
+
         // Open PDF document in new tab
-        doc.save("KGC-Gemgolfers-Players.pdf");
-      }
+        doc.save('KGC-Gemgolfers-Players.pdf');
+    }
 }

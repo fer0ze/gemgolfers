@@ -117,6 +117,7 @@ export const tournamentDashBoard = gql`
             members {
                 playerId
                 PlayerQL: player {
+                    id
                     playerCategory
                     firstName
                     lastName
@@ -135,6 +136,7 @@ export const tournamentDashBoard = gql`
                 MembersQL: members(order_by: { playerId: asc }) {
                     playerId
                     PlayerQL: player {
+                        id
                         playerCategory
                         firstName
                         lastName

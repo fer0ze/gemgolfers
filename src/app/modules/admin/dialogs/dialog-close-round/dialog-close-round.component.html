@@ -22,10 +22,13 @@
                             fxLayout.lt-md="column"
                             fxLayoutGap="10px"
                         >
-                            <div [fxFlex]="30">
-                                <mat-label>Make auto Groups/Flights?</mat-label>
+                            <div *ngIf="catArray[categoryList.value[i].name].cutshow" [fxFlex]="30">
+                                <mat-label>Make auto Cut Based Groups/Flights?</mat-label>
                             </div>
-                            <div [fxFlex]="70">
+                            <div *ngIf="!catArray[categoryList.value[i].name].cutshow" [fxFlex]="40">
+                                <mat-label>Make Next Round Groups/Flights</mat-label>
+                            </div>
+                            <div *ngIf="!catArray[categoryList.value[i].name].cutshow" [fxFlex]="70">
                                 <mat-radio-group
                                     fxLayoutAlign="start center"
                                     formControlName="playing"
@@ -36,10 +39,29 @@
                                         )
                                     "
                                 >
-                                    <mat-radio-button value="0"
+                                    <mat-radio-button  value="false"
                                         >NO</mat-radio-button
                                     >
-                                    <mat-radio-button value="1"
+                                    <mat-radio-button [checked]='true' value="true"
+                                        >YES </mat-radio-button
+                                    >
+                                </mat-radio-group>
+                            </div>
+                            <div *ngIf="catArray[categoryList.value[i].name].cutshow" [fxFlex]="70">
+                                <mat-radio-group
+                                    fxLayoutAlign="start center"
+                                    formControlName="playing"
+                                    (change)="
+                                        selectionChange(
+                                            $event,
+                                            categoryList.value[i].name
+                                        )
+                                    "
+                                >
+                                    <mat-radio-button  value="false"
+                                        >NO</mat-radio-button
+                                    >
+                                    <mat-radio-button [checked]='true' value="true"
                                         >YES (Flights will be make based on
                                         Gross or Net score)</mat-radio-button
                                     >
@@ -62,12 +84,13 @@
                                 </div>
                                 <div class="flex flex-row ">
                                     <mat-label>Flight Start Time:</mat-label>
-                                    <mat-form-field>
+                                    <mat-form-field class="w-40">
                                         <input
                                             type="time"
                                             matInput
                                             atp-time-picker
                                             formControlName="time"
+                                           
                                         />
                                         <mat-error
                                             >The input is required.</mat-error
@@ -108,7 +131,7 @@
                                         >
                                     </mat-radio-group>
                                 </div>
-                                <div class="flex flex-col px-10">
+                                <div *ngIf="catArray[categoryList.value[i].name].cutshow && catArray[categoryList.value[i].name].showCutCopy" class="flex flex-col px-10">
                                     <mat-label
                                         >Cut off score based on:</mat-label
                                     >
@@ -144,7 +167,7 @@
                             <div
                             class="flex flex-row my-2"
                             >
-                                <div class="flex flex-row ">
+                                <div *ngIf="catArray[categoryList.value[i].name].cutshow && catArray[categoryList.value[i].name].showCutCopy" class="flex flex-row ">
                                     <mat-label class="pt-4"
                                         >Cut Off Score (Total Par)</mat-label
                                     >
@@ -161,11 +184,17 @@
                                     </mat-form-field>
                                 </div>
 
-                                <div class="flex flex-row ml-12 pt-4">
+                                <div *ngIf="catArray[categoryList.value[i].name].cutshow" class="flex flex-row ml-12 pt-4">
                                     <mat-label>Copy Flights</mat-label>
 
                                     <mat-radio-group
                                         formControlName="copyFlights"
+                                        (change)="
+                                        selectionChangeCopy(
+                                            $event,
+                                            categoryList.value[i].name
+                                        )
+                                    "
                                     >
                                         <mat-radio-button value="No"
                                             >No</mat-radio-button

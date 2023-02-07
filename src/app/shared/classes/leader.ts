@@ -354,6 +354,7 @@ export enum LeaderType {
     GROSS = "GROSS",
     NET = "NET",
     STABLEFORD = "STABLEFORD",
+    NEW= "NEW",
 }
 
 export enum LeaderTypeValue {

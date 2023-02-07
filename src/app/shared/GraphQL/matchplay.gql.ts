@@ -56,6 +56,11 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
             ...CourseQL
             HolesQL: holes {
                 ...HoleQL
+                HoleMetaQL:meta{
+                    hole_id
+                    tee_distance
+                    tee_id
+                  }
             }
         }
     }
