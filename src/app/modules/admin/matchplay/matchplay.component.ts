@@ -1304,7 +1304,46 @@ export class MatchplayComponent implements OnInit {
             if (timeupdated) return;
         }
     }
-
+    keytab(e) {
+        var code = e.keyCode || e.which;
+    
+        if (code === 13) {
+          e.preventDefault();
+          let control: HTMLInputElement = <HTMLInputElement>e.srcElement;
+    
+          while (control) {
+            let nextControl = <HTMLInputElement>control.nextElementSibling;
+    
+            if (nextControl) {
+              control = nextControl;
+    
+              while (nextControl) {
+                control = nextControl;
+    
+                nextControl = <HTMLInputElement>nextControl.firstElementChild;
+    
+                if (
+                  nextControl &&
+                  nextControl.type == "text" &&
+                  !nextControl.disabled
+                )
+                  break;
+              }
+    
+              if (nextControl) {
+                control = nextControl;
+                break;
+              }
+            } else {
+              control = <HTMLInputElement>control.parentElement;
+            }
+          }
+    
+          if (control && control.focus) {
+            control.focus();
+          }
+        }
+      }
     getSubTournamentPlayers() {
         let subTournamentsFlightMembers: any = [];
         if (this.subTournaments.length > 0) {

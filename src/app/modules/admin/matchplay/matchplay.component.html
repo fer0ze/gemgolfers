@@ -568,7 +568,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9, 
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -584,6 +588,8 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
+                                                    
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -630,7 +636,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -646,6 +656,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -1059,7 +1070,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -1075,6 +1090,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -1119,7 +1135,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -1135,6 +1155,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -1809,7 +1830,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -1825,6 +1850,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -1871,7 +1897,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -1887,6 +1917,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -2300,7 +2331,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -2316,6 +2351,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -2360,7 +2396,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -2376,6 +2416,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -3050,7 +3091,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -3066,6 +3111,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -3112,7 +3158,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -3128,6 +3178,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -3541,7 +3592,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -3557,6 +3612,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -3601,7 +3657,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -3617,6 +3677,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -4291,7 +4352,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -4307,6 +4372,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -4353,7 +4419,11 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -4369,6 +4439,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ item.playerId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -4782,7 +4853,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles9[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles9[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles9[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles9[i]['par']==2 
                                                 }"
                                                 ><input
                                                     (input)="
@@ -4798,6 +4873,7 @@
                                                             .courseHoles9[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
@@ -4842,7 +4918,11 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9
+                                                    warn: score > 9,
+                                                    eagle: (score - flight.header.courseHoles18[i]['par'])==-2,
+                                                    birdy: (score - flight.header.courseHoles18[i]['par'])==-1,
+                                                    bogey : score - flight.header.courseHoles18[i]['par']==1,
+                                                    doublebogey: score - flight.header.courseHoles18[i]['par']==2 
                                                 }"
                                                 ><input
                                                     type="text"
@@ -4858,6 +4938,7 @@
                                                             .courseHoles18[i].id
                                                     }}&{{ flight.flightId }}"
                                                     maxlength="2"
+                                                    (keyup.enter)="keytab($event)"
                                                     (keypress)="
                                                         numberOnly($event)
                                                     "
