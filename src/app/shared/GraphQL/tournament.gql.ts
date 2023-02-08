@@ -25,7 +25,7 @@ import {
 } from '../fragments/player.fragment';
 
 export const LeaderboardSubscription = gql`
-    query LeaderboardSimpleSubscription($tournamentPrefix: String!) {
+    subscription LeaderboardSimpleSubscription($tournamentPrefix: String!) {
         TournamentQL: tournament(
             where: {
                 _or: [
