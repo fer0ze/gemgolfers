@@ -220,7 +220,7 @@ h2 {
 .responsive-table {
   li {
     border-radius: 11px;
-    padding: 22px 30px;
+    padding: 22px 12px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 4px;
@@ -243,10 +243,14 @@ h2 {
     box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
     font-weight: 600;
     font-size: large;
+    padding: 12px 12px !important;
   }
 
   .col-1 {
     flex-basis: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .col-2 {
@@ -255,14 +259,23 @@ h2 {
 
   .col-3 {
     flex-basis: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .col-4 {
     flex-basis: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .col-5 {
     flex-basis: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 
@@ -300,10 +313,15 @@ h2 {
 
       .col-4 {
         flex-basis: 10%;
+        //margin-right: 2px;
       }
 
       .col-5 {
         flex-basis: 10%;
+      }
+
+      .THRU{
+        padding-right: 8px;
       }
 
     }
@@ -317,13 +335,14 @@ h2 {
 
       .col-1 {
         flex-basis: 13%;
-padding-top: 25px;
-        padding-left: 10px;
+        // padding-top: 25px;
+        padding-right: 13px;
       }
 
       .col-2 {
         flex-basis: 49%;
-        font-weight: 700;line-height: normal;
+        font-weight: 700;
+        line-height: normal;
 
       }
 
@@ -335,31 +354,34 @@ padding-top: 25px;
 
       .col-4 {
         flex-basis: 10%;
-        flex-basis: 10%;
         background: #2a3f50;
-        border-radius: 17%;
-        padding-top: 19px;
+        border-radius: 21%;
+        padding-top: 16px;
         color: white;
         margin-right: 3px;
-        text-align: center;
-        height: 46px;
-    
+        margin-top: 11px;
+        padding-bottom: 14px;
+        align-items: center;
+        height: 36px;
+
       }
 
 
       .col-5 {
         flex-basis: 10%;
-        flex-basis: 10%;
         background: #2a3f50;
-        border-radius: 17%;
-        padding-top: 19px;
-        margin-right: 5px;
+        border-radius: 21%;
+        padding-top: 16px;
         color: white;
-        text-align: center;
-        height: 46px;
-    
+        margin-right: 3px;
+        margin-top: 11px;
+        padding-bottom: 14px;
+        align-items: center;
+        height: 36px;
+
 
       }
+      
 
       .text-xs {
         padding-top: 7px;
@@ -405,10 +427,12 @@ padding-top: 25px;
   .logo {
     display: grid !important;
   }
-  .logo-1{
+
+  .logo-1 {
     display: none;
   }
-  .logo-2{
+
+  .logo-2 {
     width: fit-content !important;
     padding-top: 0px !important;
     height: 7rem !important;

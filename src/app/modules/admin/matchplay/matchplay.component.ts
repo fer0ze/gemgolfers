@@ -629,7 +629,7 @@ export class MatchplayComponent implements OnInit {
         this.active = true;
     }
     private async setupMatchplayHeader(
-        tee_id:string,
+        tee_id: string,
         course: any,
         holeSets: number,
         courseHoleSetsInverted: boolean
@@ -752,7 +752,7 @@ export class MatchplayComponent implements OnInit {
     }
 
     public getHolesSets(
-        tee_id:string,
+        tee_id: string,
         courseHoleSets: number,
         holes,
         isCourseHoleSetsInverted: boolean,
@@ -764,75 +764,88 @@ export class MatchplayComponent implements OnInit {
         }
         for (let obj of holesSets) {
             if (
-              obj.holeSets == courseHoleSets &&
-              isCourseHoleSetsInverted == obj.inverted
+                obj.holeSets == courseHoleSets &&
+                isCourseHoleSetsInverted == obj.inverted
             ) {
-              if (obj.backId == null) {
-                let counter = 1;
-                for (let i of holes) {
-                  if (obj.id == i.holeSetId) {
-                    let tee_distance=i.HoleMetaQL.filter((a)=>{
-                      return a.tee_id==tee_id
-                     })
-                    let singleHole: any = {
-                      id: i.id,
-                      courseId: i.courseId,
-                      holeNo: counter,
-                      par: i.par,
-                      index: i.index,
-                      teeDistances: tee_distance.length>0? tee_distance[0].tee_distance :0,
-                      holeSetId: i.holeSetId,
-                    };
-                    arrayOfHoleSet.push(singleHole);
-                    counter++;
-                  }
+                if (obj.backId == null) {
+                    let counter = 1;
+                    for (let i of holes) {
+                        if (obj.id == i.holeSetId) {
+                            let tee_distance = i.HoleMetaQL.filter((a) => {
+                                return a.tee_id == tee_id;
+                            });
+                            let singleHole: any = {
+                                id: i.id,
+                                courseId: i.courseId,
+                                holeNo: counter,
+                                par: i.par,
+                                index: i.index,
+                                teeDistances:
+                                    tee_distance.length > 0
+                                        ? tee_distance[0].tee_distance
+                                        : 0,
+                                holeSetId: i.holeSetId,
+                            };
+                            arrayOfHoleSet.push(singleHole);
+                            counter++;
+                        }
+                    }
+                } else {
+                    let holesSetA = holesSets.find(
+                        (x) => x.holeSets == obj.frontId
+                    );
+                    let holesSetB = holesSets.find(
+                        (x) => x.holeSets == obj.backId
+                    );
+                    console.log(holesSetA);
+                    console.log(holesSetB);
+                    let counter = 1;
+                    for (let i of holes) {
+                        if (holesSetA.id == i.holeSetId) {
+                            let tee_distance = i.HoleMetaQL.filter((a) => {
+                                return a.tee_id == tee_id;
+                            });
+                            let singleHole: any = {
+                                id: i.id,
+                                courseId: i.courseId,
+                                holeNo: counter,
+                                par: i.par,
+                                index: i.index,
+                                teeDistances:
+                                    tee_distance.length > 0
+                                        ? tee_distance[0].tee_distance
+                                        : 0,
+                                holeSetId: i.holeSetId,
+                            };
+                            arrayOfHoleSet.push(singleHole);
+                            counter++;
+                        }
+                    }
+                    let counterA = 10;
+                    for (let i of holes) {
+                        if (holesSetB.id == i.holeSetId) {
+                            let tee_distance = i.HoleMetaQL.filter((a) => {
+                                return a.tee_id == tee_id;
+                            });
+                            let singleHole: any = {
+                                id: i.id,
+                                courseId: i.courseId,
+                                holeNo: counterA,
+                                par: i.par,
+                                index: i.index,
+                                teeDistances:
+                                    tee_distance.length > 0
+                                        ? tee_distance[0].tee_distance
+                                        : 0,
+                                holeSetId: i.holeSetId,
+                            };
+                            arrayOfHoleSet.push(singleHole);
+                            counterA++;
+                        }
+                    }
                 }
-              } else {
-                let holesSetA = holesSets.find((x) => x.holeSets == obj.frontId);
-                let holesSetB = holesSets.find((x) => x.holeSets == obj.backId);
-                console.log(holesSetA);
-                console.log(holesSetB);
-                let counter = 1;
-                for (let i of holes) {
-                  if (holesSetA.id == i.holeSetId) {
-                    let tee_distance=i.HoleMetaQL.filter((a)=>{
-                      return a.tee_id==tee_id
-                     })
-                    let singleHole: any = {
-                      id: i.id,
-                      courseId: i.courseId,
-                      holeNo: counter,
-                      par: i.par,
-                      index: i.index,
-                      teeDistances: tee_distance.length>0? tee_distance[0].tee_distance :0,
-                      holeSetId: i.holeSetId,
-                    };
-                    arrayOfHoleSet.push(singleHole);
-                    counter++;
-                  }
-                }
-                let counterA = 10;
-                for (let i of holes) {
-                  if (holesSetB.id == i.holeSetId) {
-                    let tee_distance=i.HoleMetaQL.filter((a)=>{
-                      return a.tee_id==tee_id
-                     })
-                    let singleHole: any = {
-                      id: i.id,
-                      courseId: i.courseId,
-                      holeNo: counterA,
-                      par: i.par,
-                      index: i.index,
-                      teeDistances: tee_distance.length>0 ? tee_distance[0].tee_distance :0,
-                      holeSetId: i.holeSetId,
-                    };
-                    arrayOfHoleSet.push(singleHole);
-                    counterA++;
-                  }
-                }
-              }
             }
-          }
+        }
         return arrayOfHoleSet;
     }
 
@@ -886,10 +899,15 @@ export class MatchplayComponent implements OnInit {
 
         let allSubTournamentMember = this.getSubTournamentPlayers();
 
-        if (!this.showTaxes)
+        if (!this.showTaxes) {
             for (let player of selectedFlight) {
                 let totalPlayed = 0;
                 let playerScoresIds: string[] = [];
+                let playerScoreEqual: string[] = [];
+                let playerScoreEagle: string[] = [];
+                let playerScoreBirdy: string[] = [];
+                let playerScoreBoogey: string[] = [];
+                let playerScoreDBoogey: string[] = [];
                 let playerEmptyScoresIds: string[] = [];
                 let player1DigitIds: string[] = [];
                 let player2DigitIds: string[] = [];
@@ -957,6 +975,34 @@ export class MatchplayComponent implements OnInit {
                             playerScoresIds.push(
                                 hole.id + '&' + player.playerId
                             );
+                            if (grossScore - hole.par == -2) {
+                                playerScoreEagle.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == -1) {
+                                playerScoreBirdy.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == 1) {
+                                playerScoreBoogey.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == 2) {
+                                playerScoreDBoogey.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == 0) {
+                                playerScoreEqual.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            playerScoresIds.push(
+                                hole.id + '&' + player.playerId
+                            );
 
                             if (grossScore > 9)
                                 player2DigitIds.push(
@@ -1007,15 +1053,59 @@ export class MatchplayComponent implements OnInit {
                                 .classList.remove('warn');
                         }
                     }
+                    if (playerScoreEagle.length > 0) {
+                        for (let id of playerScoreEagle) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('eagle');
+                        }
+                    }
+                    if (playerScoreBirdy.length > 0) {
+                        for (let id of playerScoreBirdy) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('birdy');
+                        }
+                    }
+                    if (playerScoreBoogey.length > 0) {
+                        for (let id of playerScoreBoogey) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('bogey');
+                        }
+                    }
+                    if (playerScoreDBoogey.length > 0) {
+                        for (let id of playerScoreDBoogey) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('doublebogey');
+                        }
+                    }
+                    if (playerScoreEqual.length > 0) {
+                        for (let id of playerScoreEqual) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.remove('eagle');
+                            a.classList.remove('birdy');
+                            a.classList.remove('bogey');
+                            a.classList.remove('doublebogey');
+                        }
+                    }
                 }
             }
-        else {
+        } else {
             for (let player of selectedFlight) {
                 let totalPlayed = 0;
                 let playerScoresIds: string[] = [];
                 let playerEmptyScoresIds: string[] = [];
                 let player1DigitIds: string[] = [];
                 let player2DigitIds: string[] = [];
+
+                let playerScoreEqual: string[] = [];
+                let playerScoreEagle: string[] = [];
+                let playerScoreBirdy: string[] = [];
+                let playerScoreBoogey: string[] = [];
+                let playerScoreDBoogey: string[] = [];
 
                 for (let hole of courseHoleQLs) {
                     //console.log(hole.id);
@@ -1076,7 +1166,31 @@ export class MatchplayComponent implements OnInit {
                                     playerScores.push(subFlightScore);
                                 }
                             }
-
+                            if (grossScore - hole.par == -2) {
+                                playerScoreEagle.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == -1) {
+                                playerScoreBirdy.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == 1) {
+                                playerScoreBoogey.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == 2) {
+                                playerScoreDBoogey.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
+                            if (grossScore - hole.par == 0) {
+                                playerScoreEqual.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                            }
                             playerScoresIds.push(hole.id + '&' + flightId);
 
                             if (grossScore > 9)
@@ -1119,6 +1233,44 @@ export class MatchplayComponent implements OnInit {
                             document
                                 .getElementById(id)
                                 .classList.remove('warn');
+                        }
+                    }
+                    if (playerScoreEagle.length > 0) {
+                        for (let id of playerScoreEagle) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('eagle');
+                        }
+                    }
+                    if (playerScoreBirdy.length > 0) {
+                        for (let id of playerScoreBirdy) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('birdy');
+                        }
+                    }
+                    if (playerScoreBoogey.length > 0) {
+                        for (let id of playerScoreBoogey) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('bogey');
+                        }
+                    }
+                    if (playerScoreDBoogey.length > 0) {
+                        for (let id of playerScoreDBoogey) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.add('doublebogey');
+                        }
+                    }
+                    if (playerScoreEqual.length > 0) {
+                        for (let id of playerScoreEqual) {
+                            var a = document.getElementById(id)
+                                .parentNode as HTMLElement;
+                            a.classList.remove('eagle');
+                            a.classList.remove('birdy');
+                            a.classList.remove('bogey');
+                            a.classList.remove('doublebogey');
                         }
                     }
                 }
@@ -1272,6 +1424,39 @@ export class MatchplayComponent implements OnInit {
                                     playerScores.push(subFlightScore);
                                 }
                             }
+                            if (grossScore - hole.par == -2) {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.add('eagle');
+                            }
+                            if (grossScore - hole.par == -1) {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.add('birdy');
+                            }
+                            if (grossScore - hole.par == 1) {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.add('bogey');
+                            }
+                            if (grossScore - hole.par == 2) {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.add('doublebogey');
+                            }
+                            if (grossScore - hole.par == 0) {
+                                var a = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                a.classList.remove('eagle');
+                                a.classList.remove('birdy');
+                                a.classList.remove('bogey');
+                                a.classList.remove('doublebogey');
+                            }
                         }
                     }
                 }
@@ -1306,44 +1491,46 @@ export class MatchplayComponent implements OnInit {
     }
     keytab(e) {
         var code = e.keyCode || e.which;
-    
+
         if (code === 13) {
-          e.preventDefault();
-          let control: HTMLInputElement = <HTMLInputElement>e.srcElement;
-    
-          while (control) {
-            let nextControl = <HTMLInputElement>control.nextElementSibling;
-    
-            if (nextControl) {
-              control = nextControl;
-    
-              while (nextControl) {
-                control = nextControl;
-    
-                nextControl = <HTMLInputElement>nextControl.firstElementChild;
-    
-                if (
-                  nextControl &&
-                  nextControl.type == "text" &&
-                  !nextControl.disabled
-                )
-                  break;
-              }
-    
-              if (nextControl) {
-                control = nextControl;
-                break;
-              }
-            } else {
-              control = <HTMLInputElement>control.parentElement;
+            e.preventDefault();
+            let control: HTMLInputElement = <HTMLInputElement>e.srcElement;
+
+            while (control) {
+                let nextControl = <HTMLInputElement>control.nextElementSibling;
+
+                if (nextControl) {
+                    control = nextControl;
+
+                    while (nextControl) {
+                        control = nextControl;
+
+                        nextControl = <HTMLInputElement>(
+                            nextControl.firstElementChild
+                        );
+
+                        if (
+                            nextControl &&
+                            nextControl.type == 'text' &&
+                            !nextControl.disabled
+                        )
+                            break;
+                    }
+
+                    if (nextControl) {
+                        control = nextControl;
+                        break;
+                    }
+                } else {
+                    control = <HTMLInputElement>control.parentElement;
+                }
             }
-          }
-    
-          if (control && control.focus) {
-            control.focus();
-          }
+
+            if (control && control.focus) {
+                control.focus();
+            }
         }
-      }
+    }
     getSubTournamentPlayers() {
         let subTournamentsFlightMembers: any = [];
         if (this.subTournaments.length > 0) {

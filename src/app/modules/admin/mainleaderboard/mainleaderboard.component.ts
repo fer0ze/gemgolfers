@@ -890,7 +890,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 let scores: any[] = membersQL.ScoresQL;
 
-                if (scores.length <= 0) continue;
+                //if (scores.length <= 0) continue;
 
                 for (let score of scores) {
                     let objScore: Score = new Score(
@@ -1075,14 +1075,17 @@ export class MainLeaderboardComponent implements OnInit {
             }
         }
 
+        console.log(this.grossLeaders);
+        console.log(this.netLeaders);
         this.sortLeaders(this.grossLeaders);
+        this.sortLeaders(this.netLeaders);
+        console.log(this.grossLeaders);
+        console.log(this.netLeaders);
 
         this.sortLeadersTie(this.grossLeaders);
         this.sortLeadersTie(this.netLeaders);
-        ////console.log(this.grossLeaders);
-        ////console.log(this.netLeaders);
-        this.sortLeaders(this.netLeaders);
-
+        console.log(this.grossLeaders);
+        console.log(this.netLeaders);
         //return { gross: this.grossLeaders, net: this.netLeaders };
     }
 
@@ -1326,6 +1329,8 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     Comparator(a, b) {
+        
+        if (a['holes'] == 0 || a['score'] == 0) return 1;
         if (a['under'] < b['under']) return -1;
         if (a['under'] > b['under']) return 1;
         return 0;
