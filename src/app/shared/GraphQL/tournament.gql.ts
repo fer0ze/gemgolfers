@@ -39,6 +39,7 @@ export const LeaderboardSubscription = gql`
             handicapAllocations
             noOfRounds
             webLogoUrl
+            title
             matchFormat
             tee_id
             FlightsQL: flights(
@@ -1402,27 +1403,26 @@ export const LeaderRoundsSubscriptionQL = gql`
 
 export const LeaderAllRoundDataQL = gql`
     query leaderAllRoundData($tournamentId: String!) {
-        TournamentLeaderDataQL: leader_all_round(
-            where: { tournamentId: { _eq: $tournamentId } }
+        LeaderGrossQL: leader(
+            where: {
+               tournamentId: { _eq: $tournamentId }
+                type: { _eq: "GROSS" }
+            }
+           
         ) {
-            ...LeaderAllRoundQL
+            ...LeaderQL
+        }
+        LeaderNetQL: leader(
+            where: {
+               tournamentId: { _eq: $tournamentId }
+                type: { _eq: "NET" }
+            }
+        ) {
+            ...LeaderQL
         }
 
-        TouranmentCategoriesQL: tournament_member_category(
-            where: { tournamentId: { _eq: $tournamentId } }
-        ) {
-            ...TournamentMemberCategoryQL
-        }
-
-        TouranmentPlayersStatusQL: tournament_member_status(
-            where: { tournamentId: { _eq: $tournamentId } }
-        ) {
-            ...TournamentMemberStatusQL
-        }
     }
-    ${LeaderAllRoundQL}
-    ${TournamentMemberCategoryQL}
-    ${TournamentMemberStatusQL}
+    ${LeaderQL}
 `;
 
 export const LeaderRoundQueryQL = gql`

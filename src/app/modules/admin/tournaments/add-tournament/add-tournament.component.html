@@ -197,7 +197,7 @@
                                     </div>
                                 </div>
                                 <div
-                                class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                 >
                                     <div>
                                         <div
@@ -266,7 +266,7 @@
                                     </div>
                                 </div>
                                 <div
-                                class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                 >
                                     <div>
                                         <div
@@ -408,7 +408,7 @@
                                     </div>
                                 </div>
                                 <div
-                                class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                 >
                                     <div
                                         *ngIf="this.showCat"
@@ -475,7 +475,7 @@
                                         <div
                                             fxLayout="column"
                                             fxLayoutAlign="center stretch"
-                                            class="row"
+                                            class="row mx-4 pt-4 pl-1"
                                             *ngIf="isAmateur"
                                         >
                                             <mat-checkbox
@@ -489,50 +489,37 @@
                                                 Categories</mat-checkbox
                                             >
                                         </div>
-                                        <div
-                                            fxLayout="column"
-                                            fxLayoutAlign="center stretch"
-                                            class="row"
-                                            *ngIf="selected"
-                                        >
-                                            <div
-                                                fxLayout="row"
-                                                fxLayoutGap="40px"
-                                                fxLayoutAlign="start center"
-                                            >
-                                                Prize Category A:
-                                                <mat-form-field>
-                                                    <input
-                                                        matInput
-                                                        formControlName="prizeCategoryA"
-                                                        type="number"
-                                                    />
-                                                    <mat-icon matSuffix
-                                                        >golf_course</mat-icon
-                                                    >
-                                                    <mat-hint
-                                                        >From 1 to</mat-hint
-                                                    >
-                                                </mat-form-field>
-                                                Prize Category B:
-                                                <mat-form-field>
-                                                    <input
-                                                        matInput
-                                                        formControlName="prizeCategoryB"
-                                                        type="number"
-                                                    />
-                                                    <mat-icon matSuffix
-                                                        >golf_course</mat-icon
-                                                    >
-                                                    <mat-hint>till 18</mat-hint>
-                                                </mat-form-field>
-                                            </div>
+                                        <div class="flex flex-row -mt-8 px-4 items-center"     *ngIf="selected">
+                                            <div class="w-80 font-medium">Prize Category A:</div>
+                                            <mat-form-field class="mx-3 pt-8">
+                                                <input
+                                                    matInput
+                                                    formControlName="prizeCategoryA"
+                                                    type="number"
+                                                />
+                                                <mat-icon matSuffix
+                                                    >golf_course</mat-icon
+                                                >
+                                                <mat-hint>From 1 to</mat-hint>
+                                            </mat-form-field>
+                                            <div class="w-80 font-medium">Prize Category B:</div>
+                                            <mat-form-field class="mx-3 pt-8">
+                                                <input
+                                                    matInput
+                                                    formControlName="prizeCategoryB"
+                                                    type="number"
+                                                />
+                                                <mat-icon matSuffix
+                                                    >golf_course</mat-icon
+                                                >
+                                                <mat-hint>till 18</mat-hint>
+                                            </mat-form-field>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div
-                                class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                 >
                                     <div
                                         class="flex my-4 text-2xl"
@@ -634,7 +621,7 @@
                                     </div>
                                 </div>
 
-                                <div class="my-3" style=" text-align: center">
+                                <div class="my-3" style="text-align: center">
                                     <button
                                         mat-raised-button
                                         color="primary"
@@ -710,6 +697,7 @@
                                 </div>
                                 <div>
                                     <button
+                                        class="mr-8"
                                         mat-raised-button
                                         color="warn"
                                         (click)="saveTournamentMembers()"
@@ -720,7 +708,7 @@
                                 </div>
                             </div>
 
-                            <div class="my-4 flex">
+                            <div class="mt-4 mb-2 flex">
                                 <div
                                     class="flex justify-start"
                                     style="width: 50%"
@@ -755,7 +743,7 @@
 
                             <div class="flex flex-row">
                                 <div
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                    class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                     style="
                                         width: 46%;
                                         box-shadow: 0 2px 8px 0
@@ -946,7 +934,7 @@
                                 </div>
 
                                 <div
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                    class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                     style="
                                         width: 46%;
                                         box-shadow: 0 2px 8px 0
@@ -1269,22 +1257,22 @@
 
                                         <div>
                                             <div>
-                                                <mat-card
-                                                    style="margin-bottom: 30px"
+                                                <div
+                                                class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                                 >
                                                     <div
-                                                        class="py-0.5 ml-4 px-3 rounded-full text-sm w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500"
+                                                        class="py-2 ml-4 px-3 mb-2 items-center rounded-full text-md w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500"
                                                     >
                                                         Day 1 Flights
                                                     </div>
-                                                    <div
+                                                    <!-- <div
                                                         class="ml-5 mt-1 mb-4 text-slate-600 font-extrabold"
                                                     >
                                                         Note*: These are only
                                                         Day 1 Flights. Remaining
                                                         Flights are generated
                                                         according to the cut.
-                                                    </div>
+                                                    </div> -->
                                                     <div
                                                         class="flex flex-row items-center"
                                                     >
@@ -1325,9 +1313,9 @@
                                                             >
                                                         </mat-form-field>
                                                     </div>
-                                                </mat-card>
-                                                <mat-card
-                                                    style="margin-bottom: 30px"
+                                                </div>
+                                                <div
+                                                class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                                 >
                                                     <div
                                                         class="flex flex-row ml-4"
@@ -1354,9 +1342,11 @@
                                                         >
                                                             <input
                                                                 type="time"
-                                                                matInput
-                                                                atp-time-picker
                                                                 formControlName="flightStartTime"
+                                                                value="{{ selectedTime }}"
+                                                                atp-time-picker
+                                                                matInput
+                                                                #query
                                                             />
                                                             <mat-error
                                                                 >The input is
@@ -1364,10 +1354,10 @@
                                                             >
                                                         </mat-form-field>
                                                     </div>
-                                                </mat-card>
+                                                </div>
 
-                                                <mat-card
-                                                    style="margin-bottom: 30px"
+                                                <div
+                                                class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                                 >
                                                     <div
                                                         class="flex justify-between"
@@ -1428,7 +1418,7 @@
                                                             </mat-radio-group>
                                                         </div>
                                                     </div>
-                                                </mat-card>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

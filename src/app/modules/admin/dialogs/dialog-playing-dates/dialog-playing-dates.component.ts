@@ -29,36 +29,33 @@ export class DialogPlayingDatesComponent implements OnInit {
       };
       this.date.push(obj);
     }
-    for (let i of this.data.category) {
-      console.log(i);
-      let obj = {
-        cat: i,
-      };
-      this.category.push(obj);
-    }
-    if (this.category.length > 1) {
-      let pop: any = this.category.pop();
-      this.categoryDate.push(pop);
-      console.log(this.categoryDate);
-      console.log(this.category);
-    }
+    // for (let i of this.data.category) {
+    //   console.log(i);
+    //   let obj = {
+    //     cat: i,
+    //   };
+    //   this.category.push(obj);
+    // }
+    this.category=this.data.category.name;
+    // if (this.category.length > 1) {
+    //   let pop: any = this.category.pop();
+    //   this.categoryDate.push(pop);
+    //   console.log(this.categoryDate);
+    //   console.log(this.category);
+    // }
     console.log(this.category);
     console.log(this.categoryDate);
   }
 
   dateChange(event, t) {
-    console.log(this.category[0]["cat"].id);
+    //console.log(this.category[0]["cat"].id);
     //console.log(this.category["cat"].id);
 
     let obj = {
       id:
-        this.categoryDate.length > 0
-          ? this.categoryDate[0]["cat"].id
-          : this.category[0]["cat"].id,
+      this.data.category.id,
       name:
-        this.categoryDate.length > 0
-          ? this.categoryDate[0]["cat"].name
-          : this.category[0]["cat"].name,
+      this.data.category.name,
 
       dates: t,
     };

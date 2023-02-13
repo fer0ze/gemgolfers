@@ -15,8 +15,10 @@ export class DialogCloseRoundComponent implements OnInit {
     cutOffform: FormGroup;
     copyFlights: boolean = false;
     public categoryList: FormArray;
+    allTabsChecked:boolean=false;
     public flightSettings: any;
     public nDate: Date;
+    public selectedIndex:number=0;
     public tournament_member_category: any;
     public playingCat: any[] = [];
     public catArray: any[] = [];
@@ -261,5 +263,17 @@ export class DialogCloseRoundComponent implements OnInit {
 
     onNoClick(): void {
         this.dialogRef.close();
+    }
+
+    saveCutSettings(index):void{
+     console.log(this.cutOffform.get('category').value.length);
+     
+        console.log(index);
+        if (index < this.cutOffform.get('category').value.length - 1) {
+            
+            this.selectedIndex = ++index;
+        }else{
+            this.allTabsChecked=true;
+        }
     }
 }

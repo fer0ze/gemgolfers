@@ -134,6 +134,7 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab3: boolean = false;
     showMainTab4: boolean = false;
     showMainTab5: boolean = false;
+    showSummary: boolean = false;
     tournamentMember: any;
     dataFullTournament: any;
     cuttFlag: number = 0;
@@ -314,7 +315,8 @@ export class ViewTournamentComponent implements OnInit {
                 this.activeRound = this.fullTournament.activeRound;
                 this.noOfRounds = this.fullTournament.noOfRounds;
                 this.categories = this.fullTournament.CategoriesQL;
-
+                this.tournamentCategories =
+                    this.dataFullTournament['TournamentQL'][0]['CategoriesQL'];
                 // this.playersUpdatedHandicap =
                 //   this.fullTournament.HandicapCalculated;
 
@@ -349,7 +351,18 @@ export class ViewTournamentComponent implements OnInit {
             } else this.router.navigate(['/tournaments/']);
 
             //console.log(this.fullTournament);
+
             this.calculateStatistics();
+            // if (this.tournamentPlayersAdd) {
+            //     this.GrossData(
+            //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+            //             .category
+            //     );
+            //     this.NetData(
+            //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+            //             .category
+            //     );
+            // }
             if (this.activeRound > this.noOfRounds) {
                 if (this.selected == 0) {
                     this.getRound1stats(1);
@@ -400,6 +413,17 @@ export class ViewTournamentComponent implements OnInit {
     calculateStatistics() {
         this.FlightsQL = [];
         this.topMembers = [];
+        this.AmateursCount = 0;
+        this.JuniorsCount = 0;
+        this.SeniorsCount = 0;
+        this.VeteransCount = 0;
+        this.LadiesCount = 0;
+        this.AmateursPlayingDates = [];
+        this.SeniorsPlayingDates = [];
+        this.JuniorsPlayingDates = [];
+        this.VeteransPlayingDates = [];
+        this.LadiesPlayingDates = [];
+        
         if (this.fullTournament.FlightsQL.length > 6) {
             this.FlightsQL = this.fullTournament.FlightsQL.slice(0, 7);
         } else {
@@ -809,34 +833,43 @@ export class ViewTournamentComponent implements OnInit {
         console.log(event);
         this.selectedCategory = this.tournamentCategories[event.index].category;
         console.log(this.selectedCategory);
-        this.GrossData(this.selectedCategory);
+        if (this.showSummary) this.GrossData(this.selectedCategory);
     }
     public onChangeNet(event) {
         console.log(event);
         this.selectedCategory = this.tournamentCategories[event.index].category;
         console.log(this.selectedCategory);
-        this.NetData(this.selectedCategory);
+        if (this.showSummary) this.NetData(this.selectedCategory);
+        this.showSummary = true;
     }
     tabClicked(tab: any) {
-        if (tab.index == 0) {
+        if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics();
             this.getRoundsstats();
             // this.getRound1stats(1);
             // this.GrossData(this.tournamentCategories[0].category);
             // this.NetData(this.tournamentCategories[0].category);
-        } else if (tab.index == 1) {
+        } else if (tab.index == 1 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics1();
             this.getRound1stats(1);
-        } else if (tab.index == 2) {
+        } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics2();
             this.getRound2stats(2);
-        } else if (tab.index == 3) {
+        } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics3();
             this.getRound3stats(3);
-        } else if (tab.index == 4) {
+        } else if (tab.index == 4 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics4();
             this.getRound4stats(4);
         } else {
+            this.GrossData(
+                this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+                    .category
+            );
+            this.NetData(
+                this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+                    .category
+            );
         }
     }
     maintabClicked(tab: any) {
@@ -1597,7 +1630,6 @@ export class ViewTournamentComponent implements OnInit {
         let result = objLeader.parseSubscriptionResponse();
         console.log(result);
         if (cutOffCriteria.copyflights == 'No') {
-            
             if (result.length == 0) {
                 result = this.dataFullTournament.TournamentQL[0].members.filter(
                     (a) => {
@@ -1675,12 +1707,9 @@ export class ViewTournamentComponent implements OnInit {
                 //console.log(this.selectedMembers);
                 this.saveCategoryFlights(cutOffCriteria, categoryName);
             }
-        }else{
+        } else {
             nextRoundPlayers = result;
-            this.makePlayerFlights(
-                nextRoundPlayers,
-                cutOffCriteria.players
-            );
+            this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
             //console.log(this.selectedMembers);
             this.saveCategoryFlights(cutOffCriteria, categoryName);
         }
@@ -1694,7 +1723,7 @@ export class ViewTournamentComponent implements OnInit {
         // }
         //this.markActiveTournamentMembers(this.activeTournamentMembers);
     }
-    
+
     async makePlayerFlights(nextRoundPlayers: any, playersPerFlight: number) {
         let cnter = 0;
         let outer = 0;
@@ -2067,117 +2096,123 @@ export class ViewTournamentComponent implements OnInit {
         // console.log(e);
     }
 
-    async GrossData(category: any) {
-        let members = this.dataFullTournament['TournamentQL'][0].members;
-        let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
+    private async GrossData(category: any) {
+        // let members = this.dataFullTournament['TournamentQL'][0].members;
+        // let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
         // GrossR2arr = R2GrossData.sort(this.ComparatorPositionR2);
-        if (this.round1Stats) {
-            if (members.length != 0 && flights.length == 0) {
-                let R1GrossData = members.filter((a) => {
-                    return a.PlayerQL.playerCategory == category;
-                });
-                console.log(R1GrossData);
-                R1GrossData = R1GrossData.slice(0, 10);
-                this.dataSourceR1Gross = new MatTableDataSource(R1GrossData);
-                this.dataSourceR1Gross.paginator = this.paginator;
-                this.dataSourceR1Gross.sort = this.sort;
-            } else if (flights.length != 0) {
-                let roundflight = 1;
-                let R1GrossData;
-                for (let obj of flights) {
-                    if (obj.flightRound == roundflight) {
-                        R1GrossData = obj.MembersQL.filter((a) => {
-                            return a.PlayerQL.playerCategory == category;
-                        });
-                    }
-                }
-                console.log(R1GrossData);
-                R1GrossData = R1GrossData.slice(0, 10);
-                this.dataSourceR1Gross = new MatTableDataSource(R1GrossData);
-                this.dataSourceR1Gross.paginator = this.paginator;
-                this.dataSourceR1Gross.sort = this.sort;
-            } else {
-                this.topPlayers = this.topPlayers.slice(0, 10);
-                this.dataSourceR1Gross = new MatTableDataSource(
-                    this.topPlayers
-                );
-                this.dataSourceR1Gross.paginator = this.paginator;
-                this.dataSourceR1Gross.sort = this.sort;
-            }
-        }
+        // if (this.round1Stats) {
+        //     if (members.length != 0 && flights.length == 0) {
+        //         let R1GrossData = members.filter((a) => {
+        //             return a.PlayerQL.playerCategory === category;
+        //         });
+        //         console.log(R1GrossData);
+        //         R1GrossData = R1GrossData.slice(0, 10);
+        //         this.dataSourceR1Gross = new MatTableDataSource(R1GrossData);
+        //         this.dataSourceR1Gross.paginator = this.paginator;
+        //         this.dataSourceR1Gross.sort = this.sort;
+        //     } else if (flights.length != 0) {
+        //         let roundflight = 1;
+        //         let R1GrossData=[];
+        //         for (let obj of flights) {
+        //             if (obj.flightRound == roundflight) {
+        //                 R1GrossData = obj.MembersQL.filter((a) => {
+        //                     return a.PlayerQL.playerCategory === category;
+        //                 });
+        //             }
+        //         }
+        //         console.log(R1GrossData);
+        //         R1GrossData = R1GrossData.slice(0, 10);
+        //         this.dataSourceR1Gross = new MatTableDataSource(R1GrossData);
+        //         this.dataSourceR1Gross.paginator = this.paginator;
+        //         this.dataSourceR1Gross.sort = this.sort;
+        //     } else {
+        //         this.topPlayers = this.topPlayers.slice(0, 10);
+        //         this.dataSourceR1Gross = new MatTableDataSource(
+        //             this.topPlayers
+        //         );
+        //         this.dataSourceR1Gross.paginator = this.paginator;
+        //         this.dataSourceR1Gross.sort = this.sort;
+        //     }
+        // }
 
-        if (this.round2Stats) {
-            let R2GrossData = members.filter((a) => {
-                return a.PlayerQL.playerCategory == category;
-            });
-            console.log(R2GrossData);
-            R2GrossData = R2GrossData.slice(0, 10);
-            this.dataSourceR2Gross = new MatTableDataSource(R2GrossData);
-            this.dataSourceR2Gross.paginator = this.paginator;
-            this.dataSourceR2Gross.sort = this.sort;
-        }
-        if (this.round3Stats) {
-            let R3GrossData = members.filter((a) => {
-                return a.PlayerQL.playerCategory == category;
-            });
-            console.log(R3GrossData);
-            R3GrossData = R3GrossData.slice(0, 10);
-            this.dataSourceR3Gross = new MatTableDataSource(R3GrossData);
-            this.dataSourceR3Gross.paginator = this.paginator;
-            this.dataSourceR3Gross.sort = this.sort;
-        }
+        // if (this.round2Stats) {
+        //     let R2GrossData = members.filter((a) => {
+        //         return a.PlayerQL.playerCategory == category;
+        //     });
+        //     console.log(R2GrossData);
+        //     R2GrossData = R2GrossData.slice(0, 10);
+        //     this.dataSourceR2Gross = new MatTableDataSource(R2GrossData);
+        //     this.dataSourceR2Gross.paginator = this.paginator;
+        //     this.dataSourceR2Gross.sort = this.sort;
+        // }
+        // if (this.round3Stats) {
+        //     let R3GrossData = members.filter((a) => {
+        //         return a.PlayerQL.playerCategory == category;
+        //     });
+        //     console.log(R3GrossData);
+        //     R3GrossData = R3GrossData.slice(0, 10);
+        //     this.dataSourceR3Gross = new MatTableDataSource(R3GrossData);
+        //     this.dataSourceR3Gross.paginator = this.paginator;
+        //     this.dataSourceR3Gross.sort = this.sort;
+        // }
 
-        if (this.round4Stats) {
-            let R4GrossData = members.filter((a) => {
-                return a.PlayerQL.playerCategory == category;
-            });
-            console.log(R4GrossData);
-            R4GrossData = R4GrossData.slice(0, 10);
-            this.dataSourceR4Gross = new MatTableDataSource(R4GrossData);
-            this.dataSourceR4Gross.paginator = this.paginator;
-            this.dataSourceR4Gross.sort = this.sort;
-        }
+        // if (this.round4Stats) {
+        //     let R4GrossData = members.filter((a) => {
+        //         return a.PlayerQL.playerCategory == category;
+        //     });
+        //     console.log(R4GrossData);
+        //     R4GrossData = R4GrossData.slice(0, 10);
+        //     this.dataSourceR4Gross = new MatTableDataSource(R4GrossData);
+        //     this.dataSourceR4Gross.paginator = this.paginator;
+        //     this.dataSourceR4Gross.sort = this.sort;
+        // }
 
-        // let LeadersGross = Object.assign(
-        //   {},
-        //   this.leaderAllRoundData.TournamentLeaderDataQL
-        // );
-        // console.log(LeadersGross);
-        // var Grossarr = Object.keys(LeadersGross).map((key) => ({
-        //   value: LeadersGross[key],
-        // }));
-        // console.log(Grossarr);
-        // let TotalGrossData = Grossarr.filter((a) => {
-        //   return a.value.player.playerCategory == category;
-        // });
-        // Grossarr = TotalGrossData.sort(this.ComparatorPosition);
+        // showSummarythis.showSummary
+        this.leaderAllRoundData = await this.facadeService.leaderAllRoundData(
+            this.tournamentID
+        );
+        //console.log(this.leaderAllRoundData);
+        let LeadersGross = Object.assign(
+            {},
+            this.leaderAllRoundData.LeaderGrossQL
+        );
+        console.log(LeadersGross);
+        var Grossarr = Object.keys(LeadersGross).map((key) => ({
+            value: LeadersGross[key],
+        }));
+        console.log(Grossarr);
+        let GrossData = Grossarr.filter((a) => {
+            return a.value.player.playerCategory == category;
+        });
+        //Grossarr = TotalGrossData.sort(this.ComparatorPosition);
         // Grossarr.slice(0, 10);
         // let GrossData = Grossarr.filter((a) => {
-        //   return a.value.type == "GROSS";
+        //     return a.value.type == 'GROSS';
         // });
+        console.log(GrossData);
+        // for()
 
         // GrossData = GrossData.slice(0, 10);
-        // console.log(GrossData);
-        // this.dataSourceTotalGross = new MatTableDataSource(GrossData);
-        // this.dataSourceTotalGross.paginator = this.paginator;
-        // this.dataSourceTotalGross.sort = this.sort;
+        this.dataSourceTotalGross = new MatTableDataSource(GrossData);
+        this.dataSourceTotalGross.paginator = this.paginator;
+        this.dataSourceTotalGross.sort = this.sort;
     }
 
     async NetData(category: any) {
-        let leaderAllRoundData = await this.facadeService.leaderAllRoundData(
-            this.tournamentID
-        );
-        console.log(leaderAllRoundData);
+        // let leaderAllRoundData = await this.facadeService.leaderAllRoundData(
+        //     this.tournamentID
+        // );
+        // console.log(leaderAllRoundData);
 
-        this.tournamentCategories = leaderAllRoundData.TouranmentCategoriesQL;
+        //this.tournamentCategories = leaderAllRoundData.TouranmentCategoriesQL;
 
         let members = this.dataFullTournament['TournamentQL'][0].members;
         let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
         let R1LeadersNET = Object.assign(
             {},
-            leaderAllRoundData.TournamentLeaderDataQL
+            this.leaderAllRoundData.LeaderNetQL
         );
-        console.log(leaderAllRoundData.TournamentLeaderDataQL);
+        console.log(this.leaderAllRoundData.LeaderNetQL);
         // if (this.round1Stats) {
 
         // }
@@ -2188,20 +2223,20 @@ export class ViewTournamentComponent implements OnInit {
             return a.value.player.playerCategory == category;
         });
 
-        let R1NETData = R1NetData.filter((a) => {
-            return a.value.type == 'NET';
-        });
-        NETR1arr = R1NETData.sort(this.ComparatorPositionR1);
-        console.log(NETR1arr);
-        R1NETData = NETR1arr.slice(0, 10);
-        console.log(R1NETData);
-        this.dataSourceR1NET = new MatTableDataSource(R1NETData);
+        // let R1NETData = R1NetData.filter((a) => {
+        //     return a.value.type == 'NET';
+        // });
+        // NETR1arr = R1NETData.sort(this.ComparatorPositionR1);
+        // console.log(NETR1arr);
+        R1NetData = R1NetData.slice(0, 10);
+        console.log(R1NetData);
+        this.dataSourceR1NET = new MatTableDataSource(R1NetData);
         this.dataSourceR1NET.paginator = this.paginator;
         this.dataSourceR1NET.sort = this.sort;
 
         let R2LeadersNET = Object.assign(
             {},
-            leaderAllRoundData.TournamentLeaderDataQL
+            this.leaderAllRoundData.LeaderNetQL
         );
         var NETR2arr = Object.keys(R2LeadersNET).map((key) => ({
             value: R2LeadersNET[key],
@@ -2209,20 +2244,20 @@ export class ViewTournamentComponent implements OnInit {
         let R2NetData = NETR2arr.filter((a) => {
             return a.value.player.playerCategory == category;
         });
-        let R2NETData = R2NetData.filter((a) => {
-            return a.value.type == 'NET';
-        });
-        NETR2arr = R2NETData.sort(this.ComparatorPositionR2);
-        console.log(NETR2arr);
-        R2NETData = NETR2arr.slice(0, 10);
-        console.log(R2NETData);
-        this.dataSourceR2NET = new MatTableDataSource(R2NETData);
+        // let R2NETData = R2NetData.filter((a) => {
+        //     return a.value.type == 'NET';
+        // });
+        // NETR2arr = R2NETData.sort(this.ComparatorPositionR2);
+        // console.log(NETR2arr);
+        R2NetData = R2NetData.slice(0, 10);
+        console.log(R2NetData);
+        this.dataSourceR2NET = new MatTableDataSource(R2NetData);
         this.dataSourceR2NET.paginator = this.paginator;
         this.dataSourceR2NET.sort = this.sort;
 
         let R3LeadersNET = Object.assign(
             {},
-            leaderAllRoundData.TournamentLeaderDataQL
+            this.leaderAllRoundData.LeaderNetQL
         );
         console.log(R3LeadersNET);
         var NETR3arr = Object.keys(R3LeadersNET).map((key) => ({
@@ -2232,20 +2267,20 @@ export class ViewTournamentComponent implements OnInit {
         let R3NetData = NETR3arr.filter((a) => {
             return a.value.player.playerCategory == category;
         });
-        let R3NETData = R3NetData.filter((a) => {
-            return a.value.type == 'NET';
-        });
-        NETR3arr = R3NETData.sort(this.ComparatorPositionR3);
-        console.log(NETR3arr);
-        R3NETData = NETR3arr.slice(0, 10);
-        console.log(R3NETData);
-        this.dataSourceR3NET = new MatTableDataSource(R3NETData);
+        // let R3NETData = R3NetData.filter((a) => {
+        //     return a.value.type == 'NET';
+        // });
+        // NETR3arr = R3NETData.sort(this.ComparatorPositionR3);
+        // console.log(NETR3arr);
+        R3NetData = R3NetData.slice(0, 10);
+        console.log(R3NetData);
+        this.dataSourceR3NET = new MatTableDataSource(R3NetData);
         this.dataSourceR3NET.paginator = this.paginator;
         this.dataSourceR3NET.sort = this.sort;
 
         let R4LeadersNET = Object.assign(
             {},
-            leaderAllRoundData.TournamentLeaderDataQL
+            this.leaderAllRoundData.LeaderNetQL
         );
         console.log(R4LeadersNET);
         var NETR4arr = Object.keys(R4LeadersNET).map((key) => ({
@@ -2255,21 +2290,18 @@ export class ViewTournamentComponent implements OnInit {
         let R4NetData = NETR4arr.filter((a) => {
             return a.value.player.playerCategory == category;
         });
-        let R4NETData = R4NetData.filter((a) => {
-            return a.value.type == 'NET';
-        });
-        NETR4arr = R4NETData.sort(this.ComparatorPositionR4);
-        console.log(NETR4arr);
-        R4NETData = NETR4arr.slice(0, 10);
-        console.log(R4NETData);
-        this.dataSourceR4NET = new MatTableDataSource(R4NETData);
+        // let R4NETData = R4NetData.filter((a) => {
+        //     return a.value.type == 'NET';
+        // });
+        // NETR4arr = R4NETData.sort(this.ComparatorPositionR4);
+        // console.log(NETR4arr);
+        R4NetData = R4NetData.slice(0, 10);
+        console.log(R4NetData);
+        this.dataSourceR4NET = new MatTableDataSource(R4NetData);
         this.dataSourceR4NET.paginator = this.paginator;
         this.dataSourceR4NET.sort = this.sort;
 
-        let LeadersNET = Object.assign(
-            {},
-            leaderAllRoundData.TournamentLeaderDataQL
-        );
+        let LeadersNET = Object.assign({}, this.leaderAllRoundData.LeaderNetQL);
         console.log(LeadersNET);
         var NETarr = Object.keys(LeadersNET).map((key) => ({
             value: LeadersNET[key],
@@ -2278,17 +2310,18 @@ export class ViewTournamentComponent implements OnInit {
         let TotalNETData = NETarr.filter((a) => {
             return a.value.player.playerCategory == category;
         });
-        NETarr = TotalNETData.sort(this.ComparatorPosition);
-        NETarr.slice(0, 10);
-        let NETData = NETarr.filter((a) => {
-            return a.value.type == 'NET';
-        });
+        // NETarr = TotalNETData.sort(this.ComparatorPosition);
+        // NETarr.slice(0, 10);
+        // let NETData = NETarr.filter((a) => {
+        //     return a.value.type == 'NET';
+        // });
 
-        NETData = NETData.slice(0, 10);
-        console.log(NETData);
-        this.dataSourceTotalNET = new MatTableDataSource(NETData);
+        TotalNETData = TotalNETData.slice(0, 10);
+        console.log(TotalNETData);
+        this.dataSourceTotalNET = new MatTableDataSource(TotalNETData);
         this.dataSourceTotalNET.paginator = this.paginator;
         this.dataSourceTotalNET.sort = this.sort;
+        this.showSummary = true;
     }
 
     async getTournamentMembers() {

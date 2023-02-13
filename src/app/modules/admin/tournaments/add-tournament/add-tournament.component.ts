@@ -76,7 +76,12 @@ export class AddTournamentComponent implements OnInit {
         'playerCategory',
         'select',
     ];
-    membersColumns: string[] = ['firstName', 'handicap', 'playerCategory', 'delete'];
+    membersColumns: string[] = [
+        'firstName',
+        'handicap',
+        'playerCategory',
+        'delete',
+    ];
     dataSource: MatTableDataSource<Player>;
     selection = new SelectionModel<Player>(true, []);
     isLoading = true;
@@ -496,7 +501,7 @@ export class AddTournamentComponent implements OnInit {
                 Validators.compose([Validators.required]),
             ],
             playersperFlight: ['3', Validators.compose([Validators.required])],
-            flightStartTime: ['08:00 AM', Validators.required],
+            flightStartTime: ["08:00 AM", Validators.required],
             arrangeBy: ['handicap', Validators.required],
             selectedcategories: [
                 this.formArray.get([0]).get('clubctgies').value,
@@ -668,7 +673,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     private _filterCourse(value: any): Course[] {
-        console.log("value="+value);
+        console.log('value=' + value);
 
         if (value) {
             if (typeof value === 'object') {
@@ -727,7 +732,8 @@ export class AddTournamentComponent implements OnInit {
             if (chkArray.controls.findIndex((x) => x.value.id == chk.id) == -1)
                 chkArray.push(new FormControl({ id: chk.id, name: chk.name }));
             console.log(chkArray);
-            this.dateSetup();
+            //this.dateSetup();
+            this.getplayingDates();
             this.showDates = true;
             let category;
             category = this.formArray.get([0]).get('clubctgies').value;
@@ -738,7 +744,7 @@ export class AddTournamentComponent implements OnInit {
 
                 data: {
                     dates: this.playingDat,
-                    category: this.formArray.get([0]).get('clubctgies').value,
+                    category: chk,
                 },
             });
 
@@ -754,6 +760,10 @@ export class AddTournamentComponent implements OnInit {
                         this.dates.push(obj);
                     }
                     console.log(this.dates);
+                } else {
+                    this.snackBar.open('Dates have not been saved', 'x', {
+                        duration: 3000,
+                    });
                 }
             });
             //this.PlayingDateFormGroup(index)
@@ -762,6 +772,8 @@ export class AddTournamentComponent implements OnInit {
                 (x) => x.value.name == chk.name
             );
             chkArray.removeAt(idx);
+            this.dates = this.dates.filter((x) => x.name != chk.name);
+            console.log(this.dates);
         }
 
         if (chkArray.controls.findIndex((x) => x.value.id == 1) != -1)
@@ -1635,6 +1647,27 @@ export class AddTournamentComponent implements OnInit {
         return courseHoleSet;
     }
 
+    getFlightTime(items: any) {
+        let flightTime: string = '08:00';
+
+        try {
+            if (items.time) {
+                let dateNow: Date = new Date(
+                    Constants.DEFAULT_DATE + ' ' + items.time.substr(0, 5)
+                );
+
+                var h = dateNow.getHours();
+                var m = dateNow.getMinutes();
+
+                flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
+            }
+        } catch {
+            flightTime = '08:00';
+        }
+
+        return flightTime;
+    }
+
     async createTournament(stepper: MatStepper) {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
@@ -1660,7 +1693,11 @@ export class AddTournamentComponent implements OnInit {
                 //this.TCdata.lowerLimitStart = 1;
                 //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
 
-                if (this.formArray.get([0]).value.handicapCats) {
+                if (
+                    this.formArray.get([0]).value.handicapCats &&
+                    this.formArray.get([0]).value.prizeCategoryA != '' &&
+                    this.formArray.get([0]).value.prizeCategoryB != ''
+                ) {
                     TCdata = {
                         lowerLimitStart: 1,
                         lowerLimitEnd: this.formArray.get([0]).value

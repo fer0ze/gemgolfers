@@ -1,6 +1,6 @@
 <div mat-dialog-content>
     <form [formGroup]="cutOffform" (ngSubmit)="onSubmit()">
-        <mat-tab-group mat-align-tabs="center">
+        <mat-tab-group mat-align-tabs="center" [(selectedIndex)]="selectedIndex">
             <mat-tab
                 formArrayName="category"
                 class="mb-20 separator"
@@ -22,13 +22,35 @@
                             fxLayout.lt-md="column"
                             fxLayoutGap="10px"
                         >
-                            <div *ngIf="catArray[categoryList.value[i].name].cutshow" [fxFlex]="30">
-                                <mat-label>Make auto Cut Based Groups/Flights?</mat-label>
+                            <div
+                                *ngIf="
+                                    catArray[categoryList.value[i].name].cutshow
+                                "
+                                [fxFlex]="30"
+                            >
+                                <mat-label
+                                    >Make auto Cut Based
+                                    Groups/Flights?</mat-label
+                                >
                             </div>
-                            <div *ngIf="!catArray[categoryList.value[i].name].cutshow" [fxFlex]="40">
-                                <mat-label>Make Next Round Groups/Flights</mat-label>
+                            <div
+                                *ngIf="
+                                    !catArray[categoryList.value[i].name]
+                                        .cutshow
+                                "
+                                [fxFlex]="40"
+                            >
+                                <mat-label
+                                    >Make Next Round Groups/Flights</mat-label
+                                >
                             </div>
-                            <div *ngIf="!catArray[categoryList.value[i].name].cutshow" [fxFlex]="70">
+                            <div
+                                *ngIf="
+                                    !catArray[categoryList.value[i].name]
+                                        .cutshow
+                                "
+                                [fxFlex]="70"
+                            >
                                 <mat-radio-group
                                     fxLayoutAlign="start center"
                                     formControlName="playing"
@@ -39,15 +61,22 @@
                                         )
                                     "
                                 >
-                                    <mat-radio-button  value="false"
+                                    <mat-radio-button value="false"
                                         >NO</mat-radio-button
                                     >
-                                    <mat-radio-button [checked]='true' value="true"
-                                        >YES </mat-radio-button
-                                    >
+                                    <mat-radio-button
+                                        [checked]="true"
+                                        value="true"
+                                        >YES
+                                    </mat-radio-button>
                                 </mat-radio-group>
                             </div>
-                            <div *ngIf="catArray[categoryList.value[i].name].cutshow" [fxFlex]="70">
+                            <div
+                                *ngIf="
+                                    catArray[categoryList.value[i].name].cutshow
+                                "
+                                [fxFlex]="70"
+                            >
                                 <mat-radio-group
                                     fxLayoutAlign="start center"
                                     formControlName="playing"
@@ -58,22 +87,27 @@
                                         )
                                     "
                                 >
-                                    <mat-radio-button  value="false"
+                                    <mat-radio-button value="false"
                                         >NO</mat-radio-button
                                     >
-                                    <mat-radio-button [checked]='true' value="true"
+                                    <mat-radio-button
+                                        [checked]="true"
+                                        value="true"
                                         >YES (Flights will be make based on
                                         Gross or Net score)</mat-radio-button
                                     >
                                 </mat-radio-group>
                             </div>
                         </div>
-                        <div class="grid" *ngIf="catArray[categoryList.value[i].name].value">
+                        <div
                             
-
-                            <div  class="flex flex-row ">
-                                <div class="flex flex-row ">
-                                    <mat-label class="pt-3">Players/Flight:</mat-label>
+                            *ngIf="catArray[categoryList.value[i].name].value"
+                        >
+                            <div class="flex flex-row">
+                                <div class="flex flex-row">
+                                    <mat-label class="pt-3"
+                                        >Players/Flight:</mat-label
+                                    >
                                     <mat-form-field>
                                         <input
                                             matInput
@@ -82,7 +116,7 @@
                                         />
                                     </mat-form-field>
                                 </div>
-                                <div class="flex flex-row ">
+                                <div class="flex flex-row">
                                     <mat-label>Flight Start Time:</mat-label>
                                     <mat-form-field class="w-40">
                                         <input
@@ -90,14 +124,13 @@
                                             matInput
                                             atp-time-picker
                                             formControlName="time"
-                                           
                                         />
                                         <mat-error
                                             >The input is required.</mat-error
                                         >
                                     </mat-form-field>
                                 </div>
-                                <div class="flex flex-row ">
+                                <div class="flex flex-row">
                                     <mat-label
                                         >Flights interval (Minutes)</mat-label
                                     >
@@ -113,10 +146,8 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div
-                            class="flex flex-row my-4"
-                            >
-                                <div class="flex flex-col px-10">
+                            <div class="flex flex-row my-4">
+                                <div class="flex flex-col ">
                                     <mat-label>Starting Hole:</mat-label>
                                     <mat-radio-group
                                         formControlName="tee"
@@ -129,9 +160,20 @@
                                         <mat-radio-button value="1"
                                             >1</mat-radio-button
                                         >
+                                        <mat-radio-button value="10"
+                                            >10</mat-radio-button
+                                        >
                                     </mat-radio-group>
                                 </div>
-                                <div *ngIf="catArray[categoryList.value[i].name].cutshow && catArray[categoryList.value[i].name].showCutCopy" class="flex flex-col px-10">
+                                <div
+                                    *ngIf="
+                                        catArray[categoryList.value[i].name]
+                                            .cutshow &&
+                                        catArray[categoryList.value[i].name]
+                                            .showCutCopy
+                                    "
+                                    class="flex flex-col pl-16"
+                                >
                                     <mat-label
                                         >Cut off score based on:</mat-label
                                     >
@@ -148,7 +190,7 @@
                                         >
                                     </mat-radio-group>
                                 </div>
-                                <div class="flex flex-col px-10">
+                                <div class="flex flex-col pl-24">
                                     <mat-label>Flights Order:</mat-label>
                                     <mat-radio-group
                                         formControlName="order"
@@ -164,10 +206,16 @@
                                     </mat-radio-group>
                                 </div>
                             </div>
-                            <div
-                            class="flex flex-row my-2"
-                            >
-                                <div *ngIf="catArray[categoryList.value[i].name].cutshow && catArray[categoryList.value[i].name].showCutCopy" class="flex flex-row ">
+                            <div class="flex flex-row mt-10 mb-2">
+                                <div
+                                    *ngIf="
+                                        catArray[categoryList.value[i].name]
+                                            .cutshow &&
+                                        catArray[categoryList.value[i].name]
+                                            .showCutCopy
+                                    "
+                                    class="flex flex-row"
+                                >
                                     <mat-label class="pt-4"
                                         >Cut Off Score (Total Par)</mat-label
                                     >
@@ -184,17 +232,23 @@
                                     </mat-form-field>
                                 </div>
 
-                                <div *ngIf="catArray[categoryList.value[i].name].cutshow" class="flex flex-row ml-12 pt-4">
+                                <div
+                                    *ngIf="
+                                        catArray[categoryList.value[i].name]
+                                            .cutshow
+                                    "
+                                    class="flex flex-row ml-12 pt-4"
+                                >
                                     <mat-label>Copy Flights</mat-label>
 
                                     <mat-radio-group
                                         formControlName="copyFlights"
                                         (change)="
-                                        selectionChangeCopy(
-                                            $event,
-                                            categoryList.value[i].name
-                                        )
-                                    "
+                                            selectionChangeCopy(
+                                                $event,
+                                                categoryList.value[i].name
+                                            )
+                                        "
                                     >
                                         <mat-radio-button value="No"
                                             >No</mat-radio-button
@@ -224,6 +278,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex flex-row flex justify-center my-2">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="saveCutSettings(i)"
+                    >
+                        Save Changes
+                    </button>
+                </div>
             </mat-tab>
         </mat-tab-group>
     </form>
@@ -231,10 +294,10 @@
 <div mat-dialog-actions>
     <button mat-raised-button (click)="onNoClick()">Cancel</button>
     <button
+        [disabled]="!allTabsChecked"
         mat-raised-button
-        color="primary"
+        color="warn"
         [mat-dialog-close]="cutOffform.value"
-        [disabled]="!cutOffform.valid"
         cdkFocusInitial
     >
         Close Round

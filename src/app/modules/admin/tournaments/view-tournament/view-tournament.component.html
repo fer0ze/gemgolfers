@@ -4071,36 +4071,27 @@
                             </mat-tab>
 
                             <mat-tab
-                                *ngIf="
-                                    fullTournament.activeRound >
-                                    fullTournament.noOfRounds
-                                "
+                               
+                                label="Summary"
                             >
-                                <ng-template mat-tab-label>Summary</ng-template>
-                                <div
-                                    fxLayoutAlign="center center"
-                                    [ngStyle]="{
-                                        'padding-bottom': '10px',
-                                        padding: '20px 0'
-                                    }"
-                                ></div>
+                                
+                    
 
                                 <div
-                                    class="mat-elevation-z8"
-                                    fxFlex
-                                    fxLayout="row"
-                                    fxLayoutAlign="start center"
-                                    fxLayout.lt-md="column"
-                                    fxLayoutGap="20px"
+                                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                 >
-                                    <div [fxFlex]="50">
-                                        <mat-card>
-                                            <mat-card-header>
-                                                <mat-card-title
-                                                    >TOP 15
-                                                    GROSS</mat-card-title
-                                                >
-                                            </mat-card-header>
+                                    <div  class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                      
+                                        <div
+                                        class="flex flex-col sm:flex-row items-start justify-between"
+                                    >
+                                        <div
+                                            class="text-lg font-medium tracking-tight leading-6 truncate"
+                                        >
+                                            Top Gross
+                                        </div>
+                                        
+                                    </div>
                                             <mat-tab-group
                                                 mat-align-tabs="center"
                                                 (selectedTabChange)="
@@ -4204,7 +4195,8 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR1
-                                                                        : null
+                                                                        : row.value
+                                                                        .score
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4232,7 +4224,7 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR2
-                                                                        : null
+                                                                        : "-"
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4260,7 +4252,7 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR3
-                                                                        : null
+                                                                        : "-"
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4287,7 +4279,7 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR4
-                                                                        : null
+                                                                        : "-"
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4310,16 +4302,7 @@
                                                             >
                                                                 {{
                                                                     row.value
-                                                                        .scoreR1 +
-                                                                        row
-                                                                            .value
-                                                                            .scoreR2 +
-                                                                        row
-                                                                            .value
-                                                                            .scoreR3 +
-                                                                        row
-                                                                            .value
-                                                                            .scoreR4
+                                                                        .under
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4340,16 +4323,21 @@
                                                     </table>
                                                 </mat-tab>
                                             </mat-tab-group>
-                                        </mat-card>
+                                        
                                     </div>
 
-                                    <div [fxFlex]="50">
-                                        <mat-card>
-                                            <mat-card-header>
-                                                <mat-card-title
-                                                    >TOP 10 NET</mat-card-title
-                                                >
-                                            </mat-card-header>
+                                    <div class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                        <div
+                                        class="flex flex-col sm:flex-row items-start justify-between"
+                                    >
+                                        <div
+                                            class="text-lg font-medium tracking-tight leading-6 truncate"
+                                        >
+                                            Top Net
+                                        </div>
+                                        
+                                    </div>
+                                           
                                             <mat-tab-group
                                                 mat-align-tabs="center"
                                                 (selectedTabChange)="
@@ -4453,7 +4441,8 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR1
-                                                                        : null
+                                                                        : row.value
+                                                                        .score
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4481,7 +4470,7 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR2
-                                                                        : null
+                                                                        : "-"
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4509,7 +4498,7 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR3
-                                                                        : null
+                                                                        :  "-"
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4536,7 +4525,7 @@
                                                                         ? row
                                                                               .value
                                                                               .scoreR4
-                                                                        : null
+                                                                        :  "-"
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4558,17 +4547,7 @@
                                                                 "
                                                             >
                                                                 {{
-                                                                    row.value
-                                                                        .scoreR1 +
-                                                                        row
-                                                                            .value
-                                                                            .scoreR2 +
-                                                                        row
-                                                                            .value
-                                                                            .scoreR3 +
-                                                                        row
-                                                                            .value
-                                                                            .scoreR4
+                                                                    row.value.under
                                                                 }}
                                                             </td>
                                                         </ng-container>
@@ -4589,7 +4568,7 @@
                                                     </table>
                                                 </mat-tab>
                                             </mat-tab-group>
-                                        </mat-card>
+                                        
                                     </div>
                                 </div>
                             </mat-tab>
