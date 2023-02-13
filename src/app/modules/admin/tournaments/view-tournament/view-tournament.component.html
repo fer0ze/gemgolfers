@@ -1836,7 +1836,7 @@
                                                                 class="font-medium"
                                                             >
                                                                 Flight No:{{
-                                                                    flight.flightNo
+                                                                    flight.flightNo 
                                                                 }}
                                                             </div>
                                                             <div
@@ -1860,7 +1860,7 @@
                                                                             class="ml-1.5 text-md text-secondary"
                                                                         >
                                                                             {{
-                                                                                flight.time
+                                                                                flight.time.substring(0,5)
                                                                             }}
                                                                         </div>
                                                                     </div>
@@ -1892,7 +1892,7 @@
                                                                 </ng-container>
                                                             </div>
                                                         </div>
-                                                        <button mat-icon-button>
+                                                        <button (click)="movetoFlight(flight.id)" mat-icon-button>
                                                             <mat-icon
                                                                 [svgIcon]="
                                                                     'heroicons_solid:chevron-right'

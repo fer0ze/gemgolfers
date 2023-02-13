@@ -423,7 +423,7 @@ export class ViewTournamentComponent implements OnInit {
         this.JuniorsPlayingDates = [];
         this.VeteransPlayingDates = [];
         this.LadiesPlayingDates = [];
-        
+
         if (this.fullTournament.FlightsQL.length > 6) {
             this.FlightsQL = this.fullTournament.FlightsQL.slice(0, 7);
         } else {
@@ -2379,6 +2379,9 @@ export class ViewTournamentComponent implements OnInit {
             //console.log(this.player);
             // this.setDataSource(this.player);
         }
+    }
+    movetoFlight(id){
+        this.mainSelected=++this.mainSelected;
     }
     async playerList() {
         let datas = await this.facadeService.getPlayersListForTournament(
