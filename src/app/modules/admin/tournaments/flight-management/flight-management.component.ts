@@ -1359,17 +1359,29 @@ export class FlightManagementComponent implements OnInit {
     public async closedrawer(id) {
         console.log(id);
         console.log(this.selectedMembers);
-        
-        let found = this.selectedMembers.filter((a) => {
-            return a['id'] == id;
-        });
-        if (found) {
-            let newflight = await this.facadeService.singleRoundFlightQuery(id);
-            console.log(newflight);
-        } else {
-          let newflight = await this.facadeService.singleRoundFlightQuery(id);
-          console.log(newflight);
-        }
+        let dataFullTournament = await this.facadeService.getTournamentsFlights(
+            id
+        );
+        this.tournamentInfo = dataFullTournament.TournamentQL;
+
+        this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
+            (a) => {
+                return a.flightRound == this.flightRound;
+            }
+        );
+        this.getSelectedPlayers();
+        // let found = this.selectedMembers.filter((a) => {
+        //     return a['id'] == id;
+        // });
+        // if (found.length>0) {
+        //     // let newflight = await this.facadeService.singleRoundFlightQuery(id);
+        //     // console.log(newflight);
+            
+       
+        // } else {
+        //   let newflight = await this.facadeService.singleRoundFlightQuery(id);
+        //   console.log(newflight);
+        // }
     }
     saveFlight(index: number) {
         //console.log(index);

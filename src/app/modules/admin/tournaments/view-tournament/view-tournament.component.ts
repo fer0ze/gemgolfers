@@ -845,20 +845,20 @@ export class ViewTournamentComponent implements OnInit {
     }
     tabClicked(tab: any) {
         if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics();
-            this.getRoundsstats();
+            this.calculateStatistics1();
+            this.getRound1stats(1);
             // this.getRound1stats(1);
             // this.GrossData(this.tournamentCategories[0].category);
             // this.NetData(this.tournamentCategories[0].category);
         } else if (tab.index == 1 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics1();
-            this.getRound1stats(1);
-        } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics2();
             this.getRound2stats(2);
-        } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
+        } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics3();
             this.getRound3stats(3);
+        } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
+            this.calculateStatistics4();
+            this.getRound4stats(4);
         } else if (tab.index == 4 && tab.tab['textLabel'] !== 'Summary') {
             this.calculateStatistics4();
             this.getRound4stats(4);
@@ -2428,7 +2428,7 @@ export class ViewTournamentComponent implements OnInit {
         if (this.flightid) {
             //this._flightManagmentComponent.closedrawer(this.flightid);
            
-            obj.closedrawer(this.flightid)
+            obj.closedrawer(this.tournamentID)
         } else {
             //this._flightManagmentComponent.closedrawer(this.newFlightID);
             obj.closedrawer(this.newFlightID)
