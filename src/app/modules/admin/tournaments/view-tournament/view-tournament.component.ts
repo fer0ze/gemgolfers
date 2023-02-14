@@ -2429,10 +2429,11 @@ export class ViewTournamentComponent implements OnInit {
         if (this.flightid) {
             //this._flightManagmentComponent.closedrawer(this.flightid);
            
-            obj.closedrawer(this.tournamentID)
+            //obj.closedrawer(this.tournamentID)
+            obj.ngOnInit();
         } else {
             //this._flightManagmentComponent.closedrawer(this.newFlightID);
-            obj.closedrawer(this.newFlightID)
+           // obj.closedrawer(this.tournamentID)
         }
         this.matDrawer.close();
         this.flight = [];

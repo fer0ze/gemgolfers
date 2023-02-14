@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnInit,
+    ViewChild,
+    OnChanges,
+    SimpleChange,
+    SimpleChanges,
+} from '@angular/core';
 import {
     AbstractControl,
     FormBuilder,
@@ -54,7 +63,7 @@ import { ViewTournamentComponent } from '../view-tournament/view-tournament.comp
     templateUrl: './flight-management.component.html',
     styleUrls: ['./flight-management.component.scss'],
 })
-export class FlightManagementComponent implements OnInit {
+export class FlightManagementComponent implements OnInit, OnChanges {
     @Input()
     tournamentID: string;
     dataSource: MatTableDataSource<any>;
@@ -89,7 +98,7 @@ export class FlightManagementComponent implements OnInit {
     loggedInuser: Player;
     tournamentInfo: any;
     tournamentMember: any[] = [];
-    selectedMembers: Player[][] = [];
+    selectedMembers?: any[][] = [];
     //tournamentID: string;
     isLoading: boolean = true;
     preFlightTime: string;
@@ -134,7 +143,18 @@ export class FlightManagementComponent implements OnInit {
     get contactFormGroup() {
         return this.formGroup.get('flights') as FormArray;
     }
+    /**
+     * On changes
+     *
+     * @param changes
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        // ..this.getSelectedPlayers();
+        // this.selectedMembers=changes;
+        console.log( changes);
 
+        // changes.prop contains the old and the new value...
+    }
     async ngOnInit() {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
@@ -154,7 +174,8 @@ export class FlightManagementComponent implements OnInit {
         this.activeRound = this.tournamentInfo[0].activeRound;
         this.noOfRounds = this.tournamentInfo[0].noOfRounds;
         this.selectedIndex = this.activeRound - 1;
-
+  console.log(this.activeRound);
+  
         console.log(this.tournamentInfo[0]);
         let selectedClubId: string =
             this.loggedInuser.userRole > 1
@@ -162,12 +183,12 @@ export class FlightManagementComponent implements OnInit {
                 : this.tournamentInfo[0].clubId;
         this.clubMembers = [];
         console.log(selectedClubId);
-        let dataFullTournaments = await this.facadeService.getTournamentMembers(
-            this.tournamentID
-        );
-        console.log(dataFullTournaments);
+        // let dataFullTournaments = await this.facadeService.getTournamentMembers(
+        //     this.tournamentID
+        // );
+        // console.log(dataFullTournaments);
 
-        this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+        // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
         // this.clubMembers = await this.facadeService.getPlayerByClub(
         //     selectedClubId
         // );
@@ -518,11 +539,12 @@ export class FlightManagementComponent implements OnInit {
             }
         }
     }
-    public trackByFn(index: number, item: any): any {
+    public trackByFn(item: any) {
         return item.id;
     }
     getSelectedPlayers() {
         this.selectedMembers = [];
+        this.changeDetection.detectChanges();
         if (this.tournamentInfo[0].FlightManagerQLi.length > 0) {
             if (this.flightRound == 0) {
                 this.roundFlights = this.tournamentInfo[0].FlightManagerQLi;
@@ -580,8 +602,8 @@ export class FlightManagementComponent implements OnInit {
                 outer++;
             }
         }
+
         console.log(this.selectedMembers);
-        this.changeDetection.detectChanges();
         //console.log(this.groups);
     }
 

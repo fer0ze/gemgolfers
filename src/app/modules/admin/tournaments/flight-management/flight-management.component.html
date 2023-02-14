@@ -18,25 +18,20 @@
                 </div>
                 <ng-container>
                     <div *ngIf="selectedMembers.length > 0">
-                        <div
-                            cdkDropListGroup
-                            id="manageFlights"
-                            class="mx-32 m-4"
-                        >
+                        <div id="manageFlights" class="mx-32 m-4">
                             <ng-container>
                                 <div
-                                    *ngFor="
-                                        let items of selectedMembers;
-                                        trackBy: trackByFn;
-                                        let i = index
-                                    "
                                     class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                                     style="
                                         box-shadow: 5px 3px 18px 2px
                                             rgb(0 0 3 / 21%);
                                     "
+                                    *ngFor="
+                                        let items of selectedMembers;
+                                        let i = index;
+                                        trackBy: trackByFn
+                                    "
                                 >
-                               
                                     <div
                                         class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                                     >
@@ -298,9 +293,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                
                                 </div>
                             </ng-container>
+                        </div>
+                        <div class="flex justify-center my-3">
+                            <button
+                                mat-raised-button
+                                color="primary" 
+                                *ngIf="activeRound == flightRound"
+                                (click)="saveFlights()"
+                            >
+                                Save Changes
+                            </button>
                         </div>
                     </div>
                 </ng-container>
@@ -595,6 +599,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="flex justify-center my-3">
+                        <button
+                            mat-raised-button
+                            color="primary" 
+                            *ngIf="activeRound == flightRound"
+                            (click)="saveFlights()"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
                 </div>
             </mat-tab>
             <mat-tab
@@ -888,6 +902,16 @@
                                 </div>
                             </div>
                         </div>
+                    </div >
+                    <div class="flex justify-center my-3">
+                        <button
+                            mat-raised-button 
+                            color="primary"
+                            *ngIf="activeRound == flightRound"
+                            (click)="saveFlights()"
+                        >
+                            Save Changes
+                        </button>
                     </div>
                 </div>
             </mat-tab>
@@ -1182,6 +1206,16 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="flex justify-center my-3">
+                        <button
+                            mat-raised-button
+                            color="primary" 
+                            *ngIf="activeRound == flightRound"
+                            (click)="saveFlights()"
+                        >
+                            Save Changes
+                        </button>
                     </div>
                 </div>
             </mat-tab>

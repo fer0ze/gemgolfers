@@ -360,7 +360,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 index++;
             }
-            //console.log(this.allMatchResults);
+            console.log(this.allMatchResults);
             let player: any = [];
             // if (this.cutOffList) {
             //   for (let leader in this.allMatchResults) {
@@ -619,6 +619,8 @@ export class MainLeaderboardComponent implements OnInit {
                 //this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
                 //(this.matchFormat == matchFormat.TEXAS_SCRAMBLE)? this.createTexasScrampleLeaders(this.Leaderboard.FlightsQL, 1, false) : this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
                 //this.createTexasScrampleLeaders(this.Leaderboard.FlightsQL, 1, false);
+                console.log(this.allMatchResults);
+                
                 for (let leader in this.allMatchResults) {
                     grossAllArray.push(this.allMatchResults[leader]);
                     //this.activePlayers.push(this.allMatchResults[leader]);
@@ -1018,7 +1020,7 @@ export class MainLeaderboardComponent implements OnInit {
                 };
 
                 this.grossLeaders.push(LeaderGross);
-                console.log('Gross:' + this.grossLeaders);
+                //console.log('Gross:' + this.grossLeaders);
 
                 this.grossAllLeaders.push(LeaderGross);
                 //console.log(this.grossAllLeaders);
@@ -1075,17 +1077,17 @@ export class MainLeaderboardComponent implements OnInit {
             }
         }
 
-        console.log(this.grossLeaders);
-        console.log(this.netLeaders);
+         console.log(this.grossLeaders);
+        // console.log(this.netLeaders);
         this.sortLeaders(this.grossLeaders);
         this.sortLeaders(this.netLeaders);
-        console.log(this.grossLeaders);
-        console.log(this.netLeaders);
+        // console.log(this.grossLeaders);
+        // console.log(this.netLeaders);
 
-        this.sortLeadersTie(this.grossLeaders);
-        this.sortLeadersTie(this.netLeaders);
-        console.log(this.grossLeaders);
-        console.log(this.netLeaders);
+        //this.sortLeadersTie(this.grossLeaders);
+       // this.sortLeadersTie(this.netLeaders);
+        // console.log(this.grossLeaders);
+        // console.log(this.netLeaders);
         //return { gross: this.grossLeaders, net: this.netLeaders };
     }
 
@@ -1224,7 +1226,10 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     private sortLeaders(arrayLeaders: any): any[] {
+        // console.log(arrayLeaders);
+
         arrayLeaders = arrayLeaders.sort(this.Comparator);
+        console.log(arrayLeaders);
 
         let rankGrossCntr: number = 1;
         let preGrossScore: number = 999;
@@ -1329,10 +1334,14 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     Comparator(a, b) {
-        
-        if (a['holes'] == 0 || a['score'] == 0) return 1;
-        if (a['under'] < b['under']) return -1;
-        if (a['under'] > b['under']) return 1;
+        // console.log(this.tournamentID);
+        // console.log(this.activeRound);
+        // console.log(a)
+        // console.log(b);
+        if (a['holes'] == 0 && a['under'] == 0) return 1;
+        if (b['holes'] == 0 && b['under'] == 0) return 1;
+        if ((a['under'] < b['under']) && (a['holes'] >= b['holes'])) return -1;
+        if ((a['under'] > b['under']) && (a['holes'] <= b['holes'])) return 1;
         return 0;
     }
 
