@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
@@ -246,6 +246,7 @@ export class ViewTournamentComponent implements OnInit {
         private location: Location,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
+        public changeDetection: ChangeDetectorRef,
         // public _flightManagmentComponent: FlightManagementComponent,
         public facadeService: FacadeService // private storage: AngularFireStorage
     ) {
@@ -498,7 +499,7 @@ export class ViewTournamentComponent implements OnInit {
                 if (c.name.toLowerCase().includes('Senior')) {
                     this.SeniorsCount = m.length;
                 }
-                if (c.name == 'Veterans') {
+                if (c.name == 'Professionals') {
                     this.VeteransCount = m.length;
                 }
                 if (c.name == 'Ladies') {
@@ -620,7 +621,7 @@ export class ViewTournamentComponent implements OnInit {
                         }
                     }
                 }
-                if (c.category == 'Veterans') {
+                if (c.category == 'Professionals') {
                     this.VeteransCount = m.length;
                     if (
                         c.flightSettings &&
@@ -2424,7 +2425,7 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
     async closeDrawer() {
-        let obj =new FlightManagementComponent(this.router,this.snackBar,this.dialog,null,this.facadeService);
+        let obj =new FlightManagementComponent(this.router,this.snackBar,this.dialog,null,this.facadeService,this.changeDetection);
         if (this.flightid) {
             //this._flightManagmentComponent.closedrawer(this.flightid);
            

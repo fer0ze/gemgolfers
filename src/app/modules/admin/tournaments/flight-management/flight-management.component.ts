@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
     AbstractControl,
     FormBuilder,
@@ -126,7 +126,8 @@ export class FlightManagementComponent implements OnInit {
         public snackBar?: MatSnackBar,
         public dialog?: MatDialog,
         public _viewTournamentComponent?: ViewTournamentComponent,
-        private facadeService?: FacadeService
+        private facadeService?: FacadeService,
+        public changeDetection?: ChangeDetectorRef
     ) {}
 
     // returns all form groups under flights
@@ -167,13 +168,13 @@ export class FlightManagementComponent implements OnInit {
         console.log(dataFullTournaments);
 
         this.tournamentMember = dataFullTournaments.TournamentMemberQL;
-        this.clubMembers = await this.facadeService.getPlayerByClub(
-            selectedClubId
-        );
-        this.aggregate =
-            this.clubMembers['AggregateQL']['aggregate'].totalCount;
+        // this.clubMembers = await this.facadeService.getPlayerByClub(
+        //     selectedClubId
+        // );
+        // this.aggregate =
+        //     this.clubMembers['AggregateQL']['aggregate'].totalCount;
 
-        this.syncClubMembers();
+        // this.syncClubMembers();
         if (
             this.tournamentInfo[0].activeRound >
             this.tournamentInfo[0].noOfRounds
@@ -517,8 +518,10 @@ export class FlightManagementComponent implements OnInit {
             }
         }
     }
-
-    async getSelectedPlayers() {
+    public trackByFn(index: number, item: any): any {
+        return item.id;
+    }
+    getSelectedPlayers() {
         this.selectedMembers = [];
         if (this.tournamentInfo[0].FlightManagerQLi.length > 0) {
             if (this.flightRound == 0) {
@@ -578,6 +581,7 @@ export class FlightManagementComponent implements OnInit {
             }
         }
         console.log(this.selectedMembers);
+        this.changeDetection.detectChanges();
         //console.log(this.groups);
     }
 
@@ -1295,13 +1299,13 @@ export class FlightManagementComponent implements OnInit {
     }
     editFlight(id) {
         // this.router.navigate(['/tournaments/manage/', id], { relativeTo: this.route });
-        console.log( this.selectedMembers);
+        console.log(this.selectedMembers);
         this._viewTournamentComponent.getFlightId(id);
         this._viewTournamentComponent.matDrawer.open();
     }
     addFlight(index: any) {
         //console.log(this.selectedMembers.length);
-        console.log( this.selectedMembers);
+        console.log(this.selectedMembers);
         this._viewTournamentComponent.getTournamentMembers();
         this._viewTournamentComponent.createFlight(index);
         this._viewTournamentComponent.matDrawer.open();
@@ -1369,6 +1373,7 @@ export class FlightManagementComponent implements OnInit {
                 return a.flightRound == this.flightRound;
             }
         );
+        //this.selectedMembers[1] = [];
         this.getSelectedPlayers();
         // let found = this.selectedMembers.filter((a) => {
         //     return a['id'] == id;
@@ -1376,8 +1381,7 @@ export class FlightManagementComponent implements OnInit {
         // if (found.length>0) {
         //     // let newflight = await this.facadeService.singleRoundFlightQuery(id);
         //     // console.log(newflight);
-            
-       
+
         // } else {
         //   let newflight = await this.facadeService.singleRoundFlightQuery(id);
         //   console.log(newflight);
