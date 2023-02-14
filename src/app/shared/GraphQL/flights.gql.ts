@@ -477,12 +477,12 @@ export const singleRoundFlightsQueryQL = gql`
 `;
 
 export const singleRoundFlightQueryQL = gql`
-  mutation ClubSingleRoundFlightQuery($flightId: String!) {
-    flightEndedQl: update_flight(
+  query ClubSingleRoundFlightQuery($flightId: String!) {
+    flightEndedQl: flight(
       where: { id: { _eq: $flightId } }
-      _set: { ended: true }
     ) {
-      AffectedRowsQLi: affected_rows
+      ...FlightQL
     }
   }
+  ${FlightsQL}
 `;

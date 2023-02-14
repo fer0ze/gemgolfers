@@ -125,5 +125,6 @@ import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialo
         FlexLayoutModule,
     ],
     entryComponents: [DialogHanidcapListComponent],
+   
 })
 export class TournamentsModule {}

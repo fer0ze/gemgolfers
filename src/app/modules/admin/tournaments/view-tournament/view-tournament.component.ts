@@ -36,6 +36,7 @@ import { ApexOptions } from 'ng-apexcharts';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FlightManagementComponent } from '../flight-management/flight-management.component';
+import { PlayerManagementComponent } from '../player-management/player-management.component';
 
 @Component({
     selector: 'app-view-tournament',
@@ -1431,20 +1432,38 @@ export class ViewTournamentComponent implements OnInit {
     async closeRound() {
         this.activeTournamentMembers = [];
         let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
-        for (let obj of flights) {
-            if (obj.flightRound == this.activeRound) {
-                for (let newObj of this.categories) {
+        // for (let obj of flights) {
+        //     if (obj.flightRound == this.activeRound) {
+        //         for (let newObj of this.categories) {
+        //             let check = obj.MembersQL.filter((a) => {
+        //                 return a.PlayerQL.playerCategory == newObj.category;
+        //             });
+        //             if (check.length > 0) {
+        //                 newObj['cut'] = true;
+        //                 check = [];
+        //                 break;
+        //             } else {
+        //                 newObj['cut'] = false;
+        //             }
+        //         }
+        //     }
+        // }
+        for (let newObj of this.categories) {
+            for (let obj of flights) {
+                if (obj.flightRound == this.activeRound) {
                     let check = obj.MembersQL.filter((a) => {
                         return a.PlayerQL.playerCategory == newObj.category;
                     });
                     if (check.length > 0) {
                         newObj['cut'] = true;
                         check = [];
+                        break;
                     } else {
                         newObj['cut'] = false;
                     }
                 }
             }
+
         }
         const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
             width: '800px',
@@ -2405,10 +2424,14 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
     async closeDrawer() {
+        let obj =new FlightManagementComponent(this.router,this.snackBar,this.dialog,null,this.facadeService);
         if (this.flightid) {
             //this._flightManagmentComponent.closedrawer(this.flightid);
+           
+            obj.closedrawer(this.flightid)
         } else {
             //this._flightManagmentComponent.closedrawer(this.newFlightID);
+            obj.closedrawer(this.newFlightID)
         }
         this.matDrawer.close();
         this.flight = [];

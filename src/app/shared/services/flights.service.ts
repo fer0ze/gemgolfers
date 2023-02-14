@@ -568,24 +568,22 @@ export class FlightsService {
         });
     }
 
-    public singleRoundFlightQuery(flightId: string): Promise<boolean> {
+    public singleRoundFlightQuery(flightId: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
-                .mutate<any>({
-                    mutation: Query.singleRoundFlightQueryQL,
+                .subscribe<any>({
+                    query: Query.singleRoundFlightQueryQL,
                     variables: {
                         flightId: flightId,
                     },
                 })
-                .subscribe(
-                    ({ data }) => {
-                        resolve(true);
-                    },
-                    (error) => {
-                        resolve(false);
-                        console.log('Could not Calculated due to ' + error);
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
                     }
-                );
+                });
         });
     }
 }

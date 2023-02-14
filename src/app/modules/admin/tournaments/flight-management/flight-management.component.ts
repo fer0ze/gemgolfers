@@ -122,13 +122,11 @@ export class FlightManagementComponent implements OnInit {
 
     selectPlayer: any;
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        public snackBar: MatSnackBar,
-        private _formBuilder: FormBuilder,
-        public dialog: MatDialog,
-        private _viewTournamentComponent: ViewTournamentComponent,
-        private facadeService: FacadeService
+        private router?: Router,
+        public snackBar?: MatSnackBar,
+        public dialog?: MatDialog,
+        public _viewTournamentComponent?: ViewTournamentComponent,
+        private facadeService?: FacadeService
     ) {}
 
     // returns all form groups under flights
@@ -1297,12 +1295,13 @@ export class FlightManagementComponent implements OnInit {
     }
     editFlight(id) {
         // this.router.navigate(['/tournaments/manage/', id], { relativeTo: this.route });
-
+        console.log( this.selectedMembers);
         this._viewTournamentComponent.getFlightId(id);
         this._viewTournamentComponent.matDrawer.open();
     }
     addFlight(index: any) {
         //console.log(this.selectedMembers.length);
+        console.log( this.selectedMembers);
         this._viewTournamentComponent.getTournamentMembers();
         this._viewTournamentComponent.createFlight(index);
         this._viewTournamentComponent.matDrawer.open();
@@ -1357,7 +1356,10 @@ export class FlightManagementComponent implements OnInit {
         //this.selectedMembers[this.selectedMembers.length - 1].push(player);
         //console.log(this.selectedMembers);
     }
-    async closedrawer(id) {
+    public async closedrawer(id) {
+        console.log(id);
+        console.log(this.selectedMembers);
+        
         let found = this.selectedMembers.filter((a) => {
             return a['id'] == id;
         });
