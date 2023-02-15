@@ -1514,12 +1514,12 @@
                                 mat-stretch-tabs="false"
                                 mat-align-tabs="start"
                             >
-                                <mat-tab label="Overview"></mat-tab>
+                                <mat-tab label="Rounds"></mat-tab>
                                 <mat-tab class="pl-5" label="Flights"></mat-tab>
                                 <mat-tab label="Scores"></mat-tab>
                                 <mat-tab label="Leaderboard"></mat-tab>
                                 <mat-tab label="Members"></mat-tab>
-                            </mat-tab-group>
+                            </mat-tab-group
                         </div>
                     </div>
                 </div>
@@ -1535,7 +1535,7 @@
                             [selectedIndex]="selected"
                             (selectedTabChange)="tabClicked($event)"
                         >
-                            <mat-tab label="Day 1" *ngIf="noOfRounds >= 1">
+                            <mat-tab label="Round 1" *ngIf="noOfRounds >= 1">
                                 <ng-template matTabContent>
                                     <div class="flex flex-auto justify-end">
                                         <button
@@ -2112,7 +2112,7 @@
                             </mat-tab>
                             <mat-tab
                                 *ngIf="noOfRounds > 1"
-                                label="Day 2"
+                                label="Round 2"
                                 [disabled]="activeRound < 2"
                             >
                                 <ng-template matTabContent>
@@ -2765,7 +2765,7 @@
                             </mat-tab>
                             <mat-tab
                                 *ngIf="noOfRounds > 2"
-                                label="Day 3"
+                                label="Round 3"
                                 [disabled]="activeRound < 3"
                             >
                                 <ng-template matTabContent>
@@ -3418,7 +3418,7 @@
                             </mat-tab>
                             <mat-tab
                                 *ngIf="noOfRounds > 3"
-                                label="Day 4"
+                                label="Round 4"
                                 [disabled]="activeRound < 4"
                             >
                                 <ng-template matTabContent>
