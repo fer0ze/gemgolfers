@@ -315,47 +315,49 @@ export class MainLeaderboardComponent implements OnInit {
             }
             //console.log(this.cuttOffScore);
             for (let round = 1; round <= this.Leaderboard.noOfRounds; round++) {
-                this.roundFlights[round - 1] =
-                    this.Leaderboard.FlightsQL.filter((a) => {
-                        return a.flightRound == round;
-                    });
+                if (this.activeRound >= round) {
+                    this.roundFlights[round - 1] =
+                        this.Leaderboard.FlightsQL.filter((a) => {
+                            return a.flightRound == round;
+                        });
 
-                //console.log(this.roundFlights[round - 1]);
+                    //console.log(this.roundFlights[round - 1]);
 
-                if (this.roundFlights[round - 1].length > 0) {
-                    ////console.log("not null");
+                    if (this.roundFlights[round - 1].length > 0) {
+                        ////console.log("not null");
 
-                    if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-                        this.showTaxes = true;
-                        this.createTexasScrampleLeaders(
-                            this.roundFlights[round - 1],
-                            round,
-                            true
-                        );
-                    } else if (
-                        this.matchFormat == matchFormat.BEST_THREE &&
-                        this.teamMatch
-                    )
-                        this.createBestThreeLeaders(
-                            this.roundFlights[round - 1],
-                            round,
-                            true
-                        );
-                    else if (
-                        this.matchFormat == matchFormat.COMBINE_ALL &&
-                        this.teamMatch
-                    )
-                        this.createBestThreeLeaders(
-                            this.roundFlights[round - 1],
-                            round,
-                            true
-                        );
-                    else
-                        this.createSimpleLeaders(
-                            this.roundFlights[round - 1],
-                            round,
-                            true
-                        );
+                        if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+                            this.showTaxes = true;
+                            this.createTexasScrampleLeaders(
+                                this.roundFlights[round - 1],
+                                round,
+                                true
+                            );
+                        } else if (
+                            this.matchFormat == matchFormat.BEST_THREE &&
+                            this.teamMatch
+                        )
+                            this.createBestThreeLeaders(
+                                this.roundFlights[round - 1],
+                                round,
+                                true
+                            );
+                        else if (
+                            this.matchFormat == matchFormat.COMBINE_ALL &&
+                            this.teamMatch
+                        )
+                            this.createBestThreeLeaders(
+                                this.roundFlights[round - 1],
+                                round,
+                                true
+                            );
+                        else
+                            this.createSimpleLeaders(
+                                this.roundFlights[round - 1],
+                                round,
+                                true
+                            );
+                    }
                 }
 
                 index++;
@@ -554,6 +556,11 @@ export class MainLeaderboardComponent implements OnInit {
                         }
                         //console.log(this.activePlayers);
                     }
+                    console.log(grossAllArray);
+                    console.log(this.allLeadersGross);
+                    
+                    grossAllArray.sort(this.ComparatorAllGross);
+                    netAllArray.sort(this.ComparatorAllNet)
                     this.allLeadersGross =
                         this.allllll.length > 0 ||
                         this.cuttOffScore > 0 ||
@@ -620,7 +627,7 @@ export class MainLeaderboardComponent implements OnInit {
                 //(this.matchFormat == matchFormat.TEXAS_SCRAMBLE)? this.createTexasScrampleLeaders(this.Leaderboard.FlightsQL, 1, false) : this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
                 //this.createTexasScrampleLeaders(this.Leaderboard.FlightsQL, 1, false);
                 console.log(this.allMatchResults);
-                
+
                 for (let leader in this.allMatchResults) {
                     grossAllArray.push(this.allMatchResults[leader]);
                     //this.activePlayers.push(this.allMatchResults[leader]);
@@ -637,7 +644,8 @@ export class MainLeaderboardComponent implements OnInit {
                 // else this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
 
                 // this.flightRound = 1;
-
+                grossAllArray.sort(this.ComparatorAllGross);
+                netAllArray.sort(this.ComparatorAllNet)
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
                     this.cuttOffScore > 0 ||
@@ -1077,7 +1085,7 @@ export class MainLeaderboardComponent implements OnInit {
             }
         }
 
-         console.log(this.grossLeaders);
+        console.log(this.grossLeaders);
         // console.log(this.netLeaders);
         this.sortLeaders(this.grossLeaders);
         this.sortLeaders(this.netLeaders);
@@ -1085,7 +1093,7 @@ export class MainLeaderboardComponent implements OnInit {
         // console.log(this.netLeaders);
 
         //this.sortLeadersTie(this.grossLeaders);
-       // this.sortLeadersTie(this.netLeaders);
+        // this.sortLeadersTie(this.netLeaders);
         // console.log(this.grossLeaders);
         // console.log(this.netLeaders);
         //return { gross: this.grossLeaders, net: this.netLeaders };
@@ -1340,8 +1348,8 @@ export class MainLeaderboardComponent implements OnInit {
         // console.log(b);
         if (a['holes'] == 0 && a['under'] == 0) return 1;
         if (b['holes'] == 0 && b['under'] == 0) return 1;
-        if ((a['under'] < b['under']) && (a['holes'] >= b['holes'])) return -1;
-        if ((a['under'] > b['under']) && (a['holes'] <= b['holes'])) return 1;
+        if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
+        if (a['under'] > b['under'] && a['holes'] <= b['holes']) return 1;
         return 0;
     }
 
@@ -1547,8 +1555,12 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     ComparatorAllGross(a, b) {
+        // if(a['holes2']==0) return 1;
+        // if(b['holes2']==0) return 1;
+        // if (a['holes2'] >= b['holes2'] ) return -1;
+        // if (a['holes2'] <= b['holes2'] ) return 1;
         if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
-        if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
+        if (a['AllGrossUnder'] > b['AllGrossUnder'] ) return 1;
         return 0;
     }
 
@@ -1633,7 +1645,7 @@ export class MainLeaderboardComponent implements OnInit {
 
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
         //Collections.sort(grossLeaders);
-        //console.log(leaderGrossList);
+        console.log(leaderGrossList);
 
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
         //console.log(leaderGrossList);

@@ -1201,7 +1201,7 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
@@ -1209,7 +1209,7 @@
                                             Playing Dates:
                                         </div>
                                         <div
-                                            class=" text-lg  font-semibold bg-blue-500 text-white rounded-md p-1 mb-1"
+                                            class="text-lg font-semibold bg-blue-500 text-white rounded-md p-1 mb-1"
                                             *ngFor="
                                                 let s of AmateursPlayingDates
                                             "
@@ -1259,7 +1259,7 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
@@ -1267,7 +1267,7 @@
                                             Playing Dates:
                                         </div>
                                         <div
-                                            class=" text-lg font-semibold bg-red-500 text-white rounded-md p-1 mb-1"
+                                            class="text-lg font-semibold bg-red-500 text-white rounded-md p-1 mb-1"
                                             *ngFor="
                                                 let s of SeniorsPlayingDates
                                             "
@@ -1317,7 +1317,7 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
@@ -1325,7 +1325,7 @@
                                             Playing Dates:
                                         </div>
                                         <div
-                                            class=" text-lg font-semibold bg-amber-500 text-white rounded-md p-1 mb-1 "
+                                            class="text-lg font-semibold bg-amber-500 text-white rounded-md p-1 mb-1"
                                             *ngFor="
                                                 let s of JuniorsPlayingDates
                                             "
@@ -1375,7 +1375,7 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
@@ -1383,7 +1383,7 @@
                                             Playing Dates:
                                         </div>
                                         <div
-                                            class=" text-lg font-semibold bg-green-500 text-white rounded-md p-1 mb-1 "
+                                            class="text-lg font-semibold bg-green-500 text-white rounded-md p-1 mb-1"
                                             *ngFor="
                                                 let s of VeteransPlayingDates
                                             "
@@ -1433,7 +1433,7 @@
                                         Players
                                     </div>
                                     <div
-                                        class="flex flex-col items-center  justify-center w-full mt-5 text-secondary"
+                                        class="flex flex-col items-center justify-center w-full mt-5 text-secondary"
                                     >
                                         <div
                                             class="text-md font-medium truncate"
@@ -1441,7 +1441,7 @@
                                             Playing Dates:
                                         </div>
                                         <div
-                                            class=" text-lg font-semibold bg-yellow-500 text-white rounded-md p-1 mb-1 "
+                                            class="text-lg font-semibold bg-yellow-500 text-white rounded-md p-1 mb-1"
                                             *ngFor="let s of LadiesPlayingDates"
                                         >
                                             {{ s.dates }}
@@ -1519,7 +1519,7 @@
                                 <mat-tab label="Scores"></mat-tab>
                                 <mat-tab label="Leaderboard"></mat-tab>
                                 <mat-tab label="Members"></mat-tab>
-                            </mat-tab-group
+                            </mat-tab-group>
                         </div>
                     </div>
                 </div>
@@ -1836,7 +1836,7 @@
                                                                 class="font-medium"
                                                             >
                                                                 Flight No:{{
-                                                                    flight.flightNo 
+                                                                    flight.flightNo
                                                                 }}
                                                             </div>
                                                             <div
@@ -1860,7 +1860,10 @@
                                                                             class="ml-1.5 text-md text-secondary"
                                                                         >
                                                                             {{
-                                                                                flight.time.substring(0,5)
+                                                                                flight.time.substring(
+                                                                                    0,
+                                                                                    5
+                                                                                )
                                                                             }}
                                                                         </div>
                                                                     </div>
@@ -1892,7 +1895,14 @@
                                                                 </ng-container>
                                                             </div>
                                                         </div>
-                                                        <button (click)="movetoFlight(flight.id)" mat-icon-button>
+                                                        <button
+                                                            (click)="
+                                                                movetoFlight(
+                                                                    flight.id
+                                                                )
+                                                            "
+                                                            mat-icon-button
+                                                        >
                                                             <mat-icon
                                                                 [svgIcon]="
                                                                     'heroicons_solid:chevron-right'
@@ -4070,505 +4080,479 @@
                                 </ng-template>
                             </mat-tab>
 
-                            <mat-tab
-                               
-                                label="Summary"
-                            >
-                                
-                    
-
+                            <mat-tab label="Summary">
                                 <div
-                                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                 >
-                                    <div  class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                      
-                                        <div
-                                        class="flex flex-col sm:flex-row items-start justify-between"
+                                    <div
+                                        class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                     >
                                         <div
-                                            class="text-lg font-medium tracking-tight leading-6 truncate"
+                                            class="flex flex-col sm:flex-row items-start justify-between"
                                         >
-                                            Top Gross
+                                            <div
+                                                class="text-lg font-medium tracking-tight leading-6 truncate"
+                                            >
+                                                Top Gross
+                                            </div>
                                         </div>
-                                        
-                                    </div>
-                                            <mat-tab-group
-                                                mat-align-tabs="center"
-                                                (selectedTabChange)="
-                                                    onChangeGross($event)
+                                        <mat-tab-group
+                                            mat-align-tabs="center"
+                                            (selectedTabChange)="
+                                                onChangeGross($event)
+                                            "
+                                        >
+                                            <mat-tab
+                                                class="mb-20 separator"
+                                                fxLayout="row"
+                                                fxLayout.lt-md="column"
+                                                fxLayoutGap="20px"
+                                                *ngFor="
+                                                    let m of tournamentCategories;
+                                                    let k = index
                                                 "
                                             >
-                                                <mat-tab
-                                                    class="mb-20 separator"
-                                                    fxLayout="row"
-                                                    fxLayout.lt-md="column"
-                                                    fxLayoutGap="20px"
-                                                    *ngFor="
-                                                        let m of tournamentCategories;
-                                                        let k = index
+                                                <ng-template mat-tab-label>{{
+                                                    m.category
+                                                }}</ng-template>
+                                                <table
+                                                    mat-table
+                                                    [dataSource]="
+                                                        dataSourceTotalGross
                                                     "
+                                                    matSort
                                                 >
-                                                    <ng-template
-                                                        mat-tab-label
-                                                        >{{
-                                                            m.category
-                                                        }}</ng-template
+                                                    <!-- Serial Column -->
+                                                    <ng-container
+                                                        matColumnDef="pos"
                                                     >
-                                                    <table
-                                                        mat-table
-                                                        [dataSource]="
-                                                            dataSourceTotalGross
-                                                        "
-                                                        matSort
-                                                    >
-                                                        <!-- Serial Column -->
-                                                        <ng-container
-                                                            matColumnDef="pos"
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
                                                         >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                            >
-                                                                Position
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row;
-                                                                    let i = index
-                                                                "
-                                                            >
-                                                                {{ i + 1 }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Name Column -->
-                                                        <ng-container
-                                                            matColumnDef="name"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                Name
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .player
-                                                                        .firstName
-                                                                }}
-                                                                {{
-                                                                    row.value
-                                                                        .player
-                                                                        .lastName
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Phone Column -->
-                                                        <ng-container
-                                                            matColumnDef="R1gross"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R1
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR1
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR1
-                                                                        : row.value
-                                                                        .score
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Email Column -->
-                                                        <ng-container
-                                                            matColumnDef="R2gross"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R2
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR2
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR2
-                                                                        : "-"
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Details Column -->
-                                                        <ng-container
-                                                            matColumnDef="R3gross"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R3
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR3
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR3
-                                                                        : "-"
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <ng-container
-                                                            matColumnDef="R4gross"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R4
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR4
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR4
-                                                                        : "-"
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <ng-container
-                                                            matColumnDef="total"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                total
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .under
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <tr
-                                                            mat-header-row
-                                                            *matHeaderRowDef="
-                                                                displayedColumnsTotalGross
-                                                            "
-                                                        ></tr>
-                                                        <tr
-                                                            mat-row
-                                                            *matRowDef="
+                                                            Position
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
                                                                 let row;
-                                                                columns: displayedColumnsTotalGross
+                                                                let i = index
                                                             "
-                                                        ></tr>
-                                                    </table>
-                                                </mat-tab>
-                                            </mat-tab-group>
-                                        
+                                                        >
+                                                            {{ i + 1 }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Name Column -->
+                                                    <ng-container
+                                                        matColumnDef="name"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            Name
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value.player
+                                                                    .firstName
+                                                            }}
+                                                            {{
+                                                                row.value.player
+                                                                    .lastName
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Phone Column -->
+                                                    <ng-container
+                                                        matColumnDef="R1gross"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R1
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR1
+                                                                    ? row.value
+                                                                          .scoreR1
+                                                                    : row.value
+                                                                          .score
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Email Column -->
+                                                    <ng-container
+                                                        matColumnDef="R2gross"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R2
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR2
+                                                                    ? row.value
+                                                                          .scoreR2
+                                                                    : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Details Column -->
+                                                    <ng-container
+                                                        matColumnDef="R3gross"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R3
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR3
+                                                                    ? row.value
+                                                                          .scoreR3
+                                                                    : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        matColumnDef="R4gross"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R4
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR4
+                                                                    ? row.value
+                                                                          .scoreR4
+                                                                    : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        matColumnDef="total"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            total
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value.under
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <tr
+                                                        mat-header-row
+                                                        *matHeaderRowDef="
+                                                            displayedColumnsTotalGross
+                                                        "
+                                                    ></tr>
+                                                    <tr
+                                                        mat-row
+                                                        *matRowDef="
+                                                            let row;
+                                                            columns: displayedColumnsTotalGross
+                                                        "
+                                                    ></tr>
+                                                </table>
+                                            </mat-tab>
+                                        </mat-tab-group>
                                     </div>
 
-                                    <div class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                        <div
-                                        class="flex flex-col sm:flex-row items-start justify-between"
+                                    <div
+                                        class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                     >
                                         <div
-                                            class="text-lg font-medium tracking-tight leading-6 truncate"
+                                            class="flex flex-col sm:flex-row items-start justify-between"
                                         >
-                                            Top Net
+                                            <div
+                                                class="text-lg font-medium tracking-tight leading-6 truncate"
+                                            >
+                                                Top Net
+                                            </div>
                                         </div>
-                                        
-                                    </div>
-                                           
-                                            <mat-tab-group
-                                                mat-align-tabs="center"
-                                                (selectedTabChange)="
-                                                    onChangeNet($event)
+
+                                        <mat-tab-group
+                                            mat-align-tabs="center"
+                                            (selectedTabChange)="
+                                                onChangeNet($event)
+                                            "
+                                        >
+                                            <mat-tab
+                                                class="mb-20 separator"
+                                                fxLayout="row"
+                                                fxLayout.lt-md="column"
+                                                fxLayoutGap="20px"
+                                                *ngFor="
+                                                    let m of tournamentCategories;
+                                                    let k = index
                                                 "
                                             >
-                                                <mat-tab
-                                                    class="mb-20 separator"
-                                                    fxLayout="row"
-                                                    fxLayout.lt-md="column"
-                                                    fxLayoutGap="20px"
-                                                    *ngFor="
-                                                        let m of tournamentCategories;
-                                                        let k = index
+                                                <ng-template mat-tab-label>{{
+                                                    m.category
+                                                }}</ng-template>
+                                                <table
+                                                    mat-table
+                                                    [dataSource]="
+                                                        dataSourceTotalNET
                                                     "
+                                                    matSort
                                                 >
-                                                    <ng-template
-                                                        mat-tab-label
-                                                        >{{
-                                                            m.category
-                                                        }}</ng-template
+                                                    <!-- Serial Column -->
+                                                    <ng-container
+                                                        matColumnDef="pos"
                                                     >
-                                                    <table
-                                                        mat-table
-                                                        [dataSource]="
-                                                            dataSourceTotalNET
-                                                        "
-                                                        matSort
-                                                    >
-                                                        <!-- Serial Column -->
-                                                        <ng-container
-                                                            matColumnDef="pos"
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
                                                         >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                            >
-                                                                Position
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row;
-                                                                    let i = index
-                                                                "
-                                                            >
-                                                                {{ i + 1 }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Name Column -->
-                                                        <ng-container
-                                                            matColumnDef="name"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                Name
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .player
-                                                                        .firstName
-                                                                }}
-                                                                {{
-                                                                    row.value
-                                                                        .player
-                                                                        .lastName
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Phone Column -->
-                                                        <ng-container
-                                                            matColumnDef="R1net"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R1
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR1
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR1
-                                                                        : row.value
-                                                                        .score
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Email Column -->
-                                                        <ng-container
-                                                            matColumnDef="R2net"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R2
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR2
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR2
-                                                                        : "-"
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <!-- Details Column -->
-                                                        <ng-container
-                                                            matColumnDef="R3net"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R3
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR3
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR3
-                                                                        :  "-"
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <ng-container
-                                                            matColumnDef="R4net"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                R4
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value
-                                                                        .scoreR4
-                                                                        ? row
-                                                                              .value
-                                                                              .scoreR4
-                                                                        :  "-"
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <ng-container
-                                                            matColumnDef="total"
-                                                        >
-                                                            <th
-                                                                mat-header-cell
-                                                                *matHeaderCellDef
-                                                                mat-sort-header
-                                                            >
-                                                                total
-                                                            </th>
-                                                            <td
-                                                                mat-cell
-                                                                *matCellDef="
-                                                                    let row
-                                                                "
-                                                            >
-                                                                {{
-                                                                    row.value.under
-                                                                }}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <tr
-                                                            mat-header-row
-                                                            *matHeaderRowDef="
-                                                                displayedColumnsTotalNET
-                                                            "
-                                                        ></tr>
-                                                        <tr
-                                                            mat-row
-                                                            *matRowDef="
+                                                            Position
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
                                                                 let row;
-                                                                columns: displayedColumnsTotalNET
+                                                                let i = index
                                                             "
-                                                        ></tr>
-                                                    </table>
-                                                </mat-tab>
-                                            </mat-tab-group>
-                                        
+                                                        >
+                                                            {{ i + 1 }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Name Column -->
+                                                    <ng-container
+                                                        matColumnDef="name"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            Name
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value.player
+                                                                    .firstName
+                                                            }}
+                                                            {{
+                                                                row.value.player
+                                                                    .lastName
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Phone Column -->
+                                                    <ng-container
+                                                        matColumnDef="R1net"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R1
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR1
+                                                                    ? row.value
+                                                                          .scoreR1
+                                                                    : row.value
+                                                                          .score
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Email Column -->
+                                                    <ng-container
+                                                        matColumnDef="R2net"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R2
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR2
+                                                                    ? row.value
+                                                                          .scoreR2
+                                                                    : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Details Column -->
+                                                    <ng-container
+                                                        matColumnDef="R3net"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R3
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR3
+                                                                    ? row.value
+                                                                          .scoreR3
+                                                                    : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        matColumnDef="R4net"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            R4
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value
+                                                                    .scoreR4
+                                                                    ? row.value
+                                                                          .scoreR4
+                                                                    : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        matColumnDef="total"
+                                                    >
+                                                        <th
+                                                            mat-header-cell
+                                                            *matHeaderCellDef
+                                                            mat-sort-header
+                                                        >
+                                                            total
+                                                        </th>
+                                                        <td
+                                                            mat-cell
+                                                            *matCellDef="
+                                                                let row
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.value.under
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <tr
+                                                        mat-header-row
+                                                        *matHeaderRowDef="
+                                                            displayedColumnsTotalNET
+                                                        "
+                                                    ></tr>
+                                                    <tr
+                                                        mat-row
+                                                        *matRowDef="
+                                                            let row;
+                                                            columns: displayedColumnsTotalNET
+                                                        "
+                                                    ></tr>
+                                                </table>
+                                            </mat-tab>
+                                        </mat-tab-group>
                                     </div>
                                 </div>
                             </mat-tab>
@@ -4580,7 +4564,7 @@
                     class="flex-auto border-t -mt-px pt-4 sm:pt-6"
                 >
                     <div class="w-full max-w-screen-xl mx-auto">
-                        <app-flight-management 
+                        <app-flight-management
                             [tournamentID]="tournamentID"
                         ></app-flight-management>
                     </div>
