@@ -481,6 +481,8 @@ export class LeaderboardComponent implements OnInit {
             }
             //console.log(this.activePlayers);
           }
+          grossAllArray.sort(this.ComparatorAllGross);
+          netAllArray.sort(this.ComparatorAllNet);
           this.allLeadersGross =
             this.allllll.length > 0 || this.cuttOffScore > 0 || !this.cutOffList
               ? this.sortAllGrossLeadersTie(grossAllArray)
@@ -557,7 +559,8 @@ export class LeaderboardComponent implements OnInit {
         // else this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
 
         // this.flightRound = 1;
-
+        grossAllArray.sort(this.ComparatorAllGross);
+        netAllArray.sort(this.ComparatorAllNet)
         this.allLeadersGross =
           this.allllll.length > 0 || this.cuttOffScore > 0 || !this.cutOffList
             ? this.sortAllGrossLeadersTie(grossAllArray)
@@ -1163,8 +1166,10 @@ export class LeaderboardComponent implements OnInit {
   }
 
   Comparator(a, b) {
-    if (a["under"] < b["under"]) return -1;
-    if (a["under"] > b["under"]) return 1;
+    if (a['holes'] == 0 && a['under'] == 0) return 1;
+    if (b['holes'] == 0 && b['under'] == 0) return 1;
+    if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
+    if (a['under'] > b['under'] && a['holes'] <= b['holes']) return 1;
     return 0;
   }
 
