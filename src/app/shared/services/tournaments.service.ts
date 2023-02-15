@@ -309,7 +309,6 @@ export class TournamentsService {
         });
     }
     public getDailyRoundsSingleDashboardAll(
-       
         fromDate: string,
         toDate: string
     ): Promise<any> {
@@ -321,7 +320,6 @@ export class TournamentsService {
                 .subscribe<any>({
                     query: Query.DailyRoundsSingleDashboardQueryQLsAll,
                     variables: {
-                        
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -380,11 +378,7 @@ export class TournamentsService {
                 });
         });
     }
-    public getAllAdmin(
-       
-        fromDate: string,
-        toDate: string
-    ): Promise<any> {
+    public getAllAdmin(fromDate: string, toDate: string): Promise<any> {
         // console.log(clubId);
         // console.log(fromDate);
         // console.log(toDate);
@@ -945,12 +939,16 @@ export class TournamentsService {
                     mutation: Query.DeleteTournamentMember,
                     variables: {
                         where: {
-                            tournamentId: {
-                                _eq: tournamentId,
-                            },
-                            playerId: {
-                                _eq: playerId,
-                            },
+                            _and: [
+                                {
+                                    tournamentId: {
+                                        _eq: tournamentId,
+                                    },
+                                    playerId: {
+                                        _eq: playerId,
+                                    },
+                                },
+                            ],
                         },
                     },
                 })

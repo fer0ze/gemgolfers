@@ -1633,7 +1633,10 @@
                                                                             'Ladies',
                                                                         'bg-indigo-500':
                                                                             budget.category ===
-                                                                            'Junior Amateurs'
+                                                                            'Junior Amateurs',
+                                                                        'bg-red-900':
+                                                                            budget.category ===
+                                                                            'Professionals'
                                                                     }"
                                                                 ></span>
                                                                 <span
@@ -2297,7 +2300,10 @@
                                                                             'Ladies',
                                                                         'bg-indigo-500':
                                                                             budget.category ===
-                                                                            5
+                                                                            'Junior Amateurs',
+                                                                        'bg-red-900':
+                                                                            budget.category ===
+                                                                            'Professionals'
                                                                     }"
                                                                 ></span>
                                                                 <span
@@ -2949,7 +2955,10 @@
                                                                             'Ladies',
                                                                         'bg-indigo-500':
                                                                             budget.category ===
-                                                                            5
+                                                                            'Junior Amateurs',
+                                                                        'bg-red-900':
+                                                                            budget.category ===
+                                                                            'Professionals'
                                                                     }"
                                                                 ></span>
                                                                 <span
@@ -3603,7 +3612,10 @@
                                                                             'Ladies',
                                                                         'bg-indigo-500':
                                                                             budget.category ===
-                                                                            5
+                                                                            'Junior Amateurs',
+                                                                        'bg-red-900':
+                                                                            budget.category ===
+                                                                            'Professionals'
                                                                     }"
                                                                 ></span>
                                                                 <span
@@ -4663,7 +4675,9 @@
                                     <div class="col col-2">NAME</div>
                                     <div class="col col-3">EMAIL</div>
                                     <div class="col col-4">HC</div>
+                                    <div class="col col-5">MemberNo</div>
                                     <div class="col col-5">CATEGORY</div>
+                                    <div class="col col-5">Actions</div>
                                 </li>
                                 <li
                                     class="table-row hover:bg-gray-100"
@@ -4698,7 +4712,30 @@
                                         class="col col-5 font-medium"
                                         data-label="Payment Status"
                                     >
+                                        {{ row.player["membershipNumber"] }}
+                                    </div>
+                                    <div
+                                        class="col col-5 font-medium"
+                                        data-label="Payment Status"
+                                    >
                                         {{ row.player["playerCategory"] }}
+                                    </div>
+                                    <div
+                                        class="col col-5 font-medium"
+                                        data-label="Payment Status"
+                                    >
+                                        <span
+                                            class="pr-6 font-medium whitespace-nowrap cursor-pointer"
+                                        >
+                                            <mat-icon
+                                            (click)="deleteTM(row.player)"
+
+                                            [svgIcon]="
+                                                    'heroicons_solid:delete'
+                                                "
+                                                color="warn"
+                                            ></mat-icon>
+                                        </span>
                                     </div>
                                 </li>
                             </ul>

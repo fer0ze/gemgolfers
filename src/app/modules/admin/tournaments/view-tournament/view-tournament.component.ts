@@ -247,7 +247,7 @@ export class ViewTournamentComponent implements OnInit {
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public changeDetection: ChangeDetectorRef,
-        // public _flightManagmentComponent: FlightManagementComponent,
+        //private _flightManagmentComponent: FlightManagementComponent,
         public facadeService: FacadeService // private storage: AngularFireStorage
     ) {
         this.barChartLabels.push('Birdies');
@@ -1464,7 +1464,6 @@ export class ViewTournamentComponent implements OnInit {
                     }
                 }
             }
-
         }
         const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
             width: '800px',
@@ -2343,7 +2342,33 @@ export class ViewTournamentComponent implements OnInit {
         this.dataSourceTotalNET.sort = this.sort;
         this.showSummary = true;
     }
+    async deleteTM(player: any) {
+        console.log(player);
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to remove this player from Tournament?',
+        });
 
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                //console.log("record deleted.");
+                let result = this.facadeService.deleteTournamentMember(
+                    this.tournamentID,
+                    player.id
+                );
+                if (result) {
+                    this.snackBar.open('Members has been deleted', 'x', {
+                        duration: 3000,
+                    });
+                    this.tournamentMember = this.tournamentMember.filter(
+                        (a) => a.playerId !== player.id
+                    );
+                }
+            } else {
+                //console.log("cancel delete action");
+            }
+        });
+    }
     async getTournamentMembers() {
         let dataFullTournaments = await this.facadeService.getTournamentMembers(
             this.tournamentID
@@ -2400,8 +2425,8 @@ export class ViewTournamentComponent implements OnInit {
             // this.setDataSource(this.player);
         }
     }
-    movetoFlight(id){
-        this.mainSelected=++this.mainSelected;
+    movetoFlight(id) {
+        this.mainSelected = ++this.mainSelected;
     }
     async playerList() {
         let datas = await this.facadeService.getPlayersListForTournament(
@@ -2425,15 +2450,15 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
     async closeDrawer() {
-        let obj =new FlightManagementComponent(this.router,this.snackBar,this.dialog,null,this.facadeService,this.changeDetection);
+        //let obj =new FlightManagementComponent(this.route, this.router,this.snackBar,this.dialog,null,this.facadeService,this.changeDetection);
         if (this.flightid) {
-            //this._flightManagmentComponent.closedrawer(this.flightid);
-           
-            //obj.closedrawer(this.tournamentID)
-            obj.ngOnInit();
+            //this._flightManagmentComponent.closedrawer(this.tournamentID);
+            // obj.closedrawer(this.tournamentID)
+            //obj.ngOnInit();
+            // obj.changeRound(2);
         } else {
             //this._flightManagmentComponent.closedrawer(this.newFlightID);
-           // obj.closedrawer(this.tournamentID)
+            // obj.closedrawer(this.tournamentID)
         }
         this.matDrawer.close();
         this.flight = [];

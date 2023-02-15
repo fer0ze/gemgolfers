@@ -1,30 +1,24 @@
-<div mat-dialog-content>
+<div class="w-200" mat-dialog-content>
     <div>
-        <mat-form-field>
-            <input
-                matInput
-                (keyup)="applyFilter($event.target.value)"
-                placeholder="Filter"
-            />
-        </mat-form-field>
+        <div class="flex">
+            <div class="text-lg w-76 pt-4">Tournament Members</div>
+            <mat-form-field>
+                <input
+                    matInput
+                    (keyup)="applyFilter($event.target.value)"
+                    placeholder="Filter"
+                />
+            </mat-form-field>
+        </div>
 
         <table id="playerTable" mat-table [dataSource]="dataSource" matSort>
-            <!-- Membership Number Column -->
-            <ng-container matColumnDef="membershipNumber">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>MNo.</th>
-                <td mat-cell *matCellDef="let row">
-                    {{ row.membershipNumber }}
-                </td>
-            </ng-container>
-
             <!-- First Name Column -->
-            <ng-container matColumnDef="name">
+            <ng-container matColumnDef="firstName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                 <td mat-cell *matCellDef="let row">
                     {{ row.firstName + " " + row.lastName }}
                 </td>
             </ng-container>
-
             <!-- Email Column -->
             <ng-container matColumnDef="handicap">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -35,6 +29,19 @@
                     <span *ngIf="row.handicap >= 1">{{
                         row.handicap | number : "1.1-1"
                     }}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="playerCategory">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Category
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.playerCategory }}</td>
+            </ng-container>
+            <!-- Membership Number Column -->
+            <ng-container matColumnDef="membershipNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>MNo.</th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.membershipNumber }}
                 </td>
             </ng-container>
 
@@ -77,11 +84,12 @@
     </div>
 </div>
 <div mat-dialog-actions class="flex justify-center mt-4">
-    <button mat-raised-button (click)="(close)">Close</button>
+    <button mat-raised-button [mat-dialog-close]="refresh">Close</button>
     <button
         mat-raised-button
         color="primary"
-        (click)="saveTournamentMembers()"
+        [mat-dialog-close]="tournamentMember"
+        (click)="onSubmit()"
         cdkFocusInitial
     >
         Save Member

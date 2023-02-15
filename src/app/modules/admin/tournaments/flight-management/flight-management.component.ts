@@ -57,6 +57,9 @@ import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dial
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
 import { DialogMoveFlightComponent } from '../../dialogs/dialog-move-flight/dialog-move-flight.component';
 import { ViewTournamentComponent } from '../view-tournament/view-tournament.component';
+import { isNumber } from 'lodash';
+import { MatDrawer } from '@angular/material/sidenav';
+import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog-add-member.component';
 
 @Component({
     selector: 'app-flight-management',
@@ -66,6 +69,7 @@ import { ViewTournamentComponent } from '../view-tournament/view-tournament.comp
 export class FlightManagementComponent implements OnInit, OnChanges {
     @Input()
     tournamentID: string;
+    @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     dataSource: MatTableDataSource<any>;
     dataSources: MatTableDataSource<any>;
     drawerMode: 'side' | 'over';
@@ -98,7 +102,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     loggedInuser: Player;
     tournamentInfo: any;
     tournamentMember: any[] = [];
-    selectedMembers?: any[][] = [];
+    selectedMembers: any[][] = [];
     //tournamentID: string;
     isLoading: boolean = true;
     preFlightTime: string;
@@ -131,6 +135,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     selectPlayer: any;
     constructor(
+        private route?: ActivatedRoute,
         private router?: Router,
         public snackBar?: MatSnackBar,
         public dialog?: MatDialog,
@@ -151,7 +156,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         // ..this.getSelectedPlayers();
         // this.selectedMembers=changes;
-        console.log( changes);
+        if ('selectedMembers' in changes) {
+            this.getSelectedPlayers();
+        }
 
         // changes.prop contains the old and the new value...
     }
@@ -161,9 +168,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         );
         console.log(this.loggedInuser);
 
-        // this.route.paramMap.subscribe((params) => {
-        //   this.tournamentID = params.get("id");
-        // });
+        this.route.paramMap.subscribe((params) => {
+            this.tournamentID = params.get('id');
+        });
         console.log(this.tournamentID);
 
         let dataFullTournament = await this.facadeService.getTournamentsFlights(
@@ -174,8 +181,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.activeRound = this.tournamentInfo[0].activeRound;
         this.noOfRounds = this.tournamentInfo[0].noOfRounds;
         this.selectedIndex = this.activeRound - 1;
-  console.log(this.activeRound);
-  
+        console.log(this.activeRound);
+
         console.log(this.tournamentInfo[0]);
         let selectedClubId: string =
             this.loggedInuser.userRole > 1
@@ -183,12 +190,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 : this.tournamentInfo[0].clubId;
         this.clubMembers = [];
         console.log(selectedClubId);
-        // let dataFullTournaments = await this.facadeService.getTournamentMembers(
-        //     this.tournamentID
-        // );
-        // console.log(dataFullTournaments);
+        let dataFullTournaments = await this.facadeService.getTournamentMembers(
+            this.tournamentID
+        );
+        console.log(dataFullTournaments);
 
-        // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+        this.tournamentMember = dataFullTournaments.TournamentMemberQL;
         // this.clubMembers = await this.facadeService.getPlayerByClub(
         //     selectedClubId
         // );
@@ -209,6 +216,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 this.showTeams = true;
             }
         this.getSelectedPlayers();
+
         //this.syncTournamentMembers();
         // console.log(clubMembersData);
 
@@ -465,7 +473,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     changeRound(item) {
         //console.log("Selected value: " + item.value);
-        this.flightRound = item.index + 1;
+        if (isNumber(item.index)) {
+            this.flightRound = item.index + 1;
+        } else {
+            this.flightRound = item;
+        }
         this.roundFlights = [];
         this.selectedMembers = [];
 
@@ -1319,65 +1331,85 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         //console.log(tournamentFlights);
     }
-    editFlight(id) {
-        // this.router.navigate(['/tournaments/manage/', id], { relativeTo: this.route });
-        console.log(this.selectedMembers);
-        this._viewTournamentComponent.getFlightId(id);
-        this._viewTournamentComponent.matDrawer.open();
+    editFlight(id, index) {
+        console.log(index);
+
+        let TM = [];
+        for (let obj of this.tournamentMember) {
+            TM.push(obj.player);
+        }
+
+        const dialogRef = this.dialog.open(DialogAddMemberComponent, {
+            data: {
+                id: id,
+                members: TM,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result.length > 0) {
+                for (let obj of result) {
+                    this.selectedMembers[index].push(obj);
+                }
+            }
+        });
     }
     addFlight(index: any) {
+        //const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
         //console.log(this.selectedMembers.length);
-        console.log(this.selectedMembers);
-        this._viewTournamentComponent.getTournamentMembers();
-        this._viewTournamentComponent.createFlight(index);
-        this._viewTournamentComponent.matDrawer.open();
-        // this.selectedMembers[this.selectedMembers.length] = [];
-        // this.selectedMembers[this.selectedMembers.length - 1]["id"] =
-        //   UniqueIdGenerator.generate();
-        // this.selectedMembers[this.selectedMembers.length - 1]["time"] = "09:00";
-        // this.selectedMembers[this.selectedMembers.length - 1]["firstName"] =
-        //   "Team Name";
-        // this.selectedMembers[this.selectedMembers.length - 1]["adminId"] = this
-        //   .roundFlights.length
-        //   ? this.roundFlights[0]["adminId"]
-        //   : this.tournamentInfo[0].adminId;
-        // this.selectedMembers[this.selectedMembers.length - 1]["courseHoleSets"] =
-        //   this.roundFlights.length
-        //     ? this.roundFlights[0]["courseHoleSets"]
-        //     : this.tournamentInfo[0].courseHoleSets;
-        // this.selectedMembers[this.selectedMembers.length - 1][
-        //   "courseHoleSetsInverted"
-        // ] = this.roundFlights.length
-        //   ? this.roundFlights[0]["courseHoleSetsInverted"]
-        //   : this.tournamentInfo[0].courseHoleSetsInverted;
-        // this.selectedMembers[this.selectedMembers.length - 1]["courseId"] = this
-        //   .roundFlights.length
-        //   ? this.roundFlights[0]["courseId"]
-        //   : this.tournamentInfo[0].courseId;
-        // this.selectedMembers[this.selectedMembers.length - 1]["tournamentId"] = this
-        //   .roundFlights.length
-        //   ? this.roundFlights[0]["tournamentId"]
-        //   : this.tournamentInfo[0].id;
-        // this.selectedMembers[this.selectedMembers.length - 1]["startingHole"] = "1";
-        // this.selectedMembers[this.selectedMembers.length - 1]["tee"] = "";
-        // this.selectedMembers[this.selectedMembers.length - 1]["flightRound"] =
-        //   this.flightRound;
-        // this.selectedMembers[this.selectedMembers.length - 1]["date"] = this
-        //   .roundFlights.length
-        //   ? this.roundFlights[0]["date"]
-        //   : this.tournamentInfo[0].startDate;
-        // this.selectedMembers[this.selectedMembers.length - 1]["flightNo"] = this
-        //   .selectedMembers.length
-        //   ? this.selectedMembers.length
-        //   : 1;
-        // this.selectedMembers[this.selectedMembers.length - 1]["tee_id"] = "1";
+        // console.log(this.selectedMembers);
+        // this._viewTournamentComponent.getTournamentMembers();
+        // this._viewTournamentComponent.createFlight(index);
+        // this._viewTournamentComponent.matDrawer.open();
+        this.selectedMembers[this.selectedMembers.length] = [];
+        this.selectedMembers[this.selectedMembers.length - 1]['id'] =
+            UniqueIdGenerator.generate();
+        this.selectedMembers[this.selectedMembers.length - 1]['time'] = '09:00';
+        this.selectedMembers[this.selectedMembers.length - 1]['firstName'] =
+            'Team Name';
+        this.selectedMembers[this.selectedMembers.length - 1]['adminId'] = this
+            .roundFlights.length
+            ? this.roundFlights[0]['adminId']
+            : this.tournamentInfo[0].adminId;
+        this.selectedMembers[this.selectedMembers.length - 1][
+            'courseHoleSets'
+        ] = this.roundFlights.length
+            ? this.roundFlights[0]['courseHoleSets']
+            : this.tournamentInfo[0].courseHoleSets;
+        this.selectedMembers[this.selectedMembers.length - 1][
+            'courseHoleSetsInverted'
+        ] = this.roundFlights.length
+            ? this.roundFlights[0]['courseHoleSetsInverted']
+            : this.tournamentInfo[0].courseHoleSetsInverted;
+        this.selectedMembers[this.selectedMembers.length - 1]['courseId'] = this
+            .roundFlights.length
+            ? this.roundFlights[0]['courseId']
+            : this.tournamentInfo[0].courseId;
+        this.selectedMembers[this.selectedMembers.length - 1]['tournamentId'] =
+            this.roundFlights.length
+                ? this.roundFlights[0]['tournamentId']
+                : this.tournamentInfo[0].id;
+        this.selectedMembers[this.selectedMembers.length - 1]['startingHole'] =
+            '1';
+        this.selectedMembers[this.selectedMembers.length - 1]['tee'] = '';
+        this.selectedMembers[this.selectedMembers.length - 1]['flightRound'] =
+            this.flightRound;
+        this.selectedMembers[this.selectedMembers.length - 1]['date'] = this
+            .roundFlights.length
+            ? this.roundFlights[0]['date']
+            : this.tournamentInfo[0].startDate;
+        this.selectedMembers[this.selectedMembers.length - 1]['flightNo'] = this
+            .selectedMembers.length
+            ? this.selectedMembers.length
+            : 1;
+        this.selectedMembers[this.selectedMembers.length - 1]['tee_id'] = '1';
 
-        // //this.newFlight.push(this.selectedMembers[this.selectedMembers.length - 1]);
-        // //console.log(this.newFlight.id);
-        // this.newFlights[this.addFlightNum] =
-        //   this.selectedMembers[this.selectedMembers.length - 1];
-        // console.log(this.newFlights[this.addFlightNum]);
-        // this.addFlightNum++;
+        //this.newFlight.push(this.selectedMembers[this.selectedMembers.length - 1]);
+        //console.log(this.newFlight.id);
+        this.newFlights[this.addFlightNum] =
+            this.selectedMembers[this.selectedMembers.length - 1];
+        console.log(this.newFlights[this.addFlightNum]);
+        this.addFlightNum++;
         //console.log(this.selectedMembers.length);
         //this.selectedMembers[this.selectedMembers.length - 1].push(player);
         //console.log(this.selectedMembers);
@@ -1390,13 +1422,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         );
         this.tournamentInfo = dataFullTournament.TournamentQL;
 
-        this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
-            (a) => {
-                return a.flightRound == this.flightRound;
-            }
-        );
+        // this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
+        //     (a) => {
+        //         return a.flightRound == this.flightRound;
+        //     }
+        // );
         //this.selectedMembers[1] = [];
-        this.getSelectedPlayers();
+        this.changeRound(2);
+        // this.getSelectedPlayers();
         // let found = this.selectedMembers.filter((a) => {
         //     return a['id'] == id;
         // });

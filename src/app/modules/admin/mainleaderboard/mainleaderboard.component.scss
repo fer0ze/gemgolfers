@@ -167,6 +167,11 @@ hr {
     display: none !important;
   }
 }
+@media screen and (max-width: 1000px) {
+  .cut-UI-Mobile {
+    font-size: 12px !important;
+  }
+}
 
 @media screen and (max-width: 500px) {
   .mat-toolbar-row {

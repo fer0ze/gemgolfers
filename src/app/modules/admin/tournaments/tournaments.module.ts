@@ -61,6 +61,7 @@ import { ApolloModule } from 'apollo-angular';
 import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-add-player.component';
 import { DialogPlayingDatesComponent } from '../dialogs/dialog-playing-dates/dialog-playing-dates.component';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
+import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-add-member.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -80,6 +81,7 @@ import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialo
         ViewTournamentComponent,
         DialogMarshalComponent,
         DialogPlayingCategoryComponent,
+        DialogAddMemberComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
         DialogPlayingDatesComponent
@@ -125,6 +127,7 @@ import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialo
         FlexLayoutModule,
     ],
     entryComponents: [DialogHanidcapListComponent],
+    providers:[FlightManagementComponent]
    
 })
 export class TournamentsModule {}

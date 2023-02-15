@@ -137,8 +137,10 @@
                                             </mat-form-field>
                                         </ng-container>
                                         <button
-                                            mat-stroked-button
-                                            (click)="editFlight(items.id)"
+                                            mat-raised-button
+                                            color="primary"
+                                            color="primary"
+                                            (click)="editFlight(items.id, i)"
                                         >
                                             <mat-icon
                                                 class="icon-size-5"
@@ -146,7 +148,9 @@
                                                     'heroicons_solid:pencil-alt'
                                                 "
                                             ></mat-icon>
-                                            <span class="ml-2">Edit</span>
+                                            <span class="ml-2 "
+                                                >Add New Member</span
+                                            >
                                         </button>
                                     </div>
                                     <div
@@ -172,7 +176,7 @@
                                                     <tr>
                                                         <td width="20%">
                                                             <span
-                                                                class="font-bold text-base"
+                                                                class="font-medium text-base"
                                                                 >{{
                                                                     item[
                                                                         "firstName"
@@ -182,7 +186,7 @@
                                                         </td>
                                                         <td width="20%">
                                                             <span
-                                                                class="font-bold text-base"
+                                                                class="font-medium text-base"
                                                                 >{{
                                                                     item[
                                                                         "lastName"
@@ -192,7 +196,7 @@
                                                         </td>
                                                         <td width="10%">
                                                             <span
-                                                                class="font-bold text-base"
+                                                                class="font-medium text-base"
                                                                 >{{
                                                                     item[
                                                                         "handicap"
@@ -202,7 +206,7 @@
                                                         </td>
                                                         <td width="20%">
                                                             <span
-                                                                class="font-bold text-base"
+                                                                class="font-medium text-base"
                                                                 >{{
                                                                     item[
                                                                         "playerCategory"
@@ -299,7 +303,7 @@
                         <div class="flex justify-center my-3">
                             <button
                                 mat-raised-button
-                                color="primary" 
+                                color="primary"
                                 *ngIf="activeRound == flightRound"
                                 (click)="saveFlights()"
                             >
@@ -419,14 +423,18 @@
                                     />
                                 </mat-form-field>
                                 <button
-                                    mat-stroked-button
-                                    (click)="editFlight(items.id)"
+                                    mat-raised-button
+                                    color="primary"
+                                    color="primary"
+                                    (click)="editFlight(items.id, i)"
                                 >
                                     <mat-icon
                                         class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:pencil-alt'"
+                                        [svgIcon]="'heroicons_solid:add-member'"
                                     ></mat-icon>
-                                    <span class="ml-2">Edit</span>
+                                    <span class="ml-2 "
+                                        >Add New Member</span
+                                    >
                                 </button>
                                 <!-- <span
                             ><input
@@ -521,7 +529,7 @@
                                                 </td>
                                                 <td width="23%">
                                                     <mat-form-field
-                                                        class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
+                                                        class="fuse-mat-no-subscript py-1"
                                                     >
                                                         <mat-select
                                                             placeholder="Flight Tee"
@@ -602,7 +610,7 @@
                     <div class="flex justify-center my-3">
                         <button
                             mat-raised-button
-                            color="primary" 
+                            color="primary"
                             *ngIf="activeRound == flightRound"
                             (click)="saveFlights()"
                         >
@@ -722,14 +730,18 @@
                                 </mat-form-field>
 
                                 <button
-                                    mat-stroked-button
-                                    (click)="editFlight(items.id)"
+                                    mat-raised-button
+                                    color="primary"
+                                    color="primary"
+                                    (click)="editFlight(items.id, i)"
                                 >
                                     <mat-icon
                                         class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:pencil-alt'"
+                                        [svgIcon]="'heroicons_solid:add-member'"
                                     ></mat-icon>
-                                    <span class="ml-2">Edit</span>
+                                    <span class="ml-2 text-gay-900"
+                                        >Add New Member</span
+                                    >
                                 </button>
 
                                 <!-- <span
@@ -825,7 +837,7 @@
                                                 </td>
                                                 <td width="23%">
                                                     <mat-form-field
-                                                        class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
+                                                        class="fuse-mat-no-subscript py-1"
                                                     >
                                                         <mat-select
                                                             placeholder="Flight Tee"
@@ -902,10 +914,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div >
+                    </div>
                     <div class="flex justify-center my-3">
                         <button
-                            mat-raised-button 
+                            mat-raised-button
                             color="primary"
                             *ngIf="activeRound == flightRound"
                             (click)="saveFlights()"
@@ -1026,14 +1038,18 @@
                                 </mat-form-field>
 
                                 <button
-                                    mat-stroked-button
-                                    (click)="editFlight(items.id)"
+                                    mat-raised-button
+                                    color="primary"
+                                    color="primary"
+                                    (click)="editFlight(items.id, i)"
                                 >
                                     <mat-icon
                                         class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:pencil-alt'"
+                                        [svgIcon]="'heroicons_solid:add-member'"
                                     ></mat-icon>
-                                    <span class="ml-2">Edit</span>
+                                    <span class="ml-2 "
+                                        >Add New Member</span
+                                    >
                                 </button>
 
                                 <!-- <span
@@ -1129,7 +1145,7 @@
                                                 </td>
                                                 <td width="20%">
                                                     <mat-form-field
-                                                        class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
+                                                        class="fuse-mat-no-subscript py-1"
                                                     >
                                                         <mat-select
                                                             placeholder="Flight Tee"
@@ -1210,7 +1226,7 @@
                     <div class="flex justify-center my-3">
                         <button
                             mat-raised-button
-                            color="primary" 
+                            color="primary"
                             *ngIf="activeRound == flightRound"
                             (click)="saveFlights()"
                         >
