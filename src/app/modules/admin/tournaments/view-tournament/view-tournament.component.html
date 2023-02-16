@@ -1551,6 +1551,16 @@
                                         >
                                             Close Round 1
                                         </button>
+                                        <button
+                                            mat-raised-button
+                                            mat-button
+                                            color="primary"
+                                            class="my-3 mx-1 float-right"
+                                            *ngIf="activeRound > noOfRounds"
+                                            (click)="redirectToHandicap()"
+                                        >
+                                            Hanidcap Calculation
+                                        </button>
                                     </div>
 
                                     <div
@@ -2199,6 +2209,7 @@
                                 Hanidcap Calculation
                             </button>
                         </div> -->
+
                                     <button
                                         mat-raised-button
                                         mat-button
@@ -2219,6 +2230,16 @@
                                         (click)="undoRound()"
                                     >
                                         Undo Round 2
+                                    </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        color="primary"
+                                        class="my-3 mx-1 float-right"
+                                        *ngIf="activeRound > noOfRounds"
+                                        (click)="redirectToHandicap()"
+                                    >
+                                        Hanidcap Calculation
                                     </button>
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
@@ -2874,6 +2895,16 @@
                                         (click)="undoRound()"
                                     >
                                         Undo Round 3
+                                    </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        color="primary"
+                                        class="my-3 mx-1 float-right"
+                                        *ngIf="activeRound > noOfRounds"
+                                        (click)="redirectToHandicap()"
+                                    >
+                                        Hanidcap Calculation
                                     </button>
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
@@ -3531,6 +3562,16 @@
                                         (click)="undoRound()"
                                     >
                                         Undo Round 4
+                                    </button>
+                                    <button
+                                        mat-raised-button
+                                        mat-button
+                                        color="primary"
+                                        class="my-3 mx-1 float-right"
+                                        *ngIf="activeRound > noOfRounds"
+                                        (click)="redirectToHandicap()"
+                                    >
+                                        Hanidcap Calculation
                                     </button>
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
@@ -4611,24 +4652,7 @@
                             <div
                                 class="flex flex-col sm:flex-row items-center justify-between w-full mt-2 max-w-xs sm:max-w-none"
                             >
-                                <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
-                <mat-select
-                    [value]="0"
-                    (selectionChange)="filterByCategory($event)"
-                >
-                   
-                    <ng-container
-                        *ngFor="
-                            let category of categories;
-                            trackBy: trackByFn
-                        "
-                    >
-                        <mat-option [value]="category.id">{{
-                            category.title
-                        }}</mat-option>
-                    </ng-container>
-                </mat-select>
-            </mat-form-field> -->
+              
                                 <mat-form-field
                                     class="fuse-mat-no-subscript w-full sm:w-72 mb-4 sm:mt-0 sm:ml-4"
                                     [floatLabel]="'always'"
@@ -4661,13 +4685,7 @@
                                     ></mat-icon>
                                     <span class="ml-2">Add Player</span>
                                 </button>
-                                <!-- <mat-slide-toggle
-                class="mt-8 sm:mt-0 sm:ml-auto"
-                [color]="'primary'"
-                (change)="toggleCompleted($event)"
-            >
-                Hide completed
-            </mat-slide-toggle> -->
+                               
                             </div>
                             <ul class="responsive-table my-4 mb-12">
                                 <li class="table-header">
@@ -4728,9 +4746,8 @@
                                             class="pr-6 font-medium whitespace-nowrap cursor-pointer"
                                         >
                                             <mat-icon
-                                            (click)="deleteTM(row.player)"
-
-                                            [svgIcon]="
+                                                (click)="deleteTM(row.player)"
+                                                [svgIcon]="
                                                     'heroicons_solid:delete'
                                                 "
                                                 color="warn"

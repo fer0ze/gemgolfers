@@ -2003,7 +2003,7 @@ export class ViewTournamentComponent implements OnInit {
     }
     redirectToHandicap() {
         this.router.navigate([
-            '/tournaments/handicap-whs/' + this.tournamentID,
+            '/tournaments/handicap/' + this.tournamentID,
         ]);
     }
 
