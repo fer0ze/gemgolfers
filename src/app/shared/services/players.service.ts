@@ -136,7 +136,6 @@ export class PlayersService {
             this.apollo
                 .subscribe({
                     query: Query.getTotalPlayersAll,
-                   
                 })
                 .subscribe(({ data }) => {
                     if (!data) {
@@ -388,10 +387,10 @@ export class PlayersService {
         });
     }
 
-    getPlayerByPhone(phone: string): Promise<any> {
+    public getPlayerByPhone(phone: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
-                .watchQuery<any>({
+                .subscribe({
                     query: Query.GetPlayerByFilter,
                     variables: {
                         where: {
@@ -401,8 +400,12 @@ export class PlayersService {
                         },
                     },
                 })
-                .valueChanges.subscribe(({ data }) => {
-                    resolve(data.player);
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
                 });
         });
     }
@@ -762,12 +765,16 @@ export class PlayersService {
                     mutation: Query.DeletePlayer,
                     variables: {
                         where: {
-                            clubId: {
-                                _eq: clubId,
-                            },
-                            playerId: {
-                                _eq: playerId,
-                            },
+                            _and: [
+                                {
+                                    clubId: {
+                                        _eq: clubId,
+                                    },
+                                    playerId: {
+                                        _eq: playerId,
+                                    },
+                                },
+                            ],
                         },
                     },
                 })

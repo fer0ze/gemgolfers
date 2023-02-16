@@ -9,9 +9,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { Subject, takeUntil, Observable, of } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
@@ -56,7 +57,7 @@ export class PlayerComponent implements OnInit {
         'Status',
         'view',
         'Edit',
-        'Delete',
+        // 'Delete',
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -69,7 +70,8 @@ export class PlayerComponent implements OnInit {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _activatedRoute: ActivatedRoute,
-        private _router: Router
+        private _router: Router,
+        public snackBar: MatSnackBar
     ) {}
     ngOnInit(): void {
         this.loggedInuser = JSON.parse(
@@ -82,6 +84,7 @@ export class PlayerComponent implements OnInit {
                 // Remove the selected contact when drawer closed
                 //this.selectedContact = null;
                 console.log(opened);
+                //this.fecthData();
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -117,20 +120,44 @@ export class PlayerComponent implements OnInit {
     }
 
     async fecthData() {
-        let data:any;
+        let data: any;
         if (this.loggedInuser.userRole == 1) {
-            data = await this._facadeService.getPlayersList();
+            //data = await this._facadeService.getPlayersList();
+            of(this.Players)
+                .pipe()
+                .subscribe(
+                    async (data) => {
+                        data = await this._facadeService.getPlayersList();
+
+                        // this.Players = dataPlayers.player;
+                        // this.isLoading = false;
+
+                        // this.dataSource = new MatTableDataSource(this.Players);
+                        // this.dataSource.paginator = this.paginator;
+                        // this.dataSource.sort = this.sort;
+                        // console.log(this.Players);
+                        this.count = data.player.length;
+                        console.log(data);
+                        this.Players = data.player;
+                        this.playersDataSource = new MatTableDataSource(
+                            data.player
+                        );
+                        this.playersDataSource.paginator = this.paginator;
+                        this.playersDataSource.sort = this.sort;
+                    },
+                    (error) => console.log('error')
+                );
         } else {
-           data = await this._facadeService.getPlayersListByClub(
+            data = await this._facadeService.getPlayersListByClub(
                 this.loggedInuser.adminClubId
             );
+            this.count = data.player.length;
+            console.log(data);
+            this.Players = data.player;
+            this.playersDataSource = new MatTableDataSource(data.player);
+            this.playersDataSource.paginator = this.paginator;
+            this.playersDataSource.sort = this.sort;
         }
-        this.count = data.player.length;
-        console.log(data);
-        this.Players = data.player;
-        this.playersDataSource = new MatTableDataSource(data.player);
-        this.playersDataSource.paginator = this.paginator;
-        this.playersDataSource.sort = this.sort;
     }
 
     /**
@@ -147,6 +174,22 @@ export class PlayerComponent implements OnInit {
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
+    }
+
+    async deletePlayer(player: any, index: any) {
+        console.log(index);
+
+        let result = await this._facadeService.deletePlayer(
+            player.homeClubId,
+            player.id
+        );
+        if (result) {
+            this.snackBar.open('Player has been deleted.', 'x', {
+                duration: 5000,
+            });
+            this.playersDataSource.data.splice(index,1);
+
+        }
     }
     onBackdropClicked(): void {
         // Go back to the list

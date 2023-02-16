@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FuseConfirmationService } from '@fuse/services/confirmation/confirmation.service';
 import { FuseConfirmationDialogComponent } from '@fuse/services/confirmation/dialog/dialog.component';
 import { CommonModule } from '@angular/common';
+import { FuseConfirmationSuccessService } from './confirmationsucces';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,7 @@ import { CommonModule } from '@angular/common';
         CommonModule
     ],
     providers   : [
-        FuseConfirmationService
+        FuseConfirmationService,FuseConfirmationSuccessService
     ]
 })
 export class FuseConfirmationModule
@@ -25,7 +26,7 @@ export class FuseConfirmationModule
     /**
      * Constructor
      */
-    constructor(private _fuseConfirmationService: FuseConfirmationService)
+    constructor(private _fuseConfirmationService: FuseConfirmationService, private _fuseConfirmationSuccessService: FuseConfirmationSuccessService)
     {
     }
 }

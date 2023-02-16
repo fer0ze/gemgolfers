@@ -50,6 +50,8 @@ import {
     UniqueIdGenerator,
 } from 'app/shared/classes/general';
 import { DatePipe } from '@angular/common';
+import { RequireMatch } from 'app/shared/classes/CustomValidator';
+import { FuseConfirmationSuccessService } from '@fuse/services/confirmation/confirmationsucces';
 
 @Component({
     selector: 'contacts-details',
@@ -61,7 +63,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
-
+    clubTitle: string;
     editMode: boolean = true;
     tags: Tag[];
     tagsEditMode: boolean = false;
@@ -69,6 +71,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     playerCategories: PlayerCategory[] = [];
     contact: Contact;
     contactForm: FormGroup;
+    hideClubs: boolean = true;
     contacts: Contact[];
     countries: Country[];
     playerID: any;
@@ -87,6 +90,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         private _contactsListComponent: PlayerComponent,
         private _formBuilder: UntypedFormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _fuseConfirmationSuccessService: FuseConfirmationSuccessService,
         private _renderer2: Renderer2,
         private _facadeService: FacadeService,
         private _router: Router,
@@ -106,7 +110,18 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this._contactsListComponent.matDrawer.open();
         this.playerCategories = this._facadeService.getPlayerCategories();
         console.log(this.playerCategories);
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+        if (this.loggedInuser) {
+            let clubInfo: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
 
+            this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
+            this.clubTitle = clubInfo ? clubInfo.name : '';
+        }
         this.contactForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
@@ -116,7 +131,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             dateOfBirth: new FormControl(''),
             category: new FormControl(' ', [Validators.required]),
             handicap: new FormControl('', [Validators.required]),
-            club: new FormControl('Karachi Golf Club', [Validators.required]),
+            club: new FormControl(
+                this.loggedInuser.userRole > 1 ? this.clubTitle : '',
+                [Validators.required]
+            ),
             country: new FormControl(''),
             isClubAdmin: new FormControl('3', [Validators.required]),
             membershipNo: new FormControl('', [Validators.required]),
@@ -171,6 +189,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
      * Close the drawer
      */
     closeDrawer(): Promise<MatDrawerToggleResult> {
+        this._contactsListComponent.fecthData();
         return this._contactsListComponent.matDrawer.close();
     }
 
@@ -268,9 +287,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             }
         }
         let clubMember: ClubMembership[] = [];
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
         let UniqueId: string = '';
         let GEMId: string = '';
 
@@ -280,7 +296,12 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
         //console.log(playerFormValue.playerClubMember);
         let member: any = {
-            clubId: this.loggedInuser.adminClubId,
+            clubId:
+                typeof contact.club === 'string'
+                    ? this.loggedInuser.adminClubId
+                    : contact.club
+                    ? contact.club.id
+                    : '',
             suspended: this.contactForm.get('status').value,
         };
         console.log(member);
@@ -313,16 +334,16 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             extraData: contact.notes,
             userRole: 3,
             membership: clubMember,
-            membershipNumber: contact.membershipNumber,
+            membershipNumber: contact.membershipNo,
         };
         console.log(contact);
 
-        if (this.currentPlayer.length == 0) {
+        if (this.currentPlayer.player.length == 0) {
             const isSuccess = <boolean>(
                 await this._facadeService.AddPlayer(player)
             );
             if (isSuccess) {
-                const confirmation = this._fuseConfirmationService.open({
+                const confirmation = this._fuseConfirmationSuccessService.open({
                     title: 'Player Added Successfully',
                     message: 'Player has been added!',
                     actions: {
@@ -339,15 +360,15 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 await this._facadeService.updatePlayer(player)
             );
 
-            if (this.currentPlayer[0].handicap !== contact.handicap) {
+            if (this.currentPlayer.player[0].handicap !== contact.handicap) {
                 const handicap_change_log: handicap_change_log = {
                     id: UniqueIdGenerator.generate(),
-                    playerId: this.currentPlayer[0].id
-                        ? this.currentPlayer[0].id
+                    playerId: this.currentPlayer.player[0].id
+                        ? this.currentPlayer.player[0].id
                         : null,
                     newHandicap: contact.handicap ? contact.handicap : 0,
-                    oldHandicap: this.currentPlayer[0].handicap
-                        ? this.currentPlayer[0].handicap
+                    oldHandicap: this.currentPlayer.player[0].handicap
+                        ? this.currentPlayer.player[0].handicap
                         : 0,
                     whs: false,
                     dateTime: latest_date,
@@ -369,7 +390,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
             //console.log(isSuccess);
             if (isSuccess) {
-                const confirmation = this._fuseConfirmationService.open({
+                const confirmation = this._fuseConfirmationSuccessService.open({
                     title: 'Player Updated Successfully',
                     message: 'Player has been Updated!',
                     actions: {
@@ -412,7 +433,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
     cancel() {
-        this._router.navigate(['/players'], { relativeTo: this._activatedRoute });
+        this._router.navigate(['/players'], {
+            relativeTo: this._activatedRoute,
+        });
     }
 
     /**
@@ -481,36 +504,33 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-   async fetchData() {
-        this.currentPlayer=<Player> await this._facadeService
-            .getPlayerByID(this.playerID);
-           
+    async fetchData() {
+        this.currentPlayer = <Player>(
+            await this._facadeService.getPlayerByID(this.playerID)
+        );
 
-                console.log(this.currentPlayer);
-                if (this.currentPlayer.length > 0) {
-                    this.editMode = true;
-                    this.contactForm.setValue({
-                        firstName: this.currentPlayer[0].firstName,
-                        lastName: this.currentPlayer[0].lastName,
-                        gender: this.currentPlayer[0].gender,
-                        email: this.currentPlayer[0].email,
-                        phoneNumbers: this.currentPlayer[0].phone,
-                        dateOfBirth: this.currentPlayer[0].dob,
-                        category: this.currentPlayer[0].playerCategory,
-                        handicap: this.currentPlayer[0].handicap,
-                        country: this.currentPlayer[0].countryCode,
-                        notes: this.currentPlayer[0].extraData,
-                        membershipNo: this.currentPlayer[0].membershipNumber,
-                        club: this.currentPlayer[0].membership[0].club.name,
-                        isClubAdmin: this.currentPlayer[0].adminClubId
-                            ? '1'
-                            : '0',
-                        status: this.currentPlayer[0].membership[0].suspended
-                            ? 'true'
-                            : 'false',
-                    });
-                }
-                this._changeDetectorRef.markForCheck();
-          
+        console.log(this.currentPlayer);
+        if (this.currentPlayer.player.length > 0) {
+            this.editMode = true;
+            this.contactForm.setValue({
+                firstName: this.currentPlayer.player[0].firstName,
+                lastName: this.currentPlayer.player[0].lastName,
+                gender: this.currentPlayer.player[0].gender,
+                email: this.currentPlayer.player[0].email,
+                phoneNumbers: this.currentPlayer.player[0].phone,
+                dateOfBirth: this.currentPlayer.player[0].dob,
+                category: this.currentPlayer.player[0].playerCategory,
+                handicap: this.currentPlayer.player[0].handicap,
+                country: this.currentPlayer.player[0].countryCode,
+                notes: this.currentPlayer.player[0].extraData,
+                membershipNo: this.currentPlayer.player[0].membershipNumber,
+                club: this.currentPlayer.player[0].membership[0].club.name,
+                isClubAdmin: this.currentPlayer.player[0].adminClubId ? '1' : '0',
+                status: this.currentPlayer.player[0].membership[0].suspended
+                    ? 'true'
+                    : 'false',
+            });
+        }
+        this._changeDetectorRef.markForCheck();
     }
 }

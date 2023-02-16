@@ -315,49 +315,47 @@ export class MainLeaderboardComponent implements OnInit {
             }
             //console.log(this.cuttOffScore);
             for (let round = 1; round <= this.Leaderboard.noOfRounds; round++) {
-                if (this.activeRound >= round) {
-                    this.roundFlights[round - 1] =
-                        this.Leaderboard.FlightsQL.filter((a) => {
-                            return a.flightRound == round;
-                        });
+                this.roundFlights[round - 1] =
+                    this.Leaderboard.FlightsQL.filter((a) => {
+                        return a.flightRound == round;
+                    });
 
-                    //console.log(this.roundFlights[round - 1]);
+                //console.log(this.roundFlights[round - 1]);
 
-                    if (this.roundFlights[round - 1].length > 0) {
-                        ////console.log("not null");
+                if (this.roundFlights[round - 1].length > 0) {
+                    ////console.log("not null");
 
-                        if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-                            this.showTaxes = true;
-                            this.createTexasScrampleLeaders(
-                                this.roundFlights[round - 1],
-                                round,
-                                true
-                            );
-                        } else if (
-                            this.matchFormat == matchFormat.BEST_THREE &&
-                            this.teamMatch
-                        )
-                            this.createBestThreeLeaders(
-                                this.roundFlights[round - 1],
-                                round,
-                                true
-                            );
-                        else if (
-                            this.matchFormat == matchFormat.COMBINE_ALL &&
-                            this.teamMatch
-                        )
-                            this.createBestThreeLeaders(
-                                this.roundFlights[round - 1],
-                                round,
-                                true
-                            );
-                        else
-                            this.createSimpleLeaders(
-                                this.roundFlights[round - 1],
-                                round,
-                                true
-                            );
-                    }
+                    if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+                        this.showTaxes = true;
+                        this.createTexasScrampleLeaders(
+                            this.roundFlights[round - 1],
+                            round,
+                            true
+                        );
+                    } else if (
+                        this.matchFormat == matchFormat.BEST_THREE &&
+                        this.teamMatch
+                    )
+                        this.createBestThreeLeaders(
+                            this.roundFlights[round - 1],
+                            round,
+                            true
+                        );
+                    else if (
+                        this.matchFormat == matchFormat.COMBINE_ALL &&
+                        this.teamMatch
+                    )
+                        this.createBestThreeLeaders(
+                            this.roundFlights[round - 1],
+                            round,
+                            true
+                        );
+                    else
+                        this.createSimpleLeaders(
+                            this.roundFlights[round - 1],
+                            round,
+                            true
+                        );
                 }
 
                 index++;
@@ -558,9 +556,9 @@ export class MainLeaderboardComponent implements OnInit {
                     }
                     console.log(grossAllArray);
                     console.log(this.allLeadersGross);
-                    
+
                     grossAllArray.sort(this.ComparatorAllGross);
-                    netAllArray.sort(this.ComparatorAllNet)
+                    netAllArray.sort(this.ComparatorAllNet);
                     this.allLeadersGross =
                         this.allllll.length > 0 ||
                         this.cuttOffScore > 0 ||
@@ -645,7 +643,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 // this.flightRound = 1;
                 grossAllArray.sort(this.ComparatorAllGross);
-                netAllArray.sort(this.ComparatorAllNet)
+                netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
                     this.cuttOffScore > 0 ||
@@ -1560,7 +1558,7 @@ export class MainLeaderboardComponent implements OnInit {
         // if (a['holes2'] >= b['holes2'] ) return -1;
         // if (a['holes2'] <= b['holes2'] ) return 1;
         if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
-        if (a['AllGrossUnder'] > b['AllGrossUnder'] ) return 1;
+        if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
         return 0;
     }
 
@@ -1685,39 +1683,39 @@ export class MainLeaderboardComponent implements OnInit {
 
             tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
 
-            if (tied && firstCompleted && secondCompleted) {
-                let noOfHoles = 9;
-                while (tied && noOfHoles > 0) {
-                    //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
-                    //currentHoleScore = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores);
-                    //previousHoleScore = this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
+            // if (tied && firstCompleted && secondCompleted) {
+            //     let noOfHoles = 9;
+            //     while (tied && noOfHoles > 0) {
+            //         //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
+            //         //currentHoleScore = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores);
+            //         //previousHoleScore = this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
 
-                    if (noOfHoles == 9)
-                        tied =
-                            leaderCurrent.holeScoreLast9 ==
-                            leaderPrevious.holeScoreLast9;
-                    else if (noOfHoles == 6)
-                        tied =
-                            leaderCurrent.holeScoreLast6 ==
-                            leaderPrevious.holeScoreLast6;
-                    else if (noOfHoles == 3)
-                        tied =
-                            leaderCurrent.holeScoreLast3 ==
-                            leaderPrevious.holeScoreLast3;
-                    else if (noOfHoles < 3)
-                        tied =
-                            leaderCurrent.holeScoreLast1 ==
-                            leaderPrevious.holeScoreLast1;
+            //         if (noOfHoles == 9)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast9 ==
+            //                 leaderPrevious.holeScoreLast9;
+            //         else if (noOfHoles == 6)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast6 ==
+            //                 leaderPrevious.holeScoreLast6;
+            //         else if (noOfHoles == 3)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast3 ==
+            //                 leaderPrevious.holeScoreLast3;
+            //         else if (noOfHoles < 3)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast1 ==
+            //                 leaderPrevious.holeScoreLast1;
 
-                    //tied = currentHoleScore == previousHoleScore;
+            //         //tied = currentHoleScore == previousHoleScore;
 
-                    if (noOfHoles > 3) {
-                        noOfHoles -= 3;
-                    } else {
-                        noOfHoles -= 2;
-                    }
-                }
-            }
+            //         if (noOfHoles > 3) {
+            //             noOfHoles -= 3;
+            //         } else {
+            //             noOfHoles -= 2;
+            //         }
+            //     }
+            // }
             ////console.log("tied-> " + tied);
             if (tied) {
                 //leaderCurrent["tied"]= true;

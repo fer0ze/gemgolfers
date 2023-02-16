@@ -136,7 +136,11 @@
                                 >
                                     Name
                                 </th>
-                                <td mat-cell *matCellDef="let transaction">
+                                <td
+                                    mat-cell
+                                    *matCellDef="let transaction"
+                                    (click)="viewProfile(transaction.id)"
+                                >
                                     <span
                                         class="pr-6 font-medium whitespace-nowrap underline underline-offset-1 cursor-pointer"
                                     >
@@ -304,7 +308,7 @@
                                 </td>
                             </ng-container>
                             <!-- Delete -->
-                            <ng-container matColumnDef="Delete">
+                            <!-- <ng-container matColumnDef="Delete">
                                 <th
                                     mat-header-cell
                                     mat-sort-header
@@ -313,17 +317,18 @@
                                 >
                                     Delete
                                 </th>
-                                <td mat-cell *matCellDef="let transaction">
+                                <td mat-cell *matCellDef="let transaction;let i = index">
                                     <span
                                         class="pr-6 font-medium whitespace-nowrap cursor-pointer"
                                     >
                                         <mat-icon
                                             [svgIcon]="'heroicons_solid:delete'"
                                             color="warn"
+                                            (click)="deletePlayer(transaction,i)"
                                         ></mat-icon>
                                     </span>
                                 </td>
-                            </ng-container>
+                            </ng-container> -->
                             <!-- Delete -->
                             <ng-container matColumnDef="Status">
                                 <th
@@ -339,7 +344,7 @@
                                         *ngIf="
                                             transaction.membershipQL.length == 0
                                         "
-                                        class="bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50"
+                                        class=" inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50"
                                     >
                                         <span
                                             class="leading-relaxed whitespace-nowrap"
@@ -407,7 +412,6 @@
                                     let row;
                                     columns: playersTableColumns
                                 "
-                                (click)="viewProfile(row.id)"
                             ></tr>
                         </table>
                         <mat-paginator

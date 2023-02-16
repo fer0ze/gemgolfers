@@ -19,8 +19,6 @@ export const GetPlayers = gql`
         player(
             where: { firstName: { _neq: "" } }
             order_by: { firstName: asc }
-            offset:0,
-            limit: 1000
         ) {
             id
             firstName
@@ -30,6 +28,7 @@ export const GetPlayers = gql`
             handicapWhsIndex
             phone
             email
+            homeClubId
             membershipNumber
             membershipQL: membership {
                 suspended
@@ -52,6 +51,7 @@ export const GetPlayersByClub = gql`
             lastName
             playerCategory
             handicap
+            homeClubId
             handicapWhsIndex
             phone
             email
@@ -176,18 +176,10 @@ export const GetPlayerByFilter = gql`
             fullName
             firstName
             lastName
+            phone
             handicap
             playerCategory
             membershipNumber
-            membership {
-                club {
-                    name
-                }
-            }
-            subscriptionQL: subscription {
-                playerId
-                subscription
-            }
         }
     }
     ${PlayerQL}
