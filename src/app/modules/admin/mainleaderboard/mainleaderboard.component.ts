@@ -1428,21 +1428,30 @@ export class MainLeaderboardComponent implements OnInit {
 
         let selfHoles: number = 0;
         let leaderHoles: number = 0;
+        let completed: boolean = false;
         let checkRoundPlayed =
             a.activeRound > a.totalRounds ? a.totalRounds : a.activeRound;
 
         if (checkRoundPlayed == 1) {
             selfHoles = a.holes1;
             leaderHoles = b.holes1;
+            
+            completed = a.completed1 && b.completed1;
         } else if (checkRoundPlayed == 2) {
             selfHoles = a.holes2;
             leaderHoles = b.holes2;
+
+            completed = a.completed2 && b.completed2;
         } else if (checkRoundPlayed == 3) {
             selfHoles = a.holes3;
             leaderHoles = b.holes3;
+
+            completed = a.completed3 && b.completed3;
         } else if (checkRoundPlayed == 4) {
             selfHoles = a.holes4;
             leaderHoles = b.holes4;
+
+            completed = a.completed4 && b.completed4;
         }
 
         if (selfHoles != 0 && leaderHoles != 0) {
@@ -1451,7 +1460,7 @@ export class MainLeaderboardComponent implements OnInit {
             if (compare != 0) {
                 return compare;
             }
-            if (a.completed && b.completed) {
+            if (completed) {
                 let noOfHoles: number = 9;
                 while (noOfHoles > 0) {
                     if (noOfHoles == 9)
@@ -1495,21 +1504,26 @@ export class MainLeaderboardComponent implements OnInit {
 
         let selfHoles: number = 0;
         let leaderHoles: number = 0;
+        let completed: boolean = false;
         let checkRoundPlayed =
             a.activeRound > a.totalRounds ? a.totalRounds : a.activeRound;
 
         if (checkRoundPlayed == 1) {
             selfHoles = a.holes1;
             leaderHoles = b.holes1;
+            completed = a.completed1 && b.completed1;
         } else if (checkRoundPlayed == 2) {
             selfHoles = a.holes2;
             leaderHoles = b.holes2;
+            completed = a.completed2 && b.completed2;
         } else if (checkRoundPlayed == 3) {
             selfHoles = a.holes3;
             leaderHoles = b.holes3;
+            completed = a.completed3 && b.completed3;
         } else if (checkRoundPlayed == 4) {
             selfHoles = a.holes4;
             leaderHoles = b.holes4;
+            completed = a.completed4 && b.completed4;
         }
 
         if (selfHoles != 0 && leaderHoles != 0) {
@@ -1518,7 +1532,7 @@ export class MainLeaderboardComponent implements OnInit {
             if (compare != 0) {
                 return compare;
             }
-            if (a.completed && b.completed) {
+            if (completed) {
                 let noOfHoles: number = 9;
                 while (noOfHoles > 0) {
                     if (noOfHoles == 9)
@@ -1777,39 +1791,39 @@ export class MainLeaderboardComponent implements OnInit {
 
             tied = leaderCurrent.AllNetUnder == leaderPrevious.AllNetUnder;
 
-            if (tied && firstCompleted && secondCompleted) {
-                let noOfHoles = 9;
-                while (tied && noOfHoles > 0) {
-                    //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
-                    //currentHoleScore = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores);
-                    //previousHoleScore = this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
+            // if (tied && firstCompleted && secondCompleted) {
+            //     let noOfHoles = 9;
+            //     while (tied && noOfHoles > 0) {
+            //         //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
+            //         //currentHoleScore = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores);
+            //         //previousHoleScore = this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
 
-                    if (noOfHoles == 9)
-                        tied =
-                            leaderCurrent.holeScoreLast9 ==
-                            leaderPrevious.holeScoreLast9;
-                    else if (noOfHoles == 6)
-                        tied =
-                            leaderCurrent.holeScoreLast6 ==
-                            leaderPrevious.holeScoreLast6;
-                    else if (noOfHoles == 3)
-                        tied =
-                            leaderCurrent.holeScoreLast3 ==
-                            leaderPrevious.holeScoreLast3;
-                    else if (noOfHoles < 3)
-                        tied =
-                            leaderCurrent.holeScoreLast1 ==
-                            leaderPrevious.holeScoreLast1;
+            //         if (noOfHoles == 9)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast9 ==
+            //                 leaderPrevious.holeScoreLast9;
+            //         else if (noOfHoles == 6)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast6 ==
+            //                 leaderPrevious.holeScoreLast6;
+            //         else if (noOfHoles == 3)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast3 ==
+            //                 leaderPrevious.holeScoreLast3;
+            //         else if (noOfHoles < 3)
+            //             tied =
+            //                 leaderCurrent.holeScoreLast1 ==
+            //                 leaderPrevious.holeScoreLast1;
 
-                    //tied = currentHoleScore == previousHoleScore;
+            //         //tied = currentHoleScore == previousHoleScore;
 
-                    if (noOfHoles > 3) {
-                        noOfHoles -= 3;
-                    } else {
-                        noOfHoles -= 2;
-                    }
-                }
-            }
+            //         if (noOfHoles > 3) {
+            //             noOfHoles -= 3;
+            //         } else {
+            //             noOfHoles -= 2;
+            //         }
+            //     }
+            // }
             ////console.log("tied-> " + tied);
             if (tied) {
                 //leaderCurrent["tied"]= true;
