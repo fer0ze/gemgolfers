@@ -830,18 +830,19 @@ export class MainLeaderboardComponent implements OnInit {
                 // //console.log(this.activePlayers);
 
                 let allStatus: any = this.memberStatusesQLs;
+                let playerStatus: any;
 
                 if (allStatus) {
-                    let playerStatus: any = allStatus.find(
+                    playerStatus = allStatus.find(
                         (s) => s.playerId === playerId
                     );
                     //console.log(playerStatus);
-                    if (
-                        playerStatus &&
-                        (playerStatus.status == 'ic' ||
-                            playerStatus.status == 'dq')
-                    )
-                        continue;
+                    // if (
+                    //     playerStatus &&
+                    //     (playerStatus.status == 'ic' ||
+                    //         playerStatus.status == 'dq')
+                    // )
+                    //     continue;
                 }
 
                 //this.selectedCategory = this.categories[1];
@@ -1023,6 +1024,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
+                    playerStatus: (playerStatus)? playerStatus.status : "ac"
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -1073,6 +1075,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
+                    playerStatus: (playerStatus)? playerStatus.status : "ac"
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -1227,6 +1230,8 @@ export class MainLeaderboardComponent implements OnInit {
             ? (this.allMatchResults[leaderGross.playerId]['status'] = 1)
             : (this.allMatchResults[leaderGross.playerId]['status'] = 0);
 
+        this.allMatchResults[leaderGross.playerId]['playerStatus'] = leaderGross.playerStatus;
+
         ////console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
         return false;
     }
@@ -1342,8 +1347,10 @@ export class MainLeaderboardComponent implements OnInit {
     Comparator(a, b) {
         // console.log(this.tournamentID);
         // console.log(this.activeRound);
-        // console.log(a)
-        // console.log(b);
+        console.log(a)
+        console.log(b);
+        if (a['playerStatus'] == "ic") return 1;
+        if (b['playerStatus'] == "ic") return 1;
         if (a['holes'] == 0 && a['under'] == 0) return 1;
         if (b['holes'] == 0 && b['under'] == 0) return 1;
         if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
@@ -1425,7 +1432,13 @@ export class MainLeaderboardComponent implements OnInit {
         if (compare != 0) {
             return compare;
         }
-
+        if(a.playerStatus < b.playerStatus ){
+            return -1;
+        }
+        if(a.playerStatus > b.playerStatus ){
+            return 1;
+        }
+       
         let selfHoles: number = 0;
         let leaderHoles: number = 0;
         let completed: boolean = false;
@@ -1571,12 +1584,19 @@ export class MainLeaderboardComponent implements OnInit {
         // if(b['holes2']==0) return 1;
         // if (a['holes2'] >= b['holes2'] ) return -1;
         // if (a['holes2'] <= b['holes2'] ) return 1;
-        if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
-        if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
+
+        if (a['playerStatus'] == "ic") return 1;
+        if (b['playerStatus'] == "ic") return 1;
+        
+        if (a['AllGrossUnder'] < b['AllGrossUnder'] && (a['playerStatus']==''&&  b['playerStatus']=='')) return -1;
+        if (a['AllGrossUnder'] > b['AllGrossUnder'] && (a['playerStatus']==''&&  b['playerStatus']=='')) return 1;
+
         return 0;
     }
 
     ComparatorAllNet(a, b) {
+        if (a['playerStatus'] == "ic") return 1;
+        if (b['playerStatus'] == "ic") return 1;
         if (a['AllNetUnder'] < b['AllNetUnder']) return -1;
         if (a['AllNetUnder'] > b['AllNetUnder']) return 1;
         return 0;
@@ -1660,7 +1680,7 @@ export class MainLeaderboardComponent implements OnInit {
         console.log(leaderGrossList);
 
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
-        //console.log(leaderGrossList);
+        console.log(leaderGrossList);
         ////console.log(leaderList);
         //return false;
 
