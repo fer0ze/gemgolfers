@@ -41,8 +41,8 @@ export class DialogMarshalComponent implements OnInit {
     var doc = new jsPDF()
 
     doc.setFontSize(18);
-    doc.text("Marshal's Login Detail:", 15, 15);
-    doc.setFontSize(11);
+    doc.text("Scorers Login Detail:", 15, 15);
+
     doc.setTextColor(100);
 
     // From HTML
@@ -50,6 +50,7 @@ export class DialogMarshalComponent implements OnInit {
       html: '#pdfTable', 
       startY: 25,
       theme: 'grid',
+      styles: {fontSize: 15},
       useCss: false,
     });
   

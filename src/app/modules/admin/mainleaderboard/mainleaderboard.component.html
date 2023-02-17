@@ -2,7 +2,9 @@
     class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
     cdkScrollable
 >
-    <div class="relative flex-0 py-8 px-4 overflow-hidden bg-gray-800 dark">
+    <div
+        class="relative flex-0 py-8 h-50 px-4 overflow-hidden bg-gray-800 dark"
+    >
         <svg
             class="absolute inset-0 pointer-events-none"
             viewBox="0 0 960 540"
@@ -21,30 +23,25 @@
                 <circle r="234" cx="790" cy="491"></circle>
             </g>
         </svg>
-        <div class="flex flex-row justify-around mt-3 logo">
-            <div class="flex-0 w-40 h-25 logo-1 overflow-hidden">
-                <img
-                    src="assets/images/logo/Blue and Green Golf Club Sports Logo.png"
-                    alt="Logo"
-                />
+        <div
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6 w-full min-w-0 logo"
+        >
+            <div class="col-span-1 flex items-center w-80 logo-1 overflow-hidden">
+                <img src="assets/images/logo/500.png" alt="Logo" />
             </div>
-            <div class="z-10 relative flex flex-col items-center">
+            <div
+                class="z-10 col-span-1 text-3xl relative flex flex-col items-center"
+            >
                 <h2 class="text-4xl font-semibold">
                     {{ Leaderboard?.title }}
                 </h2>
                 <div
-                    class="mt-1 text-3xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
+                    class="mt-1 sm:text-5xl font-extrabold tracking-tight leading-tight text-center"
                 >
                     Leaderboard
                 </div>
-                <div
-                    class="max-w-2xl mt-6 sm:text-2xl text-center tracking-tight text-secondary"
-                >
-                    Our app will step you through the process of a building
-                    tournaments, or adding new formats to existing tournaments.
-                </div>
             </div>
-            <div class="flex-0 w-44 h-48 pt-16 logo-2 overflow-hidden">
+            <div class="col-span-1 flex items-center w-80 logo-2 overflow-hidden">
                 <img
                     class="object-cover"
                     src="assets/images/logo/{{ clubLogo }}"
@@ -249,7 +246,10 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs flex items-center">
+                            <div
+                                *ngIf="item.handicap > 0"
+                                class="text-xs flex items-center"
+                            >
                                 HC:{{ item.handicap }}
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
@@ -358,7 +358,10 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs flex items-center">
+                            <div
+                                *ngIf="item.handicap > 0"
+                                class="text-xs flex items-center"
+                            >
                                 HC:{{ item.handicap }}
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
@@ -457,7 +460,7 @@
                         <div class="col col-1">POS.</div>
                         <div class="col col-2">TEAM</div>
                         <div class="col col-3">NET</div>
-                        <div class="col col-4"> PAR</div>
+                        <div class="col col-4">PAR</div>
                         <div class="col col-5">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of netLeaders">
@@ -466,8 +469,13 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs flex items-center">
+                            <div
+                                
+                                class="text-xs flex items-center"
+                            >
+                            <span  *ngIf="item.handicap > 0">
                                 HC:{{ item.handicap }}
+                            </span>
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
                                     (click)="
@@ -575,8 +583,14 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs flex items-center">
-                                HC:{{ item.handicap }}
+                            <div
+                               
+                                class="text-xs flex items-center"
+                            >
+                                <span  *ngIf="item.handicap > 0">
+                                    HC:{{ item.handicap }}
+                                </span>
+                                    
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
                                     (click)="
@@ -780,12 +794,7 @@
                         >
                             R4
                         </div>
-                        <div
-                            class="col col-5  THRU"
-                            *ngIf="activeRound <= totalRounds"
-                        >
-                            THRU
-                        </div>
+                        <div class="col col-5 THRU">THRU</div>
                     </li>
                     <li
                         class="table-row hover:bg-gray-100"
@@ -797,7 +806,9 @@
                         <div class="col col-2">
                             {{ item.name }}
                             <div class="text-xs flex items-center">
-                                HC:{{ item.handicap }}
+                                <span *ngIf="item.handicap > 0">
+                                    HC:{{ item.handicap }}</span
+                                >
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
                                     (click)="
@@ -829,7 +840,13 @@
                         <div class="col col-4">
                             {{ item.TotalGross1 ? item.TotalGross1 : "-" }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 1">
+                        <div
+                            class="col col-5"
+                            *ngIf="
+                                activeRound == 1 ||
+                                (activeRound > totalRounds && totalRounds == 1)
+                            "
+                        >
                             <strong *ngIf="item.holes1 == 18">F</strong
                             ><strong *ngIf="item.holes1 < 18">{{
                                 item.holes1
@@ -841,7 +858,13 @@
                         >
                             {{ item.TotalGross2 }}
                         </div>
-                        <div class="col col-5" *ngIf="activeRound == 2">
+                        <div
+                            class="col col-5"
+                            *ngIf="
+                                activeRound == 2 ||
+                                (activeRound > totalRounds && totalRounds == 2)
+                            "
+                        >
                             <strong *ngIf="item.holes2 == 18">F</strong
                             ><strong *ngIf="item.holes2 < 18">{{
                                 item.holes2
@@ -853,7 +876,13 @@
                         >
                             {{ item.TotalGross3 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 3">
+                        <div
+                            class="col col-5"
+                            *ngIf="
+                                activeRound == 3 ||
+                                (activeRound > totalRounds && totalRounds == 3)
+                            "
+                        >
                             <strong *ngIf="item.holes3 == 18">F</strong>
                             <strong *ngIf="item.holes3 < 18">{{
                                 item.holes3
@@ -865,7 +894,10 @@
                         >
                             {{ item.TotalGross4 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound >= 4 && totalRounds == 4">
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
                             <strong *ngIf="item.holes4 == 18">F</strong
                             ><strong *ngIf="item.holes4 < 18">{{
                                 item.holes4
@@ -1007,8 +1039,11 @@
                     class="responsive-table"
                     *ngIf="activeRound > 1 && allRoundCutOff && !teamMatch"
                 >
-                    <li class="table-header justify-center bg-red-600" *ngIf="isCuttOffRequired">
-                        <div class="cut-UI-Mobile" >
+                    <li
+                        class="table-header justify-center bg-red-600"
+                        *ngIf="isCuttOffRequired"
+                    >
+                        <div class="cut-UI-Mobile">
                             CUT ROUND
                             {{
                                 activeRound > totalRounds
@@ -1030,7 +1065,9 @@
                         <div class="col col-1">-</div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs">HC:{{ item.handicap }}</div>
+                            <div *ngIf="item.handicap > 0" class="text-xs">
+                                HC:{{ item.handicap }}
+                            </div>
                         </div>
                         <div class="col col-3">
                             <strong *ngIf="item.AllGrossUnder > 0">+</strong
@@ -1227,12 +1264,7 @@
                         >
                             R4
                         </div>
-                        <div
-                            class="col col-5 THRU"
-                            *ngIf="activeRound <= totalRounds"
-                        >
-                            THRU
-                        </div>
+                        <div class="col col-5 THRU">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of allLeadersNet">
                         <div class="col col-1">
@@ -1240,7 +1272,10 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs flex items-center">
+                            <div
+                               
+                                class="text-xs flex items-center"
+                            >
                                 HC:{{ item.handicap }}
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
@@ -1273,7 +1308,7 @@
                         <div class="col col-4">
                             {{ item.TotalNet1 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 1">
+                        <div class="col col-5" *ngIf="activeRound == 1">
                             <strong *ngIf="item.holes1 == 18">F</strong
                             ><strong *ngIf="item.holes1 < 18">{{
                                 item.holes1
@@ -1285,7 +1320,13 @@
                         >
                             {{ item.TotalNet2 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 2">
+                        <div
+                            class="col col-5"
+                            *ngIf="
+                                activeRound == 2 ||
+                                (activeRound > totalRounds && totalRounds == 2)
+                            "
+                        >
                             <strong *ngIf="item.holes2 == 18">F</strong
                             ><strong *ngIf="item.holes2 < 18">{{
                                 item.holes2
@@ -1297,7 +1338,13 @@
                         >
                             {{ item.TotalNet3 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 3">
+                        <div
+                            class="col col-5"
+                            *ngIf="
+                                activeRound == 3 ||
+                                (activeRound > totalRounds && totalRounds == 3)
+                            "
+                        >
                             <strong *ngIf="item.holes3 == 18">F</strong>
                             <strong *ngIf="item.holes3 < 18">{{
                                 item.holes3
@@ -1309,7 +1356,10 @@
                         >
                             {{ item.TotalNet4 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound >= 4 && totalRounds == 4">
+                        <div
+                            class="col col-5"
+                            *ngIf="activeRound >= 4 && totalRounds == 4"
+                        >
                             <strong *ngIf="item.holes4 == 18">F</strong
                             ><strong *ngIf="item.holes4 < 18">{{
                                 item.holes4
@@ -1438,12 +1488,15 @@
                     class="responsive-table"
                     *ngIf="activeRound > 1 && allRoundCutOffNet && !teamMatch"
                 >
-                    <li class="table-header justify-center bg-red-600" *ngIf="isCuttOffRequired">
+                    <li
+                        class="table-header justify-center bg-red-600"
+                        *ngIf="isCuttOffRequired"
+                    >
                         <div class="cut-UI-Mobile">
                             CUT ROUND
                             {{
                                 activeRound > totalRounds
-                                    ? totalRounds -1 
+                                    ? totalRounds - 1
                                     : activeRound - 1
                             }}
                         </div>
@@ -1455,7 +1508,10 @@
                         <div class="col col-1">-</div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div class="text-xs flex items-center">
+                            <div
+                                *ngIf="item.handicap > 0"
+                                class="text-xs flex items-center"
+                            >
                                 HC:{{ item.handicap }}
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"

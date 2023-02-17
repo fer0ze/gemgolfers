@@ -782,7 +782,7 @@
                     >
                         R4
                     </div>
-                    <div class="col col-5" *ngIf="activeRound <= totalRounds">
+                    <div class="col col-5" >
                         THRU
                     </div>
                 </li>
@@ -790,8 +790,10 @@
                     <div class="col col-1" >
                         {{ item.position }}
                     </div>
-                    <div class="col col-2" >
-                        {{ item.name }}-(HC: {{ item.handicap }})
+                    <div class="col col-2 flex flex-col" >
+                        {{ item.name }} <span *ngIf="item.handicap > 0">
+                            HC:{{ item.handicap }}</span
+                        >
                     </div>
                     <div class="col col-3" >
                         <strong *ngIf="item.AllGrossUnder > 0">+</strong
@@ -819,7 +821,10 @@
                     >
                         {{ item.TotalGross2 }}
                     </div>
-                    <div class="col col-5" data-label="3" *ngIf="activeRound == 2">
+                    <div class="col col-5" data-label="3" *ngIf="
+                                activeRound == 2 ||
+                                (activeRound > totalRounds && totalRounds == 2)
+                            ">
                         <strong *ngIf="item.holes2 == 18">F</strong
                         ><strong *ngIf="item.holes2 < 18">{{
                             item.holes2
@@ -832,7 +837,10 @@
                     >
                         {{ item.TotalGross3 }}
                     </div>
-                    <div class="col col-5" data-label="5" *ngIf="activeRound == 3">
+                    <div class="col col-5" data-label="5" *ngIf="
+                                activeRound == 3 ||
+                                (activeRound > totalRounds && totalRounds == 3)
+                            ">
                         <strong *ngIf="item.holes3 == 18">F</strong>
                         <strong *ngIf="item.holes3 < 18">{{
                             item.holes3
@@ -844,7 +852,7 @@
                     >
                         {{ item.TotalGross4 }}
                     </div>
-                    <div class="col col-5" data-label="7" *ngIf="activeRound == 4">
+                    <div class="col col-5" data-label="7"  *ngIf="activeRound >= 4 && totalRounds == 4">
                         <strong *ngIf="item.holes4 == 18">F</strong
                         ><strong *ngIf="item.holes4 < 18">{{
                             item.holes4
@@ -991,7 +999,7 @@
                         CUT ROUND
                         {{
                             activeRound > totalRounds
-                                ? totalRounds
+                               ? totalRounds - 1
                                 : activeRound - 1
                         }}
                         {{
@@ -1005,7 +1013,7 @@
                     *ngFor="let item of allLeadersCutOffGross"
                 >
                     <div class="col col-1" >-</div>
-                    <div class="col col-2" >
+                    <div class="col col-2 flex flex-col" >
                         {{ item.name }}<div>
                             HC:{{ item.handicap }}
                         </div>
@@ -1205,7 +1213,7 @@
                     >
                         R4
                     </div>
-                    <div class="col col-5" *ngIf="activeRound <= totalRounds">
+                    <div class="col col-5" >
                         THRU
                     </div>
                 </li>
@@ -1213,7 +1221,7 @@
                     <div class="col col-1" >
                         {{ item.positionNet }}
                     </div>
-                    <div class="col col-2" >
+                    <div class="col col-2 flex flex-col" >
                         {{ item.name }}<div>
                             HC:{{ item.handicap }}
                         </div>
@@ -1244,7 +1252,10 @@
                     >
                         {{ item.TotalNet2 }}
                     </div>
-                    <div class="col col-5" *ngIf="activeRound == 2">
+                    <div class="col col-5" *ngIf="
+                                activeRound == 2 ||
+                                (activeRound > totalRounds && totalRounds == 2)
+                            ">
                         <strong *ngIf="item.holes2 == 18">F</strong
                         ><strong *ngIf="item.holes2 < 18">{{
                             item.holes2
@@ -1256,7 +1267,10 @@
                     >
                         {{ item.TotalNet3 }}
                     </div>
-                    <div class="col col-5" *ngIf="activeRound == 3">
+                    <div class="col col-5"  *ngIf="
+                                activeRound == 3 ||
+                                (activeRound > totalRounds && totalRounds == 3)
+                            ">
                         <strong *ngIf="item.holes3 == 18">F</strong>
                         <strong *ngIf="item.holes3 < 18">{{
                             item.holes3
@@ -1268,7 +1282,7 @@
                     >
                         {{ item.TotalNet4 }}
                     </div>
-                    <div class="col col-5" *ngIf="activeRound == 4">
+                    <div class="col col-5"  *ngIf="activeRound >= 4 && totalRounds == 4">
                         <strong *ngIf="item.holes4 == 18">F</strong
                         ><strong *ngIf="item.holes4 < 18">{{
                             item.holes4
@@ -1402,7 +1416,7 @@
                         CUT ROUND
                         {{
                             activeRound > totalRounds
-                                ? totalRounds
+                                ? totalRounds -1
                                 : activeRound - 1
                         }}
                     </div>

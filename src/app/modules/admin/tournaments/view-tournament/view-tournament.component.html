@@ -1514,7 +1514,7 @@
                                 mat-stretch-tabs="false"
                                 mat-align-tabs="start"
                             >
-                                <mat-tab label="Rounds"></mat-tab>
+                                <mat-tab label="Overview"></mat-tab>
                                 <mat-tab class="pl-5" label="Flights"></mat-tab>
                                 <mat-tab label="Scores"></mat-tab>
                                 <mat-tab label="Leaderboard"></mat-tab>
@@ -4133,7 +4133,10 @@
                                 </ng-template>
                             </mat-tab>
 
-                            <mat-tab label="Summary">
+                            <mat-tab
+                                [disabled]="activeRound < noOfROunds"
+                                label="Summary"
+                            >
                                 <div
                                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                 >
@@ -4192,7 +4195,7 @@
                                                                 let i = index
                                                             "
                                                         >
-                                                            {{ i + 1 }}
+                                                            {{ row.position }}
                                                         </td>
                                                     </ng-container>
 
@@ -4213,14 +4216,7 @@
                                                                 let row
                                                             "
                                                         >
-                                                            {{
-                                                                row.value.player
-                                                                    .firstName
-                                                            }}
-                                                            {{
-                                                                row.value.player
-                                                                    .lastName
-                                                            }}
+                                                            {{ row.name }}
                                                         </td>
                                                     </ng-container>
 
@@ -4242,12 +4238,10 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR1
-                                                                    ? row.value
-                                                                          .scoreR1
-                                                                    : row.value
-                                                                          .score
+                                                                row.TotalGross1 !=
+                                                                ""
+                                                                    ? row.TotalGross1
+                                                                    : "-"
                                                             }}
                                                         </td>
                                                     </ng-container>
@@ -4270,10 +4264,9 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR2
-                                                                    ? row.value
-                                                                          .scoreR2
+                                                                row.TotalGross2 !=
+                                                                ""
+                                                                    ? row.TotalGross2
                                                                     : "-"
                                                             }}
                                                         </td>
@@ -4297,10 +4290,9 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR3
-                                                                    ? row.value
-                                                                          .scoreR3
+                                                                row.TotalGross3 !=
+                                                                ""
+                                                                    ? row.TotalGross3
                                                                     : "-"
                                                             }}
                                                         </td>
@@ -4323,10 +4315,9 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR4
-                                                                    ? row.value
-                                                                          .scoreR4
+                                                                row.TotalGross4 !=
+                                                                ""
+                                                                    ? row.TotalGross4
                                                                     : "-"
                                                             }}
                                                         </td>
@@ -4349,7 +4340,7 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value.under
+                                                                row.AllGrossUnder
                                                             }}
                                                         </td>
                                                     </ng-container>
@@ -4428,7 +4419,7 @@
                                                                 let i = index
                                                             "
                                                         >
-                                                            {{ i + 1 }}
+                                                            {{ row.position }}
                                                         </td>
                                                     </ng-container>
 
@@ -4449,14 +4440,7 @@
                                                                 let row
                                                             "
                                                         >
-                                                            {{
-                                                                row.value.player
-                                                                    .firstName
-                                                            }}
-                                                            {{
-                                                                row.value.player
-                                                                    .lastName
-                                                            }}
+                                                            {{ row.name }}
                                                         </td>
                                                     </ng-container>
 
@@ -4478,12 +4462,10 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR1
-                                                                    ? row.value
-                                                                          .scoreR1
-                                                                    : row.value
-                                                                          .score
+                                                                row.TotalNet1 !=
+                                                                ""
+                                                                    ? row.TotalNet1
+                                                                    : "-"
                                                             }}
                                                         </td>
                                                     </ng-container>
@@ -4506,10 +4488,9 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR2
-                                                                    ? row.value
-                                                                          .scoreR2
+                                                                row.TotalNet2 !=
+                                                                ""
+                                                                    ? row.TotalNet2
                                                                     : "-"
                                                             }}
                                                         </td>
@@ -4533,10 +4514,9 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR3
-                                                                    ? row.value
-                                                                          .scoreR3
+                                                                row.TotalNet3 !=
+                                                                ""
+                                                                    ? row.TotalNet3
                                                                     : "-"
                                                             }}
                                                         </td>
@@ -4559,10 +4539,9 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value
-                                                                    .scoreR4
-                                                                    ? row.value
-                                                                          .scoreR4
+                                                                row.TotalNet4 !=
+                                                                ""
+                                                                    ? row.TotalNet4
                                                                     : "-"
                                                             }}
                                                         </td>
@@ -4585,7 +4564,7 @@
                                                             "
                                                         >
                                                             {{
-                                                                row.value.under
+                                                                row.AllNetUnder
                                                             }}
                                                         </td>
                                                     </ng-container>
@@ -4652,7 +4631,6 @@
                             <div
                                 class="flex flex-col sm:flex-row items-center justify-between w-full mt-2 max-w-xs sm:max-w-none"
                             >
-              
                                 <mat-form-field
                                     class="fuse-mat-no-subscript w-full sm:w-72 mb-4 sm:mt-0 sm:ml-4"
                                     [floatLabel]="'always'"
@@ -4685,7 +4663,6 @@
                                     ></mat-icon>
                                     <span class="ml-2">Add Player</span>
                                 </button>
-                               
                             </div>
                             <ul class="responsive-table my-4 mb-12">
                                 <li class="table-header">

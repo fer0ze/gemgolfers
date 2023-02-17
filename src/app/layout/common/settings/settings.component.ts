@@ -12,7 +12,7 @@ import { Layout } from 'app/layout/layout.types';
         `
             settings {
                 position: static;
-                display: block;
+                display: none;
                 flex: none;
                 width: auto;
             }

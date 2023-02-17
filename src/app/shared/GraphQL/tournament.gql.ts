@@ -111,6 +111,7 @@ export const tournamentDashBoard = gql`
             webLogoUrl
             startDate
             endDate
+            handicapAllocations
             adminId
             courseHoleSets
             courseHoleSetsInverted
