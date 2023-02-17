@@ -841,7 +841,7 @@
                         >
                             {{ item.TotalGross2 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 2">
+                        <div class="col col-5" *ngIf="activeRound == 2">
                             <strong *ngIf="item.holes2 == 18">F</strong
                             ><strong *ngIf="item.holes2 < 18">{{
                                 item.holes2
@@ -865,7 +865,7 @@
                         >
                             {{ item.TotalGross4 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 4">
+                        <div class="col col-5 " *ngIf="activeRound >= 4 && totalRounds == 4">
                             <strong *ngIf="item.holes4 == 18">F</strong
                             ><strong *ngIf="item.holes4 < 18">{{
                                 item.holes4
@@ -1012,7 +1012,7 @@
                             CUT ROUND
                             {{
                                 activeRound > totalRounds
-                                    ? totalRounds
+                                    ? totalRounds - 1
                                     : activeRound - 1
                             }}
                             {{
@@ -1309,7 +1309,7 @@
                         >
                             {{ item.TotalNet4 }}
                         </div>
-                        <div class="col col-5 " *ngIf="activeRound == 4">
+                        <div class="col col-5 " *ngIf="activeRound >= 4 && totalRounds == 4">
                             <strong *ngIf="item.holes4 == 18">F</strong
                             ><strong *ngIf="item.holes4 < 18">{{
                                 item.holes4
@@ -1443,7 +1443,7 @@
                             CUT ROUND
                             {{
                                 activeRound > totalRounds
-                                    ? totalRounds
+                                    ? totalRounds -1 
                                     : activeRound - 1
                             }}
                         </div>

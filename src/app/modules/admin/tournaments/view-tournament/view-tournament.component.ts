@@ -1431,193 +1431,193 @@ export class ViewTournamentComponent implements OnInit {
     // }
 
     async closeRound() {
-        this.activeTournamentMembers = [];
-        let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
-        // for (let obj of flights) {
-        //     if (obj.flightRound == this.activeRound) {
-        //         for (let newObj of this.categories) {
-        //             let check = obj.MembersQL.filter((a) => {
-        //                 return a.PlayerQL.playerCategory == newObj.category;
-        //             });
-        //             if (check.length > 0) {
-        //                 newObj['cut'] = true;
-        //                 check = [];
-        //                 break;
-        //             } else {
-        //                 newObj['cut'] = false;
-        //             }
-        //         }
-        //     }
-        // }
-        for (let newObj of this.categories) {
-            for (let obj of flights) {
-                if (obj.flightRound == this.activeRound) {
-                    let check = obj.MembersQL.filter((a) => {
-                        return a.PlayerQL.playerCategory == newObj.category;
-                    });
-                    if (check.length > 0) {
-                        newObj['cut'] = true;
-                        check = [];
-                        break;
-                    } else {
-                        newObj['cut'] = false;
+        if (this.activeRound == this.noOfROund) {
+            const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                width: '350px',
+                data: 'Do you want to close the last round?',
+            });
+
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    await this.facadeService.closeActiveRound(
+                        this.tournamentID,
+                        this.activeRound + 1,
+                        this.fullTournament.cutOffCriteria
+                    );
+                    window.location.reload();
+                } else {
+                    //console.log("cancel delete action");
+                }
+            });
+        } else {
+            this.activeTournamentMembers = [];
+            let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
+            for (let newObj of this.categories) {
+                for (let obj of flights) {
+                    if (obj.flightRound == this.activeRound) {
+                        let check = obj.MembersQL.filter((a) => {
+                            return a.PlayerQL.playerCategory == newObj.category;
+                        });
+                        if (check.length > 0) {
+                            newObj['cut'] = true;
+                            check = [];
+                            break;
+                        } else {
+                            newObj['cut'] = false;
+                        }
                     }
                 }
             }
-        }
-        const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
-            width: '800px',
-            data: {
-                round: this.activeRound + 1,
-                categories: this.categories,
-                tournament: this.tournamentID,
-                startDate: this.dataFullTournament.TournamentQL[0].startDate,
-            },
-        });
-        dialogRef.afterClosed().subscribe(async (result) => {
-            let getResult: any = result;
-            var jsons = new Array();
-            let flag = true;
-            jsons = [];
-            console.log(getResult);
-            if (getResult && getResult.category) {
-                console.log(getResult.category);
-                for (let cats in getResult.category) {
-                    if (getResult.category[cats].copyFlights == 'No') {
-                        flag = false;
-                    }
-
-                    console.log(getResult.category[cats]);
-                    let copyflights: any = [];
-                    if (
-                        this.fullTournament.cutOffCriteria != null &&
-                        Object.keys(
-                            this.fullTournament.cutOffCriteria.cutOff[0]
-                        ).length > 0
-                    ) {
-                        for (let cut of this.fullTournament.cutOffCriteria[
-                            'cutOff'
-                        ]) {
-                            if (
-                                cut.name == getResult.category[cats].name &&
-                                getResult.category[cats].cuttScore == ''
-                            ) {
-                                copyflights.push(cut);
-                            }
+            const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
+                width: '800px',
+                data: {
+                    round: this.activeRound + 1,
+                    categories: this.categories,
+                    tournament: this.tournamentID,
+                    startDate:
+                        this.dataFullTournament.TournamentQL[0].startDate,
+                },
+            });
+            dialogRef.afterClosed().subscribe(async (result) => {
+                let getResult: any = result;
+                var jsons = new Array();
+                let flag = true;
+                jsons = [];
+                console.log(getResult);
+                if (getResult && getResult.category) {
+                    console.log(getResult.category);
+                    for (let cats in getResult.category) {
+                        if (getResult.category[cats].copyFlights == 'No') {
+                            flag = false;
                         }
-                        console.log(copyflights);
+
+                        console.log(getResult.category[cats]);
+                        let copyflights: any = [];
+                        if (
+                            this.fullTournament.cutOffCriteria != null &&
+                            Object.keys(
+                                this.fullTournament.cutOffCriteria.cutOff[0]
+                            ).length > 0
+                        ) {
+                            for (let cut of this.fullTournament.cutOffCriteria[
+                                'cutOff'
+                            ]) {
+                                if (
+                                    cut.name == getResult.category[cats].name &&
+                                    getResult.category[cats].cuttScore == ''
+                                ) {
+                                    copyflights.push(cut);
+                                }
+                            }
+                            console.log(copyflights);
+                        }
+
+                        let cutOffCriteria: any = {
+                            round:
+                                copyflights.length > 0
+                                    ? copyflights[0].round
+                                    : this.activeRound,
+                            //copyFlights: (getResult.category[cats].copy == "1"),
+                            copymembers:
+                                copyflights.length > 0
+                                    ? copyflights[0].score
+                                    : null,
+                            copyflights: getResult.category[cats].copyFlights,
+                            name: getResult.category[cats].name,
+                            players: getResult.category[cats].players,
+                            time: getResult.category[cats].time,
+                            interval: getResult.category[cats].interval,
+                            tee: getResult.category[cats].tee,
+                            score:
+                                copyflights.length > 0
+                                    ? copyflights[0].score
+                                    : flag == false
+                                    ? getResult.category[cats].cuttScore
+                                    : 1000,
+                            type: getResult.category[cats].type,
+                            order: getResult.category[cats].order,
+                            playing: getResult.category[cats].playing,
+                            lastRoundPlayed:
+                                getResult.category[cats].lastRoundPlayed,
+                        };
+                        console.log(cutOffCriteria);
+                        if (
+                            cutOffCriteria.score == '' &&
+                            cutOffCriteria.playing == true
+                        ) {
+                            //   if(c.value != 0)
+                            await this.closeCurrentRound(
+                                cutOffCriteria,
+                                cutOffCriteria.name,
+                                cutOffCriteria.score,
+                                cutOffCriteria.copymembers
+                            );
+                        } else if (
+                            cutOffCriteria.score !== '' &&
+                            cutOffCriteria.playing == true
+                        ) {
+                            //   if(c.value != 0)
+                            await this.closeCurrentRound(
+                                cutOffCriteria,
+                                cutOffCriteria.name,
+                                cutOffCriteria.score,
+                                cutOffCriteria.copymembers
+                            );
+                        } else if (
+                            cutOffCriteria.score !== '' &&
+                            cutOffCriteria.playing == 1
+                        ) {
+                            console.log('No Cut-Off');
+                        }
+
+                        // }
+                        this.dataFullTournament =
+                            await this.facadeService.tournamentDashBoard(
+                                this.tournamentID
+                            );
+                        // if (this.dataFullTournament.TournamentQL[0]) {
+                        //   // console.log(this.dataFullTournament);
+
+                        //   // await this.facadeService.closeActiveRound(
+                        //   //   this.tournamentID,
+                        //   //   this.activeRound + 1,
+                        //   //   cutOffCriteria
+                        //   // );
+                        // } else {
+                        // var first_json =
+                        //   this.dataFullTournament.TournamentQL[0].cutOffCriteria;
+
+                        //jsons.push(first_json);
+                        jsons.push(cutOffCriteria);
+
+                        // console.log(jsons);
+                        // console.log(JSON.stringify(jsons));
+
+                        //var stringToJsonObject = JSON.parse((jsons).toString());
+                        //var stringToJsonObject = JSON.parse((jsons).toString());
+                        // var myJsonString = JSON.stringify(jsons);
+                        // console.log(myJsonString);
+
+                        // }
                     }
-
-                    let cutOffCriteria: any = {
-                        round:
-                            copyflights.length > 0
-                                ? copyflights[0].round
-                                : this.activeRound,
-                        //copyFlights: (getResult.category[cats].copy == "1"),
-                        copymembers:
-                            copyflights.length > 0
-                                ? copyflights[0].score
-                                : null,
-                        copyflights: getResult.category[cats].copyFlights,
-                        name: getResult.category[cats].name,
-                        players: getResult.category[cats].players,
-                        time: getResult.category[cats].time,
-                        interval: getResult.category[cats].interval,
-                        tee: getResult.category[cats].tee,
-                        score:
-                            copyflights.length > 0
-                                ? copyflights[0].score
-                                : flag == false
-                                ? getResult.category[cats].cuttScore
-                                : 1000,
-                        type: getResult.category[cats].type,
-                        order: getResult.category[cats].order,
-                        playing: getResult.category[cats].playing,
-                        lastRoundPlayed:
-                            getResult.category[cats].lastRoundPlayed,
-                    };
-                    console.log(cutOffCriteria);
-                    //let result = this.facadeService.closeActiveRound(this.tournamentID, round, cutOffCriteria);
-                    //console.log(result);
-                    // if(cutOffCriteria.copyFlights && cutOffCriteria.score.length > 0) {
-
-                    //for(let c of cutOffCriteria) {
-                    if (
-                        cutOffCriteria.score == '' &&
-                        cutOffCriteria.playing == true
-                    ) {
-                        //   if(c.value != 0)
-                        await this.closeCurrentRound(
-                            cutOffCriteria,
-                            cutOffCriteria.name,
-                            cutOffCriteria.score,
-                            cutOffCriteria.copymembers
-                        );
-                    } else if (
-                        cutOffCriteria.score !== '' &&
-                        cutOffCriteria.playing == true
-                    ) {
-                        //   if(c.value != 0)
-                        await this.closeCurrentRound(
-                            cutOffCriteria,
-                            cutOffCriteria.name,
-                            cutOffCriteria.score,
-                            cutOffCriteria.copymembers
-                        );
-                    } else if (
-                        cutOffCriteria.score !== '' &&
-                        cutOffCriteria.playing == 1
-                    ) {
-                        console.log('No Cut-Off');
-                    }
-
-                    // }
-                    this.dataFullTournament =
-                        await this.facadeService.tournamentDashBoard(
-                            this.tournamentID
-                        );
-                    // if (this.dataFullTournament.TournamentQL[0]) {
-                    //   // console.log(this.dataFullTournament);
-
-                    //   // await this.facadeService.closeActiveRound(
-                    //   //   this.tournamentID,
-                    //   //   this.activeRound + 1,
-                    //   //   cutOffCriteria
-                    //   // );
-                    // } else {
-                    // var first_json =
-                    //   this.dataFullTournament.TournamentQL[0].cutOffCriteria;
-
-                    //jsons.push(first_json);
-                    jsons.push(cutOffCriteria);
-
-                    // console.log(jsons);
-                    // console.log(JSON.stringify(jsons));
-
-                    //var stringToJsonObject = JSON.parse((jsons).toString());
-                    //var stringToJsonObject = JSON.parse((jsons).toString());
+                    let jObject = { cutOff: jsons };
+                    console.log(jObject);
+                    let a = JSON.stringify(jObject);
+                    var src = a.replace(/\\/g, '');
+                    console.log(src);
                     // var myJsonString = JSON.stringify(jsons);
                     // console.log(myJsonString);
-
-                    // }
+                    await this.facadeService.closeActiveRound(
+                        this.tournamentID,
+                        this.activeRound + 1,
+                        jObject
+                    );
+                    window.location.reload();
+                } else {
+                    //console.log("cancel delete action");
                 }
-                let jObject = { cutOff: jsons };
-                console.log(jObject);
-                let a = JSON.stringify(jObject);
-                var src = a.replace(/\\/g, '');
-                console.log(src);
-                // var myJsonString = JSON.stringify(jsons);
-                // console.log(myJsonString);
-                await this.facadeService.closeActiveRound(
-                    this.tournamentID,
-                    this.activeRound + 1,
-                    jObject
-                );
-                window.location.reload();
-            } else {
-                //console.log("cancel delete action");
-            }
-        });
+            });
+        }
     }
 
     showCourseDetails() {
@@ -2002,9 +2002,7 @@ export class ViewTournamentComponent implements OnInit {
         this.router.navigate(['/tournaments/attendance/' + this.tournamentID]);
     }
     redirectToHandicap() {
-        this.router.navigate([
-            '/tournaments/handicap/' + this.tournamentID,
-        ]);
+        this.router.navigate(['/tournaments/handicap/' + this.tournamentID]);
     }
 
     redirectToTournamentSetup() {
