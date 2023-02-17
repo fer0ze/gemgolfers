@@ -37,6 +37,7 @@ import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dial
 import { MatDrawer } from '@angular/material/sidenav';
 import { FlightManagementComponent } from '../flight-management/flight-management.component';
 import { PlayerManagementComponent } from '../player-management/player-management.component';
+import { forEach } from 'lodash';
 
 @Component({
     selector: 'app-view-tournament',
@@ -1429,6 +1430,12 @@ export class ViewTournamentComponent implements OnInit {
     //   });
 
     // }
+    calculateDiff(startDate, endDate) {
+        let days = Math.floor(
+            (endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60 / 24
+        );
+        return days;
+    }
 
     async closeRound() {
         if (this.activeRound == this.noOfROund) {
@@ -1450,22 +1457,115 @@ export class ViewTournamentComponent implements OnInit {
                 }
             });
         } else {
+            let allowCat: boolean = false;
             this.activeTournamentMembers = [];
             let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
+            let startDate =
+                this.dataFullTournament['TournamentQL'][0].startDate;
+            let newstartDate = new Date(startDate).getDate() + this.activeRound;
+            console.log(newstartDate);
+
             for (let newObj of this.categories) {
-                for (let obj of flights) {
-                    if (obj.flightRound == this.activeRound) {
-                        let check = obj.MembersQL.filter((a) => {
-                            return a.PlayerQL.playerCategory == newObj.category;
-                        });
-                        if (check.length > 0) {
-                            newObj['cut'] = true;
-                            check = [];
+                let flightSettings :any= newObj.flightSettings;
+               
+                if (Object.prototype.toString.call(flightSettings).indexOf("Array")>-1 && flightSettings.length>0) {
+                    
+                    for (let obj of flightSettings) {
+                        let chngDate = obj.dates.replaceAll('-', '').toString();
+                        let newDate =
+                            chngDate.substring(4, 8) +
+                            '-' +
+                            chngDate.substring(2, 4) +
+                            '-' +
+                            +chngDate.substring(0, 2);
+                        // console.log(newDate);
+
+                        let flightDate = new Date(newDate).getDate();
+                        console.log(flightDate);
+                        if (flightDate == newstartDate) {
+                            allowCat = true;
+                            newObj['allowCat'] = true;
                             break;
-                        } else {
-                            newObj['cut'] = false;
+                        }
+
+                        //console.log(this.calculateDiff(newstartDate,flightDate));
+                    }
+                    if (!allowCat) {
+                        newObj['allowCat'] = false;
+                    }
+                    for (let obj of flights) {
+                        if (obj.flightRound == this.activeRound) {
+                            let check = obj.MembersQL.filter((a) => {
+                                return (
+                                    a.PlayerQL.playerCategory == newObj.category
+                                );
+                            });
+                            if (check.length > 0) {
+                                newObj['cut'] = true;
+                                check = [];
+                                break;
+                            } else {
+                                newObj['cut'] = false;
+                            }
                         }
                     }
+                } else if (Object.prototype.toString.call(flightSettings).indexOf("Object")>-1) {
+                    for (let obj of flightSettings['playingDate']) {
+                        let chngDate = obj.dates.replaceAll('-', '').toString();
+                        let newDate =
+                            chngDate.substring(4, 8) +
+                            '-' +
+                            chngDate.substring(2, 4) +
+                            '-' +
+                            +chngDate.substring(0, 2);
+
+                        let flightDate = new Date(newDate).getDate();
+                        console.log(flightDate);
+                        if (flightDate == newstartDate) {
+                            allowCat = true;
+                            newObj['allowCat'] = true;
+                            break;
+                        }
+                        //console.log(this.calculateDiff(newstartDate,flightDate));
+                    }
+                    if (!allowCat) {
+                        newObj['allowCat'] = false;
+                    }
+                    for (let obj of flights) {
+                        if (obj.flightRound == this.activeRound) {
+                            let check = obj.MembersQL.filter((a) => {
+                                return (
+                                    a.PlayerQL.playerCategory == newObj.category
+                                );
+                            });
+                            if (check.length > 0) {
+                                newObj['cut'] = true;
+                                check = [];
+                                break;
+                            } else {
+                                newObj['cut'] = false;
+                            }
+                        }
+                    }
+                }else{
+                    for (let obj of flights) {
+                        if (obj.flightRound == this.activeRound) {
+                            let check = obj.MembersQL.filter((a) => {
+                                return (
+                                    a.PlayerQL.playerCategory == newObj.category
+                                );
+                            });
+                            if (check.length > 0) {
+                                newObj['cut'] = true;
+                                check = [];
+                                break;
+                            } else {
+                                newObj['cut'] = false;
+                            }
+
+                        }
+                    }
+                    newObj['allowCat'] = true;
                 }
             }
             const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
@@ -2439,6 +2539,7 @@ export class ViewTournamentComponent implements OnInit {
             if (result) {
                 //console.log("record deleted.");
                 console.log(result);
+                this.getTournamentMembers();
                 // this.clubMembers.push(result);
                 // console.log(this.clubMembers);
                 // this.syncClubMembers();

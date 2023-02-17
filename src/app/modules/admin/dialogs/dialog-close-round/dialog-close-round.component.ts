@@ -15,10 +15,10 @@ export class DialogCloseRoundComponent implements OnInit {
     cutOffform: FormGroup;
     copyFlights: boolean = false;
     public categoryList: FormArray;
-    allTabsChecked:boolean=false;
+    allTabsChecked: boolean = false;
     public flightSettings: any;
     public nDate: Date;
-    public selectedIndex:number=0;
+    public selectedIndex: number = 0;
     public tournament_member_category: any;
     public playingCat: any[] = [];
     public catArray: any[] = [];
@@ -74,26 +74,32 @@ export class DialogCloseRoundComponent implements OnInit {
         // for(let c of this.data.categories) {
         //   this.addField(c);
         // }
-        this.data.categories.sort(function(a, b) {
+        this.data.categories.sort(function (a, b) {
             var textA = a.category.toUpperCase();
             var textB = b.category.toUpperCase();
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
         console.log(this.data.categories);
-        
+
         for (let c of this.data.categories) {
-            this.catArray[c.category] = [];
-            this.catArray[c.category]['value'] = true;
-            this.catArray[c.category]['time'] = c.flightSettings['flightStartTime'] ?c.flightSettings['flightStartTime'] : '"08:00"';
-            if (c.cut) {
-                this.catArray[c.category]['cutshow'] = true;
-                this.catArray[c.category]['showCutCopy'] = true;
-            } else {
-                this.catArray[c.category]['cutshow'] = false;
-                this.catArray[c.category]['showCutCopy'] = false;
+            if (c.allowCat) {
+                this.catArray[c.category] = [];
+                this.catArray[c.category]['value'] = true;
+                this.catArray[c.category]['time'] = c.flightSettings[
+                    'flightStartTime'
+                ]
+                    ? c.flightSettings['flightStartTime']
+                    : '"08:00"';
+                if (c.cut) {
+                    this.catArray[c.category]['cutshow'] = true;
+                    this.catArray[c.category]['showCutCopy'] = true;
+                } else {
+                    this.catArray[c.category]['cutshow'] = false;
+                    this.catArray[c.category]['showCutCopy'] = false;
+                }
+                //console.log(this.catArray);
+                this.addCategoryFlightField(c);
             }
-            //console.log(this.catArray);
-            this.addCategoryFlightField(c);
         }
 
         //this.categoryList.removeAt(0);
@@ -111,7 +117,7 @@ export class DialogCloseRoundComponent implements OnInit {
                 var h = dateNow.getHours();
                 var m = dateNow.getMinutes();
 
-                flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) ;
+                flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
             }
         } catch {
             flightTime = '00:00';
@@ -197,13 +203,16 @@ export class DialogCloseRoundComponent implements OnInit {
         console.log(this.flightData);
 
         return this.fb.group({
-            name: [cat.category ? cat.category : '', Validators.compose([Validators.required])],
+            name: [
+                cat.category ? cat.category : '',
+                Validators.compose([Validators.required]),
+            ],
             copy: ['0', Validators.required],
             players: [3, Validators.required],
             time: ['09:00', Validators.required],
             interval: [10, Validators.required],
             tee: ['1_10', Validators.required],
-            type: [ cat.cut==true  ? 'GROSS' : 'NEW', Validators.required],
+            type: [cat.cut == true ? 'GROSS' : 'NEW', Validators.required],
             order: ['desc', Validators.required],
             copyFlights: ['No', Validators.required],
             cuttScore: [''],
@@ -265,15 +274,14 @@ export class DialogCloseRoundComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    saveCutSettings(index):void{
-     console.log(this.cutOffform.get('category').value.length);
-     
+    saveCutSettings(index): void {
+        console.log(this.cutOffform.get('category').value.length);
+
         console.log(index);
         if (index < this.cutOffform.get('category').value.length - 1) {
-            
             this.selectedIndex = ++index;
-        }else{
-            this.allTabsChecked=true;
+        } else {
+            this.allTabsChecked = true;
         }
     }
 }

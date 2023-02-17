@@ -22,6 +22,7 @@ export class DialogPlayerListComponent implements OnInit {
         'name',
         'handicap',
         'membershipNumber',
+        'cat',
         'email',
         'select',
     ];
@@ -156,7 +157,7 @@ export class DialogPlayerListComponent implements OnInit {
             this.snackBar.open('Tournament members have been saved.', 'x', {
                 duration: 3000,
             });
-            this.dialogRef.close();
+            this.dialogRef.close(tournamentMember);
         }
     }
     close() {
