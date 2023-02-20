@@ -1131,7 +1131,7 @@
                         >
                             {{ item.TotalGross4 }}
                         </div>
-                        <div class="col col-5" *ngIf="activeRound == 4">
+                        <div class="col col-5" *ngIf="activeRound >= 4">
                             <strong *ngIf="item.holes4 == 18">F</strong
                             ><strong *ngIf="item.holes4 < 18">{{
                                 item.holes4
@@ -1589,7 +1589,7 @@
                         >
                             {{ item.TotalNet4 }}
                         </div>
-                        <div class="col col-5" *ngIf="activeRound == 4">
+                        <div class="col col-5" *ngIf="activeRound >= 4">
                             <strong *ngIf="item.holes4 == 18">F</strong
                             ><strong *ngIf="item.holes4 < 18">{{
                                 item.holes4
