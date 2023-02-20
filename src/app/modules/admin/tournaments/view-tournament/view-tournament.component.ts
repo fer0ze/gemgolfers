@@ -6,6 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import {
     enumPlayerCategory,
     Player,
@@ -1963,7 +1965,86 @@ export class ViewTournamentComponent implements OnInit {
         console.log(tournamentFlights);
         console.log('After Function' + this.runningFlights);
     }
+    downloadResultSheet() {
+        var doc = new jsPDF();
 
+        var col = General.createClm(this.noOfRounds);
+        var rows = [];
+        doc.setFontSize(20);
+        doc.text(this.fullTournament.title, 10, 10);
+        doc.text('\nScore Sheet', 10, 10);
+        doc.setFontSize(15);
+        // this.tournamentCategories.forEach((element) => {
+        //     this.getSummaryData(element.category);
+        // });
+        this.getSummaryData('Result')
+        // doc.text("W.E.F:", 143, 15);
+        // doc.text(
+        // this.datepipe.transform(this.currentDate.toString(), "MMM d, y"),
+        // 160,
+        // 15
+        // );
+        doc.setFontSize(15);
+        doc.setTextColor(100);
+
+        let count = 0;
+        let grossAllArray: any[] = [];
+
+        for (let leader in this.allMatchResults) {
+            grossAllArray.push(this.allMatchResults[leader]);
+        }
+        grossAllArray.sort(this.ComparatorAllGrossSheet);
+        this.sortAllGrossLeadersTie(grossAllArray);
+        console.log(grossAllArray);
+        
+        for (let leader in grossAllArray) {
+            count++;
+            var temp = [
+                grossAllArray[leader].position,
+                grossAllArray[leader].name,
+
+                grossAllArray[leader].handicap,
+                'KGC',
+                grossAllArray[leader].TotalGross3 != '' &&grossAllArray[leader].TotalGross3 != undefined
+                    ? grossAllArray[leader].TotalGross3
+                    : '-',
+                grossAllArray[leader].TotalNet3 != ''&&grossAllArray[leader].TotalNet3!= undefined
+                    ? grossAllArray[leader].TotalNet3
+                    : '-',
+                grossAllArray[leader].TotalGross2 != ''&&grossAllArray[leader].TotalGross2!= undefined
+                    ? grossAllArray[leader].TotalGross2
+                    : '-',
+                grossAllArray[leader].TotalNet2 != ''&&grossAllArray[leader].TotalNet2!= undefined
+                    ? grossAllArray[leader].TotalNet2
+                    : '-',
+                grossAllArray[leader].TotalGross1 != ''&&grossAllArray[leader].TotalGross1!= undefined
+                    ? grossAllArray[leader].TotalGross1
+                    : '-',
+                grossAllArray[leader].TotalNet1 != ''&&grossAllArray[leader].TotalNet1!= undefined
+                    ? grossAllArray[leader].TotalNet1
+                    : '-',
+                grossAllArray[leader].AllGrossPoints != ''&&grossAllArray[leader].AllGrossPoints!= undefined
+                    ? grossAllArray[leader].AllGrossPoints
+                    : '-',
+                grossAllArray[leader].AllNetPoints != ''
+                    ? grossAllArray[leader].AllNetPoints
+                    : '-',
+            ];
+            rows.push(temp);
+        }
+
+        // From HTML
+        console.log(rows);
+        // this.sortAllGrossLeadersTie(rows);
+        // console.log(rows);
+        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+
+        // Open PDF document in new tab
+        doc.output('dataurlnewwindow');
+
+        // Download PDF document
+        //doc.save('flights.pdf');
+    }
     populateActiveTournamentMembers() {
         for (let c of this.categories) {
             let nextRoundPlayers: any[] = [];
@@ -2164,6 +2245,11 @@ export class ViewTournamentComponent implements OnInit {
         if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
         return 0;
     }
+    ComparatorAllGrossSheet(a, b) {
+        if (a['AllGrossPoints'] > b['AllGrossPoints']) return 1;
+        if (a['AllGrossPoints'] < b['AllGrossPoints']) return -1;
+        return 0;
+    }
     ComparatorHandicap(a, b) {
         if (a.PlayerQL['handicap'] < b.PlayerQL['handicap']) return -1;
         if (a.PlayerQL['handicap'] > b.PlayerQL['handicap']) return 1;
@@ -2240,13 +2326,14 @@ export class ViewTournamentComponent implements OnInit {
     }
     private async GrossData(category: any) {
         this.getSummaryData(category);
-        this.allMatchResults.sort(this.ComparatorAllGross);
+        
         console.log(this.allMatchResults);
         let grossAllArray: any[] = [];
 
         for (let leader in this.allMatchResults) {
             grossAllArray.push(this.allMatchResults[leader]);
         }
+        grossAllArray.sort(this.ComparatorAllGross);
         this.sortAllGrossLeadersTie(grossAllArray);
 
         this.dataSourceTotalGross = new MatTableDataSource(grossAllArray);
@@ -2255,6 +2342,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     getSummaryData(category) {
+
         this.allMatchResults = [];
         let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
         let handicapAllocation: string = this.getHandicapAllocation();
@@ -2265,7 +2353,10 @@ export class ViewTournamentComponent implements OnInit {
                 let playerId: String = membersQL.playerId;
 
                 let player: Player = membersQL.PlayerQL;
-                if (player.playerCategory !== category) continue;
+                if(category!='Result')
+                {
+                    if (player.playerCategory !== category) continue;
+                }
 
                 if (player == null) {
                     continue;
@@ -2596,7 +2687,7 @@ export class ViewTournamentComponent implements OnInit {
                 if (result) {
                     this.snackBar.open('Member has been deleted', 'x', {
                         duration: 3000,
-                        panelClass: ['orange-snackbar']
+                        panelClass: ['orange-snackbar'],
                     });
                     this.tournamentMember = this.tournamentMember.filter(
                         (a) => a.playerId !== player.id
@@ -2622,13 +2713,12 @@ export class ViewTournamentComponent implements OnInit {
                     playerId: player.id,
                     status: 'ic',
                 };
-                let result = this.facadeService.insertTournamentMemberStatus(
-                    member
-                );
+                let result =
+                    this.facadeService.insertTournamentMemberStatus(member);
                 if (result) {
                     this.snackBar.open('Member has been disqualify', 'x', {
                         duration: 3000,
-                        panelClass: ['orange-snackbar']
+                        panelClass: ['orange-snackbar'],
                     });
                 }
             } else {

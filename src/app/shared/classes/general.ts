@@ -279,6 +279,25 @@ export class General {
 
         return tee;
     }
+    public static createClm(round){
+        switch (round) {
+            case 1:
+                return ["Sr.", "Name","HCP", "Club", "Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                break;
+            case 2:
+                return ["Sr.", "Name","HCP", "Club", "Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                break;
+            case 3:
+                return ["Sr.", "Name","HCP", "Club", "Gross Rd3","Net Rd3","Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                break;
+            case 4:
+                return ["Sr.", "Name","HCP", "Club", "Gross Rd4","Net Rd4","Gross Rd3","Net Rd3","Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                break;
+            default:
+                return ["Sr.", "Name","HCP", "Club", "Gross Rd4","Net Rd4","Gross Rd3","Net Rd3","Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                break;
+        }
+    }
 }
 
 export enum MemberStatus {
