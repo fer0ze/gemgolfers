@@ -4716,20 +4716,20 @@
                                         {{ row.player["playerCategory"] }}
                                     </div>
                                     <div
-                                        class="col col-5 font-medium"
+                                        class="col col-5 font-medium cursor-pointer"
                                         data-label="Payment Status"
                                     >
-                                        <span
-                                            class="pr-6 font-medium whitespace-nowrap cursor-pointer"
-                                        >
-                                            <mat-icon
-                                                (click)="deleteTM(row.player)"
-                                                [svgIcon]="
-                                                    'heroicons_solid:delete'
-                                                "
-                                                color="warn"
-                                            ></mat-icon>
-                                        </span>
+                                        <mat-icon
+                                            (click)="deleteTM(row.player)"
+                                            [svgIcon]="'heroicons_solid:trash'"
+                                            color="warn"
+                                        ></mat-icon>
+                                        <mat-icon
+                                        
+                                            (click)="disqulifyTM(row.player)"
+                                            [svgIcon]="'heroicons_solid:close-eye'"
+                                            color="warn"
+                                        ></mat-icon>
                                     </div>
                                 </li>
                             </ul>

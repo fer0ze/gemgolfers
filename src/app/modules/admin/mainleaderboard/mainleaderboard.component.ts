@@ -1106,7 +1106,8 @@ export class MainLeaderboardComponent implements OnInit {
         // );
 
         // if (status && this.activeRound > 1) return false;
-
+        console.log(this.allMatchResults);
+        
         if (leaderGross.playerId in this.allMatchResults) {
             ////console.log("index exist");
         } else {
@@ -1438,7 +1439,10 @@ export class MainLeaderboardComponent implements OnInit {
         if(a.playerStatus > b.playerStatus ){
             return 1;
         }
-       
+
+        if(a.holes2 == undefined || b.holes2 == undefined){
+            return 1;
+        }
         let selfHoles: number = 0;
         let leaderHoles: number = 0;
         let completed: boolean = false;
@@ -1585,18 +1589,16 @@ export class MainLeaderboardComponent implements OnInit {
         // if (a['holes2'] >= b['holes2'] ) return -1;
         // if (a['holes2'] <= b['holes2'] ) return 1;
 
-        if (a['playerStatus'] == "ic") return 1;
-        if (b['playerStatus'] == "ic") return 1;
         
-        if (a['AllGrossUnder'] < b['AllGrossUnder'] && (a['playerStatus']==''&&  b['playerStatus']=='')) return -1;
-        if (a['AllGrossUnder'] > b['AllGrossUnder'] && (a['playerStatus']==''&&  b['playerStatus']=='')) return 1;
+        
+        if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
+        if (a['AllGrossUnder'] > b['AllGrossUnder'] ) return 1;
 
         return 0;
     }
 
     ComparatorAllNet(a, b) {
-        if (a['playerStatus'] == "ic") return 1;
-        if (b['playerStatus'] == "ic") return 1;
+       
         if (a['AllNetUnder'] < b['AllNetUnder']) return -1;
         if (a['AllNetUnder'] > b['AllNetUnder']) return 1;
         return 0;

@@ -2594,12 +2594,42 @@ export class ViewTournamentComponent implements OnInit {
                     player.id
                 );
                 if (result) {
-                    this.snackBar.open('Members has been deleted', 'x', {
+                    this.snackBar.open('Member has been deleted', 'x', {
                         duration: 3000,
+                        panelClass: ['orange-snackbar']
                     });
                     this.tournamentMember = this.tournamentMember.filter(
                         (a) => a.playerId !== player.id
                     );
+                }
+            } else {
+                //console.log("cancel delete action");
+            }
+        });
+    }
+    async disqulifyTM(player: any) {
+        console.log(player);
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to Disqualify this player from Tournament?',
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                //console.log("record deleted.");
+                let member: any = {
+                    tournamentId: this.tournamentID,
+                    playerId: player.id,
+                    status: 'ic',
+                };
+                let result = this.facadeService.insertTournamentMemberStatus(
+                    member
+                );
+                if (result) {
+                    this.snackBar.open('Member has been disqualify', 'x', {
+                        duration: 3000,
+                        panelClass: ['orange-snackbar']
+                    });
                 }
             } else {
                 //console.log("cancel delete action");

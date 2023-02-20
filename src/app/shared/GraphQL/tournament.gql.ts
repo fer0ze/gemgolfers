@@ -942,6 +942,21 @@ export const insertTournamentMemberQL = gql`
         }
     }
 `;
+export const insertTournamentMemberStatusQL = gql`
+    mutation insertTournamentMemberStatusQL(
+        $tournamentMembers: [tournament_member_status_insert_input!]!
+    ) {
+        insert_tournament_member_status(
+            objects: $tournamentMembers
+            on_conflict: {
+                constraint: tournament_member_status_pkey
+                update_columns: [status]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
 
 export const insertClubMemberQL = gql`
     mutation insertClubMemberQL($objects: [club_member_insert_input!]!) {
