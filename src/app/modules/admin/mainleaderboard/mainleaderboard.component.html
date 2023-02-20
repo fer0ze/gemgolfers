@@ -2,9 +2,7 @@
     class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
     cdkScrollable
 >
-    <div
-        class="relative flex-0 py-8 h-50 px-4 overflow-hidden bg-gray-800 dark"
-    >
+    <div class="relative flex-0 py-8 px-4 overflow-hidden bg-gray-800 dark">
         <svg
             class="absolute inset-0 pointer-events-none"
             viewBox="0 0 960 540"
@@ -26,27 +24,47 @@
         <div
             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6 w-full min-w-0 logo"
         >
-            <div class="col-span-1 flex items-center w-80 logo-1 overflow-hidden">
-                <img src="assets/images/logo/500.png" alt="Logo" />
+            <div
+                class="z-10 ml-40 col-span-1 h-25 relative flex flex-col items-center logo-1"
+            >
+                <img
+                    class="w-full h-full object-cover"
+                    src="assets/images/logo/leaderboradlogo.png"
+                    alt="Logo"
+                />
             </div>
             <div
-                class="z-10 col-span-1 text-3xl relative flex flex-col items-center"
+                class="z-10 col-span-1  relative flex flex-col items-center"
             >
-                <h2 class="text-4xl font-semibold">
+                <h2 class="text-3xl font-semibold">
                     {{ Leaderboard?.title }}
                 </h2>
                 <div
-                    class="mt-1 sm:text-5xl font-extrabold tracking-tight leading-tight text-center"
+                    class="mt-1 sm:text-4xl font-extrabold tracking-tight leading-tight text-center"
                 >
                     Leaderboard
                 </div>
             </div>
-            <div class="col-span-1 flex items-center w-80 logo-2 overflow-hidden">
+            <div
+                class="col-span-1 ml-48 h-25 flex items-center logo-2 overflow-hidden"
+            >
                 <img
                     class="object-cover"
                     src="assets/images/logo/{{ clubLogo }}"
                     alt="user"
                 />
+            </div>
+
+            <div class="flex flex-row justify-center mobile-logo">
+                <div
+                    class=" mobile-logo"
+                >
+                    <img
+                        class="w-full h-full object-cover"
+                        src="assets/images/logo/leaderboradlogo.png"
+                        alt="Logo"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -469,13 +487,10 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div
-                                
-                                class="text-xs flex items-center"
-                            >
-                            <span  *ngIf="item.handicap > 0">
-                                HC:{{ item.handicap }}
-                            </span>
+                            <div class="text-xs flex items-center">
+                                <span *ngIf="item.handicap > 0">
+                                    HC:{{ item.handicap }}
+                                </span>
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
                                     (click)="
@@ -583,14 +598,11 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div
-                               
-                                class="text-xs flex items-center"
-                            >
-                                <span  *ngIf="item.handicap > 0">
+                            <div class="text-xs flex items-center">
+                                <span *ngIf="item.handicap > 0">
                                     HC:{{ item.handicap }}
                                 </span>
-                                    
+
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
                                     (click)="
@@ -1272,10 +1284,7 @@
                         </div>
                         <div class="col col-2">
                             {{ item.name }}
-                            <div
-                               
-                                class="text-xs flex items-center"
-                            >
+                            <div class="text-xs flex items-center">
                                 HC:{{ item.handicap }}
                                 <div
                                     class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"

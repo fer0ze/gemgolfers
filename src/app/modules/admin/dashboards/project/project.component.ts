@@ -587,6 +587,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 6
             );
 
+        this.tournaments=getall.TournamentQL;
         console.log(this.tournamentCounts);
 
         this.flightCounts = getall.Count.aggregate.count;
