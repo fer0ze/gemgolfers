@@ -298,6 +298,9 @@ export class General {
                 break;
         }
     }
+    public static getClubName(clubName){
+      return clubName.match(/\b([A-Z])/g).join('');
+    }
 }
 
 export enum MemberStatus {

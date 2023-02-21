@@ -1966,13 +1966,16 @@ export class ViewTournamentComponent implements OnInit {
         console.log('After Function' + this.runningFlights);
     }
     downloadResultSheet() {
-        var doc = new jsPDF();
 
+        var doc = new jsPDF();
         var col = General.createClm(this.noOfRounds);
         var rows = [];
-        doc.setFontSize(20);
-        doc.text(this.fullTournament.title, 10, 10);
-        doc.text('\nScore Sheet', 10, 10);
+        doc.setFontSize(22);
+        doc.setFillColor(0,0,0);
+        doc.rect(10,5,190,20,'F');
+        doc.setTextColor(255,255,255);
+        doc.text(this.fullTournament.title, 13, 12,'justify');
+        doc.text('\nScore Sheet', 13, 12,'justify');
         doc.setFontSize(15);
         // this.tournamentCategories.forEach((element) => {
         //     this.getSummaryData(element.category);
@@ -1984,7 +1987,6 @@ export class ViewTournamentComponent implements OnInit {
         // 160,
         // 15
         // );
-        doc.setFontSize(15);
         doc.setTextColor(100);
 
         let count = 0;
@@ -2002,9 +2004,8 @@ export class ViewTournamentComponent implements OnInit {
             var temp = [
                 grossAllArray[leader].position,
                 grossAllArray[leader].name,
-
                 grossAllArray[leader].handicap,
-                'KGC',
+                grossAllArray[leader].clubName,
                 grossAllArray[leader].TotalGross3 != '' &&grossAllArray[leader].TotalGross3 != undefined
                     ? grossAllArray[leader].TotalGross3
                     : '-',
@@ -2037,7 +2038,7 @@ export class ViewTournamentComponent implements OnInit {
         console.log(rows);
         // this.sortAllGrossLeadersTie(rows);
         // console.log(rows);
-        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        doc.autoTable(col, rows, { startY: 30, theme: 'grid' });
 
         // Open PDF document in new tab
         doc.output('dataurlnewwindow');
@@ -2413,6 +2414,9 @@ export class ViewTournamentComponent implements OnInit {
 
                 let playerHole18ScoreGross: any[] = [];
                 let playerHole18ScoreNet: any[] = [];
+                let clubName='';
+                if(player.membership.length>0)
+                   clubName=player.membership[0].club.name;
 
                 for (
                     let i = 0;
@@ -2466,6 +2470,7 @@ export class ViewTournamentComponent implements OnInit {
                         ? flightData.courseHoleSetsInverted
                         : false,
                     playerId: playerId,
+                    clubName:General.getClubName(clubName),
                     name: name,
                     picture: picture,
                     playingRound: flightData.flightRound,
@@ -2517,6 +2522,8 @@ export class ViewTournamentComponent implements OnInit {
                         ? flightData.courseHoleSetsInverted
                         : false,
                     name: name,
+
+                    clubName:General.getClubName(clubName),
                     picture: picture,
                     handicap: handicap,
                     score: netTotal,
@@ -2818,6 +2825,7 @@ export class ViewTournamentComponent implements OnInit {
         this.allMatchResults[leaderGross.playerId]['playerId'] =
             leaderGross.playerId;
         this.allMatchResults[leaderGross.playerId]['name'] = leaderGross.name;
+        this.allMatchResults[leaderGross.playerId]['clubName'] = leaderGross.clubName;
         this.allMatchResults[leaderGross.playerId]['picture'] =
             leaderGross.picture;
         this.allMatchResults[leaderGross.playerId]['handicap'] =

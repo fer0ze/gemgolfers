@@ -143,6 +143,11 @@ export const tournamentDashBoard = gql`
                         firstName
                         lastName
                         handicap
+                        membership{
+                            club{
+                                name
+                            }
+                        }
                     }
                     ScoresQL: scores(where: { grossScore: { _gt: 0 } }) {
                         grossScore
