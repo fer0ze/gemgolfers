@@ -840,7 +840,7 @@
                                                     mat-cell
                                                     *matCellDef="let element"
                                                 >
-                                                    {{ element.playerCategory }}
+                                                    {{  element.playerCategory =='Seniors' ? 'Senior Amateurs' :element.playerCategory }}
                                                 </td>
                                             </ng-container>
 
@@ -1031,7 +1031,7 @@
                                                     mat-cell
                                                     *matCellDef="let element"
                                                 >
-                                                    {{ element.playerCategory }}
+                                                    {{ element.playerCategory =='Seniors' ? 'Senior Amateurs' :element.playerCategory }}
                                                 </td>
                                             </ng-container>
 

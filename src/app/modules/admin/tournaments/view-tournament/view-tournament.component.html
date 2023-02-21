@@ -237,7 +237,7 @@
                                                     mat-cell
                                                     *matCellDef="let row"
                                                 >
-                                                    {{ row.playerCategory }}
+                                                    {{ row.playerCategory =='Seniors' ? 'Senior Amateurs' :row.playerCategory }}
                                                 </td>
                                             </ng-container>
 

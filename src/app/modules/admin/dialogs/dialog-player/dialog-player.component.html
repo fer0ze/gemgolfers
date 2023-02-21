@@ -115,7 +115,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Category
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.playerCategory }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.playerCategory =='Seniors' ? 'Senior Amateurs' :row.playerCategory }}</td>
             </ng-container>
 
             <!-- email Column -->

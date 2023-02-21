@@ -421,6 +421,7 @@ export const DeletePlayer = gql`
 export const PlayerFlightScoresQuery = gql`
     query PlayerFlightScoresQuery($playerId: String!) {
         PlayerQL: player(where: { id: { _eq: $playerId } }) {
+            id
             firstName
             membershipNumber
             lastName
@@ -434,6 +435,7 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
+            limit:20
         ) {
             ...PlayerHandicapQL
         }
@@ -553,8 +555,37 @@ export const PlayerHandicapQuery = gql`
             id
             HandicapHistoryWhsQL: handicap_history_whs(
                 order_by: { playedAt: desc }
+                limit: 40
             ) {
-                ...PlayerHandicapWhsQL
+                Handicap_id
+                playerId
+                adjustedScore
+                back9
+                combined_handicap {
+                    playerId
+                    round
+                    handicapDifferential
+                }
+                combined_handicap_id
+                exceptionalScore
+                front9
+                handicapDifferential
+                handicapIndex
+                is_combined
+                playedAt
+                updatedAt
+                score
+                tournamentQL: tournament {
+                    title
+                    startDate
+                    endDate
+                }
+                used_handicaps {
+                    id
+                    used_handicap_id
+                    combine_handicap_id
+                    holes
+                }
             }
         }
     }
@@ -583,8 +614,7 @@ export const PlayerHandicapRoundQuery = gql`
             }
         }
     }
-    ${PlayerHandicapWhsQL}
-    ${PlayerQL}
+
 `;
 
 export const searchPlayerQL = gql`

@@ -71,8 +71,8 @@ export class ViewPlayerComponent implements OnInit {
     CONGUnetSource: MatTableDataSource<any>;
     CONGUnetColumns = ['id', 'updatedAt', 'score'];
     dataSource: MatTableDataSource<any>;
-    totalRounds:any=0;
-    ConguScoreLength:any=0;
+    totalRounds: any = 0;
+    ConguScoreLength: any = 0;
     _labels: any = [
         '06 Dec - 13 Dec',
         '14 Dec - 21 Dec',
@@ -113,16 +113,18 @@ export class ViewPlayerComponent implements OnInit {
     // @ViewChild(MatSort) Wsort: MatSort;
     // @ViewChild('fileInput') WfileInputVariable: ElementRef;
 
-   // @ViewChild(MatPaginator) paginator: MatPaginator;
+    // @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('paginatorConguHistory') paginatorConguHistory: MatPaginator;
     @ViewChild('paginatorWHSHistory') paginatorWHSHistory: MatPaginator;
-    @ViewChild('paginatorScoreConguHistory') paginatorScoreConguHistory: MatPaginator;
-    @ViewChild('paginatorScoreWHSHistory') paginatorScoreWHSHistory: MatPaginator;
+    @ViewChild('paginatorScoreConguHistory')
+    paginatorScoreConguHistory: MatPaginator;
+    @ViewChild('paginatorScoreWHSHistory')
+    paginatorScoreWHSHistory: MatPaginator;
     @ViewChild('asort') asort: MatSort;
     @ViewChild('bsort') bsort: MatSort;
     @ViewChild('csort') csort: MatSort;
     @ViewChild('dsort') dsort: MatSort;
-   
+
     chartVisitors: ApexOptions;
     constructor(
         private router: Router,
@@ -134,62 +136,62 @@ export class ViewPlayerComponent implements OnInit {
     ) {}
 
     // bar chart
-    public barChartOptions: any = {
-        scaleShowVerticalLines: false,
-        responsive: true,
-    };
+    // public barChartOptions: any = {
+    //     scaleShowVerticalLines: false,
+    //     responsive: true,
+    // };
     public barChartLabels: string[] = []; // = ['March 23, 2019', 'March 24, 2019', 'April 05, 2019', 'April 23, 2019', 'Feb 23, 2020', 'Feb 24, 2020', 'March 13, 2020'];
-    public barChartType: string;
-    public barChartLegend: boolean;
+    // public barChartType: string;
+    // public barChartLegend: boolean;
 
-    public barChartData: any[] = [
-        {
-            data: this.barChartDataGross,
-            label: 'Gross',
-            dates: this.GrossScoreDates,
-            borderRadius: 10,
-        },
-        { data: this.barChartDataNet, label: 'Net', dates: this.NetScoreDates },
-    ];
-    // lineChart
-    public lineChartData: Array<any> = [
-        { data: this.handicapHistory, label: 'Handicap' },
-    ];
-    public lineChartLabels: Array<any> = this.handicapHistoryDate;
-    public lineChartOptions: any = {
-        responsive: true,
-    };
-    public lineChartColors: Array<any> = [
-        // {
-        //     // grey
-        //     backgroundColor: 'rgba(148,159,177,0.2)',
-        //     borderColor: 'rgba(148,159,177,1)',
-        //     pointBackgroundColor: 'rgba(148,159,177,1)',
-        //     pointBorderColor: '#fff',
-        //     pointHoverBackgroundColor: '#fff',
-        //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        // },
-        {
-            // grey
-            backgroundColor: 'rgba(58,165,152,1)',
-            borderColor: 'rgba(23,77,86,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-        },
-        {
-            // dark grey
-            backgroundColor: 'rgba(23,77,86,0.8)',
-            borderColor: 'rgba(77,83,96,1)',
-            pointBackgroundColor: 'rgba(77,83,96,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(77,83,96,1)',
-        },
-    ];
-    public lineChartLegend: boolean;
-    public lineChartType: string;
+    // public barChartData: any[] = [
+    //     {
+    //         data: this.barChartDataGross,
+    //         label: 'Gross',
+    //         dates: this.GrossScoreDates,
+    //         borderRadius: 10,
+    //     },
+    //     { data: this.barChartDataNet, label: 'Net', dates: this.NetScoreDates },
+    // ];
+    // // lineChart
+    // public lineChartData: Array<any> = [
+    //     { data: this.handicapHistory, label: 'Handicap' },
+    // ];
+    // public lineChartLabels: Array<any> = this.handicapHistoryDate;
+    // public lineChartOptions: any = {
+    //     responsive: true,
+    // };
+    // public lineChartColors: Array<any> = [
+    //     // {
+    //     //     // grey
+    //     //     backgroundColor: 'rgba(148,159,177,0.2)',
+    //     //     borderColor: 'rgba(148,159,177,1)',
+    //     //     pointBackgroundColor: 'rgba(148,159,177,1)',
+    //     //     pointBorderColor: '#fff',
+    //     //     pointHoverBackgroundColor: '#fff',
+    //     //     pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    //     // },
+    //     {
+    //         // grey
+    //         backgroundColor: 'rgba(58,165,152,1)',
+    //         borderColor: 'rgba(23,77,86,1)',
+    //         pointBackgroundColor: 'rgba(148,159,177,1)',
+    //         pointBorderColor: '#fff',
+    //         pointHoverBackgroundColor: '#fff',
+    //         pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+    //     },
+    //     {
+    //         // dark grey
+    //         backgroundColor: 'rgba(23,77,86,0.8)',
+    //         borderColor: 'rgba(77,83,96,1)',
+    //         pointBackgroundColor: 'rgba(77,83,96,1)',
+    //         pointBorderColor: '#fff',
+    //         pointHoverBackgroundColor: '#fff',
+    //         pointHoverBorderColor: 'rgba(77,83,96,1)',
+    //     },
+    // ];
+    // public lineChartLegend: boolean;
+    // public lineChartType: string;
 
     async ngOnInit() {
         //console.log(this.route.snapshot.paramMap.get("id"));
@@ -329,12 +331,12 @@ export class ViewPlayerComponent implements OnInit {
                 await this.facadeService.getPlayerFlightScores(this.playerID);
             console.log(playerscore);
             this.currentPlayer = playerscore.PlayerQL;
-     this.totalRounds=playerscore.MemberQL.length;
+            this.totalRounds = playerscore.MemberQL.length;
             let memberQLs: any = playerscore.MemberQL;
             this.playerWHSRound = await this.facadeService.getPlayerWHSRound(
                 courseRating
             );
-            console.log(this.playerWHS);
+            // console.log(this.playerWHS);
             console.log(this.playerWHSRound);
             let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
             let rating = this.playerWHSRound['course_rating'];
@@ -382,6 +384,7 @@ export class ViewPlayerComponent implements OnInit {
             this.dataSource.paginator = this.paginatorConguHistory;
             this.dataSource.sort = this.asort;
             let newScores: any[] = [];
+            let newScore: any[] = [];
             for (let memberQL of memberQLs) {
                 let flightQL: any = memberQL.FlightQL;
 
@@ -442,10 +445,12 @@ export class ViewPlayerComponent implements OnInit {
                     gross: grossScore,
                     net: netScore,
                 };
-
+                if (newScores.length <= 10) {
+                    newScores.push(recentScores);
+                }
                 //this._labels.push(flightQL.date);
 
-                newScores.push(recentScores);
+                newScore.push(recentScores);
 
                 //console.log(newScores);
 
@@ -453,15 +458,16 @@ export class ViewPlayerComponent implements OnInit {
                 //console.log(this.barChartDataGross);
                 //console.log(this.barChartDataNet);
                 //console.log(this.barChartData);
-                this.ConguScoreLength=newScores.length;
+                this.ConguScoreLength = newScores.length;
                 this.CONGUgrossSource = new MatTableDataSource(newScores);
-                this.CONGUgrossSource.paginator = this.paginatorScoreConguHistory;
-                this.CONGUgrossSource.sort=this.csort;
+                this.CONGUgrossSource.paginator =
+                    this.paginatorScoreConguHistory;
+                this.CONGUgrossSource.sort = this.csort;
                 // this.dataSource.sort = this.sort;
-                
+
                 this.CONGUnetSource = new MatTableDataSource(newScores);
                 this.CONGUnetSource.paginator = this.paginatorScoreWHSHistory;
-                this.CONGUnetSource.sort=this.dsort;
+                this.CONGUnetSource.sort = this.dsort;
 
                 if (scores.length == 0) {
                     // Do not add flights without score
@@ -480,7 +486,7 @@ export class ViewPlayerComponent implements OnInit {
 
             let dataMembersG: any[] = [];
             let dataMembersN: any[] = [];
-            for (let obj of newScores) {
+            for (let obj of newScore) {
                 dataMembersG.push({
                     x: new Date(obj.date),
                     y: obj.gross,
@@ -508,23 +514,23 @@ export class ViewPlayerComponent implements OnInit {
             }
             //console.log(finalScoreStats);
 
-            this.par3Avg = finalScoreStats.par3Stats.getAvgScores();
-            this.par4Avg = finalScoreStats.par4Stats.getAvgScores();
-            this.par5Avg = finalScoreStats.par5Stats.getAvgScores();
+            // this.par3Avg = finalScoreStats.par3Stats.getAvgScores();
+            // this.par4Avg = finalScoreStats.par4Stats.getAvgScores();
+            // this.par5Avg = finalScoreStats.par5Stats.getAvgScores();
 
-            this.shotsBirdiesPercent = finalScoreStats.getShotsBirdiesPercent();
+             this.shotsBirdiesPercent = finalScoreStats.getShotsBirdiesPercent();
             this.shotsBogeysPercent = finalScoreStats.getShotsBogeysPercent();
-            this.shotsThreeOrHigherPercent =
-                finalScoreStats.getShotsThreeOrHigherPercent();
-            this.shotsParsPercent = finalScoreStats.getShotsParsPercent();
-            this.shotsDoubleBogeysPercent =
-                finalScoreStats.getShotsDoubleBogeysPercent();
+             this.shotsThreeOrHigherPercent =
+            //     finalScoreStats.getShotsThreeOrHigherPercent();
+             this.shotsParsPercent = finalScoreStats.getShotsParsPercent();
+            // this.shotsDoubleBogeysPercent =
+            //     finalScoreStats.getShotsDoubleBogeysPercent();
 
-            this.barChartType = 'bar';
-            this.barChartLegend = true;
+            // this.barChartType = 'bar';
+            // this.barChartLegend = true;
 
-            this.lineChartLegend = true;
-            this.lineChartType = 'line';
+            // this.lineChartLegend = true;
+            // this.lineChartType = 'line';
 
             this.isLoading = false;
             let flag: boolean = false;
@@ -567,17 +573,26 @@ export class ViewPlayerComponent implements OnInit {
                         enabled: true,
                     },
                 },
-                colors : ['#44E9D5'],
-                fill   : {
-                    colors : ['#DFE8E7'],
+                colors    : ['#94A3B8', '#94A3B8'],
+                dataLabels: {
+                    enabled: false
+                },
+                fill      : {
+                    colors : ['#94A3B8', '#94A3B8'],
                     opacity: 0.5
                 },
-
-                
 
                 series: this._series,
                 stroke: {
                     curve: 'smooth',
+                },
+                grid      : {
+                    show   : false,
+                    padding: {
+                        bottom: -40,
+                        left  : 0,
+                        right : 0
+                    }
                 },
                 tooltip: {
                     followCursor: true,
@@ -586,6 +601,13 @@ export class ViewPlayerComponent implements OnInit {
                 xaxis: {
                     type: 'category',
                     categories: this._labels,
+                    labels    : {
+                        offsetY: -20,
+                        rotate : 0,
+                        style  : {
+                            colors: 'var(--fuse-text-secondary)'
+                        }
+                    },
                 },
                 yaxis: {
                     labels: {
@@ -641,10 +663,7 @@ export class ViewPlayerComponent implements OnInit {
         //   console.log(id);
         // }
     }
-    onPageFired(event)
-    {
-
-    }
+    onPageFired(event) {}
     deletePlayer(playerId: string): void {
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',

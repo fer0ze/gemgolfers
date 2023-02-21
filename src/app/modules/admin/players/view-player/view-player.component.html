@@ -1,12 +1,12 @@
 <div *ngIf="showdata | async" class="flex flex-col flex-auto min-w-0">
-    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+    <div class="flex-auto border-t -mt-px ">
         <div
             class="w-full max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
         >
             <div
-                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6  rounded-2xl overflow-hidden"
             >
-                <div
+                <!-- <div
                     class="flex flex-col sm:flex-row items-start justify-around"
                 >
                     <div
@@ -19,19 +19,19 @@
                     >
                         Rounds Overview
                     </div>
-                </div>
+                </div> -->
                 <div
-                    class="grid grid-cols-1 min-h-40 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 min-h-100 sm:mt-4"
+                    class="grid grid-cols-1 min-h-50 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 min-h-100 sm:mt-4"
                 >
                     <!-- New vs. Closed -->
-                    <div class="flex flex-col flex-auto">
+                    <div class="flex flex-col mx-32 flex-auto">   
                         <div class="font-medium text-secondary"></div>
                         <div class="flex-auto grid grid-cols-1 gap-4 mt-6">
                             <div
-                                class="col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-amber-50 gap-4 dark:bg-white dark:bg-opacity-5 dark:text-amber-400"
+                                class="col-span-1 flex flex-col  p-8  bg-card shadow rounded-2xl gap-4 dark:bg-white dark:bg-opacity-5 dark:text-amber-400"
                                 *ngFor="let item of currentPlayer"
                             >
-                                <div
+                                <!-- <div
                                     class="text-4xl text-dark-800 sm:text-7xl font-semibold leading-none tracking-tight"
                                 >
                                     <div *ngFor="let item of currentPlayer">
@@ -47,7 +47,7 @@
                                 <div
                                     class="mt-1 text-sm sm:text-lg font-medium"
                                 >
-                                    Category: {{ item.playerCategory }}
+                                    Category: {{ item.playerCategory =='Seniors' ? 'Senior Amateurs' :item.playerCategory }}
                                 </div>
                                 <div
                                     class="mt-1 text-sm sm:text-lg font-medium"
@@ -79,11 +79,68 @@
                                     class="mt-1 text-sm sm:text-lg font-medium"
                                 >
                                     MembrNo: {{ item.membershipNumber }}
+                                </div> -->
+                                <div class="text-3xl font-semibold leading-tight">About Me</div>
+                                
+                                
+                                <div class="flex flex-col">
+                                    <div class="flex items-center">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{
+                                            currentPlayer[0].firstName +
+                                                " " +
+                                                currentPlayer[0].lastName
+                                        }}</span>
+                                    </div>
+                                    <div class="flex items-center mt-4">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{ currentPlayer[0].playerCategory =='Seniors' ? 'Senior Amateurs' :currentPlayer[0].playerCategory }}</span>
+                                    </div>
+                                    <div class="flex items-center mt-4">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{ clubTitle }}</span>
+                                    </div>
+                                    <div class="flex items-center mt-4">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{ currentPlayer[0].phone }}</span>
+                                    </div>
+                                    <div class="flex items-center mt-4">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{ currentPlayer[0].handicap }}</span>
+                                    </div>
+                                    <div class="flex items-center mt-4">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:color-swatch'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{ currentPlayer[0].membershipNumber  }}</span>
+                                    </div>
+                                    <div class="flex items-center mt-4">
+                                        <mat-icon
+                                            class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                        <span class="leading-none text-lg font-medium">{{ currentPlayer[0].countryCode }}</span>
+                                    </div>
                                 </div>
-
-                                <div class="row mt-4">
+                                <a
+                                    class="px-6 mt-8"
+                                    mat-flat-button
+                                    [color]="'primary'"
+                                    [routerLink]="['/players/view/'+ currentPlayer[0].id]">
+                                    Edit complete bio
+                                </a>
+                                <!-- <div class="row mt-4">
                                     <div class="col-4">
-                                        <!-- <h5 >564</h5> -->
+                                       
                                         <button
                                             mat-raised-button
                                             color="primary"
@@ -98,7 +155,7 @@
                                         </button>
                                     </div>
                                     <div class="col-4">
-                                        <!-- <h5 >18k</h5> -->
+                                       
                                         <button
                                             mat-raised-button
                                             color="primary"
@@ -110,7 +167,7 @@
                                         </button>
                                     </div>
                                     <div class="col-4">
-                                        <!-- <h5 >565</h5> -->
+                                        
                                         <button
                                             mat-raised-button
                                             color="accent"
@@ -121,7 +178,7 @@
                                             >Back
                                         </button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -130,7 +187,7 @@
                         <div class="flex-auto grid grid-cols-4 gap-4 mt-6">
                             <!-- New issues -->
                             <div
-                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400"
+                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-card shadow  dark:bg-white dark:bg-opacity-5 dark:text-indigo-400"
                             >
                                 <div
                                     class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
@@ -148,7 +205,7 @@
                             </div>
                             <!-- Closed -->
                             <div
-                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500"
+                                class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-card shadow dark:bg-white dark:bg-opacity-5 dark:text-green-500"
                             >
                                 <div
                                     class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
@@ -166,7 +223,7 @@
                             </div>
                             <!-- Fixed -->
                             <div
-                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-card shadow text-secondary dark:bg-white dark:bg-opacity-5"
                             >
                                 <div
                                     class="text-5xl font-semibold leading-none tracking-tight"
@@ -181,7 +238,7 @@
                             </div>
                             <!-- Won't fix -->
                             <div
-                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-card shadow text-secondary dark:bg-white dark:bg-opacity-5"
                             >
                                 <div
                                     class="text-5xl font-semibold leading-none tracking-tight"
@@ -198,7 +255,7 @@
                             </div>
                             <!-- Re-opened -->
                             <div
-                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-card shadow text-secondary dark:bg-white dark:bg-opacity-5"
                             >
                                 <div
                                     class="text-5xl font-semibold leading-none tracking-tight"
@@ -213,7 +270,7 @@
                             </div>
                             <!-- Needs triage -->
                             <div
-                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-card shadow  text-secondary dark:bg-white dark:bg-opacity-5"
                             >
                                 <div
                                     class="text-5xl font-semibold leading-none tracking-tight"
@@ -256,6 +313,9 @@
                             class="flex-auto w-full h-full"
                             [chart]="chartVisitors.chart"
                             [colors]="chartVisitors.colors"
+                            [dataLabels]="chartVisitors.dataLabels"
+                            [grid]="chartVisitors.grid"
+                            [legend]="chartVisitors.legend"
                             [series]="chartVisitors.series"
                             [stroke]="chartVisitors.stroke"
                             [tooltip]="chartVisitors.tooltip"

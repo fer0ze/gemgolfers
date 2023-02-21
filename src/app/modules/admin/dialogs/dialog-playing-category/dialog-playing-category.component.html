@@ -88,7 +88,7 @@
         <ng-container matColumnDef="category">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
           <td mat-cell *matCellDef="let row">
-            {{ row["player"].playerCategory }}
+            {{ row["player"].playerCategory =='Seniors' ? 'Senior Amateurs' :row["player"].playerCategory }}
           </td>
         </ng-container>
 
