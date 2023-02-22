@@ -101,6 +101,7 @@ export class MainLeaderboardComponent implements OnInit {
     leaderGrossQL: any;
     leaderNetQL: any;
     clubLogo: any;
+    leaderLogo: any;
     selectedMembers: Player[][] = [];
     runningFlights: number = 0;
     isClubAdmin: boolean = false;
@@ -149,7 +150,18 @@ export class MainLeaderboardComponent implements OnInit {
             this.loggedInUser.membership.length > 0
                 ? this.loggedInUser.membership[0].club
                 : null;
-        this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+
+        if (this.tournamentID == 'jazamanogc') {
+            this.clubLogo = 'J-Zaman.png';
+        } else {
+            this.clubLogo =
+                clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+        }
+        // if(this.tournamentID=='-NOsxzgkX96NDBE4KU1S')
+        // {
+        //     this
+        //     this.leaderLogo = 'J-Zaman.jpg';
+        // }
         ////console.log(this.loggedInUser);
 
         of(this.Leaderboard)
@@ -1024,7 +1036,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
-                    playerStatus: (playerStatus)? playerStatus.status : "ac"
+                    playerStatus: playerStatus ? playerStatus.status : 'ac',
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -1075,7 +1087,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
-                    playerStatus: (playerStatus)? playerStatus.status : "ac"
+                    playerStatus: playerStatus ? playerStatus.status : 'ac',
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -1107,7 +1119,7 @@ export class MainLeaderboardComponent implements OnInit {
 
         // if (status && this.activeRound > 1) return false;
         console.log(this.allMatchResults);
-        
+
         if (leaderGross.playerId in this.allMatchResults) {
             ////console.log("index exist");
         } else {
@@ -1231,7 +1243,8 @@ export class MainLeaderboardComponent implements OnInit {
             ? (this.allMatchResults[leaderGross.playerId]['status'] = 1)
             : (this.allMatchResults[leaderGross.playerId]['status'] = 0);
 
-        this.allMatchResults[leaderGross.playerId]['playerStatus'] = leaderGross.playerStatus;
+        this.allMatchResults[leaderGross.playerId]['playerStatus'] =
+            leaderGross.playerStatus;
 
         ////console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
         return false;
@@ -1348,10 +1361,10 @@ export class MainLeaderboardComponent implements OnInit {
     Comparator(a, b) {
         // console.log(this.tournamentID);
         // console.log(this.activeRound);
-        console.log(a)
+        console.log(a);
         console.log(b);
-        if (a['playerStatus'] == "ic") return 1;
-        if (b['playerStatus'] == "ic") return 1;
+        if (a['playerStatus'] == 'ic') return 1;
+        if (b['playerStatus'] == 'ic') return 1;
         if (a['holes'] == 0 && a['under'] == 0) return 1;
         if (b['holes'] == 0 && b['under'] == 0) return 1;
         if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
@@ -1433,14 +1446,14 @@ export class MainLeaderboardComponent implements OnInit {
         if (compare != 0) {
             return compare;
         }
-        if(a.playerStatus < b.playerStatus ){
+        if (a.playerStatus < b.playerStatus) {
             return -1;
         }
-        if(a.playerStatus > b.playerStatus ){
+        if (a.playerStatus > b.playerStatus) {
             return 1;
         }
 
-        if(a.holes2 == undefined || b.holes2 == undefined){
+        if (a.holes2 == undefined || b.holes2 == undefined) {
             return 1;
         }
         let selfHoles: number = 0;
@@ -1452,7 +1465,7 @@ export class MainLeaderboardComponent implements OnInit {
         if (checkRoundPlayed == 1) {
             selfHoles = a.holes1;
             leaderHoles = b.holes1;
-            
+
             completed = a.completed1 && b.completed1;
         } else if (checkRoundPlayed == 2) {
             selfHoles = a.holes2;
@@ -1589,16 +1602,13 @@ export class MainLeaderboardComponent implements OnInit {
         // if (a['holes2'] >= b['holes2'] ) return -1;
         // if (a['holes2'] <= b['holes2'] ) return 1;
 
-        
-        
         if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
-        if (a['AllGrossUnder'] > b['AllGrossUnder'] ) return 1;
+        if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
 
         return 0;
     }
 
     ComparatorAllNet(a, b) {
-       
         if (a['AllNetUnder'] < b['AllNetUnder']) return -1;
         if (a['AllNetUnder'] > b['AllNetUnder']) return 1;
         return 0;
