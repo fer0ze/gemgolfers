@@ -29,6 +29,7 @@
                                     *ngFor="
                                         let items of selectedMembers;
                                         let i = index;
+                                        let j=index;
                                         trackBy: trackByFn
                                     "
                                 >
@@ -60,7 +61,7 @@
                                             >
                                                 <mat-select
                                                     class="w-100"
-                                                    id="flight_{{ i }}_time"
+                                                    id="flight_{{ j }}_tee"
                                                     value="{{ items['tee'] }}"
                                                     (selectionChange)="
                                                         selectedTee(
@@ -103,7 +104,7 @@
                                                     "
                                                 ></mat-icon>
                                                 <input
-                                                    id="flight_{{ i }}_hole"
+                                                    id="flight_{{ j }}_hole"
                                                     value="{{
                                                         items['startingHole']
                                                     }}"
@@ -126,7 +127,7 @@
                                                 ></mat-icon>
                                                 <input
                                                     type="time"
-                                                    id="flight_{{ i }}_time"
+                                                    id="flight_{{ j }}_time"
                                                     atp-time-picker
                                                     value="{{
                                                         getNextFlightTime(items)
