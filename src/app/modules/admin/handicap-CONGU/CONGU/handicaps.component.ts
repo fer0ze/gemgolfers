@@ -266,9 +266,9 @@ export class HandicapsComponent implements OnInit {
         let holeObj = document.getElementById('a');
         console.log(holeObj);
 
-        var doc = new jsPDF();
-        var res = doc.autoTableHtmlToJson(document.getElementById('a'));
-        var columns = [
+        let doc = new jsPDF();
+        let res = doc.autoTableHtmlToJson(document.getElementById('a'));
+        let columns = [
             res.columns[0],
             res.columns[1],
             res.columns[2],
@@ -279,7 +279,7 @@ export class HandicapsComponent implements OnInit {
             res.columns[7],
         ];
 
-        var col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
+        let col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
         var rows = [];
         doc.setFontSize(30);
         doc.text('Congu Handicap List', 15, 15);

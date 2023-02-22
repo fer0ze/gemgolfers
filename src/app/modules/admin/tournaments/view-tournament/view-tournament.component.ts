@@ -1920,7 +1920,7 @@ export class ViewTournamentComponent implements OnInit {
                 this.teetime++;
                 //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
                 //let startTime : string = (<HTMLInputElement>document.getElementById("flight_" + index + "_time")).value;
-                var currentDate = new Date();
+                let currentDate = new Date();
                 currentDate.setDate(currentDate.getDate() + 1);
                 teeBox = this.getNextTeeBox(criteria.tee, this.teetime);
                 teeTime = this.getNextFlightTime(
@@ -1967,9 +1967,9 @@ export class ViewTournamentComponent implements OnInit {
     }
     downloadResultSheet() {
 
-        var doc = new jsPDF();
-        var col = General.createClm(this.noOfRounds);
-        var rows = [];
+        let doc = new jsPDF();
+        let col = General.createClm(this.noOfRounds);
+        let rows = [];
         doc.setFontSize(22);
         doc.setFillColor(0,0,0);
         doc.rect(10,5,190,20,'F');
@@ -2001,7 +2001,7 @@ export class ViewTournamentComponent implements OnInit {
         
         for (let leader in grossAllArray) {
             count++;
-            var temp = [
+            let temp = [
                 grossAllArray[leader].position,
                 grossAllArray[leader].name,
                 grossAllArray[leader].handicap,
@@ -2139,8 +2139,8 @@ export class ViewTournamentComponent implements OnInit {
 
             console.log(dateNow);
 
-            var h = dateNow.getHours();
-            var m = dateNow.getMinutes();
+            let h = dateNow.getHours();
+            let m = dateNow.getMinutes();
 
             flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
         } catch {

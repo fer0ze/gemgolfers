@@ -717,9 +717,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
     lastWeekMonday() {
         //let date = new Date();
         //return new Date(date.setDate(date.getDate() - 8));
-        var date = new Date();
-        var day = date.getDay();
-        var prevMonday = new Date();
+        let date = new Date();
+        let day = date.getDay();
+        let prevMonday = new Date();
         if (date.getDay() == 0) {
             prevMonday.setDate(date.getDate() - 7);
         } else {
@@ -729,9 +729,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
         return prevMonday;
     }
     lastWeekSunday() {
-        var date = new Date();
-        var day = date.getDay();
-        var prevSunday = new Date();
+        let date = new Date();
+        let day = date.getDay();
+        let prevSunday = new Date();
         if (date.getDay() == 7) {
             prevSunday.setDate(date.getDate() - 7);
         } else {

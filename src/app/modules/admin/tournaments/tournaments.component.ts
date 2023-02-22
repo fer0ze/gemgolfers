@@ -122,9 +122,9 @@ export class TournamentsComponent implements OnInit {
         console.log(this.categories);
 
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
 
@@ -251,9 +251,9 @@ export class TournamentsComponent implements OnInit {
     }
     async getTournamentCompeleted() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsForCompleted =
@@ -278,9 +278,9 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentLive() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsLive =
@@ -295,9 +295,9 @@ export class TournamentsComponent implements OnInit {
     }
     async getTournamentSchedule() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsLive =
@@ -315,9 +315,9 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentIncompelete() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsLive =
@@ -333,9 +333,9 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentCompeletedForAdmin() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsForCompleted =
@@ -357,9 +357,9 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentLiveForAdmin() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsForLive =
@@ -374,9 +374,9 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentScheduleForAdmin() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsForSchedule =
@@ -392,9 +392,9 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentIncompeleteForAdmin() {
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let dataTournamentsForIncomplete =

@@ -386,9 +386,9 @@ export class DailyStarterReportComponent implements OnInit {
     // }
   }
   public downloadAsPDF() {
-    var doc =new jsPDF();
-    var res = doc.autoTableHtmlToJson(document.getElementById("pdfTable"));
-    var columns = [
+    let doc =new jsPDF();
+    let res = doc.autoTableHtmlToJson(document.getElementById("pdfTable"));
+    let columns = [
       res.columns[0],
       res.columns[1],
       res.columns[2],

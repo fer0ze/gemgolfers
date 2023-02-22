@@ -541,14 +541,14 @@ export class AttendanceComponent implements OnInit {
         //console.log(oldMembers);
         //console.log(tournamentFlightMembers);
 
-        var removed = oldMembers.filter(n => !tournamentFlightMembers.some(n2 => n.playerId == n2.playerId));
+        let removed = oldMembers.filter(n => !tournamentFlightMembers.some(n2 => n.playerId == n2.playerId));
         //console.log(removed);
 
         for(let ids of removed) {
           flightMembersToRemove.push(ids.playerId);
           membersFromFlightToRemove.push(currentFlightId);
 
-          var newFlight: any = this.selectedMembers.filter(n => n.some(n2 => n2.id == ids.playerId));
+          let newFlight: any = this.selectedMembers.filter(n => n.some(n2 => n2.id == ids.playerId));
 
           //console.log(newFlight);
           //console.log(newFlight.length);
@@ -564,7 +564,7 @@ export class AttendanceComponent implements OnInit {
           //}
         }
 
-        var added = tournamentFlightMembers.filter(n => !oldMembers.some(n2 => n.playerId == n2.playerId));
+        let added = tournamentFlightMembers.filter(n => !oldMembers.some(n2 => n.playerId == n2.playerId));
         //console.log(added);
 
         for(let ids of added) {
@@ -756,14 +756,14 @@ export class AttendanceComponent implements OnInit {
         //console.log(oldMembers);
         //console.log(tournamentFlightMembers);
 
-        var removed = oldMembers.filter(n => !tournamentFlightMembers.some(n2 => n.playerId == n2.playerId));
+        let removed = oldMembers.filter(n => !tournamentFlightMembers.some(n2 => n.playerId == n2.playerId));
         //console.log(removed);
 
         for(let ids of removed) {
           flightMembersToRemove.push(ids.playerId);
           membersFromFlightToRemove.push(currentFlightId);
 
-          var newFlight: any = this.selectedMembers.filter(n => n.some(n2 => n2.id == ids.playerId));
+          let newFlight: any = this.selectedMembers.filter(n => n.some(n2 => n2.id == ids.playerId));
           console.log(newFlight);
 
           if(newFlight.length > 0) {
@@ -777,7 +777,7 @@ export class AttendanceComponent implements OnInit {
           }
         }
 
-        var added = tournamentFlightMembers.filter(n => !oldMembers.some(n2 => n.playerId == n2.playerId));
+        let added = tournamentFlightMembers.filter(n => !oldMembers.some(n2 => n.playerId == n2.playerId));
         //console.log(added);
 
         for(let ids of added) {

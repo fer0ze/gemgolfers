@@ -459,8 +459,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     Constants.DEFAULT_DATE + ' ' + items.time.substr(0, 5)
                 );
 
-                var h = dateNow.getHours();
-                var m = dateNow.getMinutes();
+                let h = dateNow.getHours();
+                let m = dateNow.getMinutes();
 
                 flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
             }
@@ -569,7 +569,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
             let outer = 0;
 
-            for (var index in this.roundFlights) {
+            for (let index in this.roundFlights) {
                 console.log(this.roundFlights);
 
                 //console.log(outer + "<--->" + cnter);
@@ -644,7 +644,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //console.log(this.selectedMembers);
         //console.log(this.roundFlights);
 
-        for (var index in this.selectedMembers) {
+        for (let index in this.selectedMembers) {
             tournamentFlightMembers = [];
 
             for (let index2 in this.selectedMembers[index]) {
@@ -817,7 +817,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
                 console.log(flightMembersToSave);
 
-                var removed = oldMembers.filter(
+                let removed = oldMembers.filter(
                     (n) =>
                         !tournamentFlightMembers.some(
                             (n2) => n.playerId == n2.playerId
@@ -829,7 +829,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     flightMembersToRemove.push(ids.playerId);
                     membersFromFlightToRemove.push(currentFlightId);
 
-                    var newFlight: any = this.selectedMembers.filter((n) =>
+                    let newFlight: any = this.selectedMembers.filter((n) =>
                         n.some((n2) => n2.id == ids.playerId)
                     );
 
@@ -850,7 +850,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     //}
                 }
 
-                // var added = tournamentFlightMembers.filter(
+                // let added = tournamentFlightMembers.filter(
                 //   (n) => !oldMembers.some((n2) => n.playerId == n2.playerId)
                 // );
                 // console.log(added);
@@ -1000,7 +1000,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let DelplayerInfo: any;
         let selectionArray = Object.assign({}, this.selection.selected);
 
-        for (var index in selectionArray) {
+        for (let index in selectionArray) {
             if (selectionArray[index]) {
                 let founded = this.tournamentMember.filter((a) => {
                     return a.playerId == selectionArray[index]['player'].id;
@@ -1085,7 +1085,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //console.log(this.selectedMembers);
         //console.log(flightData);
 
-        for (var index in flightData) {
+        for (let index in flightData) {
             tournamentFlightMembers = [];
 
             for (let index2 in flightData[index]) {
@@ -1199,7 +1199,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 // console.log(oldMembers);
                 // console.log(tournamentFlightMembers);
 
-                var removed = oldMembers.filter(
+                let removed = oldMembers.filter(
                     (n) =>
                         !tournamentFlightMembers.some(
                             (n2) => n.playerId == n2.playerId
@@ -1211,7 +1211,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     flightMembersToRemove.push(ids.playerId);
                     membersFromFlightToRemove.push(currentFlightId);
 
-                    var newFlight: any = this.selectedMembers.filter((n) =>
+                    let newFlight: any = this.selectedMembers.filter((n) =>
                         n.some((n2) => n2.id == ids.playerId)
                     );
                     //console.log(newFlight);
@@ -1227,7 +1227,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     }
                 }
 
-                var added = tournamentFlightMembers.filter(
+                let added = tournamentFlightMembers.filter(
                     (n) => !oldMembers.some((n2) => n.playerId == n2.playerId)
                 );
                 //console.log(added);
@@ -1474,7 +1474,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe(async (result) => {
             console.log(result);
-            var lookup = [];
+            let lookup = [];
 
             if (result) {
                 console.log('record deleted.');
@@ -1657,7 +1657,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         console.log(selectedData);
         console.log(this.selectedMembers);
         let roundTeeId: any = General.getPlayersTe(selectedData.text);
-        for (var index in this.selectedMembers) {
+        for (let index in this.selectedMembers) {
             for (let index2 in this.selectedMembers[index]) {
                 if (this.selectedMembers[index][index2].id == playerId) {
                     this.selectedMembers[index][index2].playingTee =
@@ -1794,14 +1794,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let fileReader = new FileReader();
         fileReader.onload = (e) => {
             this.arrayBuffer = fileReader.result;
-            var data = new Uint8Array(this.arrayBuffer);
-            var arr = new Array();
-            for (var i = 0; i != data.length; ++i)
+            let data = new Uint8Array(this.arrayBuffer);
+            let arr = new Array();
+            for (let i = 0; i != data.length; ++i)
                 arr[i] = String.fromCharCode(data[i]);
-            var bstr = arr.join('');
-            var workbook = read(bstr, { type: 'binary' });
-            var first_sheet_name = workbook.SheetNames[0];
-            var worksheet = workbook.Sheets[first_sheet_name];
+            let bstr = arr.join('');
+            let workbook = read(bstr, { type: 'binary' });
+            let first_sheet_name = workbook.SheetNames[0];
+            let worksheet = workbook.Sheets[first_sheet_name];
             this.flightsData = utils.sheet_to_json(worksheet, {
                 raw: true,
                 defval: '',

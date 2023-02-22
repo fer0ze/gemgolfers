@@ -794,7 +794,7 @@ export class HandicapCalculationWhsComponent implements OnInit {
             // calendar.setTime(playingDate);
             // calendar.add(Calendar.DATE, whsCalculatingRound - 1);
             //playingDate = calendar.getTime();
-            var d = new Date(playingDate);
+            let d = new Date(playingDate);
             d.setDate(d.getDate() + (this.whsCalculatingRound - 1));
             playingDate = d;
         }

@@ -89,7 +89,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginators: MatPaginator;
   @ViewChild(MatSort) sorts: MatSort;
-  @ViewChild("fileInput") fileInputVariable: ElementRef;
+  @ViewChild("fileInput") fileInputletiable: ElementRef;
   conguLength: any;
   WHSLength: any;
   dataPlayers: any;
@@ -144,11 +144,11 @@ export class UpdatedHandicapReportComponent implements OnInit {
       .pipe()
       .subscribe(
         async (data) => {
-          // var currentDate = new Date();
+          // let currentDate = new Date();
           // currentDate.setDate(currentDate.getDate());
-          // var nxtDate = new Date();
+          // let nxtDate = new Date();
           // nxtDate.setDate(nxtDate.getDate() + 7);
-          var yesterdayDate = this.yesterday();
+          let yesterdayDate = this.yesterday();
           this.getPlayerUpdatedHandicapReport(yesterdayDate, yesterdayDate);
         },
         (error) => (this.isLoading = false)
@@ -547,8 +547,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
   };
 
   public downloadAsPDFCongu() {
-    var doc =new jsPDF();
-    var col = [
+    let doc =new jsPDF();
+    let col = [
       "Sr.",
       "M.No",
       "Name",
@@ -560,7 +560,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
       "H'Cap Adj.",
       "Exact H/C",
     ];
-    var rows = [];
+    let rows = [];
     doc.setFontSize(15);
     doc.text(
       "CONGU-Handicap Change Log From " +
@@ -580,7 +580,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
     this.dataPlayersCongu.player_handicap.forEach((element) => {
       count++;
       let adjhANDICAP = element.handicap - element.oldHandicap;
-      var temp = [
+      let temp = [
         count,
         element.PlayerQL.membershipNumber,
         element.PlayerQL.firstName + " " + element.PlayerQL.lastName,
@@ -604,8 +604,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
     doc.save("CONGU-Handicap Change Log.pdf");
   }
   public downloadAsPDFWHS() {
-    var doc =new jsPDF() ;
-    var col = [
+    let doc =new jsPDF() ;
+    let col = [
       "Sr.",
       "M.No",
       "Name",
@@ -615,7 +615,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
       "h/diff",
       "h/index",
     ];
-    var rows = [];
+    let rows = [];
     doc.setFontSize(22);
     doc.text(
       "WHS-Handicap Change Log" +
@@ -634,7 +634,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
 
     this.dataPlayersWHS.player_handicap_whs.forEach((element) => {
       count++;
-      var temp = [
+      let temp = [
         count,
         element.player.membershipNumber,
         element.player.firstName + " " + element.player.lastName,

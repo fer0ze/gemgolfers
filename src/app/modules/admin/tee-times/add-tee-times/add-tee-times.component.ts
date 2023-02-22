@@ -37,9 +37,9 @@ export class AddTeeTimesComponent implements OnInit {
     });
 
     let today: Date = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
 
     let todayDate: Date = General.parseToDate( mm + '/' + dd + '/' + yyyy);
 

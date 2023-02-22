@@ -213,9 +213,9 @@ export class PlayerComponent implements OnInit {
     }
 
     downloadAllPlayers(): void {
-        var doc = new jsPDF();
+        let doc = new jsPDF();
 
-        var col = [
+        let col = [
             'Sr.',
             'Name',
             'Phone',
@@ -229,7 +229,7 @@ export class PlayerComponent implements OnInit {
         doc.text('Leaderboard Scores:', 15, 15);
         doc.setFontSize(11);
         doc.setTextColor(100);
-        var count = 0;
+        let count = 0;
         this.Players.forEach((element) => {
             count++;
             var temp = [

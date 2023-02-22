@@ -697,8 +697,8 @@ export class ViewPlayerComponent implements OnInit {
         return used;
     }
     public downloadAsPDFWHS() {
-        var doc = new jsPDF();
-        var col = [
+        let doc = new jsPDF();
+        let col = [
             'Sr.',
             'Mem.No',
             'Date',
@@ -708,7 +708,7 @@ export class ViewPlayerComponent implements OnInit {
             'h/index',
         ];
         var rows = [];
-        var rows = [];
+      
         doc.setFontSize(17);
         doc.text(
             'WHS-Handicap Change-Log of ' +
@@ -732,7 +732,7 @@ export class ViewPlayerComponent implements OnInit {
                 );
             });
 
-            var temp = [
+            let temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
                 formatDate(
@@ -784,8 +784,8 @@ export class ViewPlayerComponent implements OnInit {
         //doc.save('flights.pdf');
     }
     public downloadAsPDFCongu() {
-        var doc = new jsPDF();
-        var col = [
+        let doc = new jsPDF();
+        let col = [
             'Sr.',
             'Mem.No',
             'Date',
@@ -813,7 +813,7 @@ export class ViewPlayerComponent implements OnInit {
         this.playerHandiData = this.playerHandiData.slice(0, 20);
         this.playerHandiData.forEach((element) => {
             count++;
-            var temp = [
+            let temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
                 formatDate(

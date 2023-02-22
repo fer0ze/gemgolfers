@@ -288,9 +288,9 @@ export class AddTournamentComponent implements OnInit {
         this._courseHoles = this.facadeService.getCourseHoles('');
 
         let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
 
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         /*
@@ -533,7 +533,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     PlayingDateFormGroup(index) {
-        var catControls = this.categoryFormGroup;
+        let catControls = this.categoryFormGroup;
         //console.log(catControls);
         console.log(catControls.controls[index].get('playingDate'));
 
@@ -559,7 +559,7 @@ export class AddTournamentComponent implements OnInit {
 
         let noOfDays: any = this.calculateDiff(sDate, eDate);
         // for (let i = 0; i <= noOfDays; i++) {
-        //   var dte = new Date(sDate);
+        //   let dte = new Date(sDate);
         //   dte.setDate(sDate.getDate() + i);
         //   console.log(dte);
         //   let dteday = this.datePipe.transform(dte, "yyyyMMdd");
@@ -591,7 +591,7 @@ export class AddTournamentComponent implements OnInit {
 
         let noOfDays: any = this.calculateDiff(sDate, eDate);
         for (let i = 0; i <= noOfDays; i++) {
-            var dte = new Date(sDate);
+            let dte = new Date(sDate);
             dte.setDate(sDate.getDate() + i);
             console.log(dte);
             let dteday = this.datePipe.transform(dte, 'yyyyMMdd');
@@ -1449,8 +1449,8 @@ export class AddTournamentComponent implements OnInit {
                 : '';
             console.log(dateNow);
 
-            var h = dateNow.getHours();
-            var m = dateNow.getMinutes();
+            let h = dateNow.getHours();
+            let m = dateNow.getMinutes();
 
             this.preFlightTime =
                 ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
@@ -1465,8 +1465,8 @@ export class AddTournamentComponent implements OnInit {
                 : '';
             console.log(dateNow);
 
-            var h = dateNow.getHours();
-            var m = dateNow.getMinutes();
+            let h = dateNow.getHours();
+            let m = dateNow.getMinutes();
 
             this.preFlightTime =
                 ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
@@ -1656,8 +1656,8 @@ export class AddTournamentComponent implements OnInit {
                     Constants.DEFAULT_DATE + ' ' + items.time.substr(0, 5)
                 );
 
-                var h = dateNow.getHours();
-                var m = dateNow.getMinutes();
+                let h = dateNow.getHours();
+                let m = dateNow.getMinutes();
 
                 flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
             }
@@ -1681,7 +1681,7 @@ export class AddTournamentComponent implements OnInit {
         if (!this.tournamentID)
             this.tournamentID = UniqueIdGenerator.generate();
 
-        for (var index in this.formArray.get([0]).value.clubctgies) {
+        for (let index in this.formArray.get([0]).value.clubctgies) {
             let TCdata: any;
             if (
                 this.formArray
@@ -1969,7 +1969,7 @@ export class AddTournamentComponent implements OnInit {
         let tournamentCats: TournamentCategory[] = [];
 
         let marshalsData: Marshal[] = [];
-        for (var index in this.formArray.get([0]).value.clubctgies) {
+        for (let index in this.formArray.get([0]).value.clubctgies) {
             let TCdata: any;
             if (
                 this.formArray
@@ -2203,7 +2203,7 @@ export class AddTournamentComponent implements OnInit {
         let DelplayerInfo: any;
         let selectionArray = Object.assign({}, this.selection.selected);
 
-        for (var index in selectionArray) {
+        for (let index in selectionArray) {
             if (selectionArray[index]) {
                 let founded = this.tournamentMembers.filter((a) => {
                     return a.id == selectionArray[index].id;
@@ -2397,7 +2397,7 @@ export class AddTournamentComponent implements OnInit {
 
         if (this.currentTournament)
             this.tournamentID = this.currentTournament.id;
-        for (var index in this.selectedMembers) {
+        for (let index in this.selectedMembers) {
             let counter: number = 0;
 
             tournamentFlightMembers = [];
@@ -2411,7 +2411,7 @@ export class AddTournamentComponent implements OnInit {
             console.log(FilteredFlight);
             console.log(this.selectedMembers);
 
-            for (var index2 in this.selectedMembers[index]) {
+            for (let index2 in this.selectedMembers[index]) {
                 if (index2 != 'title') {
                     for (var index3 in this.selectedMembers[index][index2]) {
                         for (var index4 in this.selectedMembers[index][index2][
@@ -2529,7 +2529,7 @@ export class AddTournamentComponent implements OnInit {
         if (!this.tournamentID)
             this.tournamentID = UniqueIdGenerator.generate();
 
-        for (var index in this.formArray.get([0]).value.clubctgies) {
+        for (let index in this.formArray.get([0]).value.clubctgies) {
             //console.log(index); // prints indexes: 0, 1, 2, 3
 
             //console.log(this.formArray.get([0]).value.clubctgies[index].id);

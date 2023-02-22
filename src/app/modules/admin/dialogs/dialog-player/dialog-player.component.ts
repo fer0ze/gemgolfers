@@ -36,6 +36,7 @@ export class DialogPlayerComponent implements OnInit {
   selection = new SelectionModel<Player>(true, []);
   value: boolean = false;
   datas: any[] = [];
+  showTable:boolean=false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogPlayerComponent>,
@@ -64,7 +65,7 @@ export class DialogPlayerComponent implements OnInit {
     if (GEMID) {
       this.player = <Player[]>await this.facadeService.getPlayerByGEMID(GEMID);
 
-      this.setDataSource(this.player);
+      this.setDataSource(this.player['player']);
 
       // if (this.player.length > 0) {
       //   this.response[0] = {
@@ -85,7 +86,7 @@ export class DialogPlayerComponent implements OnInit {
     if (phone) {
       this.player = <Player[]>await this.facadeService.getPlayerByPhone(phone);
 
-      this.setDataSource(this.player);
+      this.setDataSource(this.player['player']);
 
       // if (this.player.length > 0) {
       //   this.response[0] = {
@@ -129,7 +130,7 @@ export class DialogPlayerComponent implements OnInit {
 
     if (email) {
       this.player = <Player[]>await this.facadeService.getPlayerByEmail(email);
-
+      
       this.setDataSource(this.player);
 
       // if (this.player.length > 0) {
@@ -300,7 +301,7 @@ export class DialogPlayerComponent implements OnInit {
 
   setDataSource(dataSource) {
     this.dataSource = new MatTableDataSource(dataSource);
-
+this.showTable=true;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

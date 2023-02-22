@@ -12,7 +12,7 @@ export class General {
     }
 
     public static parseToDate(dateValue: string) {
-        var datePipe = new DatePipe(Constants.LOCALE_EN_US);
+        let datePipe = new DatePipe(Constants.LOCALE_EN_US);
 
         if (dateValue)
             return new Date(
@@ -34,7 +34,7 @@ export class General {
     }
 
     public static truncateDecimals(num, fixed) {
-        var re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
+        let re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
         return num.toString().match(re)[0];
     }
 
@@ -392,12 +392,12 @@ export class UniqueIdGenerator {
 
     // Generates chronologically orderable unique string one by one
     public static generate() {
-        var now = new Date().getTime();
-        var duplicateTime = now === UniqueIdGenerator.lastPushTime;
+        let now = new Date().getTime();
+        let duplicateTime = now === UniqueIdGenerator.lastPushTime;
         UniqueIdGenerator.lastPushTime = now;
 
-        var timeStampChars = new Array(8);
-        for (var i = 7; i >= 0; i--) {
+        let timeStampChars = new Array(8);
+        for (let i = 7; i >= 0; i--) {
             timeStampChars[i] = UniqueIdGenerator.PUSH_CHARS.charAt(now % 64);
             // NOTE: Can't use << here because javascript will convert to int and lose the upper bits.
             now = Math.floor(now / 64);
@@ -405,10 +405,10 @@ export class UniqueIdGenerator {
         if (now !== 0)
             throw new Error('We should have converted the entire timestamp.');
 
-        var id = timeStampChars.join('');
+        let id = timeStampChars.join('');
 
         if (!duplicateTime) {
-            for (i = 0; i < 12; i++) {
+            for (var i = 0; i < 12; i++) {
                 UniqueIdGenerator.lastRandChars[i] = Math.floor(
                     Math.random() * 64
                 );
@@ -416,7 +416,7 @@ export class UniqueIdGenerator {
         } else {
             // If the timestamp hasn't changed since last push, use the same random number, except incremented by 1.
             for (
-                i = 11;
+                var i = 11;
                 i >= 0 && UniqueIdGenerator.lastRandChars[i] === 63;
                 i--
             ) {
@@ -424,7 +424,7 @@ export class UniqueIdGenerator {
             }
             UniqueIdGenerator.lastRandChars[i]++;
         }
-        for (i = 0; i < 12; i++) {
+        for (var i = 0; i < 12; i++) {
             id += UniqueIdGenerator.PUSH_CHARS.charAt(
                 UniqueIdGenerator.lastRandChars[i]
             );
@@ -440,8 +440,8 @@ export class passwordGenerator {
     private static lastRandChars = [];
 
     public static generate() {
-        var timeStampChars = new Array(4);
-        var id = timeStampChars.join('');
+        let timeStampChars = new Array(4);
+        let id = timeStampChars.join('');
 
         for (var i = 0; i < 6; i++) {
             passwordGenerator.lastRandChars[i] = Math.floor(Math.random() * 10);

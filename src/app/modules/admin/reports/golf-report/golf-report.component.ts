@@ -101,7 +101,7 @@ export class GolfReportComponent implements OnInit {
       startDate: ["", [Validators.required]],
       endDate: ["", [Validators.required]],
     });
-    var yesterdayDate = this.yesterday();
+    let yesterdayDate = this.yesterday();
 
     this.getTotalReport(yesterdayDate, yesterdayDate);
   }
@@ -188,9 +188,9 @@ export class GolfReportComponent implements OnInit {
   }
 
   public downloadAsPDF() {
-    var doc =new jsPDF();
-    var res = doc.autoTableHtmlToJson(document.getElementById("a"));
-    var columns = [
+    let doc =new jsPDF();
+    let res = doc.autoTableHtmlToJson(document.getElementById("a"));
+    let columns = [
       res.columns[0],
       res.columns[1],
       res.columns[2],
