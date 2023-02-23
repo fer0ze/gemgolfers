@@ -2,63 +2,27 @@
     class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
     cdkScrollable
 >
-    <div class="relative flex-0 py-8 px-4 overflow-hidden bg-gray-800 dark">
-        <svg
-            class="absolute inset-0 pointer-events-none"
-            viewBox="0 0 960 540"
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMax slice"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <g
-                class="text-gray-700 opacity-25"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="100"
-            >
-                <circle r="234" cx="196" cy="23"></circle>
-                <circle r="234" cx="790" cy="491"></circle>
-            </g>
-        </svg>
+    <div class="relative flex-0 py-8 px-4 overflow-hidden ">
+        
         <div
             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6 w-full min-w-0 logo"
         >
+
             <div
-                class="z-10 ml-40 col-span-1 h-25 relative flex flex-col items-center logo-1"
+                class="z-10  col-span-1 h-25 relative w-full flex flex-col items-center justify-center logo-1"
             >
                 <img
-                    class="w-full h-full object-cover"
+                    style="width: 17rem;"
                     src="assets/images/logo/leaderboradlogo.png"
                     alt="Logo"
                 />
             </div>
-            <div class="z-10 col-span-1 relative flex flex-col items-center">
-                <h2 class="text-3xl font-semibold">
-                    {{ Leaderboard?.title }}
-                </h2>
-                <div
-                    class="mt-1 text-4xl font-extrabold tracking-tight leading-tight text-center"
-                >
-                    Leaderboard
-                </div>
-            </div>
-            <div
-                class="col-span-1 logo-3 ml-44 h-25 flex items-center overflow-hidden"
-            >
-                <img
-                    class="object-cover logo-2"
-                    src="assets/images/logo/{{ clubLogo }}"
-                    alt="user"
-                />
-            </div>
-
-            <div class="flex flex-row justify-around  -mt-12 mobile-logo">
+            <div class="flex flex-row justify-around mobile-logo">
                 <div class="mobile-logo h-36 w-40">
                     <img
                       
                     
-                        src="assets/images/logo/150.png"
+                        src="assets/images/logo/opt1.png"
                         alt="Logo"
                     />
                 </div>
@@ -71,6 +35,27 @@
                     />
                 </div>
             </div>
+            <div class="z-10 col-span-1 relative flex flex-col items-center">
+                <h2 class="text-3xl font-semibold">
+                    {{ Leaderboard?.title }}
+                </h2>
+                <div
+                    class="mt-1 text-4xl font-extrabold tracking-tight leading-tight text-center"
+                >
+                    Leaderboard
+                </div>
+            </div>
+            <div
+                class="col-span-1 logo-3 ml-44 h-25 flex items-center justify-center overflow-hidden"
+            >
+                <img
+                    class="object-cover logo-2"
+                    src="assets/images/logo/{{ clubLogo }}"
+                    alt="user"
+                />
+            </div>
+
+            
         </div>
     </div>
     <!-- <div class="webLogo flex flex-row justify-around mt-3">
