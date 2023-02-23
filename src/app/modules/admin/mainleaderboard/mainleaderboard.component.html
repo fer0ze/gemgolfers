@@ -38,26 +38,36 @@
                     {{ Leaderboard?.title }}
                 </h2>
                 <div
-                    class="mt-1 sm:text-4xl font-extrabold tracking-tight leading-tight text-center"
+                    class="mt-1 text-4xl font-extrabold tracking-tight leading-tight text-center"
                 >
                     Leaderboard
                 </div>
             </div>
-            <div class="col-span-1 logo-3 ml-44 h-25 flex items-center overflow-hidden">
+            <div
+                class="col-span-1 logo-3 ml-44 h-25 flex items-center overflow-hidden"
+            >
                 <img
                     class="object-cover logo-2"
                     src="assets/images/logo/{{ clubLogo }}"
                     alt="user"
                 />
-               
             </div>
 
-            <div class="flex flex-row justify-center mobile-logo">
-                <div class="mobile-logo">
+            <div class="flex flex-row justify-around  -mt-12 mobile-logo">
+                <div class="mobile-logo h-36 w-40">
                     <img
-                        class="w-full h-full object-cover"
-                        src="assets/images/logo/leaderboradlogo.png"
+                      
+                    
+                        src="assets/images/logo/150.png"
                         alt="Logo"
+                    />
+                </div>
+                <div class="mobile-logo h-36 w-36">
+                    <img
+                      
+                    
+                        src="assets/images/logo/{{ clubLogo }}"
+                        alt="user"
                     />
                 </div>
             </div>
@@ -250,7 +260,7 @@
                         <div class="col col-1">POS.</div>
                         <div class="col col-2">PLAYER</div>
                         <div class="col col-3">GROSS</div>
-                        <div class="col col-4 THRU" >PAR</div>
+                        <div class="col col-4 THRU">PAR</div>
                         <div class="col col-5 THRU">THRU</div>
                     </li>
                     <li class="table-row" *ngFor="let item of grossLeaders">
