@@ -83,6 +83,16 @@ export class FuseMockApiHandler
         // Store the reply
         this._reply = callback;
     }
+    /**
+     * Reply
+     *
+     * @param callback
+     */
+    loginCheck(callback):void
+    {
+        // Store the reply
+        this._reply = callback;
+    }
 
     /**
      * Reply count

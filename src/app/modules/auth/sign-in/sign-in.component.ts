@@ -1,3 +1,4 @@
+import { resolve } from '@angular/compiler-cli';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     UntypedFormBuilder,
@@ -9,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { AuthMockApi } from 'app/mock-api/common/auth/api';
 import { Player } from 'app/shared/models/player.model';
 import { FacadeService } from 'app/shared/services/facade.service';
 
@@ -27,6 +29,7 @@ export class AuthSignInComponent implements OnInit {
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    show: Promise<boolean> ;
 
     /**
      * Constructor
@@ -63,6 +66,7 @@ export class AuthSignInComponent implements OnInit {
      * Sign in
      */
     async signIn() {
+        //this.show = Promise.resolve(false);
         // Return if the form is invalid
         if (this.signInForm.invalid) {
             return;
@@ -104,6 +108,63 @@ export class AuthSignInComponent implements OnInit {
         ///localStorage.setItem('aXNMb2dnZWRJbg', JSON.stringify(isAdmin[0]));
         //localStorage.setItem('adminClubID', '-LUFS3FAg4OEhIiK0vgY');
         // Sign in
+        // await this._authService
+        //     .login(this.signInForm.value.email, this.signInForm.value.password)
+        //     .then((result) => {
+        //         const redirectURL =
+        //             this._activatedRoute.snapshot.queryParamMap.get(
+        //                 'redirectURL'
+        //             ) || '/signed-in-redirect';
+
+        //         // Navigate to the redirect url
+
+        //         console.log(redirectURL);
+
+        //         this._router.navigateByUrl(redirectURL);
+        //     })
+        //     .catch((err) => {
+        //         this.signInForm.enable();
+
+        //         // Reset the form
+        //         this.signInNgForm.resetForm();
+
+        //         // Set the alert
+        //         this.alert = {
+        //             type: 'error',
+        //             message: 'Wrong email or password',
+        //         };
+
+        //         // Show the alert
+        //         this.showAlert = true;
+        //         return;
+        //     })
+        //     .finally(() => {
+        //         const redirectURL =
+        //             this._activatedRoute.snapshot.queryParamMap.get(
+        //                 'redirectURL'
+        //             ) || '/signed-in-redirect';
+
+        //         // Navigate to the redirect url
+
+        //         console.log(redirectURL);
+        //         this.show = Promise.resolve(true);
+        //         this._router.navigateByUrl(redirectURL);
+        //     });
+        // console.log(log);
+        // if (log) {
+        //     const redirectURL =
+        //         this._activatedRoute.snapshot.queryParamMap.get(
+        //             'redirectURL'
+        //         ) || '/signed-in-redirect';
+
+        //     // Navigate to the redirect url
+        //     console.log(log);
+        //     console.log(redirectURL);
+
+        //     this._router.navigateByUrl(redirectURL);
+        // } else {
+        //     console.log('Error');
+        // }
         this._authService.signIn(this.signInForm.value).subscribe(
             () => {
                 console.log('2');
@@ -121,6 +182,8 @@ export class AuthSignInComponent implements OnInit {
                 this._router.navigateByUrl(redirectURL);
             },
             (response) => {
+                console.log(response);
+
                 // Re-enable the form
                 this.signInForm.enable();
 
