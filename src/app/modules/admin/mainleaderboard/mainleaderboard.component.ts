@@ -142,14 +142,16 @@ export class MainLeaderboardComponent implements OnInit {
         // else if(this.tournamentID == "2ndpgfjdtour")
         //   this.tournamentID = "-M-PqnixdM3LFf7cnoPp";
         // else {}
-
+        let clubInfo: any ;
         this.loggedInUser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-        let clubInfo: any =
-            this.loggedInUser.membership.length > 0
-                ? this.loggedInUser.membership[0].club
-                : null;
+        if (this.loggedInUser) {
+             clubInfo =
+                this.loggedInUser.membership.length > 0
+                    ? this.loggedInUser.membership[0].club
+                    : null;
+        }
 
         if (this.tournamentID == 'jazamanogc') {
             this.clubLogo = 'J-Zaman.png';
