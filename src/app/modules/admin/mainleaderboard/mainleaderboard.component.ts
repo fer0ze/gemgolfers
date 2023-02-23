@@ -1453,9 +1453,13 @@ export class MainLeaderboardComponent implements OnInit {
             return 1;
         }
 
-        if (a.holes2 == undefined || b.holes2 == undefined) {
-            return 1;
-        }
+        // if (a.holes1 < b.holes1) {
+        //     return 1;
+        // }
+
+        // if (a.holes1 < b.holes1) {
+        //     return 1;
+        // }
         let selfHoles: number = 0;
         let leaderHoles: number = 0;
         let completed: boolean = false;
