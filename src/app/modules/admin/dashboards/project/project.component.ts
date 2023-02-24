@@ -44,7 +44,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     playerAddedTodayCounts: any = 2;
     playerCounts: any = 0;
     showdata: Promise<boolean>;
-    loading: boolean=false;
+    loading: boolean = false;
     _labels: any = labels;
     _labelsPlayers: any = labelsPlayers;
     _series: any = [];
@@ -107,7 +107,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
         //this.showdata = Promise.resolve(true);
-         this.fetchdata();
+        this.fetchdata();
         //  this.getDailyRounds(lastWeekSunday, lastWeekMonday);
         //  this.getAllPlayers();
         // this._projectService.data$
@@ -118,7 +118,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         //         console.log(this.data);
         //     });
         this.showdata = Promise.resolve(true);
-        this.loading=true;
+        this.loading = true;
         console.log(this.showdata);
 
         // Get the data
@@ -527,16 +527,16 @@ export class ProjectComponent implements OnInit, OnDestroy {
             //     );
             // players =
             //     await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
-                getall = await this._facadeService.getAllAdmin(
-                    this._datePipe.transform(
-                        lastWeekSunday.toString(),
-                        'yyyy-MM-dd'
-                    ),
-                    this._datePipe.transform(
-                        lastWeekMonday.toString(),
-                        'yyyy-MM-dd'
-                    )
-                );
+            getall = await this._facadeService.getAllAdmin(
+                this._datePipe.transform(
+                    lastWeekSunday.toString(),
+                    'yyyy-MM-dd'
+                ),
+                this._datePipe.transform(
+                    lastWeekMonday.toString(),
+                    'yyyy-MM-dd'
+                )
+            );
         } else {
             // tournamentCounts =
             //     await this._facadeService.getTournamentCountsByClub(
@@ -581,13 +581,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
         }
 
         this.tournamentCounts = getall.TournamentQL.length;
-        if (this.tournamentCounts > 6)
-            this.tournaments = getall.TournamentQL.splice(
-                0,
-                6
-            );
+        if (this.tournamentCounts > 6) {
+            this.tournaments = getall.TournamentQL.splice(0, 6);
+        } else {
+            this.tournaments = getall.TournamentQL;
+        }
 
-        this.tournaments=getall.TournamentQL;
         console.log(this.tournamentCounts);
 
         this.flightCounts = getall.Count.aggregate.count;
@@ -665,7 +664,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         ];
 
         this.flightCountsNotCal =
-        getall.TournamentsQLs.length - this.flightCountsCal;
+            getall.TournamentsQLs.length - this.flightCountsCal;
         console.log(this._overview);
 
         this._overview['last-week'] = [
@@ -683,24 +682,23 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
         console.log(players);
         if (this.loggedInuser.userRole == 1) {
-
             this._seriesPlayers['all'] = [
                 getall.Amateurs.aggregate['count'],
-    
+
                 getall.Senior_Amateurs.aggregate['count'],
-    
+
                 getall.Veterans.aggregate['count'],
-    
+
                 getall.Ladies.aggregate['count'],
             ];
-        }else{
+        } else {
             this._seriesPlayers['all'] = [
                 getall.club[0].Amateurs.aggregate['count'],
-    
+
                 getall.club[0].Senior_Amateurs.aggregate['count'],
-    
+
                 getall.club[0].Veterans.aggregate['count'],
-    
+
                 getall.club[0].Ladies.aggregate['count'],
             ];
         }

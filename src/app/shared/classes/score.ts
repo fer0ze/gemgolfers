@@ -140,7 +140,7 @@ export class Score {
     let multiplier: number = 1.0;
     switch (handicapAllocation) {
       case HandicapAllocation.AS_IS:
-        return this.playerHandicap;
+        return Math.round(this.playerHandicap);
       case HandicapAllocation.THREE_FOURTH:
         multiplier = 0.75;
         break;

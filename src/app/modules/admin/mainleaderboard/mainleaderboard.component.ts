@@ -236,7 +236,7 @@ export class MainLeaderboardComponent implements OnInit {
                             );
                             if (this.Leaderboard.CategoriesQL.length > 0) {
                                 this.selectedCategory =
-                                    this.Leaderboard.CategoriesQL[1];
+                                    this.Leaderboard.CategoriesQL[0];
 
                                 if (!this.selectedCategoryValue)
                                     this.selectedCategoryValue =
@@ -987,6 +987,9 @@ export class MainLeaderboardComponent implements OnInit {
                 } else {
                     handicap = handicap / holesPlayed;
                 }
+                if (handicapAllocation == HandicapAllocation.AS_IS) {
+                    handicap = Math.round(handicap);
+                }
                 // let status: any = this.memberStatusesQLs.find(
                 //   (s) => s.playerId === playerId
                 // );
@@ -1257,7 +1260,7 @@ export class MainLeaderboardComponent implements OnInit {
 
         if (this.isGross == true || this.isNet == true) {
             arrayLeaders = arrayLeaders.sort(this.ComparatorRound);
-        }else{
+        } else {
             arrayLeaders = arrayLeaders.sort(this.Comparator);
         }
         console.log(arrayLeaders);
@@ -1367,20 +1370,17 @@ export class MainLeaderboardComponent implements OnInit {
     Comparator(a, b) {
         // console.log(this.tournamentID);
         // console.log(this.activeRound);
-       
-            if (a['holes'] == 0 && a['under'] == 0) return 1;
-            if (b['holes'] == 0 && b['under'] == 0) return 1;
-            if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
-            if (a['under'] > b['under'] && a['holes'] <= b['holes']) return 1;
-            return 0;
-        
+
+        if (a['holes'] == 0 && a['under'] == 0) return 1;
+        if (b['holes'] == 0 && b['under'] == 0) return 1;
+        if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
+        if (a['under'] > b['under'] && a['holes'] <= b['holes']) return 1;
+        return 0;
     }
     ComparatorRound(a, b) {
-     
-            if (a['under'] < b['under']) return -1;
-            if (a['under'] > b['under']) return 1;
-            return 0;
-        
+        if (a['under'] < b['under']) return -1;
+        if (a['under'] > b['under']) return 1;
+        return 0;
     }
 
     sortCategory(a, b) {
