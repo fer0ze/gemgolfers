@@ -48,6 +48,8 @@ export class NavigationMockApi {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
+        console.log('aaaaaaaa');
+        
 
         this._fuseMockApiService.onGet('api/common/navigation').reply(() => {
             if (this.loggedInuser && this.loggedInuser.userRole==1) {

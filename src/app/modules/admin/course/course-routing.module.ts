@@ -16,13 +16,12 @@ const routes:Routes=[
     //     component: ViewCourseComponent 
     // }
     {
-        path:'',
+        path:"",
         component:CourseComponent,
     }
 ]
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
-    providers: [DatePipe]
   })
   export class CourseRoutingModule { }

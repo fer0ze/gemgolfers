@@ -94,17 +94,17 @@ export class AuthSignInComponent implements OnInit {
             this.show = Promise.resolve(false);
 
             if (isAdmin && isAdmin[0] && isAdmin[0].adminClubId) {
-                // const redirectURL =
-                //     this._activatedRoute.snapshot.queryParamMap.get(
-                //         'redirectURL'
-                //     ) || '/signed-in-redirect';
+                const redirectURL =
+                    this._activatedRoute.snapshot.queryParamMap.get(
+                        'redirectURL'
+                    ) || '/signed-in-redirect';
 
-                // // Navigate to the redirect url
+                // Navigate to the redirect url
 
-                // console.log(redirectURL);
+                console.log(redirectURL);
                 //this.signInForm.enable();
                 this.show = Promise.resolve(true);
-                this._router.navigateByUrl('/dashboard');
+                this._router.navigateByUrl(redirectURL);
             } else {
                 // Re-enable the form
                 this.signInForm.enable();

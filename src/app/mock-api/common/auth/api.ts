@@ -55,40 +55,16 @@ export class AuthMockApi {
             .onPost('api/auth/sign-in', 1500)
             .reply(({ request }) => {
                 // Sign in successful
-                if (
-                    (request.body.email === 'kgcadmin@gemgolfers.com' &&
-                        request.body.password === 'GGkgc@dmin') ||
-                    (request.body.email === 'admin@defenceraya.com' &&
-                        request.body.password === 'dR@ya123') ||
-                    (request.body.email === 'tournament@e2esp.com' &&
-                        request.body.password === 'tester@gg') ||
-                    (request.body.email === 'admin@e2esp.com' &&
-                        request.body.password === 'tester@gg') ||
-                    (request.body.email === 'admin@lahoregymkhana.pk' &&
-                        request.body.password === 'Lgk@gemgolfers') ||
-                    (request.body.email === 'faldo@gemgolfers.com' &&
-                        request.body.password === 'admin@faldo') ||
-                    (request.body.email === 'rumanza@gemgolfers.com' &&
-                        request.body.password === 'admin@rumanza')
-                ) {
-                    this.loggedInuser = JSON.parse(
-                        localStorage.getItem(Constants.LOGGED_IN_USER)
-                    );
-                    let clubInfo: any = (this.loggedInuser.membership.length > 0)? this.loggedInuser.membership[0].club : null;
-                    let logo = (clubInfo && clubInfo.logo)? clubInfo.logo : "e2esp.png";
-                    this._user.email = this.loggedInuser.email;
-                    this._user.name = this.loggedInuser.fullName;
-                    this._user.avatar='assets/images/logo/'+logo+'';
-                    
-                    return [
-                        200,
-                        {
-                            user: cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType: 'bearer',
-                        },
-                    ];
-                }
+                  console.log(request);
+                  
+                return [
+                    200,
+                    {
+                        user: cloneDeep(this._user),
+                        accessToken: this._generateJWTToken(),
+                        tokenType: 'bearer',
+                    },
+                ];
 
                 // Invalid credentials
                 return [404, false];

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
 // import { PlayersRoutingModule } from './players-routing.module';
@@ -37,30 +36,32 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
-  declarations: [CourseComponent],
-  imports: [
-    CommonModule,CourseRoutingModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatPaginatorModule,
-    MatInputModule,MatStepperModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSortModule,
-
-    FormsModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    MatSnackBarModule,
-    MatSelectModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatRadioModule,
-	  MatTabsModule,
-    WhiteSectionModule,
-    MatProgressSpinnerModule,
-    MatAutocompleteModule,
-  
-  ]
+    declarations: [CourseComponent],
+    imports: [
+        CommonModule,
+        CourseRoutingModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatPaginatorModule,
+        MatInputModule,
+        MatStepperModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSortModule,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        FormsModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        MatSnackBarModule,
+        MatSelectModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        MatRadioModule,
+        MatTabsModule,
+        WhiteSectionModule,
+        MatProgressSpinnerModule,
+        MatAutocompleteModule,
+    ],
 })
-export class CourseModule { }
+export class CourseModule {}
