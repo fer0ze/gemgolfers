@@ -127,7 +127,7 @@ export class AuthService {
                             this._userService.user = this._user;
                             this._authenticated = true;
                             // localStorage.setItem('accessToken', this._api._generateJWTToken());
-                            // localStorage.setItem('gotAuthentication', 'true');
+                            //localStorage.setItem('gotAuthentication', 'true');
                         });
 
                     //this.firebaseAuth.user.subscribe(a=> { console.log(a.providerData[0]); });

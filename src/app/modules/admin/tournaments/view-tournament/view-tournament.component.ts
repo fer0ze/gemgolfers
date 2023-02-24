@@ -2930,6 +2930,8 @@ export class ViewTournamentComponent implements OnInit {
                     players.push(c);
                 }
             }
+            console.log(players);
+            
             this.tournamentMember = players;
             //console.log(this.player);
             // this.setDataSource(this.player);
