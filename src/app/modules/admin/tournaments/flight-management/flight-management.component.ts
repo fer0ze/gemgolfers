@@ -1349,7 +1349,22 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         dialogRef.afterClosed().subscribe((result) => {
             if (result.length > 0) {
                 for (let obj of result) {
-                    this.selectedMembers[index].push(obj);
+                    this.exist = this.selectedMembers.find((item) =>
+                        item.some((f) => f.id == obj.id)
+                    );
+                    if (this.exist) {
+                        this.snackBar.open(
+                            'Player already exist in the list.',
+                            'x',
+                            {
+                                duration: 5000,
+                            }
+                        );
+    
+                        return;
+                    }else{
+                        this.selectedMembers[index].push(obj);
+                    }
                 }
             }
         });
