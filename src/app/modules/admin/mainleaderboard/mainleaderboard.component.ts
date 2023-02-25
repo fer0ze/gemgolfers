@@ -1546,6 +1546,13 @@ export class MainLeaderboardComponent implements OnInit {
         if (compare != 0) {
             return compare;
         }
+        if (a.playerStatus < b.playerStatus) {
+            return -1;
+        }
+        if (a.playerStatus > b.playerStatus) {
+            return 1;
+        }
+
 
         let selfHoles: number = 0;
         let leaderHoles: number = 0;
