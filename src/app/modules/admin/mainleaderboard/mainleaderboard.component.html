@@ -1305,7 +1305,7 @@
                             ><strong *ngIf="item.AllNetUnder == 0">E</strong>
                         </div>
                         <div class="col col-4">
-                            {{ item.TotalNet1 }}
+                            {{ item.TotalNet1 ? item.TotalNet1 : "-" }}
                         </div>
                         <div class="col col-5" *ngIf="activeRound == 1">
                             <strong *ngIf="item.holes1 == 18">F</strong
