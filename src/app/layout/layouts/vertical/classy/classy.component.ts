@@ -11,6 +11,10 @@ import { NavigationService } from 'app/core/navigation/navigation.service';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { Constants } from 'app/shared/classes/general';
+import {
+    defaultNavigation,
+    defaultNavigationSuperAdmin,
+} from 'app/mock-api/common/navigation/data';
 
 @Component({
     selector: 'classy-layout',
@@ -61,17 +65,23 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             .subscribe((user: User) => {
                 this.user = user;
             });
-            console.log(this.user);
-            
+        console.log(this.user);
+
         // Subscribe to navigation data
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
                 this.navigation = navigation;
             });
+
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
+        if (this.loggedInuser.userRole == 1) {
+            this.navigation['default'] = defaultNavigationSuperAdmin;
+        } else {
+            this.navigation['default'] = defaultNavigation;
+        }
         console.log(this.navigation);
 
         // Subscribe to media changes

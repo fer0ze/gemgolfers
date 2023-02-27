@@ -55,7 +55,6 @@ export const appRoutes: Route[] = [
     // Landing routes
     {
         path: '',
-        component  : LayoutComponent,
         data: {
             layout: 'empty'
         },
