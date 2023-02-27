@@ -15,6 +15,9 @@ export const appRoutes: Route[] = [
     // Landing routes
     {
         component: LayoutComponent,
+        data: {
+            layout: 'empty',
+        },
         path: 'leaderboard',
         loadChildren: () =>
             import(
