@@ -67,7 +67,6 @@ export class AuthSignInComponent implements OnInit {
      * Sign in
      */
     async signIn() {
-        this.show = Promise.resolve(false);
         // Return if the form is invalid
         if (this.signInForm.invalid) {
             return;
@@ -78,34 +77,57 @@ export class AuthSignInComponent implements OnInit {
 
         // Hide the alert
         this.showAlert = false;
+        let isLoggedin = <boolean>(
+            await this._authService.login(
+                this.signInForm.value.email,
+                this.signInForm.value.password
+            )
+        );
+
         let isAdmin = <Player>(
             await this.facade.getPlayerByEmailLogin(this.signInForm.value.email)
         );
         if (isAdmin && isAdmin[0] && isAdmin[0].adminClubId) {
             localStorage.setItem('aXNMb2dnZWRJbg', JSON.stringify(isAdmin[0]));
         }
-        const isLoggedin = <boolean>(
-            await this._authService.login(
-                this.signInForm.value.email,
-                this.signInForm.value.password
-            )
-        );
         if (isLoggedin) {
-            this.show = Promise.resolve(false);
-
             if (isAdmin && isAdmin[0] && isAdmin[0].adminClubId) {
-                const redirectURL =
-                    this._activatedRoute.snapshot.queryParamMap.get(
-                        'redirectURL'
-                    ) || '/signed-in-redirect';
+                this._authService.userChanges().subscribe(
+                    () => {
+                        console.log('2');
+                        const redirectURL =
+                            this._activatedRoute.snapshot.queryParamMap.get(
+                                'redirectURL'
+                            ) || '/signed-in-redirect';
 
-                // Navigate to the redirect url
+                        //Navigate to the redirect url
 
-                console.log(redirectURL);
-                //this.signInForm.enable();
+                        console.log(redirectURL);
+                        //this.signInForm.enable();
+
+                        this._router.navigateByUrl('/dashboard');
+                    },
+                    (response) => {
+                        // Re-enable the form
+                        this.signInForm.enable();
+
+                        // Reset the form
+                        this.signInNgForm.resetForm();
+
+                        // Set the alert
+                        this.alert = {
+                            type: 'error',
+                            message: 'Wrong email or password',
+                        };
+
+                        // Show the alert
+                        this.showAlert = true;
+                        this.show = Promise.resolve(true);
+                        return;
+                    }
+                );
+                //this._router.navigateByUrl('/dashboard');
                 this.show = Promise.resolve(true);
-                
-                this._router.navigateByUrl(redirectURL);
             } else {
                 // Re-enable the form
                 this.signInForm.enable();

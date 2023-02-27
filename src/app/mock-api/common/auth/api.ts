@@ -33,7 +33,6 @@ export class AuthMockApi {
 
         // Register Mock API handlers
         this.registerHandlers();
-        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -43,7 +42,7 @@ export class AuthMockApi {
     /**
      * Register Mock API handlers
      */
-   async registerHandlers() {
+    async registerHandlers() {
         // -----------------------------------------------------------------------------------------------------
         // @ Forgot password - POST
         // -----------------------------------------------------------------------------------------------------
@@ -57,18 +56,48 @@ export class AuthMockApi {
         this._fuseMockApiService
             .onPost('api/auth/reset-password', 1000)
             .reply(() => [200, true]);
+        // -----------------------------------------------------------------------------------------------------
+        // @ Reset User - POST
+        // -----------------------------------------------------------------------------------------------------
+        this._fuseMockApiService
+            .onPost('api/auth/userUpdate', 1500)
+            .reply((requset) => {
+                console.log(requset);
+
+                this.loggedInuser = JSON.parse(
+                    localStorage.getItem(Constants.LOGGED_IN_USER)
+                );
+                let clubInfo: any =
+                    this.loggedInuser.membership.length > 0
+                        ? this.loggedInuser.membership[0].club
+                        : null;
+                let logo =
+                    clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+                this._user.email = this.loggedInuser.email;
+                this._user.name = this.loggedInuser.fullName;
+                this._user.avatar = 'assets/images/logo/' + logo + '';
+                return [
+                    200,
+                    {
+                        user: cloneDeep(this._user),
+                    },
+                ];
+            });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/auth/sign-in', 1500)
-            .reply((request :any) => {
+            .reply((request: any) => {
                 // Sign in successful
                 //console.log(request);
                 console.log(request);
-                
-                    this.login(request['request'].body.email, request['request'].body.password)
+
+                this.login(
+                    request['request'].body.email,
+                    request['request'].body.password
+                )
                     .then((response) => {
                         if (response) {
                             return [
@@ -83,7 +112,7 @@ export class AuthMockApi {
                     })
                     .catch((err) => {
                         return [404, false];
-                    })
+                    });
 
                 // Invalid credentials
                 return [404, false];
