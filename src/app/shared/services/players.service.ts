@@ -968,6 +968,10 @@ export class PlayersService {
             { id: 10, name: 'Junior Ladies' },
             { id: 11, name: 'Pro-Am' },
             { id: 12, name: 'AGC Members & PAF Officers' },
+            { id: 13, name: 'Ladies A' },
+            { id: 14, name: 'Ladies B' },
+            { id: 15, name: 'Subsidiary Amateurs' },
+            { id: 16, name: 'Invitational' },
         ];
 
         return CLUB_CATEGORIES;

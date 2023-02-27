@@ -82,6 +82,8 @@ export class General {
     public static getPlayersTe(teeName: String) {
         const Course_Tee = [
           { id: "1", name: "Amateurs", result: "AMATEURS" },
+          { id: "1", name: "Invitational", result: "AMATEURS" },
+          { id: "1", name: "Subsidiary Amateurs", result: "AMATEURS" },
           { id: "1", name: "BLUE", result: "AMATEURS" },
           { id: "1", name: "Blue", result: "AMATEURS" },
           { id: "1", name: "AMATEURS", result: "AMATEURS" },
@@ -115,6 +117,8 @@ export class General {
             result: "SENIORS",
           },
           { id: "2", name: "Red", result: "LADIES" },
+          { id: "2", name: "Ladies A", result: "LADIES" },
+          { id: "2", name: "Ladies B", result: "LADIES" },
           { id: "2", name: "RED", result: "LADIES" },
           { id: "4", name: "Professionals", result: "PROFESSIONALS" },
           { id: "4", name: "PROFESSIONALS", result: "PROFESSIONALS" },
