@@ -10,14 +10,22 @@ import { InitialDataResolver } from 'app/app.resolvers';
 export const appRoutes: Route[] = [
     // Redirect empty path to '/example'
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-    // Landing routes
-    {
+
+     // Landing routes
+     {
+        component: LayoutComponent,
+        data: {
+            layout: 'empty',
+        },
+
         path: 'leaderboard',
         loadChildren: () =>
             import(
                 'app/modules/admin/mainleaderboard/mainleaderboard.module'
             ).then((m) => m.MainLeaderboardModule),
     },
+
+
     // Redirect signed in user to the '/example'
     //
     // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
@@ -100,6 +108,7 @@ export const appRoutes: Route[] = [
         ],
     },
 
+   
     // Admin routes
     {
         path: '',

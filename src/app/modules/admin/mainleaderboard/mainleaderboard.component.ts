@@ -7,11 +7,7 @@ import {
 } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
     Player,
     TournamentMemberStatus,
@@ -119,7 +115,6 @@ export class MainLeaderboardComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public facadeService: FacadeService
     ) {}
@@ -859,7 +854,7 @@ export class MainLeaderboardComponent implements OnInit {
                     //     continue;
                 }
 
-                //this.selectedCategory = this.categories[1];
+                //this.selectedCategory = this.categories[1
 
                 ////console.log(this.selectedCategory);
                 ////console.log(this.category.handicapLimits);

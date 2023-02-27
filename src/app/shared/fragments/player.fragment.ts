@@ -22,18 +22,6 @@ export const PlayerHandicapQL = gql`
   }
 `;
 
-export const PlayerHandicapQLs = gql`
-  fragment PlayerHandicapQL on player_handicap {
-    handicap
-    oldHandicap
-    updatedAt
-    score
-    tournamentQL: tournament {
-      title
-    }
-  }
-`;
-
 export const PlayerQL = gql`
   fragment PlayerQL on player {
     id
@@ -88,20 +76,6 @@ export const PlayerQL = gql`
   ${PlayerHandicapQL}
 `;
 
-export const PlayerQLs = gql`
-  fragment PlayerQL on player {
-    id
-    firstName
-    lastName
-    playerCategory
-    handicap
-    handicapWhsIndex
-    handicapQL: handicap_history {
-      ...PlayerHandicapQLs
-    }
-  }
-  ${PlayerHandicapQLs}
-`;
 export const PlayerHandicapWhsQL = gql`
   fragment PlayerHandicapWhsQL on player_handicap_whs {
     playerId

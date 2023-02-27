@@ -42,9 +42,7 @@ export const LeaderboardSubscription = gql`
             title
             matchFormat
             tee_id
-            FlightsQL: flights(
-                order_by: [{ flightRound: asc }, { flightNo: asc }]
-            ) {
+            FlightsQL: flights {
                 id
                 courseId
                 courseHoleSets
@@ -53,7 +51,7 @@ export const LeaderboardSubscription = gql`
                 name {
                     name
                 }
-                MembersQL: members(order_by: { playerId: asc }) {
+                MembersQL: members {
                     playerId
                     PlayerQL: player {
                         id
@@ -62,7 +60,7 @@ export const LeaderboardSubscription = gql`
                         firstName
                         lastName
                     }
-                    ScoresQL: scores(where: { grossScore: { _gt: 0 } }) {
+                    ScoresQL: scores {
                         playerId
                         playerHandicap
                         grossScore
