@@ -1371,10 +1371,10 @@ export class MainLeaderboardComponent implements OnInit {
         // console.log(this.tournamentID);
         // console.log(this.activeRound);
 
-        if (a['holes'] == 0 && a['under'] == 0) return 1;
-        if (b['holes'] == 0 && b['under'] == 0) return 1;
-        if (a['under'] < b['under'] && a['holes'] >= b['holes']) return -1;
-        if (a['under'] > b['under'] && a['holes'] <= b['holes']) return 1;
+        // if (a['holes'] == 0 && a['under'] == 0) return 1;
+        // if (b['holes'] == 0 && b['under'] == 0) return 1;
+        if (a['under'] < b['under'] ) return -1;
+        if (a['under'] > b['under']) return 1;
         return 0;
     }
     ComparatorRound(a, b) {
