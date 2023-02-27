@@ -40,9 +40,6 @@ const routerConfig: ExtraOptions = {
 
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
-        AngularFirestoreModule,
-        AngularFireStorageModule,
-        AngularFireDatabaseModule,
 
         // Core module of your application
         CoreModule,

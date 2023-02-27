@@ -20,7 +20,7 @@ export class GraphQLModule {
     //console.log('GraphQL');
     const uri = "https://gemgolfers-hasura.herokuapp.com/v1/graphql";
     //const uri = 'https://gemgolfers-hasura-stag.herokuapp.com/v1/graphql';
-    const wssuri = "wss://gemgolfers-hasura.herokuapp.com/v1/graphql";
+    const wssuri = "ws://gemgolfers-hasura.herokuapp.com/v1/graphql";
     //const wssuri = 'wss://gemgolfers-hasura-stag.herokuapp.com/v1/graphql';
     //const storedNames = JSON.parse(localStorage.getItem("authToken"));
     //console.log(storedNames.user.refreshToken);
