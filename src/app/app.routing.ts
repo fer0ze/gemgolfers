@@ -15,13 +15,13 @@ export const appRoutes: Route[] = [
 
     // Landing routes
     {
+
         path: 'leaderboard',
         loadChildren: () =>
-        import(
-            'app/modules/admin/mainleaderboard/mainleaderboard.module'
+            import(
+                'app/modules/admin/mainleaderboard/mainleaderboard.module'
             ).then((m) => m.MainLeaderboardModule),
-            component: LayoutLeaderComponent,
-            
+        component: LayoutLeaderComponent,
     },
 
     // Redirect signed in user to the '/example'
