@@ -29,6 +29,7 @@ import { ViewPlayerComponent } from './view-player/view-player.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         MatInputModule,
         MatTabsModule,
         MatLuxonDateModule,
+        MatAutocompleteModule,
         MatSortModule,
     MatSnackBarModule,
         MatMenuModule,

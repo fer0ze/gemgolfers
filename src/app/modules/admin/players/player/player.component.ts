@@ -166,7 +166,7 @@ export class PlayerComponent implements OnInit {
     createPlayer(): void {
         let id = UniqueIdGenerator.generate();
 
-        this._router.navigate(['./view/', id], {
+        this._router.navigate(['./add'], {
             relativeTo: this._activatedRoute,
         });
         // });

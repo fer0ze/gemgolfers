@@ -1,210 +1,6 @@
 <div class="flex flex-col w-full">
-    <!-- View mode -->
-    <ng-container *ngIf="!editMode">
-        <!-- Header -->
-        <div
-            class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700"
-        >
-            <!-- Background -->
-            <ng-container>
-                <img
-                    class="absolute inset-0 object-cover w-full h-full"
-                    [src]="this.cardsrc"
-                />
-            </ng-container>
-            <!-- Close button -->
-            <div
-                class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6"
-            >
-                <a
-                    mat-icon-button
-                    [matTooltip]="'Close'"
-                    [routerLink]="['/players']"
-                >
-                    <mat-icon
-                        class="text-white"
-                        [svgIcon]="'heroicons_outline:x'"
-                    ></mat-icon>
-                </a>
-            </div>
-        </div>
-
-        <!-- Contact -->
-        <div
-            class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0"
-        >
-            <div class="w-full max-w-3xl">
-                <!-- Avatar and actions -->
-                <div class="flex flex-auto items-end -mt-16">
-                    <!-- Avatar -->
-                    <div
-                        class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card"
-                    >
-                        <img
-                            class="object-cover w-full h-full"
-                            [src]="this.avatarsrc"
-                        />
-                        <div
-                            class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                            *ngIf="!contact.avatar"
-                        >
-                            {{ contact.firstName.charAt(0) }}
-                        </div>
-                    </div>
-                    <!-- Actions -->
-                    <div class="flex items-center ml-auto mb-1">
-                        <button
-                            mat-stroked-button
-                            (click)="toggleEditMode(true)"
-                        >
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:pencil-alt'"
-                            ></mat-icon>
-                            <span class="ml-2">Edit</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Name -->
-                <div class="mt-3 text-4xl font-bold truncate">New Contact</div>
-
-                <!-- category -->
-                <ng-container *ngIf="contact.category">
-                    <div class="flex flex-wrap items-center mt-2">
-                        <!-- Tag -->
-                        <ng-container>
-                            <div
-                                class="flex items-center justify-center py-1 px-3 mr-3 mb-3 rounded-full leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-                            >
-                                <span
-                                    class="text-sm font-medium whitespace-nowrap"
-                                    >{{ contact.category }}</span
-                                >
-                            </div>
-                        </ng-container>
-                    </div>
-                </ng-container>
-
-                <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
-                    <!-- handicap -->
-                    <ng-container *ngIf="contact.handicap">
-                        <div class="flex sm:items-center">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:briefcase'"
-                            ></mat-icon>
-                            <div class="ml-6 leading-6">
-                                {{ contact.handicap }}
-                            </div>
-                        </div>
-                    </ng-container>
-
-                    <!-- club -->
-                    <ng-container *ngIf="contact.club">
-                        <div class="flex sm:items-center">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:office-building'"
-                            ></mat-icon>
-                            <div class="ml-6 leading-6">{{ contact.club }}</div>
-                        </div>
-                    </ng-container>
-
-                    <!-- Emails -->
-                    <ng-container *ngIf="contact.email">
-                        <div class="flex">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:mail'"
-                            ></mat-icon>
-                            <div class="min-w-0 ml-6 space-y-1">
-                                <ng-container>
-                                    <div class="flex items-center leading-6">
-                                        <a
-                                            class="hover:underline text-primary-500"
-                                            [href]="'mailto:' + email.email"
-                                            target="_blank"
-                                        >
-                                            {{ contact.email }}
-                                        </a>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </ng-container>
-
-                    <!-- Phone -->
-                    <ng-container *ngIf="contact.phoneNumbers">
-                        <div class="flex">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:phone'"
-                            ></mat-icon>
-                            <div class="min-w-0 ml-6 space-y-1">
-                                <ng-container>
-                                    <div class="flex items-center leading-6">
-                                        <!-- <div
-                                            class="hidden sm:flex w-6 h-4 overflow-hidden"
-                                            [matTooltip]="getCountryByIso(phoneNumber.country).name"
-                                            [style.background]="'url(\'/assets/images/apps/contacts/flags.png\') no-repeat 0 0'"
-                                            [style.backgroundSize]="'24px 3876px'"
-                                            [style.backgroundPosition]="getCountryByIso(phoneNumber.country).flagImagePos"></div> -->
-                                        <!-- <div class="sm:ml-3 font-mono">{{getCountryByIso(phoneNumber.country).code}}</div> -->
-                                        <div class="ml-2.5 font-mono">
-                                            {{ contact.phoneNumbers }}
-                                        </div>
-                                        <!-- <div
-                                            class="text-md truncate text-secondary"
-                                            *ngIf="phoneNumber.label">
-                                            <span class="mx-2">&bull;</span>
-                                            <span class="font-medium">{{phoneNumber.label}}</span>
-                                        </div> -->
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </ng-container>
-
-                    <!-- country -->
-                    <ng-container *ngIf="contact.country">
-                        <div class="flex sm:items-center">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:location-marker'"
-                            ></mat-icon>
-                            <div class="ml-6 leading-6">
-                                {{ contact.country }}
-                            </div>
-                        </div>
-                    </ng-container>
-
-                    <!-- Birthday -->
-                    <ng-container *ngIf="contact.dateOfBirth">
-                        <div class="flex sm:items-center">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:cake'"
-                            ></mat-icon>
-                            <div class="ml-6 leading-6">
-                                {{ contact.dateOfBirth | date : "longDate" }}
-                            </div>
-                        </div>
-                    </ng-container>
-
-                    <!-- Notes -->
-                    <ng-container *ngIf="contact.notes">
-                        <div class="flex">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:menu-alt-2'"
-                            ></mat-icon>
-                            <div
-                                class="max-w-none ml-6 prose prose-sm"
-                                [innerHTML]="contact.notes"
-                            ></div>
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
-        </div>
-    </ng-container>
-
     <!-- Edit mode -->
-    <ng-container *ngIf="editMode">
+    <ng-container >
         <!-- Header -->
         <div
             class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700"
@@ -238,22 +34,21 @@
             class="relative flex flex-col flex-auto items-center px-6 sm:px-12"
         >
             <div class="w-full max-w-3xl">
-                <form [formGroup]="contactForm">
+                <form [formGroup]="contactForm" autocomplete="off" novalidate>
                     <!-- Avatar -->
                     <div class="flex flex-auto items-end -mt-16">
                         <div
                             class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card"
                         >
                             <!-- Image/Letter -->
-                            <img
+                            <!-- <img
                                 class="object-cover w-full h-full"
                                 [src]="this.avatarsrc"
-                            />
+                            />-->
                             <div
-                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                                *ngIf="!contact.avatar"
+                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-6xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
                             >
-                                {{ contact.firstName.charAt(0) }}
+                                NEW
                             </div>
                         </div>
                     </div>
@@ -270,7 +65,7 @@
                             <input
                                 matInput
                                 formControlName="firstName"
-                                [placeholder]="'FirstName'"
+                                placeholder="FirstName"
                                 [spellcheck]="false"
                             />
                         </mat-form-field>
@@ -355,6 +150,20 @@
                                 [placeholder]="'Club'"
                                 [readonly]="hideClubs"
                             />
+                            <mat-autocomplete
+                                #auto="matAutocomplete"
+                                [displayWith]="displayFn"
+                            >
+                                <mat-option
+                                    *ngFor="
+                                        let option of filteredClubOptions
+                                            | async
+                                    "
+                                    [value]="option"
+                                >
+                                    {{ option.name }}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <!-- Membership -->
@@ -370,7 +179,6 @@
                                 matInput
                                 formControlName="membershipNo"
                                 [placeholder]="'Membership No '"
-                                
                             />
                         </mat-form-field>
                     </div>
@@ -389,10 +197,9 @@
                                 formControlName="category"
                                 placeholder="Player Category"
                                 class="mr-1.5"
-                               
                             >
                                 <mat-option
-                                    *ngFor="let cat of playerCategories "
+                                    *ngFor="let cat of playerCategories"
                                     [value]="cat.name"
                                 >
                                     <span class="flex items-center">
@@ -421,7 +228,6 @@
                                             formControlName="gender"
                                             placeholder="Gender"
                                             class="mr-1.5"
-                                           
                                         >
                                             <mat-option value="male">
                                                 <span class="flex items-center">
@@ -461,7 +267,6 @@
                                             formControlName="country"
                                             placeholder="Country"
                                             class="mr-1.5"
-                                            
                                         >
                                             <mat-option value="Pakistan">
                                                 <span class="flex items-center">
@@ -495,13 +300,14 @@
                                         <mat-icon
                                             matPrefix
                                             class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:status-online'"
+                                            [svgIcon]="
+                                                'heroicons_solid:status-online'
+                                            "
                                         ></mat-icon>
                                         <mat-select
                                             formControlName="status"
                                             placeholder="Status"
                                             class="mr-1.5"
-                                            
                                         >
                                             <mat-option value="false">
                                                 <span class="flex items-center">
@@ -536,9 +342,7 @@
                                         <mat-icon
                                             matPrefix
                                             class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="
-                                                'heroicons_solid:phone'
-                                            "
+                                            [svgIcon]="'heroicons_solid:phone'"
                                         ></mat-icon>
                                         <input
                                             matInput

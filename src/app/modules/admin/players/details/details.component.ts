@@ -28,7 +28,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatDrawerToggleResult } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import {
+    debounceTime,
+    map,
+    Observable,
+    startWith,
+    Subject,
+    takeUntil,
+} from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import {
     Contact,
@@ -52,6 +59,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { RequireMatch } from 'app/shared/classes/CustomValidator';
 import { FuseConfirmationSuccessService } from '@fuse/services/confirmation/confirmationsucces';
+import { Club } from 'app/shared/models/club.model';
 
 @Component({
     selector: 'contacts-details',
@@ -64,8 +72,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     clubTitle: string;
-    editMode: boolean = true;
+    editMode: boolean = false;
     tags: Tag[];
+    golfClubs: Club[] = [];
     tagsEditMode: boolean = false;
     filteredTags: Tag[];
     playerCategories: PlayerCategory[] = [];
@@ -81,6 +90,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     currentPlayer: any = [];
     loggedInuser: any;
+    filteredClubOptions: Observable<Club[]>;
     /**
      * Constructor
      */
@@ -106,13 +116,16 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
-    ngOnInit(): void {
-        this._contactsListComponent.matDrawer.open();
-        this.playerCategories = this._facadeService.getPlayerCategories();
-        console.log(this.playerCategories);
+    async ngOnInit() {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
+
+        this.playerCategories = this._facadeService.getPlayerCategories();
+        let dataClubs = await this._facadeService.getClubList();
+        this.golfClubs = dataClubs.club;
+        console.log(this.playerCategories);
+
         if (this.loggedInuser) {
             let clubInfo: any =
                 this.loggedInuser.membership.length > 0
@@ -135,10 +148,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 this.loggedInuser.userRole > 1 ? this.clubTitle : '',
                 [Validators.required]
             ),
-            country: new FormControl(''),
+            country: new FormControl('Pakistan'),
             isClubAdmin: new FormControl('3', [Validators.required]),
             membershipNo: new FormControl('', [Validators.required]),
-            status: new FormControl('', [Validators.required]),
+            status: new FormControl('false', [Validators.required]),
             notes: new FormControl(''),
         });
         this.contact = {
@@ -157,16 +170,41 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             notes: '',
             status: true,
         };
+        this.filteredClubOptions = this.contactForm
+            .get('club')!
+            .valueChanges.pipe(
+                startWith(''),
+                map((value) =>
+                    typeof value === 'string' ? value : value ? value.name : ''
+                ),
+                map((name) => (name ? this._filter(name) : this.golfClubs))
+            );
+        console.log(this.filteredClubOptions);
+
+        if (this.loggedInuser.userRole > 1) {
+            this.contactForm.get('club').clearValidators();
+            this.contactForm.get('club').updateValueAndValidity();
+        }
         this._activatedRoute.paramMap.subscribe((params) => {
             this.playerID = params.get('id');
-            this.fetchData();
+            if (this.playerID) this.fetchData();
         });
 
         this._contactsListComponent.matDrawer.open();
 
         console.log(this.contact);
     }
+    private _filter(value: string): Club[] {
+        if (value) {
+            const filterValue = value.toLowerCase();
 
+            return this.golfClubs.filter(
+                (option) => option.name.toLowerCase().indexOf(filterValue) === 0
+            );
+        }
+
+        return this.golfClubs;
+    }
     /**
      * On destroy
      */
@@ -208,7 +246,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-
+    displayFn(club: Club): string {
+        return typeof club === 'string' ? club : club ? club.name : '';
+    }
     /**
      * Update the contact
      */
@@ -290,10 +330,12 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         let UniqueId: string = '';
         let GEMId: string = '';
 
+        this.playerID
+            ? (UniqueId = this.playerID)
+            : (UniqueId = UniqueIdGenerator.generate());
         this.currentPlayer.length > 0
             ? (GEMId = this.currentPlayer.gemId)
-            : (GEMId = generateGemId.generate(this.playerID));
-
+            : (GEMId = generateGemId.generate(UniqueId));
         //console.log(playerFormValue.playerClubMember);
         let member: any = {
             clubId:
@@ -307,7 +349,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         console.log(member);
         clubMember.push(member);
         const player: Player = {
-            id: this.playerID,
+            id: UniqueId,
             adminClubId: this.loggedInuser
                 ? this.loggedInuser.adminClubId
                 : null,
@@ -338,7 +380,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         };
         console.log(contact);
 
-        if (this.currentPlayer.player.length == 0) {
+        if (!this.editMode) {
             const isSuccess = <boolean>(
                 await this._facadeService.AddPlayer(player)
             );
@@ -511,7 +553,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
         console.log(this.currentPlayer);
         if (this.currentPlayer.player.length > 0) {
-            this.editMode = true;
+             this.editMode = true;
             this.contactForm.setValue({
                 firstName: this.currentPlayer.player[0].firstName,
                 lastName: this.currentPlayer.player[0].lastName,
@@ -525,12 +567,15 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 notes: this.currentPlayer.player[0].extraData,
                 membershipNo: this.currentPlayer.player[0].membershipNumber,
                 club: this.currentPlayer.player[0].membership[0].club.name,
-                isClubAdmin: this.currentPlayer.player[0].adminClubId ? '1' : '0',
+                isClubAdmin: this.currentPlayer.player[0].adminClubId
+                    ? '1'
+                    : '0',
                 status: this.currentPlayer.player[0].membership[0].suspended
                     ? 'true'
                     : 'false',
             });
         }
+        // this.editMode=false;
         this._changeDetectorRef.markForCheck();
     }
 }

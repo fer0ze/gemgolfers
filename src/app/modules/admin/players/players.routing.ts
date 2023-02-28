@@ -20,7 +20,12 @@ export const playerRoutes: Route[] = [
                         path: 'view/:id',
                         component: ContactsDetailsComponent,
                         canDeactivate: [CanDeactivateContactsDetails],
-                    }
+                    },
+                    {
+                        path: 'add',
+                        component: ContactsDetailsComponent,
+                        canDeactivate: [CanDeactivateContactsDetails],
+                    },
                 ],
             },
         ],

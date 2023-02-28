@@ -972,6 +972,11 @@ export class PlayersService {
             { id: 14, name: 'Ladies B' },
             { id: 15, name: 'Subsidiary Amateurs' },
             { id: 16, name: 'Invitational' },
+            { id: 17, name: "Junior Boy(18-21)" },
+            { id: 18, name: "Junior Boy(16-18)" },
+            { id: 19, name: "Junior Boy(12-16)" },
+            { id: 20, name: "Junior Girl(16-21)" },
+            { id: 21, name: "Junior Gril(12-16)" }, 
         ];
 
         return CLUB_CATEGORIES;
