@@ -15,16 +15,18 @@
                     alt="Logo"
                 />
             </div>
-            <div class="flex flex-row justify-around mobile-logo">
-                <div class="mobile-logo h-36 w-40">
+            <div class="flex flex-row justify-around sm:inline md:hidden">
+                <div class="md:hidden h-36 w-40">
                     <img src="assets/images/logo/1.png" alt="Logo" />
                 </div>
-                <div class="mobile-logo h-36 w-36">
+                <div class="md:hidden h-36 w-36">
                     <img src="assets/images/logo/{{ clubLogo }}" alt="user" />
                 </div>
             </div>
-            <div class="z-10 col-span-1 relative flex flex-col items-center">
-                <h2 class="text-3xl font-semibold">
+            <div
+                class="z-10 col-span-1 relative flex flex-col text-center items-center"
+            >
+                <h2 class="text-3xl pt-4 mb-4 font-semibold">
                     {{ Leaderboard?.title }}
                 </h2>
                 <div
@@ -34,10 +36,10 @@
                 </div>
             </div>
             <div
-                class="col-span-1 logo-3 ml-44 h-25 flex items-center justify-center overflow-hidden"
+                class="col-span-1 logo-3 w-32 ml-44 h-25 flex items-center justify-center overflow-hidden"
             >
                 <img
-                    class="object-cover logo-2"
+                    class="object-cover"
                     src="assets/images/logo/{{ clubLogo }}"
                     alt="user"
                 />
@@ -56,10 +58,9 @@
                     (change)="selectionChanged($event)"
                     *ngIf="
                         matchFormat != 'BEST_THREE' &&
-                        matchFormat != 'COMBINE_ALL' &&
-                        !selectedCategory?.text.includes('Professionals')
+                        matchFormat != 'COMBINE_ALL' 
                     "
-                    class="toogle"
+                    class="pb-2"
                 >
                     <mat-button-toggle value="1">GROSS</mat-button-toggle>
                     <mat-button-toggle value="2">NET</mat-button-toggle>
@@ -67,7 +68,7 @@
 
                 <mat-form-field
                     *ngIf="eventCategories.length > 1"
-                    class="fuse-mat-no-subscript min-w-50 mat-form w-full sm:w-36"
+                    class="fuse-mat-no-subscript min-w-50 pb-2 w-full sm:w-36"
                 >
                     <!--  && flightRound != 0 -->
                     <mat-select
@@ -101,9 +102,6 @@
                         <mat-option [value]="'pgfnateam2021'"
                             >Inter Association Team Match</mat-option
                         >
-                        <!-- <mat-option *ngFor="let round of subTournamentDetail" [value]="round.Value">
-              {{round.Text}}
-            </mat-option> -->
                     </mat-select>
                 </mat-form-field>
 
@@ -147,7 +145,7 @@
                             >
                                 HC:{{ item.handicap }}
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -195,7 +193,7 @@
                             >
                                 HC:{{ item.handicap }}
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -242,7 +240,7 @@
                                     HC:{{ item.handicap }}
                                 </span>
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -290,7 +288,7 @@
                                 </span>
 
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -357,7 +355,7 @@
                                     HC:{{ item.handicap }}</span
                                 >
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -576,7 +574,7 @@
                             <div class="text-xs flex items-center">
                                 HC:{{ item.handicap }}
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -696,7 +694,7 @@
                             >
                                 HC:{{ item.handicap }}
                                 <div
-                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500'"
+                                    class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                     (click)="
                                         viewPlayerScore(
                                             item.name,
@@ -770,18 +768,6 @@
                         </div>
                     </li>
                 </ul>
-
-                <!-- <mat-card
-                *ngIf="isLoading"
-                style="
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                "
-            >
-                <mat-progress-spinner color="primary" mode="indeterminate">
-                </mat-progress-spinner>
-            </mat-card> -->
             </div>
         </div>
     </div>

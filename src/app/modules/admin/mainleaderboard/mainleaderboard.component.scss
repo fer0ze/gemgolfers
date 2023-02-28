@@ -1,71 +1,11 @@
-
-.relative{
+.relative {
   background: #004987;
   color: white;
-}
-
-
-
-@media screen and (max-width: 1000px) {
-  .webLogo {
-    display: none !important;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .cut-UI-Mobile {
-    font-size: 12px !important;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .mat-toolbar-row {
-    flex-direction: column !important;
-    white-space: normal !important;
-    height: auto !important;
-  }
-
-  table th,
-  table td,
-  table td span.smaller {
-    font-size: 12px !important;
-  }
-
-  .leaderboard-wrapper {
-
-    margin: 0;
-  }
-
-  .mat-accordion {
-    display: inline;
-  }
-
-  .hideMe {
-    display: none !important;
-  }
 }
 
 body {
   font-family: 'lato', sans-serif;
 }
-
-.container {
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-h2 {
-  font-size: 26px;
-  margin: 20px 0;
-  text-align: center;
-
-  small {
-    font-size: 0.5em;
-  }
-}
-
 .responsive-table {
   li {
     border-radius: 11px;
@@ -129,30 +69,15 @@ h2 {
     justify-content: center;
     align-items: center;
   }
-
-
   @media all and (max-width: 767px) {
-    .toogle {
-      padding-bottom: 7px;
-    }
-
-    .mat-form {
-      padding-bottom: 6px;
-
-    }
-
     .table-header {
-      display: flex;
-  position: sticky;
-  top: 0;
+      display: flex;  
       line-height: 0.25rem;
-
       padding: 12px 5px;
 
       .col-1 {
         flex-basis: 13%;
         padding-right: 1px;
-
       }
 
       .col-2 {
@@ -173,7 +98,7 @@ h2 {
         flex-basis: 10%;
       }
 
-      .THRU{
+      .THRU {
         padding-right: 2px;
       }
 
@@ -183,7 +108,6 @@ h2 {
       display: flex;
       font-size: 0.25rem;
       line-height: 0.25rem;
-
       padding: 12px 5px;
 
       .col-1 {
@@ -220,7 +144,6 @@ h2 {
 
       }
 
-
       .col-5 {
         flex-basis: 10%;
         background: #2a3f50;
@@ -235,7 +158,6 @@ h2 {
 
 
       }
-      
 
       .text-xs {
         padding-top: 7px;
@@ -265,47 +187,18 @@ h2 {
     }
   }
 }
-.mobile-logo{
-  display: none !important;
-}
-.img-center{
-  display: flex;
-  justify-content: center ;
-  margin-top: 14px;
-  margin-bottom: 8px;
-}
-@media all and (max-width: 767px) {
-  .toogle {
-    padding-bottom: 7px;
+@media screen and (max-width: 1000px) {
+  .cut-UI-Mobile {
+    font-size: 12px !important;
   }
-
-  .mat-form {
-    padding-bottom: 6px;
-
-  }
-}
-.logo-1{
-  width: 17.5rem;
-}
-.logo-2{
-  width: 50%;
-}
-.logo-3{
-  width: 17rem;
-}
-@media all and (max-width: 767px) {
   .logo {
     display: grid !important;
   }
-
-  .logo-1 {
+  .logo-1, .logo-2, .logo-3, .webLogo{
     display: none !important;
   }
-
-  .logo-2 {
-    display: none  !important;
-  }
-  .mobile-logo{
+  .mobile-logo {
     display: flex !important;
   }
+
 }

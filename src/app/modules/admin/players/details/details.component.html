@@ -149,8 +149,10 @@
                                 formControlName="club"
                                 [placeholder]="'Club'"
                                 [readonly]="hideClubs"
+                                [matAutocomplete]="auto"
                             />
                             <mat-autocomplete
+                            autoActiveFirstOption
                                 #auto="matAutocomplete"
                                 [displayWith]="displayFn"
                             >

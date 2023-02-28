@@ -73,6 +73,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     clubTitle: string;
     editMode: boolean = false;
+    save: boolean = false;
     tags: Tag[];
     golfClubs: Club[] = [];
     tagsEditMode: boolean = false;
@@ -138,7 +139,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this.contactForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
-            gender: new FormControl('', [Validators.required]),
+            gender: new FormControl(''),
             email: new FormControl(''),
             phoneNumbers: new FormControl(''),
             dateOfBirth: new FormControl(''),
@@ -149,7 +150,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 [Validators.required]
             ),
             country: new FormControl('Pakistan'),
-            isClubAdmin: new FormControl('3', [Validators.required]),
+            isClubAdmin: new FormControl('3'),
             membershipNo: new FormControl('', [Validators.required]),
             status: new FormControl('false', [Validators.required]),
             notes: new FormControl(''),
@@ -227,7 +228,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
      * Close the drawer
      */
     closeDrawer(): Promise<MatDrawerToggleResult> {
-        this._contactsListComponent.fecthData();
+        if(this.save)
+        {
+            this._contactsListComponent.fecthData();
+        }
         return this._contactsListComponent.matDrawer.close();
     }
 
@@ -385,6 +389,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 await this._facadeService.AddPlayer(player)
             );
             if (isSuccess) {
+                this.save=true;
                 const confirmation = this._fuseConfirmationSuccessService.open({
                     title: 'Player Added Successfully',
                     message: 'Player has been added!',
@@ -432,6 +437,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
             //console.log(isSuccess);
             if (isSuccess) {
+                this.save=true;
                 const confirmation = this._fuseConfirmationSuccessService.open({
                     title: 'Player Updated Successfully',
                     message: 'Player has been Updated!',
@@ -463,7 +469,15 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         //   this.playerForm.get("playerClubMember").setValue(this.clubTitle);
         // }
 
-        this.contactForm.reset();
+        this.contactForm.get('firstName').setValue('');
+        this.contactForm.get('lastName').setValue('');
+        this.contactForm.get('email').setValue('');
+        this.contactForm.get('phoneNumbers').setValue('');
+        this.contactForm.get('dateOfBirth').setValue('');
+        this.contactForm.get('category').setValue('');
+        this.contactForm.get('handicap').setValue('');
+        this.contactForm.get('club').setValue('');
+        this.contactForm.get('membershipNo').setValue('');
     }
     /**
      * Track by function for ngFor loops
@@ -553,7 +567,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
         console.log(this.currentPlayer);
         if (this.currentPlayer.player.length > 0) {
-             this.editMode = true;
+            this.editMode = true;
             this.contactForm.setValue({
                 firstName: this.currentPlayer.player[0].firstName,
                 lastName: this.currentPlayer.player[0].lastName,
