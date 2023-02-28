@@ -4,6 +4,7 @@ import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
 import { EmptyLayoutComponent } from './layout/layouts/empty/empty.component';
+import { LayoutLeaderComponent } from './layout-Leader/layout-leader.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -14,16 +15,13 @@ export const appRoutes: Route[] = [
 
     // Landing routes
     {
-        component: LayoutComponent,
-        data: {
-            layout: 'empty',
-        },
         path: 'leaderboard',
         loadChildren: () =>
-            import(
-                'app/modules/admin/mainleaderboard/mainleaderboard.module'
+        import(
+            'app/modules/admin/mainleaderboard/mainleaderboard.module'
             ).then((m) => m.MainLeaderboardModule),
-      
+            component: LayoutLeaderComponent,
+            
     },
 
     // Redirect signed in user to the '/example'

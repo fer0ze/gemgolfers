@@ -4,6 +4,10 @@ import { MainLeaderboardComponent } from './mainleaderboard.component';
 
 const routes: Routes = [
     {
+        path: '',
+        component: MainLeaderboardComponent
+    },
+    {
         path: ':id',
         component: MainLeaderboardComponent,
     },
