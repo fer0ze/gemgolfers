@@ -1471,7 +1471,12 @@ export class ViewTournamentComponent implements OnInit {
             let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
             let startDate =
                 this.dataFullTournament['TournamentQL'][0].startDate;
-            let newstartDate = new Date(startDate).getDate() + this.activeRound;
+            startDate = new Date(startDate);
+            startDate.setDate(startDate.getDate() + this.activeRound);
+            console.log(startDate);
+
+            let newstartDate = startDate.getDate();
+
             console.log(newstartDate);
 
             for (let newObj of this.categories) {
@@ -1966,21 +1971,20 @@ export class ViewTournamentComponent implements OnInit {
         console.log('After Function' + this.runningFlights);
     }
     downloadResultSheet() {
-
         let doc = new jsPDF();
         let col = General.createClm(this.noOfRounds);
         let rows = [];
         doc.setFontSize(22);
-        doc.setFillColor(0,0,0);
-        doc.rect(10,5,190,20,'F');
-        doc.setTextColor(255,255,255);
-        doc.text(this.fullTournament.title, 13, 12,'justify');
-        doc.text('\nScore Sheet', 13, 12,'justify');
+        doc.setFillColor(0, 0, 0);
+        doc.rect(10, 5, 190, 20, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.text(this.fullTournament.title, 13, 12, 'justify');
+        doc.text('\nScore Sheet', 13, 12, 'justify');
         doc.setFontSize(15);
         // this.tournamentCategories.forEach((element) => {
         //     this.getSummaryData(element.category);
         // });
-        this.getSummaryData('Result')
+        this.getSummaryData('Result');
         // doc.text("W.E.F:", 143, 15);
         // doc.text(
         // this.datepipe.transform(this.currentDate.toString(), "MMM d, y"),
@@ -1998,7 +2002,7 @@ export class ViewTournamentComponent implements OnInit {
         grossAllArray.sort(this.ComparatorAllGrossSheet);
         this.sortAllGrossLeadersTie(grossAllArray);
         console.log(grossAllArray);
-        
+
         for (let leader in grossAllArray) {
             count++;
             let temp = [
@@ -2006,25 +2010,32 @@ export class ViewTournamentComponent implements OnInit {
                 grossAllArray[leader].name,
                 grossAllArray[leader].handicap,
                 grossAllArray[leader].clubName,
-                grossAllArray[leader].TotalGross3 != '' &&grossAllArray[leader].TotalGross3 != undefined
+                grossAllArray[leader].TotalGross3 != '' &&
+                grossAllArray[leader].TotalGross3 != undefined
                     ? grossAllArray[leader].TotalGross3
                     : '-',
-                grossAllArray[leader].TotalNet3 != ''&&grossAllArray[leader].TotalNet3!= undefined
+                grossAllArray[leader].TotalNet3 != '' &&
+                grossAllArray[leader].TotalNet3 != undefined
                     ? grossAllArray[leader].TotalNet3
                     : '-',
-                grossAllArray[leader].TotalGross2 != ''&&grossAllArray[leader].TotalGross2!= undefined
+                grossAllArray[leader].TotalGross2 != '' &&
+                grossAllArray[leader].TotalGross2 != undefined
                     ? grossAllArray[leader].TotalGross2
                     : '-',
-                grossAllArray[leader].TotalNet2 != ''&&grossAllArray[leader].TotalNet2!= undefined
+                grossAllArray[leader].TotalNet2 != '' &&
+                grossAllArray[leader].TotalNet2 != undefined
                     ? grossAllArray[leader].TotalNet2
                     : '-',
-                grossAllArray[leader].TotalGross1 != ''&&grossAllArray[leader].TotalGross1!= undefined
+                grossAllArray[leader].TotalGross1 != '' &&
+                grossAllArray[leader].TotalGross1 != undefined
                     ? grossAllArray[leader].TotalGross1
                     : '-',
-                grossAllArray[leader].TotalNet1 != ''&&grossAllArray[leader].TotalNet1!= undefined
+                grossAllArray[leader].TotalNet1 != '' &&
+                grossAllArray[leader].TotalNet1 != undefined
                     ? grossAllArray[leader].TotalNet1
                     : '-',
-                grossAllArray[leader].AllGrossPoints != ''&&grossAllArray[leader].AllGrossPoints!= undefined
+                grossAllArray[leader].AllGrossPoints != '' &&
+                grossAllArray[leader].AllGrossPoints != undefined
                     ? grossAllArray[leader].AllGrossPoints
                     : '-',
                 grossAllArray[leader].AllNetPoints != ''
@@ -2100,7 +2111,11 @@ export class ViewTournamentComponent implements OnInit {
 
             if (flight !== 1 && flight % 2 === 0) return 10;
             else return 1;
-        } else return 1;
+        } else if (startingHoleOption == '10') {
+            return 10;
+        } else {
+            return 1;
+        }
     }
 
     getNextFlightTime(
@@ -2327,7 +2342,7 @@ export class ViewTournamentComponent implements OnInit {
     }
     private async GrossData(category: any) {
         this.getSummaryData(category);
-        
+
         console.log(this.allMatchResults);
         let grossAllArray: any[] = [];
 
@@ -2343,7 +2358,6 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     getSummaryData(category) {
-
         this.allMatchResults = [];
         let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
         let handicapAllocation: string = this.getHandicapAllocation();
@@ -2354,8 +2368,7 @@ export class ViewTournamentComponent implements OnInit {
                 let playerId: String = membersQL.playerId;
 
                 let player: Player = membersQL.PlayerQL;
-                if(category!='Result')
-                {
+                if (category != 'Result') {
                     if (player.playerCategory !== category) continue;
                 }
 
@@ -2414,9 +2427,9 @@ export class ViewTournamentComponent implements OnInit {
 
                 let playerHole18ScoreGross: any[] = [];
                 let playerHole18ScoreNet: any[] = [];
-                let clubName='';
-                if(player.membership.length>0)
-                   clubName=player.membership[0].club.name;
+                let clubName = '';
+                if (player.membership.length > 0)
+                    clubName = player.membership[0].club.name;
 
                 for (
                     let i = 0;
@@ -2470,7 +2483,7 @@ export class ViewTournamentComponent implements OnInit {
                         ? flightData.courseHoleSetsInverted
                         : false,
                     playerId: playerId,
-                    clubName:General.getClubName(clubName),
+                    clubName: General.getClubName(clubName),
                     name: name,
                     picture: picture,
                     playingRound: flightData.flightRound,
@@ -2523,7 +2536,7 @@ export class ViewTournamentComponent implements OnInit {
                         : false,
                     name: name,
 
-                    clubName:General.getClubName(clubName),
+                    clubName: General.getClubName(clubName),
                     picture: picture,
                     handicap: handicap,
                     score: netTotal,
@@ -2825,7 +2838,8 @@ export class ViewTournamentComponent implements OnInit {
         this.allMatchResults[leaderGross.playerId]['playerId'] =
             leaderGross.playerId;
         this.allMatchResults[leaderGross.playerId]['name'] = leaderGross.name;
-        this.allMatchResults[leaderGross.playerId]['clubName'] = leaderGross.clubName;
+        this.allMatchResults[leaderGross.playerId]['clubName'] =
+            leaderGross.clubName;
         this.allMatchResults[leaderGross.playerId]['picture'] =
             leaderGross.picture;
         this.allMatchResults[leaderGross.playerId]['handicap'] =
@@ -2931,7 +2945,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
             }
             console.log(players);
-            
+
             this.tournamentMember = players;
             //console.log(this.player);
             // this.setDataSource(this.player);

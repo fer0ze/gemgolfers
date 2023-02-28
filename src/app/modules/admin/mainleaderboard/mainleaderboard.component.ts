@@ -46,6 +46,7 @@ export class MainLeaderboardComponent implements OnInit {
     subTournamentDetail: any[] = [];
     net: any[] = [];
     loggedInUser: Player;
+    showdata: Promise<boolean>;
     players: Player;
     activePlayers: Player[] = [];
     playerScores: Score[];
@@ -187,7 +188,7 @@ export class MainLeaderboardComponent implements OnInit {
                                 }
                             }
 
-                            this.isLoading = false;
+                           
                             this.activeRound = this.Leaderboard.activeRound;
                             this.totalRounds = this.Leaderboard.noOfRounds;
                             this.matchFormat = this.Leaderboard.matchFormat;
@@ -326,6 +327,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 index++;
             }
+            this.isLoading = false;
             console.log(this.allMatchResults);
             let player: any = [];
             let grossAllArray: any[] = [];
@@ -495,7 +497,8 @@ export class MainLeaderboardComponent implements OnInit {
                     }
                     //console.log(this.activePlayers);
                 }
-
+                grossAllArray.sort(this.ComparatorAllGross);
+                netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
                     this.cuttOffScore > 0 ||
@@ -555,6 +558,8 @@ export class MainLeaderboardComponent implements OnInit {
                     netAllArray.push(this.allMatchResults[leader]);
                     this.net.push(this.allMatchResults[leader]);
                 }
+                grossAllArray.sort(this.ComparatorAllGross);
+                netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
                     this.cuttOffScore > 0 ||
@@ -606,6 +611,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 return true;
             }
+           
         } else {
             if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE)
                 this.createTexasScrampleLeaders(
@@ -651,7 +657,9 @@ export class MainLeaderboardComponent implements OnInit {
             this.isCuttOffRequired = false;
 
             this.lastActiveTab == 1;
+            this.isLoading = false;
         }
+        this.isLoading = false;
     }
 
     private createSimpleLeaders(
