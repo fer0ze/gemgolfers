@@ -1406,7 +1406,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 : this.tournamentInfo[0].id;
         this.selectedMembers[this.selectedMembers.length - 1]['startingHole'] =
             '1';
-        this.selectedMembers[this.selectedMembers.length - 1]['tee'] = '';
+        this.selectedMembers[this.selectedMembers.length - 1]['tee'] = 'AMATEURS';
         this.selectedMembers[this.selectedMembers.length - 1]['flightRound'] =
             this.flightRound;
         this.selectedMembers[this.selectedMembers.length - 1]['date'] = this

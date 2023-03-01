@@ -147,6 +147,7 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab5: boolean = false;
     showSummary: boolean = false;
     tournamentMember: any;
+    tournamentMembers: any;
     dataFullTournament: any;
     cuttFlag: number = 0;
     tournamentCategories: any;
@@ -2150,6 +2151,12 @@ export class ViewTournamentComponent implements OnInit {
                 else {
                     dateNow.setMinutes(dateNow.getMinutes());
                 }
+            } else if (startingHole == '10') {
+                if (flight % 2 == 0)
+                    dateNow.setMinutes(dateNow.getMinutes() + interval);
+                else {
+                    dateNow.setMinutes(dateNow.getMinutes());
+                }
             }
 
             console.log(dateNow);
@@ -2763,6 +2770,7 @@ export class ViewTournamentComponent implements OnInit {
         console.log(dataFullTournaments);
         this.flightNumber = this.fullTournament.FlightsQL.length + 1;
         this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+        this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
 
         this.dataSource = new MatTableDataSource(this.tournamentMember);
         this.dataSource.sort = this.sort;
@@ -2907,13 +2915,13 @@ export class ViewTournamentComponent implements OnInit {
 
     applyMembersFilter(filterValue: string) {
         if (filterValue == '') {
-            this.getTournamentMembers();
+            this.tournamentMember = this.tournamentMembers;
             return;
         }
         filterValue = filterValue.toLowerCase();
         let players = [];
         if (filterValue.length >= 3) {
-            for (let c of this.tournamentMember) {
+            for (let c of this.tournamentMembers) {
                 c['fullname'] =
                     c.player['firstName'] + ' ' + c.player['lastName'];
                 if (c['fullname'].toLowerCase().includes(filterValue)) {

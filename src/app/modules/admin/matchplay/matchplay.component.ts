@@ -178,14 +178,14 @@ export class MatchplayComponent implements OnInit {
         this.parseSubscriptionResponse();
     }
 
-    filterPlayerFlight(flag: boolean) {
-        if (flag) {
-            this.filterPlayer = this.filters.get('name').value;
+    filterPlayerFlight(query) {
+        if (query.length > 3) {
+            this.filterPlayer = query;
         } else {
             this.filterPlayer = '';
             this.filters.reset();
         }
-        //this.ddSelectedFlight = this.filterPlayer;
+
         this.selectedTeamName = true;
         this.roundFlights = [];
         //this.scoreHeader = [];

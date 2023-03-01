@@ -4689,43 +4689,43 @@
                                         let k = index
                                     "
                                 >
-                                    <div class="col col-1" data-label="Job Id">
+                                    <div class="col col-1" >
                                         {{ k + 1 }}
                                     </div>
                                     <div
                                         class="col col-2 font-medium"
-                                        data-label="Customer Name"
+                                        
                                     >
                                         {{ row.player["firstName"] }}
                                         {{ row.player["lastName"] }}
                                     </div>
                                     <div
                                         class="col col-3 font-medium"
-                                        data-label="Amount"
+                                        
                                     >
                                         {{ row.player["email"] }}
                                     </div>
                                     <div
                                         class="col col-4 font-medium"
-                                        data-label="Payment Status"
+                                       
                                     >
                                         {{ row.player["handicap"] }}
                                     </div>
                                     <div
                                         class="col col-5 font-medium"
-                                        data-label="Payment Status"
+                                       
                                     >
                                         {{ row.player["membershipNumber"] }}
                                     </div>
                                     <div
                                         class="col col-5 font-medium"
-                                        data-label="Payment Status"
+                                       
                                     >
                                         {{ row.player["playerCategory"] }}
                                     </div>
                                     <div
                                         class="col col-5 font-medium cursor-pointer"
-                                        data-label="Payment Status"
+                                       
                                     >
                                         <mat-icon
                                             (click)="deleteTM(row.player)"
@@ -4733,7 +4733,7 @@
                                             color="warn"
                                         ></mat-icon>
                                         <mat-icon
-                                        
+                                            class="ml-2"
                                             (click)="disqulifyTM(row.player)"
                                             [svgIcon]="'heroicons_solid:close-eye'"
                                             color="warn"

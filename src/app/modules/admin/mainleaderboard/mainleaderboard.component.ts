@@ -107,8 +107,8 @@ export class MainLeaderboardComponent implements OnInit {
     async ngOnInit() {
         this.getOnLoadData();
 
-        const source = interval(60000 * 30);
-        this.subscription = source.subscribe((val) => window.location.reload());
+        // const source = interval(60000 * 30);
+        // this.subscription = source.subscribe((val) => window.location.reload());
     }
 
     async getOnLoadData() {

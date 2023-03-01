@@ -75,16 +75,17 @@
               
                     <form
                         class="example-container"
-                        [formGroup]="filters"
+                        
                     >
                         <mat-form-field
                             class="fuse-mat-no-subscript w-full mr-4 sm:w-72 mt-4 sm:mt-0 sm:ml-4"
                         >
                             <input
                                 matInput
-                                formControlName="name"
+                               
                                 [autocomplete]="'off'"
                                 placeholder="Search Player"
+                                (keyup)="filterPlayerFlight($event.target.value)"
                             />
                         </mat-form-field>
                     </form>
@@ -1346,6 +1347,7 @@
                                 formControlName="name"
                                 [autocomplete]="'off'"
                                 placeholder="Search Player"
+                                (keyup)="filterPlayerFlight($event.target.value)"
                             />
                         </mat-form-field>
                     </form>
@@ -2607,6 +2609,7 @@
                                 formControlName="name"
                                 [autocomplete]="'off'"
                                 placeholder="Search Player"
+                                (keyup)="filterPlayerFlight($event.target.value)"
                             />
                         </mat-form-field>
                     </form>
@@ -3868,6 +3871,7 @@
                                         formControlName="name"
                                         [autocomplete]="'off'"
                                         placeholder="Search Player"
+                                        (keyup)="filterPlayerFlight($event.target.value)"
                                     />
                                 </mat-form-field>
                             </form>

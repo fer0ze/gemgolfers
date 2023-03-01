@@ -222,9 +222,7 @@
                                                                 <mat-select
                                                                     placeholder="Flight Tee"
                                                                     type="text"
-                                                                    id="flight_{{
-                                                                        i
-                                                                    }}_time"
+                                                                   
                                                                     value="{{
                                                                         item[
                                                                             'playingTee'
@@ -367,7 +365,7 @@
                                 >
                                     <mat-select
                                         class="w-100"
-                                        id="flight_{{ i }}_time"
+                                        id="flight_{{ j }}_tee"
                                         value="{{ items['tee'] }}"
                                         (selectionChange)="
                                             selectedTee($event, items.id)
@@ -399,7 +397,7 @@
                                         [svgIcon]="'heroicons_solid:flag'"
                                     ></mat-icon>
                                     <input
-                                        id="flight_{{ i }}_hole"
+                                        id="flight_{{j }}_hole"
                                         value="{{ items['startingHole'] }}"
                                         matInput
                                         #query
@@ -535,9 +533,7 @@
                                                         <mat-select
                                                             placeholder="Flight Tee"
                                                             type="text"
-                                                            id="flight_{{
-                                                                i
-                                                            }}_time"
+                                                            
                                                             value="{{
                                                                 item[
                                                                     'playingTee'
@@ -637,7 +633,7 @@
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
                         <div
-                            *ngFor="let items of selectedMembers; let i = index"
+                            *ngFor="let items of selectedMembers; let i = index; let j=index;"
                             class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
@@ -673,7 +669,7 @@
                                 >
                                     <mat-select
                                         class="w-100"
-                                        id="flight_{{ i }}_time"
+                                        id="flight_{{ j }}_tee"
                                         value="{{ items['tee'] }}"
                                         (selectionChange)="
                                             selectedTee($event, items.id)
@@ -705,7 +701,7 @@
                                         [svgIcon]="'heroicons_solid:flag'"
                                     ></mat-icon>
                                     <input
-                                        id="flight_{{ i }}_hole"
+                                        id="flight_{{ j }}_hole"
                                         value="{{ items['startingHole'] }}"
                                         matInput
                                         #query
@@ -722,7 +718,7 @@
                                     ></mat-icon>
                                     <input
                                         type="time"
-                                        id="flight_{{ i }}_time"
+                                        id="flight_{{ j }}_time"
                                         atp-time-picker
                                         value="{{ getNextFlightTime(items) }}"
                                         matInput
@@ -843,9 +839,7 @@
                                                         <mat-select
                                                             placeholder="Flight Tee"
                                                             type="text"
-                                                            id="flight_{{
-                                                                i
-                                                            }}_time"
+                                                            
                                                             value="{{
                                                                 item[
                                                                     'playingTee'
@@ -945,7 +939,7 @@
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
                         <div
-                            *ngFor="let items of selectedMembers; let i = index"
+                            *ngFor="let items of selectedMembers; let i = index; let j=index;"
                             class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
@@ -981,7 +975,7 @@
                                 >
                                     <mat-select
                                         class="w-100"
-                                        id="flight_{{ i }}_time"
+                                        id="flight_{{ j }}_tee"
                                         value="{{ items['tee'] }}"
                                         (selectionChange)="
                                             selectedTee($event, items.id)
@@ -1013,7 +1007,7 @@
                                         [svgIcon]="'heroicons_solid:flag'"
                                     ></mat-icon>
                                     <input
-                                        id="flight_{{ i }}_hole"
+                                        id="flight_{{ j }}_hole"
                                         value="{{ items['startingHole'] }}"
                                         matInput
                                         #query
@@ -1030,7 +1024,7 @@
                                     ></mat-icon>
                                     <input
                                         type="time"
-                                        id="flight_{{ i }}_time"
+                                        id="flight_{{ j }}_time"
                                         atp-time-picker
                                         value="{{ getNextFlightTime(items) }}"
                                         matInput
@@ -1151,9 +1145,7 @@
                                                         <mat-select
                                                             placeholder="Flight Tee"
                                                             type="text"
-                                                            id="flight_{{
-                                                                i
-                                                            }}_time"
+                                                            
                                                             value="{{
                                                                 item[
                                                                     'playingTee'
