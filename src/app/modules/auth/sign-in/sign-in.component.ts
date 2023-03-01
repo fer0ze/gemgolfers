@@ -56,7 +56,7 @@ export class AuthSignInComponent implements OnInit {
             password: ['', Validators.required],
             rememberMe: [''],
         });
-        this.show = Promise.resolve(true);
+        // this.show = Promise.resolve(true);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -77,12 +77,15 @@ export class AuthSignInComponent implements OnInit {
 
         // Hide the alert
         this.showAlert = false;
-        let isLoggedin = <boolean>(
-            await this._authService.login(
-                this.signInForm.value.email,
-                this.signInForm.value.password
-            )
-        );
+        let isLoggedin;
+        await this._authService
+            .login(this.signInForm.value.email, this.signInForm.value.password)
+            .then((respons) => {
+                isLoggedin = respons;
+            })
+            .catch((err) => {
+                isLoggedin = err;
+            });
 
         let isAdmin = <Player>(
             await this.facade.getPlayerByEmailLogin(this.signInForm.value.email)
@@ -92,7 +95,7 @@ export class AuthSignInComponent implements OnInit {
         }
         if (isLoggedin) {
             if (isAdmin && isAdmin[0] && isAdmin[0].adminClubId) {
-                this._authService.userChanges().subscribe(
+                this._authService.signIn(this.signInForm.value).subscribe(
                     () => {
                         console.log('2');
                         const redirectURL =
@@ -105,7 +108,8 @@ export class AuthSignInComponent implements OnInit {
                         console.log(redirectURL);
                         //this.signInForm.enable();
 
-                        this._router.navigateByUrl('/dashboard');
+                        window.location.reload();
+                        //this._router.navigateByUrl(redirectURL);
                     },
                     (response) => {
                         // Re-enable the form
@@ -122,12 +126,12 @@ export class AuthSignInComponent implements OnInit {
 
                         // Show the alert
                         this.showAlert = true;
-                        this.show = Promise.resolve(true);
+
                         return;
                     }
                 );
                 //this._router.navigateByUrl('/dashboard');
-                this.show = Promise.resolve(true);
+                //this.show = Promise.resolve(true);
             } else {
                 // Re-enable the form
                 this.signInForm.enable();
@@ -143,7 +147,7 @@ export class AuthSignInComponent implements OnInit {
 
                 // Show the alert
                 this.showAlert = true;
-                this.show = Promise.resolve(true);
+                // this.show = Promise.resolve(true);
                 return;
                 //this.isLoading = false;
 
@@ -151,6 +155,7 @@ export class AuthSignInComponent implements OnInit {
                 //     duration: 5000,
                 // });
             }
+            // this.show = Promise.resolve(true);
         } else {
             console.log('false');
             // Re-enable the form
@@ -167,7 +172,7 @@ export class AuthSignInComponent implements OnInit {
 
             // Show the alert
             this.showAlert = true;
-            this.show = Promise.resolve(true);
+            // this.show = Promise.resolve(true);
             return;
         }
 
@@ -188,7 +193,7 @@ export class AuthSignInComponent implements OnInit {
         //         console.log(redirectURL);
 
         //         this._router.navigateByUrl(redirectURL);
-        //         this.show = Promise.resolve(true);
+        //this.show = Promise.resolve(true);
         //     })
         //     .catch((err) => {
         //         this.signInForm.enable();

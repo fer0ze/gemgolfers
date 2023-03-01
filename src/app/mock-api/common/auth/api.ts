@@ -80,6 +80,8 @@ export class AuthMockApi {
                     200,
                     {
                         user: cloneDeep(this._user),
+                        accessToken: this._generateJWTToken(),
+                        tokenType: 'bearer',
                     },
                 ];
             });
@@ -88,31 +90,34 @@ export class AuthMockApi {
         // @ Sign in - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/auth/sign-in', 1500)
-            .reply((request: any) => {
+            .onPost('api/auth/sign-in', 1000)
+            .reply((request) => {
                 // Sign in successful
-                //console.log(request);
                 console.log(request);
+               
 
-                this.login(
-                    request['request'].body.email,
-                    request['request'].body.password
-                )
-                    .then((response) => {
-                        if (response) {
-                            return [
-                                200,
-                                {
-                                    user: cloneDeep(this._user),
-                                    accessToken: this._generateJWTToken(),
-                                    tokenType: 'bearer',
-                                },
-                            ];
-                        }
-                    })
-                    .catch((err) => {
-                        return [404, false];
-                    });
+                this.loggedInuser = JSON.parse(
+                    localStorage.getItem(Constants.LOGGED_IN_USER)
+                );
+                if (this.loggedInuser) {
+                    let clubInfo: any =
+                        this.loggedInuser.membership.length > 0
+                            ? this.loggedInuser.membership[0].club
+                            : null;
+                    let logo =
+                        clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+                    this._user.email = this.loggedInuser.email;
+                    this._user.name = this.loggedInuser.fullName;
+                    this._user.avatar = 'assets/images/logo/' + logo + '';
+                    return [
+                        200,
+                        {
+                            user: cloneDeep(this._user),
+                            accessToken: this._generateJWTToken(),
+                            tokenType: 'bearer',
+                        },
+                    ];
+                }
 
                 // Invalid credentials
                 return [404, false];

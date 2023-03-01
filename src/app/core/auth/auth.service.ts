@@ -97,19 +97,18 @@ export class AuthService {
      *
      * @param credentials
      */
-    userChanges(): Observable<any> {
+    userChanges(credentials: { email: string; password: string }): Observable<any> {
         // Throw error, if the user is already logged in
-        if (!this._authenticated) {
-            return throwError('User is Not Logged in.');
+        if (this._authenticated) {
+            return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/userUpdate',{}).pipe(
+        return this._httpClient.post('api/auth/userUpdate',credentials).pipe(
             switchMap((response: any) => {
-                // Store the access token in the local storage
-                //this.accessToken = response.accessToken;
+                this.accessToken = response.accessToken;
 
                 // Set the authenticated flag to true
-                //._authenticated = true;
+                this._authenticated = true;
 
                 // Store the user on the user service
                 this._userService.user = response.user;
@@ -130,10 +129,10 @@ export class AuthService {
                     const token = value.user
                         .getIdToken(false)
                         .then((authToken) => {
-                            this.accessToken = this._api._generateJWTToken();
+                            // this.accessToken = this._api._generateJWTToken();
 
                             // Set the authenticated flag to true
-                            this._authenticated = true;
+                            // this._authenticated = true;
                             // this.loggedInuser = JSON.parse(
                             //     localStorage.getItem(Constants.LOGGED_IN_USER)
                             // );
