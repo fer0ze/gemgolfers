@@ -1,11 +1,5 @@
-
-<ng-container *ngIf="isLoading">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-</ng-container>
-<div
-    class="absolute inset-0 flex  flex-col min-w-0 overflow-y-auto"
->
-    <div class="relative flex-0 mt-1 py-8 px-4 overflow-hidden">
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto">
+    <div class="relative flex-0 py-8 px-4 overflow-hidden">
         <div
             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6 w-full min-w-0 logo"
         >
@@ -18,22 +12,24 @@
                     alt="Logo"
                 />
             </div>
-            <!-- <div class="flex flex-row justify-around sm:inline md:hidden">
-                <div class="md:hidden h-36 w-40">
-                    <img src="assets/images/logo/1.png" alt="Logo" />
+            <div class="flex flex-row justify-center sm:inline md:hidden">
+                <div
+                    class="py-0.5 ml-1 w-44 leading-8 flex text-center justify-center rounded-lg shadow-2xl bg-card text-md font-extrabold '"
+                    style="color: #004987"
+                >
+                    Powered by Gemgolfers
                 </div>
-                <div class="md:hidden h-36 w-36">
-                    <img src="assets/images/logo/{{ clubLogo }}" alt="user" />
-                </div>
-            </div> -->
+            </div>
             <div
                 class="z-10 col-span-1 relative flex flex-col text-center items-center"
             >
-                <h2 class="text-3xl pt-4 mb-4 font-semibold">
+                <h2
+                    class="text-3xl md:pt-4 sm:pt-0 text-neutral-50 mb-4 font-semibold"
+                >
                     {{ Leaderboard?.title }}
                 </h2>
                 <div
-                    class="mt-1 text-4xl font-extrabold tracking-tight leading-tight text-center"
+                    class="mt-1 text-3xl text-neutral-50 font-extrabold tracking-tight leading-tight text-center"
                 >
                     Leaderboard
                 </div>
@@ -47,9 +43,32 @@
                     alt="user"
                 />
             </div>
+
+            <div class="flex flex-col justify-center sm:inline md:hidden">
+                <div class="flex flex-row justify-evenly">
+                    <div class="flex flex-col text-center">
+                        <span
+                            class="leading-none text-sky-400 text-4xl font-semibold"
+                            >{{ totalRounds }}</span
+                        >
+                        <span class="leading-none mt-1 text-lg text-neutral-50 font-semibold"
+                            >No.of Rounds</span
+                        >
+                    </div>
+                    <div class="flex flex-col text-center">
+                        <span
+                            class="leading-none text-sky-400 text-4xl font-semibold"
+                            >{{ activeRound }}</span
+                        >
+                        <span class="leading-none mt-1 text-lg text-neutral-50 font-semibold"
+                            >Active Round</span
+                        >
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="flex flex-auto p-6 sm:p-10">
+    <div *ngIf="!isLoading" class="flex flex-auto p-6 sm:p-10">
         <div
             class="flex flex-col flex-auto w-full max-w-7xl sm:max-w-5xl mx-auto"
         >
@@ -61,7 +80,7 @@
                     (change)="selectionChanged($event)"
                     *ngIf="
                         matchFormat != 'BEST_THREE' &&
-                        matchFormat != 'COMBINE_ALL' 
+                        matchFormat != 'COMBINE_ALL'
                     "
                     class="pb-2"
                 >
@@ -772,6 +791,16 @@
                     </li>
                 </ul>
             </div>
+        </div>
+    </div>
+    <div class="outer-spinner" *ngIf="isLoading">
+        <!-- <img
+            src="assets/images/logo/logo.svg"
+            alt="Fuse logo"> -->
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
         </div>
     </div>
 </div>

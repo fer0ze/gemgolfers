@@ -1,11 +1,56 @@
 .relative {
   background-color: #004987;
-  color: white;
+}
+
+.outer-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+  width: 56px;
+}
+
+.spinner>div {
+  width: 12px;
+  height: 12px;
+  background-color: #004987;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: fuse-bouncedelay 1s infinite ease-in-out both;
+  animation: fuse-bouncedelay 1s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s
 }
 
 body {
   font-family: 'lato', sans-serif;
 }
+
 .responsive-table {
   li {
     border-radius: 11px;
@@ -69,9 +114,10 @@ body {
     justify-content: center;
     align-items: center;
   }
+
   @media all and (max-width: 767px) {
     .table-header {
-      display: flex;  
+      display: flex;
       line-height: 0.25rem;
       padding: 12px 5px;
 
@@ -187,16 +233,23 @@ body {
     }
   }
 }
+
 @media screen and (max-width: 1000px) {
   .cut-UI-Mobile {
     font-size: 12px !important;
   }
+
   .logo {
     display: grid !important;
   }
-  .logo-1, .logo-2, .logo-3, .webLogo{
+
+  .logo-1,
+  .logo-2,
+  .logo-3,
+  .webLogo {
     display: none !important;
   }
+
   .mobile-logo {
     display: flex !important;
   }

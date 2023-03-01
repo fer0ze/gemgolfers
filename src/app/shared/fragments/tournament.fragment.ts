@@ -161,6 +161,7 @@ export const TournamentMemberCategoryQL = gql`
         tournamentId
         category
         handicapLimits
+        default
         flightSettings
     }
 `;

@@ -188,7 +188,6 @@ export class MainLeaderboardComponent implements OnInit {
                                 }
                             }
 
-                           
                             this.activeRound = this.Leaderboard.activeRound;
                             this.totalRounds = this.Leaderboard.noOfRounds;
                             this.matchFormat = this.Leaderboard.matchFormat;
@@ -206,7 +205,9 @@ export class MainLeaderboardComponent implements OnInit {
                             );
                             if (this.Leaderboard.CategoriesQL.length > 0) {
                                 this.selectedCategory =
-                                    this.Leaderboard.CategoriesQL[2];
+                                    this.Leaderboard.CategoriesQL.find((a) => {
+                                        return a.default == true;
+                                    });
 
                                 if (!this.selectedCategoryValue)
                                     this.selectedCategoryValue =
@@ -611,7 +612,6 @@ export class MainLeaderboardComponent implements OnInit {
 
                 return true;
             }
-           
         } else {
             if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE)
                 this.createTexasScrampleLeaders(
@@ -929,7 +929,6 @@ export class MainLeaderboardComponent implements OnInit {
             this.sortLeaders(this.grossLeaders);
             this.sortLeaders(this.netLeaders);
         }
-      
     }
 
     private calculateTotal(leaderGross: any, leaderNet: any, round: number) {
