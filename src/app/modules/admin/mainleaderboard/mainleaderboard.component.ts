@@ -206,7 +206,7 @@ export class MainLeaderboardComponent implements OnInit {
                             );
                             if (this.Leaderboard.CategoriesQL.length > 0) {
                                 this.selectedCategory =
-                                    this.Leaderboard.CategoriesQL[0];
+                                    this.Leaderboard.CategoriesQL[2];
 
                                 if (!this.selectedCategoryValue)
                                     this.selectedCategoryValue =

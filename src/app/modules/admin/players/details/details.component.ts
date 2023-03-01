@@ -137,23 +137,23 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             this.clubTitle = clubInfo ? clubInfo.name : '';
         }
         this.contactForm = new FormGroup({
-            firstName: new FormControl('', [Validators.required]),
-            lastName: new FormControl('', [Validators.required]),
-            gender: new FormControl(''),
-            email: new FormControl(''),
-            phoneNumbers: new FormControl(''),
-            dateOfBirth: new FormControl(''),
+            firstName: new FormControl("", [Validators.required]),
+            lastName: new FormControl("", [Validators.required]),
+            gender: new FormControl(""),
+            email: new FormControl(""),
+            phoneNumbers: new FormControl(""),
+            dateOfBirth: new FormControl(""),
             category: new FormControl(' ', [Validators.required]),
-            handicap: new FormControl('', [Validators.required]),
+            handicap: new FormControl("", [Validators.required]),
             club: new FormControl(
-                this.loggedInuser.userRole > 1 ? this.clubTitle : '',
+                this.loggedInuser.userRole > 1 ? this.clubTitle : "",
                 [Validators.required]
             ),
             country: new FormControl('Pakistan'),
             isClubAdmin: new FormControl('3'),
-            membershipNo: new FormControl('', [Validators.required]),
+            membershipNo: new FormControl("", [Validators.required]),
             status: new FormControl('false', [Validators.required]),
-            notes: new FormControl(''),
+            notes: new FormControl(""),
         });
         this.contact = {
             id: this.playerID,
@@ -184,7 +184,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
         if (this.loggedInuser.userRole > 1) {
             this.contactForm.get('club').clearValidators();
-            this.contactForm.get('club').updateValueAndValidity();
+            //this.contactForm.get('club').updateValueAndValidity();
         }
         this._activatedRoute.paramMap.subscribe((params) => {
             this.playerID = params.get('id');
@@ -476,7 +476,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this.contactForm.get('dateOfBirth').setValue('');
         this.contactForm.get('category').setValue('');
         this.contactForm.get('handicap').setValue('');
-        this.contactForm.get('club').setValue('');
         this.contactForm.get('membershipNo').setValue('');
     }
     /**
@@ -489,6 +488,8 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
     cancel() {
+        //console.log(this.contactForm.value);
+        
         this._router.navigate(['/players'], {
             relativeTo: this._activatedRoute,
         });

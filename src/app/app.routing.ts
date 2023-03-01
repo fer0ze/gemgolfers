@@ -20,7 +20,7 @@ export const appRoutes: Route[] = [
             import(
                 'app/modules/admin/mainleaderboard/mainleaderboard.module'
             ).then((m) => m.MainLeaderboardModule),
-        component: LayoutComponent,
+        component: LayoutLeaderComponent,
         data: {
             layout: 'empty',
         },

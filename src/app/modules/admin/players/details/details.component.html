@@ -34,7 +34,7 @@
             class="relative flex flex-col flex-auto items-center px-6 sm:px-12"
         >
             <div class="w-full max-w-3xl">
-                <form [formGroup]="contactForm" autocomplete="off" novalidate>
+                <form  [formGroup]="contactForm ? contactForm : []" autocomplete="off" novalidate>
                     <!-- Avatar -->
                     <div class="flex flex-auto items-end -mt-16">
                         <div
@@ -64,9 +64,9 @@
                             ></mat-icon>
                             <input
                                 matInput
-                                formControlName="firstName"
-                                placeholder="FirstName"
-                                [spellcheck]="false"
+                                formControlName="firstName"    
+                                [placeholder]="'FirstName'"                  
+                        
                             />
                         </mat-form-field>
                     </div>
@@ -83,7 +83,7 @@
                                 matInput
                                 formControlName="lastName"
                                 [placeholder]="'LastName'"
-                                [spellcheck]="false"
+                              
                             />
                         </mat-form-field>
                     </div>
