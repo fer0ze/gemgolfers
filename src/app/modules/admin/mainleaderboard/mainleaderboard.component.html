@@ -51,7 +51,8 @@
                             class="leading-none text-sky-400 text-4xl font-semibold"
                             >{{ totalRounds }}</span
                         >
-                        <span class="leading-none mt-1 text-lg text-neutral-50 font-semibold"
+                        <span
+                            class="leading-none mt-1 text-lg text-neutral-50 font-semibold"
                             >No.of Rounds</span
                         >
                     </div>
@@ -60,7 +61,8 @@
                             class="leading-none text-sky-400 text-4xl font-semibold"
                             >{{ activeRound }}</span
                         >
-                        <span class="leading-none mt-1 text-lg text-neutral-50 font-semibold"
+                        <span
+                            class="leading-none mt-1 text-lg text-neutral-50 font-semibold"
                             >Active Round</span
                         >
                     </div>
@@ -80,7 +82,10 @@
                     (change)="selectionChanged($event)"
                     *ngIf="
                         matchFormat != 'BEST_THREE' &&
-                        matchFormat != 'COMBINE_ALL'
+                        matchFormat != 'COMBINE_ALL' &&
+                        selectedCategoryValue != 'Professionals' &&
+                        selectedCategoryValue != 'Junior Professionals' &&
+                        selectedCategoryValue != 'Senior Professionals'
                     "
                     class="pb-2"
                 >
