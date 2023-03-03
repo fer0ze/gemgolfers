@@ -21,7 +21,6 @@ import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PlayersComponent } from './players.component';
-import { PlayerComponent } from './player/player.component';
 import { ContactsDetailsComponent } from './details/details.component';
 import { playerRoutes } from './players.routing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -34,8 +33,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
     declarations: [
-       PlayersComponent,
-       PlayerComponent,
+       
+        PlayersComponent,
        ContactsDetailsComponent,ViewPlayerComponent
     ],
     imports     : [
@@ -51,7 +50,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         MatLuxonDateModule,
         MatAutocompleteModule,
         MatSortModule,
-    MatSnackBarModule,
+       MatSnackBarModule,
         MatMenuModule,
         MatProgressBarModule,
         ReactiveFormsModule,

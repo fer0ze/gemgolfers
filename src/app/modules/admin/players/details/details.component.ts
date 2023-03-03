@@ -37,12 +37,6 @@ import {
     takeUntil,
 } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import {
-    Contact,
-    Country,
-    Tag,
-} from 'app/modules/admin/players/player/player.types';
-import { PlayerComponent } from '../player/player.component';
 import { FacadeService } from 'app/shared/services/facade.service';
 import {
     ClubMembership,
@@ -68,22 +62,21 @@ import { Club } from 'app/shared/models/club.model';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactsDetailsComponent implements OnInit, OnDestroy {
+    drawerMode: 'over' | 'side' = 'side';
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     clubTitle: string;
     editMode: boolean = false;
     save: boolean = false;
-    tags: Tag[];
     golfClubs: Club[] = [];
     tagsEditMode: boolean = false;
-    filteredTags: Tag[];
     playerCategories: PlayerCategory[] = [];
-    contact: Contact;
+    contact: any;
     contactForm: FormGroup;
     hideClubs: boolean = true;
-    contacts: Contact[];
-    countries: Country[];
+    contacts: any[];
+    countries: any[];
     playerID: any;
     cardsrc = 'assets/images/cards/01-320x200.png';
     avatarsrc = 'assets/images/avatars/male-04.jpg';
@@ -98,8 +91,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _contactsListComponent: PlayerComponent,
-        private _formBuilder: UntypedFormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
         private _fuseConfirmationSuccessService: FuseConfirmationSuccessService,
         private _renderer2: Renderer2,
@@ -118,14 +109,14 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
      * On init
      */
     async ngOnInit() {
+
+        this._activatedRoute.paramMap.subscribe(async(params) => {
+            this.playerID = params.get('id');
+        });
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-
-        this.playerCategories = this._facadeService.getPlayerCategories();
-        let dataClubs = await this._facadeService.getClubList();
-        this.golfClubs = dataClubs.club;
-        console.log(this.playerCategories);
+       
 
         if (this.loggedInuser) {
             let clubInfo: any =
@@ -137,40 +128,31 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             this.clubTitle = clubInfo ? clubInfo.name : '';
         }
         this.contactForm = new FormGroup({
-            firstName: new FormControl("", [Validators.required]),
-            lastName: new FormControl("", [Validators.required]),
-            gender: new FormControl(""),
-            email: new FormControl(""),
-            phoneNumbers: new FormControl(""),
-            dateOfBirth: new FormControl(""),
-            category: new FormControl(' ', [Validators.required]),
-            handicap: new FormControl("", [Validators.required]),
+            firstName: new FormControl('', [Validators.required]),
+            lastName: new FormControl('', [Validators.required]),
+            gender: new FormControl('male'),
+            email: new FormControl(''),
+            phoneNumbers: new FormControl(''),
+            dateOfBirth: new FormControl(''),
+            category: new FormControl('', [Validators.required]),
+            handicap: new FormControl('0', [Validators.required]),
             club: new FormControl(
-                this.loggedInuser.userRole > 1 ? this.clubTitle : "",
+                this.loggedInuser.userRole > 1 ? this.clubTitle : '',
                 [Validators.required]
             ),
             country: new FormControl('Pakistan'),
             isClubAdmin: new FormControl('3'),
-            membershipNo: new FormControl("", [Validators.required]),
+            membershipNo: new FormControl(''),
             status: new FormControl('false', [Validators.required]),
-            notes: new FormControl(""),
+            notes: new FormControl(''),
         });
-        this.contact = {
-            id: this.playerID,
-            firstName: 'New Contact',
-            lastName: '',
-            gender: '',
-            email: '',
-            phoneNumbers: '',
-            dateOfBirth: '',
-            category: '',
-            handicap: '',
-            club: '',
-            country: '',
-            membershipNo: '',
-            notes: '',
-            status: true,
-        };
+        this.playerCategories = this._facadeService.getPlayerCategories();
+        let dataClubs = await this._facadeService.getClubList();
+        this.golfClubs = dataClubs.club;
+        console.log(this.playerCategories);
+        if (this.playerID) {
+            this.fetchData();
+        }
         this.filteredClubOptions = this.contactForm
             .get('club')!
             .valueChanges.pipe(
@@ -186,12 +168,8 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             this.contactForm.get('club').clearValidators();
             //this.contactForm.get('club').updateValueAndValidity();
         }
-        this._activatedRoute.paramMap.subscribe((params) => {
-            this.playerID = params.get('id');
-            if (this.playerID) this.fetchData();
-        });
 
-        this._contactsListComponent.matDrawer.open();
+        
 
         console.log(this.contact);
     }
@@ -224,16 +202,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Close the drawer
-     */
-    closeDrawer(): Promise<MatDrawerToggleResult> {
-        if(this.save)
-        {
-            this._contactsListComponent.fecthData();
-        }
-        return this._contactsListComponent.matDrawer.close();
-    }
+  
 
     /**
      * Toggle edit mode
@@ -389,7 +358,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 await this._facadeService.AddPlayer(player)
             );
             if (isSuccess) {
-                this.save=true;
+                this.save = true;
                 const confirmation = this._fuseConfirmationSuccessService.open({
                     title: 'Player Added Successfully',
                     message: 'Player has been added!',
@@ -437,7 +406,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
 
             //console.log(isSuccess);
             if (isSuccess) {
-                this.save=true;
+                this.save = true;
                 const confirmation = this._fuseConfirmationSuccessService.open({
                     title: 'Player Updated Successfully',
                     message: 'Player has been Updated!',
@@ -488,11 +457,11 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
     cancel() {
-        //console.log(this.contactForm.value);
-        
-        this._router.navigate(['/players'], {
-            relativeTo: this._activatedRoute,
-        });
+        console.log(this.contactForm.value);
+
+        // this._router.navigate(['/players'], {
+        //     relativeTo: this._activatedRoute,
+        // });
     }
 
     /**
@@ -516,19 +485,19 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             // If the confirm button pressed...
             if (result === 'confirmed') {
                 // Get the current contact's id
-                const id = this.contact.id;
+                // const id = this.contact.id;
 
-                // Get the next/previous contact's id
-                const currentContactIndex = this.contacts.findIndex(
-                    (item) => item.id === id
-                );
-                const nextContactIndex =
-                    currentContactIndex +
-                    (currentContactIndex === this.contacts.length - 1 ? -1 : 1);
-                const nextContactId =
-                    this.contacts.length === 1 && this.contacts[0].id === id
-                        ? null
-                        : this.contacts[nextContactIndex].id;
+                // // Get the next/previous contact's id
+                // const currentContactIndex = this.contacts.findIndex(
+                //     (item) => item.id === id
+                // );
+                // const nextContactIndex =
+                //     currentContactIndex +
+                //     (currentContactIndex === this.contacts.length - 1 ? -1 : 1);
+                // const nextContactId =
+                //     this.contacts.length === 1 && this.contacts[0].id === id
+                //         ? null
+                //         : this.contacts[nextContactIndex].id;
 
                 // Delete the contact
                 // this._contactsService.deleteContact(id)
@@ -562,10 +531,11 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     }
 
     async fetchData() {
-        this.currentPlayer = <Player>(
-            await this._facadeService.getPlayerByID(this.playerID)
-        );
-
+        if (this.playerID) {
+            this.currentPlayer = <Player>(
+                await this._facadeService.getPlayerByID(this.playerID)
+            );
+        }
         console.log(this.currentPlayer);
         if (this.currentPlayer.player.length > 0) {
             this.editMode = true;
@@ -581,13 +551,17 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 country: this.currentPlayer.player[0].countryCode,
                 notes: this.currentPlayer.player[0].extraData,
                 membershipNo: this.currentPlayer.player[0].membershipNumber,
-                club: this.currentPlayer.player[0].membership[0].club.name,
+                club: this.currentPlayer.player[0].membership[0]
+                    ? this.currentPlayer.player[0].membership[0].club.name
+                    : '',
                 isClubAdmin: this.currentPlayer.player[0].adminClubId
                     ? '1'
                     : '0',
-                status: this.currentPlayer.player[0].membership[0].suspended
-                    ? 'true'
-                    : 'false',
+                status:
+                    this.currentPlayer.player[0].membership[0] &&
+                    this.currentPlayer.player[0].membership[0].suspended
+                        ? 'true'
+                        : 'false',
             });
         }
         // this.editMode=false;

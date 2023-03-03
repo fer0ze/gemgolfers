@@ -1,388 +1,411 @@
-<div class="flex flex-col w-full">
+<div
+    class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
+>
     <!-- Edit mode -->
-    <ng-container >
-        <!-- Header -->
-        <div
-            class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700"
-        >
-            <!-- Background -->
-            <ng-container>
-                <img
-                    class="absolute inset-0 object-cover w-full h-full"
-                    [src]="this.cardsrc"
-                />
-            </ng-container>
-            <!-- Close button -->
-            <div
-                class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6"
-            >
-                <a
-                    mat-icon-button
-                    [matTooltip]="'Close'"
-                    [routerLink]="['/players']"
-                >
-                    <mat-icon
-                        class="text-white"
-                        [svgIcon]="'heroicons_outline:x'"
-                    ></mat-icon>
-                </a>
-            </div>
-        </div>
-
+    <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Contact form -->
-        <div
-            class="relative flex flex-col flex-auto items-center px-6 sm:px-12"
+        <mat-drawer
+            class="sm:w-96 dark:bg-gray-900"
+            [autoFocus]="false"
+            [mode]="drawerMode"
+            [opened]="true"
+            #drawer
         >
-            <div class="w-full max-w-3xl">
-                <form  [formGroup]="contactForm ? contactForm : []" autocomplete="off" novalidate>
-                    <!-- Avatar -->
-                    <div class="flex flex-auto items-end -mt-16">
-                        <div
-                            class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card"
-                        >
-                            <!-- Image/Letter -->
-                            <!-- <img
-                                class="object-cover w-full h-full"
-                                [src]="this.avatarsrc"
-                            />-->
+            <!-- Header -->
+            <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
+                <!-- Title -->
+                <div
+                    class="text-4xl font-extrabold tracking-tight leading-none"
+                >
+                    Settings
+                </div>
+                <!-- Close button -->
+                <div class="lg:hidden">
+                    <button mat-icon-button (click)="drawer.close()">
+                        <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="flex flex-col divide-y border-t border-b">
+                <ng-container>
+                    <div
+                        class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50"
+                    >
+                        <mat-icon
+                            class="text-primary dark:text-primary-500"
+                            [svgIcon]="'heroicons_outline:user-circle'"
+                        ></mat-icon>
+                        <div class="ml-3">
                             <div
-                                class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-6xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                class="font-medium leading-6 text-primary dark:text-primary-500"
                             >
-                                NEW
+                                Account
+                            </div>
+                            <div class="mt-0.5 text-secondary">
+                                Manage your public profile and private
+                                information
                             </div>
                         </div>
                     </div>
+                </ng-container>
+            </div>
+        </mat-drawer>
+        <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
+            <div class="flex items-center">
+                <!-- Drawer toggle -->
+                <button class="lg:hidden -ml-2" mat-icon-button>
+                    <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+                </button>
 
+                <!-- Panel title -->
+                <div
+                    class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none"
+                >
+                    Account
+                </div>
+            </div>
+            <!-- <div class="w-full">
+                <div class="text-xl">Profile</div>
+                <div class="text-secondary">
+                    Following information is publicly displayed, be careful!
+                </div>
+            </div> -->
+            <div class="w-full max-w-3xl">
+                <div class="text-xl mt-8">Profile</div>
+                <div class="text-secondary">
+                    Following information is publicly displayed, be careful!
+                </div>
+                <form
+                    [formGroup]="contactForm ? contactForm : []"
+                    autocomplete="off"
+                    novalidate
+                >
                     <!--First Name -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>First Name</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="firstName"    
-                                [placeholder]="'FirstName'"                  
-                        
-                            />
-                        </mat-form-field>
-                    </div>
-                    <!--Last Name -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Last Name</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="lastName"
-                                [placeholder]="'LastName'"
-                              
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- category -->
-                    <!-- <div class="flex flex-wrap items-center -m-1.5 mt-6">
-                       
-                        <ng-container *ngIf="contact.category">
-                            <ng-container >
-                                <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                                    <span class="text-md font-medium whitespace-nowrap">{{contact.category}}</span>
-                                </div>
-                            </ng-container>
-                        </ng-container> -->
-
-                    <!-- </div> -->
-
-                    <!-- Email -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Email</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:mail'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="email"
-                                [placeholder]="'Email'"
-                            />
-                        </mat-form-field>
-                    </div>
-                    <!-- Handicap -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Handicap</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:tag'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="handicap"
-                                [placeholder]="'Handicap'"
-                                type="number"
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- CLUB -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Club</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:stop'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="club"
-                                [placeholder]="'Club'"
-                                [readonly]="hideClubs"
-                                [matAutocomplete]="auto"
-                            />
-                            <mat-autocomplete
-                            autoActiveFirstOption
-                                #auto="matAutocomplete"
-                                [displayWith]="displayFn"
+                    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
                             >
-                                <mat-option
-                                    *ngFor="
-                                        let option of filteredClubOptions
-                                            | async
-                                    "
-                                    [value]="option"
-                                >
-                                    {{ option.name }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <!-- Membership -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Membership No</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:color-swatch'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                formControlName="membershipNo"
-                                [placeholder]="'Membership No '"
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Category -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Category</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:newspaper'"
-                            ></mat-icon>
-
-                            <mat-select
-                                formControlName="category"
-                                placeholder="Player Category"
-                                class="mr-1.5"
+                                <mat-label>First Name</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="firstName"
+                                    [placeholder]="'FirstName'"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <!--Last Name -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
                             >
-                                <mat-option
-                                    *ngFor="let cat of playerCategories"
-                                    [value]="cat.name"
+                                <mat-label>Last Name</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="lastName"
+                                    [placeholder]="'LastName'"
+                                />
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Email</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:mail'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="email"
+                                    [placeholder]="'Email'"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <!-- Handicap -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Handicap</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:tag'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="handicap"
+                                    [placeholder]="'Handicap'"
+                                    type="number"
+                                />
+                            </mat-form-field>
+                        </div>
+
+                        <!-- CLUB -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Club</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:stop'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="club"
+                                    [placeholder]="'Club'"
+                                    [readonly]="hideClubs"
+                                    [matAutocomplete]="auto"
+                                />
+                                <mat-autocomplete
+                                    autoActiveFirstOption
+                                    #auto="matAutocomplete"
+                                    [displayWith]="displayFn"
                                 >
-                                    <span class="flex items-center">
-                                        <span class="ml-5">{{ cat.name }}</span>
-                                    </span>
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                                    <mat-option
+                                        *ngFor="
+                                            let option of filteredClubOptions
+                                                | async
+                                        "
+                                        [value]="option"
+                                    >
+                                        {{ option.name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <!-- Membership -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Membership No</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:color-swatch'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="membershipNo"
+                                    [placeholder]="'Membership No '"
+                                />
+                            </mat-form-field>
+                        </div>
 
-                    <!-- Gender -->
-                    <div class="mt-8">
-                        <div class="space-y-4">
-                            <ng-container>
-                                <div class="flex">
-                                    <mat-form-field
-                                        class="fuse-mat-no-subscript flex-auto"
-                                    >
-                                        <mat-label>Gender</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:map'"
-                                        ></mat-icon>
-                                        <mat-select
-                                            formControlName="gender"
-                                            placeholder="Gender"
-                                            class="mr-1.5"
-                                        >
-                                            <mat-option value="male">
-                                                <span class="flex items-center">
-                                                    <span class="ml-2"
-                                                        >Male</span
-                                                    >
-                                                </span>
-                                            </mat-option>
-                                            <mat-option value="female">
-                                                <span class="flex items-center">
-                                                    <span class="ml-2"
-                                                        >Female</span
-                                                    >
-                                                </span>
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                    <!-- Country -->
-                    <div class="mt-8">
-                        <div class="space-y-4">
-                            <ng-container>
-                                <div class="flex">
-                                    <mat-form-field
-                                        class="fuse-mat-no-subscript flex-auto"
-                                    >
-                                        <mat-label>Country</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:cloud'"
-                                        ></mat-icon>
-                                        <mat-select
-                                            formControlName="country"
-                                            placeholder="Country"
-                                            class="mr-1.5"
-                                        >
-                                            <mat-option value="Pakistan">
-                                                <span class="flex items-center">
-                                                    <span class="ml-2"
-                                                        >Pakistan</span
-                                                    >
-                                                </span>
-                                            </mat-option>
-                                            <mat-option value="United Kingdom">
-                                                <span class="flex items-center">
-                                                    <span class="ml-2"
-                                                        >United Kingdom</span
-                                                    >
-                                                </span>
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                    <!-- Status -->
-                    <div class="mt-8">
-                        <div class="space-y-4">
-                            <ng-container>
-                                <div class="flex">
-                                    <mat-form-field
-                                        class="fuse-mat-no-subscript flex-auto"
-                                    >
-                                        <mat-label>Status</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="
-                                                'heroicons_solid:status-online'
-                                            "
-                                        ></mat-icon>
-                                        <mat-select
-                                            formControlName="status"
-                                            placeholder="Status"
-                                            class="mr-1.5"
-                                        >
-                                            <mat-option value="false">
-                                                <span class="flex items-center">
-                                                    <span class="ml-2"
-                                                        >Active</span
-                                                    >
-                                                </span>
-                                            </mat-option>
-                                            <mat-option value="true">
-                                                <span class="flex items-center">
-                                                    <span class="ml-2"
-                                                        >Disable</span
-                                                    >
-                                                </span>
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
+                        <!-- Category -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Category</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:newspaper'"
+                                ></mat-icon>
 
-                    <!-- Phone numbers -->
-                    <div class="mt-8">
-                        <div class="space-y-4">
-                            <ng-container>
-                                <div class="relative flex">
-                                    <mat-form-field
-                                        class="fuse-mat-no-subscript flex-auto"
+                                <mat-select
+                                    formControlName="category"
+                                    placeholder="Player Category"
+                                    class="mr-1.5"
+                                >
+                                    <mat-option
+                                        *ngFor="let cat of playerCategories"
+                                        [value]="cat.name"
                                     >
-                                        <mat-label>Phone</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:phone'"
-                                        ></mat-icon>
-                                        <input
-                                            matInput
-                                            formControlName="phoneNumbers"
-                                            [placeholder]="'Phone Number'"
-                                        />
-                                    </mat-form-field>
-                                    <!-- <mat-form-field class="fuse-mat-no-subscript flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
-                                        <mat-label *ngIf="first">Label</mat-label>
-                                        <mat-icon
-                                            matPrefix
-                                            class="hidden sm:flex icon-size-5"
-                                            [svgIcon]="'heroicons_solid:tag'"></mat-icon>
-                                        <input
-                                            matInput
-                                            formControlName="phoneNumber.get('label')"
-                                            [placeholder]="'Label'">
-                                    </mat-form-field> -->
-                                    <!-- Remove phone number -->
-                                    <!-- <ng-container *ngIf="!(first && last)">
-                                        <div
-                                            class="flex items-center w-10 pl-2"
-                                            [ngClass]="{'mt-6': first}">
-                                            <button
-                                                class="w-8 h-8 min-h-8"
-                                                mat-icon-button
-                                                (click)="removePhoneNumberField(i)"
-                                                matTooltip="Remove">
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                            </button>
-                                        </div>
-                                    </ng-container> -->
-                                </div>
-                            </ng-container>
+                                        <span class="flex items-center">
+                                            <span class="ml-5">{{
+                                                cat.name
+                                            }}</span>
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
-                        <!-- <div
+
+                        <!-- Gender -->
+                        <div class="sm:col-span-2">
+                            <div class="space-y-4">
+                                <ng-container>
+                                    <div class="flex">
+                                        <mat-form-field
+                                            class="fuse-mat-no-subscript flex-auto"
+                                        >
+                                            <mat-label>Gender</mat-label>
+                                            <mat-icon
+                                                matPrefix
+                                                class="hidden sm:flex icon-size-5"
+                                                [svgIcon]="
+                                                    'heroicons_solid:map'
+                                                "
+                                            ></mat-icon>
+                                            <mat-select
+                                                formControlName="gender"
+                                                placeholder="Gender"
+                                                class="mr-1.5"
+                                            >
+                                                <mat-option value="male">
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <span class="ml-2"
+                                                            >Male</span
+                                                        >
+                                                    </span>
+                                                </mat-option>
+                                                <mat-option value="female">
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <span class="ml-2"
+                                                            >Female</span
+                                                        >
+                                                    </span>
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- Country -->
+                        <div class="sm:col-span-2">
+                            <div class="space-y-4">
+                                <ng-container>
+                                    <div class="flex">
+                                        <mat-form-field
+                                            class="fuse-mat-no-subscript flex-auto"
+                                        >
+                                            <mat-label>Country</mat-label>
+                                            <mat-icon
+                                                matPrefix
+                                                class="hidden sm:flex icon-size-5"
+                                                [svgIcon]="
+                                                    'heroicons_solid:cloud'
+                                                "
+                                            ></mat-icon>
+                                            <mat-select
+                                                formControlName="country"
+                                                placeholder="Country"
+                                                class="mr-1.5"
+                                            >
+                                                <mat-option value="Pakistan">
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <span class="ml-2"
+                                                            >Pakistan</span
+                                                        >
+                                                    </span>
+                                                </mat-option>
+                                                <mat-option
+                                                    value="United Kingdom"
+                                                >
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <span class="ml-2"
+                                                            >United
+                                                            Kingdom</span
+                                                        >
+                                                    </span>
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- Status -->
+                        <div class="sm:col-span-2">
+                            <div class="space-y-4">
+                                <ng-container>
+                                    <div class="flex">
+                                        <mat-form-field
+                                            class="fuse-mat-no-subscript flex-auto"
+                                        >
+                                            <mat-label>Status</mat-label>
+                                            <mat-icon
+                                                matPrefix
+                                                class="hidden sm:flex icon-size-5"
+                                                [svgIcon]="
+                                                    'heroicons_solid:status-online'
+                                                "
+                                            ></mat-icon>
+                                            <mat-select
+                                                formControlName="status"
+                                                placeholder="Status"
+                                                class="mr-1.5"
+                                            >
+                                                <mat-option value="false">
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <span class="ml-2"
+                                                            >Active</span
+                                                        >
+                                                    </span>
+                                                </mat-option>
+                                                <mat-option value="true">
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <span class="ml-2"
+                                                            >Disable</span
+                                                        >
+                                                    </span>
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+                        <!-- Phone numbers -->
+                        <div class="sm:col-span-2">
+                            <div class="space-y-4">
+                                <ng-container>
+                                    <div class="relative flex">
+                                        <mat-form-field
+                                            class="fuse-mat-no-subscript flex-auto"
+                                        >
+                                            <mat-label>Phone</mat-label>
+                                            <mat-icon
+                                                matPrefix
+                                                class="hidden sm:flex icon-size-5"
+                                                [svgIcon]="
+                                                    'heroicons_solid:phone'
+                                                "
+                                            ></mat-icon>
+                                            <input
+                                                matInput
+                                                formControlName="phoneNumbers"
+                                                [placeholder]="'Phone Number'"
+                                            />
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <!-- <div
                             class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
                             (click)="addPhoneNumberField()">
                             <mat-icon
@@ -390,84 +413,62 @@
                                 [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                             <span class="ml-2 font-medium text-secondary group-hover:underline">Add a phone number</span>
                         </div> -->
-                    </div>
+                        </div>
 
-                    <!-- Address -->
-                    <!-- <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Address</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                            <input
-                                matInput
-                                formControlName="'address'"
-                                [placeholder]="'Address'">
-                        </mat-form-field>
-                    </div> -->
-
-                    <!-- Birthday -->
-                    <div class="mt-8">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>Birthday</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:cake'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                [matDatepicker]="birthdayDatepicker"
-                                formControlName="dateOfBirth"
-                                [placeholder]="'Enter Birthday'"
-                            />
-                            <mat-datepicker-toggle
-                                matSuffix
-                                [for]="birthdayDatepicker"
+                        <!-- Birthday -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
                             >
-                            </mat-datepicker-toggle>
-                            <mat-datepicker
-                                #birthdayDatepicker
-                            ></mat-datepicker>
-                        </mat-form-field>
-                    </div>
+                                <mat-label>Birthday</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:cake'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    [matDatepicker]="birthdayDatepicker"
+                                    formControlName="dateOfBirth"
+                                    [placeholder]="'Enter Birthday'"
+                                />
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="birthdayDatepicker"
+                                >
+                                </mat-datepicker-toggle>
+                                <mat-datepicker
+                                    #birthdayDatepicker
+                                ></mat-datepicker>
+                            </mat-form-field>
+                        </div>
 
-                    <!-- Notes -->
-                    <div class="mt-8">
-                        <mat-form-field
-                            class="fuse-mat-textarea fuse-mat-no-subscript w-full"
-                        >
-                            <mat-label>Notes</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:menu-alt-2'"
-                            ></mat-icon>
-                            <textarea
-                                matInput
-                                formControlName="notes"
-                                [placeholder]="'Notes'"
-                                [rows]="5"
-                                [spellcheck]="false"
-                                matTextareaAutosize
-                            ></textarea>
-                        </mat-form-field>
+                        <!-- Notes -->
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-textarea fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Notes</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:menu-alt-2'"
+                                ></mat-icon>
+                                <textarea
+                                    matInput
+                                    formControlName="notes"
+                                    [placeholder]="'Notes'"
+                                    [rows]="5"
+                                    [spellcheck]="false"
+                                    matTextareaAutosize
+                                ></textarea>
+                            </mat-form-field>
+                        </div>
                     </div>
-
+                    <div class="my-4 border-t"></div>
                     <!-- Actions -->
-                    <div
-                        class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent"
-                    >
-                        <!-- Delete -->
-                        <button
-                            mat-button
-                            [color]="'warn'"
-                            [matTooltip]="'Delete'"
-                            (click)="deleteContact()"
-                        >
-                            Delete
-                        </button>
+                    <div class="flex items-center justify-end">
+                        
                         <!-- Cancel -->
                         <button
                             class="ml-auto"
@@ -492,5 +493,5 @@
                 </form>
             </div>
         </div>
-    </ng-container>
+    </mat-drawer-container>
 </div>
