@@ -38,6 +38,7 @@ export class MainLeaderboardComponent implements OnInit {
     totalRounds: number;
     flightRound: number;
     isLoading: boolean = true;
+    searchName: boolean = false;
     tRounds: TournamentRounds[] = [];
     roundFlights: any[] = [];
     matchFormat: string;
@@ -57,6 +58,7 @@ export class MainLeaderboardComponent implements OnInit {
     showTaxes: boolean = false;
 
     allMatchResults: any[] = [];
+    allMatchSearchResults: any[] = [];
     allLeadersGross: any[] = [];
     allLeadersCutOffGross: any[] = [];
     allLeadersCutOffNet: any[] = [];
@@ -1115,6 +1117,52 @@ export class MainLeaderboardComponent implements OnInit {
             }
         }
         return true;
+    }
+
+    filterByQuery(query) {
+        if (query.length > 3) {
+            this.searchName = true;
+            console.log(this.allMatchResults);
+            this.allMatchSearchResults = this.allLeadersGross.filter((obj) => {
+                return obj.name
+                    .toString()
+                    .toLowerCase()
+                    .includes(query.toString().toLowerCase());
+            });
+            // var filteredArray: any = this.Leaderboard.FlightsQL.filter(
+            //     (element) =>
+            //         element.MembersQL.some((MembersQL) =>
+            //             (
+            //                 MembersQL.PlayerQL.firstName +
+            //                 ' ' +
+            //                 MembersQL.PlayerQL.lastName
+            //             )
+            //                 .toLowerCase()
+            //                 .trim()
+            //                 .includes(query.toLowerCase().trim())
+            //         )
+            // ).map((element) => {
+            //     let n = Object.assign({}, element, {
+            //         MembersQL: element.MembersQL.filter((subElement) =>
+            //             (
+            //                 subElement.PlayerQL.firstName +
+            //                 ' ' +
+            //                 subElement.PlayerQL.lastName
+            //             )
+            //                 .toLowerCase()
+            //                 .trim()
+            //                 .includes(query.toLowerCase().trim())
+            //         ),
+            //     });
+            //     return n;
+            // });
+            // console.log(filteredArray);
+            // for(each)
+            // this.createSimpleLeaders(filteredArray,1,true);
+        } else {
+            this.allMatchSearchResults = [];
+            this.searchName = false;
+        }
     }
     Comparator(a, b) {
         // console.log(this.tournamentID);

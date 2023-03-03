@@ -934,7 +934,6 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             save = <boolean>await this.facadeService.SaveTournamentFlight(
                 this.tournamentInfo[0].id,
                 tournamentFlights,
-
                 flightMembersToSave
             );
         }

@@ -72,7 +72,7 @@ export const SaveTournamentFlightsMutation = gql`
       objects: $flightMembersToSave
       on_conflict: {
         constraint: flight_member_pkey
-        update_columns: [flightId, playerId, playingTee, tee_id, attendance]
+        update_columns: [playingTee, tee_id, attendance]
       }
     ) {
       AffectedRowsQLi: affected_rows

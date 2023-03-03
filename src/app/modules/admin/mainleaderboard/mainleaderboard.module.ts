@@ -6,6 +6,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MainleaderboardRoutingModule } from './mainleaderboard-routing.module';
 import { MainLeaderboardComponent } from './mainleaderboard.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
     declarations: [MainLeaderboardComponent],
@@ -16,6 +17,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         MatButtonToggleModule,
         MatDialogModule,
         MatProgressBarModule,
+        MatInputModule
     ],
 })
 export class MainLeaderboardModule {}
