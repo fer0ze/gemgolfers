@@ -46,6 +46,8 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FlightManagementComponent } from '../flight-management/flight-management.component';
 import { PlayerManagementComponent } from '../player-management/player-management.component';
 import { forEach } from 'lodash';
+import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player.component';
+import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog-add-player.component';
 
 @Component({
     selector: 'app-view-tournament',
@@ -2957,6 +2959,110 @@ export class ViewTournamentComponent implements OnInit {
             this.tournamentMember = players;
             //console.log(this.player);
             // this.setDataSource(this.player);
+        }
+    }
+
+    addPlayer() {
+        const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
+            data: { flights: this.selectedMembers.length },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                //console.log("record deleted.");
+                console.log(result);
+                // this.clubMembers.push(result);
+                //console.log(this.clubMembers);
+                // this.syncClubMembers();
+            } else {
+                //console.log("cancel delete action");
+            }
+        });
+    }
+
+    searchPlayer() {
+        const dialogRef = this.dialog.open(DialogPlayerComponent, {
+            width: '740px',
+            data: { flights: this.selectedMembers.length },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(result);
+            if (result.length == 1) {
+                //console.log("record deleted.");
+                console.log(result);
+
+                let founded = this.tournamentMembers.filter((a) => {
+                    return a.player.id == result[0].player.id;
+                });
+                console.log(founded);
+
+                if (founded.length == 0) {
+                    let tournamentMember: TournamentMember[] = [];
+
+                    let member: any = {
+                        tournamentId: this.tournamentID,
+                        playerId: result[0].player.id,
+                        status: true,
+                    };
+
+                    
+                    this.saveMembers(member);
+                    this.getTournamentMembers();
+                    
+                } else {
+                    this.snackBar.open(
+                        'Player already exist in the list.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
+                }
+            } else if (result.length > 1) {
+                result.forEach((element) => {
+                    let founded = this.tournamentMembers.filter((a) => {
+                        return a.player.id == result[0].player.id;
+                    });
+                    console.log(founded);
+
+                    if (founded.length == 0) {
+                        let tournamentMember: TournamentMember[] = [];
+
+                        let member: any = {
+                            tournamentId: this.tournamentID,
+                            playerId: element.player.id,
+                            status: true,
+                        };
+
+                        
+                        this.saveMembers(member);
+                    } else {
+                        this.snackBar.open(
+                            'Player already exist in the list.',
+                            'x',
+                            {
+                                duration: 5000,
+                            }
+                        );
+                    }
+                });
+                this.getTournamentMembers();
+            } else {
+            }
+        });
+    }
+
+    
+    async saveMembers(tournamentMember: TournamentMember[]) {
+        let result = <any>(
+            await this.facadeService.insertTournamentMember(tournamentMember)
+        );
+
+        if (result) {
+            this.snackBar.open('Tournament member have been added.', 'x', {
+                duration: 5000,
+            });
         }
     }
     movetoFlight(id) {

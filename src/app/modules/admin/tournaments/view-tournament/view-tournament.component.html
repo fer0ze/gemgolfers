@@ -237,7 +237,12 @@
                                                     mat-cell
                                                     *matCellDef="let row"
                                                 >
-                                                    {{ row.playerCategory =='Seniors' ? 'Senior Amateurs' :row.playerCategory }}
+                                                    {{
+                                                        row.playerCategory ==
+                                                        "Seniors"
+                                                            ? "Senior Amateurs"
+                                                            : row.playerCategory
+                                                    }}
                                                 </td>
                                             </ng-container>
 
@@ -4137,14 +4142,19 @@
                                 [disabled]="activeRound < noOfROunds"
                                 label="Summary"
                             >
-                           
-                                    <button class="my-3 mx-1 float-right" mat-stroked-button (click)="downloadResultSheet()">
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="'heroicons_solid:dowload'"
-                                        ></mat-icon>
-                                        <span class="ml-2">Dowload Result Sheet</span>
-                                    </button>
+                                <button
+                                    class="my-3 mx-1 float-right"
+                                    mat-stroked-button
+                                    (click)="downloadResultSheet()"
+                                >
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:dowload'"
+                                    ></mat-icon>
+                                    <span class="ml-2"
+                                        >Dowload Result Sheet</span
+                                    >
+                                </button>
                                 <div
                                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                 >
@@ -4659,18 +4669,41 @@
                                         #query
                                     />
                                 </mat-form-field>
-                                <button
-                                    class="bg-accent"
-                                    mat-flat-button
-                                    (click)="playerList()"
-                                    [color]="'primary'"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:add-member'"
-                                    ></mat-icon>
-                                    <span class="ml-2">Add Player</span>
-                                </button>
+                                <div class="flex flex-row">
+                                    <button
+                                       class="mx-1"
+                                        mat-raised-button
+                                        color="primary"
+                                        (click)="addPlayer()"
+                                    >
+                                        Add New Player
+                                    </button>
+                                    &nbsp;
+                                    <button
+                                       class="mx-3"
+                                        mat-raised-button
+                                        color="primary"
+                                        (click)="searchPlayer()"
+                                    >
+                                        Add Existing Player
+                                    </button>
+                                    <button
+                                        class="bg-accent"
+                                        mat-flat-button
+                                        (click)="playerList()"
+                                        [color]="'primary'"
+                                    >
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="
+                                                'heroicons_solid:add-member'
+                                            "
+                                        ></mat-icon>
+                                        <span class="ml-2"
+                                            >Add Club Player</span
+                                        >
+                                    </button>
+                                </div>
                             </div>
                             <ul class="responsive-table my-4 mb-12">
                                 <li class="table-header">
@@ -4689,43 +4722,27 @@
                                         let k = index
                                     "
                                 >
-                                    <div class="col col-1" >
+                                    <div class="col col-1">
                                         {{ k + 1 }}
                                     </div>
-                                    <div
-                                        class="col col-2 font-medium"
-                                        
-                                    >
+                                    <div class="col col-2 font-medium">
                                         {{ row.player["firstName"] }}
                                         {{ row.player["lastName"] }}
                                     </div>
-                                    <div
-                                        class="col col-3 font-medium"
-                                        
-                                    >
+                                    <div class="col col-3 font-medium">
                                         {{ row.player["email"] }}
                                     </div>
-                                    <div
-                                        class="col col-4 font-medium"
-                                       
-                                    >
+                                    <div class="col col-4 font-medium">
                                         {{ row.player["handicap"] }}
                                     </div>
-                                    <div
-                                        class="col col-5 font-medium"
-                                       
-                                    >
+                                    <div class="col col-5 font-medium">
                                         {{ row.player["membershipNumber"] }}
                                     </div>
-                                    <div
-                                        class="col col-5 font-medium"
-                                       
-                                    >
+                                    <div class="col col-5 font-medium">
                                         {{ row.player["playerCategory"] }}
                                     </div>
                                     <div
                                         class="col col-5 font-medium cursor-pointer"
-                                       
                                     >
                                         <mat-icon
                                             (click)="deleteTM(row.player)"
@@ -4735,7 +4752,9 @@
                                         <mat-icon
                                             class="ml-2"
                                             (click)="disqulifyTM(row.player)"
-                                            [svgIcon]="'heroicons_solid:close-eye'"
+                                            [svgIcon]="
+                                                'heroicons_solid:close-eye'
+                                            "
                                             color="warn"
                                         ></mat-icon>
                                     </div>

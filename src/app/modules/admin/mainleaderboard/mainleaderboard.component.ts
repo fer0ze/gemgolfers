@@ -132,7 +132,7 @@ export class MainLeaderboardComponent implements OnInit {
 
         if (this.tournamentID == 'jazamanogc') {
             this.clubLogo = 'J-Zaman.png';
-        } else if (this.tournamentID == '1stumanza-1') {
+        } else if (this.tournamentID == '1stumanza-1' || this.tournamentID=='1stRumanza-2') {
             this.clubLogo = 'rumanza.png';
         } else {
             this.clubLogo =
