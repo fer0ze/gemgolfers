@@ -593,6 +593,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.roundFlights[index].tee;
                 this.selectedMembers[outer]['tee_id'] =
                     this.roundFlights[index].tee_id;
+                this.selectedMembers[outer]['flightNo'] =
+                    this.roundFlights[index].flightNo;
 
                 if (this.roundFlights[index].MembersQL.length > 0)
                     this.selectedMembers[outer][cnter] =
@@ -710,6 +712,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 let startTime: string = (<HTMLInputElement>(
                     document.getElementById('flight_' + index + '_time')
                 )).value;
+                let flightNumber = parseFloat(
+                    (<HTMLInputElement>(
+                        document.getElementById('flight_' + index + '_number')
+                    )).value
+                );
 
                 if (this.showTeams) {
                     this.teamName = (<HTMLInputElement>(
@@ -758,7 +765,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         roundFlightData.length > 0
                             ? roundFlightData[0].courseHoleSets
                             : 0,
-                    flightNo: runningFlightcounter,
+                    flightNo: flightNumber,
                     flightRound: this.flightRound,
                     startingHole: startingHole,
                     tee:
@@ -1360,9 +1367,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                 duration: 5000,
                             }
                         );
-    
+
                         return;
-                    }else{
+                    } else {
                         this.selectedMembers[index].push(obj);
                     }
                 }
@@ -1406,7 +1413,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 : this.tournamentInfo[0].id;
         this.selectedMembers[this.selectedMembers.length - 1]['startingHole'] =
             '1';
-        this.selectedMembers[this.selectedMembers.length - 1]['tee'] = 'AMATEURS';
+        this.selectedMembers[this.selectedMembers.length - 1]['tee'] =
+            'AMATEURS';
         this.selectedMembers[this.selectedMembers.length - 1]['flightRound'] =
             this.flightRound;
         this.selectedMembers[this.selectedMembers.length - 1]['date'] = this

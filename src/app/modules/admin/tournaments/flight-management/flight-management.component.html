@@ -49,8 +49,9 @@
                                                     "
                                                 ></mat-icon>
                                                 <input
-                                                    value="{{ i + 1 }}"
+                                                    value="{{ items['flightNo'] }}"
                                                     matInput
+                                                    id="flight_{{ j }}_number"
                                                     #query
                                                 />
                                             </mat-form-field>
@@ -355,7 +356,8 @@
                                         [svgIcon]="'heroicons_solid:gift'"
                                     ></mat-icon>
                                     <input
-                                        value="{{ i + 1 }}"
+                                        value="{{ items['flightNo'] }}"
+                                        id="flight_{{ j }}_number"
                                         matInput
                                         #query
                                     />
@@ -659,7 +661,8 @@
                                         [svgIcon]="'heroicons_solid:gift'"
                                     ></mat-icon>
                                     <input
-                                        value="{{ i + 1 }}"
+                                        value="{{ items['flightNo'] }}"
+                                        id="flight_{{ j }}_number"
                                         matInput
                                         #query
                                     />
@@ -965,7 +968,8 @@
                                         [svgIcon]="'heroicons_solid:gift'"
                                     ></mat-icon>
                                     <input
-                                        value="{{ i + 1 }}"
+                                        value="{{ items['flightNo'] }}"
+                                        id="flight_{{ j }}_number"
                                         matInput
                                         #query
                                     />
