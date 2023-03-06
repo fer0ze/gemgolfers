@@ -35,8 +35,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTimepickerModule } from 'mat-timepicker';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
+import { DialogChangeCourseHoleSetComponent } from '../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 @NgModule({
-  declarations: [DailyRoundsComponent, AddDailyRoundComponent, AddPlayerDailyScoreComponent, ViewDailyRoundComponent,DialogAddExisitingPlayerComponent],
+  declarations: [DailyRoundsComponent, AddDailyRoundComponent, AddPlayerDailyScoreComponent, ViewDailyRoundComponent,DialogAddExisitingPlayerComponent,DialogChangeCourseHoleSetComponent],
   imports: [
     CommonModule,
     DailyRoundsRoutingModule,
@@ -63,10 +65,11 @@ import { AmazingTimePickerModule } from 'amazing-time-picker';
     MatTabsModule,
     MatSnackBarModule,
     MatToolbarModule,
+
     MatDialogModule,MatTimepickerModule,
     AmazingTimePickerModule,
     MatTooltipModule,
-    // FlexLayoutModule.withConfig({addFlexToParent: false})
+     FlexLayoutModule.withConfig({addFlexToParent: false})
   ],
   entryComponents: [
     // DailogDailyPlayerScoreComponent,

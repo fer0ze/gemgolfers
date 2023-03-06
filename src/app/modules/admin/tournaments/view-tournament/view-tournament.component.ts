@@ -2492,7 +2492,7 @@ export class ViewTournamentComponent implements OnInit {
                         ? flightData.courseHoleSetsInverted
                         : false,
                     playerId: playerId,
-                    clubName: General.getClubName(clubName),
+                    clubName: clubName ? General.getClubName(clubName): '-',
                     name: name,
                     picture: picture,
                     playingRound: flightData.flightRound,
@@ -2545,7 +2545,7 @@ export class ViewTournamentComponent implements OnInit {
                         : false,
                     name: name,
 
-                    clubName: General.getClubName(clubName),
+                    clubName: clubName ? General.getClubName(clubName): '-',
                     picture: picture,
                     handicap: handicap,
                     score: netTotal,

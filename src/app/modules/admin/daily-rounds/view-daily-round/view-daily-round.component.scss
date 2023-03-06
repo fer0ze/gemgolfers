@@ -39,8 +39,10 @@ table {
   margin: 0px;
 
   tr.topheader {
-    background-color: #b7b7b7;
-    color: #585858;
+    background-color: #1e587a;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    color: #ffffff;
   }
 
   tr.topheader th {
@@ -50,8 +52,8 @@ table {
 
   tr.subhead {
     font-family: monospace;
-    background-color: #e8e8e7;
-    color: #585858;
+    background-color: #1e587a;
+    color: #ffffff;
   }
 
   tr.subhead th {
@@ -79,7 +81,7 @@ table {
 
   tr.scorebody td input.empty {
     background-color: #f7f74f !important;
-
+    color: #fff;
     width: 28px;
   }
 
@@ -113,6 +115,16 @@ table {
   border: 1px solid #deebfd;
   box-shadow: -8px 12px 18px 0 #dadee8;
   padding: 20px;
+}
+
+.class_name_round {
+  display: inline-block;
+  text-align: center;
+  width: 31px;
+  height: 34px;
+  border: 2px solid #00397e;
+  border-radius: 50%;
+  padding-top: 5px;
 }
 
 // table th {
@@ -251,7 +263,7 @@ table {
 }
 
 .trues {
-  background: #dbdbdb !important;
+  background-color: #1e587a !important;
 }
 
 .falses {

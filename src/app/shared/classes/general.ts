@@ -303,7 +303,8 @@ export class General {
         }
     }
     public static getClubName(clubName){
-      return clubName.match(/\b([A-Z])/g).join('');
+        if(clubName)
+          return clubName.match(/\b([A-Z])/g).join('');
     }
 }
 
