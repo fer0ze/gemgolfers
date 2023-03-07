@@ -180,8 +180,12 @@ export const tournamentDashBoard = gql`
             CategoriesQL: categories {
                 ...TournamentMemberCategoryQL
             }
+            MemberStatusesQL: member_statuses {
+                ...TournamentMemberStatusQL
+            }
         }
     }
+    ${TournamentMemberStatusQL}
     ${TournamentMemberCategoryQL}
 `;
 

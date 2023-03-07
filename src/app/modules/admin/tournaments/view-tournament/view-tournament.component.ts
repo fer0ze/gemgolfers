@@ -12,6 +12,7 @@ import {
     enumPlayerCategory,
     Player,
     PlayerHanidcap,
+    TournamentMemberStatus,
 } from '../../../../shared/models/player.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import {
@@ -80,6 +81,7 @@ export class ViewTournamentComponent implements OnInit {
     ];
     private noOfHolesInCourse: number = 18;
     fullTournament: any;
+    memberStatusesQLs: TournamentMemberStatus[] = [];
     isLoading: boolean = true;
     totalRounds: number;
     activeRound: number = 1;
@@ -294,6 +296,8 @@ export class ViewTournamentComponent implements OnInit {
                 await this.facadeService.tournamentDashBoard(this.tournamentID);
             console.log(this.dataFullTournament);
             // this.getTournamentMembers();
+            this.memberStatusesQLs =
+                this.dataFullTournament['TournamentQL'][0].MemberStatusesQL;
             this.noOfROund =
                 this.dataFullTournament['TournamentQL'][0].noOfRounds;
 
@@ -1976,87 +1980,100 @@ export class ViewTournamentComponent implements OnInit {
     downloadResultSheet() {
         let doc = new jsPDF();
         let col = General.createClm(this.noOfRounds);
-        let rows = [];
+
         doc.setFontSize(22);
         doc.setFillColor(0, 0, 0);
         doc.rect(10, 5, 190, 20, 'F');
         doc.setTextColor(255, 255, 255);
         doc.text(this.fullTournament.title, 13, 12, 'justify');
         doc.text('\nScore Sheet', 13, 12, 'justify');
-        doc.setFontSize(15);
-        // this.tournamentCategories.forEach((element) => {
-        //     this.getSummaryData(element.category);
-        // });
-        this.getSummaryData('Result');
-        // doc.text("W.E.F:", 143, 15);
-        // doc.text(
-        // this.datepipe.transform(this.currentDate.toString(), "MMM d, y"),
-        // 160,
-        // 15
-        // );
-        doc.setTextColor(100);
 
-        let count = 0;
-        let grossAllArray: any[] = [];
+        this.tournamentCategories.forEach((element) => {
+            this.getSummaryData(element.category);
+            let rows = [];
+            //this.getSummaryData('Result');
+            // doc.text("W.E.F:", 143, 15);
+            // doc.text(
+            // this.datepipe.transform(this.currentDate.toString(), "MMM d, y"),
+            // 160,
+            // 15
+            // );
+            doc.setFontSize(18);
+            doc.setTextColor(99, 29, 5);
+            doc.text('\n' + element.category, 13, 25);
+            doc.setFontSize(15);
+            let count = 0;
+            let grossAllArray: any[] = [];
 
-        for (let leader in this.allMatchResults) {
-            grossAllArray.push(this.allMatchResults[leader]);
-        }
-        grossAllArray.sort(this.ComparatorAllGrossSheet);
-        this.sortAllGrossLeadersTie(grossAllArray);
-        console.log(grossAllArray);
+            for (let leader in this.allMatchResults) {
+                grossAllArray.push(this.allMatchResults[leader]);
+            }
+            grossAllArray.sort(this.ComparatorAllGrossSheet);
+            this.sortAllGrossLeadersTie(grossAllArray);
+            console.log(grossAllArray);
 
-        for (let leader in grossAllArray) {
-            count++;
-            let temp = [
-                grossAllArray[leader].position,
-                grossAllArray[leader].name,
-                grossAllArray[leader].handicap,
-                grossAllArray[leader].clubName,
-                grossAllArray[leader].TotalGross3 != '' &&
-                grossAllArray[leader].TotalGross3 != undefined
-                    ? grossAllArray[leader].TotalGross3
-                    : '-',
-                grossAllArray[leader].TotalNet3 != '' &&
-                grossAllArray[leader].TotalNet3 != undefined
-                    ? grossAllArray[leader].TotalNet3
-                    : '-',
-                grossAllArray[leader].TotalGross2 != '' &&
-                grossAllArray[leader].TotalGross2 != undefined
-                    ? grossAllArray[leader].TotalGross2
-                    : '-',
-                grossAllArray[leader].TotalNet2 != '' &&
-                grossAllArray[leader].TotalNet2 != undefined
-                    ? grossAllArray[leader].TotalNet2
-                    : '-',
-                grossAllArray[leader].TotalGross1 != '' &&
-                grossAllArray[leader].TotalGross1 != undefined
-                    ? grossAllArray[leader].TotalGross1
-                    : '-',
-                grossAllArray[leader].TotalNet1 != '' &&
-                grossAllArray[leader].TotalNet1 != undefined
-                    ? grossAllArray[leader].TotalNet1
-                    : '-',
-                grossAllArray[leader].AllGrossPoints != '' &&
-                grossAllArray[leader].AllGrossPoints != undefined
-                    ? grossAllArray[leader].AllGrossPoints
-                    : '-',
-                grossAllArray[leader].AllNetPoints != ''
-                    ? grossAllArray[leader].AllNetPoints
-                    : '-',
-            ];
-            rows.push(temp);
-        }
+            for (let leader in grossAllArray) {
+                count++;
+                let temp = [
+                    grossAllArray[leader].position,
+                    grossAllArray[leader].name,
+                    grossAllArray[leader].handicap,
+                    grossAllArray[leader].clubName,
+                    grossAllArray[leader].TotalGross4 != '' &&
+                    grossAllArray[leader].TotalGross4 != undefined
+                        ? grossAllArray[leader].TotalGross4
+                        : '-',
+                    grossAllArray[leader].TotalNet4 != '' &&
+                    grossAllArray[leader].TotalNet4 != undefined
+                        ? grossAllArray[leader].TotalNet4
+                        : '-',
+                    grossAllArray[leader].TotalGross3 != '' &&
+                    grossAllArray[leader].TotalGross3 != undefined
+                        ? grossAllArray[leader].TotalGross3
+                        : '-',
+                    grossAllArray[leader].TotalNet3 != '' &&
+                    grossAllArray[leader].TotalNet3 != undefined
+                        ? grossAllArray[leader].TotalNet3
+                        : '-',
+                    grossAllArray[leader].TotalGross2 != '' &&
+                    grossAllArray[leader].TotalGross2 != undefined
+                        ? grossAllArray[leader].TotalGross2
+                        : '-',
+                    grossAllArray[leader].TotalNet2 != '' &&
+                    grossAllArray[leader].TotalNet2 != undefined
+                        ? grossAllArray[leader].TotalNet2
+                        : '-',
+                    grossAllArray[leader].TotalGross1 != '' &&
+                    grossAllArray[leader].TotalGross1 != undefined
+                        ? grossAllArray[leader].TotalGross1
+                        : '-',
+                    grossAllArray[leader].TotalNet1 != '' &&
+                    grossAllArray[leader].TotalNet1 != undefined
+                        ? grossAllArray[leader].TotalNet1
+                        : '-',
+                    grossAllArray[leader].AllGrossPoints != '' &&
+                    grossAllArray[leader].AllGrossPoints != undefined
+                        ? grossAllArray[leader].AllGrossPoints
+                        : '-',
+                    grossAllArray[leader].AllNetPoints != '' &&
+                    grossAllArray[leader].AllNetPoints != undefined
+                        ? grossAllArray[leader].AllNetPoints
+                        : '-',
+                ];
+                rows.push(temp);
+            }
 
-        // From HTML
-        console.log(rows);
-        // this.sortAllGrossLeadersTie(rows);
-        // console.log(rows);
-        doc.autoTable(col, rows, { startY: 30, theme: 'grid' });
+            // From HTML
+            console.log(rows);
+            // this.sortAllGrossLeadersTie(rows);
+            // console.log(rows);
+            doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
+            doc.addPage();
 
-        // Open PDF document in new tab
+            // Open PDF document in new tab
+        });
+
         doc.output('dataurlnewwindow');
-
         // Download PDF document
         //doc.save('flights.pdf');
     }
@@ -2271,8 +2288,20 @@ export class ViewTournamentComponent implements OnInit {
         return 0;
     }
     ComparatorAllGrossSheet(a, b) {
-        if (a['AllGrossPoints'] > b['AllGrossPoints']) return 1;
-        if (a['AllGrossPoints'] < b['AllGrossPoints']) return -1;
+        if (a.PlayingRound > b.PlayingRound) {
+            return -1;
+        }
+        if (a.PlayingRound < b.PlayingRound) {
+            return 1;
+        }
+        if (a.playerStatus < b.playerStatus) {
+            return -1;
+        }
+        if (a.playerStatus > b.playerStatus) {
+            return 1;
+        }
+        if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
+        if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
         return 0;
     }
     ComparatorHandicap(a, b) {
@@ -2358,7 +2387,7 @@ export class ViewTournamentComponent implements OnInit {
         for (let leader in this.allMatchResults) {
             grossAllArray.push(this.allMatchResults[leader]);
         }
-        grossAllArray.sort(this.ComparatorAllGross);
+        grossAllArray.sort(this.ComparatorAllGrossSheet);
         this.sortAllGrossLeadersTie(grossAllArray);
 
         this.dataSourceTotalGross = new MatTableDataSource(grossAllArray);
@@ -2474,9 +2503,14 @@ export class ViewTournamentComponent implements OnInit {
                 } else {
                     handicap = handicap / holesPlayed;
                 }
-                // let status: any = this.memberStatusesQLs.find(
-                //   (s) => s.playerId === playerId
-                // );
+                let allStatus: any = this.memberStatusesQLs;
+                let playerStatus: any;
+
+                if (allStatus) {
+                    playerStatus = allStatus.find(
+                        (s) => s.playerId === playerId
+                    );
+                }
 
                 let extraData: string = player.extraData;
                 let completed: boolean =
@@ -2492,7 +2526,7 @@ export class ViewTournamentComponent implements OnInit {
                         ? flightData.courseHoleSetsInverted
                         : false,
                     playerId: playerId,
-                    clubName: clubName ? General.getClubName(clubName): '-',
+                    clubName: clubName ? General.getClubName(clubName) : '-',
                     name: name,
                     picture: picture,
                     playingRound: flightData.flightRound,
@@ -2526,6 +2560,7 @@ export class ViewTournamentComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
+                    playerStatus: playerStatus ? playerStatus.status : 'ac',
                 };
 
                 // this.grossLeaders.push(LeaderGross);
@@ -2545,7 +2580,7 @@ export class ViewTournamentComponent implements OnInit {
                         : false,
                     name: name,
 
-                    clubName: clubName ? General.getClubName(clubName): '-',
+                    clubName: clubName ? General.getClubName(clubName) : '-',
                     picture: picture,
                     handicap: handicap,
                     score: netTotal,
@@ -2578,6 +2613,7 @@ export class ViewTournamentComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
+                    playerStatus: playerStatus ? playerStatus.status : 'ac',
                 };
 
                 // this.netLeaders.push(LeaderNet);
@@ -2910,7 +2946,8 @@ export class ViewTournamentComponent implements OnInit {
         status
             ? (this.allMatchResults[leaderGross.playerId]['status'] = 1)
             : (this.allMatchResults[leaderGross.playerId]['status'] = 0);
-
+        this.allMatchResults[leaderGross.playerId]['playerStatus'] =
+            leaderGross.playerStatus;
         ////console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
         return false;
     }
@@ -3006,10 +3043,8 @@ export class ViewTournamentComponent implements OnInit {
                         status: true,
                     };
 
-                    
                     this.saveMembers(member);
                     this.getTournamentMembers();
-                    
                 } else {
                     this.snackBar.open(
                         'Player already exist in the list.',
@@ -3035,7 +3070,6 @@ export class ViewTournamentComponent implements OnInit {
                             status: true,
                         };
 
-                        
                         this.saveMembers(member);
                     } else {
                         this.snackBar.open(
@@ -3053,7 +3087,6 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
 
-    
     async saveMembers(tournamentMember: TournamentMember[]) {
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentMember)

@@ -20,6 +20,8 @@ import { PlayerHandicapWhsAllRounds } from '../../../../shared/classes/player-ha
 import { PlayerHandicapWhs } from '../../../../shared/classes/player-hanidcap-whs';
 import { HandicapChangeLog } from '../../../../shared/classes/HandicapChangeLog';
 import { FacadeService } from '../../../../shared/services/facade.service';
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 import {
     Constants,
     General,
@@ -1767,4 +1769,22 @@ export class HandicapCalculationWhsComponent implements OnInit {
         if (a['holeNo'] > b['holeNo']) return 1;
         return 0;
     }
+    downloadHandicapChange(){
+        var doc = new jsPDF()
+        doc.setFontSize(18);
+        doc.text( this.tournament.title + " WHS Handicap Calcultion List:", 15, 15);
+    
+        doc.setTextColor(100);
+    
+        // From HTML
+        doc.autoTable({ 
+          html: '#pdfTable', 
+          startY: 25,
+          theme: 'grid',
+          useCss: false,
+        });
+      
+        // Open PDF document in new tab
+        doc.output('dataurlnewwindow');
+      }
 }

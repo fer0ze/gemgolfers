@@ -13,6 +13,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 @Component({
   selector: 'app-calculate-handicap',
   templateUrl: './calculate-handicap.component.html',
@@ -422,6 +424,25 @@ export class CalculateHandicapComponent implements OnInit {
 
   switchHandicapSystem(item) {
     this.router.navigate(['/tournaments/handicap-whs/' + this.tournamentID]);
+  }
+
+  downloadHandicapChange(){
+    var doc = new jsPDF()
+    doc.setFontSize(18);
+    doc.text( this.tournamentData.title + " Congu Handicap Calcultion List:", 15, 15);
+
+    doc.setTextColor(100);
+
+    // From HTML
+    doc.autoTable({ 
+      html: '#pdfTable', 
+      startY: 25,
+      theme: 'grid',
+      useCss: false,
+    });
+  
+    // Open PDF document in new tab
+    doc.output('dataurlnewwindow');
   }
 
 }
