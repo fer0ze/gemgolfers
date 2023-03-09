@@ -1331,12 +1331,16 @@
                         min-width: 0 !important;
                         height: 40px !important;
                         padding: 0 20px !important;
-                        border-radius: 9999px !important;
+                       
                         @apply text-secondary;
 
                         &.mat-tab-label-active {
-                            @apply bg-gray-700 bg-opacity-10 dark:bg-gray-50 dark:bg-opacity-10 #{'!important'};
-                            @apply text-default #{'!important'};
+                            // @apply bg-gray-700 bg-opacity-10 dark:bg-gray-50 dark:bg-opacity-10 #{'!important'};
+                            // @apply text-default #{'!important'};
+                            // background: #004987;
+                            // color: white;
+                            border-bottom:2px solid #004987;
+                            color: #004987;
                         }
 
                         + .mat-tab-label {

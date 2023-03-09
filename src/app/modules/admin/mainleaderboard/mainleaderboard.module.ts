@@ -7,6 +7,7 @@ import { MainleaderboardRoutingModule } from './mainleaderboard-routing.module';
 import { MainLeaderboardComponent } from './mainleaderboard.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     declarations: [MainLeaderboardComponent],
@@ -17,7 +18,8 @@ import { MatInputModule } from '@angular/material/input';
         MatButtonToggleModule,
         MatDialogModule,
         MatProgressBarModule,
-        MatInputModule
+        MatInputModule,
+        MatTabsModule,
     ],
 })
 export class MainLeaderboardModule {}

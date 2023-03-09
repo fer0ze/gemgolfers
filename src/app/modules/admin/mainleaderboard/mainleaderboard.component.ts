@@ -70,6 +70,7 @@ export class MainLeaderboardComponent implements OnInit {
     netAllLeaders: any[] = [];
 
     selectedCategory: any;
+    selectedIndex: any=0;
     selectedCategoryValue: string = '';
     eventCategories: string[] = [];
     categoryLimit: number;
@@ -205,9 +206,13 @@ export class MainLeaderboardComponent implements OnInit {
                             this.Leaderboard.CategoriesQL.sort(
                                 this.sortCategory
                             );
+                            let count=0;
                             if (this.Leaderboard.CategoriesQL.length > 0) {
                                 this.selectedCategory =
                                     this.Leaderboard.CategoriesQL.find((a) => {
+                                        this.selectedIndex=count;
+                                        count++;
+                                        
                                         return a.default == true;
                                     });
 
@@ -1737,10 +1742,10 @@ export class MainLeaderboardComponent implements OnInit {
             //   this.allRoundScore = false;
 
             let originalCategory: string = '';
-            if (item.value.search('#') == -1) {
-                originalCategory = item.value;
+            if (item.tab.textLabel.search('#') == -1) {
+                originalCategory = item.tab.textLabel;
             } else {
-                let splitted = item.value.split('#', 3);
+                let splitted = item.tab.textLabel.split('#', 3);
                 originalCategory = splitted[0];
                 this.categoryLimit = splitted[1];
             }
@@ -1759,10 +1764,10 @@ export class MainLeaderboardComponent implements OnInit {
             this.parseSubscriptionResponse(this.Leaderboard);
         } else {
             let originalCategory: string = '';
-            if (item.value.search('#') == -1) {
-                originalCategory = item.value;
+            if (item.tab.textLabel.search('#') == -1) {
+                originalCategory = item.tab.textLabel;
             } else {
-                let splitted = item.value.split('#', 3);
+                let splitted = item.tab.textLabel.split('#', 3);
                 originalCategory = splitted[0];
                 this.categoryLimit = splitted[1];
             }
