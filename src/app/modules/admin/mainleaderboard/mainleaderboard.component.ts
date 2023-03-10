@@ -31,9 +31,11 @@ import { LeaderboardSubscription } from 'app/shared/GraphQL/tournament.gql';
     styleUrls: ['./mainleaderboard.component.scss'],
 })
 export class MainLeaderboardComponent implements OnInit {
+    
     private tournamentID: string;
     Leaderboard: any;
     private noOfHolesInCourse: number = 18;
+    flightRounds=[];
     activeRound: number;
     totalRounds: number;
     flightRound: number;
@@ -873,6 +875,8 @@ export class MainLeaderboardComponent implements OnInit {
                     playerStatus: playerStatus ? playerStatus.status : 'ac',
                 };
 
+
+
                 this.grossLeaders.push(LeaderGross);
                 //console.log('Gross:' + this.grossLeaders);
 
@@ -931,7 +935,7 @@ export class MainLeaderboardComponent implements OnInit {
                 if (flag) this.calculateTotal(LeaderGross, LeaderNet, round);
             }
         }
-        console.log(this.grossLeaders);
+        //console.log(this.grossLeaders);
         if (this.isGross == true || this.isNet == true) {
             this.sortLeaders(this.grossLeaders);
             this.sortLeaders(this.netLeaders);
@@ -944,7 +948,7 @@ export class MainLeaderboardComponent implements OnInit {
         // );
 
         // if (status && this.activeRound > 1) return false;
-        console.log(this.allMatchResults);
+        //console.log(this.allMatchResults);
 
         if (leaderGross.playerId in this.allMatchResults) {
             ////console.log("index exist");
@@ -1076,7 +1080,7 @@ export class MainLeaderboardComponent implements OnInit {
         } else {
             arrayLeaders = arrayLeaders.sort(this.Comparator);
         }
-        console.log(arrayLeaders);
+       // console.log(arrayLeaders);
 
         let rankGrossCntr: number = 1;
         let preGrossScore: number = 999;

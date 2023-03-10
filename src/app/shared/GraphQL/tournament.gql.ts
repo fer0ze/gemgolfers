@@ -42,7 +42,7 @@ export const LeaderboardSubscription = gql`
             title
             matchFormat
             tee_id
-            FlightsQL: flights {
+            FlightsQL: flights (order_by: { flightRound: asc }){
                 id
                 courseId
                 courseHoleSets
