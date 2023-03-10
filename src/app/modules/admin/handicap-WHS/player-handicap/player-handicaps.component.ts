@@ -149,7 +149,7 @@ export class PlayerHandicapComponent implements OnInit {
                 this.playerID
             );
             console.log(this.playerWHS);
-            this.currentPlayer = playerscore;
+            this.currentPlayer = playerscore['player'];
            
             this.playerWHSHistory =
                 this.playerWHS['PlayerQL'].HandicapHistoryWhsQL;
@@ -218,20 +218,20 @@ export class PlayerHandicapComponent implements OnInit {
                 this.topDiff.length > this.handicapsToUse
                     ? this.topDiff[this.handicapsToUse].handicapDifferential
                     : 0;
-            console.log('TopDiffer' + this.topDiff);
-            console.log('Available Handicaps' + this.playerHandicapWhsList);
-            console.log('Available Handicaps' + this.handicapsAvailable);
-            console.log('Available Handicaps' + this.handicapsToUse);
+            // console.log('TopDiffer' + this.topDiff);
+            // console.log('Available Handicaps' + this.playerHandicapWhsList);
+            // console.log('Available Handicaps' + this.handicapsAvailable);
+            // console.log('Available Handicaps' + this.handicapsToUse);
             console.log(this.playerWHSHistory);
             // let slicedWhs = this.playerWHSHistory.slice(0, 20);
             let slicedWhs = [];
             let count = 0;
             this.memerbershipNumber =
-                this.playerWHSHistory[0].PlayerQL.membershipNumber;
+                this.playerWHS['PlayerQL'].membershipNumber;
             this.fullName =
-                this.playerWHSHistory[0].PlayerQL.firstName +
+                this.playerWHS['PlayerQL'].firstName +
                 ' ' +
-                this.playerWHSHistory[0].PlayerQL.lastName;
+                this.playerWHS['PlayerQL'].lastName;
             for (let obj of this.playerWHSHistory) {
                 count++;
                 console.log(obj);
@@ -260,6 +260,7 @@ export class PlayerHandicapComponent implements OnInit {
                 // if(slicedWhs[+whsItem].is_combined)
                 //   slicedWhs.splice(+whsItem, 1);
             }
+            console.log(slicedWhs);
             this.length = slicedWhs.length;
 
             this.personLeads = slicedWhs.filter(function (a) {

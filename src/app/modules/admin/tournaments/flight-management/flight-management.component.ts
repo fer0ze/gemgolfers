@@ -595,6 +595,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.roundFlights[index].tee_id;
                 this.selectedMembers[outer]['flightNo'] =
                     this.roundFlights[index].flightNo;
+                this.selectedMembers[outer]['categoryRound'] =
+                    this.roundFlights[index].categoryRound;
 
                 if (this.roundFlights[index].MembersQL.length > 0)
                     this.selectedMembers[outer][cnter] =
@@ -717,6 +719,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         document.getElementById('flight_' + index + '_number')
                     )).value
                 );
+                let categoryFlight = parseFloat(
+                    (<HTMLInputElement>(
+                        document.getElementById('flight_' + index + '_catnumber')
+                    )).value
+                );
 
                 if (this.showTeams) {
                     this.teamName = (<HTMLInputElement>(
@@ -766,6 +773,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             ? roundFlightData[0].courseHoleSets
                             : 0,
                     flightNo: flightNumber,
+                    categoryRound: categoryFlight,
                     flightRound: this.flightRound,
                     startingHole: startingHole,
                     tee:
@@ -1415,6 +1423,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.selectedMembers[this.selectedMembers.length - 1]['tee'] =
             'AMATEURS';
         this.selectedMembers[this.selectedMembers.length - 1]['flightRound'] =
+            this.flightRound;
+        this.selectedMembers[this.selectedMembers.length - 1]['categoryRound'] =
             this.flightRound;
         this.selectedMembers[this.selectedMembers.length - 1]['date'] = this
             .roundFlights.length

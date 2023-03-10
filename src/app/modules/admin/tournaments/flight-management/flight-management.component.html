@@ -29,13 +29,29 @@
                                     *ngFor="
                                         let items of selectedMembers;
                                         let i = index;
-                                        let j=index;
+                                        let j = index;
                                         trackBy: trackByFn
                                     "
                                 >
                                     <div
                                         class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
                                     >
+                                        <ng-container>
+                                            <mat-form-field
+                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                [floatLabel]="'always'"
+                                            >
+                                            <span class="text-base font-black text-gray-400 min-w-max">Flight No.</span>
+                                                <input
+                                                    value="{{
+                                                        items['flightNo']
+                                                    }}"
+                                                    matInput
+                                                    id="flight_{{ j }}_number"
+                                                    #query
+                                                />
+                                            </mat-form-field>
+                                        </ng-container>
                                         <ng-container>
                                             <mat-form-field
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
@@ -49,9 +65,13 @@
                                                     "
                                                 ></mat-icon>
                                                 <input
-                                                    value="{{ items['flightNo'] }}"
+                                                    value="{{
+                                                        items['categoryRound']
+                                                    }}"
                                                     matInput
-                                                    id="flight_{{ j }}_number"
+                                                    id="flight_{{
+                                                        j
+                                                    }}_catnumber"
                                                     #query
                                                 />
                                             </mat-form-field>
@@ -150,7 +170,7 @@
                                                     'heroicons_solid:pencil-alt'
                                                 "
                                             ></mat-icon>
-                                            <span class="ml-2 "
+                                            <span class="ml-2"
                                                 >Add New Member</span
                                             >
                                         </button>
@@ -223,7 +243,6 @@
                                                                 <mat-select
                                                                     placeholder="Flight Tee"
                                                                     type="text"
-                                                                   
                                                                     value="{{
                                                                         item[
                                                                             'playingTee'
@@ -304,7 +323,6 @@
                             <button
                                 mat-raised-button
                                 color="primary"
-                                
                                 (click)="saveFlights()"
                             >
                                 Save Changes
@@ -330,7 +348,11 @@
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
                         <div
-                            *ngFor="let items of selectedMembers; let i = index;let j=index;"
+                            *ngFor="
+                                let items of selectedMembers;
+                                let i = index;
+                                let j = index
+                            "
                             class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
@@ -362,6 +384,24 @@
                                         #query
                                     />
                                 </mat-form-field>
+
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <mat-icon
+                                        matPrefix
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:gift'"
+                                    ></mat-icon>
+                                    <input
+                                        value="{{ items['categoryRound'] }}"
+                                        matInput
+                                        id="flight_{{ j }}_catnumber"
+                                        #query
+                                    />
+                                </mat-form-field>
+
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
                                 >
@@ -399,7 +439,7 @@
                                         [svgIcon]="'heroicons_solid:flag'"
                                     ></mat-icon>
                                     <input
-                                        id="flight_{{j }}_hole"
+                                        id="flight_{{ j }}_hole"
                                         value="{{ items['startingHole'] }}"
                                         matInput
                                         #query
@@ -433,9 +473,7 @@
                                         class="icon-size-5"
                                         [svgIcon]="'heroicons_solid:add-member'"
                                     ></mat-icon>
-                                    <span class="ml-2 "
-                                        >Add New Member</span
-                                    >
+                                    <span class="ml-2">Add New Member</span>
                                 </button>
                                 <!-- <span
                             ><input
@@ -535,7 +573,6 @@
                                                         <mat-select
                                                             placeholder="Flight Tee"
                                                             type="text"
-                                                            
                                                             value="{{
                                                                 item[
                                                                     'playingTee'
@@ -610,7 +647,6 @@
                         <button
                             mat-raised-button
                             color="primary"
-                            
                             (click)="saveFlights()"
                         >
                             Save Changes
@@ -635,7 +671,11 @@
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
                         <div
-                            *ngFor="let items of selectedMembers; let i = index; let j=index;"
+                            *ngFor="
+                                let items of selectedMembers;
+                                let i = index;
+                                let j = index
+                            "
                             class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
@@ -667,6 +707,24 @@
                                         #query
                                     />
                                 </mat-form-field>
+
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <mat-icon
+                                        matPrefix
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:gift'"
+                                    ></mat-icon>
+                                    <input
+                                        value="{{ items['categoryRound'] }}"
+                                        matInput
+                                        id="flight_{{ j }}_catnumber"
+                                        #query
+                                    />
+                                </mat-form-field>
+
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
                                 >
@@ -842,7 +900,6 @@
                                                         <mat-select
                                                             placeholder="Flight Tee"
                                                             type="text"
-                                                            
                                                             value="{{
                                                                 item[
                                                                     'playingTee'
@@ -917,7 +974,6 @@
                         <button
                             mat-raised-button
                             color="primary"
-                            
                             (click)="saveFlights()"
                         >
                             Save Changes
@@ -942,7 +998,11 @@
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
                         <div
-                            *ngFor="let items of selectedMembers; let i = index; let j=index;"
+                            *ngFor="
+                                let items of selectedMembers;
+                                let i = index;
+                                let j = index
+                            "
                             class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
@@ -962,11 +1022,7 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:gift'"
-                                    ></mat-icon>
+                                    <span class="text-base">No.</span>
                                     <input
                                         value="{{ items['flightNo'] }}"
                                         id="flight_{{ j }}_number"
@@ -974,6 +1030,24 @@
                                         #query
                                     />
                                 </mat-form-field>
+
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <mat-icon
+                                        matPrefix
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:gift'"
+                                    ></mat-icon>
+                                    <input
+                                        value="{{ items['categoryRound'] }}"
+                                        matInput
+                                        id="flight_{{ j }}_catnumber"
+                                        #query
+                                    />
+                                </mat-form-field>
+
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
                                 >
@@ -1046,9 +1120,7 @@
                                         class="icon-size-5"
                                         [svgIcon]="'heroicons_solid:add-member'"
                                     ></mat-icon>
-                                    <span class="ml-2 "
-                                        >Add New Member</span
-                                    >
+                                    <span class="ml-2">Add New Member</span>
                                 </button>
 
                                 <!-- <span
@@ -1149,7 +1221,6 @@
                                                         <mat-select
                                                             placeholder="Flight Tee"
                                                             type="text"
-                                                            
                                                             value="{{
                                                                 item[
                                                                     'playingTee'
@@ -1224,7 +1295,6 @@
                         <button
                             mat-raised-button
                             color="primary"
-                            
                             (click)="saveFlights()"
                         >
                             Save Changes

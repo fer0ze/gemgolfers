@@ -435,7 +435,7 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
-            limit:20
+            limit: 20
         ) {
             ...PlayerHandicapQL
         }
@@ -553,39 +553,12 @@ export const PlayerHandicapQuery = gql`
         PlayerQL: player_by_pk(id: $playerId) {
             firstName
             id
+            lastName
+            membershipNumber
             HandicapHistoryWhsQL: handicap_history_whs(
                 order_by: { playedAt: desc }
-                limit: 40
             ) {
-                Handicap_id
-                playerId
-                adjustedScore
-                back9
-                combined_handicap {
-                    playerId
-                    round
-                    handicapDifferential
-                }
-                combined_handicap_id
-                exceptionalScore
-                front9
-                handicapDifferential
-                handicapIndex
-                is_combined
-                playedAt
-                updatedAt
-                score
-                tournamentQL: tournament {
-                    title
-                    startDate
-                    endDate
-                }
-                used_handicaps {
-                    id
-                    used_handicap_id
-                    combine_handicap_id
-                    holes
-                }
+                ...PlayerHandicapWhsQL
             }
         }
     }
@@ -614,7 +587,6 @@ export const PlayerHandicapRoundQuery = gql`
             }
         }
     }
-
 `;
 
 export const searchPlayerQL = gql`

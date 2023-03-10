@@ -8,6 +8,7 @@ export interface Flight {
     courseHoleSets: number;
     flightNo: number;
     flightRound: number;
+    categoryRound:number;
     startingHole: number
     tee: string;
     date: Date;

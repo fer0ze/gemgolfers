@@ -445,7 +445,7 @@ export class ViewPlayerComponent implements OnInit {
                     gross: grossScore,
                     net: netScore,
                 };
-                if (newScores.length <= 10) {
+                if (newScores.length <= 20) {
                     newScores.push(recentScores);
                 }
                 //this._labels.push(flightQL.date);

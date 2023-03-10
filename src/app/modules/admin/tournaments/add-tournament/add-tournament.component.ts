@@ -2481,6 +2481,7 @@ export class AddTournamentComponent implements OnInit {
                                     : 0,
                                 flightNo: fcnter,
                                 flightRound: 1,
+                                categoryRound: 1,
                                 tee_id: roundTeeId1.id,
                                 startingHole:
                                     this.selectedMembers[index][index2][index3]

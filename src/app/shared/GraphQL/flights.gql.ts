@@ -347,6 +347,7 @@ export const FlightManagersQuery = gql`
         date
         tournamentId
         time
+        categoryRound
         startingHole
         tee
         tee_id
