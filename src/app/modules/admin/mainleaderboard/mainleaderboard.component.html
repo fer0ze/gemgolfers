@@ -40,7 +40,7 @@
                 <img
                     class="object-cover"
                     src="assets/images/logo/{{ clubLogo }}"
-                    alt="user"
+                    alt="Club-Logo"
                 />
             </div>
 
@@ -291,7 +291,11 @@
                                             activeRound >= 2 && totalRounds >= 2
                                         "
                                     >
-                                        {{ item.TotalGross2 }}
+                                    {{
+                                        item.TotalGross2
+                                            ? item.TotalGross2
+                                            : "-"
+                                    }}
                                     </div>
                                     <div
                                         class="col col-5"
@@ -313,7 +317,11 @@
                                             activeRound >= 3 && totalRounds >= 3
                                         "
                                     >
-                                        {{ item.TotalGross3 }}
+                                    {{
+                                        item.TotalGross3
+                                            ? item.TotalGross3
+                                            : "-"
+                                    }}
                                     </div>
                                     <div
                                         class="col col-5"
@@ -336,7 +344,11 @@
                                             activeRound >= 4 && totalRounds == 4
                                         "
                                     >
-                                        {{ item.TotalGross4 }}
+                                    {{
+                                        item.TotalGross4
+                                            ? item.TotalGross4
+                                            : "-"
+                                    }}
                                     </div>
                                     <div
                                         class="col col-5"
@@ -672,7 +684,11 @@
                                             activeRound >= 2 && totalRounds >= 2
                                         "
                                     >
-                                        {{ item.TotalGross2 }}
+                                    {{
+                                        item.TotalGross2
+                                            ? item.TotalGross2
+                                            : "-"
+                                    }}
                                     </div>
                                     <div
                                         class="col col-5"
@@ -694,7 +710,11 @@
                                             activeRound >= 3 && totalRounds >= 3
                                         "
                                     >
-                                        {{ item.TotalGross3 }}
+                                    {{
+                                        item.TotalGross3
+                                            ? item.TotalGross3
+                                            : "-"
+                                    }}
                                     </div>
                                     <div
                                         class="col col-5"
@@ -717,7 +737,11 @@
                                             activeRound >= 4 && totalRounds == 4
                                         "
                                     >
-                                        {{ item.TotalGross4 }}
+                                    {{
+                                        item.TotalGross4
+                                            ? item.TotalGross4
+                                            : "-"
+                                    }}
                                     </div>
                                     <div
                                         class="col col-5"

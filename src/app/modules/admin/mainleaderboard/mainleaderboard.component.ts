@@ -31,18 +31,22 @@ import { LeaderboardSubscription } from 'app/shared/GraphQL/tournament.gql';
     styleUrls: ['./mainleaderboard.component.scss'],
 })
 export class MainLeaderboardComponent implements OnInit {
-    
     private tournamentID: string;
     Leaderboard: any;
     private noOfHolesInCourse: number = 18;
-    flightRounds=[];
+    flightRounds = [];
     activeRound: number;
     totalRounds: number;
     flightRound: number;
     isLoading: boolean = true;
+    roundCheck: boolean = false;
+    roundCheck2: boolean = false;
+    roundCheck3: boolean = false;
     searchName: boolean = false;
     tRounds: TournamentRounds[] = [];
     roundFlights: any[] = [];
+    catRound: number = 1;
+    catsRound: number = 1;
     matchFormat: string;
     teamMatch: boolean;
     selectedSubTournament: string;
@@ -72,7 +76,7 @@ export class MainLeaderboardComponent implements OnInit {
     netAllLeaders: any[] = [];
 
     selectedCategory: any;
-    selectedIndex: any=0;
+    selectedIndex: any = 0;
     selectedCategoryValue: string = '';
     eventCategories: string[] = [];
     categoryLimit: number;
@@ -122,25 +126,25 @@ export class MainLeaderboardComponent implements OnInit {
             this.tournamentID = params.get('id');
         });
 
-        let clubInfo: any;
-        this.loggedInUser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
-        if (this.loggedInUser) {
-            clubInfo =
-                this.loggedInUser.membership.length > 0
-                    ? this.loggedInUser.membership[0].club
-                    : null;
-        }
+        // let clubInfo: any;
+        // this.loggedInUser = JSON.parse(
+        //     localStorage.getItem(Constants.LOGGED_IN_USER)
+        // );
+        // if (this.loggedInUser) {
+        //     clubInfo =
+        //         this.loggedInUser.membership.length > 0
+        //             ? this.loggedInUser.membership[0].club
+        //             : null;
+        // }
 
-        if (this.tournamentID == 'jazamanogc') {
-            this.clubLogo = 'J-Zaman.png';
-        } else if (this.tournamentID == '1stumanza-1' || this.tournamentID=='1stRumanza-2') {
-            this.clubLogo = 'rumanza.png';
-        } else {
-            this.clubLogo =
-                clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-        }
+        // if (this.tournamentID == 'jazamanogc') {
+        //     this.clubLogo = 'J-Zaman.png';
+        // } else if (this.tournamentID == '1stumanza-1' || this.tournamentID=='1stRumanza-2') {
+        //     this.clubLogo = 'rumanza.png';
+        // } else {
+        //     this.clubLogo =
+        //         clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+        // }
         of(this.Leaderboard)
             .pipe()
             .subscribe(async (data) => {
@@ -172,6 +176,10 @@ export class MainLeaderboardComponent implements OnInit {
                             this.teamMatch = false;
 
                             this.Leaderboard = dataLeaderboard.TournamentQL[0];
+                            if (!this.clubLogo) {
+                                this.clubLogo =
+                                    this.Leaderboard.AdminQL.membership[0].club.logo;
+                            }
                             ////console.log(this.Leaderboard);
                             if (this.Leaderboard.cutOffCriteria != null) {
                                 if (
@@ -208,13 +216,13 @@ export class MainLeaderboardComponent implements OnInit {
                             this.Leaderboard.CategoriesQL.sort(
                                 this.sortCategory
                             );
-                            let count=0;
+                            let count = 0;
                             if (this.Leaderboard.CategoriesQL.length > 0) {
                                 this.selectedCategory =
                                     this.Leaderboard.CategoriesQL.find((a) => {
-                                        this.selectedIndex=count;
+                                        this.selectedIndex = count;
                                         count++;
-                                        
+
                                         return a.default == true;
                                     });
 
@@ -258,6 +266,9 @@ export class MainLeaderboardComponent implements OnInit {
             });
     }
     private parseSubscriptionResponse(data: any): boolean {
+        this.catRound = 1;
+        this.roundCheck=false;
+        this.roundCheck3=false;
         if (data == null) {
             return false;
         }
@@ -338,7 +349,7 @@ export class MainLeaderboardComponent implements OnInit {
                 index++;
             }
             this.isLoading = false;
-            console.log(this.allMatchResults);
+            //console.log(this.allMatchResults);
             let player: any = [];
             let grossAllArray: any[] = [];
             let netAllArray: any[] = [];
@@ -389,6 +400,9 @@ export class MainLeaderboardComponent implements OnInit {
                                     grossCutOffArray.push(remove);
                                     netCutOffArray.push(remove);
                                 } else {
+                                    // this.roundCheck(
+                                    //     this.allMatchResults[leader]
+                                    // );
                                     grossAllArray.push(
                                         this.allMatchResults[leader]
                                     );
@@ -499,6 +513,7 @@ export class MainLeaderboardComponent implements OnInit {
                     }
                 } else {
                     for (let leader in this.allMatchResults) {
+                        // this.roundCheck(this.allMatchResults[leader]);
                         grossAllArray.push(this.allMatchResults[leader]);
                         //this.activePlayers.push(this.allMatchResults[leader]);
                         this.allllll.push(this.allMatchResults[leader]);
@@ -560,7 +575,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 //this.allRoundCutOffNet = false;
             } else {
-                console.log(this.allMatchResults);
+                //  console.log(this.allMatchResults);
 
                 for (let leader in this.allMatchResults) {
                     grossAllArray.push(this.allMatchResults[leader]);
@@ -676,8 +691,9 @@ export class MainLeaderboardComponent implements OnInit {
         round: number,
         flag: boolean
     ) {
-        ////console.log("calling me once....");
+        //console.log("calling me once....");
         this.playerScores = [];
+        // console.log(round);
 
         let handicapAllocation: string = this.getHandicapAllocation();
 
@@ -875,8 +891,6 @@ export class MainLeaderboardComponent implements OnInit {
                     playerStatus: playerStatus ? playerStatus.status : 'ac',
                 };
 
-
-
                 this.grossLeaders.push(LeaderGross);
                 //console.log('Gross:' + this.grossLeaders);
 
@@ -949,6 +963,35 @@ export class MainLeaderboardComponent implements OnInit {
 
         // if (status && this.activeRound > 1) return false;
         //console.log(this.allMatchResults);
+
+        console.log(round);
+        // this.catRound=round;
+        if (round == 1) {
+            this.catRound = 1000;
+        }
+        if (this.catRound == 1) {
+            if (round == 2) {
+                this.roundCheck = true;
+                round = 1;
+                this.catsRound = round;
+            } else if (round == 3) {
+                if (this.roundCheck) {
+                    round = 2;
+                    this.roundCheck3 = true;
+                } else {
+                    this.roundCheck3 = true;
+                    round = 1;
+                }
+            } else if (round == 4) {
+                if (this.roundCheck && this.roundCheck3) {
+                    round = 3;
+                } else if (this.roundCheck3) {
+                    round = 2;
+                } else {
+                    round = 1;
+                }
+            }
+        }
 
         if (leaderGross.playerId in this.allMatchResults) {
             ////console.log("index exist");
@@ -1080,7 +1123,7 @@ export class MainLeaderboardComponent implements OnInit {
         } else {
             arrayLeaders = arrayLeaders.sort(this.Comparator);
         }
-       // console.log(arrayLeaders);
+        // console.log(arrayLeaders);
 
         let rankGrossCntr: number = 1;
         let preGrossScore: number = 999;
@@ -1516,10 +1559,10 @@ export class MainLeaderboardComponent implements OnInit {
 
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
         //Collections.sort(grossLeaders);
-        console.log(leaderGrossList);
+        // console.log(leaderGrossList);
 
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
-        console.log(leaderGrossList);
+        // console.log(leaderGrossList);
         ////console.log(leaderList);
         //return false;
 
@@ -1532,6 +1575,8 @@ export class MainLeaderboardComponent implements OnInit {
         for (let i = 1; i < leaderGrossList.length; i++) {
             let leaderCurrent = leaderGrossList[i];
             let leaderPrevious = leaderGrossList[i - 1];
+            // console.log(i);
+
             let firstCompleted = false;
             let secondCompleted = false;
 
@@ -1646,7 +1691,10 @@ export class MainLeaderboardComponent implements OnInit {
 
         return total;
     }
-
+    // roundCheck(grossLeader) {
+    //     // if (grossLeader['TotalGross1'] == undefined) {
+    //     // }
+    // }
     selectionChanged(item) {
         this.activeRound = this.Leaderboard.activeRound;
         if (this.flightRound == 0) {

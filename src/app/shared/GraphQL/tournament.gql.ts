@@ -27,12 +27,7 @@ import {
 export const LeaderboardSubscription = gql`
     subscription LeaderboardSimpleSubscription($tournamentPrefix: String!) {
         TournamentQL: tournament(
-            where: {
-                _or: [
-                    { id: { _eq: $tournamentPrefix } }
-                    { prefix: { _eq: $tournamentPrefix } }
-                ]
-            }
+            where: { prefix: { _eq: $tournamentPrefix } }
         ) {
             cutOffCriteria
             activeRound
@@ -42,11 +37,12 @@ export const LeaderboardSubscription = gql`
             title
             matchFormat
             tee_id
-            FlightsQL: flights (order_by: { flightRound: asc }){
+            FlightsQL: flights{
                 id
                 courseId
                 courseHoleSets
                 flightRound
+                categoryRound
                 flightNo
                 name {
                     name
@@ -81,6 +77,13 @@ export const LeaderboardSubscription = gql`
             }
             MemberStatusesQL: member_statuses {
                 ...TournamentMemberStatusQL
+            }
+            AdminQL: admin {
+                membership {
+                    club {
+                        logo
+                    }
+                }
             }
         }
     }
@@ -141,8 +144,8 @@ export const tournamentDashBoard = gql`
                         firstName
                         lastName
                         handicap
-                        membership{
-                            club{
+                        membership {
+                            club {
                                 name
                             }
                         }
@@ -1428,22 +1431,20 @@ export const LeaderAllRoundDataQL = gql`
     query leaderAllRoundData($tournamentId: String!) {
         LeaderGrossQL: leader(
             where: {
-               tournamentId: { _eq: $tournamentId }
+                tournamentId: { _eq: $tournamentId }
                 type: { _eq: "GROSS" }
             }
-           
         ) {
             ...LeaderQL
         }
         LeaderNetQL: leader(
             where: {
-               tournamentId: { _eq: $tournamentId }
+                tournamentId: { _eq: $tournamentId }
                 type: { _eq: "NET" }
             }
         ) {
             ...LeaderQL
         }
-
     }
     ${LeaderQL}
 `;

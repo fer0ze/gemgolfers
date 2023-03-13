@@ -56,6 +56,7 @@ export const SaveTournamentFlightsMutation = gql`
           courseId
           courseHoleSets
           flightNo
+          categoryRound
           flightRound
           startingHole
           tee
