@@ -12,7 +12,8 @@ export const environment = {
         projectId: "gemtour-4c90a",
         storageBucket: "gemtour-4c90a.appspot.com",
         messagingSenderId: "335312640323"
-      }
+      },
+      api:"http://localhost:18000",
 };
 
 /*

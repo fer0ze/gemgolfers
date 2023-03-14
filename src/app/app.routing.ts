@@ -216,6 +216,13 @@ export const appRoutes: Route[] = [
                         (m) => m.CourseModule
                     ),
             },
+            {
+                path: 'mergeProfile',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/mergeProfile/merge-profiles/merge-profiles.module'
+                    ).then((m) => m.MergeProfilesModule),
+            },
             //{path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
         ],
     },

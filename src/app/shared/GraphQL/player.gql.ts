@@ -35,7 +35,213 @@ export const GetPlayers = gql`
             }
         }
     }
-    ${PlayerQL}
+`;
+export const GetPlayersMerge = gql`
+    query PostsGetQuery {
+        player(
+            where: { firstName: { _neq: "" } }
+            order_by: { firstName: asc }
+        ) {
+            id
+            firstName
+            lastName
+            playerCategory
+            handicap
+            phone
+            email
+            membershipNumber
+            membership {
+                club {
+                    name
+                }
+            }
+        }
+    }
+`;
+
+export const MergePlayers = gql`
+    mutation MergeProfiles($oldPlayerId: String!, $newPlayerId: String!) {
+        update_feedback(
+            where: { userId: { _eq: $oldPlayerId } }
+            _set: { userId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_flight(
+            where: { adminId: { _eq: $oldPlayerId } }
+            _set: { adminId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_flight_member(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        UpdateFriendPlayer: update_friend(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        UpdateFriendFriend: update_friend(
+            where: { friendId: { _eq: $oldPlayerId } }
+            _set: { friendId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_league(
+            where: { adminId: { _eq: $oldPlayerId } }
+            _set: { adminId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_league_member(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_league_role_manager(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_mvp_leaderboard_point(
+            where: { entityId: { _eq: $oldPlayerId } }
+            _set: { entityId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_notification(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_notification_meta(
+            where: { friendId: { _eq: $oldPlayerId } }
+            _set: { friendId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_player_handicap(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_player_handicap_whs(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_player_subscription(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        UpdateScorePlayer: update_score(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        UpdaetScoreUpdater: update_score(
+            where: { updaterId: { _eq: $oldPlayerId } }
+            _set: { updaterId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_team(
+            where: { adminId: { _eq: $oldPlayerId } }
+            _set: { adminId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_team_member(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tour(
+            where: { adminId: { _eq: $oldPlayerId } }
+            _set: { adminId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tour_member(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tournament(
+            where: { adminId: { _eq: $oldPlayerId } }
+            _set: { adminId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tournament_member(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tournament_member_status(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tournament_pair(
+            where: { member1Id: { _eq: $oldPlayerId } }
+            _set: { member2Id: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tournament_role_manager(
+            where: { playerId: { _eq: $oldPlayerId } }
+            _set: { playerId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_tournament_team(
+            where: { adminId: { _eq: $oldPlayerId } }
+            _set: { adminId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        UpdateTournamentTeam1Opponent: update_tournament_team_opponent(
+            where: { team1MemberId: { _eq: $oldPlayerId } }
+            _set: { team1MemberId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        UpdateTournamentTeam2Opponent: update_tournament_team_opponent(
+            where: { team2MemberId: { _eq: $oldPlayerId } }
+            _set: { team2MemberId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        update_user_permission(
+            where: { userId: { _eq: $oldPlayerId } }
+            _set: { userId: $newPlayerId }
+        ) {
+            affected_rows
+        }
+        delete_club_member(where: { playerId: { _eq: $oldPlayerId } }) {
+            affected_rows
+        }
+        delete_player(where: { id: { _eq: $oldPlayerId } }) {
+            affected_rows
+        }
+    }
 `;
 
 export const GetPlayersByClub = gql`

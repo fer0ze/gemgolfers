@@ -1,0 +1,191 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FacadeService } from 'app/shared/services/facade.service';
+import { HandicapService } from 'app/shared/services/handicap.service';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { of } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Player } from 'app/shared/models/player.model';
+import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
+import { MatDialog } from '@angular/material/dialog';
+@Component({
+    selector: 'app-merge-profiles',
+    templateUrl: './merge-profiles.component.html',
+    styleUrls: ['./merge-profiles.component.scss'],
+})
+export class MergeProfilesComponent implements OnInit {
+    Players: any = [];
+    DataSourceA: MatTableDataSource<any>;
+    DataSourceB: MatTableDataSource<any>;
+    @ViewChild('MatPaginatorA') Apaginator: MatPaginator;
+    @ViewChild('MatSortA') Asort: MatSort;
+    @ViewChild('MatPaginatorB') Bpaginator: MatPaginator;
+    @ViewChild('MatSortB') Bsort: MatSort;
+    selectionA = new SelectionModel<Player>(true, []);
+    selectionB = new SelectionModel<Player>(true, []);
+    DataSourceBColumns: string[] = [
+        'FirstName',
+        'Phone',
+        'Email',
+        'Membership',
+        'Handicap',
+        'Club',
+        'select',
+        // 'Delete',
+    ];
+    DataSourceAColumns: string[] = [
+        'FirstName',
+        'Phone',
+        'Email',
+        'Membership',
+        'Handicap',
+        'Club',
+        'select',
+        // 'Delete',
+    ];
+    constructor(
+        private handicapService: HandicapService,
+        private _facadeService: FacadeService,
+        public snackBar: MatSnackBar,
+        public dialog: MatDialog
+    ) {}
+    async ngOnInit() {
+        of(this.Players)
+            .pipe()
+            .subscribe(
+                async (data) => {
+                    data = await this._facadeService.getPlayersListMerge();
+                    console.log(data);
+                    this.Players = data.player;
+                    this.DataSourceA = new MatTableDataSource(data.player);
+                    this.DataSourceB = new MatTableDataSource(data.player);
+                    this.DataSourceA.paginator = this.Apaginator;
+                    this.DataSourceA.sort = this.Asort;
+                    this.DataSourceB.paginator = this.Bpaginator;
+                    this.DataSourceB.sort = this.Bsort;
+                },
+                (error) => console.log('error')
+            );
+    }
+
+    calculateHandicap() {
+        let oldPlayer = Object.assign({}, this.selectionA.selected);
+        let newPlayer = Object.assign({}, this.selectionB.selected);
+        if (
+            JSON.stringify(oldPlayer) === '{}' &&
+            JSON.stringify(newPlayer) === '{}'
+        ) {
+            this.snackBar.open('Please! Select Player.', 'x', {
+                duration: 5000,
+            });
+        } else {
+            const dialogRef = this.dialog.open(DialogMergeComponent, {
+                width: '350px',
+                data: 'Do you want to calculate handicap again?',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result != undefined && result != '') {
+                    let obj: any = {};
+                    if (newPlayer && newPlayer[0]) {
+                        obj = {
+                            playerId: newPlayer[0].id,
+                            count: result,
+                        };
+                    } else {
+                        obj = {
+                            playerId: oldPlayer[0].id,
+                            count: result,
+                        };
+                    }
+                    this.handicapService
+                        .calculateHandicap(obj)
+                        .then((response) => {
+                            console.log(response);
+                            this.snackBar.open(
+                                'Handicap Calculated Successfully.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
+                        })
+                        .catch((err) => {
+                            console.log('error' + err);
+                            this.snackBar.open('Error!.', 'x', {
+                                duration: 5000,
+                            });
+                        });
+                }
+            });
+        }
+    }
+
+    async mergeProfiles() {
+        let oldPlayer = Object.assign({}, this.selectionA.selected);
+        let newPlayer = Object.assign({}, this.selectionB.selected);
+
+        const dialogRef = this.dialog.open(DialogMergeComponent, {
+            width: '350px',
+            data: 'Do you want to calculate handicap again?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            console.log(result);
+            if (result != undefined) {
+                let response = await this._facadeService.mergePlayers(
+                    oldPlayer[0].id,
+                    newPlayer[0].id
+                );
+                if (response && result != '' && result != undefined) {
+                    let obj = {
+                        playerId: newPlayer[0].id,
+                        count: result,
+                    };
+
+                    this.handicapService
+                        .calculateHandicap(obj)
+                        .then((response) => {
+                            console.log(response);
+                            this.snackBar.open(
+                                'Players are Merged and Handicap Calculated Successfully.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
+                        })
+                        .catch((err) => {
+                            console.log('error' + err);
+                            this.snackBar.open('Error!.', 'x', {
+                                duration: 5000,
+                            });
+                        });
+                } else if (response == true) {
+                    this.snackBar.open(
+                        'Players are Merged Successfully.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
+                } else {
+                    this.snackBar.open('Error!.', 'x', {
+                        duration: 5000,
+                    });
+                }
+            }
+        });
+    }
+
+    applyFilterA(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.DataSourceA.filter = filterValue;
+    }
+    applyFilterB(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.DataSourceB.filter = filterValue;
+    }
+}

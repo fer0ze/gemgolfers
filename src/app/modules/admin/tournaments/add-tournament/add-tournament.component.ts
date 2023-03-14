@@ -2790,25 +2790,15 @@ export class AddTournamentComponent implements OnInit {
             return numSelected === numRows;
         }
     }
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-        console.log(this.selection);
-        console.log(this.selection.selected.length);
-        this.isAllSelected()
-            ? this.selection.clear()
-            : this.dataSource.data.forEach((row) => this.selection.select(row));
-    }
-
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: Player): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-        }
-        return `${
-            this.selection.isSelected(row) ? 'deselect' : 'select'
-        } player ${row.firstName} ${row.lastName}`;
-    }
+    // /** The label for the checkbox on the passed row */
+    // checkboxLabel(row?: Player): string {
+    //     if (!row) {
+    //         return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    //     }
+    //     return `${
+    //         this.selection.isSelected(row) ? 'deselect' : 'select'
+    //     } player ${row.firstName} ${row.lastName}`;
+    // }
 
     addFlight() {
         //console.log(this.selectedMembers.length);

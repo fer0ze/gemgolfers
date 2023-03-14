@@ -1,0 +1,33 @@
+<div class="flex items-center justify-between">
+    <div class="flex-auto leading-6 cursor-pointer">
+        {{ message }}
+    </div>
+    <mat-slide-toggle
+        class="ml-2"
+        [color]="'primary'"
+        (change)="toggle($event)"
+        #comments
+    >
+    </mat-slide-toggle>
+</div>
+<div *ngIf="show" class="flex">
+    <div class="flex-auto text-1xl leading-6 mt-4 cursor-pointer">
+        No of Handicaps
+    </div>
+    <div [formGroup]="form">
+        <mat-form-field>
+            <input type="number" matInput formControlName="count" />
+            <mat-error>The input is required.</mat-error>
+        </mat-form-field>
+    </div>
+</div>
+<div mat-dialog-actions class="flex justify-center">
+    <button
+        mat-raised-button
+        [disabled]="form.invalid"
+        color="primary"
+        [mat-dialog-close]="this.form.get('count').value"
+    >
+       Calculate
+    </button>
+</div>

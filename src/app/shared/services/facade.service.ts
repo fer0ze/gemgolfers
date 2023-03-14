@@ -191,6 +191,9 @@ export class FacadeService {
   getPlayersList() {
     return this.playerService.getPlayersList();
   }
+  getPlayersListMerge() {
+    return this.playerService.getPlayersListMerge();
+  }
 
   getPlayersListByClub(id: string) {
     return this.playerService.getPlayersListByClub(id);
@@ -209,6 +212,10 @@ export class FacadeService {
   }
   getTotalPlayersAll() {
     return this.playerService.getTotalPlayersAll();
+  }
+
+  mergePlayers(oldPlayerId:string,newPlayerId:string){
+    return this.playerService.mergeProfiles(oldPlayerId,newPlayerId)
   }
 
   getPlayerHandicapListByPlayer(

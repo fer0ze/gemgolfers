@@ -372,6 +372,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:user-group',
                 link: '/courses',
             },
+            {
+                id: 'feedback.mergreProfiles',
+                title: 'Merge-Profiles',
+                type: 'basic',
+                icon: 'heroicons_outline:user-group',
+                link: '/mergeProfile',
+            },
         ],
     },
 ];

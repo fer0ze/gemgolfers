@@ -34,6 +34,22 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListMerge(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.GetPlayersMerge,
+                })
+                .subscribe(({ data }) => {
+                    console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public getPlayersListByClub(id: string): Promise<any> {
         return new Promise((resolve) => {
@@ -310,6 +326,28 @@ export class PlayersService {
                         resolve(null);
                     } else {
                         resolve(data);
+                    }
+                });
+        });
+    }
+    public mergeProfiles(
+        oldPlayerId: string,
+        newPlayerId: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.MergePlayers,
+                    variables: {
+                        oldPlayerId: oldPlayerId,
+                        newPlayerId: newPlayerId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(false);
+                    } else {
+                        resolve(true);
                     }
                 });
         });
@@ -972,11 +1010,11 @@ export class PlayersService {
             { id: 14, name: 'Ladies B' },
             { id: 15, name: 'Subsidiary Amateurs' },
             { id: 16, name: 'Invitational' },
-            { id: 17, name: "Junior Boy(18-21)" },
-            { id: 18, name: "Junior Boy(16-18)" },
-            { id: 19, name: "Junior Boy(12-16)" },
-            { id: 20, name: "Junior Girl(16-21)" },
-            { id: 21, name: "Junior Gril(12-16)" }, 
+            { id: 17, name: 'Junior Boy(18-21)' },
+            { id: 18, name: 'Junior Boy(16-18)' },
+            { id: 19, name: 'Junior Boy(12-16)' },
+            { id: 20, name: 'Junior Girl(16-21)' },
+            { id: 21, name: 'Junior Gril(12-16)' },
         ];
 
         return CLUB_CATEGORIES;
