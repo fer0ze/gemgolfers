@@ -133,7 +133,7 @@ export class ViewPlayerComponent implements OnInit {
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public facadeService: FacadeService
-    ) {}
+    ) { }
 
     // bar chart
     // public barChartOptions: any = {
@@ -217,9 +217,12 @@ export class ViewPlayerComponent implements OnInit {
         if (this.playerID) {
             //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
             //console.log(this.currentPlayer);
-            let club: any = this.loggedInuser.membership[0].club;
+            let club: any = this.loggedInuser.membership.length > 0
+                ? this.loggedInuser.membership[0].club
+                : null;
+
             let courseID =
-                club.courses.length > 0
+                club != null
                     ? club.courses[0].id
                     : '-LUFS3FCQKOGpJ2IEHmf';
             let courseRating: any = {
@@ -234,8 +237,8 @@ export class ViewPlayerComponent implements OnInit {
                 this.playerWHS['PlayerQL'].HandicapHistoryWhsQL;
             this.usedForHandicap =
                 this.playerWHSHistory &&
-                this.playerWHSHistory.length > 0 &&
-                this.playerWHSHistory[0]
+                    this.playerWHSHistory.length > 0 &&
+                    this.playerWHSHistory[0]
                     ? this.playerWHSHistory[0].used_handicaps
                     : [];
 
@@ -518,11 +521,11 @@ export class ViewPlayerComponent implements OnInit {
             // this.par4Avg = finalScoreStats.par4Stats.getAvgScores();
             // this.par5Avg = finalScoreStats.par5Stats.getAvgScores();
 
-             this.shotsBirdiesPercent = finalScoreStats.getShotsBirdiesPercent();
+            this.shotsBirdiesPercent = finalScoreStats.getShotsBirdiesPercent();
             this.shotsBogeysPercent = finalScoreStats.getShotsBogeysPercent();
-             this.shotsThreeOrHigherPercent =
-            //     finalScoreStats.getShotsThreeOrHigherPercent();
-             this.shotsParsPercent = finalScoreStats.getShotsParsPercent();
+            this.shotsThreeOrHigherPercent =
+                //     finalScoreStats.getShotsThreeOrHigherPercent();
+                this.shotsParsPercent = finalScoreStats.getShotsParsPercent();
             // this.shotsDoubleBogeysPercent =
             //     finalScoreStats.getShotsDoubleBogeysPercent();
 
@@ -573,12 +576,12 @@ export class ViewPlayerComponent implements OnInit {
                         enabled: true,
                     },
                 },
-                colors    : ['#94A3B8', '#94A3B8'],
+                colors: ['#94A3B8', '#94A3B8'],
                 dataLabels: {
                     enabled: false
                 },
-                fill      : {
-                    colors : ['#94A3B8', '#94A3B8'],
+                fill: {
+                    colors: ['#94A3B8', '#94A3B8'],
                     opacity: 0.5
                 },
 
@@ -586,12 +589,12 @@ export class ViewPlayerComponent implements OnInit {
                 stroke: {
                     curve: 'smooth',
                 },
-                grid      : {
-                    show   : false,
+                grid: {
+                    show: false,
                     padding: {
                         bottom: -40,
-                        left  : 0,
-                        right : 0
+                        left: 0,
+                        right: 0
                     }
                 },
                 tooltip: {
@@ -601,10 +604,10 @@ export class ViewPlayerComponent implements OnInit {
                 xaxis: {
                     type: 'category',
                     categories: this._labels,
-                    labels    : {
+                    labels: {
                         offsetY: -20,
-                        rotate : 0,
-                        style  : {
+                        rotate: 0,
+                        style: {
                             colors: 'var(--fuse-text-secondary)'
                         }
                     },
@@ -663,7 +666,7 @@ export class ViewPlayerComponent implements OnInit {
         //   console.log(id);
         // }
     }
-    onPageFired(event) {}
+    onPageFired(event) { }
     deletePlayer(playerId: string): void {
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
@@ -708,13 +711,13 @@ export class ViewPlayerComponent implements OnInit {
             'h/index',
         ];
         var rows = [];
-      
+
         doc.setFontSize(17);
         doc.text(
             'WHS-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
-                ' ' +
-                this.currentPlayer[0].lastName,
+            this.currentPlayer[0].firstName +
+            ' ' +
+            this.currentPlayer[0].lastName,
             14,
             15
         );
@@ -800,9 +803,9 @@ export class ViewPlayerComponent implements OnInit {
         doc.setFontSize(17);
         doc.text(
             'CONGU-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
-                ' ' +
-                this.currentPlayer[0].lastName,
+            this.currentPlayer[0].firstName +
+            ' ' +
+            this.currentPlayer[0].lastName,
             14,
             15
         );

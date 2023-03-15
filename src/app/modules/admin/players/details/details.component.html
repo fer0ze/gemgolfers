@@ -152,6 +152,7 @@
                                     formControlName="handicap"
                                     [placeholder]="'Handicap'"
                                     type="number"
+                                    (change)="changeHandicap($event)"
                                 />
                             </mat-form-field>
                         </div>
@@ -448,7 +449,7 @@
                             <mat-form-field
                                 class="fuse-mat-textarea fuse-mat-no-subscript w-full"
                             >
-                                <mat-label>Notes</mat-label>
+                                <mat-label>Comments</mat-label>
                                 <mat-icon
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
@@ -457,7 +458,7 @@
                                 <textarea
                                     matInput
                                     formControlName="notes"
-                                    [placeholder]="'Notes'"
+                                    [placeholder]="'Comments'"
                                     [rows]="5"
                                     [spellcheck]="false"
                                     matTextareaAutosize
