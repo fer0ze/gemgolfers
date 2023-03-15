@@ -1,143 +1,138 @@
-<!-- <div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
-    <div class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
+    <div
+        class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
         <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
 
-           
-            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Sign up For {{tournament.title}}</div>
+
+            <div class="mt-2 text-4xl font-extrabold tracking-tight leading-tight">Sign up
+            </div>
             <div class="flex items-baseline mt-0.5 font-medium">
                 <div>Powered by Gemgolfers</div>
-                
+
             </div>
 
-         
-            <fuse-alert
-                class="mt-8 -mb-4"
-                *ngIf="showAlert"
-                [appearance]="'outline'"
-                [showIcon]="false"
-                [type]="alert.type"
-                [@shake]="alert.type === 'error'">
+
+            <!-- <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                [type]="alert.type" [@shake]="alert.type === 'error'">
                 {{alert.message}}
-            </fuse-alert>
+            </fuse-alert> -->
 
-           
-            <form
-                class="mt-8"
-                [formGroup]="signUpForm"
-                #signUpNgForm="ngForm">
 
-               
+            <form class="mt-8" [formGroup]="signUpForm">
+
+
                 <mat-form-field class="w-full">
                     <mat-label>First Name</mat-label>
-                    <input
-                        id="firstname"
-                        matInput
-                        [formControlName]="'firstname'">
-                    <mat-error *ngIf="signUpForm.get('firstname').hasError('required')">
+                    <input id="firstName" matInput [formControlName]="'firstName'">
+                    <mat-error *ngIf="hasError('firstName', 'required')">
                         First name is required
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="w-full">
                     <mat-label>Last Name</mat-label>
-                    <input
-                        id="lastname"
-                        matInput
-                        [formControlName]="'lastname'">
-                    <mat-error *ngIf="signUpForm.get('lastname').hasError('required')">
+                    <input id="lastName" matInput [formControlName]="'lastName'">
+                    <mat-error *ngIf="hasError('lastName', 'required')">
                         Last name is required
                     </mat-error>
                 </mat-form-field>
 
-                
+
                 <mat-form-field class="w-full">
-                    <mat-label>Email address</mat-label>
-                    <input
-                        id="email"
-                        matInput
-                        [formControlName]="'email'">
-                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                    <mat-label>Email</mat-label>
+                    <input id="email" matInput [formControlName]="'email'">
+                     <mat-error *ngIf="hasError('email', 'required')">
                         Email address is required
                     </mat-error>
-                    <mat-error *ngIf="signUpForm.get('email').hasError('email')">
-                        Please enter a valid email address
-                    </mat-error>
+                   
                 </mat-form-field>
-                
                 <mat-form-field class="w-full">
-                    <mat-label>Phone Number</mat-label>
-                    <input
-                        id="phone"
-                        matInput
-                        [formControlName]="'phone'">
-                    <mat-error *ngIf="signUpForm.get('phone').hasError('required')">
+                    <mat-label>Phone </mat-label>
+                    <input id="phone" matInput [formControlName]="'phone'">
+                    <mat-error *ngIf="hasError('phone', 'required')">
                         Phone is required
                     </mat-error>
-                    
                 </mat-form-field>
+                <mat-form-field class="w-full">
+                    <mat-label>Membership No </mat-label>
+                    <input id="membership" matInput [formControlName]="'membership'">
+                   
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <mat-label>Category</mat-label>
+
+                    <mat-select formControlName="category" placeholder="Player Category" class="mr-1.5">
+                        <mat-option *ngFor="let cat of playerCategories" [value]="cat.name">
+                            <span class="flex items-center">
+                                <span class="ml-5">{{
+                                    cat.name
+                                    }}</span>
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('category', 'required')">
+                        Category is required
+                    </mat-error>
+
+                </mat-form-field>
+               
+
+               
 
                 <mat-form-field class="w-full">
                     <mat-label>Handicap</mat-label>
-                    <input
-                        id="handicap"
-                        matInput
-                        [formControlName]="'handicap'">
-                    <mat-error *ngIf="signUpForm.get('phone').hasError('required')">
-                        Phone is required
+                    <input type="number" id="handicap" matInput [formControlName]="'handicap'">
+                    <mat-error *ngIf="hasError('handicap', 'required')">
+                        Handicap is required
                     </mat-error>
-                    
+
                 </mat-form-field>
 
-              
-              
+
+
                 <mat-form-field class="w-full">
-                    <mat-label>Company</mat-label>
-                    <input
-                        id="company-confirm"
-                        matInput
-                        [formControlName]="'company'">
+                    <mat-label>Club</mat-label>
+                    <input matInput formControlName="club" [placeholder]="'Club'"
+                        [matAutocomplete]="auto" />
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                        <mat-option *ngFor="
+                            let option of filteredClubOptions
+                                | async
+                        " [value]="option">
+                            {{ option.name }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="hasError('club', 'required')">
+                        Club is required
+                    </mat-error>
                 </mat-form-field>
 
-                
+
                 <div class="inline-flex items-end w-full mt-1.5">
-                    <mat-checkbox
-                        [color]="'primary'"
-                        [formControlName]="'agreements'">
+                    <mat-checkbox [color]="'primary'">
                         <span>I agree to the</span>
-                        <a
-                            class="ml-1 text-primary-500 hover:underline"
-                            [routerLink]="['./']">Terms of Service
+                        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">Terms of Service
                         </a>
                         <span>and</span>
-                        <a
-                            class="ml-1 text-primary-500 hover:underline"
-                            [routerLink]="['./']">Privacy Policy
+                        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">Privacy Policy
                         </a>
                     </mat-checkbox>
                 </div>
 
-                
-                <button
-                    class="fuse-mat-button-large w-full mt-6"
-                    mat-flat-button
-                    [color]="'primary'"
-                    [disabled]="signUpForm.disabled"
-                    (click)="signUp()">
+
+                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
+                    [disabled]="signUpForm.invalid" (click)="signUp()">
                     <span *ngIf="!signUpForm.disabled">
-                        Create your free account
+                        Save
                     </span>
-                    <mat-progress-spinner
-                        *ngIf="signUpForm.disabled"
-                        [diameter]="24"
+                    <mat-progress-spinner *ngIf="signUpForm.disabled" [diameter]="24"
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>
 
             </form>
         </div>
     </div>
-    <div
-        class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden dark:border-l"
-        style="background-color: #004987; color: white ;"
-    >
+    <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden dark:border-l"
+        style="background-color: #004987; color: white ;">
         <div class="z-10 relative w-full max-w-2xl">
             <div class="text-7xl font-bold leading-none ">
                 <div>Welcome to</div>
@@ -154,4 +149,4 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>

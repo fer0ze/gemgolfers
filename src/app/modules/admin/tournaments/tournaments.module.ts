@@ -85,8 +85,7 @@ import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.co
         DialogAddMemberComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
-        DialogPlayingDatesComponent,
-        SignUpFormComponent
+        DialogPlayingDatesComponent
     ],
     imports: [
         CommonModule,

@@ -24,6 +24,18 @@ export const appRoutes: Route[] = [
         data: {
             layout: 'empty',
         },
+
+    },
+    {
+        path: 'signUpForm',
+        loadChildren: () =>
+            import(
+                'app/modules/admin/tournaments/Sign-Up-Form/sign-up-form/sign-up-form.module'
+            ).then((m) => m.SignUpFormModule),
+        component: LayoutComponent,
+        data: {
+            layout: 'empty',
+        },
     },
 
     // Redirect signed in user to the '/example'

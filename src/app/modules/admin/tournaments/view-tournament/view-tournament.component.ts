@@ -2231,6 +2231,9 @@ export class ViewTournamentComponent implements OnInit {
     redirectToScores() {
         this.router.navigate(['/matchplay/' + this.tournamentID]);
     }
+    viewsignupform(){
+        this.router.navigate(['/signUpForm/' + this.tournamentID]);
+    }
 
     redirectToflightManagement() {
         this.router.navigate(['/tournaments/manage/' + this.tournamentID]);

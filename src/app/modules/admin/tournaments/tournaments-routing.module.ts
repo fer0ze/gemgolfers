@@ -9,6 +9,7 @@ import { HandicapCalculationWhsComponent } from './handicap-calculation-whs/hand
 import { DatePipe } from '@angular/common';
 import { PlayerManagementComponent } from './player-management/player-management.component';
 import { ViewTournamentComponent } from './view-tournament/view-tournament.component';
+import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
 
 const routes: Routes = [
     {
