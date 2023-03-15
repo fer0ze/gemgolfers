@@ -62,6 +62,7 @@ import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-ad
 import { DialogPlayingDatesComponent } from '../dialogs/dialog-playing-dates/dialog-playing-dates.component';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-add-member.component';
+import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -84,7 +85,8 @@ import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-ad
         DialogAddMemberComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
-        DialogPlayingDatesComponent
+        DialogPlayingDatesComponent,
+        SignUpFormComponent
     ],
     imports: [
         CommonModule,

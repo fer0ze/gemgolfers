@@ -58,6 +58,7 @@ export class PlayersComponent implements OnInit {
     count: any = 0;
     showTable: Promise<any>;
     loggedInuser: Player;
+    TablePlayers: any=[];
     //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
@@ -72,33 +73,6 @@ export class PlayersComponent implements OnInit {
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
         this.fecthData();
-        // Subscribe to MatDrawer opened change
-        // this.matDrawer.openedChange.subscribe((opened) => {
-        //     if (!opened) {
-        //         // Remove the selected contact when drawer closed
-        //         //this.selectedContact = null;
-        //         console.log(opened);
-        //         //this.fecthData();
-
-        //         // Mark for check
-        //         this._changeDetectorRef.markForCheck();
-        //     }
-        // });
-
-        this._fuseMediaWatcherService.onMediaChange$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({ matchingAliases }) => {
-                // Set the drawerMode if the given breakpoint is active
-                if (matchingAliases.includes('lg')) {
-                    this.drawerMode = 'side';
-                } else {
-                    this.drawerMode = 'over';
-                }
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
         this.showTable = Promise.resolve(true);
     }
 
@@ -133,8 +107,21 @@ export class PlayersComponent implements OnInit {
                         this.count = data.player.length;
                         console.log(data);
                         this.Players = data.player;
+                        for (let obj of this.Players) {
+                            let newobj = {
+                              id: obj.id,
+                              Name: obj.firstName + " " + obj.lastName,
+                              Phone: obj.phone,
+                              Email: obj.email,
+                              Membership: obj.membershipNumber,
+                              Category: obj.playerCategory,
+                              Handicap: obj.handicap,
+                              Status:obj.membershipQL,
+                            };
+                            this.TablePlayers.push(newobj);
+                          }
                         this.playersDataSource = new MatTableDataSource(
-                            data.player
+                          this.TablePlayers
                         );
                         this.playersDataSource.paginator = this.paginator;
                         this.playersDataSource.sort = this.sort;
@@ -146,9 +133,23 @@ export class PlayersComponent implements OnInit {
                 this.loggedInuser.adminClubId
             );
             this.count = data.player.length;
-            console.log(data);
             this.Players = data.player;
-            this.playersDataSource = new MatTableDataSource(data.player);
+            console.log(data);
+            for (let obj of this.Players) {
+                let newobj = {
+                  id: obj.id,
+                  Name: obj.firstName + " " + obj.lastName,
+                  Phone: obj.phone,
+                  Email: obj.email,
+                  Membership: obj.membershipNumber,
+                  Category: obj.playerCategory,
+                  Handicap: obj.handicap,
+                  Status:obj.membershipQL,
+                };
+                this.TablePlayers.push(newobj);
+              }
+           
+            this.playersDataSource = new MatTableDataSource(this.TablePlayers);
             this.playersDataSource.paginator = this.paginator;
             this.playersDataSource.sort = this.sort;
         }
