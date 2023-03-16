@@ -17,8 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlightScores } from '../../../../shared/classes/FlightScores';
-import "jspdf-autotable";
-import * as jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 import {
     Constants,
     General,
@@ -132,17 +132,21 @@ export class PlayerHandicapComponent implements OnInit {
             //   await this.facadeService.getPlayerByID(this.playerID)
             // );
             // console.log(this.currentPlayerHandicap);
-            let club: any = this.loggedInuser.membership[0].club;
+            let club: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
             let courseID =
-                club.courses.length > 0
+                club != null && club.courses.length > 0
                     ? club.courses[0].id
                     : '-LUFS3FCQKOGpJ2IEHmf';
             let courseRating: any = {
                 courseId: courseID,
                 courseHoleSets: 3,
             };
-            let playerscore=<Player> await this._facadeService
-                .getPlayerByID(this.playerID)
+            let playerscore = <Player>(
+                await this._facadeService.getPlayerByID(this.playerID)
+            );
             console.log(playerscore);
 
             this.playerWHS = await this._facadeService.getPlayerWHS(
@@ -150,7 +154,7 @@ export class PlayerHandicapComponent implements OnInit {
             );
             console.log(this.playerWHS);
             this.currentPlayer = playerscore['player'];
-           
+
             this.playerWHSHistory =
                 this.playerWHS['PlayerQL'].HandicapHistoryWhsQL;
             console.log(this.playerWHSHistory);
@@ -276,7 +280,7 @@ export class PlayerHandicapComponent implements OnInit {
             this.playerWHSRound = await this._facadeService.getPlayerWHSRound(
                 courseRating
             );
-          
+
             console.log(this.playerWHS);
             console.log(this.playerWHSRound);
             let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
@@ -361,7 +365,7 @@ export class PlayerHandicapComponent implements OnInit {
     cancel() {
         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
-   
+
     public downloadAsPDFWHS() {
         var doc = new jsPDF();
         var col = [

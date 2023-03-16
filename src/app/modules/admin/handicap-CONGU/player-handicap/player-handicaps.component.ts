@@ -36,18 +36,17 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import {  HandicapsComponent } from '../CONGU/handicaps.component';
-import "jspdf-autotable";
-import * as jsPDF from "jspdf";
+import { HandicapsComponent } from '../CONGU/handicaps.component';
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 @Component({
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
 })
 export class PlayerHandicapComponent implements OnInit {
-
     cardsrc = 'assets/images/cards/01-320x200.png';
     dataSource: MatTableDataSource<any>;
-    displayedColumns : string[] = [
+    displayedColumns: string[] = [
         'id',
         'updatedAt',
         'grossScore',
@@ -57,7 +56,7 @@ export class PlayerHandicapComponent implements OnInit {
         'handicapDifference',
         'handicap',
     ];
-   
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     clubTitle: any;
@@ -99,11 +98,9 @@ export class PlayerHandicapComponent implements OnInit {
 
         this._activatedRoute.paramMap.subscribe(async (params) => {
             this.showTable = Promise.resolve(false);
-            this.playerID = params.get('id');       
+            this.playerID = params.get('id');
             this.fetchData();
         });
-
-       
     }
 
     /**
@@ -115,7 +112,7 @@ export class PlayerHandicapComponent implements OnInit {
         this._unsubscribeAll.complete();
     }
 
-    async fetchData(){
+    async fetchData() {
         if (this.loggedInuser) {
             let clubInfo: any =
                 this.loggedInuser.membership.length > 0
@@ -131,9 +128,12 @@ export class PlayerHandicapComponent implements OnInit {
             //   await this.facadeService.getPlayerByID(this.playerID)
             // );
             // console.log(this.currentPlayerHandicap);
-            let club: any = this.loggedInuser.membership[0].club;
+            let club: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
             let courseID =
-                club.courses.length > 0
+            club!=null && club.courses.length > 0
                     ? club.courses[0].id
                     : '-LUFS3FCQKOGpJ2IEHmf';
             let courseRating: any = {
@@ -157,7 +157,6 @@ export class PlayerHandicapComponent implements OnInit {
             this.dataSource.sort = this.sort;
             let newScores: any[] = [];
             this.showTable = Promise.resolve(true);
-          
         } else {
             this.location.back();
         }
@@ -268,7 +267,7 @@ export class PlayerHandicapComponent implements OnInit {
             //   }
 
             // }
-            let used=false;
+            let used = false;
             //  boolean = this.usedForHandicap.some((handicap) => {
             //     return (
             //         handicap.used_handicap_id == element.Handicap_id ||

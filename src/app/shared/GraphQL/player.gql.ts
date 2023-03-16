@@ -304,6 +304,32 @@ export const getPlayersListByClubCONGU = gql`
         }
     }
 `;
+export const getPlayersListByAdminCONGU = gql`
+    query PostsGetQuery {
+        player(
+            where: { firstName: { _neq: "" } }
+            order_by: { firstName: asc }
+        ) {
+            id
+            firstName
+            lastName
+            playerCategory
+            handicap
+            handicapWhsIndex
+            phone
+            email
+            membershipNumber
+            handicapQL: handicap_history(
+                order_by: { updatedAt: desc }
+                limit: 1
+            ) {
+                handicap
+                oldHandicap
+                updatedAt
+            }
+        }
+    }
+`;
 export const getPlayersListByClubOnlyWHS = gql`
     query PostsGetQuery($where: player_bool_exp!) {
         player(where: $where, order_by: { firstName: asc }) {
@@ -424,7 +450,6 @@ export const GetPlayerByMembershipNumber = gql`
             }
         }
     }
-    ${PlayerQL}
 `;
 
 export const GetPlayerByFirstName = gql`

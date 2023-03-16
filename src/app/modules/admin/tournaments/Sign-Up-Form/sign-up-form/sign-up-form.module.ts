@@ -13,6 +13,7 @@ import { SignUpFormRoutingModule } from './sign-up-form.routing.moduel';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
     declarations: [SignUpFormComponent],
     imports: [
@@ -22,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         MatFormFieldModule,
         MatSelectModule,
         MatButtonToggleModule,
+        MatSnackBarModule,
         MatDialogModule,
         MatButtonModule,
         MatCheckboxModule,

@@ -191,6 +191,9 @@ export class FacadeService {
   getPlayersList() {
     return this.playerService.getPlayersList();
   }
+  getPlayersListByAdminCONGU() {
+    return this.playerService.getPlayersListByAdminCONGU();
+  }
   getPlayersListMerge() {
     return this.playerService.getPlayersListMerge();
   }

@@ -81,70 +81,80 @@ export class General {
 
     public static getPlayersTe(teeName: String) {
         const Course_Tee = [
-          { id: "1", name: "Amateurs", result: "AMATEURS" },
-          { id: "1", name: "Invitational", result: "AMATEURS" },
-          { id: "1", name: "Subsidiary Amateurs", result: "AMATEURS" },
-          { id: "1", name: "BLUE", result: "AMATEURS" },
-          { id: "1", name: "Blue", result: "AMATEURS" },
-          { id: "1", name: "AMATEURS", result: "AMATEURS" },
-          { id: "5", name: "VETERANS", result: "VETERANS" },
-          { id: "5", name: "Veterans", result: "VETERANS" },
-          { id: "5", name: "Veterans ", result: "VETERANS" },
-          { id: "5", name: " Veterans ", result: "VETERANS" },
-          {
-            id: "2",
-            name: "Ladies",
-            result: "LADIES",
-          },
-          {
-            id: "2",
-            name: "LADIES",
-            result: "LADIES",
-          },
-          {
-            id: "3",
-            name: "Seniors",
-            result: "SENIORS",
-          },
-          {
-            id: "3",
-            name: "Yellow",
-            result: "SENIORS",
-          },
-          {
-            id: "3",
-            name: "YELLOW",
-            result: "SENIORS",
-          },
-          { id: "2", name: "Red", result: "LADIES" },
-          { id: "2", name: "Ladies A", result: "LADIES" },
-          { id: "2", name: "Ladies B", result: "LADIES" },
-          { id: "2", name: "RED", result: "LADIES" },
-          { id: "4", name: "Professionals", result: "PROFESSIONALS" },
-          { id: "4", name: "PROFESSIONALS", result: "PROFESSIONALS" },
-          {
-            id: "3",
-            name: "SENIORS",
-            result: "SENIORS",
-          },
-          { id: "2", name: "Junior Amateurs", result: "LADIES" },
-          { id: "2", name: "Junior Ladies", result: "LADIES" },
-          { id: "2", name: "JUNIOR LADIES", result: "LADIES" },
-          { id: "2", name: "Junior Professionals", result: "LADIES" },
-          { id: "2", name: "Junior Boy(18-21)", result: "LADIES" },
-          { id: "2", name: "Junior Boy(16-18)", result: "LADIES" },
-          { id: "2", name: "Junior Boy(12-16)", result: "LADIES" },
-          { id: "2", name: "Junior Girl(16-21)", result: "LADIES" },
-          { id: "2", name: "Junior Gril(12-16)", result: "LADIES" },
-          { id: "2", name: "Junior", result: "LADIES" },
-          { id: "3", name: "Senior Amateurs", result: "SENIORS" },
-          { id: "3", name: "Senior Professionals", result: "SENIORS" },
+            { id: '1', name: 'Amateurs', result: 'AMATEURS' },
+            { id: '1', name: 'Invitational', result: 'AMATEURS' },
+            { id: '1', name: 'Subsidiary Amateurs', result: 'AMATEURS' },
+            { id: '1', name: 'BLUE', result: 'AMATEURS' },
+            { id: '1', name: 'Blue', result: 'AMATEURS' },
+            { id: '1', name: 'AMATEURS', result: 'AMATEURS' },
+            { id: '5', name: 'VETERANS', result: 'VETERANS' },
+            { id: '5', name: 'Veterans', result: 'VETERANS' },
+            { id: '5', name: 'Veterans ', result: 'VETERANS' },
+            { id: '5', name: ' Veterans ', result: 'VETERANS' },
+            {
+                id: '2',
+                name: 'Ladies',
+                result: 'LADIES',
+            },
+            {
+                id: '2',
+                name: 'LADIES',
+                result: 'LADIES',
+            },
+            {
+                id: '3',
+                name: 'Seniors',
+                result: 'SENIORS',
+            },
+            {
+                id: '3',
+                name: 'Yellow',
+                result: 'SENIORS',
+            },
+            {
+                id: '3',
+                name: 'YELLOW',
+                result: 'SENIORS',
+            },
+            { id: '2', name: 'Red', result: 'LADIES' },
+            { id: '2', name: 'Ladies A', result: 'LADIES' },
+            { id: '2', name: 'Ladies B', result: 'LADIES' },
+            { id: '2', name: 'RED', result: 'LADIES' },
+            { id: '4', name: 'Professionals', result: 'PROFESSIONALS' },
+            { id: '4', name: 'PROFESSIONALS', result: 'PROFESSIONALS' },
+            {
+                id: '3',
+                name: 'SENIORS',
+                result: 'SENIORS',
+            },
+            { id: '2', name: 'Junior Amateurs', result: 'LADIES' },
+            { id: '2', name: 'Junior Ladies', result: 'LADIES' },
+            { id: '2', name: 'JUNIOR LADIES', result: 'LADIES' },
+            { id: '2', name: 'Junior Professionals', result: 'LADIES' },
+            { id: '2', name: 'Junior Boy(18-21)', result: 'LADIES' },
+            { id: '2', name: 'Junior Boy(16-18)', result: 'LADIES' },
+            { id: '2', name: 'Junior Boy(12-16)', result: 'LADIES' },
+            { id: '2', name: 'Junior Girl(16-21)', result: 'LADIES' },
+            { id: '2', name: 'Junior Gril(12-16)', result: 'LADIES' },
+            { id: '2', name: 'Junior', result: 'LADIES' },
+            { id: '3', name: 'Senior Amateurs', result: 'SENIORS' },
+            { id: '3', name: 'Senior Professionals', result: 'SENIORS' },
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
-    
-        return ID;
-      }
 
+        return ID;
+    }
+
+    public static getPhonePrefix(phone) {
+        if (phone.toString().indexOf('+92') === 0) {
+            phone = phone.toString();
+        } else if (phone.toString().indexOf('0') === 0) {
+            phone = phone.toString().replace(0, '+92');
+        } else if (phone.toString().indexOf('3') === 0) {
+            phone = '+92' + phone.toString();
+        }
+        return phone;
+    }
     public static getCourseTeeId(tee: string) {
         const Course_Tee = [
             { id: 1, name: 'AMATEURS' },
@@ -283,28 +293,90 @@ export class General {
 
         return tee;
     }
-    public static createClm(round){
+    public static createClm(round) {
         switch (round) {
             case 1:
-                return ["Sr.", "Name","HCP", "Club", "Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+                    'Gross Rd1',
+                    'Net Rd1',
+                    'Total Gross',
+                    'Total Net',
+                ];
                 break;
             case 2:
-                return ["Sr.", "Name","HCP", "Club", "Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+                    'Gross Rd2',
+                    'Net Rd2',
+                    'Gross Rd1',
+                    'Net Rd1',
+                    'Total Gross',
+                    'Total Net',
+                ];
                 break;
             case 3:
-                return ["Sr.", "Name","HCP", "Club", "Gross Rd3","Net Rd3","Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+                    'Gross Rd3',
+                    'Net Rd3',
+                    'Gross Rd2',
+                    'Net Rd2',
+                    'Gross Rd1',
+                    'Net Rd1',
+                    'Total Gross',
+                    'Total Net',
+                ];
                 break;
             case 4:
-                return ["Sr.", "Name","HCP", "Club", "Gross Rd4","Net Rd4","Gross Rd3","Net Rd3","Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+                    'Gross Rd4',
+                    'Net Rd4',
+                    'Gross Rd3',
+                    'Net Rd3',
+                    'Gross Rd2',
+                    'Net Rd2',
+                    'Gross Rd1',
+                    'Net Rd1',
+                    'Total Gross',
+                    'Total Net',
+                ];
                 break;
             default:
-                return ["Sr.", "Name","HCP", "Club", "Gross Rd4","Net Rd4","Gross Rd3","Net Rd3","Gross Rd2","Net Rd2","Gross Rd1","Net Rd1","Total Gross","Total Net"];
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+                    'Gross Rd4',
+                    'Net Rd4',
+                    'Gross Rd3',
+                    'Net Rd3',
+                    'Gross Rd2',
+                    'Net Rd2',
+                    'Gross Rd1',
+                    'Net Rd1',
+                    'Total Gross',
+                    'Total Net',
+                ];
                 break;
         }
     }
-    public static getClubName(clubName){
-        if(clubName)
-          return clubName.match(/\b([A-Z])/g).join('');
+    public static getClubName(clubName) {
+        if (clubName) return clubName.match(/\b([A-Z])/g).join('');
     }
 }
 
@@ -508,5 +580,5 @@ export class generateGemId {
         return this.asciiArray;
     }
 }
-export const labels = ['Mon', 'Tue', 'Wed','Thu','Fri','Sat','Sun'];
-export const labelsPlayers = ['Amatuers','S.Amatuers','Vetrans','Ladies'];
+export const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+export const labelsPlayers = ['Amatuers', 'S.Amatuers', 'Vetrans', 'Ladies'];

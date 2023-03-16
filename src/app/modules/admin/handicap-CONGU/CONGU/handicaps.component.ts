@@ -142,7 +142,7 @@ export class HandicapsComponent implements OnInit {
                         General.capitalizeFirstLetter(this.filterCategory)
                     );
             else {
-                this.dataPlayers = await this._facadeService.getPlayersList();
+                this.dataPlayers = await this._facadeService.getPlayersListByAdminCONGU();
                 console.log(this.dataPlayers);
 
                 // this.aggregate =

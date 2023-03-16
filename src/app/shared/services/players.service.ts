@@ -34,6 +34,22 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListByAdminCONGU(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersListByAdminCONGU,
+                })
+                .subscribe(({ data }) => {
+                    console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getPlayersListMerge(): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -428,7 +444,7 @@ export class PlayersService {
     public getPlayerByPhone(phone: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
-                .subscribe({
+                .watchQuery<any>({
                     query: Query.GetPlayerByFilter,
                     variables: {
                         where: {
@@ -438,12 +454,8 @@ export class PlayersService {
                         },
                     },
                 })
-                .subscribe(({ data }) => {
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        resolve(data);
-                    }
+                .valueChanges.subscribe(({ data }) => {
+                    resolve(data.player);
                 });
         });
     }

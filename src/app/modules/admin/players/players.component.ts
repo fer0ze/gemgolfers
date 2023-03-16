@@ -114,7 +114,7 @@ export class PlayersComponent implements OnInit {
                               Phone: obj.phone,
                               Email: obj.email,
                               Membership: obj.membershipNumber,
-                              Category: obj.playerCategory,
+                              Category: obj.playerCategory == 'Senior' ? 'Senior Amateurs': obj.playerCategory,
                               Handicap: obj.handicap,
                               Status:obj.membershipQL,
                             };
@@ -142,7 +142,7 @@ export class PlayersComponent implements OnInit {
                   Phone: obj.phone,
                   Email: obj.email,
                   Membership: obj.membershipNumber,
-                  Category: obj.playerCategory,
+                  Category: obj.playerCategory == 'Senior' ? 'Senior Amateurs': obj.playerCategory,
                   Handicap: obj.handicap,
                   Status:obj.membershipQL,
                 };

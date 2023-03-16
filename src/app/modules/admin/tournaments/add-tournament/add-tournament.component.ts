@@ -2791,14 +2791,14 @@ export class AddTournamentComponent implements OnInit {
         }
     }
     // /** The label for the checkbox on the passed row */
-    // checkboxLabel(row?: Player): string {
-    //     if (!row) {
-    //         return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    //     }
-    //     return `${
-    //         this.selection.isSelected(row) ? 'deselect' : 'select'
-    //     } player ${row.firstName} ${row.lastName}`;
-    // }
+    checkboxLabel(row?: Player): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${
+            this.selection.isSelected(row) ? 'deselect' : 'select'
+        } player ${row.firstName} ${row.lastName}`;
+    }
 
     addFlight() {
         //console.log(this.selectedMembers.length);
