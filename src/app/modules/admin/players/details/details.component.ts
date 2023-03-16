@@ -566,7 +566,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 notes: this.currentPlayer.player[0].extraData,
                 membershipNo: this.currentPlayer.player[0].membershipNumber,
                 club: this.currentPlayer.player[0].membership[0]
-                    ? this.currentPlayer.player[0].membership[0].club.name
+                    ? this.currentPlayer.player[0].membership[0].club
                     : '',
                 isClubAdmin: this.currentPlayer.player[0].adminClubId
                     ? '1'

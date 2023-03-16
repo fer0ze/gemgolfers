@@ -103,6 +103,8 @@ export class MergeProfilesComponent implements OnInit {
                         .calculateHandicap(obj)
                         .then((response) => {
                             console.log(response);
+                            this.selectionA.clear(true);
+                            this.selectionB.clear(true);
                             this.snackBar.open(
                                 'Handicap Calculated Successfully.',
                                 'x',
@@ -154,6 +156,8 @@ export class MergeProfilesComponent implements OnInit {
                                     duration: 5000,
                                 }
                             );
+                            this.selectionA.clear(true);
+                            this.selectionB.clear(true);
                         })
                         .catch((err) => {
                             console.log('error' + err);
@@ -162,6 +166,8 @@ export class MergeProfilesComponent implements OnInit {
                             });
                         });
                 } else if (response == true) {
+                    this.selectionA.clear(true);
+                    this.selectionB.clear(true);
                     this.snackBar.open(
                         'Players are Merged Successfully.',
                         'x',
