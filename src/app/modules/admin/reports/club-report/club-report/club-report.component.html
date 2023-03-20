@@ -11,20 +11,6 @@
                 </div>
             </div>
             <div class="flex items-center ml-6">
-                <button class="hidden sm:inline-flex" mat-stroked-button>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:document-report'"
-                    ></mat-icon>
-                    <span class="ml-2">Reports</span>
-                </button>
-                <button class="hidden sm:inline-flex ml-3" mat-stroked-button>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:cog'"
-                    ></mat-icon>
-                    <span class="ml-2">Settings</span>
-                </button>
                 <button
                     class="hidden sm:inline-flex ml-3"
                     mat-flat-button
@@ -55,15 +41,59 @@
 
         <div class="gap-8 w-full mt-8">
             <div
+            *ngIf="showdata | async"
                 class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
             >
-                <div class="p-6">
-                    <div
-                        class="mr-4 text-lg font-medium tracking-tight leading-6 truncate"
-                    >
-                        Club Details
+                <div class="flex flex-col flex-auto p-4">
+                    <apx-chart
+                        class="flex-auto w-full h-80"
+                        [chart]="chartGithubIssues.chart"
+                        [colors]="chartGithubIssues.colors"
+                        [dataLabels]="chartGithubIssues.dataLabels"
+                        [grid]="chartGithubIssues.grid"
+                        [labels]="chartGithubIssues.labels"
+                        [legend]="chartGithubIssues.legend"
+                        [plotOptions]="chartGithubIssues.plotOptions"
+                        [series]="chartGithubIssues.series[0]"
+                        [states]="chartGithubIssues.states"
+                        [stroke]="chartGithubIssues.stroke"
+                        [tooltip]="chartGithubIssues.tooltip"
+                        [xaxis]="chartGithubIssues.xaxis"
+                        [yaxis]="chartGithubIssues.yaxis"
+                    ></apx-chart>
+                </div>
+            </div>
+            <div
+                class="flex flex-col mt-8 flex-auto bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div class="p-6 flex flex-row">
+                    <div class="flex flex-col">
+                        <div
+                            class="mr-4 text-lg font-medium tracking-tight leading-6 truncate"
+                        >
+                            Club Details
+                        </div>
+                        <div class="text-secondary font-medium">
+                            {{ clubs.length }} total
+                        </div>
                     </div>
-                    <div class="text-secondary font-medium">1 total</div>
+                    <div class="w-60">
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:search'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                (keyup)="applyFilter($event.target.value)"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Search club'"
+                            />
+                        </mat-form-field>
+                    </div>
                 </div>
                 <div class="overflow-x-auto mx-6">
                     <table mat-table [dataSource]="dataSource" matSort>

@@ -46,6 +46,7 @@ export class FacadeService {
   getClubList() {
     return this.clubService.getClubsList();
   }
+ 
 
   getPGFClubList(id: string) {
     return this.clubService.getPGFClubsList(id);
@@ -395,6 +396,10 @@ export class FacadeService {
 
   getTournamentsListForCompleted(endDate: Date) {
     return this.tournamentService.getTournamentsListForCompleted(endDate);
+  }
+
+  getLeagues() {
+    return this.tournamentService.getLeagues();
   }
 
   getTournamentsListForLiveByAdmin(endDate: Date) {

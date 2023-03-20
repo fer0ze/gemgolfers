@@ -1,310 +1,153 @@
-<div
-    class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto"
-    cdkScrollable
->
-    <!-- Header -->
-    <div
-        class="relative flex-0 py-8 px-4 sm:p-16 overflow-hidden bg-gray-800 dark"
-    >
-        <!-- Background - @formatter:off -->
-        <!-- Rings -->
-        <svg
-            class="absolute inset-0 pointer-events-none"
-            viewBox="0 0 960 540"
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMax slice"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <g
-                class="text-gray-700 opacity-25"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="100"
-            >
-                <circle r="234" cx="196" cy="23"></circle>
-                <circle r="234" cx="790" cy="491"></circle>
-            </g>
-        </svg>
-        <!-- @formatter:on -->
-        <div class="z-10 relative flex flex-col items-center">
-            <h2 class="text-xl font-semibold">GemGolfers Tournament Module</h2>
-            <div
-                class="mt-1 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
-            >
-                Do you want to play tournanemt Online?
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
+        <!-- Title and action buttons -->
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <h2 class="text-3xl font-semibold tracking-tight leading-8">
+                    Leagues
+                </h2>
+                <div class="font-medium tracking-tight text-secondary">
+                    Keep track of Leagues
+                </div>
             </div>
-            <div
-                class="max-w-2xl mt-6 sm:text-2xl text-center tracking-tight text-secondary"
-            >
-                Our app will step you through the process of a building
-                tournaments, or adding new formats to existing
-                tournaments.
+            <div class="flex items-center ml-6">
+                <button
+                    class="hidden sm:inline-flex ml-3"
+                    mat-flat-button
+                    [color]="'primary'"
+                >
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:save'"
+                    ></mat-icon>
+                    <span class="ml-2">Add New League</span>
+                </button>
+
+                <!-- Actions menu (visible on xs) -->
+                <div class="sm:hidden">
+                    <button [matMenuTriggerFor]="actionsMenu" mat-icon-button>
+                        <mat-icon
+                            [svgIcon]="'heroicons_outline:dots-vertical'"
+                        ></mat-icon>
+                    </button>
+                    <mat-menu #actionsMenu="matMenu">
+                        <button mat-menu-item>Export</button>
+                        <button mat-menu-item>Reports</button>
+                        <button mat-menu-item>Settings</button>
+                    </mat-menu>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Main -->
-    <div class="flex flex-auto p-6 sm:p-10">
-        <div
-            class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto"
-        >
-            <!-- Filters -->
-            <div
-                class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none"
+        <div class="gap-8 w-full mt-8">
+            <!-- <div
+            *ngIf="showdata | async"
+                class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
             >
-                <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
-                    <mat-select
-                        [value]="0"
-                        (selectionChange)="filterByCategory($event)"
-                    >
-                       
-                        <ng-container
-                            *ngFor="
-                                let category of categories;
-                                trackBy: trackByFn
-                            "
-                        >
-                            <mat-option [value]="category.id">{{
-                                category.title
-                            }}</mat-option>
-                        </ng-container>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field
-                    class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
-                    [floatLabel]="'always'"
-                >
-                    <mat-icon
-                        matPrefix
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:search'"
-                    ></mat-icon>
-                    <input
-                        (input)="filterByQuery(query.value)"
-                        placeholder="Search by title"
-                        matInput
-                        #query
-                    />
-                </mat-form-field>
-                <!-- <mat-slide-toggle
-                    class="mt-8 sm:mt-0 sm:ml-auto"
-                    [color]="'primary'"
-                    (change)="toggleCompleted($event)"
-                >
-                    Hide completed
-                </mat-slide-toggle> -->
-            </div>
-            <!-- Courses -->
-            <ng-container *ngIf="this.Tournaments.length; else noCourses">
-                <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10"
-                >
-                    <ng-container
-                        *ngFor="let course of Tournaments; trackBy: trackByFn"
-                    >
-                        <!-- Course -->
-                        <div
-                            class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card"
-                        >
-                            <div class="flex flex-col p-6">
-                                <div class="flex items-center justify-between">
-                                    <!-- Course category -->
-                                    <ng-container>
-                                        <div
-                                            class="py-0.5 px-3 rounded-full text-sm font-semibold"
-                                            [ngClass]="{
-                                                'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500':
-                                                    course.matchFormat ===
-                                                    'STROKE_PLAY',
-                                                'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500':
-                                                    course.matchFormat ===
-                                                    'STABLEFORD',
-                                                'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500':
-                                                    course.matchFormat ===
-                                                    'TEXAS_SCRAMBLE',
-                                                'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500':
-                                                    course.matchFormat ===
-                                                    'STROKE_PLAY'
-                                            }"
-                                        >
-                                            {{ course.matchFormat }}
-                                        </div>
-                                    </ng-container>
-                                    <!-- Completed at least once -->
-                                    <div class="flex items-center">
-                                        <ng-container>
-                                            <mat-icon
-                                                class="icon-size-5 text-green-600"
-                                                [svgIcon]="
-                                                    'heroicons_solid:badge-check'
-                                                "
-                                                [matTooltip]="
-                                                    'You completed this course at least once'
-                                                "
-                                            ></mat-icon>
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- Course title & description -->
-                                <div class="mt-4 text-lg font-medium">
-                                    {{ course.title }}
-                                </div>
-                                <div  class="py-0.5 px-1 w-32 rounded-full text-sm font-semibold text-green-800 bg-green-100">
-
-                                    {{ course.admin.firstName+" "+ course.admin.lastName }}
-                                </div>
-                                <!-- <div class="mt-0.5 line-clamp-2 text-secondary">{{course.description}}</div> -->
-                                <div class="w-12 h-1 my-6 border-t-2"></div>
-                                <!-- Course time -->
-                                <div
-                                    class="flex items-center leading-5 text-md text-secondary"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5 text-hint"
-                                        [svgIcon]="'heroicons_solid:clock'"
-                                    ></mat-icon>
-                                    <div class="ml-1.5">
-                                        {{ course.startDate}} - {{ course.endDate }}
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5 text-hint"
-                                        [svgIcon]="'heroicons_solid:clipboard'"
-                                    ></mat-icon>
-                                    <div class="ml-1.5">
-                                        {{ course.noOfRounds }} Rounds
-                                    </div>
-                                </div>
-                                <!-- Course completion -->
-                                <div
-                                    class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                    *ngIf="course.HandicapCalculated"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5 text-hint"
-                                        [svgIcon]="
-                                            'heroicons_solid:academic-cap'
-                                        "
-                                        [ngClass]="{
-                                            active:
-                                                course
-                                                    .HandicapCalculated
-                                                    .length > 0,
-                                            disabled:
-                                                course
-                                                    .HandicapCalculated
-                                                    .length == 0
-                                        }"
-                                    ></mat-icon>
-                                    <!-- <ng-container *ngIf="course.progress.completed === 0">
-                                        <div class="ml-1.5">Never completed</div>
-                                    </ng-container> -->
-                                    <ng-container>
-                                        <div class="ml-1.5">
-                                            <span
-                                                >Handicap Calculated</span>
-                                                <!-- <span class="ml-1">
-                                            
-                                                 <ng-container *ngIf="course.progress.completed === 1">once</ng-container> -->
-                                                <!-- Twice -->
-                                                <!-- <ng-container *ngIf="course.progress.completed === 2">twice</ng-container> -->
-                                                <!-- Others -->
-                                                <!-- <ng-container *ngIf="course.progress.completed > 2">{{course.progress.completed}}
-                                                    {{course.progress.completed | i18nPlural: {
-                                                        '=0'   : 'time',
-                                                        '=1'   : 'time',
-                                                        'other': 'times'
-                                                    } }}
-                                                </ng-container>
-                                            </span>  -->
-                                                <!-- <span>
-                                                    <mat-icon
-                                                        class="mat-18"
-                                                        
-                                                        [ngClass]="{
-                                                            active:
-                                                                course
-                                                                    .HandicapCalculated
-                                                                    .length > 0,
-                                                            disabled:
-                                                                course
-                                                                    .HandicapCalculated
-                                                                    .length == 0
-                                                        }"
-                                                        >check_circle</mat-icon
-                                                    ></span
-                                            > -->
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </div>
-                            <!-- Footer -->
-                            <div class="flex flex-col w-full mt-auto">
-                                <!-- Course progress -->
-                                <div class="relative h-0.5">
-                                    <div
-                                        class="z-10 absolute inset-x-0 h-6 -mt-3"
-                                        [matTooltipPosition]="'above'"
-                                        [matTooltipClass]="'-mb-0.5'"
-                                    ></div>
-                                    <mat-progress-bar
-                                        class="h-0.5"
-                                        [value]="1002"
-                                    ></mat-progress-bar>
-                                </div>
-
-                                <!-- Course launch button -->
-                                <div
-                                    class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent"
-                                >
-                                    <a
-                                        mat-stroked-button
-                                        [routerLinkActive]="'active'"
-                                        [routerLink]="['/tournaments/view/'+ course.id]"
-                                    >
-                                        <span class="inline-flex items-center">
-                                            <!-- Not started -->
-
-                                            <!-- Started -->
-                                            <ng-container>
-                                                <span>View Details</span>
-                                            </ng-container>
-
-                                            <mat-icon
-                                                class="ml-1.5 icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:arrow-sm-right'
-                                                "
-                                            ></mat-icon>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
+                <div class="flex flex-col flex-auto p-4">
+                    <apx-chart
+                        class="flex-auto w-full h-80"
+                        [chart]="chartGithubIssues.chart"
+                        [colors]="chartGithubIssues.colors"
+                        [dataLabels]="chartGithubIssues.dataLabels"
+                        [grid]="chartGithubIssues.grid"
+                        [labels]="chartGithubIssues.labels"
+                        [legend]="chartGithubIssues.legend"
+                        [plotOptions]="chartGithubIssues.plotOptions"
+                        [series]="chartGithubIssues.series[0]"
+                        [states]="chartGithubIssues.states"
+                        [stroke]="chartGithubIssues.stroke"
+                        [tooltip]="chartGithubIssues.tooltip"
+                        [xaxis]="chartGithubIssues.xaxis"
+                        [yaxis]="chartGithubIssues.yaxis"
+                    ></apx-chart>
                 </div>
-            </ng-container>
-
-            <!-- No courses -->
-            <ng-template #noCourses>
-                <div
-                    class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent"
-                >
-                    <mat-icon
-                        class="icon-size-24"
-                        [svgIcon]="'heroicons_outline:document-search'"
-                    ></mat-icon>
-                    <div
-                        class="mt-6 text-2xl font-semibold tracking-tight text-secondary"
-                    >
-                        No Tournament found!
+            </div> -->
+            <div
+                class="flex flex-col mt-8 flex-auto bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div class="p-6 flex flex-row">
+                    <div class="flex flex-col">
+                        <div
+                            class="mr-4 text-lg font-medium tracking-tight leading-6 truncate"
+                        >
+                            League Details
+                        </div>
+                        <div class="text-secondary font-medium">
+                            {{ clubs.length }} total
+                        </div>
+                    </div>
+                    <div class="w-60">
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:search'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                (keyup)="applyFilter($event.target.value)"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Search league'"
+                            />
+                        </mat-form-field>
                     </div>
                 </div>
-            </ng-template>
+                <div class="overflow-x-auto mx-6">
+                    <table mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef>Sr.</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ i + 1 }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.name }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef>Date</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.dateCreated }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="members">
+                            <th mat-header-cell *matHeaderCellDef>Members</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.members.length }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="tournament">
+                            <th mat-header-cell *matHeaderCellDef>Tournaments</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.tournaments.length }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="details">
+                            <th mat-header-cell *matHeaderCellDef>Tournaments</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.tournaments.length }}
+                            </td>
+                        </ng-container>
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="displayedColumns"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: displayedColumns"
+                        ></tr>
+                    </table>
+                    <mat-paginator
+                        [pageSize]="20"
+                        [pageSizeOptions]="[10, 20, 50, 100]"
+                    ></mat-paginator>
+                </div>
+            </div>
         </div>
     </div>
 </div>

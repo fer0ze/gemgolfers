@@ -202,7 +202,8 @@ export const LeaderboardSubscriptions = gql`
     }
     ${TournamentMemberCategoryQL}
 `;
-
+export const  getLeagues=gql`
+`
 export const LeaderboardTeamSubscription = gql`
     query LeaderboardTeamSubscription(
         $tournamentId: String!

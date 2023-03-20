@@ -908,6 +908,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         yellowFrontRedback = 0;
         blueFrontYellowback = 0;
         yellowFrontBlueback = 0;
+        console.log(myData);
         for (let data of myData) {
             dataMembers.push(data.membersCount);
             this.barChartLabels.push(data.date);

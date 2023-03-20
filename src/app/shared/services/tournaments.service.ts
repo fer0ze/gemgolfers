@@ -285,7 +285,6 @@ export class TournamentsService {
         });
     }
     public getDailyRoundsSingleAdmin(
-      
         fromDate: string,
         toDate: string
     ): Promise<any> {
@@ -297,7 +296,6 @@ export class TournamentsService {
                 .subscribe<any>({
                     query: Query.ClubSingleRoundFlightsAdminQueryQLs,
                     variables: {
-                       
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -344,7 +342,6 @@ export class TournamentsService {
                 .subscribe<any>({
                     query: Query.DailyRoundsStatQueryAdminQLs,
                     variables: {
-                        
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -601,6 +598,24 @@ export class TournamentsService {
                             },
                         },
                     },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data.tournament_by_pk);
+                    //console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        //console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getLeagues(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getLeagues,
                 })
                 .subscribe(({ data }) => {
                     //console.log(data.tournament_by_pk);
@@ -1189,7 +1204,7 @@ export class TournamentsService {
         });
     }
     public insertTournamentMemberStatus(
-        tournamentMembers:any[]
+        tournamentMembers: any[]
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
