@@ -1014,6 +1014,37 @@ export const DailyRoundsStatQueryQLs = gql`
         }
     }
 `;
+export const DailyRoundsStatQueryAdminQLs = gql`
+    query ClubSingleRoundFlightsQuery(
+        
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        TournamentsQL: tournament(
+            where: {
+                singleRound: { _eq: true }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            startDate
+            FlightsQL: flights {
+                id
+                ended
+                courseHoleSets
+                courseHoleSetsInverted
+                MembersQL: members {
+                    PlayerQL: player {
+                        playerCategory
+                    }
+                }
+            }
+        }
+    }
+`;
 export const ClubSingleRoundFlightsQueryQLs = gql`
     query ClubSingleRoundFlightsQuery(
         $clubId: String!
@@ -1023,6 +1054,44 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
         TournamentsQL: tournament(
             where: {
                 clubId: { _eq: $clubId }
+                singleRound: { _eq: true }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            startDate
+
+            FlightsQL: flights {
+                id
+                ended
+                courseHoleSets
+                courseHoleSetsInverted
+                MembersQL: members {
+                    flightId
+                    playerId
+                    ScoresQL: scores {
+                        flightId
+                    }
+                    PlayerQL: player {
+                        playerCategory
+                    }
+                }
+            }
+        }
+    }
+`;
+export const ClubSingleRoundFlightsAdminQueryQLs = gql`
+    query ClubSingleRoundFlightsQuery(
+       
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        TournamentsQL: tournament(
+            where: {
+                
                 singleRound: { _eq: true }
                 _and: [
                     { startDate: { _gte: $toDate } }

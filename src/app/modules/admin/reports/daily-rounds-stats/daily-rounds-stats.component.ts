@@ -29,8 +29,7 @@ import { ceil } from 'lodash';
     styleUrls: ['./daily-rounds-stats.component.scss'],
 })
 export class DailyRoundsStatsComponent implements OnInit {
-
-  chartBudgetDistribution: ApexOptions = {};
+    chartBudgetDistribution: ApexOptions = {};
     chartGithubIssues: ApexOptions = {};
     Leaderboard: any;
     isLoading: boolean = false;
@@ -313,10 +312,17 @@ export class DailyRoundsStatsComponent implements OnInit {
         },
     ];
 
-    public courseholesets:any[]=[
-
-      'Red9','Blue9','Yell9','Red-Blu','Blu-Red','Red-Yel','Yel-Red','Blu-Yel','Yel-Blue'
-    ]
+    public courseholesets: any[] = [
+        'Red9',
+        'Blue9',
+        'Yell9',
+        'Red-Blu',
+        'Blu-Red',
+        'Red-Yel',
+        'Yel-Red',
+        'Blu-Yel',
+        'Yel-Blue',
+    ];
 
     ngOnInit() {
         this.loggedInuser = JSON.parse(
@@ -371,6 +377,7 @@ export class DailyRoundsStatsComponent implements OnInit {
 
     async getDailyRounds(fromDate: Date, toDate: Date) {
         let dailyRoundsData: any[] = [];
+        let dataPlayers: any;
         this.singleRound.length = 0;
         this.flightPlayers = [];
         this.findex = 0;
@@ -383,11 +390,18 @@ export class DailyRoundsStatsComponent implements OnInit {
         this.showResult = false;
         this.isLoading = true;
 
-        let dataPlayers = await this.facadeService.getDailyRoundsStat(
-            this.loggedInuser.adminClubId,
-            this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
-            this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
-        );
+        if ((this.loggedInuser.userRole = 1)) {
+            dataPlayers = await this.facadeService.getDailyRoundsStatAdmin(
+                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+            );
+        } else {
+            dataPlayers = await this.facadeService.getDailyRoundsStat(
+                this.loggedInuser.adminClubId,
+                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+            );
+        }
         console.log(dataPlayers);
 
         if (dataPlayers.TournamentsQL) {
@@ -480,21 +494,88 @@ export class DailyRoundsStatsComponent implements OnInit {
                               })
                             : [],
                 };
-                const  dailyStats5 = {
-                        date: dataPlayers.TournamentsQL[i].startDate,
-                        membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
-                        redNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 1 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red 9" : [],
-                        blueNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 2 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue 9" : [],
-                        yellowNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 8 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Yellow 9" : [],
-                        redfrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Blue Back 9" : [],
-                        blueFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Blue Front 9 - Red Back 9" : [],
-                        redFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Yellow Back 9" : [],
-                        yellowFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Red Back 9" : [],
-                        blueFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue Front 9 - Yellow Back 9" : [],
-                        yellowFrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Blue Back 9" : []
-                      };
-          
-                      this.dailyStats5.push(dailyStats5);
+                const dailyStats5 = {
+                    date: dataPlayers.TournamentsQL[i].startDate,
+                    membersCount:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0
+                            ? dataPlayers.TournamentsQL[i].FlightsQL[0]
+                                  .MembersQL.length
+                            : 0,
+                    redNine:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 1 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == false
+                            ? 'Red 9'
+                            : [],
+                    blueNine:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 2 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == false
+                            ? 'Blue 9'
+                            : [],
+                    yellowNine:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 8 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == false
+                            ? 'Yellow 9'
+                            : [],
+                    redfrontBlueback:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 3 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == false
+                            ? 'Red Front 9 - Blue Back 9'
+                            : [],
+                    blueFrontRedback:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 3 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == true
+                            ? 'Blue Front 9 - Red Back 9'
+                            : [],
+                    redFrontYellowback:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 9 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == false
+                            ? 'Red Front 9 - Yellow Back 9'
+                            : [],
+                    yellowFrontRedback:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 9 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == true
+                            ? 'Yellow Front 9 - Red Back 9'
+                            : [],
+                    blueFrontYellowback:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 12 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == false
+                            ? 'Blue Front 9 - Yellow Back 9'
+                            : [],
+                    yellowFrontBlueback:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSets == 12 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0]
+                            .courseHoleSetsInverted == true
+                            ? 'Yellow Front 9 - Blue Back 9'
+                            : [],
+                };
+
+                this.dailyStats5.push(dailyStats5);
                 this.dailyStats2.push(dailyStat2);
             }
 
@@ -593,7 +674,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         let blueFrontYellowback: number = 0;
         let yellowFrontBlueback: number = 0;
         this.dataSource = null;
-        let index=0;
+        let index = 0;
         for (let stats of this.dailyStats2) {
             if (stats.date == prevDate) {
                 memCounter = memCounter + stats.membersCount;
@@ -617,29 +698,67 @@ export class DailyRoundsStatsComponent implements OnInit {
 
                 //prevDate = stats.date;
 
+                redNine =
+                    redNine +
+                    (this.dailyStats5[index].redNine.length !== 0
+                        ? Number(1)
+                        : 0);
+                blueNine =
+                    blueNine +
+                    (this.dailyStats5[index].blueNine.length !== 0
+                        ? Number(1)
+                        : 0);
+                yellowNine =
+                    yellowNine +
+                    (this.dailyStats5[index].yellowNine.length !== 0
+                        ? Number(1)
+                        : 0);
+                redfrontBlueback =
+                    redfrontBlueback +
+                    (this.dailyStats5[index].redfrontBlueback.length !== 0
+                        ? Number(1)
+                        : 0);
+                blueFrontRedback =
+                    blueFrontRedback +
+                    (this.dailyStats5[index].blueFrontRedback.length !== 0
+                        ? Number(1)
+                        : 0);
+                redFrontYellowback =
+                    redFrontYellowback +
+                    (this.dailyStats5[index].redFrontYellowback.length !== 0
+                        ? Number(1)
+                        : 0);
+                yellowFrontRedback =
+                    yellowFrontRedback +
+                    (this.dailyStats5[index].yellowFrontRedback.length !== 0
+                        ? Number(1)
+                        : 0);
+                blueFrontYellowback =
+                    blueFrontYellowback +
+                    (this.dailyStats5[index].blueFrontYellowback.length !== 0
+                        ? Number(1)
+                        : 0);
+                yellowFrontBlueback =
+                    yellowFrontBlueback +
+                    (this.dailyStats5[index].yellowFrontBlueback.length !== 0
+                        ? Number(1)
+                        : 0);
+                myData4[myData4.length - 1].membersCount = memCounter;
+                myData4[myData4.length - 1].redNine = redNine;
+                myData4[myData4.length - 1].blueNine = blueNine;
+                myData4[myData4.length - 1].yellowNine = yellowNine;
+                myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback;
+                myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback;
+                myData4[myData4.length - 1].redFrontYellowback =
+                    redFrontYellowback;
+                myData4[myData4.length - 1].yellowFrontRedback =
+                    yellowFrontRedback;
+                myData4[myData4.length - 1].blueFrontYellowback =
+                    blueFrontYellowback;
+                myData4[myData4.length - 1].yellowFrontBlueback =
+                    yellowFrontBlueback;
 
-                   
-                redNine =  redNine + ((this.dailyStats5[index].redNine.length !== 0)?  Number(1) : 0);
-                blueNine = blueNine + ((this.dailyStats5[index].blueNine.length !== 0)?  Number(1) : 0 );
-                yellowNine = yellowNine + ((this.dailyStats5[index].yellowNine.length !== 0)?  Number(1) : 0);
-                redfrontBlueback = redfrontBlueback +       ((this.dailyStats5[index].redfrontBlueback.length !== 0)? Number(1) : 0);
-                blueFrontRedback = blueFrontRedback +         ((this.dailyStats5[index].blueFrontRedback.length !== 0)?  Number(1) : 0);
-                redFrontYellowback = redFrontYellowback +    ((this.dailyStats5[index].redFrontYellowback.length !== 0)?  Number(1) : 0);
-                yellowFrontRedback = yellowFrontRedback +    ((this.dailyStats5[index].yellowFrontRedback.length !== 0)?  Number(1) : 0);
-                blueFrontYellowback = blueFrontYellowback +  ((this.dailyStats5[index].blueFrontYellowback.length !== 0)?  Number(1) : 0);
-                yellowFrontBlueback = yellowFrontBlueback +  ((this.dailyStats5[index].yellowFrontBlueback.length !== 0)?  Number(1) : 0);
-                    myData4[myData4.length - 1].membersCount = memCounter;
-                    myData4[myData4.length - 1].redNine = redNine;
-                    myData4[myData4.length - 1].blueNine = blueNine;
-                    myData4[myData4.length - 1].yellowNine = yellowNine;
-                    myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback ;
-                    myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback ;
-                    myData4[myData4.length - 1].redFrontYellowback = redFrontYellowback ;
-                    myData4[myData4.length - 1].yellowFrontRedback = yellowFrontRedback ;
-                    myData4[myData4.length - 1].blueFrontYellowback= blueFrontYellowback;
-                    myData4[myData4.length - 1].yellowFrontBlueback= yellowFrontBlueback;
-
-                    prevDate = stats.date;
+                prevDate = stats.date;
             } else {
                 memCounter = 0;
                 amateurs = 0;
@@ -653,9 +772,9 @@ export class DailyRoundsStatsComponent implements OnInit {
                 blueNine = 0;
                 yellowNine = 0;
                 redfrontBlueback = 0;
-                blueFrontRedback  = 0;
-                redFrontYellowback  = 0;
-                yellowFrontRedback  = 0;
+                blueFrontRedback = 0;
+                redFrontYellowback = 0;
+                yellowFrontRedback = 0;
                 blueFrontYellowback = 0;
                 yellowFrontBlueback = 0;
 
@@ -669,15 +788,51 @@ export class DailyRoundsStatsComponent implements OnInit {
                     seniorsAmatuers + stats.seniorsAmatuers.length;
                 nulls = nulls + stats.nulls.length;
 
-                redNine =  redNine + ((this.dailyStats5[index].redNine.length !== 0)?  Number(1) : 0);
-                blueNine = blueNine + ((this.dailyStats5[index].blueNine.length !== 0)?  Number(1) : 0 );
-                yellowNine = yellowNine + ((this.dailyStats5[index].yellowNine.length !== 0)?  Number(1) : 0);
-                redfrontBlueback = redfrontBlueback + ((this.dailyStats5[index].redfrontBlueback.length !== 0)?  Number(1) : 0);
-                blueFrontRedback = blueFrontRedback + ((this.dailyStats5[index].blueFrontRedback.length !== 0)? Number(1) : 0);
-                redFrontYellowback = redFrontYellowback + ((this.dailyStats5[index].redFrontYellowback.length !== 0)? Number(1) : 0);
-                yellowFrontRedback = yellowFrontRedback + ((this.dailyStats5[index].yellowFrontRedback.length !== 0)? Number(1) : 0);
-                blueFrontYellowback = blueFrontYellowback +  ((this.dailyStats5[index].blueFrontYellowback.length !== 0)? Number(1) : 0);
-                yellowFrontBlueback = yellowFrontBlueback +  ((this.dailyStats5[index].yellowFrontBlueback.length !== 0)? Number(1) : 0);
+                redNine =
+                    redNine +
+                    (this.dailyStats5[index].redNine.length !== 0
+                        ? Number(1)
+                        : 0);
+                blueNine =
+                    blueNine +
+                    (this.dailyStats5[index].blueNine.length !== 0
+                        ? Number(1)
+                        : 0);
+                yellowNine =
+                    yellowNine +
+                    (this.dailyStats5[index].yellowNine.length !== 0
+                        ? Number(1)
+                        : 0);
+                redfrontBlueback =
+                    redfrontBlueback +
+                    (this.dailyStats5[index].redfrontBlueback.length !== 0
+                        ? Number(1)
+                        : 0);
+                blueFrontRedback =
+                    blueFrontRedback +
+                    (this.dailyStats5[index].blueFrontRedback.length !== 0
+                        ? Number(1)
+                        : 0);
+                redFrontYellowback =
+                    redFrontYellowback +
+                    (this.dailyStats5[index].redFrontYellowback.length !== 0
+                        ? Number(1)
+                        : 0);
+                yellowFrontRedback =
+                    yellowFrontRedback +
+                    (this.dailyStats5[index].yellowFrontRedback.length !== 0
+                        ? Number(1)
+                        : 0);
+                blueFrontYellowback =
+                    blueFrontYellowback +
+                    (this.dailyStats5[index].blueFrontYellowback.length !== 0
+                        ? Number(1)
+                        : 0);
+                yellowFrontBlueback =
+                    yellowFrontBlueback +
+                    (this.dailyStats5[index].yellowFrontBlueback.length !== 0
+                        ? Number(1)
+                        : 0);
 
                 let obj = {
                     date: stats.date,
@@ -690,18 +845,18 @@ export class DailyRoundsStatsComponent implements OnInit {
                     seniorsAmatuers: seniorsAmatuers,
                     nulls: nulls,
                 };
-                let obj4 =  {
-                  date: stats.date,
-                  redNine :  redNine,
-                  blueNine : blueNine,
-                  yellowNine : yellowNine,
-                  redfrontBlueback : redfrontBlueback,
-                  blueFrontRedback : blueFrontRedback,
-                  redFrontYellowback : redFrontYellowback,
-                  yellowFrontRedback : yellowFrontRedback,
-                  blueFrontYellowback : blueFrontYellowback,
-                  yellowFrontBlueback : yellowFrontBlueback
-                }
+                let obj4 = {
+                    date: stats.date,
+                    redNine: redNine,
+                    blueNine: blueNine,
+                    yellowNine: yellowNine,
+                    redfrontBlueback: redfrontBlueback,
+                    blueFrontRedback: blueFrontRedback,
+                    redFrontYellowback: redFrontYellowback,
+                    yellowFrontRedback: yellowFrontRedback,
+                    blueFrontYellowback: blueFrontYellowback,
+                    yellowFrontBlueback: yellowFrontBlueback,
+                };
 
                 myData4.push(obj4);
                 myData.push(obj);
@@ -715,16 +870,16 @@ export class DailyRoundsStatsComponent implements OnInit {
 
         this.dataSource = null;
         this.dataSource = new MatTableDataSource(myData);
-       // console.log(this.dataSource);
+        // console.log(this.dataSource);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-                    this.dataSource4 = null;
-                    this.dataSource4 = new MatTableDataSource(myData4);
+        this.dataSource4 = null;
+        this.dataSource4 = new MatTableDataSource(myData4);
 
-                   // console.log(this.dataSource4)
-                    this.dataSource4.paginator = this.paginator;
-                    this.dataSource4.sort = this.sort;
+        // console.log(this.dataSource4)
+        this.dataSource4.paginator = this.paginator;
+        this.dataSource4.sort = this.sort;
 
         this.barChartLabels = [];
         this.barChartDataAmateur = [];
@@ -743,17 +898,17 @@ export class DailyRoundsStatsComponent implements OnInit {
         this.otherDates = [];
         let dataMembers: any[] = [];
         let dataMembers4: any[] = [];
-        let index4=0;
+        let index4 = 0;
         redNine = 0;
         blueNine = 0;
         yellowNine = 0;
         redfrontBlueback = 0;
-        blueFrontRedback  = 0;
-        redFrontYellowback  = 0;
-        yellowFrontRedback  = 0;
+        blueFrontRedback = 0;
+        redFrontYellowback = 0;
+        yellowFrontRedback = 0;
         blueFrontYellowback = 0;
         yellowFrontBlueback = 0;
-        for (let data of myData) {  
+        for (let data of myData) {
             dataMembers.push(data.membersCount);
             this.barChartLabels.push(data.date);
             this.barChartDataAmateur.push(data.amateurs);
@@ -763,15 +918,15 @@ export class DailyRoundsStatsComponent implements OnInit {
             this.barChartDataVeteran.push(data.veterans);
             this.barChartDataseniorsAmatuers.push(data.seniorsAmatuers);
             this.barChartDataOthers.push(data.nulls);
-                      redNine+=myData4[index4].redNine;
-                      blueNine+=myData4[index4].blueNine;
-                      yellowNine+=myData4[index4].yellowNine;
-                      redfrontBlueback+=myData4[index4].redfrontBlueback;
-                      blueFrontRedback+=myData4[index4].blueFrontRedback;
-                      redFrontYellowback+=myData4[index4].redFrontYellowback;
-                      yellowFrontRedback+=myData4[index4].yellowFrontRedback;
-                      blueFrontYellowback+=myData4[index4].blueFrontYellowback;
-                      yellowFrontBlueback+=myData4[index4].yellowFrontBlueback;
+            redNine += myData4[index4].redNine;
+            blueNine += myData4[index4].blueNine;
+            yellowNine += myData4[index4].yellowNine;
+            redfrontBlueback += myData4[index4].redfrontBlueback;
+            blueFrontRedback += myData4[index4].blueFrontRedback;
+            redFrontYellowback += myData4[index4].redFrontYellowback;
+            yellowFrontRedback += myData4[index4].yellowFrontRedback;
+            blueFrontYellowback += myData4[index4].blueFrontYellowback;
+            yellowFrontBlueback += myData4[index4].yellowFrontBlueback;
 
             if (data.amateurs > 0) {
                 this.amateurDates.push(data.date);
@@ -791,31 +946,44 @@ export class DailyRoundsStatsComponent implements OnInit {
             index4++;
         }
 
-        redNine=ceil(((redNine/dataPlayers.TournamentsQL.length)*100));
-        blueNine=ceil(((blueNine/dataPlayers.TournamentsQL.length)*100));
-        yellowNine=ceil(((yellowNine/dataPlayers.TournamentsQL.length)*100));
-        redfrontBlueback=ceil(((redfrontBlueback/dataPlayers.TournamentsQL.length)*100));
-        blueFrontRedback=ceil(((blueFrontRedback/dataPlayers.TournamentsQL.length)*100));
-        redFrontYellowback=ceil(((redFrontYellowback/dataPlayers.TournamentsQL.length)*100));
-        yellowFrontRedback=ceil(((yellowFrontRedback/dataPlayers.TournamentsQL.length)*100));
-        blueFrontYellowback=ceil(((blueFrontYellowback/dataPlayers.TournamentsQL.length)*100));
-        yellowFrontBlueback=ceil(((yellowFrontBlueback/dataPlayers.TournamentsQL.length)*100));
+        redNine = ceil((redNine / dataPlayers.TournamentsQL.length) * 100);
+        blueNine = ceil((blueNine / dataPlayers.TournamentsQL.length) * 100);
+        yellowNine = ceil(
+            (yellowNine / dataPlayers.TournamentsQL.length) * 100
+        );
+        redfrontBlueback = ceil(
+            (redfrontBlueback / dataPlayers.TournamentsQL.length) * 100
+        );
+        blueFrontRedback = ceil(
+            (blueFrontRedback / dataPlayers.TournamentsQL.length) * 100
+        );
+        redFrontYellowback = ceil(
+            (redFrontYellowback / dataPlayers.TournamentsQL.length) * 100
+        );
+        yellowFrontRedback = ceil(
+            (yellowFrontRedback / dataPlayers.TournamentsQL.length) * 100
+        );
+        blueFrontYellowback = ceil(
+            (blueFrontYellowback / dataPlayers.TournamentsQL.length) * 100
+        );
+        yellowFrontBlueback = ceil(
+            (yellowFrontBlueback / dataPlayers.TournamentsQL.length) * 100
+        );
         dataMembers4.push(redNine);
         dataMembers4.push(yellowNine);
         dataMembers4.push(blueNine);
         dataMembers4.push(redfrontBlueback);
         dataMembers4.push(blueFrontRedback);
         dataMembers4.push(redFrontYellowback);
-        dataMembers4.push( yellowFrontRedback);
-        dataMembers4.push( yellowFrontBlueback);
-        dataMembers4.push( blueFrontYellowback);
-        this._HolesSetsseries=[
-          {
-            data: dataMembers4,
-            name: 'Hole-Set%',
-
-        },
-        ]
+        dataMembers4.push(yellowFrontRedback);
+        dataMembers4.push(yellowFrontBlueback);
+        dataMembers4.push(blueFrontYellowback);
+        this._HolesSetsseries = [
+            {
+                data: dataMembers4,
+                name: 'Hole-Set%',
+            },
+        ];
         this._series['0'] = [
             {
                 data: dataMembers,
@@ -1014,76 +1182,76 @@ export class DailyRoundsStatsComponent implements OnInit {
         //       this.barChartType3 = 'bar';
         //       this.barChartLegend3 = true;
 
-                // for(let stats of this.dailyStats5) {
+        // for(let stats of this.dailyStats5) {
 
-                //   if(stats.date == prevDate){
+        //   if(stats.date == prevDate){
 
-                //     memCounter = memCounter + stats.membersCount;
-                //     redNine =  (stats.redNine.length !== 0)? Number(redNine) + Number(1) : 0;
-                //     blueNine = (stats.blueNine.length !== 0)? Number(blueNine) + Number(1) : 0 ;
-                //     yellowNine = (stats.yellowNine.length !== 0)? Number(yellowNine) + Number(1) : 0;
-                //     redfrontBlueback = (stats.redfrontBlueback.length !== 0)? Number(redfrontBlueback) + Number(1) : 0;
-                //     blueFrontRedback = (stats.blueFrontRedback.length !== 0)? Number(blueFrontRedback) + Number(1) : 0;
-                //     redFrontYellowback = (stats.redFrontYellowback.length !== 0)? Number(redFrontYellowback) + Number(1) : 0;
-                //     yellowFrontRedback = (stats.yellowFrontRedback.length !== 0)? Number(yellowFrontRedback) + Number(1) : 0;
-                //     blueFrontYellowback = (stats.blueFrontYellowback.length !== 0)? Number(blueFrontYellowback) + Number(1) : 0;
-                //     yellowFrontBlueback = (stats.yellowFrontBlueback.length !== 0)? Number(yellowFrontBlueback) + Number(1) : 0;
+        //     memCounter = memCounter + stats.membersCount;
+        //     redNine =  (stats.redNine.length !== 0)? Number(redNine) + Number(1) : 0;
+        //     blueNine = (stats.blueNine.length !== 0)? Number(blueNine) + Number(1) : 0 ;
+        //     yellowNine = (stats.yellowNine.length !== 0)? Number(yellowNine) + Number(1) : 0;
+        //     redfrontBlueback = (stats.redfrontBlueback.length !== 0)? Number(redfrontBlueback) + Number(1) : 0;
+        //     blueFrontRedback = (stats.blueFrontRedback.length !== 0)? Number(blueFrontRedback) + Number(1) : 0;
+        //     redFrontYellowback = (stats.redFrontYellowback.length !== 0)? Number(redFrontYellowback) + Number(1) : 0;
+        //     yellowFrontRedback = (stats.yellowFrontRedback.length !== 0)? Number(yellowFrontRedback) + Number(1) : 0;
+        //     blueFrontYellowback = (stats.blueFrontYellowback.length !== 0)? Number(blueFrontYellowback) + Number(1) : 0;
+        //     yellowFrontBlueback = (stats.yellowFrontBlueback.length !== 0)? Number(yellowFrontBlueback) + Number(1) : 0;
 
-                //     myData4[myData4.length - 1].membersCount = memCounter;
-                //     myData4[myData4.length - 1].redNine = redNine;
-                //     myData4[myData4.length - 1].blueNine = blueNine;
-                //     myData4[myData4.length - 1].yellowNine = yellowNine;
-                //     myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback ;
-                //     myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback ;
-                //     myData4[myData4.length - 1].redFrontYellowback = redFrontYellowback ;
-                //     myData4[myData4.length - 1].yellowFrontRedback = yellowFrontRedback ;
-                //     myData4[myData4.length - 1].blueFrontYellowback= blueFrontYellowback;
-                //     myData4[myData4.length - 1].yellowFrontBlueback= yellowFrontBlueback;
+        //     myData4[myData4.length - 1].membersCount = memCounter;
+        //     myData4[myData4.length - 1].redNine = redNine;
+        //     myData4[myData4.length - 1].blueNine = blueNine;
+        //     myData4[myData4.length - 1].yellowNine = yellowNine;
+        //     myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback ;
+        //     myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback ;
+        //     myData4[myData4.length - 1].redFrontYellowback = redFrontYellowback ;
+        //     myData4[myData4.length - 1].yellowFrontRedback = yellowFrontRedback ;
+        //     myData4[myData4.length - 1].blueFrontYellowback= blueFrontYellowback;
+        //     myData4[myData4.length - 1].yellowFrontBlueback= yellowFrontBlueback;
 
-                //     prevDate = stats.date;
-                //   }
-                //   else {
+        //     prevDate = stats.date;
+        //   }
+        //   else {
 
-                //     memCounter = 0;
-                //     redNine = 0;
-                //     blueNine = 0;
-                //     yellowNine = 0;
-                //     redfrontBlueback = 0;
-                //     blueFrontRedback  = 0;
-                //     redFrontYellowback  = 0;
-                //     yellowFrontRedback  = 0;
-                //     blueFrontYellowback = 0;
-                //     yellowFrontBlueback = 0;
+        //     memCounter = 0;
+        //     redNine = 0;
+        //     blueNine = 0;
+        //     yellowNine = 0;
+        //     redfrontBlueback = 0;
+        //     blueFrontRedback  = 0;
+        //     redFrontYellowback  = 0;
+        //     yellowFrontRedback  = 0;
+        //     blueFrontYellowback = 0;
+        //     yellowFrontBlueback = 0;
 
-                //     memCounter = memCounter + stats.membersCount;
-                //     redNine =  redNine + stats.redNine;
-                //     blueNine = blueNine + stats.blueNine;
-                //     yellowNine = yellowNine + stats.yellowNine;
-                //     redfrontBlueback = redfrontBlueback + stats.redfrontBlueback;
-                //     blueFrontRedback = blueFrontRedback + stats.blueFrontRedback;
-                //     redFrontYellowback = redFrontYellowback + stats.redFrontYellowback;
-                //     yellowFrontRedback = yellowFrontRedback + stats.yellowFrontRedback;
-                //     blueFrontYellowback = blueFrontYellowback + stats.blueFrontYellowback;
-                //     yellowFrontBlueback = yellowFrontBlueback + stats.yellowFrontBlueback
+        //     memCounter = memCounter + stats.membersCount;
+        //     redNine =  redNine + stats.redNine;
+        //     blueNine = blueNine + stats.blueNine;
+        //     yellowNine = yellowNine + stats.yellowNine;
+        //     redfrontBlueback = redfrontBlueback + stats.redfrontBlueback;
+        //     blueFrontRedback = blueFrontRedback + stats.blueFrontRedback;
+        //     redFrontYellowback = redFrontYellowback + stats.redFrontYellowback;
+        //     yellowFrontRedback = yellowFrontRedback + stats.yellowFrontRedback;
+        //     blueFrontYellowback = blueFrontYellowback + stats.blueFrontYellowback;
+        //     yellowFrontBlueback = yellowFrontBlueback + stats.yellowFrontBlueback
 
-                //     let obj =  {
-                //       date: stats.date,
-                //       membersCount: memCounter,
-                //       redNine :  redNine,
-                //       blueNine : blueNine,
-                //       yellowNine : yellowNine,
-                //       redfrontBlueback : redfrontBlueback,
-                //       blueFrontRedback : blueFrontRedback,
-                //       redFrontYellowback : redFrontYellowback,
-                //       yellowFrontRedback : yellowFrontRedback,
-                //       blueFrontYellowback : blueFrontYellowback,
-                //       yellowFrontBlueback : yellowFrontBlueback
-                //     }
+        //     let obj =  {
+        //       date: stats.date,
+        //       membersCount: memCounter,
+        //       redNine :  redNine,
+        //       blueNine : blueNine,
+        //       yellowNine : yellowNine,
+        //       redfrontBlueback : redfrontBlueback,
+        //       blueFrontRedback : blueFrontRedback,
+        //       redFrontYellowback : redFrontYellowback,
+        //       yellowFrontRedback : yellowFrontRedback,
+        //       blueFrontYellowback : blueFrontYellowback,
+        //       yellowFrontBlueback : yellowFrontBlueback
+        //     }
 
-                //     myData4.push(obj);
-                //     prevDate = stats.date;
-                //   }
-                // }
+        //     myData4.push(obj);
+        //     prevDate = stats.date;
+        //   }
+        // }
 
         //             console.log(myData4);
 
@@ -1096,59 +1264,59 @@ export class DailyRoundsStatsComponent implements OnInit {
 
         //             for(let data of myData4){
 
-                      // this.barChartLabels4.push(data.date);
-                      // this.barChartRedNine.push(data.redNine);
-                      // this.barChartYellowNine.push(data.yellowNine);
-                      // this.barChartBlueNine.push(data.blueNine);
-                      // this.barChartRedfrontBlueback.push(data.redfrontBlueback);
-                      // this.barChartBluefrontRedback.push(data.bluefrontRedback);
-                      // this.barChartRedfrontYellowback.push(data.RedfrontYellowback);
-                      // this.barChartYellowfrontRedback.push(data.yellowfrontRedback);
-                      // this.barChartBluefrontYellowback.push(data.blueFrontYellowback);
-                      // this.barChartYellowfrontBlueback.push(data.yellowFrontBlueback);
+        // this.barChartLabels4.push(data.date);
+        // this.barChartRedNine.push(data.redNine);
+        // this.barChartYellowNine.push(data.yellowNine);
+        // this.barChartBlueNine.push(data.blueNine);
+        // this.barChartRedfrontBlueback.push(data.redfrontBlueback);
+        // this.barChartBluefrontRedback.push(data.bluefrontRedback);
+        // this.barChartRedfrontYellowback.push(data.RedfrontYellowback);
+        // this.barChartYellowfrontRedback.push(data.yellowfrontRedback);
+        // this.barChartBluefrontYellowback.push(data.blueFrontYellowback);
+        // this.barChartYellowfrontBlueback.push(data.yellowFrontBlueback);
 
-                      // if(data.redNine > 0)
-                      // {
-                      //   this.redNineDates.push(data.date)
-                      // }
-                      // else if(data.yellowNine > 0)
-                      // {
-                      //   this.yellowNineDates = data.date
-                      // }
-                      // else if(data.blueNine > 0)
-                      // {
-                      //   this.blueNineDates.push(data.date)
-                      // }
+        // if(data.redNine > 0)
+        // {
+        //   this.redNineDates.push(data.date)
+        // }
+        // else if(data.yellowNine > 0)
+        // {
+        //   this.yellowNineDates = data.date
+        // }
+        // else if(data.blueNine > 0)
+        // {
+        //   this.blueNineDates.push(data.date)
+        // }
 
-                      // else if(data.redfrontBlueback > 0)
-                      // {
-                      //   this.redFrontblueBackDates.push(data.date)
-                      // }
+        // else if(data.redfrontBlueback > 0)
+        // {
+        //   this.redFrontblueBackDates.push(data.date)
+        // }
 
-                      // else if(data.bluefrontRedback > 0)
-                      // {
-                      //   this.blueFrontredBackDates.push(data.date)
-                      // }
+        // else if(data.bluefrontRedback > 0)
+        // {
+        //   this.blueFrontredBackDates.push(data.date)
+        // }
 
-                      // else if(data.redfrontYellowback > 0)
-                      // {
-                      //   this.redFrontyellowBackDates.push(data.date)
-                      // }
+        // else if(data.redfrontYellowback > 0)
+        // {
+        //   this.redFrontyellowBackDates.push(data.date)
+        // }
 
-                      // else if(data.yellowfrontRedback > 0)
-                      // {
-                      //   this.yellowFrontredBackDates.push(data.date)
-                      // }
+        // else if(data.yellowfrontRedback > 0)
+        // {
+        //   this.yellowFrontredBackDates.push(data.date)
+        // }
 
-                      // else if(data.bluefrontYellowback > 0)
-                      // {
-                      //   this.blueFrontyellowBackDates.push(data.date)
-                      // }
+        // else if(data.bluefrontYellowback > 0)
+        // {
+        //   this.blueFrontyellowBackDates.push(data.date)
+        // }
 
-                      // else if(data.yellowfrontblueback > 0)
-                      // {
-                      //   this.yellowFrontblueBackDates.push(data.date)
-                      // }
+        // else if(data.yellowfrontblueback > 0)
+        // {
+        //   this.yellowFrontblueBackDates.push(data.date)
+        // }
 
         //           }
 
@@ -1235,7 +1403,16 @@ export class DailyRoundsStatsComponent implements OnInit {
                     enabled: false,
                 },
             },
-            colors: ['#A70606', '#DC5B11','#0F0F03','#061797','#DDDED8','#C109AE','#0A9928','#450707'],
+            colors: [
+                '#A70606',
+                '#DC5B11',
+                '#0F0F03',
+                '#061797',
+                '#DDDED8',
+                '#C109AE',
+                '#0A9928',
+                '#450707',
+            ],
             dataLabels: {
                 enabled: true,
                 enabledOnSeries: [0],
@@ -1297,7 +1474,7 @@ export class DailyRoundsStatsComponent implements OnInit {
             },
         };
 
-         this.chartBudgetDistribution = {
+        this.chartBudgetDistribution = {
             chart: {
                 fontFamily: 'inherit',
                 foreColor: 'inherit',

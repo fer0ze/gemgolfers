@@ -387,6 +387,30 @@ export const GetTotalFLightPlayed = gql`
         }
     }
 `;
+export const getTotalFlightPlayedAdmin = gql`
+    query PostsGetQuery($where: player_bool_exp!, $date: date!, $sdate: date!) {
+        player(where: $where) {
+            id
+            firstName
+            lastName
+            playerCategory
+            handicap
+            membershipNumber
+            AggregateQL: flights_played_aggregate(
+                where: {
+                    _and: [
+                        { flight: { date: { _gte: $sdate } } }
+                        { flight: { date: { _lte: $date } } }
+                    ]
+                }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+        }
+    }
+`;
 
 export const GetPlayerByID = gql`
     query PostsGetQuery($where: player_bool_exp!) {
@@ -1033,6 +1057,41 @@ export const playerUpdatedHandicapWHSReport = gql`
         player_handicap_whs(
             where: {
                 player: { membership: { clubId: { _eq: $clubId } } }
+                _and: [
+                    { tournament: { endDate: { _gte: $toDate } } }
+                    { tournament: { endDate: { _lte: $fromDate } } }
+                ]
+            }
+            order_by: [
+                { tournament: { endDate: desc } }
+                { player: { fullName: asc } }
+            ]
+        ) {
+            adjustedScore
+            handicapDifferential
+            handicapIndex
+            playedAt
+            score
+            player {
+                firstName
+                lastName
+                membershipNumber
+            }
+            tournament {
+                endDate
+            }
+        }
+    }
+    ${PlayerHandicapWhsQL}
+`;
+export const playerUpdatedHandicapWHSReportAdmin = gql`
+    query playerUpdatedHandicapReport(
+      
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        player_handicap_whs(
+            where: {
                 _and: [
                     { tournament: { endDate: { _gte: $toDate } } }
                     { tournament: { endDate: { _lte: $fromDate } } }

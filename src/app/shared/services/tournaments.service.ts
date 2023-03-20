@@ -284,6 +284,30 @@ export class TournamentsService {
                 });
         });
     }
+    public getDailyRoundsSingleAdmin(
+      
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // console.log(clubId);
+        // console.log(fromDate);
+        // console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.ClubSingleRoundFlightsAdminQueryQLs,
+                    variables: {
+                       
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // console.log(data);
+                    resolve(data);
+                });
+        });
+    }
     public getDailyRoundsStat(
         clubId: string,
         fromDate: string,
@@ -298,6 +322,29 @@ export class TournamentsService {
                     query: Query.DailyRoundsStatQueryQLs,
                     variables: {
                         clubId: clubId,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // console.log(data);
+                    resolve(data);
+                });
+        });
+    }
+    public getDailyRoundsStatAdmin(
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // console.log(clubId);
+        // console.log(fromDate);
+        // console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.DailyRoundsStatQueryAdminQLs,
+                    variables: {
+                        
                         fromDate: fromDate,
                         toDate: toDate,
                     },

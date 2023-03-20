@@ -295,6 +295,9 @@ export class FacadeService {
   getTotalFlightPlayed(club: any, fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayed(club, fromDate, toDate);
   }
+  getTotalFlightPlayedAdmin( fromDate: string, toDate: string) {
+    return this.playerService.getTotalFlightPlayedAdmin( fromDate, toDate);
+  }
 
   deletePlayer(clubId: string, playerId: string) {
     return this.playerService.deletePlayer(clubId, playerId);
@@ -331,6 +334,7 @@ export class FacadeService {
       toDate
     );
   }
+ 
   playerUpdatedHandicapWHSReport(
     clubId: string,
     fromDate: string,
@@ -338,6 +342,17 @@ export class FacadeService {
   ) {
     return this.playerService.playerUpdatedHandicapWHSReport(
       clubId,
+      fromDate,
+      toDate
+    );
+  }
+  playerUpdatedHandicapWHSReportAdmin(
+   
+    fromDate: string,
+    toDate: string
+  ) {
+    return this.playerService.playerUpdatedHandicapWHSReportAdmin(
+      
       fromDate,
       toDate
     );
@@ -793,9 +808,23 @@ export class FacadeService {
       toDate
     );
   }
+  getDailyRoundsSingleAdmin(fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyRoundsSingleAdmin(
+      
+      fromDate,
+      toDate
+    );
+  }
   getDailyRoundsStat(clubId: string, fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsStat(
       clubId,
+      fromDate,
+      toDate
+    );
+  }
+  getDailyRoundsStatAdmin( fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyRoundsStatAdmin(
+     
       fromDate,
       toDate
     );

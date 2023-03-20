@@ -242,6 +242,43 @@ export class PlayersService {
                 });
         });
     }
+    public getTotalFlightPlayedAdmin(
+    
+        fromDate: string,
+        toDate: any
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTotalFlightPlayedAdmin,
+                    variables: {
+                        where: {
+                            _and: [
+                                {
+                                    flights_played: {
+                                        flight: { date: { _gte: toDate } },
+                                    },
+                                },
+                                {
+                                    flights_played: {
+                                        flight: { date: { _lte: fromDate } },
+                                    },
+                                },
+                            ],
+                        },
+                        date: fromDate,
+                        sdate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public getPlayersListByClubAndCategory(
         id: string,
@@ -333,6 +370,30 @@ export class PlayersService {
                     query: Query.playerUpdatedHandicapWHSReport,
                     variables: {
                         clubId: clubId,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public playerUpdatedHandicapWHSReportAdmin(
+       
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.playerUpdatedHandicapWHSReportAdmin,
+                    variables: {
+                        
                         fromDate: fromDate,
                         toDate: toDate,
                     },
