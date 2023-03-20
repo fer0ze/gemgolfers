@@ -21,6 +21,8 @@ import { FacadeService } from '../../../../shared/services/facade.service';
 import { Constants } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { DatePipe, JsonPipe } from '@angular/common';
+import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
+import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 // import { DialogPlayerListComponent } from "../../material-components/dialog-player-list/dialog-player-list.component";
 
 @Component({
@@ -72,6 +74,7 @@ export class DailyStarterReportComponent implements OnInit {
         'membersPlayed',
         'submittedCards',
         'nonSubmittedCards',
+        'details'
     ];
     //['id','name', 'dates','updatedHandicap','details'];
 
@@ -127,7 +130,7 @@ export class DailyStarterReportComponent implements OnInit {
             .subscribe(
                 async (data) => {
                     var currentDate = new Date();
-                    currentDate.setDate(currentDate.getDate());
+                    currentDate.setDate(currentDate.getDate()-1);
 
                     //var nxtDate = new Date();
                     //nxtDate.setDate(nxtDate.getDate() + 7);
@@ -526,16 +529,9 @@ export class DailyStarterReportComponent implements OnInit {
     }
 
     playerList(players) {
-        // const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-        //   data: { players: players },
-        //   width: "800px",
-        // });
-        // dialogRef.afterClosed().subscribe((result) => {
-        //   console.log(result);
-        //   if (result) {
-        //   } else {
-        //     //console.log("cancel delete action");
-        //   }
-        // });
+        const dialogRef = this.dialog.open(DialogUncompletedComponent, {
+          data: { players: players },
+        });
+       
     }
 }

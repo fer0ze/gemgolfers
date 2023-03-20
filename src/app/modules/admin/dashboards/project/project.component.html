@@ -119,7 +119,7 @@
                             Tournaments
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                            <!-- <button
+                            <button
                                             mat-icon-button
                                             [matMenuTriggerFor]="summaryMenu"
                                         >
@@ -129,18 +129,19 @@
                                                     'heroicons_solid:dots-vertical'
                                                 "
                                             ></mat-icon>
-                                        </button> -->
-                            <!-- <mat-menu #summaryMenu="matMenu">
-                                            <button mat-menu-item>
-                                                Yesterday
-                                            </button>
-                                            <button mat-menu-item>
-                                                2 days ago
-                                            </button>
-                                            <button mat-menu-item>
-                                                3 days ago
-                                            </button>
-                                        </mat-menu> -->
+                                        </button> 
+                             <mat-menu #summaryMenu="matMenu">
+                                <a [routerLinkActive]="'active'"
+                                [routerLink]="[
+                                    '/tournaments'
+                                ]">
+
+                                    <button  mat-menu-item>
+                                        View Details
+                                    </button>
+                                </a>
+                                          
+                                        </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
@@ -176,7 +177,7 @@
                         >
                             DailyRounds
                         </div>
-                        <!-- <div class="ml-2 -mt-2 -mr-3">
+                        <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
                                             [matMenuTriggerFor]="overdueMenu"
@@ -189,17 +190,20 @@
                                             ></mat-icon>
                                         </button>
                                         <mat-menu #overdueMenu="matMenu">
+                                            <a
+                                           
+                                            [routerLinkActive]="'active'"
+                                            [routerLink]="[
+                                                '/reports/dailyround'
+                                            ]"
+                                            >
                                             <button mat-menu-item>
-                                                Yesterday
+                                               View Details
                                             </button>
-                                            <button mat-menu-item>
-                                                2 days ago
-                                            </button>
-                                            <button mat-menu-item>
-                                                3 days ago
-                                            </button>
+                                        </a>
+                                           
                                         </mat-menu>
-                                    </div> -->
+                                    </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
                         <div
@@ -234,7 +238,7 @@
                         >
                             Club Players
                         </div>
-                        <!-- <div class="ml-2 -mt-2 -mr-3">
+                        <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
                                             [matMenuTriggerFor]="issuesMenu"
@@ -247,17 +251,20 @@
                                             ></mat-icon>
                                         </button>
                                         <mat-menu #issuesMenu="matMenu">
+                                            <a
+                                           
+                                            [routerLinkActive]="'active'"
+                                            [routerLink]="[
+                                                '/players'
+                                            ]"
+                                            >
                                             <button mat-menu-item>
-                                                Yesterday
+                                               View Details
                                             </button>
-                                            <button mat-menu-item>
-                                                2 days ago
-                                            </button>
-                                            <button mat-menu-item>
-                                                3 days ago
-                                            </button>
+                                        </a>
+                                           
                                         </mat-menu>
-                                    </div> -->
+                                    </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
                         <div
@@ -292,7 +299,7 @@
                         >
                             Leagues
                         </div>
-                        <!-- <div class="ml-2 -mt-2 -mr-3">
+                        <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
                                             [matMenuTriggerFor]="featuresMenu"
@@ -305,17 +312,20 @@
                                             ></mat-icon>
                                         </button>
                                         <mat-menu #featuresMenu="matMenu">
+                                            <a
+                                           
+                                            [routerLinkActive]="'active'"
+                                            [routerLink]="[
+                                                '/leagues'
+                                            ]"
+                                            >
                                             <button mat-menu-item>
-                                                Yesterday
+                                               View Details
                                             </button>
-                                            <button mat-menu-item>
-                                                2 days ago
-                                            </button>
-                                            <button mat-menu-item>
-                                                3 days ago
-                                            </button>
+                                        </a>
+                                            
                                         </mat-menu>
-                                    </div> -->
+                                    </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
                         <div
@@ -638,6 +648,14 @@
                                                 }"
                                             >
                                                 {{ scheduleItem.matchFormat }}
+                                            </div>
+                                        </ng-container>
+                                        <ng-container>
+                                            <div
+                                                class="py-0.5 px-3 rounded-full text-sm font-semibold text-green-800 bg-green-100"
+                                                
+                                            >
+                                                {{ scheduleItem.admin.firstName+" "+scheduleItem.admin.lastName}}
                                             </div>
                                         </ng-container>
                                         <ng-container

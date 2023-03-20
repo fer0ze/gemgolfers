@@ -194,6 +194,13 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.GolfReportModule),
             },
             {
+                path: 'reports/club',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/club-report/club-report/club-report.module'
+                    ).then((m) => m.ClubReportModule),
+            },
+            {
                 path: 'feedback',
                 loadChildren: () =>
                     import('app/modules/admin/feedback/feedback.module').then(

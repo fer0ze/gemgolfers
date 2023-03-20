@@ -175,17 +175,28 @@
                         {{ row.submittedCards + " " }} ({{ row.submitPer }}%)
                     </td>
                 </ng-container>
+                <ng-container matColumnDef="details">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Details
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button mat-icon-button color="primary">
+                            <mat-icon
+                                (click)="playerList(row.nonSubmittedCardsList)"
+                                class="mat-18"
+                                color="accent"
+                                >reorder</mat-icon
+                            >
+                        </button>
+                    </td>
+                </ng-container>
 
                 <!-- Email Column -->
                 <ng-container matColumnDef="nonSubmittedCards">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                         NonSubmittedCards
                     </th>
-                    <td
-                        mat-cell
-                        *matCellDef="let row"
-                        (click)="playerList(row.nonSubmittedCardsList)"
-                    >
+                    <td mat-cell *matCellDef="let row">
                         <div class="flex">
                             <span>
                                 <!-- Low -->

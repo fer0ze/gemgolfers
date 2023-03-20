@@ -1,0 +1,128 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
+        <!-- Title and action buttons -->
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <h2 class="text-3xl font-semibold tracking-tight leading-8">
+                    Clubs dashboard
+                </h2>
+                <div class="font-medium tracking-tight text-secondary">
+                    Keep track of your player status
+                </div>
+            </div>
+            <div class="flex items-center ml-6">
+                <button class="hidden sm:inline-flex" mat-stroked-button>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:document-report'"
+                    ></mat-icon>
+                    <span class="ml-2">Reports</span>
+                </button>
+                <button class="hidden sm:inline-flex ml-3" mat-stroked-button>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:cog'"
+                    ></mat-icon>
+                    <span class="ml-2">Settings</span>
+                </button>
+                <button
+                    class="hidden sm:inline-flex ml-3"
+                    mat-flat-button
+                    [color]="'primary'"
+                >
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:save'"
+                    ></mat-icon>
+                    <span class="ml-2">Export</span>
+                </button>
+
+                <!-- Actions menu (visible on xs) -->
+                <div class="sm:hidden">
+                    <button [matMenuTriggerFor]="actionsMenu" mat-icon-button>
+                        <mat-icon
+                            [svgIcon]="'heroicons_outline:dots-vertical'"
+                        ></mat-icon>
+                    </button>
+                    <mat-menu #actionsMenu="matMenu">
+                        <button mat-menu-item>Export</button>
+                        <button mat-menu-item>Reports</button>
+                        <button mat-menu-item>Settings</button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+
+        <div class="gap-8 w-full mt-8">
+            <div
+                class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+            >
+                <div class="p-6">
+                    <div
+                        class="mr-4 text-lg font-medium tracking-tight leading-6 truncate"
+                    >
+                        Club Details
+                    </div>
+                    <div class="text-secondary font-medium">1 total</div>
+                </div>
+                <div class="overflow-x-auto mx-6">
+                    <table mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef>Sr.</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ i + 1 }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.name }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef>Email</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.email }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="phone">
+                            <th mat-header-cell *matHeaderCellDef>Phone</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.phone }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="members">
+                            <th mat-header-cell *matHeaderCellDef>Members</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.members.length }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="course">
+                            <th mat-header-cell *matHeaderCellDef>Course</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{
+                                    row.courses.length > 0
+                                        ? row.courses[0].name
+                                        : "-"
+                                }}
+                            </td>
+                        </ng-container>
+
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="displayedColumns"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: displayedColumns"
+                        ></tr>
+                    </table>
+                    <mat-paginator
+                        [pageSize]="20"
+                        [pageSizeOptions]="[10, 20, 50, 100]"
+                    ></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

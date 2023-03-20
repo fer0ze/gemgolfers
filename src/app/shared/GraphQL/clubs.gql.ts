@@ -10,6 +10,12 @@ export const GetClubs = gql`
       phone
       email
       logo
+      members{
+        playerId
+      }
+      courses{
+        name
+      }
     }
   }
 `;

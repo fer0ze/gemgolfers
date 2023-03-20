@@ -257,6 +257,10 @@ export const GetTournamentsForAdminCompeleted = gql`
             endDate
             noOfRounds
             matchFormat
+            admin{
+                firstName
+                lastName
+            }
             HandicapCalculated: player_handicaps {
                 handicap
                 oldHandicap
@@ -295,6 +299,10 @@ export const GetTournamnetListForLiveByAdmin = gql`
             startDate
             endDate
             noOfRounds
+            admin{
+                firstName
+                lastName
+            }
         }
     }
 `;
@@ -310,6 +318,10 @@ export const GetTournamnetListForScheduleByAdmin = gql`
             courseId
             tournamentTitle
             date
+            admin{
+                firstName
+                lastName
+            }
             course {
                 name
             }
@@ -326,6 +338,10 @@ export const GetTournamnetListForIncompleteByAdmin = gql`
             tournamentTitle
 
             date
+            admin{
+                firstName
+                lastName
+            }
         }
     }
 `;
@@ -1077,6 +1093,11 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
                     }
                     PlayerQL: player {
                         playerCategory
+                        firstName
+                        lastName
+                        handicap
+                        membershipNumber
+                        email
                     }
                 }
             }
@@ -1115,6 +1136,11 @@ export const ClubSingleRoundFlightsAdminQueryQLs = gql`
                     }
                     PlayerQL: player {
                         playerCategory
+                        firstName
+                        lastName
+                        handicap
+                        membershipNumber
+                        email
                     }
                 }
             }
@@ -1669,6 +1695,10 @@ export const getAllAdmin = gql`
             title
             matchFormat
             noOfRounds
+            admin{
+                firstName
+                lastName
+            }
         }
         Count: flight_aggregate {
             aggregate {
