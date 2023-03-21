@@ -426,6 +426,16 @@ export const compactNavigation: FuseNavigationItem[] = [
         link: '/report',
     },
 ];
+
+export const userNavigation: FuseNavigationItem[] = [
+    {
+        id: 'dashboard',
+        title: 'DashBoard',
+        type: 'basic',
+        icon: 'heroicons_outline:chart-pie',
+        link: '/leaguesDashboard',
+    },
+]
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
         id: 'dashboard',

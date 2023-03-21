@@ -4,7 +4,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import {
     compactNavigation,
-    defaultNavigation,
+    defaultNavigation,userNavigation,
     futuristicNavigation,
     horizontalNavigation,
     defaultNavigationSuperAdmin
@@ -19,6 +19,8 @@ export class NavigationMockApi {
         compactNavigation;
     private readonly _defaultNavigation: FuseNavigationItem[] =
         defaultNavigation;
+    private readonly _userNavigation: FuseNavigationItem[] =
+    userNavigation;
     private readonly _defaultNavigationSuperAdmin: FuseNavigationItem[] =
         defaultNavigationSuperAdmin;
     private readonly _futuristicNavigation: FuseNavigationItem[] =
@@ -96,7 +98,7 @@ export class NavigationMockApi {
                         horizontal: cloneDeep(this._horizontalNavigation),
                     },
                 ];
-            } else if(this.loggedInuser && this.loggedInuser.userRole > 1){
+            } else if(this.loggedInuser && this.loggedInuser.userRole > 1 &&  this.loggedInuser.adminClubId!=null){
                 // Fill compact navigation children using the default navigation
                 this._compactNavigation.forEach((compactNavItem) => {
                     this._defaultNavigation.forEach((defaultNavItem) => {
@@ -138,6 +140,24 @@ export class NavigationMockApi {
                         default: cloneDeep(this._defaultNavigation),
                         futuristic: cloneDeep(this._futuristicNavigation),
                         horizontal: cloneDeep(this._horizontalNavigation),
+                    },
+                ];
+            }else if(this.loggedInuser && this.loggedInuser.userRole > 1 &&  this.loggedInuser.adminClubId==null){
+                this._compactNavigation.forEach((compactNavItem) => {
+                    this._userNavigation.forEach((defaultNavItem) => {
+                        if (defaultNavItem.id === compactNavItem.id) {
+                            compactNavItem.children = cloneDeep(
+                                defaultNavItem.children
+                            );
+                        }
+                    });
+                });
+                return [
+                    200,
+                    {
+                       
+                        default: cloneDeep(this._userNavigation),
+                        
                     },
                 ];
             }

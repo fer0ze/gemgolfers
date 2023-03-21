@@ -129,30 +129,27 @@ export class AuthService {
                     const token = value.user
                         .getIdToken(false)
                         .then((authToken) => {
-                            // this.accessToken = this._api._generateJWTToken();
-
-                            // Set the authenticated flag to true
-                            // this._authenticated = true;
-                            // this.loggedInuser = JSON.parse(
-                            //     localStorage.getItem(Constants.LOGGED_IN_USER)
-                            // );
-                            // let clubInfo: any =
-                            //     this.loggedInuser.membership.length > 0
-                            //         ? this.loggedInuser.membership[0].club
-                            //         : null;
-                            // let logo =
-                            //     clubInfo && clubInfo.logo
-                            //         ? clubInfo.logo
-                            //         : 'e2esp.png';
-                            // this._user.email = this.loggedInuser.email;
-                            // this._user.name = this.loggedInuser.fullName;
-                            // this._user.avatar =
-                            //     'assets/images/logo/' + logo + '';
-                            // // Store the user on the user service
-                            // this._userService.user = this._user;
-                            // this._authenticated = true;
-                            // localStorage.setItem('accessToken', this._api._generateJWTToken());
-                            // localStorage.setItem('gotAuthentication', 'true');
+                            this.accessToken = this._api._generateJWTToken();
+                            this.loggedInuser = JSON.parse(
+                                localStorage.getItem(Constants.LOGGED_IN_USER)
+                            );
+                            let clubInfo: any =
+                                this.loggedInuser.membership.length > 0
+                                    ? this.loggedInuser.membership[0].club
+                                    : null;
+                            let logo =
+                                clubInfo && clubInfo.logo
+                                    ? clubInfo.logo
+                                    : 'e2esp.png';
+                            this._user.email = this.loggedInuser.email;
+                            this._user.name = this.loggedInuser.fullName;
+                            this._user.avatar =
+                                'assets/images/logo/' + logo + '';
+                            // Store the user on the user service
+                            this._userService.user = this._user;
+                            this._authenticated = true;
+                            localStorage.setItem('accessToken', this._api._generateJWTToken());
+                            localStorage.setItem('gotAuthentication', 'true');
                             resolve(true);
                         });
 
@@ -211,6 +208,7 @@ export class AuthService {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
         localStorage.removeItem('aXNMb2dnZWRJbg');
+        localStorage.removeItem('gotAuthentication');
 
         // Set the authenticated flag to false
         this._authenticated = false;

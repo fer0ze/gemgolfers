@@ -12,7 +12,7 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { Constants } from 'app/shared/classes/general';
 import {
-    defaultNavigation,
+    defaultNavigation,userNavigation,
     defaultNavigationSuperAdmin,
 } from 'app/mock-api/common/navigation/data';
 
@@ -79,8 +79,10 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         );
         if (this.loggedInuser.userRole == 1) {
             this.navigation['default'] = defaultNavigationSuperAdmin;
-        } else {
+        } else if(this.loggedInuser.adminClubId!=null){
             this.navigation['default'] = defaultNavigation;
+        }else{
+            this.navigation['default'] = userNavigation;
         }
         console.log(this.navigation);
 

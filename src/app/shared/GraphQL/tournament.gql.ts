@@ -1622,6 +1622,10 @@ export const getallDashboard = gql`
             title
             matchFormat
             noOfRounds
+            admin{
+                firstName
+                lastName
+            }
         }
         Count: flight_aggregate(
             where: { admin: { adminClubId: { _eq: $adminClubId } } }
