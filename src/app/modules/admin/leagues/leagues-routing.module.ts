@@ -3,7 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LeaguesComponent } from './leagues.component';
 import { DatePipe } from '@angular/common';
-import { AddLeagueComponent } from './add-League/add-league/add-league.component';
+import { AddLeagueComponent } from './add-League/add-league.component';
+
 
 
 const routes: Routes = [

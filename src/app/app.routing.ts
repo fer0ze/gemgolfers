@@ -24,7 +24,17 @@ export const appRoutes: Route[] = [
         data: {
             layout: 'empty',
         },
-
+    },
+    {
+        path: 'leagueTable',
+        loadChildren: () =>
+            import(
+                'app/modules/admin/leagueLeaderBoard/league-leaderboard.module'
+            ).then((m) => m.LeagueLeaderboardModule),
+        component: LayoutLeaderComponent,
+        data: {
+            layout: 'empty',
+        },
     },
     {
         path: 'signUpForm',
@@ -224,9 +234,9 @@ export const appRoutes: Route[] = [
             {
                 path: 'leagues',
                 loadChildren: () =>
-                    import(
-                        'app/modules/admin/leagues/leagues.module'
-                    ).then((m) => m.LeaguesModule),
+                    import('app/modules/admin/leagues/leagues.module').then(
+                        (m) => m.LeaguesModule
+                    ),
             },
             {
                 path: 'tournaments/schedule',

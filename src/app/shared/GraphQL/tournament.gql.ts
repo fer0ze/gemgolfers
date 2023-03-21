@@ -214,6 +214,9 @@ export const getLeagues = gql`
             tournaments{
                 id
             }
+            leaderboards{
+                id
+            }
         }
     }
 `;
@@ -397,6 +400,10 @@ export const GetTournamnetListForCompleted = gql`
             endDate
             matchFormat
             noOfRounds
+            admin{
+                firstName
+                lastName
+            }
             HandicapCalculated: player_handicaps {
                 handicap
                 oldHandicap
@@ -440,6 +447,10 @@ export const GetTournamnetListForLive = gql`
             endDate
             noOfRounds
             matchFormat
+            admin{
+                firstName
+                lastName
+            }
             HandicapCalculated: player_handicaps {
                 handicap
                 oldHandicap
@@ -465,6 +476,10 @@ export const GetTournamnetListForSchedule = gql`
             courseId
             tournamentTitle
             date
+            admin{
+                firstName
+                lastName
+            }
             matchFormat
             course {
                 name
@@ -486,6 +501,10 @@ export const GetTournamnetListForIncomplete = gql`
             endDate
             noOfRounds
             matchFormat
+            admin{
+                firstName
+                lastName
+            }
         }
     }
 `;
