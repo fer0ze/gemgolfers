@@ -222,6 +222,13 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.TournamentsModule),
             },
             {
+                path: 'leagues',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/leagues/leagues.module'
+                    ).then((m) => m.LeaguesModule),
+            },
+            {
                 path: 'tournaments/schedule',
                 loadChildren: () =>
                     import(

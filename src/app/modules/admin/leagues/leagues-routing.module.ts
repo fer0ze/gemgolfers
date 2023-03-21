@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LeaguesComponent, TournamentsComponent } from './leagues.component';
+import { LeaguesComponent } from './leagues.component';
 import { DatePipe } from '@angular/common';
+import { AddLeagueComponent } from './add-League/add-league/add-league.component';
 
 
 const routes: Routes = [
@@ -10,10 +11,10 @@ const routes: Routes = [
         path: '',
         component: LeaguesComponent,
     },
-    // {
-    //     path: 'add',
-    //     component: AddTournamentComponent,
-    // },
+    {
+        path: 'add',
+        component: AddLeagueComponent,
+    },
     // {
     //     path: 'manage/:id',
     //     component: ViewTournamentComponent,

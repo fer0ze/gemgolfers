@@ -35,20 +35,20 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { GraphQLModule } from 'app/graphql.module';
 import { ApolloModule } from 'apollo-angular';
+import { LeaguesRoutingModule } from './leagues-routing.module';
+import { LeaguesComponent } from './leagues.component';
 @NgModule({
-    declarations: [
-    
-    ],
+    declarations: [LeaguesComponent],
     imports: [
         CommonModule,
         NgApexchartsModule,
-            ReactiveFormsModule,
+        ReactiveFormsModule,
         MatTableModule,
         MatFormFieldModule,
         MatButtonToggleModule,
         MatPaginatorModule,
         MatInputModule,
-        
+        LeaguesRoutingModule,
         MatButtonModule,
         GraphQLModule,
         MatIconModule,
@@ -76,6 +76,5 @@ import { ApolloModule } from 'apollo-angular';
         AmazingTimePickerModule,
         FlexLayoutModule,
     ],
-   
 })
 export class LeaguesModule {}

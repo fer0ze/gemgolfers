@@ -37,7 +37,7 @@ export const LeaderboardSubscription = gql`
             title
             matchFormat
             tee_id
-            FlightsQL: flights{
+            FlightsQL: flights {
                 id
                 courseId
                 courseHoleSets
@@ -202,8 +202,21 @@ export const LeaderboardSubscriptions = gql`
     }
     ${TournamentMemberCategoryQL}
 `;
-export const  getLeagues=gql`
-`
+export const getLeagues = gql`
+    query getLeagues{
+        league{
+            id
+            name
+            dateCreated
+            members{
+                playerId
+            }
+            tournaments{
+                id
+            }
+        }
+    }
+`;
 export const LeaderboardTeamSubscription = gql`
     query LeaderboardTeamSubscription(
         $tournamentId: String!
@@ -258,7 +271,7 @@ export const GetTournamentsForAdminCompeleted = gql`
             endDate
             noOfRounds
             matchFormat
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -300,7 +313,7 @@ export const GetTournamnetListForLiveByAdmin = gql`
             startDate
             endDate
             noOfRounds
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -319,7 +332,7 @@ export const GetTournamnetListForScheduleByAdmin = gql`
             courseId
             tournamentTitle
             date
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -339,7 +352,7 @@ export const GetTournamnetListForIncompleteByAdmin = gql`
             tournamentTitle
 
             date
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -1032,11 +1045,7 @@ export const DailyRoundsStatQueryQLs = gql`
     }
 `;
 export const DailyRoundsStatQueryAdminQLs = gql`
-    query ClubSingleRoundFlightsQuery(
-        
-        $fromDate: date!
-        $toDate: date!
-    ) {
+    query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
         TournamentsQL: tournament(
             where: {
                 singleRound: { _eq: true }
@@ -1106,14 +1115,9 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
     }
 `;
 export const ClubSingleRoundFlightsAdminQueryQLs = gql`
-    query ClubSingleRoundFlightsQuery(
-       
-        $fromDate: date!
-        $toDate: date!
-    ) {
+    query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
         TournamentsQL: tournament(
             where: {
-                
                 singleRound: { _eq: true }
                 _and: [
                     { startDate: { _gte: $toDate } }
@@ -1696,7 +1700,7 @@ export const getAllAdmin = gql`
             title
             matchFormat
             noOfRounds
-            admin{
+            admin {
                 firstName
                 lastName
             }
