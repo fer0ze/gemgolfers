@@ -14,11 +14,20 @@ import { ApexOptions } from 'ng-apexcharts';
     styleUrls: ['./leagues.component.scss'],
 })
 export class LeaguesComponent implements OnInit {
-    clubs: Club[] = [];
-    
+    clubs: any[] = [];
+    showLeaderBoards: boolean = false;
     _series: any = [];
+    selectedId: any = null;
+    leaderBoards: any[] = [];
     dataSource: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'date', 'members', 'tournament', 'details'];
+    displayedColumns = [
+        'id',
+        'name',
+        'date',
+        'members',
+        'tournament',
+        'details',
+    ];
     chartBudgetDistribution: ApexOptions = {};
     chartGithubIssues: ApexOptions = {};
     public barChartLabels: string[] = [];
@@ -47,11 +56,11 @@ export class LeaguesComponent implements OnInit {
         this.dataSource = new MatTableDataSource(clubs.league);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        for (let obj of  this.clubs) {
+        for (let obj of this.clubs) {
             if (obj['members'].length > 0) {
                 this.barChartLabels.push(obj.name);
-                dataMembers.push(obj['members'].length)
-                dataTournaments.push(obj['tournaments'].length)
+                dataMembers.push(obj['members'].length);
+                dataTournaments.push(obj['tournaments'].length);
             }
         }
         this._series['0'] = [
@@ -62,13 +71,13 @@ export class LeaguesComponent implements OnInit {
             },
             {
                 data: dataMembers,
-                name:  "Members",
+                name: 'Members',
                 type: 'column',
             },
-           
+
             {
                 data: dataTournaments,
-                name:  "Tournaments",
+                name: 'Tournaments',
                 type: 'column',
             },
         ];
@@ -98,7 +107,7 @@ export class LeaguesComponent implements OnInit {
                     enabled: false,
                 },
             },
-            colors: ['#AF6F0B', '#121212','#AC1500'],
+            colors: ['#AF6F0B', '#121212', '#AC1500'],
             dataLabels: {
                 enabled: true,
                 enabledOnSeries: [0],
@@ -224,5 +233,17 @@ export class LeaguesComponent implements OnInit {
         //     },
         // };
     }
-   
+
+    toggleDetails(productId: string): void {
+        this.showLeaderBoards = true;
+        if (this.selectedId && this.selectedId === productId) {
+            this.showLeaderBoards = false;
+            return;
+        }
+
+        this.leaderBoards = this.clubs.find((a) => {
+            return a.id == productId;
+        });
+        this.showLeaderBoards = true;
+    }
 }

@@ -602,7 +602,14 @@ export class FacadeService {
   // insertClubMember(clubId: string, playerId: string) {
   //   return this.tournamentService.insertClubMember(clubId, playerId);
   // }
-
+  getLeageLeaderBoards(id:string)
+  {
+    return this.tournamentService.getLeageLeaderBoards(id);
+  }
+  getLeagueName(id:string)
+  {
+    return this.tournamentService.getLeagueName(id);
+  }
   setScoreUpdateTime(tournamentId: string, date: string) {
     return this.tournamentService.setScoreUpdateTime(tournamentId, date);
   }

@@ -1,203 +1,163 @@
 .relative {
-    background-color: #004987;
+  background-color: #004987;
 }
 
 .outer-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999999;
-    pointer-events: none;
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flex {
+  ::ng-deep .mat-tab-group {
+    width: 100% !important;
+  }
 }
 
 .responsive-table {
-    li {
-      border-radius: 11px;
-      padding: 22px 12px;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-  
-    .table-header {
-      position: sticky;
-      top: 0;
-      background: #004987;
-      color: white;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: white;
-      font-weight: bold;
-      font-size: larger;
-  
-    }
-  
-    .table-row {
-      background-color: #ffffff;
-      display: flex !important;
-      box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
-      font-weight: 600;
-      font-size: large;
-      padding: 12px 12px !important;
-    }
-  
-    .col-1 {
-      flex-basis: 10%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    .col-2 {
-      flex-basis: 40%;
-    }
-  
+  li {
+    border-radius: 11px;
+    padding: 22px 12px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .table-header {
+    position: sticky;
+    top: 0;
+    background: #004987;
+    color: white;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: white;
+    font-weight: bold;
+    font-size: larger;
+
+
+  }
+
+  .table-row {
+    background-color: #ffffff;
+    display: flex !important;
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    font-size: large;
+   
+
     .col-3 {
-      flex-basis: 15%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #1b80d2;
+      border-radius: 11%;
+      color: white;   
     }
-  
-    .col-4 {
-      flex-basis: 15%;
+  }
+
+  .col-1 {
+    flex-basis: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .col-2 {
+    flex-basis: 83%;
+  }
+
+  .col-3 {
+    flex-basis: 7%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+  }
+
+
+
+  @media all and (max-width: 767px) {
+    .table-header {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      line-height: 0.25rem;
+    
+
+      .col-1 {
+        flex-basis: 10%;
+        padding-right: 1px;
+      }
+
+      .col-2 {
+        flex-basis: 75%;
+      }
+
+      .col-3 {
+        flex-basis: 15%;
+        text-align: center;
+      }
+
     }
-  
-    .col-5 {
-      flex-basis: 20%;
+
+    .table-row {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      font-size: 0.25rem;
+      line-height: 0.25rem;
+      padding: 12px 5px;
+
+      .col-1 {
+        flex-basis: 10%;
+        // padding-top: 25px;
+        padding-right: 13px;
+      }
+
+      .col-2 {
+        flex-basis: 75%;
+        font-weight: 700;
+        line-height: normal;
+
+      }
+
+      .col-3 {
+        flex-basis: 15%;
+        background: #1b80d2;
+        border-radius: 21%;
+      padding: 2px;
+        color: white;
+        
+
+      }
     }
-  
-    @media all and (max-width: 767px) {
-      .table-header {
-        display: flex;
-        line-height: 0.25rem;
-        padding: 12px 5px;
-  
-        .col-1 {
-          flex-basis: 13%;
-          padding-right: 1px;
-        }
-  
-        .col-2 {
-          flex-basis: 49%;
-        }
-  
-        .col-3 {
-          flex-basis: 18%;
-          text-align: center;
-        }
-  
-        .col-4 {
-          flex-basis: 10%;
-          //margin-right: 2px;
-        }
-  
-        .col-5 {
-          flex-basis: 10%;
-        }
-  
-        .THRU {
-          padding-right: 2px;
-        }
-  
-      }
-  
-      .table-row {
-        display: flex;
-        font-size: 0.25rem;
-        line-height: 0.25rem;
-        padding: 12px 5px;
-  
-        .col-1 {
-          flex-basis: 13%;
-          // padding-top: 25px;
-          padding-right: 13px;
-        }
-  
-        .col-2 {
-          flex-basis: 49%;
-          font-weight: 700;
-          line-height: normal;
-  
-        }
-  
-        .col-3 {
-          flex-basis: 18%;
-          text-align: center;
-          padding-top: 12px;
-          font-size: 14px;
-        }
-  
-        .col-4 {
-          flex-basis: 10%;
-          background: #2a3f50;
-          border-radius: 21%;
-          padding-top: 16px;
-          color: white;
-          margin-right: 3px;
-          margin-top: 11px;
-          padding-bottom: 14px;
-          align-items: center;
-          height: 36px;
-  
-        }
-  
-        .col-5 {
-          flex-basis: 10%;
-          background: #2a3f50;
-          border-radius: 21%;
-          padding-top: 16px;
-          color: white;
-          margin-right: 3px;
-          margin-top: 11px;
-          padding-bottom: 14px;
-          align-items: center;
-          height: 36px;
-  
-  
-        }
-  
-        .text-xs {
-          padding-top: 7px;
-        }
-      }
-  
-      li {
-        display: block;
-      }
-  
-      .col {
-  
-        padding: 10px 0;
+
+    li {
+      display: block;
+    }
+
+    .col {
+
+      padding: 10px 0;
+      font-size: 13px;
+
+      &:before {
+        color: #6C7A89;
+        padding-right: 10px;
         font-size: 13px;
-  
-        &:before {
-          color: #6C7A89;
-          padding-right: 10px;
-          font-size: 13px;
-          font-weight: 600;
-          display: block;
-          padding-top: 0px;
-          line-height: 13px;
-          flex-basis: 50%;
-          text-align: right;
-        }
+        font-weight: 600;
+        display: block;
+        padding-top: 0px;
+        line-height: 13px;
+        flex-basis: 50%;
+        text-align: right;
       }
     }
   }
+}

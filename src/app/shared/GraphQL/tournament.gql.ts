@@ -203,19 +203,50 @@ export const LeaderboardSubscriptions = gql`
     ${TournamentMemberCategoryQL}
 `;
 export const getLeagues = gql`
-    query getLeagues{
-        league{
+    query getLeagues {
+        league {
             id
             name
             dateCreated
-            members{
+            members {
                 playerId
             }
-            tournaments{
+            tournaments {
                 id
             }
-            leaderboards{
-                id
+        }
+    }
+`;
+export const getLeageLeaderBoards = gql`
+    query getLeagues($leagueId: String!) {
+        LeaderBoardQL: mvp_leaderboard(
+            where: { leagueId: { _eq: $leagueId } }
+        ) {
+            id
+            name
+            points {
+                leaderboardId
+                tournamentId
+                entityId
+                name
+                points
+            }
+           
+        }
+    }
+`;
+export const getLeagueName = gql`
+    query getLeagues($leagueId: String!) {
+        LeaderBoardQL: league(
+            where: { id: { _eq: $leagueId } }
+        ) {
+            id
+            name
+            members{
+                playerId
+                player{
+                    handicap
+                }
             }
         }
     }
@@ -400,7 +431,7 @@ export const GetTournamnetListForCompleted = gql`
             endDate
             matchFormat
             noOfRounds
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -447,7 +478,7 @@ export const GetTournamnetListForLive = gql`
             endDate
             noOfRounds
             matchFormat
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -476,7 +507,7 @@ export const GetTournamnetListForSchedule = gql`
             courseId
             tournamentTitle
             date
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -501,7 +532,7 @@ export const GetTournamnetListForIncomplete = gql`
             endDate
             noOfRounds
             matchFormat
-            admin{
+            admin {
                 firstName
                 lastName
             }
@@ -1641,7 +1672,7 @@ export const getallDashboard = gql`
             title
             matchFormat
             noOfRounds
-            admin{
+            admin {
                 firstName
                 lastName
             }

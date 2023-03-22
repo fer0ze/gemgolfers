@@ -629,6 +629,48 @@ export class TournamentsService {
                 });
         });
     }
+    public getLeageLeaderBoards(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getLeageLeaderBoards,
+                    variables: {
+                        leagueId: id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data.tournament_by_pk);
+                    //console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        //console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getLeagueName(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getLeagueName,
+                    variables: {
+                        leagueId: id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data.tournament_by_pk);
+                    //console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        //console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public LeaderboardOneTimeDataQuery(
         tournamentId: string,

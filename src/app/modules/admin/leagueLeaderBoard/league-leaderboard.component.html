@@ -1,8 +1,6 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto">
     <div class="relative flex-0 py-8 px-4 overflow-hidden">
-        <div
-            class="grid grid-cols-1 sm:grid-cols-1  gap-6 w-full min-w-0 logo"
-        >
+        <div class="grid grid-cols-1 sm:grid-cols-1 gap-6 w-full min-w-0 logo">
             <div class="flex flex-row justify-center sm:inline md:hidden">
                 <div
                     class="py-0.5 ml-1 w-44 leading-8 flex text-center justify-center rounded-lg shadow-2xl bg-card text-md font-extrabold '"
@@ -14,11 +12,11 @@
             <div
                 class="z-10 col-span-1 relative flex flex-col text-center items-center"
             >
-                <!-- <h2
+                <h2
                     class="text-3xl md:pt-4 sm:pt-0 text-neutral-50 mb-4 font-semibold"
                 >
-                    {{ Leaderboard
-                </h2> -->
+                    {{ leagueTitle.LeaderBoardQL[0].name }}
+                </h2>
                 <div
                     class="mt-1 text-3xl text-neutral-50 font-extrabold tracking-tight leading-tight text-center"
                 >
@@ -34,25 +32,51 @@
             <div
                 class="flex flex-col sm:flex-row items-center justify-center mb-1"
             >
-                <ul class="responsive-table" >
-                    <li class="table-row" *ngFor="let item of Leaders">
-                        <div class="col col-1">
-                            {{ item.position }}
+                <mat-tab-group
+                    class="sm:px-2 mat-primary"
+                    mat-align-tabs="center"
+                    [selectedIndex]="0"
+                    (selectedTabChange)="changeleaderBoard($event)"
+                >
+                    <mat-tab
+                        [label]="leader.name"
+                        *ngFor="let leader of Leaders; let i = index"
+                    >
+                        <ng-template mat-tab-label>{{
+                            leader["name"]
+                        }}</ng-template>
+                        <div id="leaderboard" class="mt-2">
+                            <ul class="responsive-table">
+                                <li class="table-header">
+                                    <div class="col col-1">POS.</div>
+                                    <div class="col col-2">PLAYER</div>
+                                    <div class="col col-3">TOTAL</div>
+                                    
+                                </li>
+                                <li
+                                    class="table-row"
+                                    *ngFor="let item of results;let i=index"
+                                >
+                                    <div class="col col-1">
+                                        {{ i + 1}}
+                                    </div>
+                                    <div class="col col-2">
+                                        {{ item.name }}
+                                        <div
+                                            *ngIf="item.handicap > 0"
+                                            class="text-xs flex items-center"
+                                        >
+                                            HC:{{ item.handicap }}
+                                        </div>
+                                    </div>
+                                    <div class="col col-3">
+                                        {{ item.points }}
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="col col-2">
-                            {{ item.name }}
-                            <div
-                                *ngIf="item.handicap > 0"
-                                class="text-xs flex items-center"
-                            >
-                                HC:{{ item.handicap }}
-                            </div>
-                        </div>
-                        <div class="col col-5">
-                            {{ item.totalScore }}
-                        </div>
-                    </li>
-                </ul>
+                    </mat-tab>
+                </mat-tab-group>
             </div>
         </div>
     </div>
