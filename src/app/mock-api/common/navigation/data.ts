@@ -350,6 +350,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:speakerphone',
                 link: '/reports/players',
             },
+            {
+                id: 'reports.signUpPlayers',
+                title: 'SignUp-Players',
+                type: 'basic',
+                icon: 'heroicons_outline:beaker',
+                link: '/reports/signUpPlayers',
+            },
         ],
     },
     {

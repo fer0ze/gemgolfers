@@ -88,6 +88,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
         // Attach SVG fill fixer to all ApexCharts
         this.showdata = Promise.resolve(true);
+        
         console.log(this.showdata);
 
         window['Apex'] = {

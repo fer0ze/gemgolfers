@@ -39,14 +39,22 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where: { firstName: { _neq: "" } }
-            order_by: { createdAt: desc }
+            where:{
+                _and:[
+                { firstName: { _neq: "" } },
+                { firebaseUid: { _neq: "" } }
+            ] },
+            order_by: { createdAt: desc },
+            limit:1000
         ) {
             id
+            firstName
+            lastName
             playerCategory      
             createdAt
-            membershipQL: membership {
-                suspended
+            gender
+            AggregateQL:flights_played {      
+                flightId
             }
         }
     }

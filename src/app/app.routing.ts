@@ -197,7 +197,7 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.UpdatedHandicapReportModule),
             },
             {
-                path: 'reports/players',
+                path: 'reports/signUpPlayers',
                 loadChildren: () =>
                     import(
                         'app/modules/admin/reports/signUpReport/signUp-report.module'

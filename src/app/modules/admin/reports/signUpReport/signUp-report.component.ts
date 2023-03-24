@@ -16,6 +16,7 @@ import { of } from 'rxjs';
 })
 export class SignUpReportComponent implements OnInit {
     chartVisitors: ApexOptions;
+    showdata: Promise<boolean>;
     chartConversions: ApexOptions;
     chartImpressions: ApexOptions;
     chartVisits: ApexOptions;
@@ -25,23 +26,58 @@ export class SignUpReportComponent implements OnInit {
     chartAge: ApexOptions;
     chartLanguage: ApexOptions;
     data: any;
+    male: number = 0;
+    female: number = 0;
     series: any[] = [];
+    seriesA: any[] = [];
+    seriesB: any[] = [];
+    seriesC: any[] = [];
+    seriesD: any[] = [];
+    _seriesE: any[] = [];
     dataMembers: any[] = [];
+    dataMembersA: any[] = [];
+    dataMembersB: any[] = [];
+    dataMembersC: any[] = [];
+    dataMembersE: any[] = [];
     Players: any = [];
-
+    thisMonth: number = 0;
+    MonthLabels: any[] = [
+        '01 - 08', '09 - 16', '17 - 24'
+    ];
+    genderLabels: any[] =
+        ['Male', 'Female']
+        ;
+    lastMonth: number = 0;
+    clubPlayers: number = 0;
+    mobilePlayers: number = 0;
+    SecondLastMonth: number = 0;
+    dataSource: MatTableDataSource<any>;
+    displayedColumns = [
+        'id',
+        'name',
+        'date',
+        'category',
+        'flights',
+        
+    ];
+   
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
     constructor(
         private datePipe: DatePipe,
         private location: Router,
         private facadeService: FacadeService,
         private route: ActivatedRoute,
         private apollo: Apollo
-    ) {}
+    ) { }
 
     ngOnInit(): void {
+        this.showdata = Promise.resolve(true);
         this.fecthData();
     }
 
     async fecthData() {
+        this.showdata = Promise.resolve(false);
         of(this.Players)
             .pipe()
             .subscribe(
@@ -49,23 +85,61 @@ export class SignUpReportComponent implements OnInit {
                     data = await this.facadeService.getPlayersListReport();
                     this.data = data.player;
                     console.log(data);
-                    this.sort();
+
+                    this.sorts();
                     // for (let obj of this.data) {
                     // }
-                    this._prepareChartData();
                     this.series[0] = [
                         {
-                            data:this.dataMembers,
+                            data: this.dataMembers,
                             name: 'New Users',
                         },
                     ];
+                    this.seriesA = [
+                        {
+                            data: this.dataMembersA,
+                            name: 'Users',
+                        },
+                    ];
+                    this.seriesB = [
+                        {
+                            data: this.dataMembersB,
+                            name: 'Users',
+                        },
+                    ];
+                    this.seriesC = [
+                        {
+                            data: this.dataMembersC,
+                            name: 'Users',
+                        },
+                    ];
+                    this.seriesD = [
+                        this.male, this.female
+                    ];
+                    this._seriesE.push({
+                        name: 'Players',
+                        data: this.dataMembers,
+                    });
+                    this._seriesE.push({
+                        name: 'DailyRound',
+                        data: this.dataMembersE,
+                    });
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    console.log(this.seriesA);
+
+                    this._prepareChartData();
+
+
                 },
                 (error) => console.log('error')
             );
     }
 
-    sort() {
+    sorts() {
         let count = 1;
+        let countDailyRound = 1;
         // for (let obj of this.data) {
         //     let date = obj.createdAt.split('T');
         //     console.log(date);
@@ -87,21 +161,75 @@ export class SignUpReportComponent implements OnInit {
         for (let x = 0; x < this.data.length; x++) {
             const element = this.data[x];
             let date = element.createdAt.split('T');
+            if (element.gender == 'male') {
+                this.male++;
+            }
+            if (element.gender == 'female') {
+                this.female++;
+            }
+            if (element.AggregateQL.length > 0) {
+                this.clubPlayers++;
+            } else {
+                this.mobilePlayers++;
+            }
             for (let y = x + 1; y < this.data.length; y++) {
                 let dateA = this.data[y].createdAt.split('T');
+                if (this.data[y].AggregateQL.length > 0) {
+                    this.clubPlayers++;
+                } else {
+                    this.mobilePlayers++;
+                }
+                if (this.data[y].gender == 'male') {
+                    this.male++;
+                }
+                if (this.data[y].gender == 'female') {
+                    this.female++;
+                }
                 if (dateA[0] == date[0]) {
                     count++;
                     x++;
+                    countDailyRound=element.AggregateQL.length+this.data[y].AggregateQL.length;
+
                 } else {
                     let dateObj = {
                         x: new Date(this.data[x].createdAt),
                         y: count,
                     };
+                    let dateObjA = {
+                        x: new Date(this.data[x].createdAt),
+                        y: countDailyRound,
+                    };
                     this.dataMembers.push(dateObj);
+                    this.dataMembersE.push(dateObjA);
                     count = 0;
+                    countDailyRound=0;
                     break;
                 }
             }
+        }
+        this.clubPlayers = (this.clubPlayers * 100) / this.data.length;
+        this.mobilePlayers = (this.mobilePlayers * 100) / this.data.length;
+        for (let items of this.dataMembers) {
+            if (items.x.toString().includes('Mar')) {
+                if (this.dataMembersA.length < 3 && items.y > 0) {
+                    this.dataMembersA.push(items.y);
+                }
+                this.thisMonth++;
+            } else if (items.x.toString().includes('Feb')) {
+                this.lastMonth++;
+                if (this.dataMembersB.length < 3 && items.y > 0) {
+
+                    this.dataMembersB.push(items.y);
+                }
+            } else if (items.x.toString().includes('Jan') || items.x.toString().includes('Dec') || items.x.toString().includes('Nov')) {
+                this.SecondLastMonth++;
+                if (this.dataMembersC.length < 3 && items.y > 0) {
+                    this.dataMembersC.push(items.y);
+                }
+                //  this.dataMembersC.push(items.y);
+
+            }
+
         }
         console.log(this.dataMembers);
     }
@@ -198,8 +326,8 @@ export class SignUpReportComponent implements OnInit {
                 axisBorder: {
                     show: false,
                 },
-                min: (min): number => min - 750,
-                max: (max): number => max + 250,
+                min: (min): number => min - 70,
+                max: (max): number => max + 70,
                 tickAmount: 5,
                 show: false,
             },
@@ -224,7 +352,7 @@ export class SignUpReportComponent implements OnInit {
                 colors: ['#38BDF8'],
                 opacity: 0.5,
             },
-            series: [],
+            series: this.seriesA,
             stroke: {
                 curve: 'smooth',
             },
@@ -234,7 +362,7 @@ export class SignUpReportComponent implements OnInit {
             },
             xaxis: {
                 type: 'category',
-                categories: [],
+                categories: this.MonthLabels,
             },
             yaxis: {
                 labels: {
@@ -262,7 +390,7 @@ export class SignUpReportComponent implements OnInit {
                 colors: ['#34D399'],
                 opacity: 0.5,
             },
-            series: [],
+            series: this.seriesB,
             stroke: {
                 curve: 'smooth',
             },
@@ -272,7 +400,7 @@ export class SignUpReportComponent implements OnInit {
             },
             xaxis: {
                 type: 'category',
-                categories: [],
+                categories: this.MonthLabels,
             },
             yaxis: {
                 labels: {
@@ -300,7 +428,7 @@ export class SignUpReportComponent implements OnInit {
                 colors: ['#FB7185'],
                 opacity: 0.5,
             },
-            series: [],
+            series: this.seriesC,
             stroke: {
                 curve: 'smooth',
             },
@@ -310,7 +438,7 @@ export class SignUpReportComponent implements OnInit {
             },
             xaxis: {
                 type: 'category',
-                categories: [],
+                categories: this.MonthLabels,
             },
             yaxis: {
                 labels: {
@@ -355,7 +483,7 @@ export class SignUpReportComponent implements OnInit {
             legend: {
                 show: false,
             },
-            series: [],
+            series: this._seriesE,
             stroke: {
                 curve: 'smooth',
                 width: 2,
@@ -397,61 +525,7 @@ export class SignUpReportComponent implements OnInit {
             },
         };
 
-        // New vs. returning
-        this.chartNewVsReturning = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#3182CE', '#63B3ED'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
+
 
         // Gender
         this.chartGender = {
@@ -471,7 +545,7 @@ export class SignUpReportComponent implements OnInit {
                 },
             },
             colors: ['#319795', '#4FD1C5'],
-            labels: [],
+            labels: this.genderLabels,
             plotOptions: {
                 pie: {
                     customScale: 0.9,
@@ -481,7 +555,7 @@ export class SignUpReportComponent implements OnInit {
                     },
                 },
             },
-            series: [],
+            series: this.seriesD,
             states: {
                 hover: {
                     filter: {
@@ -620,5 +694,6 @@ export class SignUpReportComponent implements OnInit {
                                                 </div>`,
             },
         };
+        this.showdata = Promise.resolve(true);
     }
 }
