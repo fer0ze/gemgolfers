@@ -34,6 +34,22 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListReport(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersListReport,
+                })
+                .subscribe(({ data }) => {
+                    console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getPlayersListByAdminCONGU(): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

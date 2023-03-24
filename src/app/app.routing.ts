@@ -200,6 +200,13 @@ export const appRoutes: Route[] = [
                 path: 'reports/players',
                 loadChildren: () =>
                     import(
+                        'app/modules/admin/reports/signUpReport/signUp-report.module'
+                    ).then((m) => m.SignUpReportModule),
+            },
+            {
+                path: 'reports/players',
+                loadChildren: () =>
+                    import(
                         'app/modules/admin/reports/golf-report/golf-report.module'
                     ).then((m) => m.GolfReportModule),
             },

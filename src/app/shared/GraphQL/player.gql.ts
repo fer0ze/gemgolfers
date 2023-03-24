@@ -36,6 +36,21 @@ export const GetPlayers = gql`
         }
     }
 `;
+export const getPlayersListReport = gql`
+    query PostsGetQuery {
+        player(
+            where: { firstName: { _neq: "" } }
+            order_by: { createdAt: desc }
+        ) {
+            id
+            playerCategory      
+            createdAt
+            membershipQL: membership {
+                suspended
+            }
+        }
+    }
+`;
 export const GetPlayersMerge = gql`
     query PostsGetQuery {
         player(
