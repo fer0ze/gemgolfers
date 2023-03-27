@@ -20,6 +20,7 @@ import { generate, map, Observable, startWith } from 'rxjs';
 })
 export class SignUpFormComponent implements OnInit {
     signUpForm: FormGroup;
+    tournamentQL:any;
     private tournamentID: string;
     playerCategories: PlayerCategory[] = [];
     filteredClubOptions: Observable<Club[]>;
@@ -37,6 +38,9 @@ export class SignUpFormComponent implements OnInit {
         });
 
         this.createForm();
+        let data= await this._facadeService.getTournamentByID(this.tournamentID);
+        console.log(data);
+        this.tournamentQL=data.tournament[0];
         this.playerCategories = this._facadeService.getPlayerCategories();
         let dataClubs = await this._facadeService.getClubList();
         this.golfClubs = dataClubs.club;
