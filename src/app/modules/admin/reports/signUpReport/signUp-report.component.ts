@@ -72,12 +72,12 @@ export class SignUpReportComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.showdata = Promise.resolve(true);
         this.fecthData();
+        this.showdata = Promise.resolve(true);
     }
 
     async fecthData() {
-        this.showdata = Promise.resolve(false);
+        // this.showdata = Promise.resolve(false);
         of(this.Players)
             .pipe()
             .subscribe(

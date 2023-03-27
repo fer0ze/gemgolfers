@@ -39,21 +39,17 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where:{
-                _and:[
-                { firstName: { _neq: "" } },
-                { firebaseUid: { _neq: "" } }
-            ] },
-            order_by: { createdAt: desc },
+            where: { firebaseUid: { _neq: "" } }
+            order_by: { createdAt: desc }
             limit:1000
+
         ) {
-            id
             firstName
             lastName
-            playerCategory      
+            email
             createdAt
             gender
-            AggregateQL:flights_played {      
+            AggregateQL: flights_played {
                 flightId
             }
         }
@@ -1108,11 +1104,7 @@ export const playerUpdatedHandicapWHSReport = gql`
     ${PlayerHandicapWhsQL}
 `;
 export const playerUpdatedHandicapWHSReportAdmin = gql`
-    query playerUpdatedHandicapReport(
-      
-        $fromDate: date!
-        $toDate: date!
-    ) {
+    query playerUpdatedHandicapReport($fromDate: date!, $toDate: date!) {
         player_handicap_whs(
             where: {
                 _and: [

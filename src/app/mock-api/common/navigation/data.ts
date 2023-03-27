@@ -222,6 +222,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:view-list',
                 link: '/tournaments',
             },
+            {
+                id: 'tournaments.leagues',
+                title: 'All Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:shield-check',
+                link: '/leagues',
+            },
         ],
     },
     // },
