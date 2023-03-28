@@ -6,6 +6,7 @@ import {
     ChangeDetectionStrategy,
     AfterViewInit,
     ChangeDetectorRef,
+    ElementRef,
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -19,10 +20,7 @@ import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { query } from '@angular/animations';
 import { MatDrawer } from '@angular/material/sidenav';
-import {
-    Constants,
-    UniqueIdGenerator,
-} from '../../../shared/classes/general';
+import { Constants, UniqueIdGenerator } from '../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from 'app/shared/models/player.model';
 
@@ -34,6 +32,7 @@ import { Player } from 'app/shared/models/player.model';
 })
 export class PlayersComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
+    @ViewChild('event') aName: ElementRef;
     drawerMode: 'side' | 'over';
     playersDataSource: MatTableDataSource<any>;
     searchInputControl: UntypedFormControl = new UntypedFormControl();
@@ -58,7 +57,9 @@ export class PlayersComponent implements OnInit {
     count: any = 0;
     showTable: Promise<any>;
     loggedInuser: Player;
-    TablePlayers: any=[];
+    TablePlayers: any = [];
+    sorting: any = '';
+    public name: any = '';
     //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
@@ -109,19 +110,22 @@ export class PlayersComponent implements OnInit {
                         this.Players = data.player;
                         for (let obj of this.Players) {
                             let newobj = {
-                              id: obj.id,
-                              Name: obj.firstName + " " + obj.lastName,
-                              Phone: obj.phone,
-                              Email: obj.email,
-                              Membership: obj.membershipNumber,
-                              Category: obj.playerCategory == 'Senior' ? 'Senior Amateurs': obj.playerCategory,
-                              Handicap: obj.handicap,
-                              Status:obj.membershipQL,
+                                id: obj.id,
+                                Name: obj.firstName + ' ' + obj.lastName,
+                                Phone: obj.phone,
+                                Email: obj.email,
+                                Membership: obj.membershipNumber,
+                                Category:
+                                    obj.playerCategory == 'Senior'
+                                        ? 'Senior Amateurs'
+                                        : obj.playerCategory,
+                                Handicap: obj.handicap,
+                                Status: obj.membershipQL,
                             };
                             this.TablePlayers.push(newobj);
-                          }
+                        }
                         this.playersDataSource = new MatTableDataSource(
-                          this.TablePlayers
+                            this.TablePlayers
                         );
                         this.playersDataSource.paginator = this.paginator;
                         this.playersDataSource.sort = this.sort;
@@ -137,18 +141,21 @@ export class PlayersComponent implements OnInit {
             console.log(data);
             for (let obj of this.Players) {
                 let newobj = {
-                  id: obj.id,
-                  Name: obj.firstName + " " + obj.lastName,
-                  Phone: obj.phone,
-                  Email: obj.email,
-                  Membership: obj.membershipNumber,
-                  Category: obj.playerCategory == 'Senior' ? 'Senior Amateurs': obj.playerCategory,
-                  Handicap: obj.handicap,
-                  Status:obj.membershipQL,
+                    id: obj.id,
+                    Name: obj.firstName + ' ' + obj.lastName,
+                    Phone: obj.phone,
+                    Email: obj.email,
+                    Membership: obj.membershipNumber,
+                    Category:
+                        obj.playerCategory == 'Senior'
+                            ? 'Senior Amateurs'
+                            : obj.playerCategory,
+                    Handicap: obj.handicap,
+                    Status: obj.membershipQL,
                 };
                 this.TablePlayers.push(newobj);
-              }
-           
+            }
+
             this.playersDataSource = new MatTableDataSource(this.TablePlayers);
             this.playersDataSource.paginator = this.paginator;
             this.playersDataSource.sort = this.sort;
@@ -182,8 +189,7 @@ export class PlayersComponent implements OnInit {
             this.snackBar.open('Player has been deleted.', 'x', {
                 duration: 5000,
             });
-            this.playersDataSource.data.splice(index,1);
-
+            this.playersDataSource.data.splice(index, 1);
         }
     }
     onBackdropClicked(): void {
@@ -224,8 +230,34 @@ export class PlayersComponent implements OnInit {
         doc.text('Leaderboard Scores:', 15, 15);
         doc.setFontSize(11);
         doc.setTextColor(100);
+        var sortarray = [...this.Players];
+        if (this.sorting == 'desc') {
+            if (this.name == 'Name') {
+                sortarray.sort(this.ComparatordscN);
+            } else if (this.name == 'Email') {
+                sortarray.sort(this.ComparatordscE);
+            } else if (this.name == 'Membership') {
+                sortarray.sort(this.ComparatordscM);
+            } else if (this.name == 'Category') {
+                sortarray.sort(this.ComparatordscC);
+            } else if (this.name == 'Handicap')  {
+                sortarray.sort(this.ComparatordscH);
+            }
+        } else if (this.sorting == 'asc') {
+            if (this.name == 'Name') {
+                sortarray.sort(this.ComparatorascN);
+            } else if (this.name == 'Email') {
+                sortarray.sort(this.ComparatorascE);
+            } else if (this.name == 'Membership') {
+                sortarray.sort(this.ComparatorascM);
+            } else if (this.name == 'Category') {
+                sortarray.sort(this.ComparatorascC);
+            } else  if (this.name == 'Handicap') {
+                sortarray.sort(this.ComparatorascH);
+            }
+        }
         let count = 0;
-        this.Players.forEach((element) => {
+        sortarray.forEach((element) => {
             count++;
             var temp = [
                 count,
@@ -257,6 +289,72 @@ export class PlayersComponent implements OnInit {
         });
 
         // Open PDF document in new tab
-        doc.save('KGC-Gemgolfers-Players.pdf');
+        doc.save('Club-Players.pdf');
+    }
+
+    public onSortChanged(e) {
+        this.sorting = e.direction;
+        this.name = e.active;
+    }
+
+    public ComparatordscN(a, b) {
+        if (a['firstName'] > b['firstName']) return -1;
+        if (a['firstName'] < b['firstName']) return 1;
+
+        return 0;
+    }
+    public ComparatorascN(a, b) {
+        if (a['firstName'] < b['firstName']) return -1;
+        if (a['firstName'] > b['firstName']) return 1;
+
+        return 0;
+    }
+    public ComparatordscE(a, b) {
+        if (a['email'] > b['email']) return -1;
+        if (a['email'] < b['email']) return 1;
+
+        return 0;
+    }
+    public ComparatorascE(a, b) {
+        if (a['email'] < b['email']) return -1;
+        if (a['email'] > b['email']) return 1;
+
+        return 0;
+    }
+    public ComparatordscM(a, b) {
+        if (a['membershipNumber'] > b['membershipNumber']) return -1;
+        if (a['membershipNumber'] < b['membershipNumber']) return 1;
+
+        return 0;
+    }
+    public ComparatorascM(a, b) {
+        if (a['membershipNumber'] < b['membershipNumber']) return -1;
+        if (a['membershipNumber'] > b['membershipNumber']) return 1;
+
+        return 0;
+    }
+    public ComparatordscC(a, b) {
+        if (a['playerCategory'] > b['playerCategory']) return -1;
+        if (a['playerCategory'] < b['playerCategory']) return 1;
+
+        return 0;
+    }
+    public ComparatorascC(a, b) {
+        if (a['playerCategory'] < b['playerCategory']) return -1;
+        if (a['playerCategory'] > b['playerCategory']) return 1;
+
+        return 0;
+    }
+    public ComparatordscH(a, b) {
+        if (a['handicap'] > b['handicap']) return -1;
+        if (a['handicap'] < b['handicap']) return 1;
+
+        return 0;
+    }
+    public ComparatorascH(a, b) {
+        if (a['handicap'] < b['handicap']) return -1;
+        if (a['handicap'] > b['handicap']) return 1;
+
+        return 0;
     }
 }

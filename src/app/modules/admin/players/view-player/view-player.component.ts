@@ -489,7 +489,7 @@ export class ViewPlayerComponent implements OnInit {
 
             let dataMembersG: any[] = [];
             let dataMembersN: any[] = [];
-            for (let obj of newScore) {
+            for (let obj of newScores) {
                 dataMembersG.push({
                     x: new Date(obj.date),
                     y: obj.gross,
@@ -566,57 +566,100 @@ export class ViewPlayerComponent implements OnInit {
             this.chartVisitors = {
                 chart: {
                     animations: {
-                        enabled: false,
+                        speed: 400,
+                        animateGradually: {
+                            enabled: false,
+                        },
                     },
                     fontFamily: 'inherit',
                     foreColor: 'inherit',
+                    width: '100%',
                     height: '100%',
                     type: 'area',
-                    sparkline: {
-                        enabled: true,
+                    toolbar: {
+                        show: false,
+                    },
+                    zoom: {
+                        enabled: false,
                     },
                 },
-                colors: ['#94A3B8', '#94A3B8'],
+                colors: ['#818CF8','#38BDF8'],
                 dataLabels: {
                     enabled: false
                 },
                 fill: {
-                    colors: ['#94A3B8', '#94A3B8'],
-                    opacity: 0.5
+                    colors: ['#312E81'],
                 },
 
                 series: this._series,
                 stroke: {
-                    curve: 'smooth',
+                    width: 2,
                 },
                 grid: {
-                    show: false,
+                    show: true,
+                    borderColor: '#334155',
                     padding: {
-                        bottom: -40,
+                        top: 10,
+                        bottom: 0,
                         left: 0,
-                        right: 0
-                    }
+                        right: 0,
+                    },
+                    position: 'back',
+                    xaxis: {
+                        lines: {
+                            show: true,
+                        },
+                    },
                 },
                 tooltip: {
                     followCursor: true,
                     theme: 'dark',
+                    x: {
+                        format: 'MMM dd, yyyy',
+                    },
+                    y: {
+                        formatter: (value: number): string => `${value}`,
+                    },
                 },
-                xaxis: {
-                    type: 'category',
-                    categories: this._labels,
-                    labels: {
-                        offsetY: -20,
-                        rotate: 0,
-                        style: {
-                            colors: 'var(--fuse-text-secondary)'
+                xaxis     : {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks : {
+                        show: false
+                    },
+                    crosshairs: {
+                        stroke: {
+                            color    : '#475569',
+                            dashArray: 0,
+                            width    : 2
                         }
                     },
-                },
-                yaxis: {
-                    labels: {
-                        formatter: (val): string => val.toString(),
+                    labels    : {
+                        offsetY: 0,
+                        style  : {
+                            colors: '#CBD5E1'
+                        }
                     },
+                    tickAmount: 20,
+                    tooltip   : {
+                        enabled: false
+                    },
+                    type      : 'datetime'
                 },
+                yaxis     : {
+                    axisTicks : {
+                        show: false
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    min       : (min): number => min - 5,
+                    max       : (max): number => max + 20 ,
+                    tickAmount: 5,
+                    
+                    show      : false
+                }
             };
         } else {
             this.location.back();

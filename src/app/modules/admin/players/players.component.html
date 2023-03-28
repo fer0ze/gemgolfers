@@ -93,6 +93,8 @@
                     mat-table
                     matSort
                     [dataSource]="playersDataSource"
+                    (matSortChange)="onSortChanged($event)"
+                    #event
                 >
                     <!-- Serial -->
 

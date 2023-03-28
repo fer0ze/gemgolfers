@@ -135,6 +135,7 @@ export class TournamentsComponent implements OnInit {
                 );
             this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
             console.log(this.Tournaments);
+            this.copiedcompletedTournaments = this.Tournaments;
             this.dataSource = new MatTableDataSource(this.Tournaments);
             //console.log("change source");
             this.dataSource.paginator = this.paginator;
@@ -148,6 +149,7 @@ export class TournamentsComponent implements OnInit {
                 );
 
             this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+            this.copiedcompletedTournaments = this.Tournaments;
             this.isIncompletedLoading = false;
             this.isLoading = false;
             console.log(this.Tournaments);
@@ -200,6 +202,8 @@ export class TournamentsComponent implements OnInit {
     }
     filterByQuery(query) {
         console.log(query);
+        console.log(this.copiedcompletedTournaments);
+        
         if (query.length > 3) {
             this.Tournaments = this.Tournaments.filter((obj) => {
                 return obj.title
