@@ -216,19 +216,24 @@ export class MainLeaderboardComponent implements OnInit {
                             this.Leaderboard.CategoriesQL.sort(
                                 this.sortCategory
                             );
+                            if (!this.selectedCategoryValue) {
+                                this.updateCategoryNames();
+                            }
                             let count = 0;
                             if (this.Leaderboard.CategoriesQL.length > 0) {
-                                this.selectedCategory =
-                                    this.Leaderboard.CategoriesQL.find((a) => {
-                                        this.selectedIndex = count;
-                                        count++;
+                                if (!this.selectedCategoryValue) {
+                                    this.selectedCategory =
+                                        this.Leaderboard.CategoriesQL.find(
+                                            (a) => {
+                                                this.selectedIndex = count;
+                                                count++;
 
-                                        return a.default == true;
-                                    });
-
-                                if (!this.selectedCategoryValue)
+                                                return a.default == true;
+                                            }
+                                        );
                                     this.selectedCategoryValue =
                                         this.selectedCategory.category;
+                                }
                             }
 
                             if (this.loggedInUser && this.loggedInUser.userRole)
@@ -259,7 +264,6 @@ export class MainLeaderboardComponent implements OnInit {
 
                             this.parseSubscriptionResponse(this.Leaderboard);
 
-                            this.updateCategoryNames();
                             //resolve(data);
                         }
                     });
@@ -267,8 +271,8 @@ export class MainLeaderboardComponent implements OnInit {
     }
     private parseSubscriptionResponse(data: any): boolean {
         this.catRound = 1;
-        this.roundCheck=false;
-        this.roundCheck3=false;
+        this.roundCheck = false;
+        this.roundCheck3 = false;
         if (data == null) {
             return false;
         }
@@ -963,13 +967,15 @@ export class MainLeaderboardComponent implements OnInit {
 
         // if (status && this.activeRound > 1) return false;
         //console.log(this.allMatchResults);
-
+        let flag: boolean = true;
+        let trueRound = round;
         console.log(round);
         // this.catRound=round;
         if (round == 1) {
             this.catRound = 1000;
         }
         if (this.catRound == 1) {
+            flag = false;
             if (round == 2) {
                 this.roundCheck = true;
                 round = 1;
@@ -1086,8 +1092,13 @@ export class MainLeaderboardComponent implements OnInit {
             leaderNet.score;
         this.allMatchResults[leaderGross.playerId]['points' + round] =
             leaderGross.points;
-        this.allMatchResults[leaderGross.playerId]['holes' + round] =
-            leaderGross.holes;
+        if (!flag) {
+            this.allMatchResults[leaderGross.playerId]['holes' + trueRound] =
+                leaderGross.holes;
+        } else {
+            this.allMatchResults[leaderGross.playerId]['holes' + round] =
+                leaderGross.holes;
+        }
         this.allMatchResults[leaderGross.playerId]['completed' + round] =
             leaderGross.completed;
         this.allMatchResults[leaderGross.playerId]['holeScoreLast9'] =
@@ -1752,6 +1763,8 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     changeCategory(item) {
+        console.log('TAb Changes');
+
         this.activeRound = this.Leaderboard.activeRound;
         if (this.flightRound == 0) {
             this.selectedCategory = null;
@@ -3231,6 +3244,7 @@ export class MainLeaderboardComponent implements OnInit {
                 categoryNames.push(this.getTitle(c, 2));
             }
         }
+
         return categoryNames;
     }
 

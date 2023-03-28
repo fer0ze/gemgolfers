@@ -2052,6 +2052,7 @@ export class AddTournamentComponent implements OnInit {
                 flightSettings: this.checkDate(
                     this.formArray.get([0]).value.clubctgies[index]
                 ),
+                default:true,
                 //flightSettings: null,
             };
             console.log(tc);

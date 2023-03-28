@@ -190,16 +190,6 @@ export class HandicapsComponent implements OnInit {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-    updatePlayer(id: string): void {
-        this.location.navigate(['./', id], {
-            relativeTo: this._activatedRoute,
-        });
-        // });
-        // Go to the new contact
-
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-    }
 
     syncHandicapCongu() {
         console.log(this.dataPlayers.player);

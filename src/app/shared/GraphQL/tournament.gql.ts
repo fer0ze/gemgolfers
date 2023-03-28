@@ -27,7 +27,12 @@ import {
 export const LeaderboardSubscription = gql`
     subscription LeaderboardSimpleSubscription($tournamentPrefix: String!) {
         TournamentQL: tournament(
-            where: { prefix: { _eq: $tournamentPrefix } }
+            where: {
+                _or: [
+                    { id: { _eq: $tournamentPrefix } }
+                    { prefix: { _eq: $tournamentPrefix } }
+                ]
+            }
         ) {
             cutOffCriteria
             activeRound
@@ -231,20 +236,17 @@ export const getLeageLeaderBoards = gql`
                 name
                 points
             }
-           
         }
     }
 `;
 export const getLeagueName = gql`
     query getLeagues($leagueId: String!) {
-        LeaderBoardQL: league(
-            where: { id: { _eq: $leagueId } }
-        ) {
+        LeaderBoardQL: league(where: { id: { _eq: $leagueId } }) {
             id
             name
-            members{
+            members {
                 playerId
-                player{
+                player {
                     handicap
                 }
             }
