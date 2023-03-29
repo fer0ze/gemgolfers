@@ -50,7 +50,7 @@ export class AddDailyRoundComponent implements OnInit {
   currentPlayer: any = [];
   clubID: any;
   currentDate: Date;
-  public selectedTime = "08:00";
+  public selectedTime = '08:00';
   membersColumns: string[] = ["name", "handicap", "category", "tee", "delete"];
   last: boolean = false;
   loggedInuser: Player;
@@ -72,7 +72,7 @@ export class AddDailyRoundComponent implements OnInit {
   courseHoleSetNames;
   membersSource: MatTableDataSource<Player>;
   isLoading = true;
-
+  drawerMode: 'over' | 'side' = 'side';
   @ViewChild(MatPaginator) Mempaginator: MatPaginator;
   @ViewChild("msort") Memsort: MatSort;
 
@@ -125,7 +125,7 @@ export class AddDailyRoundComponent implements OnInit {
     this.starterForm = new FormGroup({
       holeSets: new FormControl("", [Validators.required]),
       //startingHole: new FormControl('', [Validators.required]),
-      startingTime: new FormControl("08:00 AM", [Validators.required]),
+      startingTime: new FormControl('09:00', [Validators.required]),
       roundTee: new FormControl("", [Validators.required]),
       roundDate: new FormControl(
         this.datepipe.transform(this.currentDate.toString(), "yyyy-MM-dd"),
@@ -330,6 +330,7 @@ export class AddDailyRoundComponent implements OnInit {
       this.currentTournament = tournament;
       //this.router.navigate(["/daily-rounds"]);
           this.starterForm.reset();
+          this.membersSource=null;
       //this.router.navigate(["/daily-rounds/"]);
     }
   }

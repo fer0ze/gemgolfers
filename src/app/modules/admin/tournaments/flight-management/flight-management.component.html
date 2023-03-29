@@ -18,7 +18,11 @@
                 </div>
                 <ng-container>
                     <div *ngIf="selectedMembers.length > 0">
-                        <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
+                        <div
+                            cdkDropListGroup
+                            id="manageFlights"
+                            class="mx-32 m-4"
+                        >
                             <ng-container>
                                 <div
                                     class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
@@ -41,7 +45,10 @@
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                                 [floatLabel]="'always'"
                                             >
-                                            <span class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
+                                                <span
+                                                    class="text-base font-black text-gray-400 min-w-max"
+                                                    >Flight No:</span
+                                                >
                                                 <input
                                                     value="{{
                                                         items['flightNo']
@@ -52,7 +59,7 @@
                                                 />
                                             </mat-form-field>
                                         </ng-container>
-                                        <ng-container>
+                                        <!-- <ng-container>
                                             <mat-form-field
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                                 [floatLabel]="'always'"
@@ -69,7 +76,7 @@
                                                     #query
                                                 />
                                             </mat-form-field>
-                                        </ng-container>
+                                        </ng-container> -->
                                         <ng-container>
                                             <mat-form-field
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
@@ -111,7 +118,10 @@
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                                 [floatLabel]="'always'"
                                             >
-                                            <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                                <span
+                                                    class="text-base font-black text-gray-400 min-w-max"
+                                                    >Tee:</span
+                                                >
                                                 <input
                                                     id="flight_{{ j }}_hole"
                                                     value="{{
@@ -146,22 +156,43 @@
                                                 />
                                             </mat-form-field>
                                         </ng-container>
-                                        <button
-                                            mat-raised-button
-                                            color="primary"
-                                            color="primary"
-                                            (click)="editFlight(items.id, i)"
-                                        >
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:pencil-alt'
+                                        <div class="flex">
+                                            <button
+                                                mat-raised-button
+                                                color="primary"
+                                                color="primary"
+                                                (click)="
+                                                    editFlight(items.id, i)
                                                 "
-                                            ></mat-icon>
-                                            <span class="ml-2"
-                                                >Add New Member</span
                                             >
-                                        </button>
+                                                <mat-icon
+                                                    class="icon-size-5"
+                                                    [svgIcon]="
+                                                        'heroicons_solid:pencil-alt'
+                                                    "
+                                                ></mat-icon>
+                                                <span class="ml-2"
+                                                    >Add New Member</span
+                                                >
+                                            </button>
+                                            <span
+                                                class="flex items-center px-1 cursor-pointer"
+                                                *ngIf="items.length == 0"
+                                            >
+                                                <mat-icon
+                                                    aria-hidden="false"
+                                                    aria-label="Dragable"
+                                                    color="warn"
+                                                    (click)="
+                                                        deleteEmptyFlight(
+                                                            items.id,
+                                                            i
+                                                        )
+                                                    "
+                                                    >delete_forever</mat-icon
+                                                >
+                                            </span>
+                                        </div>
                                     </div>
                                     <div
                                         cdkDropList
@@ -360,24 +391,14 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                <span class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Flight No:</span
+                                    >
                                     <input
                                         value="{{ items['flightNo'] }}"
                                         id="flight_{{ j }}_number"
                                         matInput
-                                        #query
-                                    />
-                                </mat-form-field>
-
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                <span class="text-base font-black text-gray-400 min-w-max">Category Round:</span>
-                                    <input
-                                        value="{{ items['categoryRound'] }}"
-                                        matInput
-                                        id="flight_{{ j }}_catnumber"
                                         #query
                                     />
                                 </mat-form-field>
@@ -413,7 +434,10 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Tee:</span
+                                    >
                                     <input
                                         id="flight_{{ j }}_hole"
                                         value="{{ items['startingHole'] }}"
@@ -439,18 +463,36 @@
                                         #query
                                     />
                                 </mat-form-field>
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    color="primary"
-                                    (click)="editFlight(items.id, i)"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:add-member'"
-                                    ></mat-icon>
-                                    <span class="ml-2">Add New Member</span>
-                                </button>
+                                <div class="flex">
+                                    <button
+                                        mat-raised-button
+                                        color="primary"
+                                        color="primary"
+                                        (click)="editFlight(items.id, i)"
+                                    >
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="
+                                                'heroicons_solid:add-member'
+                                            "
+                                        ></mat-icon>
+                                        <span class="ml-2">Add New Member</span>
+                                    </button>
+                                    <span
+                                        class="flex items-center px-1 cursor-pointer"
+                                        *ngIf="items.length == 0"
+                                    >
+                                        <mat-icon
+                                            aria-hidden="false"
+                                            aria-label="Dragable"
+                                            color="warn"
+                                            (click)="
+                                                deleteEmptyFlight(items.id, i)
+                                            "
+                                            >delete_forever</mat-icon
+                                        >
+                                    </span>
+                                </div>
                                 <!-- <span
                             ><input
                                 style="width: 24px"
@@ -671,24 +713,14 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                <span class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Flight No:</span
+                                    >
                                     <input
                                         value="{{ items['flightNo'] }}"
                                         id="flight_{{ j }}_number"
                                         matInput
-                                        #query
-                                    />
-                                </mat-form-field>
-
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                <span class="text-base font-black text-gray-400 min-w-max">Category Round:</span>
-                                    <input
-                                        value="{{ items['categoryRound'] }}"
-                                        matInput
-                                        id="flight_{{ j }}_catnumber"
                                         #query
                                     />
                                 </mat-form-field>
@@ -724,7 +756,10 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Tee:</span
+                                    >
                                     <input
                                         id="flight_{{ j }}_hole"
                                         value="{{ items['startingHole'] }}"
@@ -750,21 +785,38 @@
                                         #query
                                     />
                                 </mat-form-field>
-
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    color="primary"
-                                    (click)="editFlight(items.id, i)"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:add-member'"
-                                    ></mat-icon>
-                                    <span class="ml-2 text-gay-900"
-                                        >Add New Member</span
+                                <div class="flex">
+                                    <button
+                                        mat-raised-button
+                                        color="primary"
+                                        color="primary"
+                                        (click)="editFlight(items.id, i)"
                                     >
-                                </button>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="
+                                                'heroicons_solid:add-member'
+                                            "
+                                        ></mat-icon>
+                                        <span class="ml-2 text-gay-900"
+                                            >Add New Member</span
+                                        >
+                                    </button>
+                                    <span
+                                        class="flex items-center px-1 cursor-pointer"
+                                        *ngIf="items.length == 0"
+                                    >
+                                        <mat-icon
+                                            aria-hidden="false"
+                                            aria-label="Dragable"
+                                            color="warn"
+                                            (click)="
+                                                deleteEmptyFlight(items.id, i)
+                                            "
+                                            >delete_forever</mat-icon
+                                        >
+                                    </span>
+                                </div>
 
                                 <!-- <span
                             ><input
@@ -986,24 +1038,14 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                <span class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Flight No:</span
+                                    >
                                     <input
                                         value="{{ items['flightNo'] }}"
                                         id="flight_{{ j }}_number"
                                         matInput
-                                        #query
-                                    />
-                                </mat-form-field>
-
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                <span class="text-base font-black text-gray-400 min-w-max">Category Round:</span>
-                                    <input
-                                        value="{{ items['categoryRound'] }}"
-                                        matInput
-                                        id="flight_{{ j }}_catnumber"
                                         #query
                                     />
                                 </mat-form-field>
@@ -1039,7 +1081,10 @@
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
                                 >
-                                    <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Tee:</span
+                                    >
                                     <input
                                         id="flight_{{ j }}_hole"
                                         value="{{ items['startingHole'] }}"
@@ -1065,19 +1110,36 @@
                                         #query
                                     />
                                 </mat-form-field>
-
-                                <button
-                                    mat-raised-button
-                                    color="primary"
-                                    color="primary"
-                                    (click)="editFlight(items.id, i)"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:add-member'"
-                                    ></mat-icon>
-                                    <span class="ml-2">Add New Member</span>
-                                </button>
+                                <div class="flex">
+                                    <button
+                                        mat-raised-button
+                                        color="primary"
+                                        color="primary"
+                                        (click)="editFlight(items.id, i)"
+                                    >
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="
+                                                'heroicons_solid:add-member'
+                                            "
+                                        ></mat-icon>
+                                        <span class="ml-2">Add New Member</span>
+                                    </button>
+                                    <span
+                                        class="flex items-center px-1 cursor-pointer"
+                                        *ngIf="items.length == 0"
+                                    >
+                                        <mat-icon
+                                            aria-hidden="false"
+                                            aria-label="Dragable"
+                                            color="warn"
+                                            (click)="
+                                                deleteEmptyFlight(items.id, i)
+                                            "
+                                            >delete_forever</mat-icon
+                                        >
+                                    </span>
+                                </div>
 
                                 <!-- <span
                             ><input

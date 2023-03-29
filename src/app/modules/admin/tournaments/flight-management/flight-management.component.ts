@@ -719,11 +719,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         document.getElementById('flight_' + index + '_number')
                     )).value
                 );
-                let categoryFlight = parseFloat(
-                    (<HTMLInputElement>(
-                        document.getElementById('flight_' + index + '_catnumber')
-                    )).value
-                );
+                // let categoryFlight = parseFloat(
+                //     (<HTMLInputElement>(
+                //         document.getElementById('flight_' + index + '_catnumber')
+                //     )).value
+                // );
 
                 if (this.showTeams) {
                     this.teamName = (<HTMLInputElement>(
@@ -773,7 +773,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             ? roundFlightData[0].courseHoleSets
                             : 0,
                     flightNo: flightNumber,
-                    categoryRound: categoryFlight,
+                    categoryRound: 1,
                     flightRound: this.flightRound,
                     startingHole: startingHole,
                     tee:
@@ -939,10 +939,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         } else {
             console.log(false);
 
-            save = <boolean>await this.facadeService.SaveTournamentFlight(
-                this.tournamentInfo[0].id,
-                tournamentFlights,
-                flightMembersToSave
+            save = <boolean>(
+                await this.facadeService.SaveTournamentFlight(
+                    this.tournamentInfo[0].id,
+                    tournamentFlights,
+                    flightMembersToSave
+                )
             );
         }
         this.newFlights = [];
@@ -1344,6 +1346,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         });
 
         //console.log(tournamentFlights);
+    }
+    deleteEmptyFlight(id, index) {
+        console.log(id);
+        console.log(index);
+        console.log(this.selectedMembers);
+        let find = this.selectedMembers.find((a) => {
+            return a['id'] == id;
+        });
+        console.log(find);
+        console.log(this.selectedMembers.indexOf(find));
+        let num = this.selectedMembers.indexOf(find);
+        if (num) this.selectedMembers.splice(num, 1);
     }
     editFlight(id, index) {
         console.log(index);

@@ -2232,7 +2232,9 @@ export class ViewTournamentComponent implements OnInit {
         this.router.navigate(['/matchplay/' + this.tournamentID]);
     }
     viewsignupform(){
-        this.router.navigate(['/signUpForm/' + this.tournamentID]);
+        let url = this.router.createUrlTree(['/signUpForm/' + this.tournamentID]);
+        window.open(url.toString(), '_blank');
+        
     }
 
     redirectToflightManagement() {

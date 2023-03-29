@@ -3,9 +3,8 @@ table {
     overflow-x: auto;
     overflow-y: hidden;
     min-width: 500px;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
+    border-spacing: unset;
+    border-collapse: collapse;
 }
 
 

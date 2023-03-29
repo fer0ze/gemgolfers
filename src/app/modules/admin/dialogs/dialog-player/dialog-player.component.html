@@ -1,75 +1,88 @@
-<mat-card>
-    <div mat-dialog-content>Search Player:</div>
+<div mat-dialog-content>Search Player:</div>
 
-    <div class="flex flex-row m-5">
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-            <input matInput id="fullName" placeholder="Enter Name" />
-        </mat-form-field>
-        <!-- <mat-form-field>
+<div class="flex flex-row m-5">
+    <mat-form-field class="fuse-mat-no-subscript w-full">
+        <input matInput id="fullName" placeholder="Enter Name" />
+    </mat-form-field>
+    <!-- <mat-form-field>
     <input matInput id="lastName" placeholder="Last Name" />
   </mat-form-field> -->
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-            <input matInput id="handicap" placeholder="Handicap" />
-        </mat-form-field>
-        <button class="w-40" mat-raised-button (click)="getPlayerInformationByName()">
-           Search
-        </button>
-    </div>
-    <div class="flex flex-row m-5">
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-            <input matInput id="gemid" placeholder="by GEMID" />
-        </mat-form-field>
-        <button class="w-40" mat-raised-button (click)="getPlayerInformationByGEMID()">
-           Search
-        </button>
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-            <input matInput id="phone" placeholder="by phone" />
-        </mat-form-field>
-        <button class="w-40" mat-raised-button (click)="getPlayerInformationByPhone()">
-           Search
-        </button>
-    </div>
-    <div class="flex flex-row m-5">
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-            <input matInput id="email" placeholder="by email" required />
-        </mat-form-field>
-        <button class="w-40" mat-raised-button (click)="getPlayerInformationByEmail()">
-           Search
-        </button>
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-            <input
-                matInput
-                id="membershipNumber"
-                placeholder="by membershipNo"
-                required
-            />
-        </mat-form-field>
-        <button class="w-40"
-            mat-raised-button
-            (click)="getPlayerInformationByMembershipNumber()"
-        >
-           Search
-        </button>
-    </div>
-
-    <mat-form-field *ngIf="data.flights > 0">
-        <mat-label>Move to Flight</mat-label>
-        <mat-select (selectionChange)="changeFlight($event)">
-            <mat-option
-                *ngFor="let flight of totalFlights"
-                [value]="flight.Value"
-            >
-                {{ flight.Text }}
-            </mat-option>
-        </mat-select>
+    <mat-form-field class="fuse-mat-no-subscript w-full">
+        <input matInput id="handicap" placeholder="Handicap" />
     </mat-form-field>
-    <!-- <div id="plalyerInfoBox" *ngFor="let item of player">
+    <button
+        class="w-40"
+        mat-raised-button
+        (click)="getPlayerInformationByName()"
+    >
+        Search
+    </button>
+</div>
+<div class="flex flex-row m-5">
+    <mat-form-field class="fuse-mat-no-subscript w-full">
+        <input matInput id="gemid" placeholder="by GEMID" />
+    </mat-form-field>
+    <button
+        class="w-40"
+        mat-raised-button
+        (click)="getPlayerInformationByGEMID()"
+    >
+        Search
+    </button>
+    <mat-form-field class="fuse-mat-no-subscript w-full">
+        <input matInput id="phone" placeholder="by phone" />
+    </mat-form-field>
+    <button
+        class="w-40"
+        mat-raised-button
+        (click)="getPlayerInformationByPhone()"
+    >
+        Search
+    </button>
+</div>
+<div class="flex flex-row m-5">
+    <mat-form-field class="fuse-mat-no-subscript w-full">
+        <input matInput id="email" placeholder="by email" required />
+    </mat-form-field>
+    <button
+        class="w-40"
+        mat-raised-button
+        (click)="getPlayerInformationByEmail()"
+    >
+        Search
+    </button>
+    <mat-form-field class="fuse-mat-no-subscript w-full">
+        <input
+            matInput
+            id="membershipNumber"
+            placeholder="by membershipNo"
+            required
+        />
+    </mat-form-field>
+    <button
+        class="w-40"
+        mat-raised-button
+        (click)="getPlayerInformationByMembershipNumber()"
+    >
+        Search
+    </button>
+</div>
+
+<mat-form-field *ngIf="data.flights > 0">
+    <mat-label>Move to Flight</mat-label>
+    <mat-select (selectionChange)="changeFlight($event)">
+        <mat-option *ngFor="let flight of totalFlights" [value]="flight.Value">
+            {{ flight.Text }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<!-- <div id="plalyerInfoBox" *ngFor="let item of player">
   <span>Name: {{item?.firstName + " " + item?.lastName}}</span><br />
   <span>Handicap: {{item?.handicap}}</span><br />
   <span>Phone: {{item?.phone}}</span>
 </div> -->
-    <div class="example-container" *ngIf="this.showTable">
-        <!-- <div>
+<div class="example-container" *ngIf="this.showTable">
+    <!-- <div>
     <div>
       <mat-form-field appearance="outline">
         <input
@@ -81,107 +94,111 @@
       </mat-form-field>
     </div>
   </div> -->
-        <table mat-table [dataSource]="dataSource" matSort>
-            <!-- Serial Column -->
-            <!-- <ng-container matColumnDef="id">
+    <table mat-table [dataSource]="dataSource" matSort>
+        <!-- Serial Column -->
+        <!-- <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Sr. </th>
       <td mat-cell *matCellDef="let row; let i = index"> {{i + 1}} </td>
   </ng-container> -->
 
-            <!-- firstname Column -->
-            <ng-container matColumnDef="fullName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    fullName
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.fullName }}</td>
-            </ng-container>
+        <!-- firstname Column -->
+        <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>fullName</th>
+            <td mat-cell *matCellDef="let row">{{ row.fullName }}</td>
+        </ng-container>
 
-            <!-- lastname Column -->
-            <!-- <ng-container matColumnDef="lastName">
+        <!-- lastname Column -->
+        <!-- <ng-container matColumnDef="lastName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>lastName</th>
       <td mat-cell *matCellDef="let row">{{ row.fullName }}</td>
     </ng-container> -->
 
-            <!-- hanidcap Column -->
-            <ng-container matColumnDef="handicap">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    handicap
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.handicap }}</td>
-            </ng-container>
+        <!-- hanidcap Column -->
+        <ng-container matColumnDef="handicap">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>handicap</th>
+            <td mat-cell *matCellDef="let row">{{ row.handicap }}</td>
+        </ng-container>
 
-            <!-- phone Column -->
-            <ng-container matColumnDef="category">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Category
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.playerCategory =='Seniors' ? 'Senior Amateurs' :row.playerCategory }}</td>
-            </ng-container>
+        <!-- phone Column -->
+        <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+            <td mat-cell *matCellDef="let row">
+                {{
+                    row.playerCategory == "Seniors"
+                        ? "Senior Amateurs"
+                        : row.playerCategory
+                }}
+            </td>
+        </ng-container>
 
-            <!-- email Column -->
-            <!-- <ng-container matColumnDef="email">
+        <!-- email Column -->
+        <!-- <ng-container matColumnDef="email">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
     <td mat-cell *matCellDef="let row"> {{row.email}} </td>
   </ng-container> -->
 
-            <ng-container matColumnDef="membershipNo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    MembershipNo
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.membershipNumber }}</td>
-            </ng-container>
+        <ng-container matColumnDef="membershipNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                MembershipNo
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.membershipNumber }}
+            </td>
+        </ng-container>
 
-            <!-- email Column -->
-            <ng-container matColumnDef="club">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Club</th>
-                <td mat-cell *matCellDef="let row">
-                    <div *ngFor="let item of row.membership">
-                        {{ item.club.name }}
-                    </div>
-                </td>
-            </ng-container>
+        <!-- email Column -->
+        <ng-container matColumnDef="club">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Club</th>
+            <td mat-cell *matCellDef="let row">
+                <div *ngFor="let item of row.membership">
+                    {{ item.club.name }}
+                </div>
+            </td>
+        </ng-container>
 
-            <ng-container matColumnDef="select">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <mat-checkbox
-                        (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="
-                            selection.hasValue() && !isAllSelected()
-                        "
-                        [aria-label]="checkboxLabel()"
-                    >
-                    </mat-checkbox>
-                </th>
-                <td mat-cell *matCellDef="let row">
-                    <mat-checkbox
-                        (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)"
-                    >
-                    </mat-checkbox>
-                </td>
-            </ng-container>
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [aria-label]="checkboxLabel()"
+                >
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                    [aria-label]="checkboxLabel(row)"
+                >
+                </mat-checkbox>
+            </td>
+        </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            <!-- <tr
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <!-- <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       [ngClass]="{ selectedPlayer: selectedRowIndex == row.id }"
       (click)="selectPlayer(row)"
     ></tr>  -->
-        </table>
-        <mat-paginator
-            [pageSize]="50"
-            [pageSizeOptions]="[50, 100, 150]"
-        ></mat-paginator>
-    </div>
-    <div mat-dialog-actions class="flex justify-center my-2">
-        <button mat-raised-button (click)="onNoClick()">Cancel</button>
-        <button mat-raised-button color="primary" [mat-dialog-close]="response">
-            Add Player
-        </button>
-    </div>
-</mat-card>
+    </table>
+    <mat-paginator
+        [pageSize]="50"
+        [pageSizeOptions]="[50, 100, 150]"
+    ></mat-paginator>
+</div>
+<div mat-dialog-actions class="flex justify-center">
+    <button
+        mat-raised-button
+        color="primary"
+        [disabled]="response==null"
+        [mat-dialog-close]="response"
+    >
+        Save
+    </button>
+    <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
+</div>

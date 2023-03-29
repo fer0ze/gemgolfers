@@ -107,6 +107,7 @@ export const tournamentDashBoard = gql`
                 ]
             }
         ) {
+            id
             courseId
             title
             noOfRounds
@@ -135,6 +136,7 @@ export const tournamentDashBoard = gql`
             FlightsQL: flights(
                 order_by: [{ flightRound: asc }, { flightNo: asc }]
             ) {
+                id
                 flightRound
                 time
                 flightNo
@@ -1154,6 +1156,7 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
                         flightId
                     }
                     PlayerQL: player {
+                        id
                         playerCategory
                         firstName
                         lastName

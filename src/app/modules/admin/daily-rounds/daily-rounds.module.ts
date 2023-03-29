@@ -37,6 +37,7 @@ import { MatTimepickerModule } from 'mat-timepicker';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { DialogChangeCourseHoleSetComponent } from '../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 @NgModule({
   declarations: [DailyRoundsComponent, AddDailyRoundComponent, AddPlayerDailyScoreComponent, ViewDailyRoundComponent,DialogAddExisitingPlayerComponent,DialogChangeCourseHoleSetComponent],
   imports: [
@@ -57,7 +58,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatSelectModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    MatNativeDateModule,MatSidenavModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatStepperModule,
