@@ -29,8 +29,8 @@ import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import "jspdf-autotable";
-import * as jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
@@ -142,7 +142,8 @@ export class HandicapsComponent implements OnInit {
                         General.capitalizeFirstLetter(this.filterCategory)
                     );
             else {
-                this.dataPlayers = await this._facadeService.getPlayersListByAdminCONGU();
+                this.dataPlayers =
+                    await this._facadeService.getPlayersListByAdminCONGU();
                 console.log(this.dataPlayers);
 
                 // this.aggregate =
@@ -304,21 +305,22 @@ export class HandicapsComponent implements OnInit {
                     (element.handicap != null && element.handicap > 0)
                 ) {
                     count++;
+                    let hand: any = element.handicap;
+                    if (element.handicapQL.length > 0) {
+                        if (
+                            element.handicap !==
+                            element.handicapQL[element.handicapQL.length - 1]
+                                .handicap
+                        ) {
+                            hand = '*' + element.handicap;
+                        }
+                    }
                     var temp = [
                         count,
                         element.membershipNumber,
                         element.firstName + ' ' + element.lastName,
-                        element.handicapQL.length > 0
-                            ? element.handicapQL[element.handicapQL.length - 1]
-                                  .handicap
-                            : element.handicap,
-                        element.handicapQL.length > 0
-                            ? Math.round(
-                                  element.handicapQL[
-                                      element.handicapQL.length - 1
-                                  ].handicap
-                              )
-                            : Math.round(element.handicap),
+                        hand,
+                        Math.round(element.handicap),
                     ];
                     rows.push(temp);
                 }

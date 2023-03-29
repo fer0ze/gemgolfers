@@ -793,6 +793,9 @@ export class FacadeService {
   singleRoundFlightQuery(flightId: string) {
     return this.flightsService.singleRoundFlightQuery(flightId);
   }
+  undoFlightHandicap(flightId: string) {
+    return this.flightsService.undoFlightHandicap(flightId);
+  }
   private _teeTimeService: TeeTimeService;
 
   public get TeeTimeService(): TeeTimeService {

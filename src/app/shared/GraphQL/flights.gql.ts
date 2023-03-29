@@ -489,3 +489,13 @@ export const singleRoundFlightQueryQL = gql`
     }
   }
 `;
+export const undoFlightHandicapQL = gql`
+  mutation ClubSingleRoundFlightQuery($flightId: String!) {
+    flightEndedQl: update_flight(
+      where: { id: { _eq: $flightId } }
+      _set: { ended: false }
+    ) {
+      AffectedRowsQLi: affected_rows
+    }
+  }
+`;

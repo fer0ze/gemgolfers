@@ -313,8 +313,8 @@ export const getPlayersListByClubCONGU = gql`
             email
             membershipNumber
             handicapQL: handicap_history(
-                order_by: { updatedAt: desc }
-                limit: 1
+                order_by: [{ tournament: { startDate: desc } }] 
+            limit:1
             ) {
                 handicap
                 oldHandicap
@@ -339,8 +339,8 @@ export const getPlayersListByAdminCONGU = gql`
             email
             membershipNumber
             handicapQL: handicap_history(
-                order_by: { updatedAt: desc }
-                limit: 1
+                order_by: [{ tournament: { startDate: desc } }]
+             
             ) {
                 handicap
                 oldHandicap

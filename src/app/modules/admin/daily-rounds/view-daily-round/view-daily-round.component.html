@@ -150,11 +150,25 @@
                         <!-- <label *ngIf="flight.ended"
                             >Handicap has been calculated for this round.</label
                         > -->
-                        
-                            <span class="mat-button-wrapper btn-styl"
-                                >Handicap Calculated</span
-                            >
-                        
+
+                        <span
+                            *ngIf="flight.ended"
+                            class="mat-button-wrapper btn-styl"
+                            >Handicap Calculated</span
+                        >
+                        <span
+                            *ngIf="flight.ended"
+                            title="Undo Handicap"
+                            class="mat-button-wrapper icon-styl cursor-pointer"
+                            ><mat-icon
+                                (click)="UndoFlightHandicap(flight.flightId)"
+                                class="mat-icon material-icons"
+                                matsuffix=""
+                                aria-hidden="true"
+                                >settings_backup_restore</mat-icon
+                            ></span
+                        >
+
                         <a
                             mat-mini-fab
                             color="primary"

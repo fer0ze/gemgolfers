@@ -35,6 +35,18 @@
   border-radius: 18px;
   font-weight: 700;
 }
+.icon-styl{
+  background: red;
+    color: white;
+    padding: 8px;
+    margin: 3px;
+    border-radius: 22px;
+    mat-icon{
+      padding-top: 14px;
+      /* padding: 34px; */
+      color: white
+    }
+}
 table {
   width: 100%;
   overflow-x: auto;
