@@ -11,6 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
@@ -24,6 +25,8 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { GolfReportComponent } from './golf-report.component';
+import { UserDetailsDilogueComponent } from '../../dialogs/dialog-user-details/user-details-dilogue.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 const dailystarterStatsRoutes: Route[] = [
     {
@@ -33,8 +36,9 @@ const dailystarterStatsRoutes: Route[] = [
 ];
 
 @NgModule({
-    declarations: [GolfReportComponent],
+    declarations: [GolfReportComponent, UserDetailsDilogueComponent],
     imports: [
+        CommonModule,
         RouterModule.forChild(dailystarterStatsRoutes),
         MatButtonModule,
         MatButtonToggleModule,
@@ -43,6 +47,7 @@ const dailystarterStatsRoutes: Route[] = [
         MatMenuModule,
         MatFormFieldModule,
         MatProgressBarModule,
+        MatDialogModule,
         MatRippleModule,
         MatNativeDateModule,
         MatSelectModule,
@@ -60,6 +65,7 @@ const dailystarterStatsRoutes: Route[] = [
         MatInputModule,
         MatDatepickerModule,
     ],
+    entryComponents: [UserDetailsDilogueComponent],
     providers: [DatePipe],
 })
 export class GolfReportModule {}

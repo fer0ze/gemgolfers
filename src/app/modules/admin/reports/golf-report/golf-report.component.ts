@@ -17,6 +17,7 @@ import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 // import { UserDetailsDilogueComponent } from "../../material-components/user-details-dilogue/user-details-dilogue.component";
 import { MatDialog } from '@angular/material/dialog';
+import { UserDetailsDilogueComponent } from '../../dialogs/dialog-user-details/user-details-dilogue.component';
 @Component({
     selector: 'app-golf-report',
     templateUrl: './golf-report.component.html',
@@ -165,27 +166,27 @@ export class GolfReportComponent implements OnInit {
     redirectToHandicapDetails = (id: string) => {
         console.log(id);
 
-        // if (id) {
-        //   const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
-        //     width: "600px",
-        //     data: {
-        //       id: id,
-        //       from: this.formdate,
-        //       to: this.toDate,
-        //     },
-        //   });
-        //   console.log(id);
+        if (id) {
+          const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
+            width: "600px",
+            data: {
+              id: id,
+              from: this.formdate,
+              to: this.toDate,
+            },
+          });
+          console.log(id);
 
-        //   dialogRef.afterClosed().subscribe((result) => {
-        //     if (result) {
-        //       //console.log("record deleted.");
-        //       //this.delete(id);
-        //       //this.ngOnInit();
-        //     } else {
-        //       //console.log("cancel delete action");
-        //     }
-        //   });
-        // }
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+              //console.log("record deleted.");
+              //this.delete(id);
+              //this.ngOnInit();
+            } else {
+              //console.log("cancel delete action");
+            }
+          });
+        }
     };
 
     applyFilter(filterValue: string) {

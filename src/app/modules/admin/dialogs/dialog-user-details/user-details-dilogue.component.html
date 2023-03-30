@@ -1,0 +1,65 @@
+<div mat-dialog-content>
+  <div style="text-align: right; color: red; cursor: pointer">
+    <mat-icon
+      aria-hidden="false"
+      aria-label="Dragable"
+      class="remove"
+      (click)="downloadAsPDFCongu()"
+      >picture_as_pdf</mat-icon
+    >
+  </div>
+  <table id="pdfTable" mat-table [dataSource]="dataSource" matSort>
+    <!-- Phone Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Sr.</th>
+      <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+      <td mat-cell *matCellDef="let row">{{ row["date"] }}</td>
+    </ng-container>
+
+    <!-- Old Handicap Column -->
+    <ng-container matColumnDef="playingHandicapCongu">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Playing Handicap
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row["members"][0] ? row["members"][0].playingHandicap : "-" }}
+      </td>
+    </ng-container>
+
+    <!-- Updated At Column -->
+    <ng-container matColumnDef="playingHandicapWHS">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Playing HandicapWHS
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row["members"][0] ? row["members"][0].playingHandicapWhs : "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="playingTee">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Playing Tee</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row["members"][0].playingTee ? row["members"][0].playingTee : "-" }}
+      </td>
+    </ng-container>
+
+    <!-- Updated Score -->
+    <!-- <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Score </th>
+        <td mat-cell *matCellDef="let row"> {{row.score}} </td>
+      </ng-container> -->
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSize]="20"
+    [pageSizeOptions]="[20, 30, 40, 50]"
+  ></mat-paginator>
+  <!-- <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100, 150]"></mat-paginator> -->
+</div>
