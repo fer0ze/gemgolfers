@@ -128,15 +128,13 @@ export class FlightsService {
                 );
         });
     }
-    public SaveRoundFlight(  
-        flightsToSave: any,
-    ): Promise<any> {
+    public SaveRoundFlight(flightsToSave: any): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.SaveRoundFlightsMutation,
                     variables: {
-                        flightsToSave: flightsToSave,     
+                        flightsToSave: flightsToSave,
                     },
                 })
                 .subscribe(
@@ -152,7 +150,7 @@ export class FlightsService {
         });
     }
     public saveFlightMembers(
-        flightId:string,
+        flightId: string,
         flightMembersToSave: any
     ): Promise<any> {
         return new Promise((resolve) => {
@@ -160,10 +158,6 @@ export class FlightsService {
                 .mutate<any>({
                     mutation: Query.SaveFlightsMembersMutation,
                     variables: {
-                    
-                    
-
-                       
                         flightMembersToSave: flightMembersToSave,
                     },
                 })
@@ -584,6 +578,30 @@ export class FlightsService {
                         resolve(data);
                     }
                 });
+        });
+    }
+    public deletePlayerHandiCal(
+        tournamnetId,
+        PlayersIds: any
+    ): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.deletePlayerHandiCalQueryQL,
+                    variables: {
+                        tournamnetId: tournamnetId,
+                        PlayersIds: PlayersIds,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could not delete due to ' + error);
+                    }
+                );
         });
     }
     public undoFlightHandicap(flightId: string): Promise<any> {

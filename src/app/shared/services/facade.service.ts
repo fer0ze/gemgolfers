@@ -793,6 +793,9 @@ export class FacadeService {
   singleRoundFlightQuery(flightId: string) {
     return this.flightsService.singleRoundFlightQuery(flightId);
   }
+  deletePlayerHandiCal(tournamnetId: string,PlayersIds:any[]) {
+    return this.flightsService.deletePlayerHandiCal(tournamnetId,PlayersIds);
+  }
   undoFlightHandicap(flightId: string) {
     return this.flightsService.undoFlightHandicap(flightId);
   }

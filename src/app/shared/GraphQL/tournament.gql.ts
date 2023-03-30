@@ -1338,6 +1338,7 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
             playingOnWhs
             adminId
             createdAt
+            
             FlightsQL: flights {
                 id
                 courseId
@@ -1347,6 +1348,7 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
                 date
                 ended
                 tee
+                categoryRound
                 tee_id
                 time
                 flightNo

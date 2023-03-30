@@ -48,6 +48,7 @@ import { LogsService } from '../../../../shared/services/logs.service';
 import { of } from 'rxjs';
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
 import { DialogChangeCourseHoleSetComponent } from '../../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
+import { HandicapService } from 'app/shared/services/handicap.service';
 // import { DialogChangeCourseHoleSetComponent } from "../../material-components/dialog-change-course-hole-set/dialog-change-course-hole-set.component";
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";
 @Component({
@@ -184,6 +185,7 @@ export class ViewDailyRoundComponent implements OnInit {
         private fb: FormBuilder,
         public snackBar: MatSnackBar,
         private facadeService: FacadeService,
+        private handicapService: HandicapService,
         private router: Router,
         private route: ActivatedRoute,
         private apollo: Apollo,
@@ -387,6 +389,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 flightData.id;
             this.flightPlayers[this.flightPlayers.length - 1]['tournamentId'] =
                 flightData.tournamentId;
+            this.flightPlayers[this.flightPlayers.length - 1]['categoryRound'] =
+                flightData.categoryRound;
             this.flightPlayers[this.flightPlayers.length - 1]['flightTime'] =
                 flightData.time;
             this.flightPlayers[this.flightPlayers.length - 1][
@@ -1197,6 +1201,8 @@ export class ViewDailyRoundComponent implements OnInit {
             //console.log("members addeed");
             this.flightPlayers[this.findex]['header'] = flightHeader;
             this.flightPlayers[this.findex]['ended'] = flightData.ended;
+            this.flightPlayers[this.findex]['categoryRound'] =
+                flightData.categoryRound;
             this.flightPlayers[this.findex]['flightId'] = flightData.id;
             this.flightPlayers[this.findex]['tournamentId'] = tournamentId;
             this.flightPlayers[this.findex]['flightTime'] = flightData.time;
@@ -1723,22 +1729,25 @@ export class ViewDailyRoundComponent implements OnInit {
     async redirectCalculation(id) {
         //this.router.navigate(["/tournaments/handicap-whs/" + id]);
         console.log(id);
+        let objA: any;
+        let flag: boolean = true;
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to Calculate Handicap?',
         });
         dialogRef.afterClosed().subscribe(async (result) => {
-            if (result) {
+            for (let i = 0; i < this.flightPlayers.length; i++) {
+                objA = this.flightPlayers[i];
+                if (objA.flightId == id && objA.categoryRound == 2) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (result && flag) {
                 const isSuccess = <boolean>(
                     await this.facadeService.singleRoundFlightQuery(id)
                 );
                 if (isSuccess) {
-                    // document.getElementById(id).classList.add("trues");
-                    // for (let obj of this.flightPlayers) {
-                    //   if (id == obj.flightId) {
-                    //     obj.ended = true;
-                    //   }
-                    // }
                     let count = 0;
                     for (let i = 0; i < this.flightPlayers.length; i++) {
                         let obj = this.flightPlayers[i];
@@ -1751,9 +1760,64 @@ export class ViewDailyRoundComponent implements OnInit {
                     this.snackBar.open('Handicap Calculated', 'x', {
                         duration: 5000,
                     });
+                } else {
+                    console.log('Handicap Calculation Cancel');
                 }
-            } else {
-                console.log('Handicap Calculation Cancel');
+            } else if (result && !flag) {
+                console.log(objA);
+                let playersId = [];
+                for (let item of objA) {
+                    console.log(item);
+                    playersId.push(item.playerId);
+                }
+                console.log(playersId);
+
+                let isSuccess = <boolean>(
+                    await this.facadeService.deletePlayerHandiCal(
+                        objA.tournamentId,
+                        playersId
+                    )
+                );
+                if (isSuccess) {
+                    const bool = <boolean>(
+                        await this.facadeService.singleRoundFlightQuery(id)
+                    );
+                    if (bool) {
+                        for (let i = 0; i < this.flightPlayers.length; i++) {
+                            let obj = this.flightPlayers[i];
+                            if (obj.flightId == id) {
+                                this.flightPlayers[i].ended = true;
+                                break;
+                            }
+                        }
+                        for (let item of objA) {
+                            let obj = {
+                                playerId: item.playerId,
+                                count: 4,
+                            };
+                            this.handicapService
+                                .calculateHandicap(obj)
+                                .then((response) => {
+                                    console.log(response);
+                                })
+                                .catch((err) => {
+                                    console.log('error' + err);
+                                    this.snackBar.open('Error!.', 'x', {
+                                        duration: 5000,
+                                    });
+                                });
+                        }
+                        this.snackBar.open('Handicap Calculated', 'x', {
+                            duration: 5000,
+                        });
+                    } else {
+                        console.log('Handicap Calculation Cancel');
+                    }
+                }else{
+                    this.snackBar.open('Handicap Not Calculated', 'x', {
+                        duration: 5000,
+                    });
+                }
             }
         });
     }
@@ -1772,7 +1836,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 }
             }
 
-            this.snackBar.open('Handicap Reverted', 'x', {
+            this.snackBar.open('Handicap Calculation Reverted', 'x', {
                 duration: 2000,
             });
         }
