@@ -1195,6 +1195,7 @@ export const ClubSingleRoundFlightsAdminQueryQLs = gql`
                         flightId
                     }
                     PlayerQL: player {
+                        id
                         playerCategory
                         firstName
                         lastName
@@ -1329,6 +1330,75 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
         TournamentsQL: tournament(
             where: {
                 clubId: { _eq: $clubId }
+                singleRound: { _eq: true }
+                startDate: { _eq: $toDate }
+            }
+        ) {
+            id
+            noOfRounds
+            playingOnWhs
+            adminId
+            createdAt
+            
+            FlightsQL: flights {
+                id
+                courseId
+                courseHoleSets
+                courseHoleSetsInverted
+                tournamentId
+                date
+                ended
+                tee
+                categoryRound
+                tee_id
+                time
+                flightNo
+                MembersQL: members {
+                    flightId
+                    playerId
+                    attendance
+                    guest
+                    playingTee
+                    playingHandicap
+                    playingHandicapWhs
+
+                    PlayerQL: player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        membershipNumber
+                        picture
+                    }
+                    ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
+                        ...ScoreQL
+                    }
+                }
+                CourseQL: course {
+                    ...CourseQL
+                    HolesQL: holes {
+                        ...HoleQL
+                    }
+                }
+            }
+        }
+    }
+    ${PlayerQL}
+    ${TournamentQL}
+    ${FlightsQL}
+    ${ScoreQL}
+    ${ScoreDetailQL}
+    ${CourseQL}
+    ${CourseHoleSetsQL}
+    ${HoleQL}
+    ${TournamentRoleManagerQL}
+    ${PlayerHandicapQL}
+`;
+export const ClubSingleRoundFlightsQueryAdminQLA = gql`
+    query ClubSingleRoundFlightsQuery( $toDate: date!) {
+        TournamentsQL: tournament(
+            where: {
+                
                 singleRound: { _eq: true }
                 startDate: { _eq: $toDate }
             }

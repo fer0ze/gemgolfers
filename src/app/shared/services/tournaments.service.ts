@@ -463,6 +463,24 @@ export class TournamentsService {
                 });
         });
     }
+    public getSingleDailyRoundAdmin(
+        Date: string
+    ): Promise<any> {
+        
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.ClubSingleRoundFlightsQueryAdminQLA,
+                    variables: {
+                        toDate: Date,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    console.log(data);
+                    resolve(data);
+                });
+        });
+    }
     public getRoundScore(Id: any): Promise<any> {
         console.log(Id);
         return new Promise((resolve) => {

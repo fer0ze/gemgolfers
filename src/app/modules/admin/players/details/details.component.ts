@@ -95,6 +95,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         private _fuseConfirmationSuccessService: FuseConfirmationSuccessService,
         private _renderer2: Renderer2,
         private _facadeService: FacadeService,
+        public snackBar: MatSnackBar,
         private _router: Router,
         private datepipe: DatePipe,
         private _overlay: Overlay,
@@ -369,17 +370,11 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             );
             if (isSuccess) {
                 this.save = true;
-                const confirmation = this._fuseConfirmationSuccessService.open({
-                    title: 'Player Added Successfully',
-                    message: 'Player has been added!',
-                    actions: {
-                        confirm: {
-                            label: 'Close',
-                        },
-                    },
-                });
+                this.snackBar.open("Player has been created.", "x", {
+                    duration: 1000,
+                  });
                 this.reset();
-                //this.router.navigate(['/players']);
+                this._router.navigate(['/players']);
             }
         } else {
             const isSuccess = <boolean>(
@@ -417,15 +412,10 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             //console.log(isSuccess);
             if (isSuccess) {
                 this.save = true;
-                const confirmation = this._fuseConfirmationSuccessService.open({
-                    title: 'Player Updated Successfully',
-                    message: 'Player has been Updated!',
-                    actions: {
-                        confirm: {
-                            label: 'Close',
-                        },
-                    },
-                });
+                this.snackBar.open("Player has been updated.", "x", {
+                    duration: 1000,
+                  });
+                this._router.navigate(['/players']);
             }
         }
         // Go through the contact object and clear empty values

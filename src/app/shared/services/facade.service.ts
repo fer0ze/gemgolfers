@@ -880,6 +880,9 @@ export class FacadeService {
   getSingleDailyRound(clubId: string, Date: string) {
     return this.tournamentService.getSingleDailyRound(clubId, Date);
   }
+  getSingleDailyRoundAdmin( Date: string) {
+    return this.tournamentService.getSingleDailyRoundAdmin( Date);
+  }
   getRoundScore(Id: any) {
     return this.tournamentService.getRoundScore(Id);
   }

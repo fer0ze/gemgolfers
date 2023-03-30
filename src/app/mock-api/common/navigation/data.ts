@@ -33,13 +33,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/tournaments/add',
             },
             {
-                id: 'tournaments.schedule',
-                title: 'Schedule Tournaments',
-                type: 'basic',
-                icon: 'heroicons_outline:truck',
-                link: '/tournaments/schedule',
-            },
-            {
                 id: 'tournaments.viewtournaments',
                 title: 'All Tournaments',
                 type: 'basic',
@@ -114,6 +107,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:menu-alt-4',
                 link: '/teetimes',
+            },
+            
+            {
+                id: 'dailyRounds.schedule',
+                title: 'Schedule',
+                type: 'basic',
+                icon: 'heroicons_outline:truck',
+                link: '/tournaments/schedule',
             },
         ],
     },
@@ -208,13 +209,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:academic-cap',
                 link: '/tournaments/add',
             },
-            {
-                id: 'tournaments.schedule',
-                title: 'Schedule Tournaments',
-                type: 'basic',
-                icon: 'heroicons_outline:truck',
-                link: '/tournaments/schedule',
-            },
+            
             {
                 id: 'tournaments.viewtournaments',
                 title: 'All Tournaments',
@@ -297,6 +292,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:menu-alt-4',
                 link: '/teetimes',
+            },  
+            {
+                id: 'dailyRounds.schedule',
+                title: 'Schedule',
+                type: 'basic',
+                icon: 'heroicons_outline:truck',
+                link: '/tournaments/schedule',
             },
         ],
     },

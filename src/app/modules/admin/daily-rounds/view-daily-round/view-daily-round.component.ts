@@ -225,14 +225,25 @@ export class ViewDailyRoundComponent implements OnInit {
 
     async getDailyRounds(date) {
         this.isLoading = true;
+        let dataPlayers: any;
         console.log(this.loggedInUser);
-        let dataPlayers = await this.facadeService.getSingleDailyRound(
-            this.loggedInuser.adminClubId,
-            date
-        );
-        let club: any = this.loggedInuser.membership[0].club;
+        if (this.loggedInuser.userRole > 1) {
+            dataPlayers = await this.facadeService.getSingleDailyRound(
+                this.loggedInuser.adminClubId,
+                date
+            );
+        } else {
+            dataPlayers = await this.facadeService.getSingleDailyRoundAdmin(
+                date
+            );
+        }
+
+        let club: any =
+            this.loggedInuser.membership.length > 0
+                ? this.loggedInuser.membership[0].club
+                : null;
         let courseId =
-            club.courses.length > 0
+            club != null && club.courses.length > 0
                 ? club.courses[0].id
                 : '-LUFS3FCQKOGpJ2IEHmf';
         let selectedCourseHoleSet =
@@ -1813,7 +1824,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     } else {
                         console.log('Handicap Calculation Cancel');
                     }
-                }else{
+                } else {
                     this.snackBar.open('Handicap Not Calculated', 'x', {
                         duration: 5000,
                     });

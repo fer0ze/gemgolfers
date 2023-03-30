@@ -157,7 +157,7 @@
                             >Handicap Calculated</span
                         >
                         <span
-                            *ngIf="flight.ended"
+                            *ngIf="flight.ended && this.loggedInuser.userRole==1"
                             title="Undo Handicap"
                             class="mat-button-wrapper icon-styl cursor-pointer"
                             ><mat-icon
