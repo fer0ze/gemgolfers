@@ -225,6 +225,13 @@ export const appRoutes: Route[] = [
                     ),
             },
             {
+                path: 'banner',
+                loadChildren: () =>
+                    import('app/modules/admin/news/news.module').then(
+                        (m) => m.NewsModule
+                    ),
+            },
+            {
                 path: 'teetimes',
                 loadChildren: () =>
                     import('app/modules/admin/tee-times/tee-times.module').then(

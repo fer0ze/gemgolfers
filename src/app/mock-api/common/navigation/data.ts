@@ -395,6 +395,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:table',
                 link: '/mergeProfile',
             },
+            {
+                id: 'feedback.news',
+                title: 'News Banner',
+                type: 'basic',
+                icon: 'heroicons_outline:camera',
+                link: '/banner',
+            },
         ],
     },
 ];

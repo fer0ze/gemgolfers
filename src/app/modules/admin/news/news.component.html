@@ -1,0 +1,70 @@
+<!-- <p>
+  <mat-toolbar class="navbar" color="primary">
+    <div class="logo">News Banner</div>
+    <div class="example-button-container">
+      <button
+        class="button-1"
+        (click)="uploadBanner()"
+        [disabled]="!ready"
+        role="button"
+        style="font-size: 60%"
+      >
+        Upload
+      </button>
+    </div>
+  </mat-toolbar>
+</p> -->
+<div class="flex-auto">
+    <div
+        class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
+    >
+        <!-- Title -->
+        <div class="flex flex-auto justify-between">
+            <div
+                class="text-6xl font-extrabold tracking-tight leading-none mt-3"
+            >
+                News Banner
+            </div>
+            <button
+                class="mt-2"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="uploadBanner()"
+                [disabled]="!ready"
+            >
+                Upload
+            </button>
+        </div>
+        <div class="flex items-center">
+            <div fxFlexFill fxLayoutAlign="end center"></div>
+        </div>
+    </div>
+    <div class="xl:col-span-2 flex flex-col flex-auto  ">
+        <div class="center_parent ">
+            <div class="center_img">
+                <div *ngIf="isLoading" class="loading-indicator">
+                    <mat-progress-spinner
+                        mode="indeterminate"
+                        color="primary"
+                        [diameter]="60"
+                    ></mat-progress-spinner>
+                </div>
+                <img [src]="url | async" class="Img" alt="" />
+            </div>
+        </div>
+        <div class="center ">
+            <div class="mb-20" style="text-align: center">
+                <div class="center">
+                    <label for="file-upload" class="custom-file-upload">
+                        Upload Image
+                    </label>
+                    <input
+                        id="file-upload"
+                        (change)="onFileChange($event)"
+                        type="file"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
