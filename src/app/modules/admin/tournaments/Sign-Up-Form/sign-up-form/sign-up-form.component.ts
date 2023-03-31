@@ -12,6 +12,7 @@ import { TournamentMember } from 'app/shared/models/tournament.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { generate, map, Observable, startWith } from 'rxjs';
+import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
     selector: 'app-sign-up-form',
@@ -20,7 +21,12 @@ import { generate, map, Observable, startWith } from 'rxjs';
 })
 export class SignUpFormComponent implements OnInit {
     signUpForm: FormGroup;
-    tournamentQL:any;
+    alert: { type: FuseAlertType; message: string } = {
+        type: 'success',
+        message: 'You are successfully added as a Tournament Member',
+    };
+    showAlert: boolean = false;
+    tournamentQL: any;
     private tournamentID: string;
     playerCategories: PlayerCategory[] = [];
     filteredClubOptions: Observable<Club[]>;
@@ -38,9 +44,11 @@ export class SignUpFormComponent implements OnInit {
         });
 
         this.createForm();
-        let data= await this._facadeService.getTournamentByID(this.tournamentID);
+        let data = await this._facadeService.getTournamentByID(
+            this.tournamentID
+        );
         console.log(data);
-        this.tournamentQL=data.tournament[0];
+        this.tournamentQL = data.tournament[0];
         this.playerCategories = this._facadeService.getPlayerCategories();
         let dataClubs = await this._facadeService.getClubList();
         this.golfClubs = dataClubs.club;
@@ -93,36 +101,50 @@ export class SignUpFormComponent implements OnInit {
             exist = await this._facadeService.getPlayerByMembershipNumber(
                 signUpPerson.membership.toString()
             );
-           
         }
 
-        if (signUpPerson.phone && exist.player==undefined ) {
+        if (signUpPerson.phone && exist.length == 0) {
             // this.logger.log(signUpPerson.phone);
             console.log(signUpPerson.phone);
             let phone = General.getPhonePrefix(signUpPerson.phone.trim());
             console.log(phone);
 
             exist = await this._facadeService.getPlayerByPhone(phone);
-            
         }
 
-        if (signUpPerson.email && exist.player==undefined ) {
+        if (signUpPerson.email && exist.length == 0) {
             exist = await this._facadeService.getPlayerByEmail(
                 signUpPerson.email.toString()
             );
         }
-        let UniqueId: string =
-            exist && exist.player!=undefined  && exist.player.length>0
-                ? exist.player[0].id
-                : UniqueIdGenerator.generate();
+        let UniqueId: string;
 
-        if (exist && exist.player!=undefined  && exist.player.length>0) {
-            let member: any = {
-                tournamentId: this.tournamentID,
-                playerId: exist.player[0].id,
-                status: true,
-            };
-            this.saveMembers(member);
+        if (exist && exist.length > 0) {
+            UniqueId = exist[0].id;
+        } else if (exist && exist.player != undefined) {
+            UniqueId = exist.player[0].id;
+        } else {
+            UniqueId = UniqueIdGenerator.generate();
+        }
+        if (exist && exist.length > 0) {
+            let find = this.tournamentQL.members.find((a) => {
+                return a.playerId == exist[0].id;
+            });
+            console.log(find);
+            if (Object.keys(find).length === 0) {
+                let member: any = {
+                    tournamentId: this.tournamentID,
+                    playerId: exist[0].id,
+                    status: true,
+                };
+                this.saveMembers(member);
+            }else{
+                this.alert = {
+                    type: 'warn',
+                    message: 'You are alredy added as a Tournament Member!.Kindly Refresh the page to Sign-up again.',
+                };
+                this.showAlert=true;
+            }
         } else {
             let member: any = {
                 clubId: signUpPerson.club.id,
@@ -179,8 +201,15 @@ export class SignUpFormComponent implements OnInit {
         );
 
         if (result) {
-            this.snackBar.open('Member has been saved', 'x', {
-                duration: 5000,
+            // Set the alert
+            this.alert = {
+                type: 'success',
+                message: 'You are successfully added as a Tournament Member!Kindly Refresh the page to Sign-up again.',
+            };
+            this.showAlert = true;
+
+            this.snackBar.open('Member Added', 'x', {
+                duration: 1000,
             });
         }
     }

@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FuseAlertModule } from '@fuse/components/alert';
 @NgModule({
     declarations: [SignUpFormComponent],
     imports: [
@@ -22,6 +23,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         SignUpFormRoutingModule,
         MatFormFieldModule,
         MatSelectModule,
+        FuseAlertModule,
         MatButtonToggleModule,
         MatSnackBarModule,
         MatDialogModule,
