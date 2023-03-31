@@ -49,6 +49,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatPaginatorModule,
     MatInputModule,
     MatButtonModule,
+    MatSidenavModule,
     MatIconModule,
     MatSortModule,
     MatStepperModule,
