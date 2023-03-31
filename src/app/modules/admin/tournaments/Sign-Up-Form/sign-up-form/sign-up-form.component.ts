@@ -60,7 +60,7 @@ export class SignUpFormComponent implements OnInit {
         this.signUpForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
-            email: new FormControl('', [Validators.required]),
+            email: new FormControl(''),
             phone: new FormControl('', [Validators.required]),
             membership: new FormControl(''),
             category: new FormControl('', [Validators.required]),

@@ -12,8 +12,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import "jspdf-autotable";
-import * as jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 import {
     Player,
     ClubMembership,
@@ -240,7 +240,6 @@ export class HandicapsComponent implements OnInit {
     syncHandicapWHS() {
         console.log(this.index);
 
-      
         this.WHSSource = new MatTableDataSource(this.dataPlayers.player);
         this.WHSSource.paginator = this.paginator;
         this.WHSSource.sort = this.sort;
@@ -364,6 +363,9 @@ export class HandicapsComponent implements OnInit {
                     this.player.push(c);
                     //this.selectPlayer = c;
                 }
+                if (c['membershipNumber'] == filterValue) {
+                    this.player.push(c);
+                }
             }
             console.log(this.player);
             this.setDataSource(this.player);
@@ -422,15 +424,15 @@ export class HandicapsComponent implements OnInit {
             this.WHSSource.paginator.firstPage();
         }
     }
- /**
+    /**
      * Track by function for ngFor loops
      *
      * @param index
      * @param item
      */
- trackByFn(index: number, item: any): any {
-    return item.id || index;
-}
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
     applyWHSFilter(filterValue: string) {
         // filterValue = filterValue.trim(); // Remove whitespace
         // filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
