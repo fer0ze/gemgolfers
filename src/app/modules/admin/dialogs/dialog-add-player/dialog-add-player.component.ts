@@ -231,13 +231,16 @@ export class DialogAddPlayerComponent implements OnInit {
         };
 
         clubMember.push(member);
-
+        let players:any[] = await this.facadeService.getallPlayersforGGid();
+        var sortarray = players['player'];
+        sortarray.sort(this.Comparator);
+        console.log(sortarray);
         this.playerID
             ? (UniqueId = this.playerID)
             : (UniqueId = UniqueIdGenerator.generate());
         this.currentPlayer.length > 0
             ? (GEMId = this.currentPlayer.gemId)
-            : (GEMId = generateGemId.generate(UniqueId));
+            : (GEMId = generateGemId.generate(sortarray[0].gemId));
 
         //console.log(playerFormValue.isClubAdmin);
         const player: Player = {
@@ -290,6 +293,15 @@ export class DialogAddPlayerComponent implements OnInit {
         this.response = player;
         this.dialogRef.close(this.response);
         console.log(this.response);
+    }
+
+    public Comparator(a, b) {
+        let gemIDA=parseInt(a['gemId'].slice(2));
+        let gemIDB=parseInt(b['gemId'].slice(2));
+        if (gemIDA < gemIDB) return 1;
+        if (gemIDA > gemIDB) return -1;
+
+        return 0;
     }
 
     onNoClick(): void {

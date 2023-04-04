@@ -26,7 +26,7 @@ export class MergeProfilesComponent implements OnInit {
     selectionA = new SelectionModel<Player>(true, []);
     selectionB = new SelectionModel<Player>(true, []);
     DataSourceBColumns: string[] = [
-        'FirstName',
+        'Name',
         'Phone',
         'Email',
         'Membership',
@@ -36,7 +36,7 @@ export class MergeProfilesComponent implements OnInit {
         // 'Delete',
     ];
     DataSourceAColumns: string[] = [
-        'FirstName',
+        'Name',
         'Phone',
         'Email',
         'Membership',
@@ -52,6 +52,7 @@ export class MergeProfilesComponent implements OnInit {
         public dialog: MatDialog
     ) {}
     async ngOnInit() {
+        let rows = [];
         of(this.Players)
             .pipe()
             .subscribe(
@@ -59,8 +60,29 @@ export class MergeProfilesComponent implements OnInit {
                     data = await this._facadeService.getPlayersListMerge();
                     console.log(data);
                     this.Players = data.player;
-                    this.DataSourceA = new MatTableDataSource(data.player);
-                    this.DataSourceB = new MatTableDataSource(data.player);
+
+                    for (let obj of this.Players) {
+                        let newobj = {
+                            id: obj.id,
+                            Name: obj.firstName + ' ' + obj.lastName,
+                            Phone: obj.phone,
+                            Email: obj.email,
+                            Membership: obj.membershipNumber,
+                            Handicap: obj.handicap,
+                            Club:
+                                obj.membership.length > 0
+                                    ? obj.membership[0].club.name.substring(
+                                          0,
+                                          obj.membership[0].club.name.indexOf(
+                                              ' '
+                                          )
+                                      )
+                                    : '-',
+                        };
+                        rows.push(newobj)
+                    }
+                    this.DataSourceA = new MatTableDataSource(rows);
+                    this.DataSourceB = new MatTableDataSource(rows);
                     this.DataSourceA.paginator = this.Apaginator;
                     this.DataSourceA.sort = this.Asort;
                     this.DataSourceB.paginator = this.Bpaginator;

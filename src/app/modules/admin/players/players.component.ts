@@ -20,9 +20,14 @@ import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { query } from '@angular/animations';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Constants, UniqueIdGenerator } from '../../../shared/classes/general';
+import {
+    Constants,
+    UniqueIdGenerator,
+    generateGemId,
+} from '../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Player } from 'app/shared/models/player.model';
+import { read, utils } from 'xlsx';
 
 @Component({
     selector: 'app-players',
@@ -60,6 +65,13 @@ export class PlayersComponent implements OnInit {
     TablePlayers: any = [];
     sorting: any = '';
     public name: any = '';
+    file: File;
+    arrayBuffer: any;
+    playersData: any;
+    savePlayers: any[] = [];
+
+    duplicatePlayers: any[] = [];
+    importingList = false;
     //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
@@ -240,7 +252,7 @@ export class PlayersComponent implements OnInit {
                 sortarray.sort(this.ComparatordscM);
             } else if (this.name == 'Category') {
                 sortarray.sort(this.ComparatordscC);
-            } else if (this.name == 'Handicap')  {
+            } else if (this.name == 'Handicap') {
                 sortarray.sort(this.ComparatordscH);
             }
         } else if (this.sorting == 'asc') {
@@ -252,7 +264,7 @@ export class PlayersComponent implements OnInit {
                 sortarray.sort(this.ComparatorascM);
             } else if (this.name == 'Category') {
                 sortarray.sort(this.ComparatorascC);
-            } else  if (this.name == 'Handicap') {
+            } else if (this.name == 'Handicap') {
                 sortarray.sort(this.ComparatorascH);
             }
         }
@@ -356,5 +368,79 @@ export class PlayersComponent implements OnInit {
         if (a['handicap'] > b['handicap']) return 1;
 
         return 0;
+    }
+    onFileChange(event) {
+        // this.logger.log(this.file);
+        if (event.target.files.length > 0) {
+            this.file = event.target.files[0];
+            // this.logger.log(this.file);
+        }
+    }
+
+    parseFlightsData() {
+        let fileReader = new FileReader();
+        this.playersData = [];
+
+        fileReader.onload = (e) => {
+            this.arrayBuffer = fileReader.result;
+            var data = new Uint8Array(this.arrayBuffer);
+            var arr = new Array();
+            for (var i = 0; i != data.length; ++i)
+                arr[i] = String.fromCharCode(data[i]);
+            var bstr = arr.join('');
+            var workbook = read(bstr, { type: 'binary' });
+            var first_sheet_name = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[first_sheet_name];
+            this.playersData = utils.sheet_to_json(worksheet, {
+                raw: true,
+                defval: '',
+            });
+
+            //this.logger.log(this.playersData);
+            console.log(this.playersData);
+
+            this.importExcelData();
+            //this.providerservice.importexcel(this.exceljsondata).subscribe(data=>{
+            //})
+        };
+        fileReader.readAsArrayBuffer(this.file);
+    }
+
+    async importExcelData() {
+        try {
+            for (let obj of this.playersData) {
+                let newObj = {
+                    id: obj.ID,
+                    adminClubId: null,
+                    firebaseUid: null,
+                    fcmToken: null,
+                    gemId: obj.gemID,
+                    firstName: "p.firstName",
+                    lastName:"p.lastName",
+                    gender:  null,
+                    dob:  null,
+                    picture:  null,
+                    email:  null,
+                    phone:  null,
+                    playerCategory: null,
+                    handicap: 0,
+                    online: false,
+                    countryCode:  null,
+                    extraData:  null,
+                    membershipNumber: null,
+                    userRole: 3,
+                    membership: null,
+                };
+                this.savePlayers.push(newObj);
+            }
+            console.log(this.savePlayers);
+
+            let status = await this._facadeService.importPlayerList(
+                this.savePlayers
+            );
+            console.log(status);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

@@ -220,6 +220,9 @@ export class FacadeService {
   getTotalPlayersAll() {
     return this.playerService.getTotalPlayersAll();
   }
+  getallPlayersforGGid() {
+    return this.playerService.getallPlayersforGGid();
+  }
 
   mergePlayers(oldPlayerId:string,newPlayerId:string){
     return this.playerService.mergeProfiles(oldPlayerId,newPlayerId)
@@ -289,8 +292,8 @@ export class FacadeService {
     return this.playerService.AddHandicapRemarks(handicap_change_log);
   }
 
-  importPlayerList(players: Player[], clubMembers: ClubMembership[]) {
-    return this.playerService.importPlayerList(players, clubMembers);
+  importPlayerList(players: any[]) {
+    return this.playerService.importPlayerList(players);
   }
 
   updatePlayer(club: Player) {

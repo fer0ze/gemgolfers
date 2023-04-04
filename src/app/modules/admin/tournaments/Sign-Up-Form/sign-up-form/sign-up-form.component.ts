@@ -146,6 +146,10 @@ export class SignUpFormComponent implements OnInit {
                 this.showAlert=true;
             }
         } else {
+            let players:any[] = await this._facadeService.getallPlayersforGGid();
+            var sortarray = players['player'];
+            sortarray.sort(this.Comparator);
+            console.log(sortarray);
             let member: any = {
                 clubId: signUpPerson.club.id,
             };
@@ -155,7 +159,7 @@ export class SignUpFormComponent implements OnInit {
                 adminClubId: null,
                 firebaseUid: null,
                 fcmToken: null,
-                gemId: generateGemId.generate(UniqueId),
+                gemId: generateGemId.generate(sortarray[0].gemId),
                 firstName: signUpPerson.firstName,
                 lastName: signUpPerson.lastName,
                 gender: signUpPerson.gender ? signUpPerson.gender : null,
@@ -194,7 +198,14 @@ export class SignUpFormComponent implements OnInit {
             }
         }
     }
+    public Comparator(a, b) {
+        let gemIDA=parseInt(a['gemId'].slice(2));
+        let gemIDB=parseInt(b['gemId'].slice(2));
+        if (gemIDA < gemIDB) return 1;
+        if (gemIDA > gemIDB) return -1;
 
+        return 0;
+    }
     async saveMembers(tournamentMember: TournamentMember[]) {
         let result = <any>(
             await this._facadeService.insertTournamentMember(tournamentMember)

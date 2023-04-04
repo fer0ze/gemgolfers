@@ -100,7 +100,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef
-    ) { }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -110,14 +110,12 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
      * On init
      */
     async ngOnInit() {
-
         this._activatedRoute.paramMap.subscribe(async (params) => {
             this.playerID = params.get('id');
         });
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-
 
         if (this.loggedInuser) {
             let clubInfo: any =
@@ -170,8 +168,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             //this.contactForm.get('club').updateValueAndValidity();
         }
 
-
-
         console.log(this.contact);
     }
     private _filter(value: string): Club[] {
@@ -187,10 +183,19 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     }
 
     changeHandicap(item) {
-        if (item != null && this.playerID && this.currentPlayer.player[0].handicap !== this.contactForm.get('handicap').value) {
+        if (
+            item != null &&
+            this.playerID &&
+            this.currentPlayer.player[0].handicap !==
+                this.contactForm.get('handicap').value
+        ) {
             this.contactForm.get('notes').addValidators([Validators.required]);
             this.contactForm.get('notes').updateValueAndValidity();
-        }else if(this.playerID && this.currentPlayer.player[0].handicap == this.contactForm.get('handicap').value){
+        } else if (
+            this.playerID &&
+            this.currentPlayer.player[0].handicap ==
+                this.contactForm.get('handicap').value
+        ) {
             this.contactForm.get('notes').clearValidators();
             this.contactForm.get('notes').updateValueAndValidity();
         }
@@ -212,8 +217,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
-
-
 
     /**
      * Toggle edit mode
@@ -313,21 +316,27 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         let clubMember: ClubMembership[] = [];
         let UniqueId: string = '';
         let GEMId: string = '';
+        let players:any[] = await this._facadeService.getallPlayersforGGid();
+        var sortarray = players['player'];
+        sortarray.sort(this.Comparator);
+        console.log(sortarray);
 
         this.playerID
             ? (UniqueId = this.playerID)
             : (UniqueId = UniqueIdGenerator.generate());
-        this.currentPlayer.length > 0
-            ? (GEMId = this.currentPlayer.gemId)
-            : (GEMId = generateGemId.generate(UniqueId));
+        this.currentPlayer.player.length > 0
+            ? (GEMId = this.currentPlayer.player[0].gemId)
+            : (GEMId = generateGemId.generate(sortarray[0].gemId));
+        console.log(GEMId);
+
         //console.log(playerFormValue.playerClubMember);
         let member: any = {
             clubId:
                 typeof contact.club === 'string'
                     ? this.loggedInuser.adminClubId
                     : contact.club
-                        ? contact.club.id
-                        : '',
+                    ? contact.club.id
+                    : '',
             suspended: this.contactForm.get('status').value,
         };
         console.log(member);
@@ -338,12 +347,12 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 ? this.loggedInuser.adminClubId
                 : null,
             firebaseUid:
-                this.currentPlayer.length > 0
-                    ? this.currentPlayer.firebaseUid
+                this.currentPlayer.player.length > 0
+                    ? this.currentPlayer.player[0].firebaseUid
                     : null,
             fcmToken:
-                this.currentPlayer.length > 0
-                    ? this.currentPlayer.fcmToken
+                this.currentPlayer.player.length > 0
+                    ? this.currentPlayer.player[0].fcmToken
                     : null,
             gemId: GEMId,
             firstName: contact.firstName,
@@ -370,9 +379,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             );
             if (isSuccess) {
                 this.save = true;
-                this.snackBar.open("Player has been created.", "x", {
+                this.snackBar.open('Player has been created.', 'x', {
                     duration: 1000,
-                  });
+                });
                 this.reset();
                 this._router.navigate(['/players']);
             }
@@ -412,9 +421,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             //console.log(isSuccess);
             if (isSuccess) {
                 this.save = true;
-                this.snackBar.open("Player has been updated.", "x", {
+                this.snackBar.open('Player has been updated.', 'x', {
                     duration: 1000,
-                  });
+                });
                 this._router.navigate(['/players']);
             }
         }
@@ -433,6 +442,15 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         // });
     }
 
+    public Comparator(a, b) {
+        let gemIDA=parseInt(a['gemId'].slice(2));
+        let gemIDB=parseInt(b['gemId'].slice(2));
+        if (gemIDA < gemIDB) return 1;
+        if (gemIDA > gemIDB) return -1;
+
+        return 0;
+    }
+
     public reset() {
         // if (this.loggedInuser.userRole > 1) {
         //   this.playerForm.get("playerClubMember").setValue(this.clubTitle);
@@ -449,7 +467,6 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this.contactForm.get('notes').setValue('');
         this.contactForm.get('notes').clearValidators();
         this.contactForm.get('notes').updateValueAndValidity();
-        
     }
     /**
      * Track by function for ngFor loops
@@ -563,7 +580,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                     : '0',
                 status:
                     this.currentPlayer.player[0].membership[0] &&
-                        this.currentPlayer.player[0].membership[0].suspended
+                    this.currentPlayer.player[0].membership[0].suspended
                         ? 'true'
                         : 'false',
             });

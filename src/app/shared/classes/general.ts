@@ -537,33 +537,48 @@ export class passwordGenerator {
 export class generateGemId {
     private static asciiArray: number[] = [];
 
-    public static generate(playerId: string) {
-        let asciiArray: number[] = this.toAsciiArray(playerId);
+    public static generate(gemID: string) {
+        var num = 0;
 
-        if (asciiArray != null) {
-            let length: number = asciiArray.length;
-            let lengthOneThird: number = Math.floor(length / 3);
-            let lengthTwoThird: number = Math.floor(lengthOneThird * 2);
-            let asciiSum1: number = 0;
-
-            for (var i = 0; i < lengthOneThird; i++) {
-                asciiSum1 += asciiArray[i];
-            }
-
-            let asciiSum2: number = 0;
-            for (var i: number = +lengthOneThird; i < lengthTwoThird; i++) {
-                asciiSum2 += asciiArray[i];
-            }
-
-            let asciiSum3: number = 0;
-            for (var i = lengthTwoThird; i < length; i++) {
-                asciiSum3 += asciiArray[i];
-            }
-
-            return 'gg' + asciiSum1 + '' + asciiSum2 + '' + asciiSum3;
+        if (gemID) {
+            let gemid = (parseInt(gemID.slice(2)) + 1).toString();
+            return 'gg' + gemid;
+        } else {
+            return 'gg';
         }
+        // do {
+        //     num = Math.floor(Math.random() * 9000) + 1000;
+        // } while (num < 1500 || num > 9999);
+        // if (num && num > 1500) {
+        //     return 'gg' + num;
+        // }
+        // return '';
+        // let asciiArray: number[] = this.toAsciiArray(playerId);
 
-        return '';
+        // if (asciiArray != null) {
+        // let length: number = asciiArray.length;
+        // let lengthOneThird: number = Math.floor(length / 3);
+        // let lengthTwoThird: number = Math.floor(lengthOneThird * 2);
+        // let asciiSum1: number = 0;
+
+        // for (var i = 0; i < lengthOneThird; i++) {
+        //     asciiSum1 += asciiArray[i];
+        // }
+
+        // let asciiSum2: number = 0;
+        // for (var i: number = +lengthOneThird; i < lengthTwoThird; i++) {
+        //     asciiSum2 += asciiArray[i];
+        // }
+
+        // let asciiSum3: number = 0;
+        // for (var i = lengthTwoThird; i < length; i++) {
+        //     asciiSum3 += asciiArray[i];
+        // }
+
+        //return 'gg' + asciiSum1 + '' + asciiSum2 + '' + asciiSum3;
+        // }
+
+        // return '';
     }
 
     public static toAsciiArray(playerId: string): number[] {

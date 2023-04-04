@@ -57,14 +57,10 @@ export const getPlayersListReport = gql`
 `;
 export const GetPlayersMerge = gql`
     query PostsGetQuery {
-        player(
-            where: { firstName: { _neq: "" } }
-            order_by: { firstName: asc }
-        ) {
+        player {
             id
             firstName
             lastName
-            playerCategory
             handicap
             phone
             email
@@ -382,6 +378,13 @@ export const getTotalPlayersAll = gql`
         }
     }
 `;
+export const getallPlayersforGGid = gql`
+    query PostsGetQuery {
+        player {
+            gemId
+           }
+    }
+`;
 export const GetTotalFLightPlayed = gql`
     query PostsGetQuery($where: player_bool_exp!, $date: date!, $sdate: date!) {
         player(where: $where) {
@@ -608,33 +611,17 @@ export const GetPlayerTodayRoundQL = gql`
 export const SavePlayersList = gql`
     mutation SavePlayersListMutation(
         $playersToSave: [player_insert_input!]!
-        $clubmembers: [club_member_insert_input!]!
     ) {
         PlayerEntryQLi: insert_player(
             objects: $playersToSave
             on_conflict: {
                 constraint: player_pkey
                 update_columns: [
-                    phone
-                    email
-                    firstName
-                    lastName
-                    membershipNumber
+                    gemId 
                 ]
             }
         ) {
             AffectedRowsQLi: affected_rows
-        }
-        insert_club_member(
-            objects: $clubmembers
-            on_conflict: {
-                constraint: club_member_pkey
-                update_columns: [playerId]
-            }
-        ) {
-            returning {
-                playerId
-            }
         }
     }
 `;

@@ -194,6 +194,21 @@ export class PlayersService {
                 });
         });
     }
+    public getallPlayersforGGid(): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getallPlayersforGGid,
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getTotalPlayers(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -811,8 +826,8 @@ export class PlayersService {
     }
 
     public importPlayerList(
-        players: Player[],
-        clubMembers: ClubMembership[]
+        players: any[],
+      
     ): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
@@ -820,7 +835,6 @@ export class PlayersService {
                     mutation: Query.SavePlayersList,
                     variables: {
                         playersToSave: players,
-                        clubmembers: clubMembers,
                     },
                 })
                 .subscribe(
