@@ -56,7 +56,8 @@ export class SignUpReportComponent implements OnInit {
         'id',
         'name',
         'date',
-        'category',
+        'email',
+        'phone',
         'flights',
         
     ];
@@ -136,7 +137,13 @@ export class SignUpReportComponent implements OnInit {
                 (error) => console.log('error')
             );
     }
-
+    
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+        
+    }
     sorts() {
         let count = 1;
         let countDailyRound = 1;
@@ -210,18 +217,18 @@ export class SignUpReportComponent implements OnInit {
         this.clubPlayers = (this.clubPlayers * 100) / this.data.length;
         this.mobilePlayers = (this.mobilePlayers * 100) / this.data.length;
         for (let items of this.dataMembers) {
-            if (items.x.toString().includes('Mar')) {
+            if (items.x.toString().includes('Apr')) {
                 if (this.dataMembersA.length < 3 && items.y > 0) {
                     this.dataMembersA.push(items.y);
                 }
                 this.thisMonth++;
-            } else if (items.x.toString().includes('Feb')) {
+            } else if (items.x.toString().includes('Mar')) {
                 this.lastMonth++;
                 if (this.dataMembersB.length < 3 && items.y > 0) {
 
                     this.dataMembersB.push(items.y);
                 }
-            } else if (items.x.toString().includes('Jan') || items.x.toString().includes('Dec') || items.x.toString().includes('Nov')) {
+            } else if (items.x.toString().includes('Jan') || items.x.toString().includes('Feb') || items.x.toString().includes('Dec')) {
                 this.SecondLastMonth++;
                 if (this.dataMembersC.length < 3 && items.y > 0) {
                     this.dataMembersC.push(items.y);

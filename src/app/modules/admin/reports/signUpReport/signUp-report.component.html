@@ -90,7 +90,7 @@
                     <div
                         class="text-lg font-medium tracking-tight leading-6 truncate"
                     >
-                        Players
+                        This Month Players
                     </div>
                     <div class="ml-2">
                         <button
@@ -266,7 +266,7 @@
                 <div
                     class="text-lg font-medium tracking-tight leading-6 truncate"
                 >
-                    Visitors vs. Page Views
+                    Players vs. Daily Rounds
                 </div>
                 <div class="ml-2">
                     <button
@@ -325,13 +325,13 @@
                     <div class="flex flex-col">
                         <div class="flex items-center">
                             <div class="font-medium text-secondary leading-5">
-                                dailyround Ratio
+                                Dailyround Ratio
                             </div>
                             <mat-icon
                                 class="ml-1.5 icon-size-4 text-hint"
                                 [svgIcon]="'heroicons_solid:information-circle'"
                                 [matTooltip]="
-                                    'Average Ratio is the average ratio between Page Views and Visitors'
+                                    'Average Ratio is the average ratio between Players and Dailyround.'
                                 "
                             ></mat-icon>
                         </div>
@@ -366,7 +366,7 @@
                                 class="ml-1.5 icon-size-4 text-hint"
                                 [svgIcon]="'heroicons_solid:information-circle'"
                                 [matTooltip]="
-                                    'Predicted Ratio is calculated by using historical ratio, current trends and your goal targets.'
+                                    'Predicted Ratio is calculated by using historical ratio, current players and your goal targets.'
                                 "
                             ></mat-icon>
                         </div>
@@ -428,7 +428,27 @@
             <div
                 class="flex flex-col col-span-3 flex-auto bg-card shadow rounded-2xl overflow-hidden p-6"
             >
-                <div class="flex flex-col flex-auto mt-6 ">
+                <div class="flex flex-auto justify-end">
+                    <div>
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:search'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                
+                                (keyup)="applyFilter($event.target.value)"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Search'"
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto mt-6">
                     <table
                         mat-table
                         [dataSource]="dataSource"
@@ -450,13 +470,19 @@
                         <ng-container matColumnDef="date">
                             <th mat-header-cell *matHeaderCellDef>Date</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.createdAt.substring(0,10) }}
+                                {{ row.createdAt.substring(0, 10) }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="category">
+                        <ng-container matColumnDef="email">
                             <th mat-header-cell *matHeaderCellDef>Email</th>
                             <td mat-cell *matCellDef="let row; let i = index">
                                 {{ row.email }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="phone">
+                            <th mat-header-cell *matHeaderCellDef>Phone</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.phone }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="flights">
@@ -494,7 +520,7 @@
                     </div>
                 </div>
                 <div
-                    class="flex flex-col flex-auto mt-6 h-52"
+                    class="flex flex-col flex-auto mt-6 h-52 -mx-8"
                     *ngIf="showdata | async"
                 >
                     <apx-chart
@@ -522,7 +548,10 @@
                                     {{ this.male | number : "1.0-0" }}
                                 </div>
                                 <div class="text-right text-secondary">
-                                    {{ (this.male * 100) / this.data.length }}%
+                                    {{
+                                        (this.male * 100) / this.data.length
+                                            | number : "1.0-0"
+                                    }}%
                                 </div>
                             </div>
                         </ng-container>
@@ -540,6 +569,7 @@
                                 <div class="text-right text-secondary">
                                     {{
                                         (this.female * 100) / this.data.length
+                                            | number : "1.0-0"
                                     }}%
                                 </div>
                             </div>

@@ -11,11 +11,6 @@ import { CourseQL } from '../fragments/course.fragment';
 
 export const GetPlayers = gql`
     query PostsGetQuery {
-        AggregateQL: player_aggregate {
-            aggregate {
-                totalCount: count
-            }
-        }
         player(
             where: { firstName: { _neq: "" } }
             order_by: { firstName: asc }
@@ -41,13 +36,13 @@ export const getPlayersListReport = gql`
         player(
             where: { firebaseUid: { _neq: "" } }
             order_by: { createdAt: desc }
-            limit:1000
 
         ) {
             firstName
             lastName
             email
             createdAt
+            phone
             gender
             AggregateQL: flights_played {
                 flightId
