@@ -36,17 +36,17 @@ export const getPlayersListReport = gql`
         player(
             where: { firebaseUid: { _neq: "" } }
             order_by: { createdAt: desc }
-
         ) {
+            id
             firstName
             lastName
             email
             createdAt
             phone
             gender
-            AggregateQL: flights_played {
-                flightId
-            }
+        }
+        flight_member {
+            playerId
         }
     }
 `;
@@ -304,8 +304,8 @@ export const getPlayersListByClubCONGU = gql`
             email
             membershipNumber
             handicapQL: handicap_history(
-                order_by: [{ tournament: { startDate: desc } }] 
-            limit:1
+                order_by: [{ tournament: { startDate: desc } }]
+                limit: 1
             ) {
                 handicap
                 oldHandicap
@@ -331,7 +331,6 @@ export const getPlayersListByAdminCONGU = gql`
             membershipNumber
             handicapQL: handicap_history(
                 order_by: [{ tournament: { startDate: desc } }]
-             
             ) {
                 handicap
                 oldHandicap
@@ -377,7 +376,7 @@ export const getallPlayersforGGid = gql`
     query PostsGetQuery {
         player {
             gemId
-           }
+        }
     }
 `;
 export const GetTotalFLightPlayed = gql`
@@ -604,17 +603,10 @@ export const GetPlayerTodayRoundQL = gql`
 `;
 
 export const SavePlayersList = gql`
-    mutation SavePlayersListMutation(
-        $playersToSave: [player_insert_input!]!
-    ) {
+    mutation SavePlayersListMutation($playersToSave: [player_insert_input!]!) {
         PlayerEntryQLi: insert_player(
             objects: $playersToSave
-            on_conflict: {
-                constraint: player_pkey
-                update_columns: [
-                    gemId 
-                ]
-            }
+            on_conflict: { constraint: player_pkey, update_columns: [gemId] }
         ) {
             AffectedRowsQLi: affected_rows
         }
