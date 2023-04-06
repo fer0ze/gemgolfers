@@ -81,71 +81,63 @@ export class SignUpReportComponent implements OnInit {
     }
 
     async fecthData() {
-        // this.showdata = Promise.resolve(false);
-        of(this.Players)
-            .pipe()
-            .subscribe(
-                async (data) => {
-                    data = await this.facadeService.getPlayersListReport();
-                    this.data = data;
-                    console.log(data);
-                    let d = new Date();
-                    d.setDate(1);
-                    for (let i = 0; i <= 18; i++) {
-                        console.log(
-                            this.monthName[d.getMonth()] + ' ' + d.getFullYear()
-                        );
-                        this.labelsE.push(
-                            this.monthName[d.getMonth()] + ' ' + d.getFullYear()
-                        );
-                        d.setMonth(d.getMonth() - 1);
-                    }
-                    console.log(this.labelsE);
+        this.showdata = Promise.resolve(false);
 
-                    this.sorts();
-                    this.series[0] = [
-                        {
-                            data: this.dataMembers,
-                            name: 'New Users',
-                        },
-                    ];
-                    this.seriesA = [
-                        {
-                            data: this.dataMembersA,
-                            name: 'Users',
-                        },
-                    ];
-                    this.seriesB = [
-                        {
-                            data: this.dataMembersB,
-                            name: 'Users',
-                        },
-                    ];
-                    this.seriesC = [
-                        {
-                            data: this.dataMembersC,
-                            name: 'Users',
-                        },
-                    ];
-                    this.seriesD = [this.male, this.female];
-
-                    this._seriesE[0] = [
-                        {
-                            data: this.dataMembersE,
-                            name: 'Players',
-                            type: 'line',
-                        },
-                        {
-                            data: this.dataMembersE,
-                            name: 'Players',
-                            type: 'column',
-                        },
-                    ];
-
-                    this._prepareChartData();
-                },
-                (error) => console.log('error')
+        let data = await this.facadeService.getPlayersListReport();
+        this.data = data;
+        console.log(data);
+        let d = new Date();
+        d.setDate(1);
+        for (let i = 0; i <= 18; i++) {
+            console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
+            this.labelsE.push(
+                this.monthName[d.getMonth()] + ' ' + d.getFullYear()
             );
+            d.setMonth(d.getMonth() - 1);
+        }
+        console.log(this.labelsE);
+
+        this.sorts();
+        this.series[0] = [
+            {
+                data: this.dataMembers,
+                name: 'New Users',
+            },
+        ];
+        this.seriesA = [
+            {
+                data: this.dataMembersA,
+                name: 'Users',
+            },
+        ];
+        this.seriesB = [
+            {
+                data: this.dataMembersB,
+                name: 'Users',
+            },
+        ];
+        this.seriesC = [
+            {
+                data: this.dataMembersC,
+                name: 'Users',
+            },
+        ];
+        this.seriesD = [this.male, this.female];
+
+        this._seriesE[0] = [
+            {
+                data: this.dataMembersE,
+                name: 'Players',
+                type: 'line',
+            },
+            {
+                data: this.dataMembersE,
+                name: 'Players',
+                type: 'column',
+            },
+        ];
+
+        this._prepareChartData();
     }
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -155,24 +147,42 @@ export class SignUpReportComponent implements OnInit {
     sorts() {
         let rows = [];
         let myData: any[] = [];
+        let flights = [...this.data.flight_member];
         let memCounter = 0;
         let playerCounter = 0;
+        let flightCounter = 0;
         let prevDate = null;
         let prevPlayerDate = null;
+        let count = [];
+        let match = [];
+        // this.data.flight_member.filter((element) => {
+        //     if (element.id in match) {
+        //         console.log('as');
+        //     } else {
+        //         match[element.id]=++flightCounter;
+        //     }
+        // });
+        console.log(match);
+
         for (let item of this.data.player) {
-            let count = this.data.flight_member.filter((a) => {
+            let bool = flights.find((a) => {
                 return a.playerId == item.id;
             });
-            let SplitDate = item.createdAt.split("T");
+            if (bool!=undefined) {
+                count = flights.filter((a) => {
+                    return a.playerId == item.id;
+                });
+            }
+            let SplitDate = item.createdAt.split('T');
             if (SplitDate[0] == prevPlayerDate) {
                 playerCounter++;
-                 prevPlayerDate=SplitDate[0] ;
+                prevPlayerDate = SplitDate[0];
                 this.dataMembers[this.dataMembers.length - 1]['y'] =
                     playerCounter;
             } else {
                 playerCounter = 0;
                 playerCounter++;
-                prevPlayerDate=SplitDate[0] ;
+                prevPlayerDate = SplitDate[0];
                 let dateObj = {
                     x: new Date(item.createdAt),
                     y: playerCounter,
@@ -201,15 +211,19 @@ export class SignUpReportComponent implements OnInit {
                 month: 'long',
                 year: 'numeric',
             });
+            //console.log(date);
+
             let countA = this.labelsE.find((a) => {
                 return a == date;
             });
+            // if (countA == undefined) {
+            //     this.showdata = Promise.resolve(false);
+            // }
             console.log(countA);
             if (countA !== undefined && prevDate == countA) {
                 memCounter++;
                 prevDate = countA;
                 this.dataMembersE[this.dataMembersE.length - 1] = memCounter;
-               
             } else if (countA !== undefined) {
                 memCounter = 0;
                 memCounter++;
@@ -343,8 +357,8 @@ export class SignUpReportComponent implements OnInit {
                 axisBorder: {
                     show: false,
                 },
-                min: (min): number => min - 500,
-                max: (max): number => max + 100,
+                min: (min): number => min - 1000,
+                max: (max): number => max + 300,
                 tickAmount: 5,
                 show: false,
             },

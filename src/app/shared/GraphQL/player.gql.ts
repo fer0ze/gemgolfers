@@ -34,7 +34,7 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where: { firebaseUid : { _neq: "" } }
+            where: { firstName : { _neq: "" } }
             order_by: { createdAt: desc }
         ) {
             id
