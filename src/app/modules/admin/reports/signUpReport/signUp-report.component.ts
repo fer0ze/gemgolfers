@@ -209,20 +209,7 @@ export class SignUpReportComponent implements OnInit {
                 memCounter++;
                 prevDate = countA;
                 this.dataMembersE[this.dataMembersE.length - 1] = memCounter;
-                if (
-                    countA ==
-                    new Date().toLocaleString('default', {
-                        month: 'long',
-                        year: 'numeric',
-                    })
-                ) {
-                    this.dataMembersA.push(memCounter);
-                }
-                if (countA == 'March 2023') {
-                    this.dataMembersB.push(memCounter);
-                } else if (countA == 'February 2023') {
-                    this.dataMembersC.push(memCounter);
-                }
+               
             } else if (countA !== undefined) {
                 memCounter = 0;
                 memCounter++;
@@ -238,29 +225,29 @@ export class SignUpReportComponent implements OnInit {
         this.dataSource = new MatTableDataSource(rows);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        // for (let items of this.dataMembers) {
-        //     if (items.x.toString().includes('Apr')) {
-        //         if (this.dataMembersA.length < 3 && items.y > 0) {
-        //             this.dataMembersA.push(items.y);
-        //         }
-        //         this.thisMonth++;
-        //     } else if (items.x.toString().includes('Mar')) {
-        //         this.lastMonth++;
-        //         if (this.dataMembersB.length < 3 && items.y > 0) {
-        //             this.dataMembersB.push(items.y);
-        //         }
-        //     } else if (
-        //         items.x.toString().includes('Jan') ||
-        //         items.x.toString().includes('Feb') ||
-        //         items.x.toString().includes('Dec')
-        //     ) {
-        //         this.SecondLastMonth++;
-        //         if (this.dataMembersC.length < 3 && items.y > 0) {
-        //             this.dataMembersC.push(items.y);
-        //         }
-        //         //  this.dataMembersC.push(items.y);
-        //     }
-        // }
+        for (let items of this.dataMembers) {
+            if (items.x.toString().includes('Apr')) {
+                if (this.dataMembersA.length < 3 && items.y > 0) {
+                    this.dataMembersA.push(items.y);
+                }
+                this.thisMonth++;
+            } else if (items.x.toString().includes('Mar')) {
+                this.lastMonth++;
+                if (this.dataMembersB.length < 3 && items.y > 0) {
+                    this.dataMembersB.push(items.y);
+                }
+            } else if (
+                items.x.toString().includes('Jan') ||
+                items.x.toString().includes('Feb') ||
+                items.x.toString().includes('Dec')
+            ) {
+                this.SecondLastMonth++;
+                if (this.dataMembersC.length < 3 && items.y > 0) {
+                    this.dataMembersC.push(items.y);
+                }
+                //  this.dataMembersC.push(items.y);
+            }
+        }
         console.log(this.dataMembers);
     }
 
