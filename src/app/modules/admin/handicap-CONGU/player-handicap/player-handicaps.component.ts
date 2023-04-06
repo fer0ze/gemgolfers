@@ -70,6 +70,7 @@ export class PlayerHandicapComponent implements OnInit {
     blueTeeHI: number;
     whiteTeeHI: number;
     blackTeeHI: number;
+    pageSize: number=20;
     playerHandiData: any;
     handicapHistory: any[] = [];
     handicapHistoryDate: any[] = [];
@@ -149,7 +150,7 @@ export class PlayerHandicapComponent implements OnInit {
 
             this.playerHandiData = playerscore['HandicapQL'];
             console.log(this.playerHandiData);
-            const slicedCongu = this.playerHandiData.slice(0, 20);
+            const slicedCongu = this.playerHandiData;
             console.log(slicedCongu);
 
             this.dataSource = new MatTableDataSource(slicedCongu);
@@ -198,7 +199,7 @@ export class PlayerHandicapComponent implements OnInit {
         doc.setTextColor(100);
 
         let count = 0;
-        this.playerHandiData = this.playerHandiData.slice(0, 20);
+        this.playerHandiData = this.playerHandiData.slice(0,this.pageSize);
         this.playerHandiData.forEach((element) => {
             count++;
             var temp = [
@@ -227,103 +228,11 @@ export class PlayerHandicapComponent implements OnInit {
         // Download PDF document
         //doc.save('flights.pdf');
     }
-    public downloadAsPDFWHS() {
-        var doc = new jsPDF();
-        var col = [
-            'Sr.',
-            'Mem.No',
-            'Date',
-            'Score',
-            'Adj.Score',
-            'h/diff',
-            'h/index',
-        ];
-        var rows = [];
-        var rows = [];
-        doc.setFontSize(17);
-        doc.text(
-            'WHS-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
-                ' ' +
-                this.currentPlayer[0].lastName,
-            14,
-            15
-        );
-        doc.setFontSize(18);
-        // doc.setTextColor(100);
+    pageEvents(event){
+        console.log(event);
+        this.pageSize=event.pageSize;
 
-        let count = 0;
-        this.personLeads.forEach((element) => {
-            count++;
-            // let flag = true;
-            // if (element.combined_handicap_id) {
-
-            //   for (let index in this.personLeads) {
-            //     if (this.personLeads[index].Handicap_id==element.combined_handicap_id) {
-            //       this.personLeads[index].noBorder=false;
-            //       element.noBorder=false;
-            //       break;
-            //     }
-            //   }
-
-            // }
-            let used = false;
-            //  boolean = this.usedForHandicap.some((handicap) => {
-            //     return (
-            //         handicap.used_handicap_id == element.Handicap_id ||
-            //         handicap.combine_handicap_id == element.Handicap_id
-            //     );
-            // });
-
-            var temp = [
-                count,
-                this.currentPlayer[0].membershipNumber,
-                formatDate(
-                    element.tournamentQL.startDate,
-                    'mediumDate',
-                    'en-US'
-                ),
-                element.score,
-                element.adjustedScore,
-                Math.round(element.handicapDifferential * 10) / 10,
-                Math.round(element.handicapIndex * 10) / 10,
-                element.highlight,
-                used,
-            ];
-            rows.push(temp);
-        });
-        // From HTML
-        let a = 1;
-        doc.autoTable(col, rows, {
-            startY: 25,
-            theme: 'grid',
-            didParseCell: function (data) {
-                if (data.row.raw[7] == true) {
-                    data.cell.styles.fillColor = [195, 249, 230];
-                }
-                a++;
-                if (data.row.raw[8] == true && a == 5) {
-                    data.cell.styles.fillColor = [249, 187, 147];
-                    //console.log(1);
-                    //a=false;
-                }
-                if (data.row.index == 1) {
-                    //console.log('assssssssssss');
-                }
-                console.log(data.row.index);
-
-                //console.log(a);
-            },
-        });
-        // doc.autoTable({
-        //   html: "#pdfTable",
-        //   startY: 25,
-        //   theme: "grid",
-        // });
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
-
-        // Download PDF document
-        //doc.save('flights.pdf');
+        
     }
+    
 }

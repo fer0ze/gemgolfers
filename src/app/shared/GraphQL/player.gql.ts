@@ -34,7 +34,7 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where: { firebaseUid: { _neq: "" } }
+            where: { firebaseUid : { _neq: "" } }
             order_by: { createdAt: desc }
         ) {
             id
@@ -683,7 +683,7 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
-            limit: 20
+            
         ) {
             ...PlayerHandicapQL
         }
