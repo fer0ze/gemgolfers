@@ -71,6 +71,7 @@ export class TournamentCategory {
     handicapLimits: JSON;
     prizeInformation: JSON;
     flightSettings : JSON;
+    default?:Boolean;
 }
 
 export class TournamentMember {

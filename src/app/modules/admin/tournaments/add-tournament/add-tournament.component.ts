@@ -501,7 +501,7 @@ export class AddTournamentComponent implements OnInit {
                 Validators.compose([Validators.required]),
             ],
             playersperFlight: ['3', Validators.compose([Validators.required])],
-            flightStartTime: ["08:00 AM", Validators.required],
+            flightStartTime: ['08:00', Validators.required],
             arrangeBy: ['handicap', Validators.required],
             selectedcategories: [
                 this.formArray.get([0]).get('clubctgies').value,
@@ -1763,6 +1763,7 @@ export class AddTournamentComponent implements OnInit {
                 flightSettings: this.checkDate(
                     this.formArray.get([0]).value.clubctgies[index]
                 ),
+                default:true,
                 //flightSettings: null,
             };
 
@@ -2612,6 +2613,7 @@ export class AddTournamentComponent implements OnInit {
                 category: this.formArray.get([0]).value.clubctgies[index].name,
                 handicapLimits: TCdata ? TCdata : null,
                 prizeInformation: prizeInfo ? prizeInfo : null,
+                default:true,
             };
 
             tournamentCats.push(tc);
