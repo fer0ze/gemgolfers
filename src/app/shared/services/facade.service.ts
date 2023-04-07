@@ -302,6 +302,10 @@ export class FacadeService {
   getTotalFlightPlayed(club: any, fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayed(club, fromDate, toDate);
   }
+
+  getTotalFlightsPlayedByPlayer(id: string) {
+    return this.playerService.getTotalFlightsPlayedByPlayer(id);
+  }
   getTotalFlightPlayedAdmin( fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayedAdmin( fromDate, toDate);
   }

@@ -45,9 +45,6 @@ export const getPlayersListReport = gql`
             phone
             gender
         }
-        flight_member {
-            playerId
-        }
     }
 `;
 export const GetPlayersMerge = gql`
@@ -488,6 +485,13 @@ export const GetPlayerByMembershipNumber = gql`
                 playerId
                 subscription
             }
+        }
+    }
+`;
+export const getTotalFlightsPlayedByPlayer = gql`
+    query PostsGetQuery($where: flight_member_bool_exp!) {
+        flight_member(where: $where) {
+            flightId
         }
     }
 `;

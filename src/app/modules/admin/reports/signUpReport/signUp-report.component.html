@@ -455,12 +455,13 @@
                         mat-table
                         [dataSource]="dataSource"
                         matSort
+                        multiTemplateDataRows
                         *ngIf="showdata | async"
                     >
                         <ng-container matColumnDef="id">
                             <th mat-header-cell *matHeaderCellDef>Sr.</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ i + 1 }}
+                                {{ row.count }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="name">
@@ -490,10 +491,43 @@
                         <ng-container matColumnDef="flights">
                             <th mat-header-cell *matHeaderCellDef>Flights</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.flights }}
+                                <button
+                                    class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                    mat-stroked-button
+                                    (click)="toggleDetails(row.id)"
+                                >
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="
+                                            selectedPlayer?.id === row.id
+                                                ? 'heroicons_solid:chevron-up'
+                                                : 'heroicons_solid:chevron-down'
+                                        "
+                                    ></mat-icon>
+                                </button>
                             </td>
                         </ng-container>
+                        <ng-container matColumnDef="expandedDetail">
+                            <td 
+                                mat-cell
+                                *matCellDef="let element"
+                                [attr.colspan]="displayedColumns.length"
+                            >
+                                <div
+                                    class="example-element-detail"
+                                    [@detailExpand]="
+                                        element == expandedElement
+                                            ? 'expanded'
+                                            : 'collapsed'
+                                    "
+                                >
+                                   <span class="text-1xl font-bold">
 
+                                    TotalFlights: 
+                                   </span>{{ this.flightCount}}
+                                </div>
+                            </td>
+                        </ng-container>
                         <tr
                             mat-header-row
                             *matHeaderRowDef="displayedColumns"
@@ -501,6 +535,21 @@
                         <tr
                             mat-row
                             *matRowDef="let row; columns: displayedColumns"
+                            class="example-element-row"
+                            [class.example-expanded-row]="
+                                expandedElement === row
+                            "
+                            (click)="expandedElement = expandedElement === row ? null : row"
+                            
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="
+                                let element;
+                                columns: ['expandedDetail']
+                            "
+                            id="{{element.id}}"
+                            class="example-detail-row warn"
                         ></tr>
                     </table>
                     <mat-paginator
@@ -551,7 +600,8 @@
                                 </div>
                                 <div class="text-right text-secondary">
                                     {{
-                                        (this.male * 100) / this.data.player.length
+                                        (this.male * 100) /
+                                            this.data.player.length
                                             | number : "1.0-0"
                                     }}%
                                 </div>
@@ -570,7 +620,8 @@
                                 </div>
                                 <div class="text-right text-secondary">
                                     {{
-                                        (this.female * 100) / this.data.player.length
+                                        (this.female * 100) /
+                                            this.data.player.length
                                             | number : "1.0-0"
                                     }}%
                                 </div>

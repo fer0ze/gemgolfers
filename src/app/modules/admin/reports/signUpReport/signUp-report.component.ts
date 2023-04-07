@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
@@ -9,10 +9,27 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 import { of } from 'rxjs';
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+} from '@angular/animations';
 @Component({
     selector: 'app-signUp-report',
     templateUrl: './signUp-report.component.html',
     styleUrls: ['./signUp-report.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition(
+                'expanded <=> collapsed',
+                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ),
+        ]),
+    ],
 })
 export class SignUpReportComponent implements OnInit {
     chartVisitors: ApexOptions;
@@ -35,6 +52,8 @@ export class SignUpReportComponent implements OnInit {
     seriesD: any[] = [];
     _seriesE: any[] = [];
     labelsE: any[] = [];
+    selectedPlayer = null;
+    showFlight: boolean = false;
     dataMembers: any[] = [];
     dataMembersA: any[] = [];
     dataMembersB: any[] = [];
@@ -64,11 +83,12 @@ export class SignUpReportComponent implements OnInit {
         'November',
         'December',
     ];
-
+    flightCount: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     constructor(
         private datePipe: DatePipe,
+        private _changeDetectorRef: ChangeDetectorRef,
         private location: Router,
         private facadeService: FacadeService,
         private route: ActivatedRoute,
@@ -147,32 +167,17 @@ export class SignUpReportComponent implements OnInit {
     sorts() {
         let rows = [];
         let myData: any[] = [];
-        let flights = [...this.data.flight_member];
+        //let flights = [...this.data.flight_member];
         let memCounter = 0;
         let playerCounter = 0;
         let flightCounter = 0;
         let prevDate = null;
         let prevPlayerDate = null;
-        let count = [];
+        let count=0;
         let match = [];
-        // this.data.flight_member.filter((element) => {
-        //     if (element.id in match) {
-        //         console.log('as');
-        //     } else {
-        //         match[element.id]=++flightCounter;
-        //     }
-        // });
         console.log(match);
 
         for (let item of this.data.player) {
-            let bool = flights.find((a) => {
-                return a.playerId == item.id;
-            });
-            if (bool!=undefined) {
-                count = flights.filter((a) => {
-                    return a.playerId == item.id;
-                });
-            }
             let SplitDate = item.createdAt.split('T');
             if (SplitDate[0] == prevPlayerDate) {
                 playerCounter++;
@@ -189,11 +194,11 @@ export class SignUpReportComponent implements OnInit {
                 };
                 this.dataMembers.push(dateObj);
             }
-            if (count.length > 0) {
-                this.clubPlayers++;
-            } else {
-                this.mobilePlayers++;
-            }
+            // if (item.email!="" || item.phone!="") {
+            //     this.clubPlayers++;
+            // } else {
+            //     this.mobilePlayers++;
+            // }
             if (item.gender == 'male') {
                 this.male++;
             }
@@ -201,11 +206,13 @@ export class SignUpReportComponent implements OnInit {
                 this.female++;
             }
             let obj = {
+                id: item.id,
+                count:++count,
                 name: item.firstName + ' ' + item.lastName,
                 date: item.createdAt.substring(0, 10),
                 email: item.email,
                 phone: item.phone,
-                flights: count.length,
+                flights: 0,
             };
             let date = new Date(item.createdAt).toLocaleString('default', {
                 month: 'long',
@@ -233,9 +240,8 @@ export class SignUpReportComponent implements OnInit {
 
             rows.push(obj);
         }
-        this.clubPlayers = (this.clubPlayers * 100) / this.data.player.length;
-        this.mobilePlayers =
-            (this.mobilePlayers * 100) / this.data.player.length;
+        this.clubPlayers = (5000 * 100) / this.data.player.length;
+        this.mobilePlayers = (4000 * 100) / this.data.player.length;
         this.dataSource = new MatTableDataSource(rows);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -264,7 +270,26 @@ export class SignUpReportComponent implements OnInit {
         }
         console.log(this.dataMembers);
     }
-
+    async toggleDetails(productId: string) {
+        // If the product is already selected...
+        if (this.selectedPlayer != null && this.selectedPlayer == productId) {
+            // Close the details
+            document.getElementById(productId).classList.add('warn');
+            this.selectedPlayer = null;
+            return;
+        } else if (
+            this.selectedPlayer != null &&
+            this.selectedPlayer != productId
+        ) {
+            document.getElementById(this.selectedPlayer).classList.add('warn');
+        }
+        let count = await this.facadeService.getTotalFlightsPlayedByPlayer(
+            productId
+        );
+        this.flightCount = count['flight_member'].length;
+        document.getElementById(productId).classList.remove('warn');
+        this.selectedPlayer = productId;
+    }
     private _prepareChartData(): void {
         // Visitors
         this.chartVisitors = {

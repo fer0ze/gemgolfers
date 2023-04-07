@@ -274,7 +274,6 @@ export class PlayersService {
         });
     }
     public getTotalFlightPlayedAdmin(
-    
         fromDate: string,
         toDate: any
     ): Promise<any> {
@@ -415,7 +414,6 @@ export class PlayersService {
         });
     }
     public playerUpdatedHandicapWHSReportAdmin(
-       
         fromDate: string,
         toDate: string
     ): Promise<any> {
@@ -424,7 +422,6 @@ export class PlayersService {
                 .subscribe({
                     query: Query.playerUpdatedHandicapWHSReportAdmin,
                     variables: {
-                        
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -585,6 +582,24 @@ export class PlayersService {
                 })
                 .valueChanges.subscribe(({ data }) => {
                     resolve(data.player);
+                });
+        });
+    }
+    getTotalFlightsPlayedByPlayer(id: any): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getTotalFlightsPlayedByPlayer,
+                    variables: {
+                        where: { playerId: { _eq: id } },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
                 });
         });
     }
@@ -825,10 +840,7 @@ export class PlayersService {
         });
     }
 
-    public importPlayerList(
-        players: any[],
-      
-    ): Promise<boolean> {
+    public importPlayerList(players: any[]): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
