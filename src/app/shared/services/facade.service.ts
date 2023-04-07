@@ -745,6 +745,9 @@ export class FacadeService {
   createNextRoundFlights(flights: Flight[]) {
     return this.flightsService.createNextRoundFlights(flights);
   }
+  addFlightName(flights: any) {
+    return this.flightsService.addFlightName(flights);
+  }
 
   copyPlayerScore(playerId: string, fromFlight: string, toFlight: string) {
     return this.flightsService.copyPlayerScore(playerId, fromFlight, toFlight);

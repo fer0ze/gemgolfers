@@ -157,6 +157,21 @@ export const SaveTournamentFlightsMutationsForTaxes = gql`
         }
     }
 `;
+export const addFlightName = gql`
+    mutation SaveTournamentFlightsMutation(
+        $flightNamesToSave: [flight_name_insert_input!]!
+    ) {
+        FlightNameEntryQL: insert_flight_name(
+            objects: $flightNamesToSave
+            on_conflict: {
+                constraint: flight_name_pkey
+                update_columns: [name]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
 
 export const SaveTournamentFlightsMutationsForStroke = gql`
     mutation SaveTournamentFlightsMutation(

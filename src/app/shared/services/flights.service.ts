@@ -450,6 +450,28 @@ export class FlightsService {
         });
     }
 
+    public addFlightName(flights: any): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.addFlightName,
+                    variables: {
+                        flightNamesToSave: flights,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+
     public updateDailyRoundCourseHoleset(
         tournamentId: string,
         courseHolset: number,
