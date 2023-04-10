@@ -2565,11 +2565,14 @@ export class AddTournamentComponent implements OnInit {
                                 },
                             };
                             if (this.showTexas) {
+                                let name: string = (<HTMLInputElement>(
+                                    document.getElementById('flight_' + index + '_name')
+                                )).value;
+                                console.log(name);
+                                
                                 let flightNames: any = {
                                     flightId: flight.id,
-                                    name: this.selectedMembers[index][index2][
-                                        index3
-                                    ].name,
+                                    name: name,
                                 };
 
                                 flightName.push(flightNames);

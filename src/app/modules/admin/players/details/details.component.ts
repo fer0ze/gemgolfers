@@ -131,7 +131,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             lastName: new FormControl('', [Validators.required]),
             gender: new FormControl('male'),
             email: new FormControl(''),
-            phoneNumbers: new FormControl(''),
+            phoneNumbers: new FormControl('', [Validators.required]),
             dateOfBirth: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),

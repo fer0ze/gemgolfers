@@ -46,8 +46,14 @@
                                                 [floatLabel]="'always'"
                                             >
                                                 <span
+                                                    *ngIf="!this.showTeams"
                                                     class="text-base font-black text-gray-400 min-w-max"
                                                     >Flight No:</span
+                                                >
+                                                <span
+                                                    *ngIf="this.showTeams"
+                                                    class="text-base font-black text-gray-400 min-w-max"
+                                                    >Team No:</span
                                                 >
                                                 <input
                                                     value="{{
@@ -59,6 +65,23 @@
                                                 />
                                             </mat-form-field>
                                         </ng-container>
+                                        <mat-form-field
+                                            *ngIf="this.showTeams"
+                                            class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                            [floatLabel]="'always'"
+                                        >
+                                            <span
+                                                class="text-base font-black text-gray-400 min-w-max"
+                                                >Team Name:</span
+                                            >
+                                            <input
+                                                type="text"
+                                                matInput
+                                                placeholder="Team Name"
+                                                id="flight_{{ i }}_name"
+                                                value="{{ items['firstName'] }}"
+                                            />
+                                        </mat-form-field>
                                         <!-- <ng-container>
                                             <mat-form-field
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
@@ -392,8 +415,14 @@
                                     [floatLabel]="'always'"
                                 >
                                     <span
+                                        *ngIf="!this.showTeams"
                                         class="text-base font-black text-gray-400 min-w-max"
                                         >Flight No:</span
+                                    >
+                                    <span
+                                        *ngIf="this.showTeams"
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Team No:</span
                                     >
                                     <input
                                         value="{{ items['flightNo'] }}"
@@ -402,7 +431,22 @@
                                         #query
                                     />
                                 </mat-form-field>
-
+                                <mat-form-field
+                                    *ngIf="this.showTeams"
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Name:</span
+                                    >
+                                    <input
+                                        type="text"
+                                        placeholder="Team Name"
+                                        id="flight_{{ i }}_name"
+                                        value="{{ items['firstName'] }}"
+                                    />
+                                </mat-form-field>
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
                                 >
@@ -445,6 +489,7 @@
                                         #query
                                     />
                                 </mat-form-field>
+
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"

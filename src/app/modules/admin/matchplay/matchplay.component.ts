@@ -539,10 +539,10 @@ export class MatchplayComponent implements OnInit {
                         // console.log(courseHole);
 
                         let hole = playerScore.find((a) => {
-                            console.log(a.holeId + '<---->' + courseHole[0].id);
-                            console.log(
-                                courseHole.length > 0 ? courseHole[0].id : ''
-                            );
+                            // console.log(a.holeId + '<---->' + courseHole[0].id);
+                            // console.log(
+                            //     courseHole.length > 0 ? courseHole[0].id : ''
+                            // );
                             return (
                                 a.holeId ==
                                 (courseHole.length > 0 ? courseHole[0].id : '')
@@ -577,8 +577,8 @@ export class MatchplayComponent implements OnInit {
 
                     let LeaderGross: any = {
                         teamName: flightData['FlightName'].name,
-                        flightId: this.matchPlayData['CourseQL'].id,
-                        courseId: flightData.courseId,
+                        flightId: flightData.id,
+                        courseId: this.matchPlayData['CourseQL'].id,
                         playerId: player.id,
                         name: player.firstName + ' ' + player.lastName,
                         picture: player.picture,
@@ -972,9 +972,9 @@ export class MatchplayComponent implements OnInit {
                                 }
                             }
 
-                            playerScoresIds.push(
-                                hole.id + '&' + player.playerId
-                            );
+                            // playerScoresIds.push(
+                            //     hole.id + '&' + player.playerId
+                            // );
                             if (grossScore - hole.par == -2) {
                                 playerScoreEagle.push(
                                     hole.id + '&' + player.playerId
@@ -1168,27 +1168,27 @@ export class MatchplayComponent implements OnInit {
                             }
                             if (grossScore - hole.par == -2) {
                                 playerScoreEagle.push(
-                                    hole.id + '&' + player.playerId
+                                    hole.id + '&' + flightId
                                 );
                             }
                             if (grossScore - hole.par == -1) {
                                 playerScoreBirdy.push(
-                                    hole.id + '&' + player.playerId
+                                    hole.id + '&' + flightId
                                 );
                             }
                             if (grossScore - hole.par == 1) {
                                 playerScoreBoogey.push(
-                                    hole.id + '&' + player.playerId
+                                    hole.id + '&' + flightId
                                 );
                             }
                             if (grossScore - hole.par == 2) {
                                 playerScoreDBoogey.push(
-                                    hole.id + '&' + player.playerId
+                                    hole.id + '&' + flightId
                                 );
                             }
                             if (grossScore - hole.par == 0) {
                                 playerScoreEqual.push(
-                                    hole.id + '&' + player.playerId
+                                    hole.id + '&' + flightId
                                 );
                             }
                             playerScoresIds.push(hole.id + '&' + flightId);

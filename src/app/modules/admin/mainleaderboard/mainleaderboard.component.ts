@@ -88,6 +88,7 @@ export class MainLeaderboardComponent implements OnInit {
     allRoundCutOff: boolean = false;
     allRoundCutOffNet: boolean = false;
     cuttOffScore: number = 0;
+    cuttType: string = 'GROSS';
     isCuttOffRequired: boolean = false;
     cutOffLine: any;
     leaderGrossQL: any;
@@ -270,6 +271,7 @@ export class MainLeaderboardComponent implements OnInit {
             });
     }
     private parseSubscriptionResponse(data: any): boolean {
+        this.isLoading = false;
         this.catRound = 1;
         this.roundCheck = false;
         this.roundCheck3 = false;
@@ -292,6 +294,7 @@ export class MainLeaderboardComponent implements OnInit {
                             let catCutOff = this.cutOffList['cutOff'][index];
                             this.cutOffLine = catCutOff;
                             this.cuttOffScore = catCutOff.score;
+                            this.cuttType = catCutOff.type;
                             if (this.cutOffLine.copymembers > 0) {
                                 this.cuttOffScore = 0;
                             }
@@ -641,6 +644,7 @@ export class MainLeaderboardComponent implements OnInit {
                 return true;
             }
         } else {
+            this.isLoading = false;
             if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE)
                 this.createTexasScrampleLeaders(
                     this.Leaderboard.FlightsQL,

@@ -507,34 +507,40 @@ export class ViewTournamentComponent implements OnInit {
                 // const distinctThings = m.filter((thing, i, arr) => {
                 //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
                 // });
-                if (c.name == 'Amateurs') {
-                    this.AmateursCount = m.length;
-                }
-                if (c.name.toLowerCase().includes('Junior')) {
-                    this.JuniorsCount = m.length;
-                }
-                if (c.name.toLowerCase().includes('Senior')) {
-                    this.SeniorsCount = m.length;
-                }
-                if (c.name == 'Professionals') {
-                    this.VeteransCount = m.length;
-                }
-                if (c.name == 'Ladies') {
-                    this.LadiesCount = m.length;
-                }
+                if(m && m.length>0)
                 {
-                    this.totalMembers += m.length;
-                    let stat: any = {
-                        title: c.name,
-                        count: m.length,
-                        class: colors[index],
-                    };
-                    this.membersStats.push(stat);
-                    index++;
-
-                    if (index > 3) index = 0;
+                    if (c.name == 'Amateurs' ) {
+                        this.AmateursCount = m.length;
+                    }
+                    if (c.name.includes('Junior')) {
+                        this.JuniorsCount = m.length;
+                    }
+                    if (c.name.includes('Senior')) {
+                        this.SeniorsCount = m.length;
+                    }
+                    if (c.name == 'Professionals') {
+                        this.VeteransCount = m.length;
+                    }
+                    if (c.name == 'Ladies') {
+                        this.LadiesCount = m.length;
+                    }
+                    {
+                        this.totalMembers += m.length;
+                        let stat: any = {
+                            title: c.name,
+                            count: m.length,
+                            class: colors[index],
+                        };
+                        this.membersStats.push(stat);
+                        index++;
+    
+                        if (index > 3) index = 0;
+                    }
                 }
+                
             }
+            console.log( this.SeniorsCount);
+            
             console.log(this.membersStats);
             this.totalPlayers = this.totalMembers;
             console.log(this.totalMembers);

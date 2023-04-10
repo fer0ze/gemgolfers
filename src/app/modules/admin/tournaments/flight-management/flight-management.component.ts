@@ -204,7 +204,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         // this.syncClubMembers();
         if (
-            this.tournamentInfo[0].activeRound >
+            this.tournamentInfo[0].activeRound ==
             this.tournamentInfo[0].noOfRounds
         )
             if (

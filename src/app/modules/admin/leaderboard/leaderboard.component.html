@@ -109,6 +109,7 @@
             </div>
 
             <div
+            *ngIf="!this.showTaxes"
                 class="flex flex-col sm:flex-row items-center justify-center mb-1"
             >
                 <mat-tab-group
@@ -1111,6 +1112,113 @@
                         </div></mat-tab
                     >
                 </mat-tab-group>
+            </div>
+            <div
+                *ngIf="this.showTaxes"
+                class="flex flex-col sm:flex-row items-center justify-center mb-1"
+            >
+                <div id="leaderboard" class="mt-2 w-full">
+                    <ul
+                        class="responsive-table"
+                        *ngIf="isGross && this.showTaxes"
+                    >
+                        <li class="table-header">
+                            <div class="col col-1">POS.</div>
+                            <div class="col col-2">TEAM</div>
+                            <div class="col col-3">GROSS</div>
+                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-5 THRU">THRU</div>
+                        </li>
+                        <li class="table-row" *ngFor="let item of grossLeaders">
+                            <div class="col col-1">
+                                {{ item.position }}
+                            </div>
+                            <div class="col col-2">
+                                {{ item.name }}
+                                <div
+                                    *ngIf="item.handicap > 0"
+                                    class="text-xs flex items-center"
+                                >
+                                    HC:{{ item.handicap }}
+                                    <div
+                                        class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
+                                        (click)="
+                                            viewPlayerScore(
+                                                item.name,
+                                                item.courseId,
+                                                item.holeSets,
+                                                item.playerId,
+                                                item.holeSetsInverted,
+                                                'gross'
+                                            )
+                                        "
+                                    >
+                                        view score
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-3">
+                                {{ item.score }}
+                            </div>
+                            <div class="col col-4">
+                                {{ item.under }}
+                            </div>
+                            <div class="col col-5">
+                                {{ item.holes }}
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul
+                        class="responsive-table"
+                        *ngIf="isNet && this.showTaxes"
+                    >
+                        <li class="table-header">
+                            <div class="col col-1">POS.</div>
+                            <div class="col col-2">TEAM</div>
+                            <div class="col col-3">NET</div>
+                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-5 THRU">THRU</div>
+                        </li>
+                        <li class="table-row" *ngFor="let item of netLeaders">
+                            <div class="col col-1">
+                                {{ item.position }}
+                            </div>
+                            <div class="col col-2">
+                                {{ item.name }}
+                                <div class="text-xs flex items-center">
+                                    <span *ngIf="item.handicap > 0">
+                                        HC:{{ item.handicap }}
+                                    </span>
+                                    <div
+                                        class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
+                                        (click)="
+                                            viewPlayerScore(
+                                                item.name,
+                                                item.courseId,
+                                                item.holeSets,
+                                                item.playerId,
+                                                item.holeSetsInverted,
+                                                'gross'
+                                            )
+                                        "
+                                    >
+                                        view score
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-3">
+                                {{ item.score }}
+                            </div>
+                            <div class="col col-4">
+                                {{ item.under }}
+                            </div>
+                            <div class="col col-5">
+                                {{ item.holes }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

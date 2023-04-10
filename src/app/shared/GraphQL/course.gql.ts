@@ -179,7 +179,7 @@ export const getCourseRating = gql`
 
 export const getCourseHoleSets = gql`
   query getCourseHoleSets($where: course_hole_sets_bool_exp!) {
-    course_hole_sets(where: $where, order_by: { noOfHoles: asc }) {
+    course_hole_sets(where: $where, order_by: { noOfHoles: desc }) {
       ...CourseHoleSetsQL
     }
   }
