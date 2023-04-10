@@ -324,7 +324,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         this.playerID
             ? (UniqueId = this.playerID)
             : (UniqueId = UniqueIdGenerator.generate());
-        this.currentPlayer.player.length > 0
+        this.playerID
             ? (GEMId = this.currentPlayer.player[0].gemId)
             : (GEMId = generateGemId.generate(sortarray[0].gemId));
         console.log(GEMId);
@@ -347,11 +347,11 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 ? this.loggedInuser.adminClubId
                 : null,
             firebaseUid:
-                this.currentPlayer.player.length > 0
+                this.playerID
                     ? this.currentPlayer.player[0].firebaseUid
                     : null,
             fcmToken:
-                this.currentPlayer.player.length > 0
+                this.playerID
                     ? this.currentPlayer.player[0].fcmToken
                     : null,
             gemId: GEMId,

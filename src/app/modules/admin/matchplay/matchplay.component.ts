@@ -1612,7 +1612,7 @@ export class MatchplayComponent implements OnInit {
 
         let total: number =
             (Number(gross9total.value) ? Number(gross9total.value) : 0) +
-            (Number(gross18total.value) ? Number(gross18total.value) : 0);
+            (Number(gross18total) ? Number(gross18total.value) : 0);
         grosstotal.value = total.toString();
         console.log(total);
     }
@@ -1673,7 +1673,7 @@ export class MatchplayComponent implements OnInit {
 
         let total: number =
             (Number(gross9total.value) ? Number(gross9total.value) : 0) +
-            (Number(gross18total.value) ? Number(gross18total.value) : 0);
+            (Number(gross18total) ? Number(gross18total.value) : 0);
         grosstotal.value = total.toString();
     }
 
