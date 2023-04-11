@@ -150,8 +150,8 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab4: boolean = false;
     showMainTab5: boolean = false;
     showSummary: boolean = false;
-    tournamentMember: any;
-    tournamentMembers: any;
+    tournamentMember: any=[];
+    tournamentMembers: any=[];
     dataFullTournament: any;
     cuttFlag: number = 0;
     tournamentCategories: any;
@@ -507,9 +507,8 @@ export class ViewTournamentComponent implements OnInit {
                 // const distinctThings = m.filter((thing, i, arr) => {
                 //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
                 // });
-                if(m && m.length>0)
-                {
-                    if (c.name == 'Amateurs' ) {
+                if (m && m.length > 0) {
+                    if (c.name == 'Amateurs') {
                         this.AmateursCount = m.length;
                     }
                     if (c.name.includes('Junior')) {
@@ -533,14 +532,13 @@ export class ViewTournamentComponent implements OnInit {
                         };
                         this.membersStats.push(stat);
                         index++;
-    
+
                         if (index > 3) index = 0;
                     }
                 }
-                
             }
-            console.log( this.SeniorsCount);
-            
+            console.log(this.SeniorsCount);
+
             console.log(this.membersStats);
             this.totalPlayers = this.totalMembers;
             console.log(this.totalMembers);
@@ -2237,10 +2235,11 @@ export class ViewTournamentComponent implements OnInit {
     redirectToScores() {
         this.router.navigate(['/matchplay/' + this.tournamentID]);
     }
-    viewsignupform(){
-        let url = this.router.createUrlTree(['/signUpForm/' + this.tournamentID]);
+    viewsignupform() {
+        let url = this.router.createUrlTree([
+            '/signUpForm/' + this.tournamentID,
+        ]);
         window.open(url.toString(), '_blank');
-        
     }
 
     redirectToflightManagement() {
@@ -2813,17 +2812,44 @@ export class ViewTournamentComponent implements OnInit {
         return total;
     }
     async getTournamentMembers() {
-        let dataFullTournaments = await this.facadeService.getTournamentMembers(
-            this.tournamentID
-        );
-        console.log(dataFullTournaments);
-        this.flightNumber = this.fullTournament.FlightsQL.length + 1;
-        this.tournamentMember = dataFullTournaments.TournamentMemberQL;
-        this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
+        let dataFullTournaments: any;
+        if (this.dataFullTournament['TournamentQL'][0].leagueId == null) {
+            dataFullTournaments = await this.facadeService.getTournamentMembers(
+                this.tournamentID
+            );
+            console.log(dataFullTournaments);
+            this.flightNumber = this.fullTournament.FlightsQL.length + 1;
+            this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+            this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
 
-        this.dataSource = new MatTableDataSource(this.tournamentMember);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+            this.dataSource = new MatTableDataSource(this.tournamentMember);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+        } else {
+            dataFullTournaments =
+                await this.facadeService.getTournamentsFlights(
+                    this.tournamentID
+                );
+            console.log(dataFullTournaments);
+            if(dataFullTournaments)
+            {
+                for(let obj of dataFullTournaments['TournamentQL'][0].FlightManagerQLi)
+                {
+                    for (const iterator of obj.MembersQL) {
+                        this.tournamentMember.push(iterator.PlayerQL);
+                        this.tournamentMembers.push(iterator.PlayerQL);
+                    }
+                }
+
+            }
+            this.flightNumber = this.fullTournament.FlightsQL.length + 1;
+           // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+            this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
+
+            this.dataSource = new MatTableDataSource(this.tournamentMember);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+        }
     }
 
     private calculateTotal(leaderGross: any, leaderNet: any, round: number) {

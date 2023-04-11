@@ -3704,7 +3704,7 @@
                                     <div class="col col-2">NAME</div>
                                     <div class="col col-3">EMAIL</div>
                                     <div class="col col-4">HC</div>
-                                    <div class="col col-5">MemberNumber</div>
+                                    <div class="col col-5">Mem.No</div>
                                     <div class="col col-5">CATEGORY</div>
                                     <div class="col col-5">Actions</div>
                                 </li>
@@ -3719,20 +3719,25 @@
                                         {{ k + 1 }}
                                     </div>
                                     <div class="col col-2 font-medium">
-                                        {{ row.player["firstName"] }}
-                                        {{ row.player["lastName"] }}
+                                        {{ row.player ? row.player["firstName"]: row["firstName"] }}
+                                        {{ row.player ?row.player["lastName"]: row["lastName"]}}
+                                      
                                     </div>
                                     <div class="col col-3 font-medium">
-                                        {{ row.player["email"] }}
+                                        {{ row.player ?row.player["email"]: row["email"]}}
+                                    
                                     </div>
                                     <div class="col col-4 font-medium">
-                                        {{ row.player["handicap"] }}
+                                      
+                                        {{ row.player ?row.player["handicap"]: row["handicap"]}}
                                     </div>
                                     <div class="col col-5 font-medium">
-                                        {{ row.player["membershipNumber"] }}
+                                    
+                                        {{ row.player ?row.player["membershipNumber"]: row["membershipNumber"]}}
                                     </div>
                                     <div class="col col-5 font-medium">
-                                        {{ row.player["playerCategory"] }}
+                                       
+                                        {{ row.player ?row.player["playerCategory"]: row["playerCategory"]}}
                                     </div>
                                     <div
                                         class="col col-5 font-medium cursor-pointer"

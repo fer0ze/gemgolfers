@@ -408,6 +408,7 @@ export const FlightManagersQuery = gql`
                         lastName
                         playerCategory
                         handicap
+                        membershipNumber
                     }
                     attendance
                     playingTee

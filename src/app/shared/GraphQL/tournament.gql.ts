@@ -109,6 +109,7 @@ export const tournamentDashBoard = gql`
         ) {
             id
             courseId
+            leagueId
             title
             noOfRounds
             matchFormat

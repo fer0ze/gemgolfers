@@ -731,7 +731,7 @@ export class MainLeaderboardComponent implements OnInit {
                     );
                 }
 
-                if (this.selectedCategoryValue != null) {
+                if (this.selectedCategoryValue != '') {
                     let handicapLimits: any =
                         this.selectedCategory.handicapLimits;
 
@@ -2493,7 +2493,7 @@ export class MainLeaderboardComponent implements OnInit {
                 ////console.log(this.selectedCategory);
                 ////console.log(this.category.handicapLimits);
 
-                if (this.selectedCategoryValue != null) {
+                if (this.selectedCategoryValue != '') {
                     // Skip this player if not belonging to selected category
                     ////console.log(player.playerCategory + "< -- >" + this.category.category);
                     //let handicapLimits:any = this.category.handicapLimits;
