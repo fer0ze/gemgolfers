@@ -9,6 +9,15 @@
             <mat-tab label="Day 1" *ngIf="noOfRounds >= 1">
                 <div class="flex justify-end mr-4">
                     <button
+                    *ngIf="selectedMembers.length== 0"
+                    class="mx-2"
+                        mat-raised-button
+                        color="accent"
+                        (click)="createAutoFlights()"
+                    >
+                        Create Auto-Flights
+                    </button>
+                    <button
                         mat-raised-button
                         color="primary"
                         (click)="addFlight(1)"

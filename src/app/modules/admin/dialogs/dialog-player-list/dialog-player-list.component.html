@@ -1,6 +1,33 @@
-<div mat-dialog-content>
+<div mat-dialog-content *ngIf="show">
     <div>
-        <mat-form-field>
+        <div class="flex flex-row">
+            <mat-form-field class="fuse-mat-no-subscript w-full mr-2">
+                <input matInput id="fullName" placeholder="Enter Name" />
+            </mat-form-field>
+            <!-- <mat-form-field>
+            <input matInput id="lastName" placeholder="Last Name" />
+          </mat-form-field> -->
+            <mat-form-field class="fuse-mat-no-subscript w-full mr-2">
+                <input matInput id="handicap" placeholder="Handicap" />
+            </mat-form-field>
+            <button
+                class="w-40 mx-1 mt-1"
+                mat-raised-button
+                [color]="'accent'"
+                (click)="getPlayerInformationByName()"
+            >
+                Search
+            </button>
+            <button
+                class="w-40 mx-1 mt-1"
+                mat-flat-button [color]="'primary'"
+                (click)="addNewPlayer()"
+            >
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Add</span>
+            </button>
+        </div>
+        <mat-form-field class="mt-2">
             <input
                 matInput
                 (keyup)="applyFilter($event.target.value)"
@@ -26,9 +53,15 @@
             </ng-container>
             <!-- First Name Column -->
             <ng-container matColumnDef="cat">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Category
+                </th>
                 <td mat-cell *matCellDef="let row">
-                    {{ row.playerCategory =='Seniors' ? 'Senior Amateurs' :row.playerCategory}}
+                    {{
+                        row.playerCategory == "Seniors"
+                            ? "Senior Amateurs"
+                            : row.playerCategory
+                    }}
                 </td>
             </ng-container>
 
@@ -79,11 +112,11 @@
         </table>
         <mat-paginator
             [pageSize]="20"
-            [pageSizeOptions]="[20,30, 50, 100]"
+            [pageSizeOptions]="[20, 30, 50, 100]"
         ></mat-paginator>
     </div>
 </div>
-<div mat-dialog-actions class="flex justify-center mt-4">
+<div mat-dialog-actions class="flex justify-center mt-4" *ngIf="show">
     <button mat-raised-button (click)="close()">Close</button>
     <button
         mat-raised-button
@@ -94,3 +127,216 @@
         Save Member
     </button>
 </div>
+
+<div *ngIf="!show">
+    <section fxLayout="row wrap" class="w-160" fxLayoutAlign="center center">
+        
+            <mat-card-header>
+                <mat-card-title class="mat-button mat-accent">Create Player Form</mat-card-title>
+            </mat-card-header>
+            <form
+                [formGroup]="playerForm"
+                autocomplete="off"
+                novalidate
+                (ngSubmit)="createPlayer(playerForm.value)"
+                fxLayout="column wrap"
+                fxLayoutAlign="center center"
+            >
+                <mat-card-content>
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>First Name</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            placeholder="First Name"
+                            formControlName="firstName"
+                            id="firstName"
+                        />
+                        
+                        <mat-error *ngIf="hasError('firstName', 'required')"
+                            >Name is required</mat-error
+                        >
+                        <mat-error *ngIf="hasError('firstName', 'maxlength')"
+                            >You have more than 60 characters</mat-error
+                        >
+                        <mat-icon matSuffix>face</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Last Name</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            placeholder="Last Name"
+                            formControlName="lastName"
+                        />
+                        
+                        <mat-error *ngIf="hasError('lastName', 'required')"
+                            >Address is required</mat-error
+                        >
+                        <mat-error *ngIf="hasError('lastName', 'maxlength')"
+                            >You have more than 100 characters</mat-error
+                        >
+                        <mat-icon matSuffix>face</mat-icon>
+                    </mat-form-field>
+
+                    
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Date of Birth</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker"
+                            formControlName="dob"
+                            placeholder="Date of Birth"
+                        />
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Email</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            placeholder="Player's email"
+                            formControlName="email"
+                        />
+                        
+                        <mat-error *ngIf="hasError('email', 'required')"
+                            >Email is required</mat-error
+                        >
+                        <mat-error *ngIf="hasError('email', 'maxlength')"
+                            >You have more than 60 characters</mat-error
+                        >
+                        <mat-error *ngIf="hasError('email', 'email')"
+                            >Enter a valid email address</mat-error
+                        >
+                        <mat-icon matSuffix>email</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Phone</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            placeholder="Player's Phone"
+                            formControlName="phone"
+                        />
+                        
+                        <mat-error *ngIf="hasError('phone', 'required')"
+                            >Phone is required</mat-error
+                        >
+                        <mat-error *ngIf="hasError('phone', 'maxlength')"
+                            >You have more than 60 characters</mat-error
+                        >
+                        <mat-icon matSuffix>phone</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Handicap</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            placeholder="Player's Handicap"
+                            type="number"
+                            formControlName="handicap"
+                        />
+                        <mat-error *ngIf="hasError('handicap', 'required')"
+                            >Phone is required</mat-error
+                        >
+                        <mat-icon matSuffix>golf_course</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Category</mat-label>
+                        <mat-select
+                            placeholder="Player Category"
+                            formControlName="playerCategory"
+                        >
+                            <mat-option
+                                *ngFor="let category of playerCategories"
+                                [value]="category.name"
+                                >{{ category.name }}</mat-option
+                            >
+                        </mat-select>
+                        <mat-icon matSuffix>category</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>Club</mat-label>
+                        <mat-select
+                            placeholder="Club"
+                            formControlName="playerClubMember"
+                            [disabled]="
+                                loggedInuser.userRole > 1 ? true : false
+                            "
+                        >
+                            <mat-option
+                                *ngFor="let club of golfClubs"
+                                [value]="club.id"
+                                >{{ club.name }}</mat-option
+                            >
+                        </mat-select>
+                        <mat-icon matSuffix>golf_course</mat-icon>
+                    </mat-form-field>
+
+                    
+
+                    <mat-form-field class="w48 mx-1">
+                      <mat-label>MembershipNo</mat-label>
+                        <input
+                            matInput
+                            type="text"
+                            placeholder="MembershipNo"
+                            formControlName="membershipNumber"
+                        />
+                        
+                        <mat-error
+                            *ngIf="hasError('membershipNumber', 'required')"
+                            >Membership No. is required</mat-error
+                        >
+                        <mat-error
+                            *ngIf="hasError('membershipNumber', 'maxlength')"
+                            >You have more than 60 characters</mat-error
+                        >
+                        <mat-icon matSuffix>face</mat-icon>
+                    </mat-form-field>
+
+                   
+
+                   
+                </mat-card-content>
+
+                <mat-card-actions align="center">
+                    <button
+                    class="mx-2"
+                        mat-raised-button
+                        color="primary"
+                        [disabled]="!playerForm.valid"
+                        cdkFocusInitial
+                    >
+                        Save
+                    </button>
+                    <button
+                        type="button"
+                        mat-raised-button
+                        color="warn"
+                        (click)="onNoClick()"
+                    >
+                        Cancel
+                    </button>
+                </mat-card-actions>
+            </form>
+       
+    </section>
+</div>
+<!-- <div mat-dialog-actions>
+  <button mat-raised-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="response" [disabled]="!response" cdkFocusInitial>Add player to list</button>
+</div> -->
+

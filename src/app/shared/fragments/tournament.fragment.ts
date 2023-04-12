@@ -113,7 +113,10 @@ export const TournamentQL = gql`
             ...CourseQL
         }
         CategoriesQL: categories {
+            id
+            tournamentId
             category
+            flightSettings
         }
         members {
             playerId

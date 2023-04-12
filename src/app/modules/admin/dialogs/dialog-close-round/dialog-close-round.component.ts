@@ -24,6 +24,7 @@ export class DialogCloseRoundComponent implements OnInit {
     public catArray: any[] = [];
     public PlayingFlight: Boolean;
     flightData: any;
+    round:number=1000;
 
     constructor(
         private datePipe: DatePipe,
@@ -39,6 +40,7 @@ export class DialogCloseRoundComponent implements OnInit {
         });
 
         console.log(this.data);
+        this.round=this.data.round;
         let sDate = new Date(this.data.startDate);
 
         this.categoryList = this.cutOffform.get('category') as FormArray;

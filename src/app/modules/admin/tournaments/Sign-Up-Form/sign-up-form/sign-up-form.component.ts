@@ -49,7 +49,7 @@ export class SignUpFormComponent implements OnInit {
         );
         console.log(data);
         this.tournamentQL = data.tournament[0];
-        this.playerCategories = this._facadeService.getPlayerCategories();
+        //this.playerCategories = this._facadeService.getPlayerCategories();
         let dataClubs = await this._facadeService.getClubList();
         this.golfClubs = dataClubs.club;
 
@@ -62,6 +62,16 @@ export class SignUpFormComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.golfClubs))
             );
+       
+        if (this.tournamentQL['CategoriesQL'].length > 0) {
+            for (let obj of this.tournamentQL['CategoriesQL']) {
+                let obja = {
+                    id: 1,
+                    name: obj.category,
+                };
+                this.playerCategories.push(obja);
+            }
+        }
         console.log(this.playerCategories);
     }
     createForm() {
@@ -138,15 +148,17 @@ export class SignUpFormComponent implements OnInit {
                     status: true,
                 };
                 this.saveMembers(member);
-            }else{
+            } else {
                 this.alert = {
                     type: 'warn',
-                    message: 'You are alredy added as a Tournament Member!.Kindly Refresh the page to Sign-up again.',
+                    message:
+                        'You are alredy added as a Tournament Member!.Kindly Refresh the page to Sign-up again.',
                 };
-                this.showAlert=true;
+                this.showAlert = true;
             }
         } else {
-            let players:any[] = await this._facadeService.getallPlayersforGGid();
+            let players: any[] =
+                await this._facadeService.getallPlayersforGGid();
             var sortarray = players['player'];
             sortarray.sort(this.Comparator);
             console.log(sortarray);
@@ -199,8 +211,8 @@ export class SignUpFormComponent implements OnInit {
         }
     }
     public Comparator(a, b) {
-        let gemIDA=parseInt(a['gemId'].slice(2));
-        let gemIDB=parseInt(b['gemId'].slice(2));
+        let gemIDA = parseInt(a['gemId'].slice(2));
+        let gemIDB = parseInt(b['gemId'].slice(2));
         if (gemIDA < gemIDB) return 1;
         if (gemIDA > gemIDB) return -1;
 
@@ -215,7 +227,8 @@ export class SignUpFormComponent implements OnInit {
             // Set the alert
             this.alert = {
                 type: 'success',
-                message: 'You are successfully added as a Tournament Member!Kindly Refresh the page to Sign-up again.',
+                message:
+                    'You are successfully added as a Tournament Member!Kindly Refresh the page to Sign-up again.',
             };
             this.showAlert = true;
 

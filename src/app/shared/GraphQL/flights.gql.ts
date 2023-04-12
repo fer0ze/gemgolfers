@@ -416,6 +416,14 @@ export const FlightManagersQuery = gql`
                     playerId
                 }
             }
+            CategoriesQL: categories {
+                id
+                tournamentId
+                category
+                handicapLimits
+                default
+                flightSettings
+            }
         }
     }
 `;

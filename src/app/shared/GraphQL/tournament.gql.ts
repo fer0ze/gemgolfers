@@ -126,6 +126,7 @@ export const tournamentDashBoard = gql`
             prefix
             members {
                 playerId
+                tournamentId
                 PlayerQL: player {
                     id
                     playerCategory
@@ -142,9 +143,11 @@ export const tournamentDashBoard = gql`
                 time
                 flightNo
                 name {
+                    flightId
                     name
                 }
                 MembersQL: members(order_by: { playerId: asc }) {
+                    flightId
                     playerId
                     PlayerQL: player {
                         id
@@ -153,16 +156,23 @@ export const tournamentDashBoard = gql`
                         lastName
                         handicap
                         membership {
+                            clubId 
+                            playerId
                             club {
+                                id
                                 name
                             }
                         }
                     }
                     ScoresQL: scores(where: { grossScore: { _gt: 0 } }) {
+                        holeId
+                        flightId
                         grossScore
                         playerId
                         playerHandicap
                         hole {
+                            id
+                            courseId
                             holeNo
                             index
                             par

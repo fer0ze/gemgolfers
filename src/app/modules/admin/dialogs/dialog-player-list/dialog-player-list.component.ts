@@ -5,12 +5,15 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Player } from '../../../../shared/models/player.model';
+import { ClubMembership, Player } from '../../../../shared/models/player.model';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TournamentMember } from 'app/shared/models/tournament.model';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Constants, General, UniqueIdGenerator, generateGemId } from 'app/shared/classes/general';
+import { Club } from 'app/shared/models/club.model';
 @Component({
     selector: 'app-dialog-player-list',
     templateUrl: './dialog-player-list.component.html',
@@ -18,6 +21,9 @@ import { FacadeService } from 'app/shared/services/facade.service';
 })
 export class DialogPlayerListComponent implements OnInit {
     dataSource: MatTableDataSource<Player>;
+    public playerForm: FormGroup;
+    show: boolean = true;
+    golfClubs: Club[] = [];
     displayedColumns = [
         'name',
         'handicap',
@@ -26,7 +32,9 @@ export class DialogPlayerListComponent implements OnInit {
         'email',
         'select',
     ];
+    loggedInuser:any;
     public response: any;
+    playerCategories: any[] = [];
     playerList: Player[] = [];
     selection = new SelectionModel<Player>(true, []);
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -39,8 +47,14 @@ export class DialogPlayerListComponent implements OnInit {
         public snackBar: MatSnackBar
     ) {}
 
-    ngOnInit() {
+    async ngOnInit() {
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+        this.playerCategories = this.facadeService.getPlayerCategories();
         console.log(this.data);
+        let dataClubs = await this.facadeService.getClubList();
+        this.golfClubs = dataClubs.club;
 
         this.playerList = this.data.players;
 
@@ -160,7 +174,223 @@ export class DialogPlayerListComponent implements OnInit {
             this.dialogRef.close(tournamentMember);
         }
     }
+    async getPlayerInformationByName() {
+        let fullName: string = (<HTMLInputElement>(
+            document.getElementById('fullName')
+        )).value;
+        // let lastName: string = (<HTMLInputElement>(
+        //   document.getElementById("lastName")
+        // )).value;
+        let handicap: string = (<HTMLInputElement>(
+            document.getElementById('handicap')
+        )).value;
+        let text1 = '%';
+        let text4 = '%';
+        let result = text1.concat(fullName, text4);
+        console.log('====================================');
+        console.log(fullName);
+        console.log('====================================');
+        console.log(result);
+        if (fullName) {
+            if (!fullName) fullName = 'NOTHING';
+            console.log('====================================');
+            console.log(handicap);
+            console.log('====================================');
+            let lowerHandicap = handicap ? Number(handicap) - 1 : 70;
+            let upperHandicap = handicap ? Number(handicap) + 1 : 70;
+
+            console.log(lowerHandicap);
+            console.log(upperHandicap);
+
+            let matchingList = <Player>(
+                await this.facadeService.searchPlayerForTournament(
+                    result,
+                    lowerHandicap,
+                    upperHandicap
+                )
+            );
+            // this.player = matchingList['Result'];
+console.log(matchingList['Result']);
+
+             this.setDataSource(matchingList['Result']);
+
+            // if (this.player[0]) {
+            //   this.response = {
+            //     player: this.player[0],
+            //     flight: Number(this.selectedFlight) - 1,
+            //   };
+            // } else {
+            //   this.response = null;
+            // }
+        }
+    }
+    setDataSource(dataSource) {
+        this.dataSource = new MatTableDataSource(dataSource);
+      
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
     close() {
         this.dialogRef.close();
+    }
+    addNewPlayer() {
+        this.playerForm = new FormGroup({
+            firstName: new FormControl('', [
+                Validators.required,
+                Validators.maxLength(60),
+            ]),
+            lastName: new FormControl('', [
+                Validators.required,
+                Validators.maxLength(60),
+            ]),
+
+            email: new FormControl('', [Validators.email]),
+            phone: new FormControl('', [Validators.required]),
+            dob: new FormControl('', [Validators.required]),
+            playerCategory: new FormControl('', [Validators.required]),
+            handicap: new FormControl('', [Validators.required]),
+
+            playerClubMember: new FormControl(
+                this.loggedInuser ? this.loggedInuser.adminClubId : '',
+                [Validators.required]
+            ),
+            membershipNumber: new FormControl(''),
+        });
+        this.show = false;
+    }
+
+    public createPlayer = (playerFormValue: any) => {
+        if (this.playerForm.valid) {
+            this.executePlayerCreation(playerFormValue);
+        }
+    };
+    async executePlayerCreation(playerFormValue: any) {
+        let newFlag = true;
+        let checkEmail: any = [];
+        let checkPhone: any = [];
+        let emailPlayerId: string = '';
+        let phonePlayerId: string = '';
+
+        if (this.playerForm.get('email').value)
+            checkEmail = <Player>(
+                await this.facadeService.getPlayerByEmail(
+                    this.playerForm.get('email').value
+                )
+            );
+
+        if (this.playerForm.get('phone').value)
+            checkPhone = <Player>(
+                await this.facadeService.getPlayerByPhone(
+                    this.playerForm.get('phone').value
+                )
+            );
+
+        //console.log(checkEmail);
+        if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
+
+        if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
+
+        if (
+            checkEmail.length > 0 )
+         {
+            this.snackBar.open('Email already exist.', 'x', {
+                duration: 5000,
+            });
+
+            return;
+        } else if (
+            checkPhone.length > 0
+        ) {
+            this.snackBar.open('Phone number already exist.', 'x', {
+                duration: 5000,
+            });
+
+            return;
+        } else if (checkEmail.length > 0 || checkPhone.length > 0) {
+            newFlag = false;
+        } else {
+        }
+
+        let clubMember: ClubMembership[] = [];
+       
+        let UniqueId: string = '';
+        let GEMId: string = '';
+
+        let member: any = {
+            clubId: playerFormValue.playerClubMember,
+        };
+
+        clubMember.push(member);
+        let players: any[] = await this.facadeService.getallPlayersforGGid();
+        var sortarray = players['player'];
+        sortarray.sort(this.Comparator);
+        console.log(sortarray);
+        UniqueId = UniqueIdGenerator.generate();
+        GEMId = generateGemId.generate(sortarray[0].gemId);
+
+        //console.log(playerFormValue.isClubAdmin);
+        const player: Player = {
+            id: UniqueId,
+            adminClubId:
+                playerFormValue.isClubAdmin == true
+                    ? playerFormValue.playerClubMember
+                    : null,
+            firebaseUid: null,
+
+            fcmToken: null,
+
+            gemId: GEMId,
+            firstName: playerFormValue.firstName,
+            lastName: playerFormValue.lastName,
+            gender: playerFormValue.gender,
+            dob: General.parseToDate(playerFormValue.dob),
+            picture: playerFormValue.picture,
+            email: playerFormValue.email,
+            phone: playerFormValue.phone,
+            playerCategory: playerFormValue.playerCategory,
+            handicap: playerFormValue.handicap,
+            online: false,
+            countryCode: playerFormValue.countryCode,
+            extraData: playerFormValue.extraData,
+            userRole: playerFormValue.isClubAdmin == true ? 2 : 3,
+            membership: clubMember,
+            membershipNumber: playerFormValue.membershipNumber,
+        };
+
+        if (newFlag) {
+            //console.log("Going to add new player");
+            const isSuccess = <boolean>(
+                await this.facadeService.AddPlayer(player)
+            );
+            //console.log(isSuccess);
+            if (isSuccess) {
+                this.snackBar.open('Player has been created.', 'x', {
+                    duration: 5000,
+                });
+                // this.reset();
+                //this.router.navigate(['/players']);
+            }
+        }
+
+        this.response = player;
+        this.dialogRef.close(this.response);
+        console.log(this.response);
+    }
+    public hasError = (controlName: string, errorName: string) => {
+        return this.playerForm.controls[controlName].hasError(errorName);
+    };
+
+    public reset() {
+        this.playerForm.reset();
+    }
+
+   
+    public Comparator(a, b) {
+        let gemIDA = parseInt(a['gemId'].slice(2));
+        let gemIDB = parseInt(b['gemId'].slice(2));
+        if (gemIDA < gemIDB) return 1;
+        if (gemIDA > gemIDB) return -1;
+
+        return 0;
     }
 }

@@ -1,6 +1,9 @@
 <div mat-dialog-content>
     <form [formGroup]="cutOffform" (ngSubmit)="onSubmit()">
-        <mat-tab-group mat-align-tabs="center" [(selectedIndex)]="selectedIndex">
+        <mat-tab-group
+            mat-align-tabs="center"
+            [(selectedIndex)]="selectedIndex"
+        >
             <mat-tab
                 formArrayName="category"
                 class="mb-20 separator"
@@ -16,6 +19,7 @@
                 <div [formGroupName]="i">
                     <div class="flex flex-col">
                         <div
+                            *ngIf="this.round != 1000"
                             class="separator"
                             fxFlex
                             fxLayout="row"
@@ -99,10 +103,7 @@
                                 </mat-radio-group>
                             </div>
                         </div>
-                        <div
-                            
-                            *ngIf="catArray[categoryList.value[i].name].value"
-                        >
+                        <div class="mt-3" *ngIf="catArray[categoryList.value[i].name].value">
                             <div class="flex flex-row">
                                 <div class="flex flex-row">
                                     <mat-label class="pt-3"
@@ -147,7 +148,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-row my-4">
-                                <div class="flex flex-col ">
+                                <div class="flex flex-col">
                                     <mat-label>Starting Hole:</mat-label>
                                     <mat-radio-group
                                         formControlName="tee"
@@ -294,6 +295,7 @@
 <div mat-dialog-actions>
     <button mat-raised-button (click)="onNoClick()">Cancel</button>
     <button
+        *ngIf="this.round != 1000"
         [disabled]="!allTabsChecked"
         mat-raised-button
         color="warn"
@@ -301,5 +303,15 @@
         cdkFocusInitial
     >
         Close Round
+    </button>
+    <button
+        *ngIf="this.round == 1000"
+        [disabled]="!allTabsChecked"
+        mat-raised-button
+        color="warn"
+        [mat-dialog-close]="cutOffform.value"
+        cdkFocusInitial
+    >
+        Create Flights
     </button>
 </div>

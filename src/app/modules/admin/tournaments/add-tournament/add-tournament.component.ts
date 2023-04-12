@@ -389,6 +389,7 @@ export class AddTournamentComponent implements OnInit {
                 // .get([0])
                 // .get("matchFormat")
                 // .setValue({value: this.currentTournament.matchFormat})
+console.log(this.currentTournament['CategoriesQL']);
 
                 for (let p of playerCategoryList) {
                     let founded = this.currentTournament['CategoriesQL'].filter(
@@ -406,8 +407,15 @@ export class AddTournamentComponent implements OnInit {
                                 id: 1,
                                 name: p.name,
                                 checked: founded.length > 0 ? true : false,
+                                dates:founded.length > 0 ? founded[0].flightSettings:[],
                             })
                         );
+                        let obj = {
+                            id: 1,
+                            name: p.name,
+                            // playingDates: result[i]['dates'],
+                        };
+                        this.dates.push(obj);
                     }
 
                     let checkBoxCat: any = {
@@ -755,6 +763,7 @@ export class AddTournamentComponent implements OnInit {
             //sometimes inserts values already included creating double records for the same values -hence the defence
             if (chkArray.controls.findIndex((x) => x.value.id == chk.id) == -1)
                 chkArray.push(new FormControl({ id: chk.id, name: chk.name }));
+                
             console.log(chkArray);
             //this.dateSetup();
             this.getplayingDates();
@@ -1282,13 +1291,13 @@ export class AddTournamentComponent implements OnInit {
                 this.formArray.get([1]).get('category').value[i].playingDate
             );
 
-            let flightSettingsStatus: any =
-                await this.facadeService.updateFlightSettings(
-                    this.tournamentID,
-                    this.formArray.get([1]).get('category').value[i].name,
-                    this.formArray.get([1]).get('category').value[i]
-                );
-            console.log(flightSettingsStatus);
+            // let flightSettingsStatus: any =
+            //     await this.facadeService.updateFlightSettings(
+            //         this.tournamentID,
+            //         this.formArray.get([1]).get('category').value[i].name,
+            //         this.formArray.get([1]).get('category').value[i]
+            //     );
+            // console.log(flightSettingsStatus);
         }
         if (index < this.formArray.get([1]).get('category').value.length - 1) {
             this.selectedIndex = ++index;
