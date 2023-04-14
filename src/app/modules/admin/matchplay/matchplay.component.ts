@@ -1474,6 +1474,7 @@ export class MatchplayComponent implements OnInit {
         }
 
         if (result) {
+            document.getElementById('savePlayer_'+ playerId).classList.add('active')
             this.snackBar.open('Score has been submitted.', 'x', {
                 duration: 5000,
             });
@@ -1612,7 +1613,7 @@ export class MatchplayComponent implements OnInit {
 
         let total: number =
             (Number(gross9total.value) ? Number(gross9total.value) : 0) +
-            (Number(gross18total) ? Number(gross18total.value) : 0);
+            (Number(gross18total.value) ? Number(gross18total.value) : 0);
         grosstotal.value = total.toString();
         console.log(total);
     }
@@ -1673,7 +1674,7 @@ export class MatchplayComponent implements OnInit {
 
         let total: number =
             (Number(gross9total.value) ? Number(gross9total.value) : 0) +
-            (Number(gross18total) ? Number(gross18total.value) : 0);
+            (Number(gross18total.value) ? Number(gross18total.value) : 0);
         grosstotal.value = total.toString();
     }
 
