@@ -352,16 +352,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             console.log(result);
             if (result && result.category) {
                 let teeBox: number;
-                let cnter = 0;
+                
                 let outer = 0;
+                let category = '';
                 for (let obj of result.category) {
                     let selMembers: Player[][] = [];
-
+                    let cnter = 0;
+                    outer=this.selectedMembers.length;
                     let FilteredPL: Player[] = [];
                     let flightTime: any = '9:00';
                     let flightTee: any = 'AMATEURS';
                     let flightTeeID: any = '1';
-                   
+                    
 
                     if (
                         this.tournamentInfo[0].matchFormat != 'TEXAS_SCRAMBLE'
@@ -387,21 +389,19 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             this.selectedMembers[outer][cnter] =
                                 FilteredPL[index]['player'];
 
-                            if (cnter == parseInt(PperFlight) - 1) {
+                            if (cnter == parseInt(PperFlight) - 1 ) {
                                 cnter = 0;
                                 outer++;
                             } else {
                                 cnter++;
                             }
                         }
+                        category = obj.name;
                         let tempSelMembers: any[] = [];
 
                         for (const index in this.selectedMembers) {
                             this.teetime++;
-                            teeBox = this.getNextTeeBox(
-                                obj.tee,
-                                this.teetime
-                            );
+                            teeBox = this.getNextTeeBox(obj.tee, this.teetime);
                             tempSelMembers = [];
                             tempSelMembers = this.selectedMembers;
                             tempSelMembers[index]['tee'] = flightTee;
@@ -1215,21 +1215,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
             );
         } else if (save && !update) {
-            this.snackBar.open(
-                'Something Went Wrong.',
-                'x',
-                {
-                    duration: 5000,
-                }
-            );
+            this.snackBar.open('Something Went Wrong.', 'x', {
+                duration: 5000,
+            });
         } else {
-            this.snackBar.open(
-                'Something Went Wrong.',
-                'x',
-                {
-                    duration: 5000,
-                }
-            );
+            this.snackBar.open('Something Went Wrong.', 'x', {
+                duration: 5000,
+            });
         }
 
         let dataFullTournament = await this.facadeService.getTournamentsFlights(
@@ -1593,8 +1585,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         console.log(find);
         console.log(this.selectedMembers.indexOf(find));
         let num = this.selectedMembers.indexOf(find);
-        if(num!=undefined) 
-        {
+        if (num != undefined) {
             this.selectedMembers.splice(num, 1);
         }
     }

@@ -1282,6 +1282,10 @@ export class MatchplayComponent implements OnInit {
         );
 
         if (result) {
+            for(let obj of playerScores)
+            {
+                document.getElementById('savePlayer_'+ obj.playerId).classList.add('active')
+            }
             this.snackBar.open('Score has been submitted.', 'x', {
                 duration: 5000,
             });
