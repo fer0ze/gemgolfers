@@ -217,6 +217,7 @@
                                                 [matDatepicker]="picker"
                                                 [min]="minDate"
                                                 [max]="maxDate"
+                                                (focus)="picker.open()"
                                                 (dateChange)="
                                                     datechange($event)
                                                 "
@@ -246,6 +247,7 @@
                                                 [matDatepicker]="picker2"
                                                 [min]="minDate"
                                                 [max]="maxDate"
+                                                (focus)="picker2.open()"
                                                 (onChange)="datechange($event)"
                                                 formControlName="endDateFormCtrl"
                                                 placeholder="end date"
@@ -270,10 +272,16 @@
                                 >
                                     <div>
                                         <div
-                                            class="flex my-4 text-2xl"
-                                            fxLayoutAlign="start center"
+                                            class="flex my-4 text-2xl items-center"
+                                           
                                         >
-                                            <h3>Course Format</h3>
+                                        <div class="w-full">
+                                            <h3>Course</h3>
+                                        </div>
+                                           <div class="w-full">
+                                               <h3>Format</h3>
+
+                                           </div>
                                         </div>
                                     </div>
 
@@ -680,20 +688,20 @@
                             >
                             <div class="flex flex-row mt-8">
                                 <div class="flex-auto">
-                                    <button
+                                    <!-- <button
                                         mat-raised-button
                                         color="primary"
                                         (click)="addPlayer()"
                                     >
                                         Add New Player
-                                    </button>
+                                    </button> -->
                                     &nbsp;
                                     <button
                                         mat-raised-button
                                         color="primary"
                                         (click)="searchPlayer()"
                                     >
-                                        Add Existing Player
+                                        Add New Player
                                     </button>
                                 </div>
                                 <div>
@@ -701,7 +709,7 @@
                                         class="mr-8"
                                         mat-raised-button
                                         color="warn"
-                                        (click)="saveTournamentMembers()"
+                                        (click)="saveTournamentMembers( linearVerticalStepper)"
                                     >
                                         Save Selected Members
                                     </button>
@@ -726,7 +734,7 @@
                                     >
                                 </div>
 
-                                <div class="flex justify-end">
+                                <div class="flex justify-end" style="width: min-content;">
                                     <span
                                         *ngFor="
                                             let catCount of TMcategoryCounts
@@ -1160,6 +1168,7 @@
                             <mat-tab-group
                                 class="mt-5 row-change"
                                 mat-align-tabs="center"
+                                
                                 [(selectedIndex)]="selectedIndex"
                             >
                                 <mat-tab
@@ -1174,7 +1183,7 @@
                                     "
                                     id="manage i"
                                 >
-                                    <ng-template mat-tab-label>{{
+                                    <ng-template mat-tab-label id="abdullah">{{
                                         formArray.get([1]).get("category")
                                             .value[i].name
                                     }}</ng-template>

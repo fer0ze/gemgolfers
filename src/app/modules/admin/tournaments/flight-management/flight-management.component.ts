@@ -265,106 +265,165 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         // this.dataSource.sort = this.sort;
     }
 
-    createAutoFlights(){
-            let allowCat: boolean = false;
-          //  let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
-            let startDate =
-              this.tournamentInfo[0].startDate;
-            startDate = new Date(startDate);
-            startDate.setDate(startDate.getDate());
-            console.log(startDate);
+    createAutoFlights() {
+        let allowCat: boolean = false;
+        //  let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
+        let startDate = this.tournamentInfo[0].startDate;
+        startDate = new Date(startDate);
+        startDate.setDate(startDate.getDate());
+        console.log(startDate);
 
-            let newstartDate = startDate.getDate();
+        let newstartDate = startDate.getDate();
 
-            console.log(newstartDate);
+        console.log(newstartDate);
 
-            for (let newObj of this.categories) {
-                let flightSettings: any = newObj.flightSettings;
-                newObj['cut'] = false;
-                if (
-                    Object.prototype.toString
-                        .call(flightSettings)
-                        .indexOf('Array') > -1 &&
-                    flightSettings.length > 0
-                ) {
-                    for (let obj of flightSettings) {
-                        let chngDate = obj.dates.replaceAll('-', '').toString();
-                        let newDate =
-                            chngDate.substring(4, 8) +
-                            '-' +
-                            chngDate.substring(2, 4) +
-                            '-' +
-                            +chngDate.substring(0, 2);
-                        // console.log(newDate);
+        for (let newObj of this.categories) {
+            let flightSettings: any = newObj.flightSettings;
+            newObj['cut'] = false;
+            if (
+                Object.prototype.toString
+                    .call(flightSettings)
+                    .indexOf('Array') > -1 &&
+                flightSettings.length > 0
+            ) {
+                for (let obj of flightSettings) {
+                    let chngDate = obj.dates.replaceAll('-', '').toString();
+                    let newDate =
+                        chngDate.substring(4, 8) +
+                        '-' +
+                        chngDate.substring(2, 4) +
+                        '-' +
+                        +chngDate.substring(0, 2);
+                    // console.log(newDate);
 
-                        let flightDate = new Date(newDate).getDate();
-                        console.log(flightDate);
-                        if (flightDate == newstartDate) {
-                            allowCat = true;
-                            newObj['allowCat'] = true;
-                            break;
+                    let flightDate = new Date(newDate).getDate();
+                    console.log(flightDate);
+                    if (flightDate == newstartDate) {
+                        allowCat = true;
+                        newObj['allowCat'] = true;
+                        break;
+                    }
+
+                    //console.log(this.calculateDiff(newstartDate,flightDate));
+                }
+                if (!allowCat) {
+                    newObj['allowCat'] = false;
+                }
+            } else if (
+                Object.prototype.toString
+                    .call(flightSettings)
+                    .indexOf('Object') > -1
+            ) {
+                for (let obj of flightSettings['playingDate']) {
+                    let chngDate = obj.dates.replaceAll('-', '').toString();
+                    let newDate =
+                        chngDate.substring(4, 8) +
+                        '-' +
+                        chngDate.substring(2, 4) +
+                        '-' +
+                        +chngDate.substring(0, 2);
+
+                    let flightDate = new Date(newDate).getDate();
+                    console.log(flightDate);
+                    if (flightDate == newstartDate) {
+                        allowCat = true;
+                        newObj['allowCat'] = true;
+                        break;
+                    }
+                    //console.log(this.calculateDiff(newstartDate,flightDate));
+                }
+                if (!allowCat) {
+                    newObj['allowCat'] = false;
+                }
+            } else {
+                //  newObj['allowCat'] = true;
+            }
+        }
+        const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
+            width: '800px',
+            data: {
+                round: 1000,
+                categories: this.categories,
+                tournament: this.tournamentID,
+                startDate: this.tournamentInfo[0].startDate,
+            },
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            console.log(result);
+            if (result && result.category) {
+                let teeBox: number;
+                let cnter = 0;
+                let outer = 0;
+                for (let obj of result.category) {
+                    let selMembers: Player[][] = [];
+
+                    let FilteredPL: Player[] = [];
+                    let flightTime: any = '9:00';
+                    let flightTee: any = 'AMATEURS';
+                    let flightTeeID: any = '1';
+                   
+
+                    if (
+                        this.tournamentInfo[0].matchFormat != 'TEXAS_SCRAMBLE'
+                    ) {
+                        FilteredPL = this.tournamentMember.filter((a) => {
+                            return a.player.playerCategory == obj.name;
+                        });
+                    } else {
+                        FilteredPL = this.tournamentMember;
+                    }
+
+                    if (FilteredPL.length > 0) {
+                        let PperFlight = obj.players;
+                        FilteredPL.forEach((filteredPlayer: any) => {
+                            if (cnter == 0) this.selectedMembers[outer] = [];
+                        });
+
+                        for (const index in FilteredPL) {
+                            //console.log(outer + "<--->" + cnter);
+                            console.log(FilteredPL);
+                            if (cnter == 0) this.selectedMembers[outer] = [];
+
+                            this.selectedMembers[outer][cnter] =
+                                FilteredPL[index]['player'];
+
+                            if (cnter == parseInt(PperFlight) - 1) {
+                                cnter = 0;
+                                outer++;
+                            } else {
+                                cnter++;
+                            }
                         }
+                        let tempSelMembers: any[] = [];
 
-                        //console.log(this.calculateDiff(newstartDate,flightDate));
-                    }
-                    if (!allowCat) {
-                        newObj['allowCat'] = false;
-                    }
-                    
-                } else if (
-                    Object.prototype.toString
-                        .call(flightSettings)
-                        .indexOf('Object') > -1
-                ) {
-                    for (let obj of flightSettings['playingDate']) {
-                        let chngDate = obj.dates.replaceAll('-', '').toString();
-                        let newDate =
-                            chngDate.substring(4, 8) +
-                            '-' +
-                            chngDate.substring(2, 4) +
-                            '-' +
-                            +chngDate.substring(0, 2);
-
-                        let flightDate = new Date(newDate).getDate();
-                        console.log(flightDate);
-                        if (flightDate == newstartDate) {
-                            allowCat = true;
-                            newObj['allowCat'] = true;
-                            break;
+                        for (const index in this.selectedMembers) {
+                            this.teetime++;
+                            teeBox = this.getNextTeeBox(
+                                obj.tee,
+                                this.teetime
+                            );
+                            tempSelMembers = [];
+                            tempSelMembers = this.selectedMembers;
+                            tempSelMembers[index]['tee'] = flightTee;
+                            tempSelMembers[index]['id'] =
+                                UniqueIdGenerator.generate();
+                            tempSelMembers[index]['tournamentId'] =
+                                this.tournamentID;
+                            tempSelMembers[index]['startingHole'] = teeBox;
+                            tempSelMembers[index]['flightNo'] = this.teetime;
+                            tempSelMembers[index]['categoryRound'] = 1;
+                            tempSelMembers[index]['tee_id'] = 1;
+                            tempSelMembers[index]['name'] = 'Team' + index;
+                            tempSelMembers[index]['time'] = obj.time;
+                            this.selectedMembers = tempSelMembers;
                         }
-                        //console.log(this.calculateDiff(newstartDate,flightDate));
+                        console.log(this.selectedMembers);
                     }
-                    if (!allowCat) {
-                        newObj['allowCat'] = false;
-                    }
-                } else {
-                  //  newObj['allowCat'] = true;
                 }
             }
-            const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
-                width: '800px',
-                data: {
-                    round: 1000,
-                    categories: this.categories,
-                    tournament: this.tournamentID,
-                    startDate:
-                        this.tournamentInfo[0].startDate,
-                },
-            });
-            dialogRef.afterClosed().subscribe(async (result) => {
-
-                console.log(result);
-                if (result && result.category) {
-                    for(let obj of result.category)
-                    {
-                        this.createflight(obj);
-                    }
-
-                }
-                
-            })
+        });
     }
-    createflight(flight){
+    createflight(flight) {
         let selMembers: Player[][] = [];
 
         let FilteredPL: Player[] = [];
@@ -375,10 +434,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let cnter = 0;
         let outer = 0;
 
-        if (
-            this.tournamentInfo[0].matchFormat !=
-            'TEXAS_SCRAMBLE'
-        ) {
+        if (this.tournamentInfo[0].matchFormat != 'TEXAS_SCRAMBLE') {
             FilteredPL = this.tournamentMember.filter((a) => {
                 return a.player.playerCategory == flight.name;
             });
@@ -397,7 +453,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 console.log(FilteredPL);
                 if (cnter == 0) this.selectedMembers[outer] = [];
 
-                this.selectedMembers[outer][cnter] = FilteredPL[index]['player'];
+                this.selectedMembers[outer][cnter] =
+                    FilteredPL[index]['player'];
 
                 if (cnter == parseInt(PperFlight) - 1) {
                     cnter = 0;
@@ -407,7 +464,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
             }
             let tempSelMembers: any[] = [];
-           
+
             for (const index in this.selectedMembers) {
                 this.teetime++;
                 teeBox = this.getNextTeeBox(flight.tee, this.teetime);
@@ -417,7 +474,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 tempSelMembers[index]['id'] = UniqueIdGenerator.generate();
                 tempSelMembers[index]['tournamentId'] = this.tournamentID;
                 tempSelMembers[index]['startingHole'] = teeBox;
-                tempSelMembers[index]['flightNo'] = this.teetime ;
+                tempSelMembers[index]['flightNo'] = this.teetime;
                 tempSelMembers[index]['categoryRound'] = 1;
                 tempSelMembers[index]['tee_id'] = 1;
                 tempSelMembers[index]['name'] = 'Team' + index;
@@ -1159,7 +1216,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             );
         } else if (save && !update) {
             this.snackBar.open(
-                'Flights have not been saved but updated successfully.',
+                'Something Went Wrong.',
                 'x',
                 {
                     duration: 5000,
@@ -1167,7 +1224,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             );
         } else {
             this.snackBar.open(
-                'Flights have not been saved and updated successfully.',
+                'Something Went Wrong.',
                 'x',
                 {
                     duration: 5000,

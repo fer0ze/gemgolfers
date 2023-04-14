@@ -24,7 +24,7 @@ export class DialogCloseRoundComponent implements OnInit {
     public catArray: any[] = [];
     public PlayingFlight: Boolean;
     flightData: any;
-    round:number=1000;
+    round: number = 1000;
 
     constructor(
         private datePipe: DatePipe,
@@ -40,7 +40,7 @@ export class DialogCloseRoundComponent implements OnInit {
         });
 
         console.log(this.data);
-        this.round=this.data.round;
+        this.round = this.data.round;
         let sDate = new Date(this.data.startDate);
 
         this.categoryList = this.cutOffform.get('category') as FormArray;
@@ -277,6 +277,33 @@ export class DialogCloseRoundComponent implements OnInit {
     }
 
     saveCutSettings(index): void {
+        // console.log(document.getElementById('mat-tab-label-5-' + index));
+        // console.log(document.getElementById('mat-tab-label-6-' + index));
+        // console.log(document.getElementById('mat-tab-label-7-' + index));
+        // console.log(document.getElementById('mat-tab-label-8-' + index));
+        if (document.getElementById('mat-tab-label-5-' + index)) {
+            document
+                .getElementById('mat-tab-label-5-' + index)
+                .insertAdjacentHTML(
+                    'beforeend',
+                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+                );
+        } else if (document.getElementById('mat-tab-label-6-' + index)) {
+            document
+                .getElementById('mat-tab-label-6-' + index)
+                .insertAdjacentHTML(
+                    'beforeend',
+                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+                );
+        } else {
+            document
+                .getElementById('mat-tab-label-7-' + index)
+                .insertAdjacentHTML(
+                    'beforeend',
+                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+                );
+        }
+
         console.log(this.cutOffform.get('category').value.length);
 
         console.log(index);

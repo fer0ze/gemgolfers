@@ -12,7 +12,7 @@
                 fxLayoutGap="20px"
                 *ngFor="let url of categoryFormGroup.controls; let i = index"
             >
-                <ng-template mat-tab-label>{{
+                <ng-template mat-tab-label id="i">{{
                     categoryList.value[i].name
                 }}</ng-template>
 

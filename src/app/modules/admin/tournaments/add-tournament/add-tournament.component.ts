@@ -389,7 +389,7 @@ export class AddTournamentComponent implements OnInit {
                 // .get([0])
                 // .get("matchFormat")
                 // .setValue({value: this.currentTournament.matchFormat})
-console.log(this.currentTournament['CategoriesQL']);
+                console.log(this.currentTournament['CategoriesQL']);
 
                 for (let p of playerCategoryList) {
                     let founded = this.currentTournament['CategoriesQL'].filter(
@@ -407,7 +407,10 @@ console.log(this.currentTournament['CategoriesQL']);
                                 id: 1,
                                 name: p.name,
                                 checked: founded.length > 0 ? true : false,
-                                dates:founded.length > 0 ? founded[0].flightSettings:[],
+                                dates:
+                                    founded.length > 0
+                                        ? founded[0].flightSettings
+                                        : [],
                             })
                         );
                         let obj = {
@@ -763,7 +766,7 @@ console.log(this.currentTournament['CategoriesQL']);
             //sometimes inserts values already included creating double records for the same values -hence the defence
             if (chkArray.controls.findIndex((x) => x.value.id == chk.id) == -1)
                 chkArray.push(new FormControl({ id: chk.id, name: chk.name }));
-                
+
             console.log(chkArray);
             //this.dateSetup();
             this.getplayingDates();
@@ -1236,10 +1239,33 @@ console.log(this.currentTournament['CategoriesQL']);
         } else {
         }
     }
+    
     async getSelectedPlayers(index, stepper: MatStepper) {
         console.log(index);
 
         //console.log(this.selection.selected.length);
+        if (document.getElementById('mat-tab-label-0-' + index)) {
+            document
+                .getElementById('mat-tab-label-0-' + index)
+                .insertAdjacentHTML(
+                    'beforeend',
+                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+                );
+        } else if (document.getElementById('mat-tab-label-1-' + index)) {
+            document
+                .getElementById('mat-tab-label-1-' + index)
+                .insertAdjacentHTML(
+                    'beforeend',
+                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+                );
+        } else if (document.getElementById('mat-tab-label-2-' + index)){
+            document
+                .getElementById('mat-tab-label-2-' + index)
+                .insertAdjacentHTML(
+                    'beforeend',
+                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+                );
+        }
         this.flightArrangementSetup();
         this.selectedMembers = [];
 
@@ -2263,7 +2289,7 @@ console.log(this.currentTournament['CategoriesQL']);
             );
     }
 
-    async saveTournamentMembers() {
+    async saveTournamentMembers(stepper: MatStepper) {
         let tournamentMember: TournamentMember[] = [];
         let counter: number;
         let DelplayerIndex: any;
@@ -2304,6 +2330,60 @@ console.log(this.currentTournament['CategoriesQL']);
         );
 
         if (result) {
+            const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                width: '350px',
+                data: 'Do you want to add more members?',
+            });
+            dialogRef.afterClosed().subscribe((resultA) => {
+                if (!resultA) {
+                    if (
+                        this.formArray.get([0]).value.courseInfo[0]
+                            .matchFormat != 'TEXAS_SCRAMBLE'
+                    ) {
+                        let sDate = new Date(
+                            this.formArray.get([0]).value.startDateFormCtrl
+                        );
+                        let dteday = this.datePipe.transform(sDate, 'yyyyMMdd');
+                        let date =
+                            dteday.substring(8, 6) +
+                            '-' +
+                            dteday.substring(6, 4) +
+                            '-' +
+                            +dteday.substring(0, 4);
+                        console.log(date);
+                        if (!this.setupInitialized) {
+                            for (
+                                let i = 0;
+                                i <
+                                this.formArray.get([0]).get('clubctgies').value
+                                    .length;
+                                i++
+                            ) {
+                                for (let obj of this.dates) {
+                                    if (
+                                        obj.playingDates['dates'] == date &&
+                                        this.formArray
+                                            .get([0])
+                                            .get('clubctgies').value[i].name ==
+                                            obj.name
+                                    ) {
+                                        this.addFlightField(
+                                            this.formArray
+                                                .get([0])
+                                                .get('clubctgies').value[i]
+                                        );
+                                    }
+                                }
+                            }
+                            this.setupInitialized = true;
+                        }
+                    } else {
+                        this.addFlightField('Teams');
+                    }
+                    
+                    stepper.next();
+                }
+            });
             this.snackBar.open('Tournament members have been saved.', 'x', {
                 duration: 5000,
             });
@@ -2575,10 +2655,12 @@ console.log(this.currentTournament['CategoriesQL']);
                             };
                             if (this.showTexas) {
                                 let name: string = (<HTMLInputElement>(
-                                    document.getElementById('flight_' + index + '_name')
+                                    document.getElementById(
+                                        'flight_' + index + '_name'
+                                    )
                                 )).value;
                                 console.log(name);
-                                
+
                                 let flightNames: any = {
                                     flightId: flight.id,
                                     name: name,
@@ -2767,14 +2849,12 @@ console.log(this.currentTournament['CategoriesQL']);
         //   this.reset();
         //   this.router.navigate(['/tournaments/view/' + this.tournamentID]);
         // }
-       
-            
+
         let result = <any>(
             await this.facadeService.createNextRoundFlights(tournamentFlights)
         );
         if (this.showTexas == true) {
-            await this.facadeService.addFlightName(flightName)
-            
+            await this.facadeService.addFlightName(flightName);
         }
         //result = <any>await this.facadeService.createTournamentMarshals(marshalsData);
 
@@ -2958,77 +3038,99 @@ console.log(this.currentTournament['CategoriesQL']);
         });
     }
 
-    searchPlayer() {
-        const dialogRef = this.dialog.open(DialogPlayerComponent, {
-            width: '740px',
-            data: { flights: this.selectedMembers.length },
+    async searchPlayer() {
+        // const dialogRef = this.dialog.open(DialogPlayerComponent, {
+        //     width: '740px',
+        //     data: { flights: this.selectedMembers.length },
+        // });
+
+        let datas = await this.facadeService.getPlayersListForTournament(
+            this.loggedInuser.adminClubId
+        );
+        const dialogRef = this.dialog.open(DialogPlayerListComponent, {
+            data: { players: datas.player, tournamentID: this.tournamentID },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
+        dialogRef.afterClosed().subscribe(async (result) => {
             console.log(result);
-            if (result.length == 1) {
-                //console.log("record deleted.");
-                console.log(result);
+            if (result) {
+                let dataFullTournaments: any;
 
-                let founded = this.tournamentMembers.filter((a) => {
-                    return a.id == result[0].player.id;
-                });
-                console.log(founded);
-
-                if (founded.length == 0) {
-                    let tournamentMember: TournamentMember[] = [];
-
-                    let member: any = {
-                        tournamentId: this.tournamentID,
-                        playerId: result[0].player.id,
-                        status: true,
-                    };
-
-                    tournamentMember.push(member);
-                    this.saveMembers(tournamentMember);
-                    this.tournamentMembers.push(result[0].player);
-                    this.syncTournamentMembers();
-                } else {
-                    this.snackBar.open(
-                        'Player already exist in the list.',
-                        'x',
-                        {
-                            duration: 5000,
-                        }
+                dataFullTournaments =
+                    await this.facadeService.getTournamentMembers(
+                        this.tournamentID
                     );
-                }
-            } else if (result.length > 1) {
-                result.forEach((element) => {
-                    let founded = this.tournamentMembers.filter((a) => {
-                        return a.id == element.player.id;
-                    });
-                    console.log(founded);
+                console.log(dataFullTournaments);
+                this.tournamentMembers = [];
+                for (let p of dataFullTournaments.TournamentMemberQL)
+                    this.tournamentMembers.push(p['player']);
 
-                    if (founded.length == 0) {
-                        let tournamentMember: TournamentMember[] = [];
-
-                        let member: any = {
-                            tournamentId: this.tournamentID,
-                            playerId: element.player.id,
-                            status: true,
-                        };
-
-                        tournamentMember.push(member);
-                        this.saveMembers(tournamentMember);
-                        this.tournamentMembers.push(element.player);
-                        this.syncTournamentMembers();
-                    } else {
-                        this.snackBar.open(
-                            'Player already exist in the list.',
-                            'x',
-                            {
-                                duration: 5000,
-                            }
-                        );
-                    }
-                });
-            } else {
+                this.syncClubMembers();
+                this.syncTournamentMembers();
             }
+            // if (result.length == 1) {
+            //     //console.log("record deleted.");
+            //     console.log(result);
+
+            //     let founded = this.tournamentMembers.filter((a) => {
+            //         return a.id == result[0].player.id;
+            //     });
+            //     console.log(founded);
+
+            //     if (founded.length == 0) {
+            //         let tournamentMember: TournamentMember[] = [];
+
+            //         let member: any = {
+            //             tournamentId: this.tournamentID,
+            //             playerId: result[0].player.id,
+            //             status: true,
+            //         };
+
+            //         tournamentMember.push(member);
+            //         this.saveMembers(tournamentMember);
+            //         this.tournamentMembers.push(result[0].player);
+            //         this.syncTournamentMembers();
+            //     } else {
+            //         this.snackBar.open(
+            //             'Player already exist in the list.',
+            //             'x',
+            //             {
+            //                 duration: 5000,
+            //             }
+            //         );
+            //     }
+            // } else if (result.length > 1) {
+            //     result.forEach((element) => {
+            //         let founded = this.tournamentMembers.filter((a) => {
+            //             return a.id == element.player.id;
+            //         });
+            //         console.log(founded);
+
+            //         if (founded.length == 0) {
+            //             let tournamentMember: TournamentMember[] = [];
+
+            //             let member: any = {
+            //                 tournamentId: this.tournamentID,
+            //                 playerId: element.player.id,
+            //                 status: true,
+            //             };
+
+            //             tournamentMember.push(member);
+            //             this.saveMembers(tournamentMember);
+            //             this.tournamentMembers.push(element.player);
+            //             this.syncTournamentMembers();
+            //         } else {
+            //             this.snackBar.open(
+            //                 'Player already exist in the list.',
+            //                 'x',
+            //                 {
+            //                     duration: 5000,
+            //                 }
+            //             );
+            //         }
+            //     });
+            // } else {
+            // }
         });
     }
 
