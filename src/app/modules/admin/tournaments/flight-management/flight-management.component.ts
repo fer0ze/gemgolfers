@@ -1593,7 +1593,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         console.log(find);
         console.log(this.selectedMembers.indexOf(find));
         let num = this.selectedMembers.indexOf(find);
-        if (num) this.selectedMembers.splice(num, 1);
+        if(num!=undefined) 
+        {
+            this.selectedMembers.splice(num, 1);
+        }
     }
     editFlight(id, index) {
         console.log(index);

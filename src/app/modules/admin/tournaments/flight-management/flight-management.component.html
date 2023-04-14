@@ -7,7 +7,7 @@
             (selectedTabChange)="changeRound($event)"
         >
             <mat-tab label="Day 1" *ngIf="noOfRounds >= 1">
-                <div class="flex justify-end mr-4">
+                <div class="flex justify-end mx-32">
                     <button
                     *ngIf="selectedMembers.length== 0"
                     class="mx-2"
@@ -387,7 +387,7 @@
                 label="Day 2"
                 [disabled]="activeRound < 2"
             >
-                <div class="flex justify-end mr-4">
+                <div class="flex justify-end mx-32">
                     <button
                         mat-raised-button
                         color="primary"
@@ -731,7 +731,7 @@
                 label="Day 3"
                 [disabled]="activeRound < 3"
             >
-                <div class="flex justify-end mr-4">
+                <div class="flex justify-end mx-32">
                     <button
                         mat-raised-button
                         color="primary"
@@ -1056,7 +1056,7 @@
                 label="Day 4"
                 [disabled]="activeRound < 4"
             >
-                <div class="flex justify-end mr-4">
+                <div class="flex justify-end mx-32">
                     <button
                         mat-raised-button
                         color="primary"
