@@ -558,35 +558,8 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9,
-                                                    eagle:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -2,
-                                                    birdy:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -1,
-                                                    bogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        1,
-                                                    doublebogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        2
+                                                    warn: score > 9
+                                                    
                                                 }"
                                                 ><input
                                                     (input)="
@@ -657,35 +630,8 @@
                                                             score == '' &&
                                                             item.holesPlayed >
                                                                 0,
-                                                        warn: score > 9,
-                                                        eagle:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -2,
-                                                        birdy:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -1,
-                                                        bogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            1,
-                                                        doublebogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            2
+                                                        warn: score > 9
+                                                        
                                                     }"
                                                     ><input
                                                         type="text"
@@ -762,6 +708,11 @@
                                         <td>
                                             <mat-icon
                                                 matSuffix
+                                                [ngClass]="{
+                                                    
+                                                    active: item.grossTotal > 0
+                                                    
+                                                }"
                                                 color="primary"
                                                 title="{{ item.name }}"
                                                 id="savePlayer_{{item.playerId}}"
@@ -1202,35 +1153,7 @@
                                                     empty:
                                                         score == '' &&
                                                         flight.holesPlayed > 0,
-                                                    warn: score > 9,
-                                                    eagle:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -2,
-                                                    birdy:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -1,
-                                                    bogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        1,
-                                                    doublebogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        2
+                                                    warn: score > 9
                                                 }"
                                                 ><input
                                                     (input)="
@@ -1300,35 +1223,7 @@
                                                             score == '' &&
                                                             flight.holesPlayed >
                                                                 0,
-                                                        warn: score > 9,
-                                                        eagle:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -2,
-                                                        birdy:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -1,
-                                                        bogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            1,
-                                                        doublebogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            2
+                                                        warn: score > 9
                                                     }"
                                                     ><input
                                                         type="text"
@@ -2037,35 +1932,7 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9,
-                                                    eagle:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -2,
-                                                    birdy:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -1,
-                                                    bogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        1,
-                                                    doublebogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        2
+                                                    warn: score > 9
                                                 }"
                                                 ><input
                                                     (input)="
@@ -2136,35 +2003,7 @@
                                                             score == '' &&
                                                             item.holesPlayed >
                                                                 0,
-                                                        warn: score > 9,
-                                                        eagle:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -2,
-                                                        birdy:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -1,
-                                                        bogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            1,
-                                                        doublebogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            2
+                                                        warn: score > 9
                                                     }"
                                                     ><input
                                                         type="text"
@@ -2241,8 +2080,14 @@
                                         <td>
                                             <mat-icon
                                                 matSuffix
+                                                [ngClass]="{
+                                                    
+                                                    active: item.grossTotal > 0
+                                                    
+                                                }"
                                                 color="primary"
                                                 title="{{ item.name }}"
+                                                id="savePlayer_{{item.playerId}}"
                                                 (click)="
                                                     savePlayerScore(
                                                         flight.flightId,
@@ -2848,35 +2693,7 @@
                                                     empty:
                                                         score == '' &&
                                                         item.holesPlayed > 0,
-                                                    warn: score > 9,
-                                                    eagle:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -2,
-                                                    birdy:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        -1,
-                                                    bogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        1,
-                                                    doublebogey:
-                                                        score -
-                                                            flight.header
-                                                                .courseHoles9[
-                                                                i
-                                                            ]['par'] ==
-                                                        2
+                                                    warn: score > 9
                                                 }"
                                                 ><input
                                                     (input)="
@@ -2947,35 +2764,7 @@
                                                             score == '' &&
                                                             item.holesPlayed >
                                                                 0,
-                                                        warn: score > 9,
-                                                        eagle:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -2,
-                                                        birdy:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            -1,
-                                                        bogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            1,
-                                                        doublebogey:
-                                                            score -
-                                                                flight.header
-                                                                    .courseHoles18[
-                                                                    i
-                                                                ]['par'] ==
-                                                            2
+                                                        warn: score > 9
                                                     }"
                                                     ><input
                                                         type="text"
@@ -3053,8 +2842,14 @@
                                         <td>
                                             <mat-icon
                                                 matSuffix
+                                                [ngClass]="{
+                                                    
+                                                    active: item.grossTotal > 0
+                                                    
+                                                }"
                                                 color="primary"
                                                 title="{{ item.name }}"
+                                                id="savePlayer_{{item.playerId}}"
                                                 (click)="
                                                     savePlayerScore(
                                                         flight.flightId,
@@ -3865,8 +3660,14 @@
                                         <td>
                                             <mat-icon
                                                 matSuffix
+                                                [ngClass]="{
+                                                    
+                                                    active: item.grossTotal > 0
+                                                    
+                                                }"
                                                 color="primary"
                                                 title="{{ item.name }}"
+                                                id="savePlayer_{{item.playerId}}"
                                                 (click)="
                                                     savePlayerScore(
                                                         flight.flightId,

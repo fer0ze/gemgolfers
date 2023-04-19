@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Constants } from 'app/shared/classes/general';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
     selector: 'app-dialog-close-round',
@@ -11,6 +12,7 @@ import { Constants } from 'app/shared/classes/general';
     styleUrls: ['./dialog-close-round.component.scss'],
 })
 export class DialogCloseRoundComponent implements OnInit {
+    @ViewChild('tabGroup') tabGroup;
     public collection: any;
     cutOffform: FormGroup;
     copyFlights: boolean = false;
@@ -276,33 +278,36 @@ export class DialogCloseRoundComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    saveCutSettings(index): void {
+    saveCutSettings(index,event): void {
+        console.log(this.tabGroup);
+        // /console.log(event);
+        
         // console.log(document.getElementById('mat-tab-label-5-' + index));
         // console.log(document.getElementById('mat-tab-label-6-' + index));
         // console.log(document.getElementById('mat-tab-label-7-' + index));
         // console.log(document.getElementById('mat-tab-label-8-' + index));
-        if (document.getElementById('mat-tab-label-5-' + index)) {
-            document
-                .getElementById('mat-tab-label-5-' + index)
-                .insertAdjacentHTML(
-                    'beforeend',
-                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
-                );
-        } else if (document.getElementById('mat-tab-label-6-' + index)) {
-            document
-                .getElementById('mat-tab-label-6-' + index)
-                .insertAdjacentHTML(
-                    'beforeend',
-                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
-                );
-        } else {
-            document
-                .getElementById('mat-tab-label-7-' + index)
-                .insertAdjacentHTML(
-                    'beforeend',
-                    '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
-                );
-        }
+        // if (document.getElementById('mat-tab-label-5-' + index)) {
+        //     document
+        //         .getElementById('mat-tab-label-5-' + index)
+        //         .insertAdjacentHTML(
+        //             'beforeend',
+        //             '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+        //         );
+        // } else if (document.getElementById('mat-tab-label-6-' + index)) {
+        //     document
+        //         .getElementById('mat-tab-label-6-' + index)
+        //         .insertAdjacentHTML(
+        //             'beforeend',
+        //             '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+        //         );
+        // } else {
+        //     document
+        //         .getElementById('mat-tab-label-7-' + index)
+        //         .insertAdjacentHTML(
+        //             'beforeend',
+        //             '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
+        //         );
+        // }
 
         console.log(this.cutOffform.get('category').value.length);
 

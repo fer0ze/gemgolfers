@@ -902,6 +902,18 @@ export class ViewTournamentComponent implements OnInit {
             this.showMainTab3 = false;
             this.showMainTab4 = false;
             this.showMainTab5 = false;
+            if(this.activeRound==1)  
+                this.calculateStatistics1();
+                this.getRound1stats(1);
+            if(this.activeRound==2)
+                this.calculateStatistics2();
+                this.getRound2stats(2);
+            if(this.activeRound==3)
+                this.calculateStatistics3();
+                this.getRound3stats(3);
+            if(this.activeRound==4)
+                this.calculateStatistics4();
+                this.getRound4stats(4);
         } else if (tab.index == 1) {
             this.showMainTab1 = false;
             this.showMainTab2 = true;
@@ -1006,7 +1018,11 @@ export class ViewTournamentComponent implements OnInit {
         this.chart();
     }
     getRound1stats(round: number) {
-        if (this.round1Stats) return;
+       // if (this.round1Stats) return;
+        this.avgScore1=[];
+        this.chartavgScore1=[];
+        this.pieChartData1=[];
+        this._series=[];
 
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
@@ -1086,8 +1102,11 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     getRound2stats(round: number) {
-        if (this.round2Stats) return;
-
+        // if (this.round2Stats) return;
+        this.avgScore2=[];
+        this.chartavgScore2=[];
+        this.pieChartData2=[];
+        this._series=[];
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
         });
@@ -1166,7 +1185,11 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     getRound3stats(round: number) {
-        if (this.round3Stats) return;
+        // if (this.round3Stats) return;
+        this.avgScore3=[];
+        this.chartavgScore3=[];
+        this.pieChartData3=[];
+        this._series=[];
 
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
@@ -1240,7 +1263,11 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     getRound4stats(round: number) {
-        if (this.round4Stats) return;
+        // if (this.round4Stats) return;
+        this.avgScore4=[];
+        this.chartavgScore4=[];
+        this.pieChartData4=[];
+        this._series=[];
 
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;

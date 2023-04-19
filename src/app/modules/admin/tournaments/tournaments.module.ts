@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -76,7 +76,8 @@ import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.co
         DialogMoveFlightComponent,
         DialogAddPlayerComponent,
         DialogOverviewComponent,
-        DialogPlayerComponent,DialogPlayerScoreComponent,
+        DialogPlayerComponent,
+        DialogPlayerScoreComponent,
         DialogPlayerListComponent,
         MatchplayComponent,
         ViewTournamentComponent,
@@ -85,14 +86,16 @@ import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.co
         DialogAddMemberComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
-        DialogPlayingDatesComponent
+        DialogPlayingDatesComponent,
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
         CommonModule,
         NgApexchartsModule,
         TournamentsRoutingModule,
         ReactiveFormsModule,
         MatTableModule,
+        NgTemplateOutlet,
         MatFormFieldModule,
         MatButtonToggleModule,
         MatPaginatorModule,
@@ -128,7 +131,6 @@ import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.co
         FlexLayoutModule,
     ],
     entryComponents: [DialogHanidcapListComponent],
-    providers:[FlightManagementComponent]
-   
+    providers: [FlightManagementComponent],
 })
 export class TournamentsModule {}

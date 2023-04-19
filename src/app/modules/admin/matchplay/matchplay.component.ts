@@ -1053,44 +1053,44 @@ export class MatchplayComponent implements OnInit {
                                 .classList.remove('warn');
                         }
                     }
-                    if (playerScoreEagle.length > 0) {
-                        for (let id of playerScoreEagle) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('eagle');
-                        }
-                    }
-                    if (playerScoreBirdy.length > 0) {
-                        for (let id of playerScoreBirdy) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('birdy');
-                        }
-                    }
-                    if (playerScoreBoogey.length > 0) {
-                        for (let id of playerScoreBoogey) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('bogey');
-                        }
-                    }
-                    if (playerScoreDBoogey.length > 0) {
-                        for (let id of playerScoreDBoogey) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('doublebogey');
-                        }
-                    }
-                    if (playerScoreEqual.length > 0) {
-                        for (let id of playerScoreEqual) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.remove('eagle');
-                            a.classList.remove('birdy');
-                            a.classList.remove('bogey');
-                            a.classList.remove('doublebogey');
-                        }
-                    }
+                    // if (playerScoreEagle.length > 0) {
+                    //     for (let id of playerScoreEagle) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('eagle');
+                    //     }
+                    // }
+                    // if (playerScoreBirdy.length > 0) {
+                    //     for (let id of playerScoreBirdy) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('birdy');
+                    //     }
+                    // }
+                    // if (playerScoreBoogey.length > 0) {
+                    //     for (let id of playerScoreBoogey) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('bogey');
+                    //     }
+                    // }
+                    // if (playerScoreDBoogey.length > 0) {
+                    //     for (let id of playerScoreDBoogey) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('doublebogey');
+                    //     }
+                    // }
+                    // if (playerScoreEqual.length > 0) {
+                    //     for (let id of playerScoreEqual) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.remove('eagle');
+                    //         a.classList.remove('birdy');
+                    //         a.classList.remove('bogey');
+                    //         a.classList.remove('doublebogey');
+                    //     }
+                    // }
                 }
             }
         } else {
@@ -1235,44 +1235,44 @@ export class MatchplayComponent implements OnInit {
                                 .classList.remove('warn');
                         }
                     }
-                    if (playerScoreEagle.length > 0) {
-                        for (let id of playerScoreEagle) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('eagle');
-                        }
-                    }
-                    if (playerScoreBirdy.length > 0) {
-                        for (let id of playerScoreBirdy) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('birdy');
-                        }
-                    }
-                    if (playerScoreBoogey.length > 0) {
-                        for (let id of playerScoreBoogey) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('bogey');
-                        }
-                    }
-                    if (playerScoreDBoogey.length > 0) {
-                        for (let id of playerScoreDBoogey) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('doublebogey');
-                        }
-                    }
-                    if (playerScoreEqual.length > 0) {
-                        for (let id of playerScoreEqual) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.remove('eagle');
-                            a.classList.remove('birdy');
-                            a.classList.remove('bogey');
-                            a.classList.remove('doublebogey');
-                        }
-                    }
+                    // if (playerScoreEagle.length > 0) {
+                    //     for (let id of playerScoreEagle) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('eagle');
+                    //     }
+                    // }
+                    // if (playerScoreBirdy.length > 0) {
+                    //     for (let id of playerScoreBirdy) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('birdy');
+                    //     }
+                    // }
+                    // if (playerScoreBoogey.length > 0) {
+                    //     for (let id of playerScoreBoogey) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('bogey');
+                    //     }
+                    // }
+                    // if (playerScoreDBoogey.length > 0) {
+                    //     for (let id of playerScoreDBoogey) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.add('doublebogey');
+                    //     }
+                    // }
+                    // if (playerScoreEqual.length > 0) {
+                    //     for (let id of playerScoreEqual) {
+                    //         var a = document.getElementById(id)
+                    //             .parentNode as HTMLElement;
+                    //         a.classList.remove('eagle');
+                    //         a.classList.remove('birdy');
+                    //         a.classList.remove('bogey');
+                    //         a.classList.remove('doublebogey');
+                    //     }
+                    // }
                 }
             }
         }
@@ -1428,39 +1428,39 @@ export class MatchplayComponent implements OnInit {
                                     playerScores.push(subFlightScore);
                                 }
                             }
-                            if (grossScore - hole.par == -2) {
-                                var element = document.getElementById(
-                                    hole.id + '&' + player.playerId
-                                ).parentNode as HTMLElement;
-                                element.classList.add('eagle');
-                            }
-                            if (grossScore - hole.par == -1) {
-                                var element = document.getElementById(
-                                    hole.id + '&' + player.playerId
-                                ).parentNode as HTMLElement;
-                                element.classList.add('birdy');
-                            }
-                            if (grossScore - hole.par == 1) {
-                                var element = document.getElementById(
-                                    hole.id + '&' + player.playerId
-                                ).parentNode as HTMLElement;
-                                element.classList.add('bogey');
-                            }
-                            if (grossScore - hole.par == 2) {
-                                var element = document.getElementById(
-                                    hole.id + '&' + player.playerId
-                                ).parentNode as HTMLElement;
-                                element.classList.add('doublebogey');
-                            }
-                            if (grossScore - hole.par == 0) {
-                                var a = document.getElementById(
-                                    hole.id + '&' + player.playerId
-                                ).parentNode as HTMLElement;
-                                a.classList.remove('eagle');
-                                a.classList.remove('birdy');
-                                a.classList.remove('bogey');
-                                a.classList.remove('doublebogey');
-                            }
+                            // if (grossScore - hole.par == -2) {
+                            //     var element = document.getElementById(
+                            //         hole.id + '&' + player.playerId
+                            //     ).parentNode as HTMLElement;
+                            //     element.classList.add('eagle');
+                            // }
+                            // if (grossScore - hole.par == -1) {
+                            //     var element = document.getElementById(
+                            //         hole.id + '&' + player.playerId
+                            //     ).parentNode as HTMLElement;
+                            //     element.classList.add('birdy');
+                            // }
+                            // if (grossScore - hole.par == 1) {
+                            //     var element = document.getElementById(
+                            //         hole.id + '&' + player.playerId
+                            //     ).parentNode as HTMLElement;
+                            //     element.classList.add('bogey');
+                            // }
+                            // if (grossScore - hole.par == 2) {
+                            //     var element = document.getElementById(
+                            //         hole.id + '&' + player.playerId
+                            //     ).parentNode as HTMLElement;
+                            //     element.classList.add('doublebogey');
+                            // }
+                            // if (grossScore - hole.par == 0) {
+                            //     var a = document.getElementById(
+                            //         hole.id + '&' + player.playerId
+                            //     ).parentNode as HTMLElement;
+                            //     a.classList.remove('eagle');
+                            //     a.classList.remove('birdy');
+                            //     a.classList.remove('bogey');
+                            //     a.classList.remove('doublebogey');
+                            // }
                         }
                     }
                 }
