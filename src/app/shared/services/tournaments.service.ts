@@ -993,6 +993,8 @@ export class TournamentsService {
                                 mobileLogoUrl: tmnt.mobileLogoUrl,
                                 webLogoUrl: tmnt.webLogoUrl,
                                 flightsCategory: tmnt.flightsCategory,
+                                subTournament: tmnt.subTournament,
+                                multiFormat: tmnt.multiFormat,
                                 categories: {
                                     data: tmnt.categories,
                                 },
@@ -1007,6 +1009,27 @@ export class TournamentsService {
                                 },
                             },
                         ],
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+    public addSubTournament(obj: any): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.AddSubTournamentMutation,
+                    variables: {
+                        subTournaments:obj,
                     },
                 })
                 .subscribe(

@@ -1843,6 +1843,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 let obj = this.flightPlayers[i];
                 if (obj.flightId == flightId) {
                     this.flightPlayers[i].ended = false;
+                    this.flightPlayers[i].categoryRound = 2;
                     break;
                 }
             }

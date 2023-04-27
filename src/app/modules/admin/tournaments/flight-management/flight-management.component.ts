@@ -208,13 +208,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //     this.clubMembers['AggregateQL']['aggregate'].totalCount;
 
         // this.syncClubMembers();
-        if (
-            this.tournamentInfo[0].activeRound ==
-            this.tournamentInfo[0].noOfRounds
-        )
+       
             if (
                 this.tournamentInfo[0]['matchFormat'] ==
-                matchFormat.TEXAS_SCRAMBLE
+                matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
+                matchFormat.BESTBALL
             ) {
                 // this.flightRound = this.tournamentInfo[0].noOfRounds;
                 // else this.flightRound = this.tournamentInfo[0].activeRound;
@@ -940,7 +938,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             fcnter++;
             if (this.selectedMembers[index].length > 0) {
                 runningFlightcounter++;
-                console.log(tournamentFlightMembers);
+                // console.log(tournamentFlightMembers);
 
                 let startingHole = parseFloat(
                     (<HTMLInputElement>(
@@ -966,6 +964,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         document.getElementById('flight_' + index + '_name')
                     )).value;
                 }
+                console.log(this.teamName);
+                
 
                 //let stTime: Time;
                 //stTime.hours = 9;

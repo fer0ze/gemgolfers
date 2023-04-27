@@ -542,6 +542,9 @@ export class FacadeService {
   addTournament(tournament: any) {
     return this.tournamentService.addTournament(tournament);
   }
+  addSubTournament(obj: any) {
+    return this.tournamentService.addSubTournament(obj);
+  }
 
   updateFlightSettings(
     tournamentId: string,

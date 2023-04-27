@@ -790,6 +790,15 @@ export const AddMutation = gql`
         }
     }
 `;
+export const AddSubTournamentMutation = gql`
+    mutation insert_sub_tournament($subTournaments: [sub_tournament_insert_input!]!) {
+        insert_sub_tournament(objects: $subTournaments) {
+            returning {
+                tournamentId
+            }
+        }
+    }
+`;
 
 export const UpdateMutation = gql`
     mutation updateMutation(

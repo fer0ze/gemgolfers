@@ -102,7 +102,8 @@ export class MatchplayComponent implements OnInit {
                     console.log(this.matchPlayData);
                     if (
                         this.matchPlayData['matchFormat'] ==
-                        matchFormat.TEXAS_SCRAMBLE
+                        matchFormat.TEXAS_SCRAMBLE || this.matchPlayData['matchFormat'] ==
+                        matchFormat.BESTBALL
                     ) {
                         this.showTaxes = true;
                     }

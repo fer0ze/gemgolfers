@@ -420,6 +420,7 @@ export class Constants {
     static readonly MF_MATCH_PLAY = 'MATCH_PLAY';
     static readonly MF_STROKE_PLAY = 'STROKE_PLAY';
     static readonly MF_STABLEFORD = 'STABLEFORD';
+    static readonly MF_BESTBALL = 'BESTBALL';
 
     // Score Management
     static readonly SM_ONLY_PLAYERS = 'ONLY_PLAYERS';

@@ -23,6 +23,11 @@
     width: 100% !important;
   }
 }
+.flex {
+  ::ng-deep .mt-2{
+    width: 100% !important;
+  }
+}
 .spinner {
   display: flex;
   align-items: center;

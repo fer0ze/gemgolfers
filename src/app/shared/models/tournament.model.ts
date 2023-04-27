@@ -95,7 +95,8 @@ export enum matchFormat {
     STABLEFORD = "STABLEFORD",
     TEXAS_SCRAMBLE = "TEXAS_SCRAMBLE",
     BEST_THREE = "BEST_THREE",
-    COMBINE_ALL = "COMBINE_ALL"
+    COMBINE_ALL = "COMBINE_ALL",
+    BESTBALL = "BESTBALL",
 }
 
 export enum TexasScrampleTeamSize {

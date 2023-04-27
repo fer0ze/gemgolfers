@@ -62,6 +62,7 @@ export class MainLeaderboardComponent implements OnInit {
     leaderboardAd: LeaderboardAd[];
     allllll: any[] = [];
     showTaxes: boolean = false;
+    showBestBall: boolean = false;
 
     allMatchResults: any[] = [];
     allMatchSearchResults: any[] = [];
@@ -161,7 +162,7 @@ export class MainLeaderboardComponent implements OnInit {
                             //console.log(data);
                         } else {
                             let dataLeaderboard: any = data;
-                            //console.log(data);
+                            console.log(data);
                             //console.log(dataLeaderboard);
 
                             this.allMatchResults = [];
@@ -210,6 +211,9 @@ export class MainLeaderboardComponent implements OnInit {
                                 this.matchFormat == matchFormat.TEXAS_SCRAMBLE
                             ) {
                                 this.showTaxes = true;
+                            }
+                            if (this.matchFormat == matchFormat.BESTBALL) {
+                                this.showBestBall = true;
                             }
 
                             if (this.Leaderboard.webLogoUrl)
@@ -345,6 +349,12 @@ export class MainLeaderboardComponent implements OnInit {
                             round,
                             true
                         );
+                    else if (this.matchFormat == matchFormat.BESTBALL)
+                        this.createBestBallLeaders(
+                            this.roundFlights[round - 1],
+                            round,
+                            true
+                        );
                     else
                         this.createSimpleLeaders(
                             this.roundFlights[round - 1],
@@ -356,7 +366,7 @@ export class MainLeaderboardComponent implements OnInit {
                 index++;
             }
             this.isLoading = false;
-            //console.log(this.allMatchResults);
+            console.log(this.allMatchResults);
             let player: any = [];
             let grossAllArray: any[] = [];
             let netAllArray: any[] = [];
@@ -804,7 +814,7 @@ export class MainLeaderboardComponent implements OnInit {
                     cntr++;
 
                     //if(player.id == "-L6192uVBlBFw3grUy9_")
-                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.HoleIPQL.holeNo);
+                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
                 }
 
                 let playerHole18ScoreGross: any[] = [];
@@ -973,7 +983,8 @@ export class MainLeaderboardComponent implements OnInit {
         //console.log(this.allMatchResults);
         let flag: boolean = true;
         let trueRound = round;
-        console.log(round);
+        // console.log(round);
+        console.log('------');
         // this.catRound=round;
         if (round == 1) {
             this.catRound = 1000;
@@ -1058,6 +1069,7 @@ export class MainLeaderboardComponent implements OnInit {
             ] = 0;
 
         this.allMatchResults[leaderGross.playerId]['position'] = '';
+        this.allMatchResults[leaderGross.playerId]['type'] = leaderGross.type;
         this.allMatchResults[leaderGross.playerId]['courseId'] =
             leaderGross.courseId;
         this.allMatchResults[leaderGross.playerId]['holeSets'] =
@@ -2102,14 +2114,80 @@ export class MainLeaderboardComponent implements OnInit {
         holeSetsInverted: string,
         scoreType: string
     ) {
-        let playerGrossScore: any;
-        let playerNetScore: any;
+        let playerGrossScore: any[] = [];
+        let playerNetScore: any[] = [];
         let playerPerTeam: any[];
         let team: boolean = false;
         let removed: string[] = [];
+        let scores: any[];
+        let scoresArray: any[] = [];
         //console.log(playerId);
+        let handicapAllocation: string = this.getHandicapAllocation();
+        if (this.showBestBall == true) {
+            for (let flightData of this.Leaderboard.FlightsQL) {
+                if (flightData.id == playerId) {
+                    let membersQLs: any = flightData.MembersQL;
+                    for (let membersQL of membersQLs) {
+                        scores = membersQL.ScoresQL;
+                        let player: Player = membersQL.PlayerQL;
+                        if (scores.length <= 0) continue;
 
-        if (this.flightRound == 0) {
+                        for (let score of scores) {
+                            let objScore: Score = new Score(
+                                score.playerId,
+                                score.playerHandicap,
+                                score.hole.index,
+                                score.hole.par,
+                                score.grossScore
+                            );
+                            let gross: number = score.grossScore;
+                            if (gross <= 0) {
+                                continue;
+                            }
+                            let currentNet: number =
+                                objScore.getNetScore(handicapAllocation);
+                            score['netScore'] = currentNet;
+                            score['check'] = false;
+                            scoresArray.push(score.grossScore);
+                        }
+                        let playerHole18ScoreGross: any[] = [];
+                        let playerHole18ScoreNet: any[] = [];
+
+                        for (
+                            let i = 0;
+                            i < flightData.CourseQL.noOfHoles;
+                            i++
+                        ) {
+                            let hole = scores.find((a) => {
+                                return a.hole.holeNo == i + 1;
+                            });
+
+                            if (hole) {
+                                playerHole18ScoreGross[i] = hole.grossScore;
+                                playerHole18ScoreNet[i] = hole.netScore;
+                            } else {
+                                playerHole18ScoreGross[i] = 0;
+                                playerHole18ScoreNet[i] = 0;
+                            }
+                        }
+                        let teamName: string = flightData.name
+                            ? flightData.name.name
+                            : 'UNKNOWN TEAM';
+                        let LeaderGross: any = {
+                            name: player.firstName + ' ' + player.lastName,
+                            holeScores: playerHole18ScoreGross,
+                        };
+                        let LeaderNet: any = {
+                            name: player.firstName + ' ' + player.lastName,
+                            holeScores: playerHole18ScoreNet,
+                        };
+                        playerGrossScore.push(LeaderGross);
+                        playerNetScore.push(LeaderNet);
+                    }
+                }
+            }
+            console.log(playerGrossScore);
+        } else if (this.flightRound == 0) {
             playerGrossScore = this.grossAllLeaders.filter((g) => {
                 return g.playerId == playerId;
             });
@@ -2167,6 +2245,26 @@ export class MainLeaderboardComponent implements OnInit {
                     allNet: playerNetScore,
                     round: this.flightRound,
                     type: scoreType,
+                    team: team,
+                    removed: removed,
+                },
+            });
+        } else if (this.matchFormat == matchFormat.BESTBALL) {
+            const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
+                data: {
+                    name: name,
+                    tee_id:
+                        this.Leaderboard.tee_id != null
+                            ? this.Leaderboard.tee_id
+                            : 1,
+                    course: courseId,
+                    players:[],
+                    holeSets: courseHoleSets,
+                    courseHoleSetsInverted: holeSetsInverted,
+                    allGross: playerGrossScore,
+                    allNet: playerNetScore,
+                    round: this.flightRound,
+                    type: this.allRoundNetScore? 'Net':'Gross',
                     team: team,
                     removed: removed,
                 },
@@ -2442,6 +2540,240 @@ export class MainLeaderboardComponent implements OnInit {
         //return { gross: this.grossLeaders, net: this.netLeaders };
     }
 
+    private createBestBallLeaders(
+        flightsQLs: any[],
+        round: number,
+        flag: boolean
+    ) {
+        ////console.log("calling me once....");
+        this.playerScores = [];
+
+        let handicapAllocation: string = this.getHandicapAllocation();
+
+        for (let flightData of flightsQLs) {
+            let flightGrossLeaders: any = [];
+            let flightNetLeaders: any = [];
+            let maxHolesPlayed = 0;
+            let grossTotal: number = 0;
+            let netTotal: number = 0;
+            let grossUnderTotal: number = 0;
+            let netUnderTotal: number = 0;
+            let stableFordPointsTotal: number = 0;
+            let handicap: number = 0;
+            let scoreHandicap: number = 0;
+            let holesPlayed: number = 0;
+            let flightIds: String[] = [];
+            let cntr: number = 0;
+            let membersQLs: any = flightData.MembersQL;
+            let scores: any[];
+            let allScores: any[] = [];
+            let newScores: any[] = [];
+            for (let membersQL of membersQLs) {
+                scores = membersQL.ScoresQL;
+                if (scores.length <= 0) continue;
+
+                for (let score of scores) {
+                    let objScore: Score = new Score(
+                        score.playerId,
+                        score.playerHandicap,
+                        score.hole.index,
+                        score.hole.par,
+                        score.grossScore
+                    );
+                    let gross: number = score.grossScore;
+                    if (gross <= 0) {
+                        continue;
+                    }
+                    let currentNet: number =
+                        objScore.getNetScore(handicapAllocation);
+                    score['netScore'] = currentNet;
+                    score['check'] = false;
+                    cntr++;
+                    allScores.push(score);
+                }
+            }
+            // console.log(allScores);
+            let index = 0;
+            for (let item of allScores) {
+                let holeNo = item.hole.holeNo;
+                let score = item.grossScore;
+                let playerId = item.playerId;
+                if (item['check'] == false) {
+                    newScores.push(item);
+                    for (let itemA of allScores) {
+                        let holeNoA = itemA.hole.holeNo;
+                        let scoreA = itemA.grossScore;
+                        let playerIdA = itemA.playerId;
+                        if (holeNoA == holeNo) {
+                            itemA['check'] = true;
+                        }
+                        if (
+                            holeNoA == holeNo &&
+                            scoreA <= score &&
+                            playerId != playerIdA
+                        ) {
+                            newScores[index] = itemA;
+                            break;
+                        }
+                    }
+                    index++;
+                }
+            }
+            // console.log(newScores);
+            for (let score of newScores) {
+                let objScore: Score = new Score(
+                    score.playerId,
+                    score.playerHandicap,
+                    score.hole.index,
+                    score.hole.par,
+                    score.grossScore
+                );
+                let gross: number = score.grossScore;
+
+                if (gross <= 0) {
+                    continue;
+                }
+
+                grossTotal += gross;
+                let currentNet: number =
+                    objScore.getNetScore(handicapAllocation);
+                console.log(
+                    'HoleNo' +
+                        score.hole.holeNo +
+                        '=' +
+                        'Groos' +
+                        gross +
+                        '=' +
+                        'Net' +
+                        currentNet
+                );
+                netTotal += currentNet;
+
+                grossUnderTotal += objScore.getGrossUnder();
+                netUnderTotal =
+                    netUnderTotal + objScore.getNetUnder(handicapAllocation);
+                stableFordPointsTotal +=
+                    objScore.getStablefordPoints(handicapAllocation);
+                handicap += objScore.getPlayerHandicap(handicapAllocation);
+                scoreHandicap = objScore.getPlayerHandicap(handicapAllocation);
+                holesPlayed++;
+
+                if (!flightIds.includes(score.flightId)) {
+                    flightIds.push(score.flightId);
+                }
+                cntr++;
+            }
+
+            //netUnderTotal = grossUnderTotal - scoreHandicap;
+
+            let playerHole18ScoreUnder: any[] = [];
+            let playerHole18ScoreUnderNet: any[] = [];
+            let playerHole18ScoreGross: any[] = [];
+            let playerHole18ScoreNet: any[] = [];
+
+            for (let i = 0; i < 18; i++) {
+                let hole = newScores.find((a) => {
+                    return a.hole.holeNo == i + 1;
+                });
+                ////console.log(hole);
+
+                if (hole) {
+                    playerHole18ScoreGross[i] = hole.grossScore;
+                    playerHole18ScoreNet[i] = hole.netScore;
+
+                    playerHole18ScoreUnder[i] = hole.underGross;
+                    playerHole18ScoreUnderNet[i] = hole.underNet;
+                } else {
+                    playerHole18ScoreGross[i] = 0;
+                    playerHole18ScoreNet[i] = 0;
+                    playerHole18ScoreUnder[i] = 0;
+                    playerHole18ScoreUnderNet[i] = 0;
+                }
+            }
+
+            let completed: boolean =
+                holesPlayed > 0 &&
+                holesPlayed >= this.noOfHolesInCourse * flightIds.length;
+            let teamName: string = flightData.name
+                ? flightData.name.name
+                : 'UNKNOWN TEAM';
+
+            let LeaderGross: any = {
+                position: 0,
+                tied: false,
+                courseId: flightData.courseId,
+                holeSets: flightData.courseHoleSets,
+                playerId: flightData.id,
+                name: teamName,
+                picture: '',
+                handicap: 0,
+                score: grossTotal,
+                type: LeaderType.GROSS,
+                status: status ? 1 : 0,
+                extraData: '',
+
+                holeSetsInverted: flightData.courseHoleSetsInverted
+                    ? flightData.courseHoleSetsInverted
+                    : false,
+                under: grossUnderTotal,
+                points: '',
+                holes: holesPlayed,
+                completed: completed,
+                holeScores: playerHole18ScoreGross,
+
+                // holeScoreLast18: this.getLastHolesTotal(18, playerHole18ScoreGross),
+                // holeScoreLast9: this.getLastHolesTotal(9, playerHole18ScoreGross),
+                // holeScoreLast6: this.getLastHolesTotal(6, playerHole18ScoreGross),
+                // holeScoreLast3: this.getLastHolesTotal(3, playerHole18ScoreGross),
+                // holeScoreLast1: this.getLastHolesTotal(1, playerHole18ScoreGross)
+            };
+
+            let LeaderNet: any = {
+                position: 0,
+                tied: false,
+                courseId: flightData.courseId,
+
+                playerId: flightData.id,
+                name: teamName,
+                picture: '',
+                handicap: 0,
+                score: netTotal,
+                type: LeaderType.NET,
+                holeSets: flightData.courseHoleSets,
+                holeSetsInverted: flightData.courseHoleSetsInverted
+                    ? flightData.courseHoleSetsInverted
+                    : false,
+                status: status ? 1 : 0,
+                extraData: '',
+                under: netUnderTotal,
+                points: '',
+                holes: holesPlayed,
+                completed: completed,
+                holeScores: playerHole18ScoreNet,
+                // holeScoreLast18: this.getLastHolesTotal(18, playerHole18ScoreGross),
+                // holeScoreLast9: this.getLastHolesTotal(9, playerHole18ScoreGross),
+                // holeScoreLast6: this.getLastHolesTotal(6, playerHole18ScoreGross),
+                // holeScoreLast3: this.getLastHolesTotal(3, playerHole18ScoreGross),
+                // holeScoreLast1: this.getLastHolesTotal(1, playerHole18ScoreGross)
+            };
+
+            this.netLeaders.push(LeaderNet);
+            this.grossLeaders.push(LeaderGross);
+            //this.netAllLeaders.push(LeaderNet);
+
+            if (flag && LeaderGross.holeScores.length > 0)
+                this.calculateTotal(LeaderGross, LeaderNet, round);
+        }
+        //this.sortLeaders(this.grossLeaders);
+
+        this.sortLeadersTie(this.grossLeaders);
+        this.sortLeadersTie(this.netLeaders);
+        console.log(this.grossLeaders);
+        console.log(this.netLeaders);
+        //this.sortLeaders(this.netLeaders);
+
+        //return { gross: this.grossLeaders, net: this.netLeaders };
+    }
     private createBestThreeLeaders(
         flightsQLs: any[],
         round: number,
@@ -2538,8 +2870,8 @@ export class MainLeaderboardComponent implements OnInit {
                     let objScore: Score = new Score(
                         score.playerId,
                         score.playerHandicap,
-                        score.HoleIPQL.index,
-                        score.HoleIPQL.par,
+                        score.hole.index,
+                        score.hole.par,
                         score.grossScore
                     );
                     let gross: number = score.grossScore;
@@ -2573,7 +2905,7 @@ export class MainLeaderboardComponent implements OnInit {
                     cntr++;
 
                     //if(player.id == "-L6192uVBlBFw3grUy9_")
-                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.HoleIPQL.holeNo);
+                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
                 }
 
                 maxHolesPlayed =
@@ -2586,7 +2918,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 for (let i = 0; i < 18; i++) {
                     let hole = scores.find((a) => {
-                        return a.HoleIPQL.holeNo == i + 1;
+                        return a.hole.holeNo == i + 1;
                     });
                     ////console.log(hole);
 

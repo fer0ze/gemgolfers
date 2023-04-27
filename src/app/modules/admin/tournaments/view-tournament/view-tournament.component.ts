@@ -150,8 +150,8 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab4: boolean = false;
     showMainTab5: boolean = false;
     showSummary: boolean = false;
-    tournamentMember: any=[];
-    tournamentMembers: any=[];
+    tournamentMember: any = [];
+    tournamentMembers: any = [];
     dataFullTournament: any;
     cuttFlag: number = 0;
     tournamentCategories: any;
@@ -480,25 +480,26 @@ export class ViewTournamentComponent implements OnInit {
             0
         ) {
             const colors = ['warn', 'success', 'info', 'danger'];
-            //console.log(this.fullTournament.FlightsQL);
-            //console.log(this.playersCatgery.TournamentMemberQL[0]);
             let indeca = 0;
-            // let indecb = 0;
-            for (let c of this.fullTournament.FlightsQL)
-                for (let index = 0; index < c.MembersQL.length; index++) {
-                    if (c.MembersQL.length > indeca) {
-                        this.membersData.push(c.MembersQL[indeca]['PlayerQL']);
-                        indeca++;
-                    } else {
-                        indeca = 0;
+            if (this.fullTournament.FlightsQL.length > 0) {
+                for (let c of this.fullTournament.FlightsQL) {
+                    for (let index = 0; index < c.MembersQL.length; index++) {
+                        if (c.MembersQL.length > indeca) {
+                            this.membersData.push(
+                                c.MembersQL[indeca]['PlayerQL']
+                            );
+                            indeca++;
+                        } else {
+                            indeca = 0;
+                        }
                     }
                 }
-            console.log(this.membersData);
-            //console.log(this.membersData);
-
+            } else if (this.fullTournament.members.length > 0) {
+                for (let c of this.fullTournament.members) {
+                    this.membersData.push(c['PlayerQL']);
+                }
+            }
             let index: number = 0;
-            console.log(this.fullTournament.CategoriesQL);
-
             for (const c of this.playerCategoryList) {
                 let m = this.membersData.filter((a) => {
                     return a.playerCategory == c.name;
@@ -902,18 +903,14 @@ export class ViewTournamentComponent implements OnInit {
             this.showMainTab3 = false;
             this.showMainTab4 = false;
             this.showMainTab5 = false;
-            if(this.activeRound==1)  
-                this.calculateStatistics1();
-                this.getRound1stats(1);
-            if(this.activeRound==2)
-                this.calculateStatistics2();
-                this.getRound2stats(2);
-            if(this.activeRound==3)
-                this.calculateStatistics3();
-                this.getRound3stats(3);
-            if(this.activeRound==4)
-                this.calculateStatistics4();
-                this.getRound4stats(4);
+            if (this.activeRound == 1) this.calculateStatistics1();
+            this.getRound1stats(1);
+            if (this.activeRound == 2) this.calculateStatistics2();
+            this.getRound2stats(2);
+            if (this.activeRound == 3) this.calculateStatistics3();
+            this.getRound3stats(3);
+            if (this.activeRound == 4) this.calculateStatistics4();
+            this.getRound4stats(4);
         } else if (tab.index == 1) {
             this.showMainTab1 = false;
             this.showMainTab2 = true;
@@ -1018,11 +1015,11 @@ export class ViewTournamentComponent implements OnInit {
         this.chart();
     }
     getRound1stats(round: number) {
-       // if (this.round1Stats) return;
-        this.avgScore1=[];
-        this.chartavgScore1=[];
-        this.pieChartData1=[];
-        this._series=[];
+        // if (this.round1Stats) return;
+        this.avgScore1 = [];
+        this.chartavgScore1 = [];
+        this.pieChartData1 = [];
+        this._series = [];
 
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
@@ -1103,10 +1100,10 @@ export class ViewTournamentComponent implements OnInit {
 
     getRound2stats(round: number) {
         // if (this.round2Stats) return;
-        this.avgScore2=[];
-        this.chartavgScore2=[];
-        this.pieChartData2=[];
-        this._series=[];
+        this.avgScore2 = [];
+        this.chartavgScore2 = [];
+        this.pieChartData2 = [];
+        this._series = [];
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
         });
@@ -1186,10 +1183,10 @@ export class ViewTournamentComponent implements OnInit {
 
     getRound3stats(round: number) {
         // if (this.round3Stats) return;
-        this.avgScore3=[];
-        this.chartavgScore3=[];
-        this.pieChartData3=[];
-        this._series=[];
+        this.avgScore3 = [];
+        this.chartavgScore3 = [];
+        this.pieChartData3 = [];
+        this._series = [];
 
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
@@ -1264,10 +1261,10 @@ export class ViewTournamentComponent implements OnInit {
 
     getRound4stats(round: number) {
         // if (this.round4Stats) return;
-        this.avgScore4=[];
-        this.chartavgScore4=[];
-        this.pieChartData4=[];
-        this._series=[];
+        this.avgScore4 = [];
+        this.chartavgScore4 = [];
+        this.pieChartData4 = [];
+        this._series = [];
 
         let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
             return a.flightRound == round;
@@ -2858,19 +2855,17 @@ export class ViewTournamentComponent implements OnInit {
                     this.tournamentID
                 );
             console.log(dataFullTournaments);
-            if(dataFullTournaments)
-            {
-                for(let obj of dataFullTournaments['TournamentQL'][0].FlightManagerQLi)
-                {
+            if (dataFullTournaments) {
+                for (let obj of dataFullTournaments['TournamentQL'][0]
+                    .FlightManagerQLi) {
                     for (const iterator of obj.MembersQL) {
                         this.tournamentMember.push(iterator.PlayerQL);
                         this.tournamentMembers.push(iterator.PlayerQL);
                     }
                 }
-
             }
             this.flightNumber = this.fullTournament.FlightsQL.length + 1;
-           // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+            // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
             this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
 
             this.dataSource = new MatTableDataSource(this.tournamentMember);

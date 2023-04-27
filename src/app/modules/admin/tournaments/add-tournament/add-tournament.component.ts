@@ -121,6 +121,7 @@ export class AddTournamentComponent implements OnInit {
     clubTitle: string;
     sDate: Date;
     tournamentID: string;
+    subTournamentID: string;
     public selectedTime = '08:00 AM';
     public preFlightTime = this.selectedTime;
     minDate: Date;
@@ -145,6 +146,7 @@ export class AddTournamentComponent implements OnInit {
     dates: any[] = [];
     datesPlaying: any[] = [];
     showCat: boolean = true;
+    showSubtournament: boolean = false;
     onHoleChange($event, i, j) {
         console.log(i);
 
@@ -224,6 +226,7 @@ export class AddTournamentComponent implements OnInit {
                     handicapAllocations: ['AS_IS', Validators.required],
                     startDateFormCtrl: ['', Validators.required],
                     endDateFormCtrl: ['', Validators.required],
+
                     clubsFormCtrl: [
                         this.loggedInuser.userRole > 1
                             ? this.loggedInuser.membership.length > 0
@@ -239,9 +242,17 @@ export class AddTournamentComponent implements OnInit {
                                 [Validators.required, RequireMatch],
                             ],
                             matchFormat: [Constants.MF_STROKE_PLAY],
+                            multiFormat: ['SINGLE', Validators.required],
                         }),
                     ]),
                     courseHoleSet: [],
+                    subTournament: this._formBuilder.array([
+                        this._formBuilder.group({
+                            title: ['', [Validators.required]],
+                            prefix: ['', [Validators.required]],
+                            matchFormat: [Constants.MF_BESTBALL],
+                        }),
+                    ]),
                     clubctgies: this._formBuilder.array([]),
                     scoreManagement: ['ONLY_PLAYERS'],
                     marshalStart: ['', this.marshalValidators],
@@ -1165,6 +1176,9 @@ export class AddTournamentComponent implements OnInit {
     get courseFileds() {
         return <FormArray>this.formArray.get([0]).get('courseInfo');
     }
+    get subTournamentFileds() {
+        return <FormArray>this.formArray.get([0]).get('subTournament');
+    }
 
     get flightFileds() {
         return <FormArray>this.formArray.get([3]).get('flightInfo');
@@ -1239,7 +1253,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
         }
     }
-    
+
     async getSelectedPlayers(index, stepper: MatStepper) {
         console.log(index);
 
@@ -1258,7 +1272,7 @@ export class AddTournamentComponent implements OnInit {
                     'beforeend',
                     '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
                 );
-        } else if (document.getElementById('mat-tab-label-2-' + index)){
+        } else if (document.getElementById('mat-tab-label-2-' + index)) {
             document
                 .getElementById('mat-tab-label-2-' + index)
                 .insertAdjacentHTML(
@@ -1919,7 +1933,13 @@ export class AddTournamentComponent implements OnInit {
             activeRound: 1,
             matchFormat: this.formArray.get([0]).value.courseInfo[0]
                 .matchFormat,
+            multiFormat:
+                this.formArray.get([0]).value.courseInfo[0].multiFormat ==
+                'SINGLE'
+                    ? false
+                    : true,
             pointsFormats: null,
+            subTournament: false,
             pointsValues: null,
             handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
@@ -1974,10 +1994,17 @@ export class AddTournamentComponent implements OnInit {
             } else {
                 let result = <any>(
                     await this.facadeService.addTournament(tournament)
+                    // console.log('a')
                 );
                 this.currentTournament = tournament;
                 console.log(result);
                 if (result) {
+                    
+                    if (
+                        this.showSubtournament==true
+                    ) {
+                        this.createSubtournament(this.tournamentID);
+                    }
                     this.snackBar.open('Tournament has been created.', 'x', {
                         duration: 3000,
                     });
@@ -2310,6 +2337,14 @@ export class AddTournamentComponent implements OnInit {
                     playerId: selectionArray[index].id,
                     status: true,
                 };
+                if(this.showSubtournament){
+                    let member: any = {
+                        tournamentId: this.subTournamentID,
+                        playerId: selectionArray[index].id,
+                        status: true,
+                    };
+                    tournamentMember.push(member);
+                }
                 tournamentMember.push(member);
                 counter = parseInt(index) + 1;
                 console.log(counter);
@@ -2380,7 +2415,7 @@ export class AddTournamentComponent implements OnInit {
                     } else {
                         this.addFlightField('Teams');
                     }
-                    
+
                     stepper.next();
                 }
             });
@@ -3188,6 +3223,94 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
+    async createSubtournament(tournamentID) {
+        let subTournamentId = UniqueIdGenerator.generate();
+        this.subTournamentID=subTournamentId;
+
+        let courseHoleSetsData = this.formArray.get([0]).value.courseHoleSet;
+
+        courseHoleSetsData.length > 0
+            ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
+            : (courseHoleSetsData = []);
+        let tournament = {
+            id: subTournamentId, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
+            clubId:
+                this.loggedInuser.userRole > 1
+                    ? this.loggedInuser.adminClubId
+                    : this.formArray.get([0]).value.clubsFormCtrl.id,
+            leagueId: null,
+            courseId: this.formArray.get([0]).value.courseInfo[0]
+                ? this.formArray.get([0]).value.courseInfo[0].courseName.course
+                      .id
+                : '',
+            adminId: this.loggedInuser.id,
+            title: this.formArray.get([0]).value.subTournament[0].title,
+            prefix: this.formArray.get([0]).value.subTournament[0].prefix,
+            subTournament: true,
+            multiFormat: false,
+            courseHoleSets:
+                courseHoleSetsData.length > 0
+                    ? Number(courseHoleSetsData[0])
+                    : 0,
+            teamMatch: false,
+            pairsMatch: false,
+            interLeague: false,
+            playingOnWhs: false,
+            publicTournament: false,
+            confirmParticipants: this.formArray.get([0]).value.askConfirmation,
+            noOfRounds: this.formArray.get([0]).value.numOfRounds,
+            activeRound: 1,
+            matchFormat: this.formArray.get([0]).value.subTournament[0]
+                .matchFormat,
+
+            pointsFormats: null,
+            pointsValues: null,
+            handicapAllocations: this.formArray.get([0]).value
+                .handicapAllocations,
+            tee: 'AMATEURS',
+            tee_id: 1,
+            scoreManagement: 'ONLY_PLAYERS',
+            startDate: General.parseToDate(
+                this.formArray.get([0]).value.startDateFormCtrl
+            ),
+            endDate: General.parseToDate(
+                this.formArray.get([0]).value.endDateFormCtrl
+            ),
+            flightsCategory: null,
+            started: true,
+            invited: false,
+            singleRound: false,
+            sponsorName: '',
+            sponsorLogo: '',
+            mobileLogoUrl: '',
+            webLogoUrl: '',
+            courseHoleSetsInverted:
+                courseHoleSetsData.length > 0
+                    ? courseHoleSetsData[1] == 'true'
+                        ? true
+                        : false
+                    : false,
+            categories: [],
+            marshals: [],
+            flights: [],
+            members: [],
+        };
+        let result = <any>await this.facadeService.addTournament(tournament);
+        // console.log(tournament)
+        if (result) {
+            let obj = {
+                tournamentId: tournamentID,
+                subTournamentId: subTournamentId,
+            };
+            let response = <any>await this.facadeService.addSubTournament(obj);
+            if (response) {
+                this.snackBar.open('Sub Tournament has been created.', 'x', {
+                    duration: 3000,
+                });
+            }
+        }
+    }
+
     updateTMCategorySelection() {
         this.TMcategoryCounts = [];
         if (this.tournamentMembers.length > 0) {
@@ -3249,6 +3372,14 @@ export class AddTournamentComponent implements OnInit {
             this.showCat = false;
         } else {
             this.showCat = true;
+        }
+    }
+
+    typeChange(event) {
+        if (event.value == 'SINGLE') {
+            this.showSubtournament = false;
+        } else {
+            this.showSubtournament = true;
         }
     }
 
