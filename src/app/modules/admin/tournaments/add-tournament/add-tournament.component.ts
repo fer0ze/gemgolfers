@@ -3083,7 +3083,7 @@ export class AddTournamentComponent implements OnInit {
             this.loggedInuser.adminClubId
         );
         const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-            data: { players: datas.player, tournamentID: this.tournamentID },
+            data: { players: datas.player, tournamentID: this.tournamentID,subTournamentID:this.subTournamentID },
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {

@@ -156,7 +156,7 @@ export const tournamentDashBoard = gql`
                         lastName
                         handicap
                         membership {
-                            clubId 
+                            clubId
                             playerId
                             club {
                                 id
@@ -204,6 +204,13 @@ export const tournamentDashBoard = gql`
             MemberStatusesQL: member_statuses {
                 ...TournamentMemberStatusQL
             }
+            
+        }
+        SubTournamentQL: sub_tournament(
+            where: { tournamentId: { _eq: $tournamentPrefix } }
+        ) {
+            tournamentId
+            subTournamentId
         }
     }
     ${TournamentMemberStatusQL}
@@ -791,7 +798,9 @@ export const AddMutation = gql`
     }
 `;
 export const AddSubTournamentMutation = gql`
-    mutation insert_sub_tournament($subTournaments: [sub_tournament_insert_input!]!) {
+    mutation insert_sub_tournament(
+        $subTournaments: [sub_tournament_insert_input!]!
+    ) {
         insert_sub_tournament(objects: $subTournaments) {
             returning {
                 tournamentId
@@ -1359,7 +1368,7 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
             playingOnWhs
             adminId
             createdAt
-            
+
             FlightsQL: flights {
                 id
                 courseId
@@ -1415,20 +1424,16 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
     ${PlayerHandicapQL}
 `;
 export const ClubSingleRoundFlightsQueryAdminQLA = gql`
-    query ClubSingleRoundFlightsQuery( $toDate: date!) {
+    query ClubSingleRoundFlightsQuery($toDate: date!) {
         TournamentsQL: tournament(
-            where: {
-                
-                singleRound: { _eq: true }
-                startDate: { _eq: $toDate }
-            }
+            where: { singleRound: { _eq: true }, startDate: { _eq: $toDate } }
         ) {
             id
             noOfRounds
             playingOnWhs
             adminId
             createdAt
-            
+
             FlightsQL: flights {
                 id
                 courseId

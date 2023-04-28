@@ -1019,6 +1019,7 @@ export const searchPlayerForTournamentQL = gql`
             membershipNumber
             membership {
                 club {
+                    id
                     name
                 }
             }

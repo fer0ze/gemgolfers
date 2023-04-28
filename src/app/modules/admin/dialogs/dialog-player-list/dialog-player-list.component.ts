@@ -148,6 +148,14 @@ export class DialogPlayerListComponent implements OnInit {
                     playerId: selectionArray[index].id,
                     status: true,
                 };
+                if(this.data.subTournamentID!=''){
+                    let member: any = {
+                        tournamentId: this.data.subTournamentID,
+                        playerId: selectionArray[index].id,
+                        status: true,
+                    };
+                    tournamentMember.push(member);
+                }
                 tournamentMember.push(member);
                 counter = parseInt(index) + 1;
                 console.log(counter);

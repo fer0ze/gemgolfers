@@ -3164,8 +3164,16 @@ export class ViewTournamentComponent implements OnInit {
         let datas = await this.facadeService.getPlayersListForTournament(
             this.loggedInUser.adminClubId
         );
+        let subtournamentID =
+            this.dataFullTournament['SubTournamentQL'].length > 0
+                ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId
+                : '';
         const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-            data: { players: datas.player, tournamentID: this.tournamentID },
+            data: {
+                players: datas.player,
+                tournamentID: this.tournamentID,
+                subTournamentID: subtournamentID,
+            },
         });
 
         dialogRef.afterClosed().subscribe((result) => {

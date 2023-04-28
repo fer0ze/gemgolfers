@@ -670,6 +670,12 @@ export class MainLeaderboardComponent implements OnInit {
                     1,
                     false
                 );
+            else if (this.matchFormat == matchFormat.BESTBALL)
+                this.createBestBallLeaders(
+                    this.Leaderboard.FlightsQL,
+                    1,
+                    false
+                );
             else if (
                 this.matchFormat == matchFormat.COMBINE_ALL &&
                 this.teamMatch
@@ -2130,7 +2136,7 @@ export class MainLeaderboardComponent implements OnInit {
                     for (let membersQL of membersQLs) {
                         scores = membersQL.ScoresQL;
                         let player: Player = membersQL.PlayerQL;
-                        if (scores.length <= 0) continue;
+                        // if (scores.length <= 0) continue;
 
                         for (let score of scores) {
                             let objScore: Score = new Score(
@@ -2141,9 +2147,9 @@ export class MainLeaderboardComponent implements OnInit {
                                 score.grossScore
                             );
                             let gross: number = score.grossScore;
-                            if (gross <= 0) {
-                                continue;
-                            }
+                            // if (gross <= 0) {
+                            //     continue;
+                            // }
                             let currentNet: number =
                                 objScore.getNetScore(handicapAllocation);
                             score['netScore'] = currentNet;

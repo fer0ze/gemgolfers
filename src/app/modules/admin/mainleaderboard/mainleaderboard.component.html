@@ -1336,14 +1336,14 @@
                             <div class="col col-4 THRU">PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
-                        <li class="table-row" *ngFor="let item of grossLeaders">
+                        <li class="table-row  hover:bg-gray-100"  *ngFor="let item of grossLeaders">
                             <div class="col col-1">
                                 {{ item.position }}
                             </div>
                             <div class="col col-2">
                                 {{ item.name }}
                                 <div
-                                    *ngIf="item.handicap > 0"
+
                                     class="text-xs flex items-center"
                                 >
                                     
