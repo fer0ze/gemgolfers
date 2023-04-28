@@ -2624,6 +2624,7 @@ export class MainLeaderboardComponent implements OnInit {
                             scoreA <= score &&
                             playerId != playerIdA
                         ) {
+                            score=scoreA;
                             newScores[index] = itemA;
                             // break;
                         }
