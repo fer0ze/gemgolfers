@@ -1259,6 +1259,11 @@ export class MainLeaderboardComponent implements OnInit {
         if (a['under'] > b['under']) return 1;
         return 0;
     }
+    ComparatorH(a, b) {
+        if (a['hole']['holeNo'] < b['hole']['holeNo']) return -1;
+        if (a['hole']['holeNo'] > b['hole']['holeNo']) return 1;
+        return 0;
+    }
     ComparatorRound(a, b) {
         if (a['under'] < b['under']) return -1;
         if (a['under'] > b['under']) return 1;
@@ -2578,7 +2583,7 @@ export class MainLeaderboardComponent implements OnInit {
             for (let membersQL of membersQLs) {
                 scores = membersQL.ScoresQL;
                 if (scores.length <= 0) continue;
-
+                scores=scores.sort(this.ComparatorH)
                 for (let score of scores) {
                     let objScore: Score = new Score(
                         score.playerId,
@@ -2620,13 +2625,13 @@ export class MainLeaderboardComponent implements OnInit {
                             playerId != playerIdA
                         ) {
                             newScores[index] = itemA;
-                            break;
+                            // break;
                         }
                     }
                     index++;
                 }
             }
-            // console.log(newScores);
+            console.log(newScores);
             for (let score of newScores) {
                 let objScore: Score = new Score(
                     score.playerId,
@@ -2644,16 +2649,16 @@ export class MainLeaderboardComponent implements OnInit {
                 grossTotal += gross;
                 let currentNet: number =
                     objScore.getNetScore(handicapAllocation);
-                console.log(
-                    'HoleNo' +
-                        score.hole.holeNo +
-                        '=' +
-                        'Groos' +
-                        gross +
-                        '=' +
-                        'Net' +
-                        currentNet
-                );
+                // console.log(
+                //     'HoleNo' +
+                //         score.hole.holeNo +
+                //         '=' +
+                //         'Groos' +
+                //         gross +
+                //         '=' +
+                //         'Net' +
+                //         currentNet
+                // );
                 netTotal += currentNet;
 
                 grossUnderTotal += objScore.getGrossUnder();
