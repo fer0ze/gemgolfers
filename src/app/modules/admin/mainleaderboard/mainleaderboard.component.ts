@@ -1208,23 +1208,12 @@ export class MainLeaderboardComponent implements OnInit {
         if (query.length > 3) {
             this.searchName = true;
             console.log(this.allMatchResults);
-            if(this.totalRounds>1){
-
-                this.allMatchSearchResults = this.allLeadersGross.filter((obj) => {
-                    return obj.name
-                        .toString()
-                        .toLowerCase()
-                        .includes(query.toString().toLowerCase());
-                });
-            }else{
-
-                this.allMatchSearchResults = this.grossLeaders.filter((obj) => {
-                    return obj.name
-                        .toString()
-                        .toLowerCase()
-                        .includes(query.toString().toLowerCase());
-                });
-            }
+            this.allMatchSearchResults = this.allLeadersGross.filter((obj) => {
+                return obj.name
+                    .toString()
+                    .toLowerCase()
+                    .includes(query.toString().toLowerCase());
+            });
             // var filteredArray: any = this.Leaderboard.FlightsQL.filter(
             //     (element) =>
             //         element.MembersQL.some((MembersQL) =>
@@ -2286,7 +2275,7 @@ export class MainLeaderboardComponent implements OnInit {
                     allGross: playerGrossScore,
                     allNet: playerNetScore,
                     round: this.flightRound,
-                    type: this.allRoundNetScore? 'Net':'Gross',
+                    type: this.allRoundNetScore || this.isNet? 'Net':'Gross',
                     team: team,
                     removed: removed,
                 },
