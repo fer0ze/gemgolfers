@@ -687,8 +687,13 @@ export class MainLeaderboardComponent implements OnInit {
                 );
             else this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
 
+
             this.flightRound = 1;
 
+            this.grossLeaders.sort(this.Comparator);
+            this.netLeaders.sort(this.Comparator);
+            this.grossLeaders=this.sortAllGrossLeadersTie(this.grossLeaders);
+            this.netLeaders=this.sortAllNetLeadersTie(this.netLeaders);
             if (this.lastActiveTab == 1) {
                 this.isGross = true;
                 this.isNet = false;
@@ -1597,7 +1602,7 @@ export class MainLeaderboardComponent implements OnInit {
 
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
         //Collections.sort(grossLeaders);
-        // console.log(leaderGrossList);
+         console.log(leaderGrossList);
 
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
         // console.log(leaderGrossList);
@@ -1637,8 +1642,8 @@ export class MainLeaderboardComponent implements OnInit {
                 secondCompleted = leaderPrevious.completed4;
             }
 
-            tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
-
+          //  tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
+            tied = leaderCurrent.under == leaderPrevious.under;
             if (tied) {
                 //leaderCurrent["tied"]= true;
                 //leaderPrevious["tied"]= true;
@@ -1697,7 +1702,7 @@ export class MainLeaderboardComponent implements OnInit {
                 secondCompleted = leaderPrevious.completed4;
             }
 
-            tied = leaderCurrent.AllNetUnder == leaderPrevious.AllNetUnder;
+            tied = leaderCurrent.under == leaderPrevious.under;
 
             if (tied) {
                 //leaderCurrent["tied"]= true;
