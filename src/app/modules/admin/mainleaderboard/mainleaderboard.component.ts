@@ -2585,6 +2585,7 @@ export class MainLeaderboardComponent implements OnInit {
             let scores: any[];
             let allScores: any[] = [];
             let newScores: any[] = [];
+            let newScoresNET: any[] = [];
             for (let membersQL of membersQLs) {
                 scores = membersQL.ScoresQL;
                 if (scores.length <= 0) continue;
@@ -2613,24 +2614,36 @@ export class MainLeaderboardComponent implements OnInit {
             let index = 0;
             for (let item of allScores) {
                 let holeNo = item.hole.holeNo;
-                let score = item.grossScore;
+                let score = item.netScore;
+                let scoreG = item.grossScore;
                 let playerId = item.playerId;
                 if (item['check'] == false) {
                     newScores.push(item);
+                    newScoresNET.push(item);
                     for (let itemA of allScores) {
                         let holeNoA = itemA.hole.holeNo;
-                        let scoreA = itemA.grossScore;
+                        let scoreA = itemA.netScore;
+                        let scoreAG = itemA.grossScore;
                         let playerIdA = itemA.playerId;
                         if (holeNoA == holeNo) {
                             itemA['check'] = true;
                         }
                         if (
                             holeNoA == holeNo &&
-                            scoreA <= score &&
+                            scoreAG <= scoreG &&
+                            playerId != playerIdA
+                        ) {
+                            scoreG=scoreAG;
+                            newScores[index] = itemA;
+                            // break;
+                        }
+                        if (
+                            holeNoA == holeNo &&
+                            scoreA<= score &&
                             playerId != playerIdA
                         ) {
                             score=scoreA;
-                            newScores[index] = itemA;
+                            newScoresNET[index] = itemA;
                             // break;
                         }
                     }
@@ -2653,25 +2666,10 @@ export class MainLeaderboardComponent implements OnInit {
                 }
 
                 grossTotal += gross;
-                let currentNet: number =
-                    objScore.getNetScore(handicapAllocation);
-                // console.log(
-                //     'HoleNo' +
-                //         score.hole.holeNo +
-                //         '=' +
-                //         'Groos' +
-                //         gross +
-                //         '=' +
-                //         'Net' +
-                //         currentNet
-                // );
-                netTotal += currentNet;
-
+                
                 grossUnderTotal += objScore.getGrossUnder();
-                netUnderTotal =
-                    netUnderTotal + objScore.getNetUnder(handicapAllocation);
-                stableFordPointsTotal +=
-                    objScore.getStablefordPoints(handicapAllocation);
+               
+               
                 handicap += objScore.getPlayerHandicap(handicapAllocation);
                 scoreHandicap = objScore.getPlayerHandicap(handicapAllocation);
                 holesPlayed++;
@@ -2680,6 +2678,38 @@ export class MainLeaderboardComponent implements OnInit {
                     flightIds.push(score.flightId);
                 }
                 cntr++;
+            }
+            for (let score of newScoresNET) {
+                let objScore: Score = new Score(
+                    score.playerId,
+                    score.playerHandicap,
+                    score.hole.index,
+                    score.hole.par,
+                    score.grossScore
+                );
+                let gross: number = score.grossScore;
+
+                if (gross <= 0) {
+                    continue;
+                }
+
+                
+                let currentNet: number =
+                    objScore.getNetScore(handicapAllocation);
+                netTotal += currentNet;
+
+                
+                netUnderTotal =
+                    netUnderTotal + objScore.getNetUnder(handicapAllocation);
+                stableFordPointsTotal +=
+                    objScore.getStablefordPoints(handicapAllocation);
+                handicap += objScore.getPlayerHandicap(handicapAllocation);
+                scoreHandicap = objScore.getPlayerHandicap(handicapAllocation);
+               
+                if (!flightIds.includes(score.flightId)) {
+                    flightIds.push(score.flightId);
+                }
+             
             }
 
             //netUnderTotal = grossUnderTotal - scoreHandicap;
