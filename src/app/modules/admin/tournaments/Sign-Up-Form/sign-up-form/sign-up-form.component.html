@@ -1,8 +1,28 @@
 <div
-    class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0"
+    class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-card"
 >
+    <div class="flex items-center bg-card h-full">
+        <div class="h-full">
+            <img class="h-full" src="assets/images/logo/GymKhanaHeader.jpg" />
+        </div>
+        <!-- <div class="z-10 relative w-full max-w-2xl">
+<div class="text-7xl font-bold leading-none">
+    <div>Welcome to</div>
+    <div>Gemgolfers</div>
+</div>
+<div class="mt-6 text-lg tracking-tight leading-6">
+    Gemgolers helps Golf Players to organize their Golf and add some
+    extra abilities to enjoy the game.
+</div>
+<div class="flex items-center mt-8">
+    <div class="font-medium tracking-tight">
+        More than 17k people joined us, it's your turn
+    </div>
+</div>
+</div> -->
+    </div>
     <div
-        class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card"
+        class="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full py-2 md:w-1/2 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card"
     >
         <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
             <div
@@ -35,7 +55,7 @@
             >
                 {{ alert.message }}
             </fuse-alert>
-            <form  *ngIf="!showAlert" class="mt-8" [formGroup]="signUpForm">
+            <form *ngIf="!showAlert" class="mt-8" [formGroup]="signUpForm">
                 <mat-form-field class="w-full">
                     <mat-label>First Name</mat-label>
                     <input
@@ -173,26 +193,6 @@
                     ></mat-progress-spinner>
                 </button>
             </form>
-        </div>
-    </div>
-    <div
-        class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden dark:border-l"
-        style="background-color: #004987; color: white"
-    >
-        <div class="z-10 relative w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none">
-                <div>Welcome to</div>
-                <div>Gemgolfers</div>
-            </div>
-            <div class="mt-6 text-lg tracking-tight leading-6">
-                Gemgolers helps Golf Players to organize their Golf and add some
-                extra abilities to enjoy the game.
-            </div>
-            <div class="flex items-center mt-8">
-                <div class="font-medium tracking-tight">
-                    More than 17k people joined us, it's your turn
-                </div>
-            </div>
         </div>
     </div>
 </div>
