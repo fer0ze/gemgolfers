@@ -141,7 +141,7 @@ export class SignUpFormComponent implements OnInit {
                 return a.playerId == exist[0].id;
             });
             console.log(find);
-            if (Object.keys(find).length === 0) {
+            if (find ==undefined || Object.keys(find).length === 0) {
                 let member: any = {
                     tournamentId: this.tournamentID,
                     playerId: exist[0].id,
