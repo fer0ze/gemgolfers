@@ -239,6 +239,11 @@ export class AddDailyRoundComponent implements OnInit {
 
     console.log(roundTeeId.result);
     let index = this.selectedCourseHoleSet.indexOf("_");
+    // console.log(this.selectedCourseHoleSet);
+    // console.log(this.selectedCourseHoleSet.substring(0, index));
+    // console.log(this.selectedCourseHoleSet.substring(++index));
+    
+    
     let flight: any = {
       id: UniqueIdGenerator.generate(),
       //tournamentId: this.tournamentID,
@@ -257,7 +262,7 @@ export class AddDailyRoundComponent implements OnInit {
       date: this.starterForm.value.roundDate,
       time: addRound.startingTime,
       ended: false,
-      courseHoleSetsInverted: false,
+      courseHoleSetsInverted: this.selectedCourseHoleSet.substring(++index),
       members: {
         data: roundMembers,
       },
