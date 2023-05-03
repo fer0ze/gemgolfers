@@ -1817,6 +1817,17 @@ export class ViewDailyRoundComponent implements OnInit {
                                         duration: 5000,
                                     });
                                 });
+                            this.handicapService
+                                .calculateHandicapWHS(obj)
+                                .then((response) => {
+                                    console.log(response);
+                                })
+                                .catch((err) => {
+                                    console.log('error' + err);
+                                    this.snackBar.open('Error!.', 'x', {
+                                        duration: 5000,
+                                    });
+                                });
                         }
                         this.snackBar.open('Handicap Calculated', 'x', {
                             duration: 5000,

@@ -141,6 +141,26 @@ export class MergeProfilesComponent implements OnInit {
                                 duration: 5000,
                             });
                         });
+                    this.handicapService
+                        .calculateHandicapWHS(obj)
+                        .then((response) => {
+                            console.log(response);
+                            this.selectionA.clear(true);
+                            this.selectionB.clear(true);
+                            this.snackBar.open(
+                                'Handicap Calculated Successfully.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
+                        })
+                        .catch((err) => {
+                            console.log('error' + err);
+                            this.snackBar.open('Error!.', 'x', {
+                                duration: 5000,
+                            });
+                        });
                 }
             });
         }
@@ -169,6 +189,26 @@ export class MergeProfilesComponent implements OnInit {
 
                     this.handicapService
                         .calculateHandicap(obj)
+                        .then((response) => {
+                            console.log(response);
+                            this.snackBar.open(
+                                'Players are Merged and Handicap Calculated Successfully.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
+                            this.selectionA.clear(true);
+                            this.selectionB.clear(true);
+                        })
+                        .catch((err) => {
+                            console.log('error' + err);
+                            this.snackBar.open('Error!.', 'x', {
+                                duration: 5000,
+                            });
+                        });
+                    this.handicapService
+                        .calculateHandicapWHS(obj)
                         .then((response) => {
                             console.log(response);
                             this.snackBar.open(

@@ -15,4 +15,10 @@ export class HandicapService {
             obj
         ).toPromise();
     }
+    calculateHandicapWHS(obj):Promise<any> {
+        return this.$http.post(
+            'https://gemgolfers-api.herokuapp.com/handicap/revertAndReCalculateHcWHS',
+            obj
+        ).toPromise();
+    }
 }
