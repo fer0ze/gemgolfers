@@ -242,14 +242,14 @@ export class AddTournamentComponent implements OnInit {
                                 [Validators.required, RequireMatch],
                             ],
                             matchFormat: [Constants.MF_STROKE_PLAY],
-                            multiFormat: ['SINGLE', Validators.required],
+                            multiFormat: ['SINGLE'],
                         }),
                     ]),
                     courseHoleSet: [],
                     subTournament: this._formBuilder.array([
                         this._formBuilder.group({
-                            title: ['', [Validators.required]],
-                            prefix: ['', [Validators.required]],
+                            title: [''],
+                            prefix: [''],
                             matchFormat: [Constants.MF_BESTBALL],
                         }),
                     ]),

@@ -1806,7 +1806,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 playerId: item.playerId,
                                 count: 4,
                             };
-                            this.handicapService
+                            await this.handicapService
                                 .calculateHandicap(obj)
                                 .then((response) => {
                                     console.log(response);
