@@ -1675,7 +1675,7 @@ export class MainLeaderboardComponent implements OnInit {
         let pos: number = 1;
         let tied: boolean;
 
-        if (leaderList.length > 0) leaderList[0]['positionNet'] = pos;
+        if (leaderList.length > 0) leaderList[0]['position'] = pos;
         ////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
@@ -1709,11 +1709,11 @@ export class MainLeaderboardComponent implements OnInit {
                 //leaderPrevious["tied"]= true;
                 leaderList[i]['tied'] = true;
                 leaderList[i - 1]['tied'] = true;
-                leaderList[i]['positionNet'] = 'T' + pos;
-                leaderList[i - 1]['positionNet'] = 'T' + pos;
+                leaderList[i]['position'] = 'T' + pos;
+                leaderList[i - 1]['position'] = 'T' + pos;
             } else {
                 pos = i + 1;
-                leaderList[i]['positionNet'] = pos;
+                leaderList[i]['position'] = pos;
             }
             ////console.log(pos);
 
