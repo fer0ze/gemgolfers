@@ -292,8 +292,8 @@ export class FacadeService {
     return this.playerService.AddHandicapRemarks(handicap_change_log);
   }
 
-  importPlayerList(players: any[]) {
-    return this.playerService.importPlayerList(players);
+  importPlayerList(players: any[], clubMembers: any[]) {
+    return this.playerService.importPlayerList(players, clubMembers);
   }
 
   updatePlayer(club: Player) {
@@ -964,6 +964,11 @@ export class FacadeService {
 
   savePlayerHandicapWhsIndex(handicapWhsInputs) {
     return this.playerHandicapWhsService.savePlayerHandicapWhsIndex(
+      handicapWhsInputs
+    );
+  }
+  updatePlayerHandicapWhsDifferential(handicapWhsInputs) {
+    return this.playerHandicapWhsService.updatePlayerHandicapWhsDifferential(
       handicapWhsInputs
     );
   }

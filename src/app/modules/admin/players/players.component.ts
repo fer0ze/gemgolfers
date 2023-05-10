@@ -26,7 +26,7 @@ import {
     generateGemId,
 } from '../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Player } from 'app/shared/models/player.model';
+import { ClubMembership, Player } from 'app/shared/models/player.model';
 import { read, utils } from 'xlsx';
 
 @Component({
@@ -72,6 +72,7 @@ export class PlayersComponent implements OnInit {
 
     duplicatePlayers: any[] = [];
     importingList = false;
+    @ViewChild("fileInput") fileInputVariable: ElementRef;
     //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
@@ -408,39 +409,203 @@ export class PlayersComponent implements OnInit {
 
     async importExcelData() {
         try {
-            for (let obj of this.playersData) {
-                let newObj = {
-                    id: obj.ID,
+            this.importingList = true;
+
+            this.savePlayers = [];
+            this.duplicatePlayers = [];
+            let clubMember: ClubMembership[] = [];
+
+            // for (let p of this.playersData) {
+            //   // this.logger.logObject(p);
+            //   console.log(p);
+
+            //   let exist: any = [];
+
+            //   if (p.membershipNumber) {
+            //     // this.logger.log(p.membershipNumber);
+            //     console.log(p.membershipNumber);
+
+            //     exist = await this.facadeService.getPlayerByMembershipNumber(
+            //       p.membershipNumber.toString()
+            //     );
+
+            //     if (exist.length > 0) {
+            //       if (exist[0].handicapQL.length > 0) {
+            //         let handicapHistory = exist[0].handicapQL;
+            //         let lastTournamentID =
+            //           handicapHistory[handicapHistory.length - 1].tournamentId;
+            //         console.log(lastTournamentID);
+
+            //         const handicapChangeLog =
+            //           await this.facadeService.updateLastHandicap(
+            //             exist[0].id,
+            //             lastTournamentID,
+            //             p.handicap
+            //           );
+            //         console.log(handicapChangeLog);
+            //       }
+
+            //       let succes = await this.facadeService.updatePlayerHandicap(
+            //         exist[0].id,
+            //         p.handicap
+            //       );
+
+            //       this.duplicatePlayers.push(exist);
+            //       //continue;
+            //     }
+            //   }
+            // }
+            // console.log(this.duplicatePlayers);
+
+            for (let p of this.playersData) {
+                // this.logger.logObject(p);
+                console.log(p);
+
+                let exist: any = [];
+
+                if (p.membershipNumber) {
+                    // this.logger.log(p.membershipNumber);
+                    console.log(p.membershipNumber);
+
+                    exist =
+                        await this._facadeService.getPlayerByMembershipNumber(
+                            p.membershipNumber.toString()
+                        );
+
+                    if (exist.length > 0) {
+                        this.duplicatePlayers.push(p);
+                        //continue;
+                    }
+                }
+
+                let phone="481";
+                if (p.phone && exist.length == 0) {
+                    // this.logger.log(p.phone);
+                    console.log(p.phone);
+                    if (p.phone.toString().indexOf('+92') === 0) {
+                        phone = p.phone.toString();
+                    } else if (p.phone.toString().indexOf('0') === 0) {
+                        phone = p.phone.toString().replace(0, '+92');
+                    } else if (p.phone.toString().indexOf('3') === 0) {
+                        phone = '+92' + p.phone.toString();
+                    }
+                    console.log(phone);
+
+                    exist = await this._facadeService.getPlayerByPhone(phone);
+                    // p.phone.toString().indexOf("+") !== -1
+                    // ? p.phone.toString()
+                    // : "+" + p.phone.toString()
+                    if (exist.length > 0) {
+                        this.duplicatePlayers.push(p);
+                        //continue;
+                    }
+                }
+
+                if (p.email && exist.length == 0) {
+                    exist = await this._facadeService.getPlayerByEmail(
+                        p.email.toString()
+                    );
+
+                    if (exist.length > 0) {
+                        // this.logger.log("email yes");
+                        console.log('email Yes');
+
+                        this.duplicatePlayers.push(p);
+                        //continue;
+                    }
+                }
+
+                // this.logger.log(exist);
+                console.log(exist);
+
+                let UniqueId: string =
+                    exist && exist.length > 0
+                        ? exist[0].id
+                        : UniqueIdGenerator.generate();
+
+                //if(p.club) {
+
+                let member: any = {
+                    clubId: this.loggedInuser.adminClubId,
+                    playerId: UniqueId,
+                };
+
+                clubMember.push(member);
+                //}
+
+                let player: any = {
+                    id: UniqueId,
                     adminClubId: null,
                     firebaseUid: null,
                     fcmToken: null,
-                    gemId: obj.gemID,
-                    firstName: "p.firstName",
-                    lastName:"p.lastName",
+                    gemId: null,
+                    firstName: p.firstName,
+                    lastName: p.lastName,
                     gender:  null,
-                    dob:  null,
-                    picture:  null,
-                    email:  null,
-                    phone:  null,
-                    playerCategory: null,
-                    handicap: 0,
+                    dob: null,
+                    picture:null,
+                    email: p.email ? p.email : null,
+                    phone: p.phone ? phone : null,
+                    playerCategory: p.category ? p.category : null,
+                    handicap: p.handicap ? p.handicap : 0,
                     online: false,
                     countryCode:  null,
                     extraData:  null,
-                    membershipNumber: null,
+                    membershipNumber: p.membershipNumber.toString(),
                     userRole: 3,
                     membership: null,
                 };
-                this.savePlayers.push(newObj);
+
+                this.savePlayers.push(player);
             }
+
+            // this.logger.log(this.savePlayers);
+            // this.logger.log(this.duplicatePlayers);
             console.log(this.savePlayers);
+            console.log(clubMember);
+            
 
             let status = await this._facadeService.importPlayerList(
-                this.savePlayers
+                this.savePlayers,
+                clubMember
             );
-            console.log(status);
-        } catch (error) {
-            console.log(error);
+
+            if (status) {
+                let newProfiles =
+                    Number(this.savePlayers.length) -
+                    Number(this.duplicatePlayers.length);
+                this.snackBar.open(
+                    (newProfiles < 0 ? 0 : newProfiles) +
+                        ' players have been created. ' +
+                        this.duplicatePlayers.length +
+                        ' player(s) were already exist.',
+                    'x',
+                    {
+                        duration: 5000,
+                    }
+                );
+
+                this.importingList = false;
+                this.file = null;
+                this.fileInputVariable.nativeElement.value = '';
+
+                await this.delay(5000);
+                //window.location.reload();
+            } else {
+                this.snackBar.open(
+                    'There was an Error while loading file',
+                    'x',
+                    {
+                        duration: 3000,
+                    }
+                );
+                this.importingList = false;
+            }
+        } catch {
+            this.importingList = false;
         }
     }
+    delay(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
 }

@@ -87,6 +87,7 @@ export const PlayerHandicapWhsQL = gql`
     adjustedScore
     front9
     back9
+    tournamentId
     handicapIndex
     exceptionalScore
     Handicap_id

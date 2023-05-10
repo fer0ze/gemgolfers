@@ -54,6 +54,7 @@ import { DatePipe } from '@angular/common';
 import { RequireMatch } from 'app/shared/classes/CustomValidator';
 import { FuseConfirmationSuccessService } from '@fuse/services/confirmation/confirmationsucces';
 import { Club } from 'app/shared/models/club.model';
+import { HandicapService } from 'app/shared/services/handicap.service';
 
 @Component({
     selector: 'contacts-details',
@@ -61,7 +62,7 @@ import { Club } from 'app/shared/models/club.model';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactsDetailsComponent implements OnInit, OnDestroy {
+export class ContactsDetailsComponent implements OnInit {
     drawerMode: 'over' | 'side' = 'side';
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
@@ -83,7 +84,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     currentPlayer: any = [];
+    public handicapsWhs: any[] = [];
     loggedInuser: any;
+    handicapIndex: number = 0;
     filteredClubOptions: Observable<Club[]>;
     /**
      * Constructor
@@ -95,6 +98,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         private _fuseConfirmationSuccessService: FuseConfirmationSuccessService,
         private _renderer2: Renderer2,
         private _facadeService: FacadeService,
+        private handicapService: HandicapService,
         public snackBar: MatSnackBar,
         private _router: Router,
         private datepipe: DatePipe,
@@ -135,6 +139,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             dateOfBirth: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),
+            handicapWHS: new FormControl('0', [Validators.required]),
             club: new FormControl(
                 this.loggedInuser.userRole > 1 ? this.clubTitle : '',
                 [Validators.required]
@@ -200,39 +205,23 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             this.contactForm.get('notes').updateValueAndValidity();
         }
     }
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-
-        // Dispose the overlays if they are still on the DOM
-        if (this._tagsPanelOverlayRef) {
-            this._tagsPanelOverlayRef.dispose();
+    changeHandicapWHS(item) {
+        if (
+            item != null &&
+            this.playerID &&
+            this.handicapIndex !== this.contactForm.get('handicapWHS').value
+        ) {
+            this.contactForm.get('notes').addValidators([Validators.required]);
+            this.contactForm.get('notes').updateValueAndValidity();
+        } else if (
+            this.playerID &&
+            this.handicapIndex == this.contactForm.get('handicapWHS').value
+        ) {
+            this.contactForm.get('notes').clearValidators();
+            this.contactForm.get('notes').updateValueAndValidity();
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Toggle edit mode
-     *
-     * @param editMode
-     */
-    toggleEditMode(editMode: boolean | null = null): void {
-        if (editMode === null) {
-            this.editMode = !this.editMode;
-        } else {
-            this.editMode = editMode;
-        }
-
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-    }
     displayFn(club: Club): string {
         return typeof club === 'string' ? club : club ? club.name : '';
     }
@@ -240,6 +229,11 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
      * Update the contact
      */
     async updateContact() {
+        // console.log(this.handicapIndex);
+        // console.log(this.contactForm.get('handicapWHS').value);
+        if (this.handicapIndex != this.contactForm.get('handicapWHS').value) {
+            this.changeWHSHandicap();
+        }
         let newFlag = true;
         let checkEmail: any = [];
         let checkPhone: any = [];
@@ -316,7 +310,7 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         let clubMember: ClubMembership[] = [];
         let UniqueId: string = '';
         let GEMId: string = '';
-        let players:any[] = await this._facadeService.getallPlayersforGGid();
+        let players: any[] = await this._facadeService.getallPlayersforGGid();
         var sortarray = players['player'];
         sortarray.sort(this.Comparator);
         console.log(sortarray);
@@ -346,14 +340,12 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             adminClubId: this.loggedInuser
                 ? this.loggedInuser.adminClubId
                 : null,
-            firebaseUid:
-                this.playerID
-                    ? this.currentPlayer.player[0].firebaseUid
-                    : null,
-            fcmToken:
-                this.playerID
-                    ? this.currentPlayer.player[0].fcmToken
-                    : null,
+            firebaseUid: this.playerID
+                ? this.currentPlayer.player[0].firebaseUid
+                : null,
+            fcmToken: this.playerID
+                ? this.currentPlayer.player[0].fcmToken
+                : null,
             gemId: GEMId,
             firstName: contact.firstName,
             lastName: contact.lastName,
@@ -418,33 +410,50 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 console.log(remarksAdded);
             }
 
+            if (
+                this.handicapIndex != this.contactForm.get('handicapWHS').value
+            ) {
+                const handicap_change_log: handicap_change_log = {
+                    id: UniqueIdGenerator.generate(),
+                    playerId: this.currentPlayer.player[0].id
+                        ? this.currentPlayer.player[0].id
+                        : null,
+                    newHandicap: contact.handicap ? contact.handicap : 0,
+                    oldHandicap: this.currentPlayer.player[0].handicap
+                        ? this.currentPlayer.player[0].handicap
+                        : 0,
+                    whs: false,
+                    dateTime: latest_date,
+                    remarks: this.contactForm.get('notes').value,
+                    tournamentId: null,
+                    updaterId: this.loggedInuser.id,
+                };
+
+                console.log(handicap_change_log);
+                //this.handicapLog = handicap_change_log;
+
+                const remarksAdded = <boolean>(
+                    await this._facadeService.AddHandicapRemarks(
+                        handicap_change_log
+                    )
+                );
+                console.log(remarksAdded);
+            }
+
             //console.log(isSuccess);
             if (isSuccess) {
                 this.save = true;
                 this.snackBar.open('Player has been updated.', 'x', {
                     duration: 1000,
                 });
-                this._router.navigate(['/players']);
+                //this._router.navigate(['/players']);
             }
         }
-        // Go through the contact object and clear empty values
-        // contact.emails = contact.emails.filter((email) => email.email);
-
-        // contact.phoneNumbers = contact.phoneNumbers.filter(
-        //     (phoneNumber) => phoneNumber.phoneNumber
-        // );
-
-        // Update the contact on the server
-        //this._contactsService.updateContact(contact.id, contact).subscribe(() => {
-
-        // Toggle the edit mode off
-        //this.toggleEditMode(false);
-        // });
     }
 
     public Comparator(a, b) {
-        let gemIDA=parseInt(a['gemId'].slice(2));
-        let gemIDB=parseInt(b['gemId'].slice(2));
+        let gemIDA = parseInt(a['gemId'].slice(2));
+        let gemIDB = parseInt(b['gemId'].slice(2));
         if (gemIDA < gemIDB) return 1;
         if (gemIDA > gemIDB) return -1;
 
@@ -556,6 +565,14 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
             this.currentPlayer = <Player>(
                 await this._facadeService.getPlayerByID(this.playerID)
             );
+            let whsHandicaps = await this._facadeService.getPlayerWHS(
+                this.playerID
+            );
+            let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
+            console.log(whshandicap);
+            
+            this.handicapsWhs =
+                whshandicap.length > 0 && whshandicap[0] ? whshandicap : 0;
         }
         console.log(this.currentPlayer);
         if (this.currentPlayer.player.length > 0) {
@@ -569,8 +586,9 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
                 dateOfBirth: this.currentPlayer.player[0].dob,
                 category: this.currentPlayer.player[0].playerCategory,
                 handicap: this.currentPlayer.player[0].handicap,
+                handicapWHS: 0,
                 country: this.currentPlayer.player[0].countryCode,
-                notes: this.currentPlayer.player[0].extraData,
+                notes: '',
                 membershipNo: this.currentPlayer.player[0].membershipNumber,
                 club: this.currentPlayer.player[0].membership[0]
                     ? this.currentPlayer.player[0].membership[0].club
@@ -587,5 +605,57 @@ export class ContactsDetailsComponent implements OnInit, OnDestroy {
         }
         // this.editMode=false;
         this._changeDetectorRef.markForCheck();
+    }
+
+    async changeWHSHandicap() {
+        // console.log(this.handicapIndex);
+        // console.log(this.contactForm.get('handicapWHS').value);
+        let newHandicapDifferentils = this.contactForm.get('handicapWHS').value;
+        // if(newHandicapDifferentils%1)
+        // console.log(parseFloat(newHandicapDifferentils.toFixed(1)));
+        let handicapWhsInputs: any[] = [];
+        let handicaps = this.handicapsWhs.slice(0, 20);
+        for (let playerHandicap of handicaps) {
+            let handicapWhsInput = {
+                playerId: playerHandicap.playerId,
+                tournamentId: playerHandicap.tournamentId,
+                round: playerHandicap.round,
+                handicapDifferential:
+                    playerHandicap.handicapDifferential ,
+                updatedAt: playerHandicap.updatedAt,
+                playedAt: playerHandicap.playedAt,
+                score: playerHandicap.score,
+                adjustedScore: playerHandicap.adjustedScore,
+                front9: playerHandicap.front9,
+                back9: playerHandicap.back9,
+                handicapIndex: playerHandicap.handicapIndex
+                    ? playerHandicap.handicapIndex
+                    : 0,
+                exceptionalScore: playerHandicap.exceptionalScore,
+            };
+            handicapWhsInputs.push(handicapWhsInput);
+        }
+        console.log(handicapWhsInputs);
+        let result = await this._facadeService.updatePlayerHandicapWhsDifferential(
+            handicapWhsInputs
+        );
+        if (result) {
+            let obj = {
+                playerId: this.playerID,
+                count: 21,
+                diffChange:newHandicapDifferentils,
+            };
+            this.handicapService
+                .calculateHandicapWHS(obj)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((err) => {
+                    console.log('error' + err);
+                    this.snackBar.open('Error!.', 'x', {
+                        duration: 5000,
+                    });
+                });
+        }
     }
 }

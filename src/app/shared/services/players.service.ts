@@ -840,26 +840,30 @@ export class PlayersService {
         });
     }
 
-    public importPlayerList(players: any[]): Promise<boolean> {
+    public importPlayerList(
+        players: any[],
+        clubMembers: any[]
+      ): Promise<boolean> {
         return new Promise((resolve) => {
-            this.apollo
-                .mutate<any>({
-                    mutation: Query.SavePlayersList,
-                    variables: {
-                        playersToSave: players,
-                    },
-                })
-                .subscribe(
-                    ({ data }) => {
-                        resolve(true);
-                    },
-                    (error) => {
-                        resolve(false);
-                        console.log('Could not add due to ' + error);
-                    }
-                );
+          this.apollo
+            .mutate<any>({
+              mutation: Query.SavePlayersList,
+              variables: {
+                playersToSave: players,
+                clubmembers: clubMembers,
+              },
+            })
+            .subscribe(
+              ({ data }) => {
+                resolve(true);
+              },
+              (error) => {
+                resolve(false);
+                console.log("Could not add due to " + error);
+              }
+            );
         });
-    }
+      }
 
     updatePlayer(player: Player): Promise<boolean> {
         console.log(player.id);

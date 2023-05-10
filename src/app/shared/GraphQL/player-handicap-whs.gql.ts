@@ -150,3 +150,17 @@ mutation UpdatePlayersHandicapWhsIndexMutation($handicapsWhs: [player_handicap_w
         AffectedRowsQL: affected_rows
     }
 }`;
+export const updatePlayerHandicapWhsDifferentialQL = gql`
+mutation UpdatePlayersHandicapWhsIndexMutation($handicapsWhs: [player_handicap_whs_insert_input!]!) {
+    HandicapWhsEntryQL: insert_player_handicap_whs(
+        objects: $handicapsWhs,
+        on_conflict: {
+            constraint: player_handicap_whs_pkey,
+            update_columns: [
+                handicapDifferential
+            ]
+        }
+    ) {
+        AffectedRowsQL: affected_rows
+    }
+}`;

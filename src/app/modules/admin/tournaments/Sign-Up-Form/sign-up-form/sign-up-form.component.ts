@@ -83,7 +83,7 @@ export class SignUpFormComponent implements OnInit {
             membership: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),
-            club: new FormControl('Lahore Gymkhana Club', [Validators.required]),
+            club: new FormControl('', [Validators.required]),
         });
     }
     displayFn(club: Club): string {
@@ -152,7 +152,7 @@ export class SignUpFormComponent implements OnInit {
                 this.alert = {
                     type: 'warn',
                     message:
-                        'You are alredy added as a Tournament Member!.Kindly Refresh the page to Sign-up again.',
+                        'You are alredy added as a Tournament Member!',
                 };
                 this.showAlert = true;
             }
@@ -163,8 +163,8 @@ export class SignUpFormComponent implements OnInit {
             sortarray.sort(this.Comparator);
             console.log(sortarray);
             let member: any = {
-                //clubId: signUpPerson.club.id,
-                clubId: "-KpFBx3dRDXWh7ZoK9vG",
+                clubId: signUpPerson.club.id,
+                //clubId: "-KpFBx3dRDXWh7ZoK9vG",
             };
             // clubMember.push(member);
             let player: any = {

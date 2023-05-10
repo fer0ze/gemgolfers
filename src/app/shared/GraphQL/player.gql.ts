@@ -34,7 +34,7 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where: { firstName : { _neq: "" } }
+            where: { firstName: { _neq: "" } }
             order_by: { createdAt: desc }
         ) {
             id
@@ -607,12 +607,35 @@ export const GetPlayerTodayRoundQL = gql`
 `;
 
 export const SavePlayersList = gql`
-    mutation SavePlayersListMutation($playersToSave: [player_insert_input!]!) {
+    mutation SavePlayersListMutation(
+        $playersToSave: [player_insert_input!]!
+        $clubmembers: [club_member_insert_input!]!
+    ) {
         PlayerEntryQLi: insert_player(
             objects: $playersToSave
-            on_conflict: { constraint: player_pkey, update_columns: [gemId] }
+            on_conflict: {
+                constraint: player_pkey
+                update_columns: [
+                    phone
+                    email
+                    firstName
+                    lastName
+                    membershipNumber
+                ]
+            }
         ) {
             AffectedRowsQLi: affected_rows
+        }
+        insert_club_member(
+            objects: $clubmembers
+            on_conflict: {
+                constraint: club_member_pkey
+                update_columns: [playerId]
+            }
+        ) {
+            returning {
+                playerId
+            }
         }
     }
 `;
@@ -687,7 +710,6 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
-            
         ) {
             ...PlayerHandicapQL
         }
