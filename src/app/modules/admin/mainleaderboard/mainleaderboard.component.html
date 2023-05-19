@@ -117,7 +117,7 @@
                             url["Text"]
                             }}</ng-template>
                         <div id="leaderboard" class="mt-2">
-                            <ul class="responsive-table" id="all" *ngIf="searchName">
+                            <ul class="responsive-table" id="all" *ngIf="searchName && totalRounds>1">
                                 <!-- <li class="table-header">
                                     <div class="col col-1">POS.</div>
                                     <div class="col col-2">PLAYER</div>
@@ -239,6 +239,46 @@
                                     </div>
                                 </li>
                             </ul>
+                            <ul class="responsive-table" *ngIf="searchName">
+                                <li class="table-row  hover:bg-gray-100"  *ngFor="let item of allMatchSearchResults">
+                                    <div class="col col-1">
+                                        {{ item.position }}
+                                    </div>
+                                    <div class="col col-2">
+                                        {{ item.name }}
+                                        <div class="text-xs flex items-center">
+        
+                                            <div class="cursor-pointer py-0.5 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
+                                                (click)="
+                                                    viewPlayerScore(
+                                                        item.name,
+                                                        item.courseId,
+                                                        item.holeSets,
+                                                        item.playerId,
+                                                        item.holeSetsInverted,
+                                                        item.type
+                                                    )
+                                                ">
+                                                view score
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-3">
+                                        {{ item.score }}
+                                    </div>
+                                    <div class="col col-4" *ngIf="item.under >= 0" >
+        
+                                        {{ item.under }}
+                                    </div>
+                                    <div class="col col-4" *ngIf="item.under < 0" style="color: red">
+        
+                                        {{ item.under }}
+                                    </div>
+                                    <div class="col col-5">
+                                        {{ item.holes }}
+                                    </div>
+                                </li>
+                            </ul>
                             <ul class="responsive-table" *ngIf="isGross && !this.showTaxes">
                                 <li class="table-header">
                                     <div class="col col-1">POS.</div>
@@ -276,7 +316,12 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4">
+                                    <div class="col col-4" *ngIf="item.under >= 0" >
+        
+                                        {{ item.under }}
+                                    </div>
+                                    <div class="col col-4" *ngIf="item.under < 0" style="color: red">
+        
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-5">
@@ -841,7 +886,7 @@
                             R4
                         </div>
                         <div class="col col-5 THRU">THRU</div>
-                    </li> -->
+                       </li> -->
                         <li class="table-row hover:bg-gray-100" *ngFor="let item of allMatchSearchResults">
                             <div class="col col-1">
                                 {{ item.position }}

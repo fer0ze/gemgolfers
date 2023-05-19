@@ -687,13 +687,12 @@ export class MainLeaderboardComponent implements OnInit {
                 );
             else this.createSimpleLeaders(this.Leaderboard.FlightsQL, 1, false);
 
-
             this.flightRound = 1;
 
             this.grossLeaders.sort(this.Comparator);
             this.netLeaders.sort(this.Comparator);
-            this.grossLeaders=this.sortAllGrossLeadersTie(this.grossLeaders);
-            this.netLeaders=this.sortAllNetLeadersTie(this.netLeaders);
+            this.grossLeaders = this.sortAllGrossLeadersTie(this.grossLeaders);
+            this.netLeaders = this.sortAllNetLeadersTie(this.netLeaders);
             if (this.lastActiveTab == 1) {
                 this.isGross = true;
                 this.isNet = false;
@@ -917,7 +916,11 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
-                    playerStatus: playerStatus ? playerStatus.status : 'ac',
+                    playerStatus: playerStatus
+                        ? playerStatus.status
+                        : scores.length <= 0
+                        ? 'ic'
+                        : 'ac',
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -968,7 +971,11 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
-                    playerStatus: playerStatus ? playerStatus.status : 'ac',
+                    playerStatus: playerStatus
+                    ? playerStatus.status
+                    : scores.length <= 0
+                    ? 'ic'
+                    : 'ac',
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -1213,42 +1220,23 @@ export class MainLeaderboardComponent implements OnInit {
         if (query.length > 3) {
             this.searchName = true;
             console.log(this.allMatchResults);
-            this.allMatchSearchResults = this.allLeadersGross.filter((obj) => {
-                return obj.name
-                    .toString()
-                    .toLowerCase()
-                    .includes(query.toString().toLowerCase());
-            });
-            // var filteredArray: any = this.Leaderboard.FlightsQL.filter(
-            //     (element) =>
-            //         element.MembersQL.some((MembersQL) =>
-            //             (
-            //                 MembersQL.PlayerQL.firstName +
-            //                 ' ' +
-            //                 MembersQL.PlayerQL.lastName
-            //             )
-            //                 .toLowerCase()
-            //                 .trim()
-            //                 .includes(query.toLowerCase().trim())
-            //         )
-            // ).map((element) => {
-            //     let n = Object.assign({}, element, {
-            //         MembersQL: element.MembersQL.filter((subElement) =>
-            //             (
-            //                 subElement.PlayerQL.firstName +
-            //                 ' ' +
-            //                 subElement.PlayerQL.lastName
-            //             )
-            //                 .toLowerCase()
-            //                 .trim()
-            //                 .includes(query.toLowerCase().trim())
-            //         ),
-            //     });
-            //     return n;
-            // });
-            // console.log(filteredArray);
-            // for(each)
-            // this.createSimpleLeaders(filteredArray,1,true);
+            if(this.allLeadersGross.length>0){
+                this.allMatchSearchResults = this.allLeadersGross.filter((obj) => {
+                    return obj.name
+                        .toString()
+                        .toLowerCase()
+                        .includes(query.toString().toLowerCase());
+                });
+                
+            }else{
+                this.allMatchSearchResults = this.grossLeaders.filter((obj) => {
+                    return obj.name
+                        .toString()
+                        .toLowerCase()
+                        .includes(query.toString().toLowerCase());
+                });
+
+            }
         } else {
             this.allMatchSearchResults = [];
             this.searchName = false;
@@ -1602,7 +1590,7 @@ export class MainLeaderboardComponent implements OnInit {
 
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
         //Collections.sort(grossLeaders);
-         console.log(leaderGrossList);
+        console.log(leaderGrossList);
 
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
         // console.log(leaderGrossList);
@@ -1642,8 +1630,12 @@ export class MainLeaderboardComponent implements OnInit {
                 secondCompleted = leaderPrevious.completed4;
             }
 
-          //  tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
-            tied = leaderCurrent.under == leaderPrevious.under;
+            //  tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
+            if(leaderCurrent.AllGrossUnder){
+                tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
+            }else{
+                tied = leaderCurrent.under == leaderPrevious.under;
+            }
             if (tied) {
                 //leaderCurrent["tied"]= true;
                 //leaderPrevious["tied"]= true;
@@ -1659,7 +1651,7 @@ export class MainLeaderboardComponent implements OnInit {
 
             ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
-        //console.log(leaderGrossList);
+        console.log(leaderGrossList);
 
         return leaderGrossList;
     }
@@ -1702,7 +1694,11 @@ export class MainLeaderboardComponent implements OnInit {
                 secondCompleted = leaderPrevious.completed4;
             }
 
-            tied = leaderCurrent.under == leaderPrevious.under;
+            if(leaderCurrent.AllGrossUnder){
+                tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
+            }else{
+                tied = leaderCurrent.under == leaderPrevious.under;
+            }
 
             if (tied) {
                 //leaderCurrent["tied"]= true;
@@ -2274,13 +2270,13 @@ export class MainLeaderboardComponent implements OnInit {
                             ? this.Leaderboard.tee_id
                             : 1,
                     course: courseId,
-                    players:[],
+                    players: [],
                     holeSets: courseHoleSets,
                     courseHoleSetsInverted: holeSetsInverted,
                     allGross: playerGrossScore,
                     allNet: playerNetScore,
                     round: this.flightRound,
-                    type: this.allRoundNetScore || this.isNet? 'Net':'Gross',
+                    type: this.allRoundNetScore || this.isNet ? 'Net' : 'Gross',
                     team: team,
                     removed: removed,
                 },
@@ -2294,13 +2290,13 @@ export class MainLeaderboardComponent implements OnInit {
                             ? this.Leaderboard.tee_id
                             : 1,
                     course: courseId,
-                    players:[],
+                    players: [],
                     holeSets: courseHoleSets,
                     allGross: playerGrossScore,
                     courseHoleSetsInverted: holeSetsInverted,
                     allNet: playerNetScore,
                     round: this.flightRound,
-                    type: this.allRoundNetScore? 'Net':'Gross',
+                    type: this.allRoundNetScore ? 'Net' : 'Gross',
                     team: team,
                     removed: removed,
                 },
@@ -2589,7 +2585,7 @@ export class MainLeaderboardComponent implements OnInit {
             for (let membersQL of membersQLs) {
                 scores = membersQL.ScoresQL;
                 if (scores.length <= 0) continue;
-                scores=scores.sort(this.ComparatorH)
+                scores = scores.sort(this.ComparatorH);
                 for (let score of scores) {
                     let objScore: Score = new Score(
                         score.playerId,
@@ -2633,16 +2629,16 @@ export class MainLeaderboardComponent implements OnInit {
                             scoreAG <= scoreG &&
                             playerId != playerIdA
                         ) {
-                            scoreG=scoreAG;
+                            scoreG = scoreAG;
                             newScores[index] = itemA;
                             // break;
                         }
                         if (
                             holeNoA == holeNo &&
-                            scoreA<= score &&
+                            scoreA <= score &&
                             playerId != playerIdA
                         ) {
-                            score=scoreA;
+                            score = scoreA;
                             newScoresNET[index] = itemA;
                             // break;
                         }
@@ -2666,10 +2662,9 @@ export class MainLeaderboardComponent implements OnInit {
                 }
 
                 grossTotal += gross;
-                
+
                 grossUnderTotal += objScore.getGrossUnder();
-               
-               
+
                 handicap += objScore.getPlayerHandicap(handicapAllocation);
                 scoreHandicap = objScore.getPlayerHandicap(handicapAllocation);
                 holesPlayed++;
@@ -2693,23 +2688,20 @@ export class MainLeaderboardComponent implements OnInit {
                     continue;
                 }
 
-                
                 let currentNet: number =
                     objScore.getNetScore(handicapAllocation);
                 netTotal += currentNet;
 
-                
                 netUnderTotal =
                     netUnderTotal + objScore.getNetUnder(handicapAllocation);
                 stableFordPointsTotal +=
                     objScore.getStablefordPoints(handicapAllocation);
                 handicap += objScore.getPlayerHandicap(handicapAllocation);
                 scoreHandicap = objScore.getPlayerHandicap(handicapAllocation);
-               
+
                 if (!flightIds.includes(score.flightId)) {
                     flightIds.push(score.flightId);
                 }
-             
             }
 
             //netUnderTotal = grossUnderTotal - scoreHandicap;
