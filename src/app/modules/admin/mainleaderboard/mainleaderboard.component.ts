@@ -789,7 +789,7 @@ export class MainLeaderboardComponent implements OnInit {
 
                 let scores: any[] = membersQL.ScoresQL;
 
-                if (scores.length <= 0) continue;
+                //if (scores.length <= 0) continue;
 
                 for (let score of scores) {
                     let objScore: Score = new Score(

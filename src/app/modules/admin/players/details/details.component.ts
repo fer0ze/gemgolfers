@@ -642,7 +642,7 @@ export class ContactsDetailsComponent implements OnInit {
         if (result) {
             let obj = {
                 playerId: this.playerID,
-                count: 21,
+                count: 39,
                 diffChange:newHandicapDifferentils,
             };
             this.handicapService
