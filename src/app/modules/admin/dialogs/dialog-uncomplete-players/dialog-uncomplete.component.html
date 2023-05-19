@@ -7,7 +7,15 @@
                 placeholder="Filter"
             />
         </mat-form-field>
-
+        <div class="flex justify-end ml-auto mb-1">
+            <button mat-stroked-button (click)="downloadAsPDF()">
+                <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:dowload'"
+                ></mat-icon>
+                <span class="ml-2">Dowload Summary</span>
+            </button>
+        </div>
         <table id="playerTables" mat-table [dataSource]="dataSource" matSort>
             <!-- Membership Number Column -->
             <ng-container matColumnDef="membershipNumber">
@@ -54,7 +62,7 @@
            
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row  *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
         <mat-paginator
             #MatPaginatorA="matPaginator"

@@ -68,7 +68,7 @@ export class DialogUncompletedComponent implements OnInit {
 
         // From HTML
         doc.autoTable({
-            html: '#playerTable',
+            html: '#playerTables',
             startY: 25,
             theme: 'grid',
             useCss: false,
