@@ -21,4 +21,10 @@ export class HandicapService {
             obj
         ).toPromise();
     }
+    adjustHandicapWHS(obj):Promise<any> {
+        return this.$http.post(
+            'https://gemgolfers-api.herokuapp.com/handicap/adjustSelectedHcDiff',
+            obj
+        ).toPromise();
+    }
 }
