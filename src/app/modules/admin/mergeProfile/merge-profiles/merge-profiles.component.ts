@@ -92,7 +92,60 @@ export class MergeProfilesComponent implements OnInit {
             );
     }
 
-    calculateHandicap() {
+    calculateHandicapCONGU() {
+        let oldPlayer = Object.assign({}, this.selectionA.selected);
+        let newPlayer = Object.assign({}, this.selectionB.selected);
+        if (
+            JSON.stringify(oldPlayer) === '{}' &&
+            JSON.stringify(newPlayer) === '{}'
+        ) {
+            this.snackBar.open('Please! Select Player.', 'x', {
+                duration: 5000,
+            });
+        } else {
+            const dialogRef = this.dialog.open(DialogMergeComponent, {
+                width: '350px',
+                data: 'Do you want to calculate handicap again?',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result != undefined && result != '') {
+                    let obj: any = {};
+                    if (newPlayer && newPlayer[0]) {
+                        obj = {
+                            playerId: newPlayer[0].id,
+                            count: result,
+                        };
+                    } else {
+                        obj = {
+                            playerId: oldPlayer[0].id,
+                            count: result,
+                        };
+                    }
+                    this.handicapService
+                        .calculateHandicap(obj)
+                        .then((response) => {
+                            console.log(response);
+                            this.selectionA.clear(true);
+                            this.selectionB.clear(true);
+                            this.snackBar.open(
+                                'Handicap Calculated Successfully.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
+                        })
+                        .catch((err) => {
+                            console.log('error' + err);
+                            this.snackBar.open('Error!.', 'x', {
+                                duration: 5000,
+                            });
+                        });
+                }
+            });
+        }
+    }
+    calculateHandicapWHS() {
         let oldPlayer = Object.assign({}, this.selectionA.selected);
         let newPlayer = Object.assign({}, this.selectionB.selected);
         if (
@@ -207,26 +260,26 @@ export class MergeProfilesComponent implements OnInit {
                                 duration: 5000,
                             });
                         });
-                    this.handicapService
-                        .calculateHandicapWHS(obj)
-                        .then((response) => {
-                            console.log(response);
-                            this.snackBar.open(
-                                'Players are Merged and Handicap Calculated Successfully.',
-                                'x',
-                                {
-                                    duration: 5000,
-                                }
-                            );
-                            this.selectionA.clear(true);
-                            this.selectionB.clear(true);
-                        })
-                        .catch((err) => {
-                            console.log('error' + err);
-                            this.snackBar.open('Error!.', 'x', {
-                                duration: 5000,
-                            });
-                        });
+                    // this.handicapService
+                    //     .calculateHandicapWHS(obj)
+                    //     .then((response) => {
+                    //         console.log(response);
+                    //         this.snackBar.open(
+                    //             'Players are Merged and Handicap Calculated Successfully.',
+                    //             'x',
+                    //             {
+                    //                 duration: 5000,
+                    //             }
+                    //         );
+                    //         this.selectionA.clear(true);
+                    //         this.selectionB.clear(true);
+                    //     })
+                    //     .catch((err) => {
+                    //         console.log('error' + err);
+                    //         this.snackBar.open('Error!.', 'x', {
+                    //             duration: 5000,
+                    //         });
+                    //     });
                 } else if (response == true) {
                     this.selectionA.clear(true);
                     this.selectionB.clear(true);
