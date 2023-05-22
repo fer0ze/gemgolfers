@@ -62,7 +62,13 @@ export class DialogUncompletedComponent implements OnInit {
         var doc = new jsPDF();
 
         doc.setFontSize(18);
-        doc.text("Round's Report Detail:", 15, 15);
+        if(this.data.key=='non'){
+            doc.text("Round's Non-Submitted Cards Detail:", 15, 15);
+        }else if(this.data.key=='all'){
+            doc.text("Round's All Players Detail:", 15, 15);
+        }else{
+            doc.text("Round's Submitted Cards Detail:", 15, 15);
+        }
         doc.setFontSize(11);
         doc.setTextColor(100);
 

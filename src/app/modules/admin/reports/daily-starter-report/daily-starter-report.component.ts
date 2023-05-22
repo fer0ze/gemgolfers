@@ -74,7 +74,7 @@ export class DailyStarterReportComponent implements OnInit {
         'membersPlayed',
         'submittedCards',
         'nonSubmittedCards',
-        'details'
+        'details',
     ];
     //['id','name', 'dates','updatedHandicap','details'];
 
@@ -130,7 +130,7 @@ export class DailyStarterReportComponent implements OnInit {
             .subscribe(
                 async (data) => {
                     var currentDate = new Date();
-                    currentDate.setDate(currentDate.getDate()-1);
+                    currentDate.setDate(currentDate.getDate() - 1);
 
                     //var nxtDate = new Date();
                     //nxtDate.setDate(nxtDate.getDate() + 7);
@@ -154,7 +154,7 @@ export class DailyStarterReportComponent implements OnInit {
     async getDailyRounds(fromDate: Date, toDate: Date) {
         let dailyRoundsData: any[] = [];
         this.singleRound.length = 0;
-        let dataPlayers :any;
+        let dataPlayers: any;
         this.flightPlayers = [];
         this.findex = 0;
         this.dailyStats = [];
@@ -164,12 +164,12 @@ export class DailyStarterReportComponent implements OnInit {
         let counter: number = 0;
 
         if (this.loggedInuser.userRole == 1) {
-            dataPlayers= await this.facadeService.getDailyRoundsSingleAdmin(
+            dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
             );
         } else {
-             dataPlayers = await this.facadeService.getDailyRoundsSingle(
+            dataPlayers = await this.facadeService.getDailyRoundsSingle(
                 this.loggedInuser.adminClubId,
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
@@ -198,6 +198,13 @@ export class DailyStarterReportComponent implements OnInit {
                                   .MembersQL.length
                             : 0,
                     noOfFlights: dataPlayers.TournamentsQL[i].FlightsQL.length,
+                    allPlayers:
+                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
+                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                            .length > 0
+                            ? dataPlayers.TournamentsQL[i].FlightsQL[0]
+                                  .MembersQL
+                            : [],
                     submittedCards:
                         dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
                         dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
@@ -251,6 +258,18 @@ export class DailyStarterReportComponent implements OnInit {
                                 myData.length - 1
                             ].nonSubmittedCardsList.push(p.PlayerQL);
                     }
+                    if (stats.submittedCards.length) {
+                        for (let p of stats.submittedCards)
+                            myData[myData.length - 1].submittedCardsList.push(
+                                p.PlayerQL
+                            );
+                    }
+                    if (stats.allPlayers.length) {
+                        for (let p of stats.allPlayers)
+                            myData[myData.length - 1].allPlayersList.push(
+                                p.PlayerQL
+                            );
+                    }
                     prevDate = stats.date;
                 } else {
                     memCounter = 0;
@@ -272,9 +291,19 @@ export class DailyStarterReportComponent implements OnInit {
                     nonSubmitPer = Math.round(nonSubmitPer);
 
                     let nonSubmittedCardsList = [];
+                    let submittedCardsList = [];
+                    let allPlayersList = [];
                     if (stats.nonSubmittedCards.length) {
                         for (let p of stats.nonSubmittedCards)
                             nonSubmittedCardsList.push(p.PlayerQL);
+                    }
+                    if (stats.submittedCards.length) {
+                        for (let p of stats.submittedCards)
+                            submittedCardsList.push(p.PlayerQL);
+                    }
+                    if (stats.allPlayers.length) {
+                        for (let p of stats.allPlayers)
+                            allPlayersList.push(p.PlayerQL);
                     }
 
                     let obj = {
@@ -282,6 +311,8 @@ export class DailyStarterReportComponent implements OnInit {
                         membersCount: memCounter,
                         totalFlights: totalFlights,
                         submittedCards: submittedCards,
+                        submittedCardsList: submittedCardsList,
+                        allPlayersList: allPlayersList,
                         nonSubmittedCards: nonSubmittedCards,
                         nonSubmittedCardsList: nonSubmittedCardsList,
                         submitPer: submitPer,
@@ -528,10 +559,9 @@ export class DailyStarterReportComponent implements OnInit {
         }
     }
 
-    playerList(players) {
+    playerList(players, key) {
         const dialogRef = this.dialog.open(DialogUncompletedComponent, {
-          data: { players: players },
+            data: { players: players, key: key },
         });
-       
     }
 }
