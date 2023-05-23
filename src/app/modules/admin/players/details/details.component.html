@@ -160,7 +160,7 @@
                             <mat-form-field
                                 class="fuse-mat-no-subscript w-full"
                             >
-                                <mat-label>Handicap</mat-label>
+                                <mat-label>Handicap Congu</mat-label>
                                 <mat-icon
                                     matPrefix
                                     class="hidden sm:flex icon-size-5"
@@ -171,7 +171,28 @@
                                     formControlName="handicap"
                                     [placeholder]="'Handicap'"
                                     type="number"
+                                    step="0.1"
                                     (change)="changeHandicap($event)"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <mat-form-field
+                                class="fuse-mat-no-subscript w-full"
+                            >
+                                <mat-label>Handicap WHS</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:tag'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="handicapWhsIndex"
+                                    [placeholder]="'HandicapWhsIndex'"
+                                    type="number"
+                                    step="0.1"
+                                    (change)="changeHandicapWHS($event)"
                                 />
                             </mat-form-field>
                         </div>
@@ -188,10 +209,11 @@
                                 ></mat-icon>
                                 <input
                                     matInput
+                                    step="0.1"
                                     formControlName="handicapWHS"
                                     [placeholder]="'HandicapIndex'"
                                     type="number"
-                                    (change)="changeHandicapWHS($event)"
+                                    (change)="changeHandicapWHSDiff($event)"
                                 />
                             </mat-form-field>
                         </div>
@@ -467,7 +489,7 @@
                         </div>
 
                         <!-- Notes -->
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-2  hidden" id="comment">
                             <mat-form-field
                                 class="fuse-mat-textarea fuse-mat-no-subscript w-full"
                             >

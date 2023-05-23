@@ -139,6 +139,7 @@ export class ContactsDetailsComponent implements OnInit {
             dateOfBirth: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),
+            handicapWhsIndex: new FormControl('0', [Validators.required]),
             handicapWHS: new FormControl('0', [Validators.required]),
             club: new FormControl(
                 this.loggedInuser.userRole > 1 ? this.clubTitle : '',
@@ -194,6 +195,7 @@ export class ContactsDetailsComponent implements OnInit {
             this.currentPlayer.player[0].handicap !==
                 this.contactForm.get('handicap').value
         ) {
+            document.getElementById('comment').classList.remove('hidden');
             this.contactForm.get('notes').addValidators([Validators.required]);
             this.contactForm.get('notes').updateValueAndValidity();
         } else if (
@@ -201,6 +203,7 @@ export class ContactsDetailsComponent implements OnInit {
             this.currentPlayer.player[0].handicap ==
                 this.contactForm.get('handicap').value
         ) {
+            document.getElementById('comment').classList.add('hidden');
             this.contactForm.get('notes').clearValidators();
             this.contactForm.get('notes').updateValueAndValidity();
         }
@@ -209,14 +212,34 @@ export class ContactsDetailsComponent implements OnInit {
         if (
             item != null &&
             this.playerID &&
+             this.currentPlayer.player[0].handicapWhsIndex !== this.contactForm.get('handicapWhsIndex').value
+        ) {
+            document.getElementById('comment').classList.remove('hidden');
+            this.contactForm.get('notes').addValidators([Validators.required]);
+            this.contactForm.get('notes').updateValueAndValidity();
+        } else if (
+            this.playerID &&
+             this.currentPlayer.player[0].handicapWhsIndex == this.contactForm.get('handicapWhsIndex').value
+        ) {
+            document.getElementById('comment').classList.add('hidden');
+            this.contactForm.get('notes').clearValidators();
+            this.contactForm.get('notes').updateValueAndValidity();
+        }
+    }
+    changeHandicapWHSDiff(item) {
+        if (
+            item != null &&
+            this.playerID &&
             this.handicapIndex !== this.contactForm.get('handicapWHS').value
         ) {
+            document.getElementById('comment').classList.remove('hidden');
             this.contactForm.get('notes').addValidators([Validators.required]);
             this.contactForm.get('notes').updateValueAndValidity();
         } else if (
             this.playerID &&
             this.handicapIndex == this.contactForm.get('handicapWHS').value
         ) {
+            document.getElementById('comment').classList.add('hidden');
             this.contactForm.get('notes').clearValidators();
             this.contactForm.get('notes').updateValueAndValidity();
         }
@@ -355,6 +378,7 @@ export class ContactsDetailsComponent implements OnInit {
             email: contact.email,
             phone: contact.phoneNumbers,
             playerCategory: contact.category,
+            handicapWhsIndex: contact.handicapWhsIndex,
             handicap: contact.handicap,
             online: false,
             countryCode: contact.country,
@@ -391,6 +415,32 @@ export class ContactsDetailsComponent implements OnInit {
                     newHandicap: contact.handicap ? contact.handicap : 0,
                     oldHandicap: this.currentPlayer.player[0].handicap
                         ? this.currentPlayer.player[0].handicap
+                        : 0,
+                    whs: false,
+                    dateTime: latest_date,
+                    remarks: this.contactForm.get('notes').value,
+                    tournamentId: null,
+                    updaterId: this.loggedInuser.id,
+                };
+
+                console.log(handicap_change_log);
+                //this.handicapLog = handicap_change_log;
+
+                const remarksAdded = <boolean>(
+                    await this._facadeService.AddHandicapRemarks(
+                        handicap_change_log
+                    )
+                );
+                console.log(remarksAdded);
+            }else if(this.currentPlayer.player[0].handicapWhsIndex !== contact.handicapWhsIndex){
+                const handicap_change_log: handicap_change_log = {
+                    id: UniqueIdGenerator.generate(),
+                    playerId: this.currentPlayer.player[0].id
+                        ? this.currentPlayer.player[0].id
+                        : null,
+                    newHandicap: contact.handicapWhsIndex ? contact.handicapWhsIndex : 0,
+                    oldHandicap: this.currentPlayer.player[0].handicapWhsIndex
+                        ? this.currentPlayer.player[0].handicapWhsIndex
                         : 0,
                     whs: false,
                     dateTime: latest_date,
@@ -586,6 +636,7 @@ export class ContactsDetailsComponent implements OnInit {
                 dateOfBirth: this.currentPlayer.player[0].dob,
                 category: this.currentPlayer.player[0].playerCategory,
                 handicap: this.currentPlayer.player[0].handicap,
+                handicapWhsIndex: this.currentPlayer.player[0].handicapWhsIndex,
                 handicapWHS: 0,
                 country: this.currentPlayer.player[0].countryCode,
                 notes: '',
