@@ -63,11 +63,14 @@ export class DialogUncompletedComponent implements OnInit {
 
         doc.setFontSize(18);
         if(this.data.key=='non'){
-            doc.text("Round's Non-Submitted Cards Detail:", 15, 15);
-        }else if(this.data.key=='all'){
-            doc.text("Round's All Players Detail:", 15, 15);
+            doc.text("Date: "+this.data.date, 80, 15);
+            doc.text("Round's Non-Submitted Cards Detail:", 54, 23);
+        }else if(this.data.key=='all'){      
+            doc.text("Date: "+this.data.date, 80, 15);
+            doc.text("Round's All Players Detail:", 68, 23);
         }else{
-            doc.text("Round's Submitted Cards Detail:", 15, 15);
+            doc.text("Date: "+this.data.date, 80, 15);
+            doc.text("Round's Submitted Cards Detail:",62, 23);
         }
         doc.setFontSize(11);
         doc.setTextColor(100);

@@ -401,7 +401,16 @@ export class AddDailyRoundComponent implements OnInit {
           };
 
           this.flightMembers.push(member);
-
+          let playerTee=(player[0].playerCategory);
+          if(playerTee=='Senior Amateurs'){
+            playerTee='Seniors';
+          }
+          player[0]['playingTee']=playerTee.toUpperCase();
+          let selectedData = {
+            value: player[0]['playingTee'],
+            text: player[0]['playingTee'],
+          };
+          this.playerTees.set(player[0].id, selectedData);
           this.tournamentMembers.push(player[0]);
 
           this.syncTournamentMembers();
@@ -470,6 +479,17 @@ export class AddDailyRoundComponent implements OnInit {
 
               console.log(this.flightMembers);
               console.log(this.tournamentMembers);
+              let playerTee=result.player.playerCategory;
+              if(playerTee=='Senior Amateurs'){
+                playerTee='Seniors';
+              }
+              playerTee=playerTee.toUpperCase();
+              let selectedData = {
+                value: playerTee,
+                text: playerTee,
+              };
+              this.playerTees.set(result.player.id, selectedData);
+
               let obj: Player = {
                 id: result.player.id,
                 adminClubId: result.player.adminClubId,
@@ -491,7 +511,10 @@ export class AddDailyRoundComponent implements OnInit {
                 userRole: result.player.isClubAdmin == true ? 2 : 3,
                 membership: result.player.membership,
                 membershipNumber: result.player.membershipNumber,
+                playingTee:playerTee,
               };
+              
+          
               console.log(obj);
               console.log(this.tournamentMembers);
 

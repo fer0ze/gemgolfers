@@ -559,9 +559,9 @@ export class DailyStarterReportComponent implements OnInit {
         }
     }
 
-    playerList(players, key) {
+    playerList(players, key,date) {
         const dialogRef = this.dialog.open(DialogUncompletedComponent, {
-            data: { players: players, key: key },
+            data: { players: players, key: key,date:date },
         });
     }
 }
