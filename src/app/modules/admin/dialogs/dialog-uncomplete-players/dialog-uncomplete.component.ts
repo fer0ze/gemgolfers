@@ -60,7 +60,7 @@ export class DialogUncompletedComponent implements OnInit {
 
     public downloadAsPDF() {
         var doc = new jsPDF();
-let date=new Date(this.data.date).getDate() +'/'+new Date(this.data.date).getMonth() +'/'+new Date(this.data.date).getFullYear(); 
+let date=new Date(this.data.date).getDate() +'/'+(new Date(this.data.date).getMonth()+1) +'/'+new Date(this.data.date).getFullYear(); 
         doc.setFontSize(18);
         if(this.data.key=='non'){
             doc.text("Date: "+date, 80, 15);
