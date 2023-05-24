@@ -212,14 +212,16 @@ export class ContactsDetailsComponent implements OnInit {
         if (
             item != null &&
             this.playerID &&
-             this.currentPlayer.player[0].handicapWhsIndex !== this.contactForm.get('handicapWhsIndex').value
+            this.currentPlayer.player[0].handicapWhsIndex !==
+                this.contactForm.get('handicapWhsIndex').value
         ) {
             document.getElementById('comment').classList.remove('hidden');
             this.contactForm.get('notes').addValidators([Validators.required]);
             this.contactForm.get('notes').updateValueAndValidity();
         } else if (
             this.playerID &&
-             this.currentPlayer.player[0].handicapWhsIndex == this.contactForm.get('handicapWhsIndex').value
+            this.currentPlayer.player[0].handicapWhsIndex ==
+                this.contactForm.get('handicapWhsIndex').value
         ) {
             document.getElementById('comment').classList.add('hidden');
             this.contactForm.get('notes').clearValidators();
@@ -432,13 +434,18 @@ export class ContactsDetailsComponent implements OnInit {
                     )
                 );
                 console.log(remarksAdded);
-            }else if(this.currentPlayer.player[0].handicapWhsIndex !== contact.handicapWhsIndex){
+            } else if (
+                this.currentPlayer.player[0].handicapWhsIndex !==
+                contact.handicapWhsIndex
+            ) {
                 const handicap_change_log: handicap_change_log = {
                     id: UniqueIdGenerator.generate(),
                     playerId: this.currentPlayer.player[0].id
                         ? this.currentPlayer.player[0].id
                         : null,
-                    newHandicap: contact.handicapWhsIndex ? contact.handicapWhsIndex : 0,
+                    newHandicap: contact.handicapWhsIndex
+                        ? contact.handicapWhsIndex
+                        : 0,
                     oldHandicap: this.currentPlayer.player[0].handicapWhsIndex
                         ? this.currentPlayer.player[0].handicapWhsIndex
                         : 0,
@@ -620,7 +627,7 @@ export class ContactsDetailsComponent implements OnInit {
             );
             let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
             console.log(whshandicap);
-            
+
             this.handicapsWhs =
                 whshandicap.length > 0 && whshandicap[0] ? whshandicap : 0;
         }
@@ -659,54 +666,22 @@ export class ContactsDetailsComponent implements OnInit {
     }
 
     async changeWHSHandicap() {
-        // console.log(this.handicapIndex);
-        // console.log(this.contactForm.get('handicapWHS').value);
         let newHandicapDifferentils = this.contactForm.get('handicapWHS').value;
-        // if(newHandicapDifferentils%1)
-        // console.log(parseFloat(newHandicapDifferentils.toFixed(1)));
-        let handicapWhsInputs: any[] = [];
-        let handicaps = this.handicapsWhs.slice(0, 20);
-        for (let playerHandicap of handicaps) {
-            let handicapWhsInput = {
-                playerId: playerHandicap.playerId,
-                tournamentId: playerHandicap.tournamentId,
-                round: playerHandicap.round,
-                handicapDifferential:
-                    playerHandicap.handicapDifferential ,
-                updatedAt: playerHandicap.updatedAt,
-                playedAt: playerHandicap.playedAt,
-                score: playerHandicap.score,
-                adjustedScore: playerHandicap.adjustedScore,
-                front9: playerHandicap.front9,
-                back9: playerHandicap.back9,
-                handicapIndex: playerHandicap.handicapIndex
-                    ? playerHandicap.handicapIndex
-                    : 0,
-                exceptionalScore: playerHandicap.exceptionalScore,
-            };
-            handicapWhsInputs.push(handicapWhsInput);
-        }
-        console.log(handicapWhsInputs);
-        let result = await this._facadeService.updatePlayerHandicapWhsDifferential(
-            handicapWhsInputs
-        );
-        if (result) {
-            let obj = {
-                playerId: this.playerID,
-                count: 39,
-                diffChange:newHandicapDifferentils,
-            };
-            this.handicapService
-                .calculateHandicapWHS(obj)
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((err) => {
-                    console.log('error' + err);
-                    this.snackBar.open('Error!.', 'x', {
-                        duration: 5000,
-                    });
+        let obj = {
+            playerId: this.playerID,
+            count: 40,
+            diffChange: newHandicapDifferentils,
+        };
+        this.handicapService
+            .adjustHandicapWHS(obj)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log('error' + err);
+                this.snackBar.open('Error!.', 'x', {
+                    duration: 5000,
                 });
-        }
+            });
     }
 }
