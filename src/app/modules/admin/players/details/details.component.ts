@@ -362,9 +362,7 @@ export class ContactsDetailsComponent implements OnInit {
         clubMember.push(member);
         const player: Player = {
             id: UniqueId,
-            adminClubId: this.loggedInuser
-                ? this.loggedInuser.adminClubId
-                : null,
+            adminClubId: null,
             firebaseUid: this.playerID
                 ? this.currentPlayer.player[0].firebaseUid
                 : null,

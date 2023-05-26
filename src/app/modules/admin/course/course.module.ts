@@ -7,8 +7,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { WhiteSectionModule } from 'app/shared/modules/white-section/white-section.module';
 import { CourseRoutingModule } from './course-routing.module';
-// import { AddCourseComponent } from './add-course/add-course.component';
-// import { ViewCourseComponent } from './view-course/view-course.component';
+import { AddCourseComponent } from './add-course/add-course.component';
+import { ViewCourseComponent } from './view-course/view-course.component';
 import { CourseComponent } from './course.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
@@ -35,10 +35,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FlexFillDirective, FlexLayoutModule } from '@angular/flex-layout';
 @NgModule({
-    declarations: [CourseComponent],
+    declarations: [CourseComponent,AddCourseComponent,ViewCourseComponent],
     imports: [
         CommonModule,
+        MatSidenavModule,
         CourseRoutingModule,
         MatTableModule,
         MatFormFieldModule,
@@ -62,6 +64,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         WhiteSectionModule,
         MatProgressSpinnerModule,
         MatAutocompleteModule,
+        MatToolbarModule,
+        FlexLayoutModule,
     ],
 })
 export class CourseModule {}
