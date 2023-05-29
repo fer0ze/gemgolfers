@@ -122,9 +122,11 @@ export class PlayersComponent implements OnInit {
                         console.log(data);
                         this.Players = data.player;
                         for (let obj of this.Players) {
+                            let Fname=obj.firstName?obj.firstName.trim():obj.firstName;
+                            let Lname=obj.lastName?obj.lastName.trim():obj.lastName;
                             let newobj = {
                                 id: obj.id,
-                                Name: obj.firstName + ' ' + obj.lastName,
+                                Name: Fname+' '+Lname,
                                 Phone: obj.phone,
                                 Email: obj.email,
                                 Membership: obj.membershipNumber,
@@ -153,9 +155,11 @@ export class PlayersComponent implements OnInit {
             this.Players = data.player;
             console.log(data);
             for (let obj of this.Players) {
+                let Fname=obj.firstName?obj.firstName.trim():obj.firstName;
+                let Lname=obj.lastName?obj.lastName.trim():obj.lastName;
                 let newobj = {
                     id: obj.id,
-                    Name: obj.firstName + ' ' + obj.lastName,
+                    Name: Fname+' '+Lname,
                     Phone: obj.phone,
                     Email: obj.email,
                     Membership: obj.membershipNumber,

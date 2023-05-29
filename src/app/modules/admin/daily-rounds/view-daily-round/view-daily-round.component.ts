@@ -295,29 +295,71 @@ export class ViewDailyRoundComponent implements OnInit {
                             (element) =>
                                 element.MembersQL.some(
                                     (MembersQL) =>
-                                        this.filterPlayer
+                                        MembersQL.PlayerQL.firstName
                                             .toLowerCase()
+                                            .trim()
                                             .includes(
-                                                MembersQL.PlayerQL.firstName
+                                                this.filterPlayer
                                                     .toLowerCase()
                                                     .trim()
                                             ) ||
                                         MembersQL.PlayerQL.membershipNumber ==
-                                            this.filterPlayer
+                                            this.filterPlayer ||
+                                        MembersQL.PlayerQL.lastName
+                                            .toLowerCase()
+                                            .trim()
+                                            .includes(
+                                                this.filterPlayer
+                                                    .toLowerCase()
+                                                    .trim()
+                                            ) ||
+                                        (
+                                            MembersQL.PlayerQL.firstName +
+                                            ' ' +
+                                            MembersQL.PlayerQL.lastName
+                                        )
+                                            .toLowerCase()
+                                            .trim()
+                                            .includes(
+                                                this.filterPlayer
+                                                    .toLowerCase()
+                                                    .trim()
+                                            )
                                 )
                         ).map((element) => {
                             let n = Object.assign({}, element, {
                                 MembersQL: element.MembersQL.filter(
                                     (subElement) =>
-                                        this.filterPlayer
+                                        subElement.PlayerQL.firstName
                                             .toLowerCase()
+                                            .trim()
                                             .includes(
-                                                subElement.PlayerQL.firstName
+                                                this.filterPlayer
                                                     .toLowerCase()
                                                     .trim()
                                             ) ||
                                         subElement.PlayerQL.membershipNumber ==
-                                            this.filterPlayer
+                                            this.filterPlayer ||
+                                        subElement.PlayerQL.lastName
+                                            .toLowerCase()
+                                            .trim()
+                                            .includes(
+                                                this.filterPlayer
+                                                    .toLowerCase()
+                                                    .trim()
+                                            ) ||
+                                        (
+                                            subElement.PlayerQL.firstName +
+                                            ' ' +
+                                            subElement.PlayerQL.lastName
+                                        )
+                                            .toLowerCase()
+                                            .trim()
+                                            .includes(
+                                                this.filterPlayer
+                                                    .toLowerCase()
+                                                    .trim()
+                                            )
                                 ),
                             });
                             return n;
@@ -1793,7 +1835,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     const bool = <boolean>(
                         await this.facadeService.singleRoundFlightQuery(id)
                     );
-                    setTimeout(async() => {
+                    setTimeout(async () => {
                         if (bool) {
                             for (
                                 let i = 0;

@@ -21,6 +21,7 @@ export class ViewCourseComponent implements OnInit {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
+    selectedPanel :string= 'a';
     valid1 = new FormControl('');
     valid2 = new FormControl('');
     valid3 = new FormControl('');
@@ -63,6 +64,7 @@ export class ViewCourseComponent implements OnInit {
     showholeMetafor36: boolean = false;
     showTees = [];
     showholeindexforWomen: boolean = false;
+    isLoading: boolean = false;
     setName9: string;
     setName18: string;
     setName27: string;
@@ -92,36 +94,38 @@ export class ViewCourseComponent implements OnInit {
     }
 
     async ngOnInit() {
+        console.log(this.selectedPanel);
+        
         this.panels = [
             {
-                id: 'account',
+                id: 'a',
                 icon: 'heroicons_outline:user-circle',
                 title: 'Tees',
                 description:
                     'Manage your public profile and private information',
             },
             {
-                id: 'security',
+                id: 'b',
                 icon: 'heroicons_outline:lock-closed',
                 title: 'Holes',
                 description:
                     'Manage your password and 2-step verification preferences',
             },
             {
-                id: 'plan-billing',
+                id: 'c',
                 icon: 'heroicons_outline:credit-card',
                 title: 'Hole-Set',
                 description:
                     'Manage your subscription plan, payment method and billing information',
             },
             {
-                id: 'notifications',
+                id: 'd',
                 icon: 'heroicons_outline:bell',
                 title: 'Course Rating',
                 description: "Manage when you'll be notified on which channels",
             },
             {
-                id: 'team',
+                id: 'e',
                 icon: 'heroicons_outline:user-group',
                 title: 'Tee Meta',
                 description:
@@ -180,6 +184,7 @@ export class ViewCourseComponent implements OnInit {
             } else {
                 this.addIntialsTees();
             }
+            this.isLoading=true;
         } else {
             alert('Course Does Not Exist.');
         }
@@ -1260,5 +1265,43 @@ event   */
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+     /**
+     * Get the details of the panel
+     *
+     * @param id
+     */
+     getPanelInfo(id: string): any
+     {
+        
+         return this.panels.find(panel => panel.id === id);
+     }
+
+      /**
+     * Navigate to the panel
+     *
+     * @param panel
+     */
+    goToPanel(panel: string): void
+    {
+        this.selectedPanel = panel;
+        if (panel == 'b') {
+            this.setHoles(this.NoOfHoles);
+        } else if (panel == 'c') {
+            //this.setCoursRating();
+            this.getCourseHoleSets();
+            // this.getTeeMeta();
+            // this.showTees = [];
+        } else if (panel == 'd') {
+            this.setCoursRating();
+        } else if (panel =='e') {
+            this.getTeeMeta();
+        }
+        // Close the drawer on 'over' mode
+        if ( this.drawerMode === 'over' )
+        {
+            this.drawer.close();
+        }
     }
 }

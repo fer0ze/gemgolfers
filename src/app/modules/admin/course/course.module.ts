@@ -36,6 +36,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FlexFillDirective, FlexLayoutModule } from '@angular/flex-layout';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
     declarations: [CourseComponent,AddCourseComponent,ViewCourseComponent],
     imports: [
@@ -46,15 +47,13 @@ import { FlexFillDirective, FlexLayoutModule } from '@angular/flex-layout';
         MatFormFieldModule,
         MatPaginatorModule,
         MatInputModule,
-        MatStepperModule,
         MatButtonModule,
         MatIconModule,
         MatSortModule,
-        MatProgressSpinnerModule,
-        MatProgressBarModule,
         FormsModule,
         MatCardModule,
         ReactiveFormsModule,
+        MatSlideToggleModule,
         MatSnackBarModule,
         MatSelectModule,
         MatNativeDateModule,
