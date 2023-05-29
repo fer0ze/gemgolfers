@@ -1802,6 +1802,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             }
                         }
                         for (let item of objA) {
+                            // continue // 
                             let obj = {
                                 playerId: item.playerId,
                                 count: 6,
@@ -1817,7 +1818,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                         duration: 5000,
                                     });
                                 });
-                            this.handicapService
+                            await this.handicapService
                                 .calculateHandicapWHS(obj)
                                 .then((response) => {
                                     console.log(response);
