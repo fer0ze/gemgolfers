@@ -1793,49 +1793,55 @@ export class ViewDailyRoundComponent implements OnInit {
                     const bool = <boolean>(
                         await this.facadeService.singleRoundFlightQuery(id)
                     );
-                    if (bool) {
-                        for (let i = 0; i < this.flightPlayers.length; i++) {
-                            let obj = this.flightPlayers[i];
-                            if (obj.flightId == id) {
-                                this.flightPlayers[i].ended = true;
-                                break;
+                    setTimeout(async() => {
+                        if (bool) {
+                            for (
+                                let i = 0;
+                                i < this.flightPlayers.length;
+                                i++
+                            ) {
+                                let obj = this.flightPlayers[i];
+                                if (obj.flightId == id) {
+                                    this.flightPlayers[i].ended = true;
+                                    break;
+                                }
                             }
-                        }
-                        for (let item of objA) {
-                            // continue // 
-                            let obj = {
-                                playerId: item.playerId,
-                                count: 6,
-                            };
-                            await this.handicapService
-                                .calculateHandicap(obj)
-                                .then((response) => {
-                                    console.log(response);
-                                })
-                                .catch((err) => {
-                                    console.log('error' + err);
-                                    this.snackBar.open('Error!.', 'x', {
-                                        duration: 5000,
+                            for (let item of objA) {
+                                // continue //
+                                let obj = {
+                                    playerId: item.playerId,
+                                    count: 6,
+                                };
+                                await this.handicapService
+                                    .calculateHandicap(obj)
+                                    .then((response) => {
+                                        console.log(response);
+                                    })
+                                    .catch((err) => {
+                                        console.log('error' + err);
+                                        this.snackBar.open('Error!.', 'x', {
+                                            duration: 5000,
+                                        });
                                     });
-                                });
-                            await this.handicapService
-                                .calculateHandicapWHS(obj)
-                                .then((response) => {
-                                    console.log(response);
-                                })
-                                .catch((err) => {
-                                    console.log('error' + err);
-                                    this.snackBar.open('Error!.', 'x', {
-                                        duration: 5000,
+                                await this.handicapService
+                                    .calculateHandicapWHS(obj)
+                                    .then((response) => {
+                                        console.log(response);
+                                    })
+                                    .catch((err) => {
+                                        console.log('error' + err);
+                                        this.snackBar.open('Error!.', 'x', {
+                                            duration: 5000,
+                                        });
                                     });
-                                });
+                            }
+                            this.snackBar.open('Handicap Calculated', 'x', {
+                                duration: 5000,
+                            });
+                        } else {
+                            console.log('Handicap Calculation Cancel');
                         }
-                        this.snackBar.open('Handicap Calculated', 'x', {
-                            duration: 5000,
-                        });
-                    } else {
-                        console.log('Handicap Calculation Cancel');
-                    }
+                    }, 10000);
                 } else {
                     this.snackBar.open('Handicap Not Calculated', 'x', {
                         duration: 5000,
