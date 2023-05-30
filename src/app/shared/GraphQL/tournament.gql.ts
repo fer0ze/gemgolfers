@@ -1504,12 +1504,23 @@ export const RoundScoreQLA = gql`
             MembersQL: members {
                 flightId
                 playerId
-
+                playingTee
+                playingHandicap
+                playingHandicapWhs
+                PlayerQL: player {
+                    id
+                    firstName
+                    lastName
+                    handicap
+                }
                 ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
                     holeId
                     grossScore
                 }
             }
+            courseHoleSets
+            courseHoleSetsInverted
+            ended
         }
     }
 `;

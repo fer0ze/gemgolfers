@@ -705,6 +705,15 @@ export class ViewDailyRoundComponent implements OnInit {
                     let flightScore = await this.facadeService.getRoundScore(
                         flight.FlightsQL[0]['id']
                     );
+                    flight.FlightsQL[0].courseHoleSets=flightScore.FlightQL[0].courseHoleSets;
+                    flight.FlightsQL[0].courseHoleSetsInverted=flightScore.FlightQL[0].courseHoleSetsInverted;
+                    //flight.FlightsQL[0].MembersQL.filter()
+                    flightScore.FlightQL[0]['MembersQL'].forEach((obj) => {
+                        const found = flight.FlightsQL[0].MembersQL.some((item) => { return item.playerId===obj.playerId});
+                        if (!found) {
+                            flight.FlightsQL[0].MembersQL.push(obj);
+                        }
+                    });
                     this.setupMatchplayData(
                         flight.FlightsQL[0]['CourseQL'],
                         flight.FlightsQL,
