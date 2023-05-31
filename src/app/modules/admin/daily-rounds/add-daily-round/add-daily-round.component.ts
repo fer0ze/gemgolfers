@@ -126,7 +126,7 @@ export class AddDailyRoundComponent implements OnInit {
       holeSets: new FormControl("", [Validators.required]),
       //startingHole: new FormControl('', [Validators.required]),
       startingTime: new FormControl('09:00', [Validators.required]),
-      roundTee: new FormControl("", [Validators.required]),
+      roundTee: new FormControl("AMATEURS"),
       roundDate: new FormControl(
         this.datepipe.transform(this.currentDate.toString(), "yyyy-MM-dd"),
         [Validators.required]

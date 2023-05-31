@@ -1892,7 +1892,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         } else {
                             console.log('Handicap Calculation Cancel');
                         }
-                    }, 10000);
+                    }, 5000);
                 } else {
                     this.snackBar.open('Handicap Not Calculated', 'x', {
                         duration: 5000,
