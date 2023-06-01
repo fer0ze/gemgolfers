@@ -1390,6 +1390,7 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
                     playingTee
                     playingHandicap
                     playingHandicapWhs
+                    undoHandicap
 
                     PlayerQL: player {
                         id
@@ -1455,7 +1456,7 @@ export const ClubSingleRoundFlightsQueryAdminQLA = gql`
                     playingTee
                     playingHandicap
                     playingHandicapWhs
-
+                    undoHandicap
                     PlayerQL: player {
                         id
                         firstName

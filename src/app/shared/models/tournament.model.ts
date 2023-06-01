@@ -41,6 +41,8 @@ export class Tournament {
     playingOnWhs:boolean;
     members: TournamentMember[];
 	flightsCategory: FlightsCategory[];
+    createdAt?:string;
+
 }
 
 export class FlightsCategory {

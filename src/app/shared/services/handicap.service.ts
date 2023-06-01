@@ -15,6 +15,12 @@ export class HandicapService {
             obj
         ).toPromise();
     }
+    calculatePlayerHandicap(obj):Promise<any> {
+        return this.$http.post(
+            'https://gemgolfers-api.herokuapp.com/handicap/calculateHandicapForPlayer',
+            obj
+        ).toPromise();
+    }
     calculateHandicapWHS(obj):Promise<any> {
         return this.$http.post(
             'https://gemgolfers-api.herokuapp.com/handicap/revertAndReCalculateHcWHS',

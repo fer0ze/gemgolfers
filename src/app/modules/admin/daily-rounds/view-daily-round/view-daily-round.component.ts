@@ -49,6 +49,7 @@ import { of } from 'rxjs';
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
 import { DialogChangeCourseHoleSetComponent } from '../../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
 import { HandicapService } from 'app/shared/services/handicap.service';
+import { forEach } from 'lodash';
 // import { DialogChangeCourseHoleSetComponent } from "../../material-components/dialog-change-course-hole-set/dialog-change-course-hole-set.component";
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";
 @Component({
@@ -705,11 +706,17 @@ export class ViewDailyRoundComponent implements OnInit {
                     let flightScore = await this.facadeService.getRoundScore(
                         flight.FlightsQL[0]['id']
                     );
-                    flight.FlightsQL[0].courseHoleSets=flightScore.FlightQL[0].courseHoleSets;
-                    flight.FlightsQL[0].courseHoleSetsInverted=flightScore.FlightQL[0].courseHoleSetsInverted;
+                    flight.FlightsQL[0].courseHoleSets =
+                        flightScore.FlightQL[0].courseHoleSets;
+                    flight.FlightsQL[0].courseHoleSetsInverted =
+                        flightScore.FlightQL[0].courseHoleSetsInverted;
                     //flight.FlightsQL[0].MembersQL.filter()
                     flightScore.FlightQL[0]['MembersQL'].forEach((obj) => {
-                        const found = flight.FlightsQL[0].MembersQL.some((item) => { return item.playerId===obj.playerId});
+                        const found = flight.FlightsQL[0].MembersQL.some(
+                            (item) => {
+                                return item.playerId === obj.playerId;
+                            }
+                        );
                         if (!found) {
                             flight.FlightsQL[0].MembersQL.push(obj);
                         }
@@ -1233,7 +1240,7 @@ export class ViewDailyRoundComponent implements OnInit {
 
                 index1++;
                 //  console.log(index1);
-
+                let undoHandicap = membersQL.undoHandicap == 0 ? false : true;
                 let LeaderGross: any = {
                     flightId: flightData.id,
                     tournamentId: flightData.tournamentId,
@@ -1248,6 +1255,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     gross18Total: gross18Total,
                     grossTotal: grossTotal,
                     holesPlayed: holePlayed,
+                    undoHandicap: undoHandicap,
                 };
 
                 singleFlight.push(LeaderGross);
@@ -1479,6 +1487,7 @@ export class ViewDailyRoundComponent implements OnInit {
             //console.log(player.playerId);
 
             if (player.playerId == playerId) {
+
                 for (let hole of courseHoleQLs) {
                     let holeObj = <HTMLInputElement>(
                         document.getElementById(hole.id + '&' + player.playerId)
@@ -1570,7 +1579,85 @@ export class ViewDailyRoundComponent implements OnInit {
                             todayString.toLocaleTimeString()
                     );
 
-                if (timeupdated) return;
+                
+            }
+            if (selectedFlight.categoryRound == 2) {
+                const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                    width: '350px',
+                    data: 'Do you want to Re-Calculate Handicap?',
+                });
+                dialogRef.afterClosed().subscribe(async (result) => {
+                    if (result) {
+                        for (let player of selectedFlight) {
+                            //console.log(player.playerId);
+                
+                            if (player.playerId == playerId) {
+                                player.undoHandicap=false;
+                                break;
+                            }
+                        }
+                        let playersId = [];
+                        playersId.push(playerId);
+                        let isSuccess = <boolean>(
+                            await this.facadeService.deletePlayerHandiCal(
+                                selectedFlight[0].tournamentId,
+                                playersId
+                            )
+                        );
+                        const bool = <boolean>(
+                            await this.facadeService.undoHandicapPlayer(
+                                flightId,
+                                playerId
+                            )
+                        );
+                        if (isSuccess) {
+                            let obj = {
+                                playerId: playerId,
+                                tournamentId: selectedFlight[0].tournamentId,
+                            };
+                            await this.handicapService
+                                .calculatePlayerHandicap(obj)
+                                .then((response) => {
+                                    console.log(response);
+                                });
+                            setTimeout(async () => {
+                                let newObj = {
+                                    playerId: playerId,
+                                    count: 6,
+                                };
+                                await this.handicapService
+                                    .calculateHandicap(newObj)
+                                    .then((response) => {
+                                        console.log(response);
+                                    })
+                                    .catch((err) => {
+                                        console.log('error' + err);
+                                        this.snackBar.open('Error!.', 'x', {
+                                            duration: 5000,
+                                        });
+                                    });
+                                await this.handicapService
+                                    .calculateHandicapWHS(newObj)
+                                    .then((response) => {
+                                        console.log(response);
+                                    })
+                                    .catch((err) => {
+                                        console.log('error' + err);
+                                        this.snackBar.open('Error!.', 'x', {
+                                            duration: 5000,
+                                        });
+                                    });
+                                this.snackBar.open(
+                                    'Handicap Re-Calculated',
+                                    'x',
+                                    {
+                                        duration: 5000,
+                                    }
+                                );
+                            }, 3000);
+                        }
+                    }
+                });
             }
         }
     }
@@ -1805,6 +1892,17 @@ export class ViewDailyRoundComponent implements OnInit {
                     break;
                 }
             }
+            let selectedFlight: any = this.flightPlayers.find((a) => {
+                return a.flightId == id;
+            });
+            for(let player of selectedFlight){
+               let handicap = await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(player.playerId,this.routeDate)
+               console.log(handicap);
+                if(handicap && handicap.HandicapHistoryWhsQL.length>0){
+                        flag = false;
+                        break;
+                }
+            }
             if (result && flag) {
                 const isSuccess = <boolean>(
                     await this.facadeService.singleRoundFlightQuery(id)
@@ -1902,25 +2000,41 @@ export class ViewDailyRoundComponent implements OnInit {
         });
     }
 
-    async UndoFlightHandicap(flightId) {
+    async UndoFlightHandicap(flightId, playerId) {
         console.log(flightId);
-        const isSuccess = <boolean>(
-            await this.facadeService.undoFlightHandicap(flightId)
-        );
-        if (isSuccess) {
-            for (let i = 0; i < this.flightPlayers.length; i++) {
-                let obj = this.flightPlayers[i];
-                if (obj.flightId == flightId) {
-                    this.flightPlayers[i].ended = false;
-                    this.flightPlayers[i].categoryRound = 2;
-                    break;
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to Undo Handicap?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                const isSuccess = <boolean>(
+                    await this.facadeService.undoFlightHandicap(
+                        flightId,
+                        playerId
+                    )
+                );
+                if (isSuccess) {
+                    for (let i = 0; i < this.flightPlayers.length; i++) {
+                        let obj = this.flightPlayers[i];
+                        if (obj.flightId == flightId) {
+                            // this.flightPlayers[i].ended = false;
+                            this.flightPlayers[i].categoryRound = 2;
+                            this.flightPlayers[i].forEach((a) => {
+                                if (a.playerId == playerId) {
+                                    a.undoHandicap = true;
+                                }
+                            });
+                            break;
+                        }
+                    }
+
+                    this.snackBar.open('Handicap Calculation Reverted', 'x', {
+                        duration: 2000,
+                    });
                 }
             }
-
-            this.snackBar.open('Handicap Calculation Reverted', 'x', {
-                duration: 2000,
-            });
-        }
+        });
     }
 
     keytab(e) {
@@ -2878,191 +2992,217 @@ export class ViewDailyRoundComponent implements OnInit {
     }
 
     createNewRound(player) {
-        // const dialogRef = this.dialog.open(DialogOverviewComponent, {
-        //   width: "350px",
-        //   data: "Do you want to move this player to a new round?",
-        // });
-        // dialogRef.afterClosed().subscribe(async (result) => {
-        //   if (result) {
-        //     this.loggedInuser = JSON.parse(
-        //       localStorage.getItem(Constants.LOGGED_IN_USER)
-        //     );
-        //     let selectedFlight: any = this.flightPlayers.find((a) => {
-        //       return a.flightId == player.flightId;
-        //     });
-        //     let courseHS = selectedFlight.courseHoleSetKey.split("_", 2);
-        //     console.log(selectedFlight);
-        //     console.log(this.fDate);
-        //     const addRound: any = {
-        //       holeSets: courseHS.length > 0 ? courseHS[0] : 3,
-        //       holeSetInverted: courseHS.length > 0 ? courseHS[1] : false,
-        //       //startingHole: starterFormValue.startingHole,
-        //       startingTime: selectedFlight.flightTime,
-        //       roundTee: selectedFlight.courseTee,
-        //       roundDate: this.fDate,
-        //       //addPlayer : starterFormValue.addPlayer
-        //     };
-        //     console.log(addRound);
-        //     let tournamentFlights: Flight[] = [];
-        //     let fcnter = 1;
-        //     // let roundMembers: any[] = [];
-        //     // let flightMember = {
-        //     //   playerId: player.playerId,
-        //     //   attendance: false,
-        //     //   playingTee: (selectedFlight.courseTee)? selectedFlight.courseTee : "BLUE",
-        //     //   guest: null
-        //     // }
-        //     //   roundMembers.push(flightMember);
-        //     let newFlightId = UniqueIdGenerator.generate();
-        //     let flight: any = {
-        //       id: newFlightId,
-        //       //tournamentId: this.tournamentID,
-        //       courseId: player.courseId,
-        //       adminId: this.loggedInuser.id,
-        //       courseHoleSets: addRound.holeSets,
-        //       flightNo: fcnter,
-        //       flightRound: 0,
-        //       startingHole: 1,
-        //       tee: addRound.roundTee,
-        //       category: null,
-        //       date: General.parseToDate(this.fDate),
-        //       time: addRound.startingTime,
-        //       ended: false,
-        //       courseHoleSetsInverted: addRound.holeSetInverted,
-        //       members: {
-        //         data: [],
-        //       },
-        //     };
-        //     console.log(flight);
-        //     tournamentFlights.push(flight);
-        //     console.log(tournamentFlights);
-        //     let newTournamentId = UniqueIdGenerator.generate();
-        //     let tournament: Tournament = {
-        //       id: newTournamentId,
-        //       clubId: this.loggedInuser.adminClubId,
-        //       leagueId: null,
-        //       courseId: player.courseId,
-        //       adminId: this.loggedInuser.id,
-        //       title: this.fDate + " " + this.loggedInuser.membership[0].club.name,
-        //       prefix: null,
-        //       courseHoleSets: addRound.holeSets,
-        //       teamMatch: false,
-        //       pairsMatch: false,
-        //       interLeague: false,
-        //       publicTournament: false,
-        //       confirmParticipants: false,
-        //       noOfRounds: 1,
-        //       activeRound: 1,
-        //       playingOnWhs:
-        //         this.dailyData && this.dailyData.TournamentsQL.length > 0
-        //           ? this.dailyData.TournamentsQL[0].playingOnWhs
-        //           : false,
-        //       matchFormat: "STROKE_PLAY",
-        //       pointsFormats: null,
-        //       pointsValues: null,
-        //       handicapAllocations: null,
-        //       tee: selectedFlight.courseTee ? selectedFlight.courseTee : "AMATEURS",
-        //       tee_id: 1,
-        //       scoreManagement: "ONLY_PLAYERS",
-        //       startDate: General.parseToDate(this.fDate),
-        //       endDate: General.parseToDate(this.fDate),
-        //       flightsCategory: null,
-        //       started: true,
-        //       invited: false,
-        //       singleRound: true,
-        //       sponsorName: "",
-        //       sponsorLogo: "",
-        //       mobileLogoUrl: "",
-        //       webLogoUrl: "",
-        //       courseHoleSetsInverted: addRound.holeSetInverted,
-        //       categories: [],
-        //       marshals: [],
-        //       flights: tournamentFlights,
-        //       members: [],
-        //     };
-        //     console.log(tournament);
-        //     let result = <any>await this.facadeService.addTournament(tournament);
-        //     //this.executeStarterCreation(this.starterForm)
-        //     console.log(result);
-        //     if (result) {
-        //       let eliminated = <any>(
-        //         await this.facadeService.eliminateRound(
-        //           selectedFlight.flightId,
-        //           newFlightId,
-        //           player.playerId
-        //         )
-        //       );
-        //       if (eliminated) {
-        //         let flightIndex = this.flightPlayers.findIndex(
-        //           (a) => a.flightId == player.flightId
-        //         );
-        //         let playerIndex = this.flightPlayers[flightIndex].findIndex(
-        //           (a) => a.playerId == player.playerId
-        //         );
-        //         this.flightPlayers[flightIndex].splice(playerIndex, 1);
-        //         let updatedFlight =
-        //           await this.facadeService.singleRoundFlightsQuery(newFlightId);
-        //         console.log(updatedFlight);
-        //         let courseHoleSetTitle;
-        //         if (
-        //           updatedFlight.FlightsQL[0].CourseQL &&
-        //           updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL
-        //         ) {
-        //           courseHoleSetTitle =
-        //             updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL.find(
-        //               (a) => {
-        //                 return (
-        //                   a.holeSets == updatedFlight.FlightsQL[0].courseHoleSets &&
-        //                   a.inverted ==
-        //                     updatedFlight.FlightsQL[0].courseHoleSetsInverted
-        //                 );
-        //               }
-        //             );
-        //         }
-        //         console.log(courseHoleSetTitle);
-        //         let flightHeader = await this.setupMatchplayHeader(
-        //           updatedFlight.FlightsQL[0].courseId,
-        //           updatedFlight.FlightsQL[0].courseHoleSets,
-        //           updatedFlight.FlightsQL[0].courseHoleSetsInverted,
-        //           updatedFlight.FlightsQL[0].CourseQL
-        //         );
-        //         console.log(flightHeader);
-        //         let singleFlight = this.setupSingleFlight(
-        //           updatedFlight.FlightsQL[0],
-        //           flightHeader,
-        //           []
-        //         );
-        //         console.log(singleFlight);
-        //         //this.flightPlayers.push(singleFlight);
-        //         //console.log(this.flightPlayers)
-        //         let newFlightData = singleFlight;
-        //         newFlightData["header"] = flightHeader;
-        //         newFlightData["flightId"] = newFlightId;
-        //         newFlightData["tournamentId"] = newTournamentId;
-        //         newFlightData["flightTime"] = selectedFlight.flightTime;
-        //         newFlightData["courseHoleSetTitle"] =
-        //           courseHoleSetTitle.displayName;
-        //         newFlightData["courseHoleSetKey"] = updatedFlight.FlightsQL[0]
-        //           ? updatedFlight.FlightsQL[0].courseHoleSets +
-        //             "_" +
-        //             updatedFlight.FlightsQL[0].courseHoleSetsInverted
-        //           : "";
-        //         newFlightData["courseTee"] = courseHoleSetTitle
-        //           ? updatedFlight.FlightsQL[0].tee
-        //           : "";
-        //         newFlightData["membersCount"] = singleFlight
-        //           ? singleFlight.length
-        //           : 0;
-        //         this.flightPlayers.splice(flightIndex, 0, newFlightData);
-        //         this.snackBar.open("Player has been moved to a new round.", "x", {
-        //           duration: 5000,
-        //         });
-        //       }
-        //       //this.router.navigate(['/daily-rounds/']);
-        //     }
-        //   } else {
-        //     //console.log("cancel delete action");
-        //   }
-        // });
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to move this player to a new round?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                this.loggedInuser = JSON.parse(
+                    localStorage.getItem(Constants.LOGGED_IN_USER)
+                );
+                let selectedFlight: any = this.flightPlayers.find((a) => {
+                    return a.flightId == player.flightId;
+                });
+                let courseHS = selectedFlight.courseHoleSetKey.split('_', 2);
+                console.log(selectedFlight);
+                console.log(this.fDate);
+                const addRound: any = {
+                    holeSets: courseHS.length > 0 ? courseHS[0] : 3,
+                    holeSetInverted: courseHS.length > 0 ? courseHS[1] : false,
+                    //startingHole: starterFormValue.startingHole,
+                    startingTime: selectedFlight.flightTime,
+                    roundTee: selectedFlight.courseTee,
+                    roundDate: this.fDate,
+                    //addPlayer : starterFormValue.addPlayer
+                };
+                console.log(addRound);
+                let tournamentFlights: Flight[] = [];
+                let fcnter = 1;
+                // let roundMembers: any[] = [];
+                // let flightMember = {
+                //   playerId: player.playerId,
+                //   attendance: false,
+                //   playingTee: (selectedFlight.courseTee)? selectedFlight.courseTee : "BLUE",
+                //   guest: null
+                // }
+                //   roundMembers.push(flightMember);
+                let newFlightId = UniqueIdGenerator.generate();
+                let flight: any = {
+                    id: newFlightId,
+                    //tournamentId: this.tournamentID,
+                    courseId: player.courseId,
+                    adminId: this.loggedInuser.id,
+                    courseHoleSets: addRound.holeSets,
+                    flightNo: fcnter,
+                    flightRound: 0,
+                    startingHole: 1,
+                    tee: addRound.roundTee,
+                    category: null,
+                    date: General.parseToDate(this.fDate),
+                    time: addRound.startingTime,
+                    ended: false,
+                    categoryRound: selectedFlight.categoryRound,
+                    courseHoleSetsInverted: addRound.holeSetInverted,
+                    members: {
+                        data: [],
+                    },
+                };
+                console.log(flight);
+                tournamentFlights.push(flight);
+                console.log(tournamentFlights);
+                let newTournamentId = UniqueIdGenerator.generate();
+                let tournament: Tournament = {
+                    id: newTournamentId,
+                    clubId: this.loggedInuser.adminClubId,
+                    leagueId: null,
+                    courseId: player.courseId,
+                    adminId: this.loggedInuser.id,
+                    title:
+                        this.fDate +
+                        ' ' +
+                        this.loggedInuser.membership[0].club.name,
+                    prefix: null,
+                    courseHoleSets: addRound.holeSets,
+                    teamMatch: false,
+                    pairsMatch: false,
+                    interLeague: false,
+                    publicTournament: false,
+                    confirmParticipants: false,
+                    noOfRounds: 1,
+                    activeRound: 1,
+                    playingOnWhs:
+                        this.dailyData &&
+                        this.dailyData.TournamentsQL.length > 0
+                            ? this.dailyData.TournamentsQL[0].playingOnWhs
+                            : false,
+                    matchFormat: 'STROKE_PLAY',
+                    pointsFormats: null,
+                    pointsValues: null,
+                    handicapAllocations: null,
+                    tee: selectedFlight.courseTee
+                        ? selectedFlight.courseTee
+                        : 'AMATEURS',
+                    tee_id: 1,
+                    scoreManagement: 'ONLY_PLAYERS',
+                    startDate: General.parseToDate(this.fDate),
+                    endDate: General.parseToDate(this.fDate),
+                    createdAt: new Date(this.fDate).toISOString(),
+                    flightsCategory: null,
+                    started: true,
+                    invited: false,
+                    singleRound: true,
+                    sponsorName: '',
+                    sponsorLogo: '',
+                    mobileLogoUrl: '',
+                    webLogoUrl: '',
+                    courseHoleSetsInverted: addRound.holeSetInverted,
+                    categories: [],
+                    marshals: [],
+                    flights: tournamentFlights,
+                    members: [],
+                };
+                console.log(tournament);
+                let result = <any>(
+                    await this.facadeService.addTournament(tournament)
+                );
+                //this.executeStarterCreation(this.starterForm)
+                console.log(result);
+                if (result) {
+                    let eliminated = <any>(
+                        await this.facadeService.eliminateRound(
+                            selectedFlight.flightId,
+                            newFlightId,
+                            player.playerId
+                        )
+                    );
+                    if (eliminated) {
+                        let flightIndex = this.flightPlayers.findIndex(
+                            (a) => a.flightId == player.flightId
+                        );
+                        let playerIndex = this.flightPlayers[
+                            flightIndex
+                        ].findIndex((a) => a.playerId == player.playerId);
+                        this.flightPlayers[flightIndex].splice(playerIndex, 1);
+                        let updatedFlight =
+                            await this.facadeService.singleRoundFlightsQuery(
+                                newFlightId
+                            );
+                        console.log(updatedFlight);
+                        let courseHoleSetTitle;
+                        if (
+                            updatedFlight.FlightsQL[0].CourseQL &&
+                            updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL
+                        ) {
+                            courseHoleSetTitle =
+                                updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL.find(
+                                    (a) => {
+                                        return (
+                                            a.holeSets ==
+                                                updatedFlight.FlightsQL[0]
+                                                    .courseHoleSets &&
+                                            a.inverted ==
+                                                updatedFlight.FlightsQL[0]
+                                                    .courseHoleSetsInverted
+                                        );
+                                    }
+                                );
+                        }
+                        console.log(courseHoleSetTitle);
+                        let flightHeader = await this.setupMatchplayHeader(
+                            updatedFlight.FlightsQL[0].courseId,
+                            updatedFlight.FlightsQL[0].courseHoleSets,
+                            updatedFlight.FlightsQL[0].courseHoleSetsInverted,
+                            updatedFlight.FlightsQL[0].CourseQL
+                        );
+                        console.log(flightHeader);
+                        let singleFlight = this.setupSingleFlight(
+                            updatedFlight.FlightsQL[0],
+                            flightHeader,
+                            []
+                        );
+                        console.log(singleFlight);
+                        //this.flightPlayers.push(singleFlight);
+                        //console.log(this.flightPlayers)
+                        let newFlightData = singleFlight;
+                        newFlightData['header'] = flightHeader;
+                        newFlightData['flightId'] = newFlightId;
+                        newFlightData['categoryRound'] =
+                            selectedFlight.categoryRound;
+                        newFlightData['tournamentId'] = newTournamentId;
+                        newFlightData['flightTime'] = selectedFlight.flightTime;
+                        newFlightData['courseHoleSetTitle'] =
+                            courseHoleSetTitle.displayName;
+                        newFlightData['courseHoleSetKey'] = updatedFlight
+                            .FlightsQL[0]
+                            ? updatedFlight.FlightsQL[0].courseHoleSets +
+                              '_' +
+                              updatedFlight.FlightsQL[0].courseHoleSetsInverted
+                            : '';
+                        newFlightData['courseTee'] = courseHoleSetTitle
+                            ? updatedFlight.FlightsQL[0].tee
+                            : '';
+                        newFlightData['membersCount'] = singleFlight
+                            ? singleFlight.length
+                            : 0;
+                        this.flightPlayers.splice(
+                            flightIndex,
+                            0,
+                            newFlightData
+                        );
+                        this.snackBar.open(
+                            'Player has been moved to a new round.',
+                            'x',
+                            {
+                                duration: 5000,
+                            }
+                        );
+                    }
+                    //this.router.navigate(['/daily-rounds/']);
+                }
+            } else {
+                //console.log("cancel delete action");
+            }
+        });
     }
 }

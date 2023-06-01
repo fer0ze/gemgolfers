@@ -626,13 +626,34 @@ export class FlightsService {
                 );
         });
     }
-    public undoFlightHandicap(flightId: string): Promise<any> {
+    public undoFlightHandicap(flightId: string,playerId:string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
                     query: Query.undoFlightHandicapQL,
                     variables: {
                         flightId: flightId,
+                        playerId: playerId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+
+    public undoHandicapPlayer(flightId: string,playerId:string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.undoHandicapPlayerQL,
+                    variables: {
+                        flightId: flightId,
+                        playerId: playerId,
                     },
                 })
                 .subscribe(({ data }) => {

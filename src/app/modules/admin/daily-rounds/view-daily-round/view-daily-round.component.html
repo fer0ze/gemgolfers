@@ -156,18 +156,7 @@
                             class="mat-button-wrapper btn-styl"
                             >Handicap Calculated</span
                         >
-                        <span
-                            *ngIf="flight.ended"
-                            title="Undo Handicap"
-                            class="mat-button-wrapper icon-styl cursor-pointer"
-                            ><mat-icon
-                                (click)="UndoFlightHandicap(flight.flightId)"
-                                class="mat-icon material-icons"
-                                matsuffix=""
-                                aria-hidden="true"
-                                >settings_backup_restore</mat-icon
-                            ></span
-                        >
+                       
 
                         <a
                             mat-mini-fab
@@ -345,7 +334,7 @@
                     <td class="title">
                         {{ item.name }} ({{ item.handicap | number : "1.0-0" }})
                         <mat-icon
-                            *ngIf="flight.membersCount > 1 && !flight.ended"
+                            *ngIf="flight.membersCount > 1 && (!flight.ended || item.undoHandicap)"
                             matTooltip="Move to separate round"
                             matTooltipPosition="above"
                             matTooltipClass="tooltipStyle"
@@ -460,17 +449,30 @@
                             />
                         </span>
                     </td>
-                    <td>
+                    <td *ngIf="!flight.ended || item.undoHandicap">
                         <mat-icon
                             matSuffix
                             color="primary"
                             title="{{ item.name }}"
-                            *ngIf="flightRound == activeRound && !flight.ended"
+                            
                             (click)="
                                 savePlayerScore(flight.flightId, item.playerId)
                             "
                             >save</mat-icon
                         >
+                    </td>
+                    <td *ngIf="flight.ended && !item.undoHandicap">
+                        <span
+                        title="Undo Handicap"
+                        class="mat-button-wrapper icon-styl cursor-pointer"
+                        ><mat-icon
+                            (click)="UndoFlightHandicap(flight.flightId,item.playerId)"
+                            class="mat-icon material-icons"
+                            matsuffix=""
+                            aria-hidden="true"
+                            >settings_backup_restore</mat-icon
+                        ></span
+                    >
                     </td>
                 </tr>
                 <!-- <tr>
@@ -613,7 +615,7 @@
                             />
                         </span>
                     </td>
-                    <td>
+                    <td *ngIf="!flight.ended">
                         <mat-icon
                             matSuffix
                             color="primary"
@@ -624,6 +626,19 @@
                             "
                             >save</mat-icon
                         >
+                    </td>
+                    <td *ngIf="flight.ended">
+                        <span
+                        title="Undo Handicap"
+                        class="mat-button-wrapper icon-styl cursor-pointer"
+                        ><mat-icon
+                            (click)="UndoFlightHandicap(flight.flightId,item.playerId)"
+                            class="mat-icon material-icons"
+                            matsuffix=""
+                            aria-hidden="true"
+                            >settings_backup_restore</mat-icon
+                        ></span
+                    >
                     </td>
                 </tr>
             </tbody>

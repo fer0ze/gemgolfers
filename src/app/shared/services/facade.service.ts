@@ -809,8 +809,11 @@ export class FacadeService {
   deletePlayerHandiCal(tournamnetId: string,PlayersIds:any[]) {
     return this.flightsService.deletePlayerHandiCal(tournamnetId,PlayersIds);
   }
-  undoFlightHandicap(flightId: string) {
-    return this.flightsService.undoFlightHandicap(flightId);
+  undoFlightHandicap(flightId: string,playerId:string) {
+    return this.flightsService.undoFlightHandicap(flightId,playerId);
+  }
+  undoHandicapPlayer(flightId: string,playerId:string) {
+    return this.flightsService.undoHandicapPlayer(flightId,playerId);
   }
   private _teeTimeService: TeeTimeService;
 
@@ -944,6 +947,12 @@ export class FacadeService {
 
   getPlayersHandicapWhsHistory(playerIds: string[], playingDate: Date) {
     return this.playerHandicapWhsService.getPlayersHandicapWhsHistory(
+      playerIds,
+      playingDate
+    );
+  }
+  getPlayersHandicapWhsHistoryAboveDate(playerIds: string, playingDate: Date) {
+    return this.playerHandicapWhsService.getPlayersHandicapWhsHistoryAboveDate(
       playerIds,
       playingDate
     );

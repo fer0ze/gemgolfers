@@ -50,6 +50,28 @@ export class PlayerHandicapWhsService {
                 });
         });
     }
+    public getPlayersHandicapWhsHistoryAboveDate(
+        playerIds: string,
+        playingDate: Date
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.PlayersHandicapWhsHistoryAboveDateQueryQL,
+                    variables: {
+                        playerId: playerIds,
+                        playingDate: playingDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public savePlayerWhsHandicapsForRound(handicapWhsInputs): Promise<any> {
         return new Promise((resolve) => {

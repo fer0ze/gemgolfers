@@ -1966,6 +1966,7 @@ export class AddTournamentComponent implements OnInit {
                         : false
                     : false,
             categories: tournamentCats,
+            createdAt:new Date().toISOString(),
             marshals: marshalsData,
             flights: [],
             members: [],

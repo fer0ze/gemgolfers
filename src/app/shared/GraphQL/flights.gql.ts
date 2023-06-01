@@ -537,17 +537,47 @@ export const singleRoundFlightQueryQL = gql`
     mutation ClubSingleRoundFlightQuery($flightId: String!) {
         flightEndedQl: update_flight(
             where: { id: { _eq: $flightId } }
-            _set: { ended: true }
+            _set: { 
+                ended: true
+                categoryRound: 2 
+            }
         ) {
             AffectedRowsQLi: affected_rows
         }
     }
 `;
 export const undoFlightHandicapQL = gql`
-    mutation ClubSingleRoundFlightQuery($flightId: String!) {
+    mutation ClubSingleRoundFlightQuery(
+        $flightId: String!
+        $playerId: String!
+    ) {
         flightEndedQl: update_flight(
             where: { id: { _eq: $flightId } }
-            _set: { ended: false, categoryRound: 2 }
+            _set: { categoryRound: 2 }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+        flightEndedQlA: update_flight_member(
+            where: {
+                _and: [{ flightId: { _eq: $flightId }, playerId: { _eq: $playerId } }]
+            }
+            _set: { undoHandicap: 1 }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+    }
+`;
+export const undoHandicapPlayerQL = gql`
+    mutation ClubSingleRoundFlightQuery(
+        $flightId: String!
+        $playerId: String!
+    ) {
+        
+        flightEndedQlA: update_flight_member(
+            where: {
+                _and: [{ flightId: { _eq: $flightId }, playerId: { _eq: $playerId } }]
+            }
+            _set: { undoHandicap: 0 }
         ) {
             AffectedRowsQLi: affected_rows
         }

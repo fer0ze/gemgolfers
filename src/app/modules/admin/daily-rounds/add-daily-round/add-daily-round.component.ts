@@ -313,6 +313,7 @@ export class AddDailyRoundComponent implements OnInit {
       sponsorLogo: "",
       mobileLogoUrl: "",
       webLogoUrl: "",
+      createdAt: new Date(this.starterForm.value.roundDate).toISOString(),
       courseHoleSetsInverted: false,
       categories: [],
       marshals: [],

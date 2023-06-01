@@ -995,6 +995,7 @@ export class TournamentsService {
                                 flightsCategory: tmnt.flightsCategory,
                                 subTournament: tmnt.subTournament,
                                 multiFormat: tmnt.multiFormat,
+                                createdAt:tmnt.createdAt,
                                 categories: {
                                     data: tmnt.categories,
                                 },
