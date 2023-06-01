@@ -454,12 +454,18 @@
                             matSuffix
                             color="primary"
                             title="{{ item.name }}"
-                            
+                            class="pt-1"
                             (click)="
                                 savePlayerScore(flight.flightId, item.playerId)
                             "
                             >save</mat-icon
                         >
+                        <mat-slide-toggle
+                        class="ml-4"
+                        [color]="'primary'"
+                        [checked]="true"
+                       >
+                    </mat-slide-toggle>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">
                         <span
@@ -540,7 +546,7 @@
                     <td>
                         {{ item.name }} ({{ item.handicap | number : "1.0-0" }})
                         <mat-icon
-                            *ngIf="flight.membersCount > 1 && !flight.ended"
+                            *ngIf="flight.membersCount > 1 && (!flight.ended || item.undoHandicap)"
                             matTooltip="Move to separate round"
                             matTooltipPosition="above"
                             matTooltipClass="tooltipStyle"
@@ -615,19 +621,26 @@
                             />
                         </span>
                     </td>
-                    <td *ngIf="!flight.ended">
+                    <td *ngIf="!flight.ended || item.undoHandicap">
                         <mat-icon
                             matSuffix
                             color="primary"
                             title="{{ item.name }}"
-                            *ngIf="flightRound == activeRound && !flight.ended"
+                          
+                            class="pt-1"
                             (click)="
                                 savePlayerScore(flight.flightId, item.playerId)
                             "
                             >save</mat-icon
                         >
+                        <mat-slide-toggle
+                        
+                        [color]="'primary'"
+                        [checked]="true"
+                       >
+                    </mat-slide-toggle>
                     </td>
-                    <td *ngIf="flight.ended">
+                    <td *ngIf="flight.ended && !item.undoHandicap">
                         <span
                         title="Undo Handicap"
                         class="mat-button-wrapper icon-styl cursor-pointer"

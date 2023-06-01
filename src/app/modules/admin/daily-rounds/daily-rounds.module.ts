@@ -28,6 +28,7 @@ import { MatTimepickerModule } from 'mat-timepicker';
 import { DialogChangeCourseHoleSetComponent } from '../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
     declarations: [
         DailyRoundsComponent,
@@ -59,7 +60,7 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
         MatSidenavModule,
         MatDialogModule,
         MatTimepickerModule,
-
+        MatSlideToggleModule,
         MatTooltipModule,
         FlexLayoutModule.withConfig({ addFlexToParent: false }),
     ],
