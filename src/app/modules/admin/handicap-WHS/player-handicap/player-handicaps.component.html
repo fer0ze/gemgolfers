@@ -1,7 +1,6 @@
-<div  class="flex flex-col bg-accent-100 w-full">
+<div class="flex flex-col bg-accent-100 w-full">
     <ng-container>
         <div
-       
             class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700"
         >
             <!-- Background -->
@@ -29,7 +28,7 @@
         </div>
 
         <div
-        *ngIf="showTable | async"
+            *ngIf="showTable | async"
             class="relative flex flex-col flex-auto items-center px-6 sm:px-12"
         >
             <div class="w-full max-w-3xl">
@@ -76,7 +75,12 @@
                             >
                                 <span
                                     class="text-sm font-medium whitespace-nowrap"
-                                    >{{ currentPlayer[0].playerCategory =='Seniors' ? 'Senior Amateurs' :currentPlayer[0].playerCategory }}</span
+                                    >{{
+                                        currentPlayer[0].playerCategory ==
+                                        "Seniors"
+                                            ? "Senior Amateurs"
+                                            : currentPlayer[0].playerCategory
+                                    }}</span
                                 >
                             </div>
                         </ng-container>
@@ -114,7 +118,7 @@
                                     >
                                 </div>
                                 <div
-                                    class="flex items-center justify-center p-3 px-6 rounded-full leading-normal ml-3 text-gray-800 bg-card  dark:text-gray-300 dark:bg-gray-700"
+                                    class="flex items-center justify-center p-3 px-6 rounded-full leading-normal ml-3 text-gray-800 bg-card dark:text-gray-300 dark:bg-gray-700"
                                 >
                                     <span
                                         class="text-lg font-medium whitespace-nowrap"
@@ -172,7 +176,17 @@
                                         'text-blue-500': row.highlight
                                     }"
                                 >
-                                    {{ row.playedAt.substring(0, 10) }}
+                                    <div class="flex justify-center">
+                                        <div
+                                            [ngClass]="{
+                                                'flex-0 w-2 h-2 mt-2 rounded-full bg-red-600':
+                                                    isPanelty(
+                                                        row.tournamentQL.flights
+                                                    )
+                                            }"
+                                        ></div>
+                                        {{ row.playedAt.substring(0, 10) }}
+                                    </div>
                                 </td>
                             </ng-container>
 
@@ -236,9 +250,8 @@
                                 >
                                     <span
                                         [ngClass]="{
-                                            'text-blue-50 bg-red-800 p-1 rounded-full': isHandicapUsed(
-                                                row.Handicap_id
-                                            )
+                                            'text-blue-50 bg-red-800 p-1 rounded-full':
+                                                isHandicapUsed(row.Handicap_id)
                                         }"
                                     >
                                         {{

@@ -70,7 +70,7 @@ export class PlayerHandicapComponent implements OnInit {
     blueTeeHI: number;
     whiteTeeHI: number;
     blackTeeHI: number;
-    pageSize: number=20;
+    pageSize: number = 20;
     playerHandiData: any;
     handicapHistory: any[] = [];
     handicapHistoryDate: any[] = [];
@@ -134,7 +134,7 @@ export class PlayerHandicapComponent implements OnInit {
                     ? this.loggedInuser.membership[0].club
                     : null;
             let courseID =
-            club!=null && club.courses.length > 0
+                club != null && club.courses.length > 0
                     ? club.courses[0].id
                     : '-LUFS3FCQKOGpJ2IEHmf';
             let courseRating: any = {
@@ -169,6 +169,20 @@ export class PlayerHandicapComponent implements OnInit {
         return this._handicapComponent.matDrawer.close();
     }
 
+    isPanelty(flight) {
+        //console.log(this.usedForHandicap);
+        if (flight && flight[0] != undefined) {
+            let used: boolean = flight[0].members.some((element) => {
+                return (
+                    element.playerId == this.playerID && element.panelty == true
+                );
+            });
+            return used;
+        } else {
+            return false;
+        }
+    }
+
     cancel() {
         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
@@ -199,9 +213,23 @@ export class PlayerHandicapComponent implements OnInit {
         doc.setTextColor(100);
 
         let count = 0;
-        this.playerHandiData = this.playerHandiData.slice(0,this.pageSize);
+        this.playerHandiData = this.playerHandiData.slice(0, this.pageSize);
         this.playerHandiData.forEach((element) => {
+            let panelty: boolean = false;
             count++;
+            if (
+                element.tournamentQL.flights &&
+                element.tournamentQL.flights[0] != undefined
+            ) {
+                panelty = element.tournamentQL.flights[0].members.some(
+                    (element) => {
+                        return (
+                            element.playerId == this.playerID &&
+                            element.panelty == true
+                        );
+                    }
+                );
+            }
             var temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
@@ -216,11 +244,20 @@ export class PlayerHandicapComponent implements OnInit {
                 element.oldHandicap,
                 Math.round((element.handicap - element.oldHandicap) * 10) / 10,
                 element.handicap,
+                panelty,
             ];
             rows.push(temp);
         });
         //From HTML
-        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        doc.autoTable(col, rows, {
+            startY: 25,
+            theme: 'grid',
+            didParseCell: function (data) {
+                if (data.row.raw[9] == true) {
+                    data.cell.styles.textColor = [255, 9, 9];
+                }
+            },
+        });
 
         // Open PDF document in new tab
         doc.output('dataurlnewwindow');
@@ -228,11 +265,8 @@ export class PlayerHandicapComponent implements OnInit {
         // Download PDF document
         //doc.save('flights.pdf');
     }
-    pageEvents(event){
+    pageEvents(event) {
         console.log(event);
-        this.pageSize=event.pageSize;
-
-        
+        this.pageSize = event.pageSize;
     }
-    
 }

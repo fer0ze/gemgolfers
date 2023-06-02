@@ -366,6 +366,20 @@ export class PlayerHandicapComponent implements OnInit {
         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
 
+    isPanelty(flight) {
+        //console.log(this.usedForHandicap);
+        if (flight && flight[0] != undefined) {
+            let used: boolean = flight[0].members.some((element) => {
+                return (
+                    element.playerId == this.playerID && element.panelty == true
+                );
+            });
+            return used;
+        } else {
+            return false;
+        }
+    }
+
     public downloadAsPDFWHS() {
         var doc = new jsPDF();
         var col = [
@@ -406,12 +420,26 @@ export class PlayerHandicapComponent implements OnInit {
             //   }
 
             // }
+            let panelty: boolean = false;
             let used: boolean = this.usedForHandicap.some((handicap) => {
                 return (
                     handicap.used_handicap_id == element.Handicap_id ||
                     handicap.combine_handicap_id == element.Handicap_id
                 );
             });
+            if (
+                element.tournamentQL.flights &&
+                element.tournamentQL.flights[0] != undefined
+            ) {
+                panelty = element.tournamentQL.flights[0].members.some(
+                    (element) => {
+                        return (
+                            element.playerId == this.playerID &&
+                            element.panelty == true
+                        );
+                    }
+                );
+            }
 
             var temp = [
                 count,
@@ -427,6 +455,7 @@ export class PlayerHandicapComponent implements OnInit {
                 Math.round(element.handicapIndex * 10) / 10,
                 element.highlight,
                 used,
+                panelty
             ];
             rows.push(temp);
         });
@@ -440,6 +469,9 @@ export class PlayerHandicapComponent implements OnInit {
                     data.cell.styles.fillColor = [195, 249, 230];
                 }
                 a++;
+                if (data.row.raw[9] == true) {
+                    data.cell.styles.textColor = [255, 9, 9];
+                }
                 if (data.row.raw[8] == true && a == 5) {
                     data.cell.styles.fillColor = [249, 187, 147];
                     //console.log(1);
