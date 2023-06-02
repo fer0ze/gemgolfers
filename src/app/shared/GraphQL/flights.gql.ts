@@ -537,10 +537,7 @@ export const singleRoundFlightQueryQL = gql`
     mutation ClubSingleRoundFlightQuery($flightId: String!) {
         flightEndedQl: update_flight(
             where: { id: { _eq: $flightId } }
-            _set: { 
-                ended: true
-                categoryRound: 2 
-            }
+            _set: { ended: true, categoryRound: 2 }
         ) {
             AffectedRowsQLi: affected_rows
         }
@@ -559,7 +556,12 @@ export const undoFlightHandicapQL = gql`
         }
         flightEndedQlA: update_flight_member(
             where: {
-                _and: [{ flightId: { _eq: $flightId }, playerId: { _eq: $playerId } }]
+                _and: [
+                    {
+                        flightId: { _eq: $flightId }
+                        playerId: { _eq: $playerId }
+                    }
+                ]
             }
             _set: { undoHandicap: 1 }
         ) {
@@ -572,12 +574,36 @@ export const undoHandicapPlayerQL = gql`
         $flightId: String!
         $playerId: String!
     ) {
-        
         flightEndedQlA: update_flight_member(
             where: {
-                _and: [{ flightId: { _eq: $flightId }, playerId: { _eq: $playerId } }]
+                _and: [
+                    {
+                        flightId: { _eq: $flightId }
+                        playerId: { _eq: $playerId }
+                    }
+                ]
             }
             _set: { undoHandicap: 0 }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+    }
+`;
+export const markPlayerPaneltyQL = gql`
+    mutation ClubSingleRoundFlightQuery(
+        $flightId: String!
+        $playerId: String!
+    ) {
+        flightQlA: update_flight_member(
+            where: {
+                _and: [
+                    {
+                        flightId: { _eq: $flightId }
+                        playerId: { _eq: $playerId }
+                    }
+                ]
+            }
+            _set: { panelty: true }
         ) {
             AffectedRowsQLi: affected_rows
         }

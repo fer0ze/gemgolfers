@@ -133,7 +133,7 @@ export class ViewPlayerComponent implements OnInit {
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public facadeService: FacadeService
-    ) { }
+    ) {}
 
     // bar chart
     // public barChartOptions: any = {
@@ -217,14 +217,13 @@ export class ViewPlayerComponent implements OnInit {
         if (this.playerID) {
             //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
             //console.log(this.currentPlayer);
-            let club: any = this.loggedInuser.membership.length > 0
-                ? this.loggedInuser.membership[0].club
-                : null;
+            let club: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
 
             let courseID =
-                club != null
-                    ? club.courses[0].id
-                    : '-LUFS3FCQKOGpJ2IEHmf';
+                club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
             let courseRating: any = {
                 courseId: courseID,
                 courseHoleSets: 3,
@@ -237,8 +236,8 @@ export class ViewPlayerComponent implements OnInit {
                 this.playerWHS['PlayerQL'].HandicapHistoryWhsQL;
             this.usedForHandicap =
                 this.playerWHSHistory &&
-                    this.playerWHSHistory.length > 0 &&
-                    this.playerWHSHistory[0]
+                this.playerWHSHistory.length > 0 &&
+                this.playerWHSHistory[0]
                     ? this.playerWHSHistory[0].used_handicaps
                     : [];
 
@@ -583,9 +582,9 @@ export class ViewPlayerComponent implements OnInit {
                         enabled: false,
                     },
                 },
-                colors: ['#818CF8','#38BDF8'],
+                colors: ['#818CF8', '#38BDF8'],
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
                 },
                 fill: {
                     colors: ['#312E81'],
@@ -621,45 +620,45 @@ export class ViewPlayerComponent implements OnInit {
                         formatter: (value: number): string => `${value}`,
                     },
                 },
-                xaxis     : {
+                xaxis: {
                     axisBorder: {
-                        show: false
+                        show: false,
                     },
-                    axisTicks : {
-                        show: false
+                    axisTicks: {
+                        show: false,
                     },
                     crosshairs: {
                         stroke: {
-                            color    : '#475569',
+                            color: '#475569',
                             dashArray: 0,
-                            width    : 2
-                        }
+                            width: 2,
+                        },
                     },
-                    labels    : {
+                    labels: {
                         offsetY: 0,
-                        style  : {
-                            colors: '#CBD5E1'
-                        }
+                        style: {
+                            colors: '#CBD5E1',
+                        },
                     },
                     tickAmount: 20,
-                    tooltip   : {
-                        enabled: false
+                    tooltip: {
+                        enabled: false,
                     },
-                    type      : 'datetime'
+                    type: 'datetime',
                 },
-                yaxis     : {
-                    axisTicks : {
-                        show: false
+                yaxis: {
+                    axisTicks: {
+                        show: false,
                     },
                     axisBorder: {
-                        show: false
+                        show: false,
                     },
-                    min       : (min): number => min - 5,
-                    max       : (max): number => max + 20 ,
+                    min: (min): number => min - 5,
+                    max: (max): number => max + 20,
                     tickAmount: 5,
-                    
-                    show      : false
-                }
+
+                    show: false,
+                },
             };
         } else {
             this.location.back();
@@ -709,7 +708,7 @@ export class ViewPlayerComponent implements OnInit {
         //   console.log(id);
         // }
     }
-    onPageFired(event) { }
+    onPageFired(event) {}
     deletePlayer(playerId: string): void {
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
@@ -742,6 +741,19 @@ export class ViewPlayerComponent implements OnInit {
         });
         return used;
     }
+    isPanelty(flight) {
+        //console.log(this.usedForHandicap);
+        if (flight && flight[0] != undefined) {
+            let used: boolean = flight[0].members.some((element) => {
+                return (
+                    element.playerId == this.playerID && element.panelty == true
+                );
+            });
+            return used;
+        } else {
+            return false;
+        }
+    }
     public downloadAsPDFWHS() {
         let doc = new jsPDF();
         let col = [
@@ -758,9 +770,9 @@ export class ViewPlayerComponent implements OnInit {
         doc.setFontSize(17);
         doc.text(
             'WHS-Handicap Change-Log of ' +
-            this.currentPlayer[0].firstName +
-            ' ' +
-            this.currentPlayer[0].lastName,
+                this.currentPlayer[0].firstName +
+                ' ' +
+                this.currentPlayer[0].lastName,
             14,
             15
         );
@@ -770,6 +782,7 @@ export class ViewPlayerComponent implements OnInit {
         let count = 0;
         this.personLeads.forEach((element) => {
             count++;
+            let panelty: boolean = false;
 
             let used: boolean = this.usedForHandicap.some((handicap) => {
                 return (
@@ -777,6 +790,19 @@ export class ViewPlayerComponent implements OnInit {
                     handicap.combine_handicap_id == element.Handicap_id
                 );
             });
+            if (
+                element.tournamentQL.flights &&
+                element.tournamentQL.flights[0] != undefined
+            ) {
+                panelty = element.tournamentQL.flights[0].members.some(
+                    (element) => {
+                        return (
+                            element.playerId == this.playerID &&
+                            element.panelty == true
+                        );
+                    }
+                );
+            }
 
             let temp = [
                 count,
@@ -792,6 +818,7 @@ export class ViewPlayerComponent implements OnInit {
                 Math.round(element.handicapIndex * 10) / 10,
                 element.highlight,
                 used,
+                panelty,
             ];
             rows.push(temp);
         });
@@ -803,6 +830,9 @@ export class ViewPlayerComponent implements OnInit {
             didParseCell: function (data) {
                 if (data.row.raw[7] == true) {
                     data.cell.styles.fillColor = [195, 249, 230];
+                }
+                if (data.row.raw[9] == true) {
+                    data.cell.styles.textColor = [255, 9, 9];
                 }
                 a++;
                 if (data.row.raw[8] == true && a == 5) {
@@ -846,9 +876,9 @@ export class ViewPlayerComponent implements OnInit {
         doc.setFontSize(17);
         doc.text(
             'CONGU-Handicap Change-Log of ' +
-            this.currentPlayer[0].firstName +
-            ' ' +
-            this.currentPlayer[0].lastName,
+                this.currentPlayer[0].firstName +
+                ' ' +
+                this.currentPlayer[0].lastName,
             14,
             15
         );
@@ -858,7 +888,21 @@ export class ViewPlayerComponent implements OnInit {
         let count = 0;
         this.playerHandiData = this.playerHandiData.slice(0, 20);
         this.playerHandiData.forEach((element) => {
+            let panelty: boolean = false;
             count++;
+            if (
+                element.tournamentQL.flights &&
+                element.tournamentQL.flights[0] != undefined
+            ) {
+                panelty = element.tournamentQL.flights[0].members.some(
+                    (element) => {
+                        return (
+                            element.playerId == this.playerID &&
+                            element.panelty == true
+                        );
+                    }
+                );
+            }
             let temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
@@ -873,11 +917,20 @@ export class ViewPlayerComponent implements OnInit {
                 element.oldHandicap,
                 Math.round((element.handicap - element.oldHandicap) * 10) / 10,
                 element.handicap,
+                panelty,
             ];
             rows.push(temp);
         });
         //From HTML
-        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        doc.autoTable(col, rows, {
+            startY: 25,
+            theme: 'grid',
+            didParseCell: function (data) {
+                if (data.row.raw[9] == true) {
+                    data.cell.styles.textColor = [255, 9, 9];
+                }
+            },
+        });
 
         // Open PDF document in new tab
         doc.output('dataurlnewwindow');

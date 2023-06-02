@@ -815,6 +815,9 @@ export class FacadeService {
   undoHandicapPlayer(flightId: string,playerId:string) {
     return this.flightsService.undoHandicapPlayer(flightId,playerId);
   }
+  markPlayerPanelty(flightId: string,playerId:string) {
+    return this.flightsService.markPlayerPanelty(flightId,playerId);
+  }
   private _teeTimeService: TeeTimeService;
 
   public get TeeTimeService(): TeeTimeService {

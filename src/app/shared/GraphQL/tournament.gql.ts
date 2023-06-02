@@ -575,7 +575,7 @@ export const GetTournamentsByClub = gql`
                 ]
             }
         ) {
-            ggggg
+            id
         }
         CompletedRecently: tournament(
             where: {
@@ -639,8 +639,7 @@ export const GetTournamentsByClub = gql`
         }
     }
     ${TournamentQL}
-    ${PlayerHandicapQL}
-    ${PlayerHandicapWhsQL}
+    
 `;
 
 export const getActiveTournamentsList = gql`
@@ -1391,7 +1390,7 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
                     playingHandicap
                     playingHandicapWhs
                     undoHandicap
-
+                    panelty
                     PlayerQL: player {
                         id
                         firstName
@@ -1457,6 +1456,7 @@ export const ClubSingleRoundFlightsQueryAdminQLA = gql`
                     playingHandicap
                     playingHandicapWhs
                     undoHandicap
+                    panelty
                     PlayerQL: player {
                         id
                         firstName

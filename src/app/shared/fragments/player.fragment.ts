@@ -18,6 +18,14 @@ export const PlayerHandicapQL = gql`
       title
       startDate
       endDate
+      flights{
+        id
+        members{
+          flightId
+          playerId
+          panelty
+        }
+      }
     }
   }
 `;
@@ -124,6 +132,14 @@ export const PlayerHandicapWhsQL = gql`
       title
       startDate
       endDate
+      flights{
+        id
+        members{
+          flightId
+          playerId
+          panelty
+        }
+      }
     }
     used_handicaps {
       id

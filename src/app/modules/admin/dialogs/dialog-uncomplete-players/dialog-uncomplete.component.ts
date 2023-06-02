@@ -25,6 +25,15 @@ export class DialogUncompletedComponent implements OnInit {
         'email',
        
     ];
+    monthName = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+    ];
     public response: any;
     playerList: Player[] = [];
     selection = new SelectionModel<Player>(true, []);
@@ -60,16 +69,18 @@ export class DialogUncompletedComponent implements OnInit {
 
     public downloadAsPDF() {
         var doc = new jsPDF();
-let date=new Date(this.data.date).getDate() +'/'+(new Date(this.data.date).getMonth()+1) +'/'+new Date(this.data.date).getFullYear(); 
+        let date=new Date(this.data.date).getDate() +'/'+(new Date(this.data.date).getMonth()+1) +'/'+new Date(this.data.date).getFullYear(); 
+        var day=new Date(this.data.date).getDay()-1;
+        // day=this.monthName[day];
         doc.setFontSize(18);
         if(this.data.key=='non'){
-            doc.text("Date: "+date, 80, 15);
+            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
             doc.text("Round's Non-Submitted Cards Detail:", 54, 23);
         }else if(this.data.key=='all'){      
-            doc.text("Date: "+date, 80, 15);
+            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
             doc.text("Round's All Players Detail:", 68, 23);
         }else{
-            doc.text("Date: "+date, 80, 15);
+            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
             doc.text("Round's Submitted Cards Detail:",62, 23);
         }
         doc.setFontSize(11);

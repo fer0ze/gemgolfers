@@ -156,7 +156,6 @@
                             class="mat-button-wrapper btn-styl"
                             >Handicap Calculated</span
                         >
-                       
 
                         <a
                             mat-mini-fab
@@ -226,7 +225,7 @@
             >
                 <tr class="topheader">
                     <th class="rounded-tl-lg">
-                         Group {{ i + 1 }} - ({{ flight.courseHoleSetTitle }})
+                        Group {{ i + 1 }} - ({{ flight.courseHoleSetTitle }})
                     </th>
                     <th *ngFor="let hole of flight.header.courseHoles9">
                         {{ hole?.holeNo }}
@@ -334,7 +333,10 @@
                     <td class="title">
                         {{ item.name }} ({{ item.handicap | number : "1.0-0" }})
                         <mat-icon
-                            *ngIf="flight.membersCount > 1 && (!flight.ended || item.undoHandicap)"
+                            *ngIf="
+                                flight.membersCount > 1 &&
+                                (!flight.ended || item.undoHandicap)
+                            "
                             matTooltip="Move to separate round"
                             matTooltipPosition="above"
                             matTooltipClass="tooltipStyle"
@@ -454,31 +456,37 @@
                             matSuffix
                             color="primary"
                             title="{{ item.name }}"
-                            class="pt-1"
+                            class="pt-1 ml-2"
                             (click)="
                                 savePlayerScore(flight.flightId, item.playerId)
                             "
                             >save</mat-icon
                         >
                         <mat-slide-toggle
-                        class="ml-4"
-                        [color]="'primary'"
-                        [checked]="true"
-                       >
-                    </mat-slide-toggle>
+                            class="ml-4"
+                            [color]="'accent'"
+                            [checked]="item.panelty"
+                            (change)="paneltToggle(flight.flightId,item.playerId,$event)" 
+                        >
+                        </mat-slide-toggle>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">
                         <span
-                        title="Undo Handicap"
-                        class="mat-button-wrapper icon-styl cursor-pointer"
-                        ><mat-icon
-                            (click)="UndoFlightHandicap(flight.flightId,item.playerId)"
-                            class="mat-icon material-icons"
-                            matsuffix=""
-                            aria-hidden="true"
-                            >settings_backup_restore</mat-icon
-                        ></span
-                    >
+                            title="Undo Handicap"
+                            class="mat-button-wrapper icon-styl cursor-pointer"
+                            ><mat-icon
+                                (click)="
+                                    UndoFlightHandicap(
+                                        flight.flightId,
+                                        item.playerId
+                                    )
+                                "
+                                class="mat-icon material-icons"
+                                matsuffix=""
+                                aria-hidden="true"
+                                >settings_backup_restore</mat-icon
+                            ></span
+                        >
                     </td>
                 </tr>
                 <!-- <tr>
@@ -546,7 +554,10 @@
                     <td>
                         {{ item.name }} ({{ item.handicap | number : "1.0-0" }})
                         <mat-icon
-                            *ngIf="flight.membersCount > 1 && (!flight.ended || item.undoHandicap)"
+                            *ngIf="
+                                flight.membersCount > 1 &&
+                                (!flight.ended || item.undoHandicap)
+                            "
                             matTooltip="Move to separate round"
                             matTooltipPosition="above"
                             matTooltipClass="tooltipStyle"
@@ -626,32 +637,32 @@
                             matSuffix
                             color="primary"
                             title="{{ item.name }}"
-                          
-                            class="pt-1"
+                            class="pt-1 ml-2"
                             (click)="
                                 savePlayerScore(flight.flightId, item.playerId)
                             "
                             >save</mat-icon
                         >
-                        <mat-slide-toggle
-                        
-                        [color]="'primary'"
-                        [checked]="true"
-                       >
-                    </mat-slide-toggle>
+                        <mat-slide-toggle (change)="paneltToggle(flight.flightId,item.playerId,$event)"  [color]="'accent'" [checked]="item.panelty">
+                        </mat-slide-toggle>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">
                         <span
-                        title="Undo Handicap"
-                        class="mat-button-wrapper icon-styl cursor-pointer"
-                        ><mat-icon
-                            (click)="UndoFlightHandicap(flight.flightId,item.playerId)"
-                            class="mat-icon material-icons"
-                            matsuffix=""
-                            aria-hidden="true"
-                            >settings_backup_restore</mat-icon
-                        ></span
-                    >
+                            title="Undo Handicap"
+                            class="mat-button-wrapper icon-styl cursor-pointer"
+                            ><mat-icon
+                                (click)="
+                                    UndoFlightHandicap(
+                                        flight.flightId,
+                                        item.playerId
+                                    )
+                                "
+                                class="mat-icon material-icons"
+                                matsuffix=""
+                                aria-hidden="true"
+                                >settings_backup_restore</mat-icon
+                            ></span
+                        >
                     </td>
                 </tr>
             </tbody>

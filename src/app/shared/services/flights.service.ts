@@ -665,4 +665,23 @@ export class FlightsService {
                 });
         });
     }
+    public markPlayerPanelty(flightId: string,playerId:string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.markPlayerPaneltyQL,
+                    variables: {
+                        flightId: flightId,
+                        playerId: playerId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 }

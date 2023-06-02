@@ -1256,6 +1256,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     grossTotal: grossTotal,
                     holesPlayed: holePlayed,
                     undoHandicap: undoHandicap,
+                    panelty: membersQL.panelty,
                 };
 
                 singleFlight.push(LeaderGross);
@@ -1487,7 +1488,6 @@ export class ViewDailyRoundComponent implements OnInit {
             //console.log(player.playerId);
 
             if (player.playerId == playerId) {
-
                 for (let hole of courseHoleQLs) {
                     let holeObj = <HTMLInputElement>(
                         document.getElementById(hole.id + '&' + player.playerId)
@@ -1578,8 +1578,6 @@ export class ViewDailyRoundComponent implements OnInit {
                             'T' +
                             todayString.toLocaleTimeString()
                     );
-
-                
             }
             if (selectedFlight.categoryRound == 2) {
                 const dialogRef = this.dialog.open(DialogOverviewComponent, {
@@ -1590,9 +1588,9 @@ export class ViewDailyRoundComponent implements OnInit {
                     if (result) {
                         for (let player of selectedFlight) {
                             //console.log(player.playerId);
-                
+
                             if (player.playerId == playerId) {
-                                player.undoHandicap=false;
+                                player.undoHandicap = false;
                                 break;
                             }
                         }
@@ -1878,29 +1876,30 @@ export class ViewDailyRoundComponent implements OnInit {
     async redirectCalculation(id) {
         //this.router.navigate(["/tournaments/handicap-whs/" + id]);
         console.log(id);
-        let objA: any;
+      
         let flag: boolean = true;
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to Calculate Handicap?',
         });
         dialogRef.afterClosed().subscribe(async (result) => {
-            for (let i = 0; i < this.flightPlayers.length; i++) {
-                objA = this.flightPlayers[i];
-                if (objA.flightId == id && objA.categoryRound == 2) {
-                    flag = false;
-                    break;
-                }
-            }
+            
             let selectedFlight: any = this.flightPlayers.find((a) => {
                 return a.flightId == id;
             });
-            for(let player of selectedFlight){
-               let handicap = await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(player.playerId,this.routeDate)
-               console.log(handicap);
-                if(handicap && handicap.HandicapHistoryWhsQL.length>0){
-                        flag = false;
-                        break;
+            if(selectedFlight.categoryRound==2){
+                flag = false;
+            }
+            for (let player of selectedFlight) {
+                let handicap =
+                    await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(
+                        player.playerId,
+                        this.routeDate
+                    );
+                console.log(handicap);
+                if (handicap && handicap.HandicapHistoryWhsQL.length > 0) {
+                    flag = false;
+                    break;
                 }
             }
             if (result && flag) {
@@ -1908,15 +1907,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     await this.facadeService.singleRoundFlightQuery(id)
                 );
                 if (isSuccess) {
-                    let count = 0;
-                    for (let i = 0; i < this.flightPlayers.length; i++) {
-                        let obj = this.flightPlayers[i];
-                        if (obj.flightId == id) {
-                            this.flightPlayers[i].ended = true;
-                            break;
-                        }
-                    }
-
+                    selectedFlight.ended=true;
                     this.snackBar.open('Handicap Calculated', 'x', {
                         duration: 5000,
                     });
@@ -1924,9 +1915,9 @@ export class ViewDailyRoundComponent implements OnInit {
                     console.log('Handicap Calculation Cancel');
                 }
             } else if (result && !flag) {
-                console.log(objA);
+                // console.log(objA);
                 let playersId = [];
-                for (let item of objA) {
+                for (let item of selectedFlight) {
                     console.log(item);
                     playersId.push(item.playerId);
                 }
@@ -1934,7 +1925,7 @@ export class ViewDailyRoundComponent implements OnInit {
 
                 let isSuccess = <boolean>(
                     await this.facadeService.deletePlayerHandiCal(
-                        objA.tournamentId,
+                        selectedFlight.tournamentId,
                         playersId
                     )
                 );
@@ -1944,22 +1935,12 @@ export class ViewDailyRoundComponent implements OnInit {
                     );
                     setTimeout(async () => {
                         if (bool) {
-                            for (
-                                let i = 0;
-                                i < this.flightPlayers.length;
-                                i++
-                            ) {
-                                let obj = this.flightPlayers[i];
-                                if (obj.flightId == id) {
-                                    this.flightPlayers[i].ended = true;
-                                    break;
-                                }
-                            }
-                            for (let item of objA) {
+                            selectedFlight.ended=true;
+                            for (let item of selectedFlight) {
                                 // continue //
                                 let obj = {
                                     playerId: item.playerId,
-                                    count: 6,
+                                    count: 8,
                                 };
                                 await this.handicapService
                                     .calculateHandicap(obj)
@@ -2986,6 +2967,48 @@ export class ViewDailyRoundComponent implements OnInit {
         }
     }
 
+    paneltToggle(flightId,playerId,event) {
+        if(event.checked){
+            const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                width: '350px',
+                data: 'Do you want to make this player panelty?',
+            });
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                   let result=await this.facadeService.markPlayerPanelty(flightId,playerId);
+                   if(result){
+                    let selectedFlight: any = this.flightPlayers.find((a) => {
+                        return a.flightId == flightId;
+                    });
+                    selectedFlight.forEach(element => {
+                        if(element.playerId==playerId){
+                            element.panelty=true;
+                        }
+                    });
+                    this.snackBar.open(
+                        'Panelty Marked.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
+                   }
+                }else{
+             
+                }
+            });
+        }else{
+            let selectedFlight: any = this.flightPlayers.find((a) => {
+                return a.flightId == flightId;
+            });
+            selectedFlight.forEach(element => {
+                if(element.playerId==playerId){
+                    element.panelty=false;
+                }
+            });
+
+        }
+    }
     movetoNewRound(player) {
         console.log(player);
         this.createNewRound(player);
