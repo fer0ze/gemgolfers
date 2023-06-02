@@ -466,6 +466,7 @@
                             class="ml-4"
                             [color]="'accent'"
                             [checked]="item.panelty"
+                            [disabled]="item.panelty"
                             (change)="paneltToggle(flight.flightId,item.playerId,$event)" 
                         >
                         </mat-slide-toggle>

@@ -461,7 +461,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 courseHoleSetTitle ? flightData.tee : '';
             this.flightPlayers[this.flightPlayers.length - 1]['membersCount'] =
                 singleFlight ? singleFlight.length : 0;
-            this.flightPlayers[this.flightPlayers.length - 1]['ended'] = false;
+            this.flightPlayers[this.flightPlayers.length - 1]['ended'] = flightData.ended;
         }
         console.log('FILTERS' + this.flightPlayers);
         // this.dataSource = new MatTableDataSource(this.flightPlayers);
@@ -574,7 +574,7 @@ export class ViewDailyRoundComponent implements OnInit {
 
             //console.log(playerHole9Score);
             //console.log(playerHole18Score);
-
+            let undoHandicap = membersQL.undoHandicap == 0 ? false : true;
             let LeaderGross: any = {
                 flightId: flightData.id,
                 tournamentId: flightData.tournamentId,
@@ -589,6 +589,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 gross18Total: gross18Total,
                 grossTotal: grossTotal,
                 holesPlayed: holePlayed,
+                undoHandicap: undoHandicap,
+                panelty: membersQL.panelty,
             };
 
             singleFlight.push(LeaderGross);
@@ -1290,6 +1292,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 : '';
             this.flightPlayers[this.flightPlayers.length - 1]['membersCount'] =
                 singleFlight ? singleFlight.length : 0;
+                
             //console.log("flight setup");
 
             console.log(this.flightPlayers[this.findex]);
