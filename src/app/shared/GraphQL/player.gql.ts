@@ -831,6 +831,7 @@ export const PlayerHandicapQuery = gql`
             membershipNumber
             HandicapHistoryWhsQL: handicap_history_whs(
                 order_by: { playedAt: desc }
+                limit: 40
             ) {
                 ...PlayerHandicapWhsQL
             }

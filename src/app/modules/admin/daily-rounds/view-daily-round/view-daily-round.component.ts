@@ -1624,7 +1624,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             setTimeout(async () => {
                                 let newObj = {
                                     playerId: playerId,
-                                    count: 6,
+                                    count: 3,
                                 };
                                 await this.handicapService
                                     .calculateHandicap(newObj)
