@@ -1943,7 +1943,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 // continue //
                                 let obj = {
                                     playerId: item.playerId,
-                                    count: 8,
+                                    count: 3,
                                 };
                                 await this.handicapService
                                     .calculateHandicap(obj)

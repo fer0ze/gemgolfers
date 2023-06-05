@@ -644,7 +644,7 @@
                             "
                             >save</mat-icon
                         >
-                        <mat-slide-toggle (change)="paneltToggle(flight.flightId,item.playerId,$event)"  [color]="'accent'" [checked]="item.panelty">
+                        <mat-slide-toggle (change)="paneltToggle(flight.flightId,item.playerId,$event)"  [color]="'accent'" [checked]="item.panelty" [disabled]="item.panelty">
                         </mat-slide-toggle>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">
