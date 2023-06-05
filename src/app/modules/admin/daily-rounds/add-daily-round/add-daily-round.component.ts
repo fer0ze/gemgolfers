@@ -383,17 +383,17 @@ export class AddDailyRoundComponent implements OnInit {
         console.log(founded);
 
         if (founded.length == 0) {
-          if (this.flightMembers.length > 3) {
-            this.snackBar.open(
-              "Maximum 4 players are allowed per flight.",
-              "x",
-              {
-                duration: 5000,
-              }
-            );
+          // if (this.flightMembers.length > 3) {
+          //   this.snackBar.open(
+          //     "Maximum 4 players are allowed per flight.",
+          //     "x",
+          //     {
+          //       duration: 5000,
+          //     }
+          //   );
 
-            return false;
-          }
+          //   return false;
+          // }
 
           let member: any = {
             playerId: player[0].id,
@@ -461,17 +461,17 @@ export class AddDailyRoundComponent implements OnInit {
             console.log(founded);
 
             if (founded.length == 0) {
-              if (this.flightMembers.length > 3) {
-                this.snackBar.open(
-                  "Maximum 4 players are allowed per flight.",
-                  "x",
-                  {
-                    duration: 5000,
-                  }
-                );
+              // if (this.flightMembers.length > 3) {
+              //   this.snackBar.open(
+              //     "Maximum 4 players are allowed per flight.",
+              //     "x",
+              //     {
+              //       duration: 5000,
+              //     }
+              //   );
 
-                return false;
-              }
+              //   return false;
+              // }
 
               let member: any = {
                 playerId: result.player.id,
