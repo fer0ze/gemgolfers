@@ -164,7 +164,7 @@
                             matTooltipPosition="above"
                             matTooltipClass="tooltipStyle"
                             target="_blank"
-                            
+                            *ngIf="!flight.ended"
                             (click)="redirectCalculation(flight.flightId)"
                             ><span class="mat-button-wrapper"
                                 ><mat-icon

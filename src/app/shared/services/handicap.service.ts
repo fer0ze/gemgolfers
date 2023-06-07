@@ -33,4 +33,10 @@ export class HandicapService {
             obj
         ).toPromise();
     }
+    flightEndedTrigger(obj):Promise<any> {
+        return this.$http.post(
+            'https://gemgolfers-api.herokuapp.com/triggers/updateFlightEndedField',
+            obj
+        ).toPromise();
+    }
 }

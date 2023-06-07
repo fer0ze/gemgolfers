@@ -28,6 +28,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClubMembership, Player } from 'app/shared/models/player.model';
 import { read, utils } from 'xlsx';
+import { HandicapService } from 'app/shared/services/handicap.service';
 
 @Component({
     selector: 'app-players',
@@ -72,7 +73,7 @@ export class PlayersComponent implements OnInit {
 
     duplicatePlayers: any[] = [];
     importingList = false;
-    @ViewChild("fileInput") fileInputVariable: ElementRef;
+    @ViewChild('fileInput') fileInputVariable: ElementRef;
     //contacts$: Observable<Contact[]>;
     constructor(
         private _facadeService: FacadeService,
@@ -80,7 +81,8 @@ export class PlayersComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private _handicapServise: HandicapService
     ) {}
     ngOnInit(): void {
         this.loggedInuser = JSON.parse(
@@ -122,11 +124,15 @@ export class PlayersComponent implements OnInit {
                         console.log(data);
                         this.Players = data.player;
                         for (let obj of this.Players) {
-                            let Fname=obj.firstName?obj.firstName.trim():obj.firstName;
-                            let Lname=obj.lastName?obj.lastName.trim():obj.lastName;
+                            let Fname = obj.firstName
+                                ? obj.firstName.trim()
+                                : obj.firstName;
+                            let Lname = obj.lastName
+                                ? obj.lastName.trim()
+                                : obj.lastName;
                             let newobj = {
                                 id: obj.id,
-                                Name: Fname+' '+Lname,
+                                Name: Fname + ' ' + Lname,
                                 Phone: obj.phone,
                                 Email: obj.email,
                                 Membership: obj.membershipNumber,
@@ -155,11 +161,13 @@ export class PlayersComponent implements OnInit {
             this.Players = data.player;
             console.log(data);
             for (let obj of this.Players) {
-                let Fname=obj.firstName?obj.firstName.trim():obj.firstName;
-                let Lname=obj.lastName?obj.lastName.trim():obj.lastName;
+                let Fname = obj.firstName
+                    ? obj.firstName.trim()
+                    : obj.firstName;
+                let Lname = obj.lastName ? obj.lastName.trim() : obj.lastName;
                 let newobj = {
                     id: obj.id,
-                    Name: Fname+' '+Lname,
+                    Name: Fname + ' ' + Lname,
                     Phone: obj.phone,
                     Email: obj.email,
                     Membership: obj.membershipNumber,
@@ -462,154 +470,229 @@ export class PlayersComponent implements OnInit {
             // console.log(this.duplicatePlayers);
 
             for (let p of this.playersData) {
+                let obj = {
+                    event: {
+                        session_variables: {
+                            'x-hasura-role': 'admin',
+                            'x-hasura-allowed-roles': 'admin',
+                        },
+                        op: 'UPDATE',
+                        data: {
+                            old: {
+                                tee: 'AMATEURS',
+                                flightRound: 0,
+                                time: '18:59:00+05',
+                                category: null,
+                                courseId: '-LUFS3FCQKOGpJ2IEHmf',
+                                startingHole: 1,
+                                courseHoleSetsInverted: false,
+                                flightNo: 1,
+                                date: '2022-05-27',
+                                tournamentId: p.tournamentId,
+                                courseHoleSets: 3,
+                                adminId: '-L61c9obophnGAu73YSM',
+                                id: '-N34oqug_aFn244dvq2g',
+                                ended: false,
+                                tee_id: 1,
+                            },
+                            new: {
+                                tee: 'AMATEURS',
+                                flightRound: 0,
+                                time: '18:59:00+05',
+                                category: null,
+                                courseId: '-LUFS3FCQKOGpJ2IEHmf',
+                                startingHole: 1,
+                                courseHoleSetsInverted: false,
+                                flightNo: 1,
+                                date: '2022-05-27',
+                                tournamentId: p.tournamentId,
+                                courseHoleSets: 3,
+                                adminId: '-L61c9obophnGAu73YSM',
+                                id: '-N34oqug_aFn244dvq2g',
+                                ended: true,
+                                tee_id: 1,
+                            },
+                        },
+                        trace_context: null,
+                    },
+                    created_at: '2022-05-27T14:13:07.573411Z',
+                    id: '22a65faf-ca91-4de1-b576-04ba73814232',
+                    delivery_info: {
+                        max_retries: 0,
+                        current_retry: 0,
+                    },
+                    trigger: {
+                        name: 'flight_ended_trigger',
+                    },
+                    table: {
+                        schema: 'public',
+                        name: 'flight',
+                    },
+                };
+
+                // console.log('a');
+                console.log(p.tournamentId);
+
+                await this._handicapServise
+                    .flightEndedTrigger(obj)
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((err) => {
+                        console.log('error' + err);
+                        this.snackBar.open('Error!.', 'x', {
+                            duration: 5000,
+                        });
+                    });
+                await this.delay(4000);
+                // console.log('b');
+
                 // this.logger.logObject(p);
-                console.log(p);
+                // console.log(p);
 
-                let exist: any = [];
+                // let exist: any = [];
 
-                if (p.membershipNumber) {
-                    // this.logger.log(p.membershipNumber);
-                    console.log(p.membershipNumber);
+                // if (p.membershipNumber) {
+                //     // this.logger.log(p.membershipNumber);
+                //     console.log(p.membershipNumber);
 
-                    exist =
-                        await this._facadeService.getPlayerByMembershipNumber(
-                            p.membershipNumber.toString()
-                        );
+                //     exist =
+                //         await this._facadeService.getPlayerByMembershipNumber(
+                //             p.membershipNumber.toString()
+                //         );
 
-                    if (exist.length > 0) {
-                        this.duplicatePlayers.push(p);
-                        //continue;
-                    }
-                }
+                //     if (exist.length > 0) {
+                //         this.duplicatePlayers.push(p);
+                //         //continue;
+                //     }
+                // }
 
-                let phone="481";
-                if (p.phone && exist.length == 0) {
-                    // this.logger.log(p.phone);
-                    console.log(p.phone);
-                    if (p.phone.toString().indexOf('+92') === 0) {
-                        phone = p.phone.toString();
-                    } else if (p.phone.toString().indexOf('0') === 0) {
-                        phone = p.phone.toString().replace(0, '+92');
-                    } else if (p.phone.toString().indexOf('3') === 0) {
-                        phone = '+92' + p.phone.toString();
-                    }
-                    console.log(phone);
+                // let phone="481";
+                // if (p.phone && exist.length == 0) {
+                //     // this.logger.log(p.phone);
+                //     console.log(p.phone);
+                //     if (p.phone.toString().indexOf('+92') === 0) {
+                //         phone = p.phone.toString();
+                //     } else if (p.phone.toString().indexOf('0') === 0) {
+                //         phone = p.phone.toString().replace(0, '+92');
+                //     } else if (p.phone.toString().indexOf('3') === 0) {
+                //         phone = '+92' + p.phone.toString();
+                //     }
+                //     console.log(phone);
 
-                    exist = await this._facadeService.getPlayerByPhone(phone);
-                    // p.phone.toString().indexOf("+") !== -1
-                    // ? p.phone.toString()
-                    // : "+" + p.phone.toString()
-                    if (exist.length > 0) {
-                        this.duplicatePlayers.push(p);
-                        //continue;
-                    }
-                }
+                //     exist = await this._facadeService.getPlayerByPhone(phone);
+                //     // p.phone.toString().indexOf("+") !== -1
+                //     // ? p.phone.toString()
+                //     // : "+" + p.phone.toString()
+                //     if (exist.length > 0) {
+                //         this.duplicatePlayers.push(p);
+                //         //continue;
+                //     }
+                // }
 
-                if (p.email && exist.length == 0) {
-                    exist = await this._facadeService.getPlayerByEmail(
-                        p.email.toString()
-                    );
+                // if (p.email && exist.length == 0) {
+                //     exist = await this._facadeService.getPlayerByEmail(
+                //         p.email.toString()
+                //     );
 
-                    if (exist.length > 0) {
-                        // this.logger.log("email yes");
-                        console.log('email Yes');
+                //     if (exist.length > 0) {
+                //         // this.logger.log("email yes");
+                //         console.log('email Yes');
 
-                        this.duplicatePlayers.push(p);
-                        //continue;
-                    }
-                }
+                //         this.duplicatePlayers.push(p);
+                //         //continue;
+                //     }
+                // }
 
-                // this.logger.log(exist);
-                console.log(exist);
+                // // this.logger.log(exist);
+                // console.log(exist);
 
-                let UniqueId: string =
-                    exist && exist.length > 0
-                        ? exist[0].id
-                        : UniqueIdGenerator.generate();
+                // let UniqueId: string =
+                //     exist && exist.length > 0
+                //         ? exist[0].id
+                //         : UniqueIdGenerator.generate();
 
-                //if(p.club) {
+                // //if(p.club) {
 
-                let member: any = {
-                    clubId: this.loggedInuser.adminClubId,
-                    playerId: UniqueId,
-                };
+                // let member: any = {
+                //     clubId: this.loggedInuser.adminClubId,
+                //     playerId: UniqueId,
+                // };
 
-                clubMember.push(member);
-                //}
+                // clubMember.push(member);
+                // //}
 
-                let player: any = {
-                    id: UniqueId,
-                    adminClubId: null,
-                    firebaseUid: null,
-                    fcmToken: null,
-                    gemId: null,
-                    firstName: p.firstName,
-                    lastName: p.lastName,
-                    gender:  null,
-                    dob: null,
-                    picture:null,
-                    email: p.email ? p.email : null,
-                    phone: p.phone ? phone : null,
-                    playerCategory: p.category ? p.category : null,
-                    handicap: p.handicap ? p.handicap : 0,
-                    online: false,
-                    countryCode:  null,
-                    extraData:  null,
-                    membershipNumber: p.membershipNumber.toString(),
-                    userRole: 3,
-                    membership: null,
-                };
+                // let player: any = {
+                //     id: UniqueId,
+                //     adminClubId: null,
+                //     firebaseUid: null,
+                //     fcmToken: null,
+                //     gemId: null,
+                //     firstName: p.firstName,
+                //     lastName: p.lastName,
+                //     gender:  null,
+                //     dob: null,
+                //     picture:null,
+                //     email: p.email ? p.email : null,
+                //     phone: p.phone ? phone : null,
+                //     playerCategory: p.category ? p.category : null,
+                //     handicap: p.handicap ? p.handicap : 0,
+                //     online: false,
+                //     countryCode:  null,
+                //     extraData:  null,
+                //     membershipNumber: p.membershipNumber.toString(),
+                //     userRole: 3,
+                //     membership: null,
+                // };
 
-                this.savePlayers.push(player);
+                // this.savePlayers.push(player);
             }
 
             // this.logger.log(this.savePlayers);
             // this.logger.log(this.duplicatePlayers);
-            console.log(this.savePlayers);
-            console.log(clubMember);
-            
+            // console.log(this.savePlayers);
+            // console.log(clubMember);
 
-            let status = await this._facadeService.importPlayerList(
-                this.savePlayers,
-                clubMember
-            );
+            // let status = await this._facadeService.importPlayerList(
+            //     this.savePlayers,
+            //     clubMember
+            // );
 
-            if (status) {
-                let newProfiles =
-                    Number(this.savePlayers.length) -
-                    Number(this.duplicatePlayers.length);
-                this.snackBar.open(
-                    (newProfiles < 0 ? 0 : newProfiles) +
-                        ' players have been created. ' +
-                        this.duplicatePlayers.length +
-                        ' player(s) were already exist.',
-                    'x',
-                    {
-                        duration: 5000,
-                    }
-                );
+            // if (status) {
+            //     let newProfiles =
+            //         Number(this.savePlayers.length) -
+            //         Number(this.duplicatePlayers.length);
+            //     this.snackBar.open(
+            //         (newProfiles < 0 ? 0 : newProfiles) +
+            //             ' players have been created. ' +
+            //             this.duplicatePlayers.length +
+            //             ' player(s) were already exist.',
+            //         'x',
+            //         {
+            //             duration: 5000,
+            //         }
+            //     );
 
-                this.importingList = false;
-                this.file = null;
-                this.fileInputVariable.nativeElement.value = '';
+            //     this.importingList = false;
+            //     this.file = null;
+            //     this.fileInputVariable.nativeElement.value = '';
 
-                await this.delay(5000);
-                //window.location.reload();
-            } else {
-                this.snackBar.open(
-                    'There was an Error while loading file',
-                    'x',
-                    {
-                        duration: 3000,
-                    }
-                );
-                this.importingList = false;
-            }
+            //     //window.location.reload();
+            // } else {
+            //     this.snackBar.open(
+            //         'There was an Error while loading file',
+            //         'x',
+            //         {
+            //             duration: 3000,
+            //         }
+            //     );
+            //     this.importingList = false;
+            // }
         } catch {
             this.importingList = false;
         }
     }
     delay(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));
-      }
+    }
 }
