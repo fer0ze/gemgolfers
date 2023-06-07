@@ -233,7 +233,7 @@ export class ViewPlayerComponent implements OnInit {
             );
 
             this.playerWHSHistory =
-                this.playerWHS['PlayerQL'].HandicapHistoryWhsQL;
+                this.playerWHS['HandicapHistoryWhsQL'];
             this.usedForHandicap =
                 this.playerWHSHistory &&
                 this.playerWHSHistory.length > 0 &&

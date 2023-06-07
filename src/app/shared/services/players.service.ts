@@ -510,6 +510,28 @@ export class PlayersService {
                 });
         });
     }
+    getPlayerByIDDetailForm(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayerByIDDetailForm,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: id,
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     getPlayerByGEMID(GEMID: string): Promise<any> {
         return new Promise((resolve) => {

@@ -461,7 +461,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 courseHoleSetTitle ? flightData.tee : '';
             this.flightPlayers[this.flightPlayers.length - 1]['membersCount'] =
                 singleFlight ? singleFlight.length : 0;
-            this.flightPlayers[this.flightPlayers.length - 1]['ended'] = flightData.ended;
+            this.flightPlayers[this.flightPlayers.length - 1]['ended'] =
+                flightData.ended;
         }
         console.log('FILTERS' + this.flightPlayers);
         // this.dataSource = new MatTableDataSource(this.flightPlayers);
@@ -1292,7 +1293,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 : '';
             this.flightPlayers[this.flightPlayers.length - 1]['membersCount'] =
                 singleFlight ? singleFlight.length : 0;
-                
+
             //console.log("flight setup");
 
             console.log(this.flightPlayers[this.findex]);
@@ -1624,7 +1625,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             setTimeout(async () => {
                                 let newObj = {
                                     playerId: playerId,
-                                    count: 3,
+                                    count: 4,
                                 };
                                 await this.handicapService
                                     .calculateHandicap(newObj)
@@ -1878,107 +1879,109 @@ export class ViewDailyRoundComponent implements OnInit {
 
     async redirectCalculation(id) {
         //this.router.navigate(["/tournaments/handicap-whs/" + id]);
-        console.log(id);
-      
+        //console.log(id);
+        let selectedFlight: any = this.flightPlayers.find((a) => {
+            return a.flightId == id;
+        });
+        console.log(selectedFlight.tournamentId);
+
         let flag: boolean = true;
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to Calculate Handicap?',
         });
         dialogRef.afterClosed().subscribe(async (result) => {
-            
-            let selectedFlight: any = this.flightPlayers.find((a) => {
-                return a.flightId == id;
-            });
-            if(selectedFlight.categoryRound==2){
-                flag = false;
-            }
-            for (let player of selectedFlight) {
-                let handicap =
-                    await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(
-                        player.playerId,
-                        this.routeDate
-                    );
-                console.log(handicap);
-                if (handicap && handicap.HandicapHistoryWhsQL.length > 0) {
+            if (result) {
+                if (selectedFlight.categoryRound == 2) {
                     flag = false;
-                    break;
                 }
-            }
-            if (result && flag) {
-                const isSuccess = <boolean>(
-                    await this.facadeService.singleRoundFlightQuery(id)
-                );
-                if (isSuccess) {
-                    selectedFlight.ended=true;
-                    this.snackBar.open('Handicap Calculated', 'x', {
-                        duration: 5000,
-                    });
-                } else {
-                    console.log('Handicap Calculation Cancel');
+                for (let player of selectedFlight) {
+                    let handicap =
+                        await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(
+                            player.playerId,
+                            this.routeDate
+                        );
+                    console.log(handicap);
+                    if (handicap && handicap.HandicapHistoryWhsQL.length > 0) {
+                        flag = false;
+                        break;
+                    }
                 }
-            } else if (result && !flag) {
-                // console.log(objA);
-                let playersId = [];
-                for (let item of selectedFlight) {
-                    console.log(item);
-                    playersId.push(item.playerId);
-                }
-                console.log(playersId);
-
-                let isSuccess = <boolean>(
-                    await this.facadeService.deletePlayerHandiCal(
-                        selectedFlight.tournamentId,
-                        playersId
-                    )
-                );
-                if (isSuccess) {
-                    const bool = <boolean>(
+                if (result && flag) {
+                    const isSuccess = <boolean>(
                         await this.facadeService.singleRoundFlightQuery(id)
                     );
-                    setTimeout(async () => {
-                        if (bool) {
-                            selectedFlight.ended=true;
-                            for (let item of selectedFlight) {
-                                // continue //
-                                let obj = {
-                                    playerId: item.playerId,
-                                    count: 3,
-                                };
-                                await this.handicapService
-                                    .calculateHandicap(obj)
-                                    .then((response) => {
-                                        console.log(response);
-                                    })
-                                    .catch((err) => {
-                                        console.log('error' + err);
-                                        this.snackBar.open('Error!.', 'x', {
-                                            duration: 5000,
+                    if (isSuccess) {
+                        selectedFlight.ended = true;
+                        this.snackBar.open('Handicap Calculated', 'x', {
+                            duration: 5000,
+                        });
+                    } else {
+                        console.log('Handicap Calculation Cancel');
+                    }
+                } else if (result && !flag) {
+                    // console.log(objA);
+                    let playersId = [];
+                    for (let item of selectedFlight) {
+                        console.log(item);
+                        playersId.push(item.playerId);
+                    }
+                    console.log(playersId);
+
+                    let isSuccess = <boolean>(
+                        await this.facadeService.deletePlayerHandiCal(
+                            selectedFlight.tournamentId,
+                            playersId
+                        )
+                    );
+                    if (isSuccess) {
+                        const bool = <boolean>(
+                            await this.facadeService.singleRoundFlightQuery(id)
+                        );
+                        setTimeout(async () => {
+                            if (bool) {
+                                selectedFlight.ended = true;
+                                for (let item of selectedFlight) {
+                                    // continue //
+                                    let obj = {
+                                        playerId: item.playerId,
+                                        count: 5,
+                                    };
+                                    await this.handicapService
+                                        .calculateHandicap(obj)
+                                        .then((response) => {
+                                            console.log(response);
+                                        })
+                                        .catch((err) => {
+                                            console.log('error' + err);
+                                            this.snackBar.open('Error!.', 'x', {
+                                                duration: 5000,
+                                            });
                                         });
-                                    });
-                                await this.handicapService
-                                    .calculateHandicapWHS(obj)
-                                    .then((response) => {
-                                        console.log(response);
-                                    })
-                                    .catch((err) => {
-                                        console.log('error' + err);
-                                        this.snackBar.open('Error!.', 'x', {
-                                            duration: 5000,
+                                    await this.handicapService
+                                        .calculateHandicapWHS(obj)
+                                        .then((response) => {
+                                            console.log(response);
+                                        })
+                                        .catch((err) => {
+                                            console.log('error' + err);
+                                            this.snackBar.open('Error!.', 'x', {
+                                                duration: 5000,
+                                            });
                                         });
-                                    });
+                                }
+                                this.snackBar.open('Handicap Calculated', 'x', {
+                                    duration: 5000,
+                                });
+                            } else {
+                                console.log('Handicap Calculation Cancel');
                             }
-                            this.snackBar.open('Handicap Calculated', 'x', {
-                                duration: 5000,
-                            });
-                        } else {
-                            console.log('Handicap Calculation Cancel');
-                        }
-                    }, 5000);
-                } else {
-                    this.snackBar.open('Handicap Not Calculated', 'x', {
-                        duration: 5000,
-                    });
+                        }, 5000);
+                    } else {
+                        this.snackBar.open('Handicap Not Calculated', 'x', {
+                            duration: 5000,
+                        });
+                    }
                 }
             }
         });
@@ -2970,46 +2973,46 @@ export class ViewDailyRoundComponent implements OnInit {
         }
     }
 
-    paneltToggle(flightId,playerId,event) {
-        if(event.checked){
+    paneltToggle(tournamentId, flightId, playerId, event) {
+        if (event.checked) {
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',
                 data: 'Do you want to make this player panelty?',
             });
             dialogRef.afterClosed().subscribe(async (result) => {
                 if (result) {
-                   let result=await this.facadeService.markPlayerPanelty(flightId,playerId);
-                   if(result){
-                    let selectedFlight: any = this.flightPlayers.find((a) => {
-                        return a.flightId == flightId;
-                    });
-                    selectedFlight.forEach(element => {
-                        if(element.playerId==playerId){
-                            element.panelty=true;
-                        }
-                    });
-                    this.snackBar.open(
-                        'Panelty Marked.',
-                        'x',
-                        {
-                            duration: 5000,
-                        }
+                    let result = await this.facadeService.markPlayerPanelty(
+                        tournamentId,
+                        flightId,
+                        playerId
                     );
-                   }
-                }else{
-             
+                    if (result) {
+                        let selectedFlight: any = this.flightPlayers.find(
+                            (a) => {
+                                return a.flightId == flightId;
+                            }
+                        );
+                        selectedFlight.forEach((element) => {
+                            if (element.playerId == playerId) {
+                                element.panelty = true;
+                            }
+                        });
+                        this.snackBar.open('Panelty Marked.', 'x', {
+                            duration: 5000,
+                        });
+                    }
+                } else {
                 }
             });
-        }else{
+        } else {
             let selectedFlight: any = this.flightPlayers.find((a) => {
                 return a.flightId == flightId;
             });
-            selectedFlight.forEach(element => {
-                if(element.playerId==playerId){
-                    element.panelty=false;
+            selectedFlight.forEach((element) => {
+                if (element.playerId == playerId) {
+                    element.panelty = false;
                 }
             });
-
         }
     }
     movetoNewRound(player) {

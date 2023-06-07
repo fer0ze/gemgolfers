@@ -350,6 +350,7 @@
                 </div>
                 <!-- Github issues summary -->
                 <div
+                    *ngIf="showdata | async"
                     class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                 >
                     <div
@@ -360,7 +361,7 @@
                         >
                             Daily Rounds Summary
                         </div>
-                        <div class="mt-3 sm:mt-0 sm:ml-2">
+                        <!-- <div  class="mt-3 sm:mt-0 sm:ml-2">
                             <mat-button-toggle-group
                                 value="last-week"
                                 #githubIssuesWeekSelector="matButtonToggleGroup"
@@ -369,7 +370,7 @@
                                     >Last Week</mat-button-toggle
                                 >
                             </mat-button-toggle-group>
-                        </div>
+                        </div> -->
                     </div>
                     <div
                         class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
@@ -390,9 +391,7 @@
                                         chartGithubIssues.plotOptions
                                     "
                                     [series]="
-                                        chartGithubIssues.series[
-                                            githubIssuesWeekSelector.value
-                                        ]
+                                        chartGithubIssues.series
                                     "
                                     [states]="chartGithubIssues.states"
                                     [stroke]="chartGithubIssues.stroke"
@@ -416,9 +415,7 @@
                                         class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
                                     >
                                         {{
-                                            _overview[
-                                                githubIssuesWeekSelector.value
-                                            ][0]["newIssues"]
+                                            _overview["newIssues"]
                                         }}
                                     </div>
                                     <div
@@ -435,9 +432,7 @@
                                         class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
                                     >
                                         {{
-                                            _overview[
-                                                githubIssuesWeekSelector.value
-                                            ][0]["closedIssues"]
+                                            _overview["closedIssues"]
                                         }}
                                     </div>
                                     <div
@@ -454,9 +449,7 @@
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
                                         {{
-                                            _overview[
-                                                githubIssuesWeekSelector.value
-                                            ][0]["fixed"]
+                                            _overview["fixed"]
                                         }}
                                     </div>
                                     <div
@@ -473,9 +466,7 @@
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
                                         {{
-                                            _overview[
-                                                githubIssuesWeekSelector.value
-                                            ][0]["wontfix"]
+                                            _overview["wontfix"]
                                         }}
                                     </div>
                                     <div
@@ -492,9 +483,7 @@
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
                                         {{
-                                            _overview[
-                                                githubIssuesWeekSelector.value
-                                            ][0]["reopened"]
+                                            _overview["reopened"]
                                         }}
                                     </div>
                                     <div
@@ -511,9 +500,7 @@
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
                                         {{
-                                            _overview[
-                                                githubIssuesWeekSelector.value
-                                            ][0]["needstriage"]
+                                            _overview["needstriage"]
                                         }}
                                     </div>
                                     <div
@@ -528,7 +515,7 @@
                 </div>
                 <!-- Task distribution -->
                 <div
-                *ngIf="loading" class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                *ngIf="showdata | async" class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                 >
                     <div
                         class="flex flex-col sm:flex-row items-start justify-between"

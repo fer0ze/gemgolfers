@@ -437,6 +437,31 @@ export const GetPlayerByID = gql`
     }
     ${PlayerQL}
 `;
+export const getPlayerByIDDetailForm = gql`
+    query PostsGetQuery($where: player_bool_exp!) {
+        player(where: $where) {
+            firstName
+            lastName
+            gender
+            email
+            phone
+            dob
+            handicap
+            handicapWhsIndex
+            playerCategory
+            countryCode
+            membershipNumber
+            membership {
+                clubId
+                suspended
+                club {
+                  id
+                  name
+                }
+            }
+        }
+    }
+`;
 
 export const GetPlayerByFilter = gql`
     query PostsGetQuery($where: player_bool_exp!) {
@@ -710,28 +735,30 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
-            limit: 40
+            limit: 20
         ) {
-            ...PlayerHandicapQL
+            playerId
+            handicap
+            oldHandicap
+            score
+            updatedAt
+            grossScore
+            adjustedScore
+            panelty
+            tournamentQL: tournament {
+                title
+                startDate
+            }
         }
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
-            order_by: [
-                { flight: { date: desc } }
-                { flight: { flightRound: asc } }
-                { flight: { flightNo: asc } }
-            ]
+            order_by: { flight: { date: desc } }
+            limit: 20
         ) {
             FlightQL: flight {
-                flightRound
-                flightNo
                 date
-                name {
-                    name
-                }
                 ScoresQL: scores(where: { playerId: { _eq: $playerId } }) {
                     playerId
-                    playerHandicap
                     grossScore
                     hole {
                         holeNo
@@ -739,18 +766,9 @@ export const PlayerFlightScoresQuery = gql`
                         par
                     }
                 }
-                CourseQL: course {
-                    ...CourseQL
-                }
             }
         }
     }
-    ${FlightsQL}
-    ${ScoreQL}
-    ${ScoreDetailQL}
-    ${CourseQL}
-    ${PlayerQL}
-    ${PlayerHandicapQL}
 `;
 
 export const AllPlayersByCategoryQL = gql`
@@ -825,21 +843,45 @@ export const createMarshalQL = gql`
 
 export const PlayerHandicapQuery = gql`
     query PlayerHandicapQuery($playerId: String!) {
-        PlayerQL: player_by_pk(id: $playerId) {
-            firstName
-            id
-            lastName
-            membershipNumber
-            HandicapHistoryWhsQL: handicap_history_whs(
-                order_by: { playedAt: desc }
-                limit: 40
-            ) {
-                ...PlayerHandicapWhsQL
+        HandicapHistoryWhsQL: player_handicap_whs(
+            where: { playerId: { _eq: $playerId } }
+            order_by: { playedAt: desc }
+            limit: 40
+        ) {
+            handicapDifferential
+            score
+            playedAt
+            adjustedScore
+            handicapIndex
+            Handicap_id
+            combined_handicap_id
+            is_combined
+            tee
+            panelty
+            combined_handicap {
+                playedAt
+                handicapDifferential
+                Handicap_id
+                handicapIndex
+                score
+                adjustedScore
+                combined_handicap_id
+                tournamentQL: tournament {
+                    title
+                }
             }
+            used_handicaps {
+                id
+                used_handicap_id
+                combine_handicap_id
+            }
+            tournamentQL: tournament {
+                title
+                
+            }
+          
         }
     }
-    ${PlayerHandicapWhsQL}
-    ${PlayerQL}
 `;
 export const PlayerHandicapRoundQuery = gql`
     query PlayerHandicapQuery($courseId: String!, $courseHoleSets: Int!) {

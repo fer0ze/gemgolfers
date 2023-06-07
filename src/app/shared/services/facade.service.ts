@@ -46,8 +46,6 @@ export class FacadeService {
   getClubList() {
     return this.clubService.getClubsList();
   }
- 
-
   getPGFClubList(id: string) {
     return this.clubService.getPGFClubsList(id);
   }
@@ -246,6 +244,9 @@ export class FacadeService {
 
   getPlayerByID(id: string) {
     return this.playerService.getPlayerByID(id);
+  }
+  getPlayerByIDDetailForm(id: string) {
+    return this.playerService.getPlayerByIDDetailForm(id);
   }
 
   getPlayerByGEMID(GEMID: string) {
@@ -815,8 +816,8 @@ export class FacadeService {
   undoHandicapPlayer(flightId: string,playerId:string) {
     return this.flightsService.undoHandicapPlayer(flightId,playerId);
   }
-  markPlayerPanelty(flightId: string,playerId:string) {
-    return this.flightsService.markPlayerPanelty(flightId,playerId);
+  markPlayerPanelty(tournamentId:string,flightId: string,playerId:string) {
+    return this.flightsService.markPlayerPanelty(tournamentId,flightId,playerId);
   }
   private _teeTimeService: TeeTimeService;
 

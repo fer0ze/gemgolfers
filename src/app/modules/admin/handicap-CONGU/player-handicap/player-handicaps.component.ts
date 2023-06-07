@@ -217,19 +217,19 @@ export class PlayerHandicapComponent implements OnInit {
         this.playerHandiData.forEach((element) => {
             let panelty: boolean = false;
             count++;
-            if (
-                element.tournamentQL.flights &&
-                element.tournamentQL.flights[0] != undefined
-            ) {
-                panelty = element.tournamentQL.flights[0].members.some(
-                    (element) => {
-                        return (
-                            element.playerId == this.playerID &&
-                            element.panelty == true
-                        );
-                    }
-                );
-            }
+            // if (
+            //     element.tournamentQL.flights &&
+            //     element.tournamentQL.flights[0] != undefined
+            // ) {
+            //     panelty = element.tournamentQL.flights[0].members.some(
+            //         (element) => {
+            //             return (
+            //                 element.playerId == this.playerID &&
+            //                 element.panelty == true
+            //             );
+            //         }
+            //     );
+            // }
             var temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
@@ -244,7 +244,7 @@ export class PlayerHandicapComponent implements OnInit {
                 element.oldHandicap,
                 Math.round((element.handicap - element.oldHandicap) * 10) / 10,
                 element.handicap,
-                panelty,
+                element.panelty,
             ];
             rows.push(temp);
         });

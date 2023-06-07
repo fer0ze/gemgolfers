@@ -145,18 +145,18 @@ export class PlayerHandicapComponent implements OnInit {
                 courseHoleSets: 3,
             };
             let playerscore = <Player>(
-                await this._facadeService.getPlayerByID(this.playerID)
+                await this._facadeService.getPlayerByIDDetailForm(this.playerID)
             );
             console.log(playerscore);
 
             this.playerWHS = await this._facadeService.getPlayerWHS(
                 this.playerID
             );
-            console.log(this.playerWHS);
+            //console.log(this.playerWHS);
             this.currentPlayer = playerscore['player'];
 
             this.playerWHSHistory =
-                this.playerWHS['PlayerQL'].HandicapHistoryWhsQL;
+                this.playerWHS['HandicapHistoryWhsQL'];
             console.log(this.playerWHSHistory);
 
             this.usedForHandicap =
@@ -231,11 +231,11 @@ export class PlayerHandicapComponent implements OnInit {
             let slicedWhs = [];
             let count = 0;
             this.memerbershipNumber =
-                this.playerWHS['PlayerQL'].membershipNumber;
+                this.currentPlayer[0].membershipNumber;
             this.fullName =
-                this.playerWHS['PlayerQL'].firstName +
+                this.currentPlayer[0].firstName +
                 ' ' +
-                this.playerWHS['PlayerQL'].lastName;
+                this.currentPlayer[0].lastName;
             for (let obj of this.playerWHSHistory) {
                 count++;
                 console.log(obj);
@@ -427,25 +427,25 @@ export class PlayerHandicapComponent implements OnInit {
                     handicap.combine_handicap_id == element.Handicap_id
                 );
             });
-            if (
-                element.tournamentQL.flights &&
-                element.tournamentQL.flights[0] != undefined
-            ) {
-                panelty = element.tournamentQL.flights[0].members.some(
-                    (element) => {
-                        return (
-                            element.playerId == this.playerID &&
-                            element.panelty == true
-                        );
-                    }
-                );
-            }
+            // if (
+            //     element.tournamentQL.flights &&
+            //     element.tournamentQL.flights[0] != undefined
+            // ) {
+            //     panelty = element.tournamentQL.flights[0].members.some(
+            //         (element) => {
+            //             return (
+            //                 element.playerId == this.playerID &&
+            //                 element.panelty == true
+            //             );
+            //         }
+            //     );
+            // }
 
             var temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
                 formatDate(
-                    element.tournamentQL.startDate,
+                    element.playedAt,
                     'mediumDate',
                     'en-US'
                 ),
@@ -455,7 +455,7 @@ export class PlayerHandicapComponent implements OnInit {
                 Math.round(element.handicapIndex * 10) / 10,
                 element.highlight,
                 used,
-                panelty
+                element.panelty,
             ];
             rows.push(temp);
         });

@@ -665,7 +665,7 @@ export class FlightsService {
                 });
         });
     }
-    public markPlayerPanelty(flightId: string,playerId:string): Promise<any> {
+    public markPlayerPanelty(tournamentId:string,flightId: string,playerId:string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -673,6 +673,7 @@ export class FlightsService {
                     variables: {
                         flightId: flightId,
                         playerId: playerId,
+                        tournamentId:tournamentId,
                     },
                 })
                 .subscribe(({ data }) => {

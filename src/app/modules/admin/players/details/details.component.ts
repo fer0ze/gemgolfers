@@ -120,7 +120,7 @@ export class ContactsDetailsComponent implements OnInit {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-
+        let dataClubs:any;
         if (this.loggedInuser) {
             let clubInfo: any =
                 this.loggedInuser.membership.length > 0
@@ -152,11 +152,16 @@ export class ContactsDetailsComponent implements OnInit {
             notes: new FormControl(''),
         });
         this.playerCategories = this._facadeService.getPlayerCategories();
-        let dataClubs = await this._facadeService.getClubList();
+        if(this.loggedInuser.userRole > 1 ){
+             dataClubs = await this._facadeService.getClubByID(this.loggedInuser.adminClubId);
+            
+        }else{
+             dataClubs = await this._facadeService.getClubList();
+        }
         this.golfClubs = dataClubs.club;
         console.log(this.playerCategories);
         if (this.playerID) {
-            this.fetchData();
+            await this.fetchData();
         }
         this.filteredClubOptions = this.contactForm
             .get('club')!
@@ -617,20 +622,18 @@ export class ContactsDetailsComponent implements OnInit {
 
     async fetchData() {
         if (this.playerID) {
-            this.currentPlayer = <Player>(
-                await this._facadeService.getPlayerByID(this.playerID)
-            );
-            let whsHandicaps = await this._facadeService.getPlayerWHS(
-                this.playerID
-            );
-            let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
-            console.log(whshandicap);
-
-            this.handicapsWhs =
-                whshandicap.length > 0 && whshandicap[0] ? whshandicap : 0;
+            this.currentPlayer = 
+                await this._facadeService.getPlayerByIDDetailForm(this.playerID)
+        
+            // let whsHandicaps = await this._facadeService.getPlayerWHS(
+            //     this.playerID
+            // );
+            // let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
+            // console.log(whshandicap);  
         }
         console.log(this.currentPlayer);
         if (this.currentPlayer.player.length > 0) {
+            this.handicapsWhs =this.currentPlayer.player[0].handicapWhsIndex;
             this.editMode = true;
             this.contactForm.setValue({
                 firstName: this.currentPlayer.player[0].firstName,

@@ -88,7 +88,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
         // Attach SVG fill fixer to all ApexCharts
         this.showdata = Promise.resolve(true);
-        
+
         console.log(this.showdata);
 
         window['Apex'] = {
@@ -651,7 +651,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
             dataMembers.push(obj.membersCount);
             dataFlight.push(obj.totalFlights);
         }
-        this._series['last-week'] = [
+        this._series = [
             {
                 data: dataMembers,
                 name: 'Members',
@@ -668,18 +668,15 @@ export class ProjectComponent implements OnInit, OnDestroy {
             getall.TournamentsQLs.length - this.flightCountsCal;
         console.log(this._overview);
 
-        this._overview['last-week'] = [
-            {
-                newIssues: getall.TournamentsQLs.length,
-                closedIssues: this.membersCountsCal,
-                fixed: this.flightCountsCal,
-                wontfix: this.flightCountsNotCal,
-                reopened: '20',
-                needstriage: '36',
-            },
-        ];
-
-        this._prepareChartData();
+        (this._overview = {
+            newIssues: getall.TournamentsQLs.length,
+            closedIssues: this.membersCountsCal,
+            fixed: this.flightCountsCal,
+            wontfix: this.flightCountsNotCal,
+            reopened: '20',
+            needstriage: '36',
+        }),
+            this._prepareChartData();
 
         console.log(players);
         if (this.loggedInuser.userRole == 1) {

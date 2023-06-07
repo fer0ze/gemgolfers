@@ -164,7 +164,7 @@
                             matTooltipPosition="above"
                             matTooltipClass="tooltipStyle"
                             target="_blank"
-                            *ngIf="!flight.ended"
+                            
                             (click)="redirectCalculation(flight.flightId)"
                             ><span class="mat-button-wrapper"
                                 ><mat-icon
@@ -467,7 +467,7 @@
                             [color]="'accent'"
                             [checked]="item.panelty"
                             [disabled]="item.panelty"
-                            (change)="paneltToggle(flight.flightId,item.playerId,$event)" 
+                            (change)="paneltToggle(flight.tournamentId,flight.flightId,item.playerId,$event)" 
                         >
                         </mat-slide-toggle>
                     </td>
@@ -644,7 +644,7 @@
                             "
                             >save</mat-icon
                         >
-                        <mat-slide-toggle (change)="paneltToggle(flight.flightId,item.playerId,$event)"  [color]="'accent'" [checked]="item.panelty" [disabled]="item.panelty">
+                        <mat-slide-toggle (change)="paneltToggle(flight.tournamentId,flight.flightId,item.playerId,$event)"  [color]="'accent'" [checked]="item.panelty" [disabled]="item.panelty">
                         </mat-slide-toggle>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">

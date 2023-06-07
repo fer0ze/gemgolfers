@@ -593,6 +593,7 @@ export const markPlayerPaneltyQL = gql`
     mutation ClubSingleRoundFlightQuery(
         $flightId: String!
         $playerId: String!
+        $tournamentId: String!
     ) {
         flightQlA: update_flight_member(
             where: {
@@ -606,6 +607,32 @@ export const markPlayerPaneltyQL = gql`
             _set: { panelty: true }
         ) {
             AffectedRowsQLi: affected_rows
+        }
+        UpdateQL: update_player_handicap(
+            where: {
+                _and: [
+                    {
+                        tournamentId: { _eq: $tournamentId }
+                        playerId: { _eq: $playerId }
+                    }
+                ]
+            }
+            _set: { panelty: true }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+        UpdateQLWHS: update_player_handicap_whs(
+            where: {
+                _and: [
+                    {
+                        tournamentId: { _eq: $tournamentId }
+                        playerId: { _eq: $playerId }
+                    }
+                ]
+            }
+            _set: { panelty: true }
+        ) {
+            AffectedRowsQL: affected_rows
         }
     }
 `;
