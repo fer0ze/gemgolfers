@@ -759,6 +759,7 @@ export const PlayerFlightScoresQuery = gql`
                 date
                 ScoresQL: scores(where: { playerId: { _eq: $playerId } }) {
                     playerId
+                    playerHandicap
                     grossScore
                     hole {
                         holeNo
