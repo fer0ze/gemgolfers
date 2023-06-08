@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import * as auth from 'firebase/auth';
@@ -71,24 +71,58 @@ export class AuthService {
      * @param credentials
      */
     signIn(credentials: { email: string; password: string }): Observable<any> {
-        // Throw error, if the user is already logged in
+        // Throw an error if the user is already logged in
         if (this._authenticated) {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) => {
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
+        return from(
+            this.firebaseAuth.signInWithEmailAndPassword(
+                credentials.email,
+                credentials.password
+            )
+        ).pipe(
+            switchMap((value: any) => {
+                
+                return this._httpClient.post('api/auth/sign-in', true).pipe(
+                    switchMap((response: any) => {
+                        // Store the access token in the local storage
+                        this.accessToken = response.accessToken;
 
-                // Set the authenticated flag to true
-                this._authenticated = true;
+                        // Set the authenticated flag to true
+                        this._authenticated = true;
+                        this.loggedInuser = JSON.parse(
+                            localStorage.getItem(Constants.LOGGED_IN_USER)
+                        );
+                        let clubInfo: any =
+                            this.loggedInuser.membership.length > 0
+                                ? this.loggedInuser.membership[0].club
+                                : null;
+                        let logo =
+                            clubInfo && clubInfo.logo
+                                ? clubInfo.logo
+                                : 'e2esp.png';
+                        this._user.email = this.loggedInuser.email;
+                        this._user.name = this.loggedInuser.fullName;
+                        this._user.avatar = 'assets/images/logo/' + logo + '';
+                        // Store the user on the user service
+                        this._userService.user = this._user;
+                        localStorage.setItem('gotAuthentication', 'true');
 
-                // Store the user on the user service
-                this._userService.user = response.user;
+                        // Store the user on the user service
+                        //this._userService.user = response.user;
 
-                // Return a new observable with the response
-                return of(response);
+                        // Return a new observable with the response
+                        return of(response);
+                    })
+                );
+            }),
+            catchError((err) => {
+                console.log(err);
+                console.log('Something went wrong:', err.message);
+
+                // Handle the error or rethrow it if necessary
+                return throwError(err);
             })
         );
     }
@@ -97,13 +131,16 @@ export class AuthService {
      *
      * @param credentials
      */
-    userChanges(credentials: { email: string; password: string }): Observable<any> {
+    userChanges(credentials: {
+        email: string;
+        password: string;
+    }): Observable<any> {
         // Throw error, if the user is already logged in
         if (this._authenticated) {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/userUpdate',credentials).pipe(
+        return this._httpClient.post('api/auth/userUpdate', credentials).pipe(
             switchMap((response: any) => {
                 this.accessToken = response.accessToken;
 
@@ -148,7 +185,10 @@ export class AuthService {
                             // Store the user on the user service
                             this._userService.user = this._user;
                             this._authenticated = true;
-                            localStorage.setItem('accessToken', this._api._generateJWTToken());
+                            localStorage.setItem(
+                                'accessToken',
+                                this._api._generateJWTToken()
+                            );
                             localStorage.setItem('gotAuthentication', 'true');
                             resolve(true);
                         });

@@ -399,6 +399,7 @@ export class TournamentsService {
         });
     }
     public getAll(
+        Id: string,
         clubId: string,
         fromDate: string,
         toDate: string
@@ -411,6 +412,7 @@ export class TournamentsService {
                 .subscribe<any>({
                     query: Query.getallDashboard,
                     variables: {
+                        adminId:Id,
                         adminClubId: clubId,
                         fromDate: fromDate,
                         toDate: toDate,

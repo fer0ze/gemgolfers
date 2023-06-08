@@ -569,6 +569,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
             //         this.loggedInuser.adminClubId
             //     );
             getall = await this._facadeService.getAll(
+                this.loggedInuser.id,
                 this.loggedInuser.adminClubId,
                 this._datePipe.transform(
                     lastWeekSunday.toString(),
@@ -608,38 +609,30 @@ export class ProjectComponent implements OnInit, OnDestroy {
         //let data = dataPlayers.TournamentsQL;
         let i = 0;
         for (let stats of data) {
-            if (stats.FlightsQL.length > 0 && stats.FlightsQL[0].ended) {
+            if (stats.ended) {
                 this.flightCountsCal++;
             }
-            if (stats.startDate == prevDate) {
-                memCounter =
-                    memCounter +
-                    (stats.FlightsQL.length > 0 && stats.FlightsQL[0]
-                        ? stats.FlightsQL[0].MembersQL.length
-                        : 0);
-                totalFlights = totalFlights + stats.FlightsQL.length;
+            if (stats.date == prevDate) {
+                memCounter = memCounter + (stats ? stats.MembersQL.length : 0);
+                totalFlights = totalFlights + 1;
 
                 myData[myData.length - 1].membersCount = memCounter;
                 myData[myData.length - 1].totalFlights = totalFlights;
-                prevDate = stats.startDate;
+                prevDate = stats.date;
             } else {
                 memCounter = 0;
                 totalFlights = 0;
-                memCounter =
-                    memCounter +
-                    (stats.FlightsQL.length > 0 && stats.FlightsQL[0]
-                        ? stats.FlightsQL[0].MembersQL.length
-                        : 0);
-                totalFlights = totalFlights + stats.FlightsQL.length;
+                memCounter = memCounter + (stats ? stats.MembersQL.length : 0);
+                totalFlights = totalFlights +1;
 
                 let obj = {
-                    date: stats.startDate,
+                    date: stats.date,
                     membersCount: memCounter,
                     totalFlights: totalFlights,
                 };
 
                 myData.push(obj);
-                prevDate = stats.startDate;
+                prevDate = stats.date;
             }
         }
 
@@ -706,8 +699,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     }
 
     ComparatorDate(a, b) {
-        if (a['startDate'] < b['startDate']) return -1;
-        if (a['startDate'] > b['startDate']) return 1;
+        if (a['date'] < b['date']) return -1;
+        if (a['date'] > b['date']) return 1;
         return 0;
     }
     lastWeekMonday() {

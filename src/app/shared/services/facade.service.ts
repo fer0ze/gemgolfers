@@ -877,8 +877,9 @@ export class FacadeService {
       toDate
     );
   }
-  getAll(clubId: string, fromDate: string, toDate: string) {
+  getAll(id:string,clubId: string, fromDate: string, toDate: string) {
     return this.tournamentService.getAll(
+      id,
       clubId,
       fromDate,
       toDate

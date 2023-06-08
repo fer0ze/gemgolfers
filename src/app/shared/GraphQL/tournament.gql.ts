@@ -204,7 +204,6 @@ export const tournamentDashBoard = gql`
             MemberStatusesQL: member_statuses {
                 ...TournamentMemberStatusQL
             }
-            
         }
         SubTournamentQL: sub_tournament(
             where: { tournamentId: { _eq: $tournamentPrefix } }
@@ -639,7 +638,6 @@ export const GetTournamentsByClub = gql`
         }
     }
     ${TournamentQL}
-    
 `;
 
 export const getActiveTournamentsList = gql`
@@ -1767,6 +1765,7 @@ export const getTournamentCountsByClubAll = gql`
 
 export const getallDashboard = gql`
     query geteverything(
+        $adminId: String!
         $adminClubId: String!
         $fromDate: date!
         $toDate: date!
@@ -1822,7 +1821,6 @@ export const getallDashboard = gql`
                     count
                 }
             }
-
             Veterans: members_aggregate(
                 where: { player: { playerCategory: { _eq: "Veterans" } } }
             ) {
@@ -1838,22 +1836,19 @@ export const getallDashboard = gql`
                 }
             }
         }
-        TournamentsQLs: tournament(
+        TournamentsQLs: flight(
             where: {
-                clubId: { _eq: $adminClubId }
-                singleRound: { _eq: true }
+                adminId: { _eq: $adminId }
                 _and: [
-                    { startDate: { _gte: $toDate } }
-                    { endDate: { _lte: $fromDate } }
+                    { date: { _gte: $toDate } }
+                    { date: { _lte: $fromDate } }
                 ]
             }
         ) {
-            startDate
-            FlightsQL: flights {
-                ended
-                MembersQL: members {
-                    attendance
-                }
+            date
+            ended
+            MembersQL: members {
+                attendance
             }
         }
     }

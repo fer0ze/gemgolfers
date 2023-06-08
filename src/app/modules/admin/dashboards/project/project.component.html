@@ -515,7 +515,7 @@
                 </div>
                 <!-- Task distribution -->
                 <div
-                *ngIf="showdata | async" class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                 class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                 >
                     <div
                         class="flex flex-col sm:flex-row items-start justify-between"
@@ -526,7 +526,7 @@
                             Player Distribution
                         </div>
                     </div>
-                    <div class="flex flex-col flex-auto mt-6">
+                    <div *ngIf="showdata | async" class="flex flex-col flex-auto mt-6">
                         <apx-chart
                             class="flex-auto w-full h-80"
                             [chart]="chartTaskDistribution.chart"

@@ -89,26 +89,47 @@ export class AuthMockApi {
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/sign-in', 1000)
-            .reply((request) => {
-                // Sign in successful
-                console.log(request);
-               
+        // this._fuseMockApiService
+        //     .onPost('api/auth/sign-in', 1000)
+        //     .reply((request) => {
+        //         // Sign in successful
+        //         console.log(request);
 
-                this.loggedInuser = JSON.parse(
-                    localStorage.getItem(Constants.LOGGED_IN_USER)
-                );
-                if (this.loggedInuser) {
-                    let clubInfo: any =
-                        this.loggedInuser.membership.length > 0
-                            ? this.loggedInuser.membership[0].club
-                            : null;
-                    let logo =
-                        clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-                    this._user.email = this.loggedInuser.email;
-                    this._user.name = this.loggedInuser.fullName;
-                    this._user.avatar = 'assets/images/logo/' + logo + '';
+        //         this.loggedInuser = JSON.parse(
+        //             localStorage.getItem(Constants.LOGGED_IN_USER)
+        //         );
+        //         if (this.loggedInuser) {
+        //             let clubInfo: any =
+        //                 this.loggedInuser.membership.length > 0
+        //                     ? this.loggedInuser.membership[0].club
+        //                     : null;
+        //             let logo =
+        //                 clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+        //             this._user.email = this.loggedInuser.email;
+        //             this._user.name = this.loggedInuser.fullName;
+        //             this._user.avatar = 'assets/images/logo/' + logo + '';
+        //             return [
+        //                 200,
+        //                 {
+        //                     user: cloneDeep(this._user),
+        //                     accessToken: this._generateJWTToken(),
+        //                     tokenType: 'bearer',
+        //                 },
+        //             ];
+        //         }
+
+        //         // Invalid credentials
+        //         return [404, false];
+        //     });
+        // -----------------------------------------------------------------------------------------------------
+        // @ Sign in - POST
+        // -----------------------------------------------------------------------------------------------------
+        this._fuseMockApiService
+            .onPost('api/auth/sign-in', 1500)
+            .reply(({ request }) => {
+                console.log(request);
+                // Sign in successful
+                if (request.body == true) {
                     return [
                         200,
                         {

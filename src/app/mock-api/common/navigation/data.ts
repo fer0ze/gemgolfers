@@ -5,7 +5,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'dashboards',
         title: 'DashBoards',
-
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
@@ -21,7 +20,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'tournaments',
         title: 'Tournament',
-
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [

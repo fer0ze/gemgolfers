@@ -145,8 +145,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
                 this.onCollapsableItemExpanded
             )
                 .pipe(
-                    takeUntil(this._unsubscribeAll),
-                    delay(250)
+                    takeUntil(this._unsubscribeAll)
                 )
                 .subscribe(() => {
 
