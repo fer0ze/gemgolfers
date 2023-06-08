@@ -1906,22 +1906,18 @@ export const getAllAdmin = gql`
                 count
             }
         }
-
-        TournamentsQLs: tournament(
+        TournamentsQLs: flight(
             where: {
-                singleRound: { _eq: true }
                 _and: [
-                    { startDate: { _gte: $toDate } }
-                    { endDate: { _lte: $fromDate } }
+                    { date: { _gte: $toDate } }
+                    { date: { _lte: $fromDate } }
                 ]
             }
         ) {
-            startDate
-            FlightsQL: flights {
-                ended
-                MembersQL: members {
-                    attendance
-                }
+            date
+            ended
+            MembersQL: members {
+                attendance
             }
         }
     }
