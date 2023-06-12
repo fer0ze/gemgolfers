@@ -974,7 +974,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 let roundFlightData = this.roundFlights.filter((a) => {
                     return (
                         a.flightRound == this.flightRound &&
-                        a.flightNo == fcnter
+                        a.id ==  this.selectedMembers[index]['id']
                     );
                 });
 
@@ -1127,7 +1127,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 let roundFlightData = this.roundFlights.filter((a) => {
                     return (
                         a.flightRound == this.flightRound &&
-                        a.flightNo == fcnter
+                        a.id == this.selectedMembers[index]['id']
                     );
                 });
                 //console.log(roundFlightData);
@@ -1168,7 +1168,6 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.tournamentInfo[0].id,
                     flightName,
                     tournamentFlights,
-
                     flightMembersToSave
                 )
             );

@@ -231,8 +231,12 @@ export const ChangeScoresFlightMutation = gql`
     ) {
         ScoreUpdateQL: update_score(
             where: {
-                playerId: { _eq: $playerId }
-                flightId: { _eq: $flightIdFrom }
+                _and: [
+                    {
+                        playerId: { _eq: $playerId }
+                        flightId: { _eq: $flightIdFrom }
+                    }
+                ]
             }
             _set: { flightId: $flightIdTo }
         ) {
@@ -240,8 +244,12 @@ export const ChangeScoresFlightMutation = gql`
         }
         FlightMemberDeleteQL: delete_flight_member(
             where: {
-                playerId: { _eq: $playerId }
-                flightId: { _eq: $flightIdFrom }
+                _and: [
+                    {
+                        playerId: { _eq: $playerId }
+                        flightId: { _eq: $flightIdFrom }
+                    }
+                ]
             }
         ) {
             AffectedRowsQL: affected_rows

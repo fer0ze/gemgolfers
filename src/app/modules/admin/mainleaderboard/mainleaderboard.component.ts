@@ -420,16 +420,11 @@ export class MainLeaderboardComponent implements OnInit {
                                     // this.roundCheck(
                                     //     this.allMatchResults[leader]
                                     // );
-                                    grossAllArray.push(
-                                        this.allMatchResults[leader]
-                                    );
-                                    this.allllll.push(
-                                        this.allMatchResults[leader]
-                                    );
-                                    netAllArray.push(
-                                        this.allMatchResults[leader]
-                                    );
-                                    this.net.push(this.allMatchResults[leader]);
+                                    const matchResult = this.allMatchResults[leader];
+                                    grossAllArray.push({...matchResult});
+                                    this.allllll.push({...matchResult});
+                                    netAllArray.push({...matchResult});
+                                    this.net.push({...matchResult});
                                     //netCutOffArray.push(this.allMatchResults[leader]);
                                 }
                             }
@@ -442,10 +437,11 @@ export class MainLeaderboardComponent implements OnInit {
                                 this.allRoundCutOff = true;
                             }
                         } else {
-                            grossAllArray.push(this.allMatchResults[leader]);
-                            this.allllll.push(this.allMatchResults[leader]);
-                            netAllArray.push(this.allMatchResults[leader]);
-                            this.net.push(this.allMatchResults[leader]);
+                            const matchResult = this.allMatchResults[leader];
+                            grossAllArray.push({ ...matchResult });
+                            this.allllll.push({ ...matchResult });
+                            netAllArray.push({ ...matchResult });
+                            this.net.push({ ...matchResult });
                         }
                     }
                 } else if (
@@ -474,12 +470,12 @@ export class MainLeaderboardComponent implements OnInit {
 
                                 netCutOffArray.push(remove);
                             } else {
-                                grossAllArray.push(
-                                    this.allMatchResults[leader]
-                                );
-                                this.allllll.push(this.allMatchResults[leader]);
-                                netAllArray.push(this.allMatchResults[leader]);
-                                this.net.push(this.allMatchResults[leader]);
+                                const matchResult =
+                                    this.allMatchResults[leader];
+                                grossAllArray.push({ ...matchResult });
+                                this.allllll.push({ ...matchResult });
+                                netAllArray.push({ ...matchResult });
+                                this.net.push({ ...matchResult });
                                 //netCutOffArray.push(this.allMatchResults[leader]);
                             }
 
@@ -499,10 +495,11 @@ export class MainLeaderboardComponent implements OnInit {
                             //   this.cuttOffScore = score.value;
                             // }
                         } else {
-                            grossAllArray.push(this.allMatchResults[leader]);
-                            this.allllll.push(this.allMatchResults[leader]);
-                            netAllArray.push(this.allMatchResults[leader]);
-                            this.net.push(this.allMatchResults[leader]);
+                            const matchResult = this.allMatchResults[leader];
+                            grossAllArray.push({ ...matchResult });
+                            this.allllll.push({ ...matchResult });
+                            netAllArray.push({ ...matchResult });
+                            this.net.push({ ...matchResult });
                         }
                     }
                 } else if (
@@ -521,21 +518,22 @@ export class MainLeaderboardComponent implements OnInit {
                             grossCutOffArray.push(remove);
                             netCutOffArray.push(remove);
                         } else {
-                            grossAllArray.push(this.allMatchResults[leader]);
-                            this.allllll.push(this.allMatchResults[leader]);
-                            netAllArray.push(this.allMatchResults[leader]);
-                            this.net.push(this.allMatchResults[leader]);
+                            const matchResult = this.allMatchResults[leader];
+                            grossAllArray.push({ ...matchResult });
+                            this.allllll.push({ ...matchResult });
+                            netAllArray.push({ ...matchResult });
+                            this.net.push({ ...matchResult });
                             //netCutOffArray.push(this.allMatchResults[leader]);
                         }
                     }
                 } else {
+                    console.log(2312);
                     for (let leader in this.allMatchResults) {
-                        // this.roundCheck(this.allMatchResults[leader]);
-                        grossAllArray.push(this.allMatchResults[leader]);
-                        //this.activePlayers.push(this.allMatchResults[leader]);
-                        this.allllll.push(this.allMatchResults[leader]);
-                        netAllArray.push(this.allMatchResults[leader]);
-                        this.net.push(this.allMatchResults[leader]);
+                        const matchResult = this.allMatchResults[leader];
+                        grossAllArray.push({...matchResult});
+                        this.allllll.push({...matchResult});
+                        netAllArray.push({...matchResult});
+                        this.net.push({...matchResult});
                     }
                     //console.log(this.activePlayers);
                 }
@@ -587,19 +585,23 @@ export class MainLeaderboardComponent implements OnInit {
                         this.allRoundNetScore = true;
                     }
                 }
-
+                return true;
                 //this.allRoundCutOff = false;
 
                 //this.allRoundCutOffNet = false;
             } else {
                 //  console.log(this.allMatchResults);
+                //    console.log(23);
 
                 for (let leader in this.allMatchResults) {
-                    grossAllArray.push(this.allMatchResults[leader]);
-                    this.allllll.push(this.allMatchResults[leader]);
-                    netAllArray.push(this.allMatchResults[leader]);
-                    this.net.push(this.allMatchResults[leader]);
+                    const matchResult = this.allMatchResults[leader];
+                    grossAllArray.push({ ...matchResult });
+                    this.allllll.push({ ...matchResult });
+                    netAllArray.push({ ...matchResult });
+                    this.net.push({ ...matchResult });
                 }
+                // const grossAllArrayCopy = [...grossAllArray];
+                // const netAllArrayCopy = [...netAllArray];
                 grossAllArray.sort(this.ComparatorAllGross);
                 netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
@@ -608,15 +610,17 @@ export class MainLeaderboardComponent implements OnInit {
                     !this.cutOffList
                         ? this.sortAllGrossLeadersTie(grossAllArray)
                         : this.allLeadersGross;
-
                 this.allLeadersNet =
                     this.net.length > 0 ||
                     this.cuttOffScore > 0 ||
                     !this.cutOffList
                         ? this.sortAllNetLeadersTie(netAllArray)
                         : this.allLeadersNet; //this.allLeadersNet = this.sortNetLeaders(netAllArray);
-                this.allLeadersCutOffGross =
-                    this.sortAllGrossLeadersTie(grossCutOffArray);
+
+                if (grossCutOffArray.length > 0) {
+                    this.allLeadersCutOffGross =
+                        this.sortAllGrossLeadersTie(grossCutOffArray);
+                }
                 //console.log(this.allLeadersCutOffGross.length);
                 //console.log(this.allLeadersCutOffGross);
 
@@ -627,9 +631,10 @@ export class MainLeaderboardComponent implements OnInit {
                     this.isCuttOffRequired = false;
                     //console.log(this.allLeadersCutOffGross.length);
                 }
-
-                this.allLeadersCutOffNet =
-                    this.sortAllNetLeadersTie(netCutOffArray);
+                if (netCutOffArray.length > 0) {
+                    this.allLeadersCutOffNet =
+                        this.sortAllNetLeadersTie(netCutOffArray);
+                }
 
                 if (this.flightRound && this.flightRound != 0) {
                     ////console.log(this.grossLeaders);
@@ -654,6 +659,7 @@ export class MainLeaderboardComponent implements OnInit {
                 return true;
             }
         } else {
+            console.log(234);
             this.isLoading = false;
             if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE)
                 this.createTexasScrampleLeaders(
@@ -710,8 +716,11 @@ export class MainLeaderboardComponent implements OnInit {
 
             this.lastActiveTab == 1;
             this.isLoading = false;
+            return true;
         }
+        console.log(23);
         this.isLoading = false;
+        return true;
     }
 
     private createSimpleLeaders(
@@ -721,7 +730,7 @@ export class MainLeaderboardComponent implements OnInit {
     ) {
         //console.log("calling me once....");
         this.playerScores = [];
-        // console.log(round);
+        console.log(round);
 
         let handicapAllocation: string = this.getHandicapAllocation();
 
@@ -972,10 +981,10 @@ export class MainLeaderboardComponent implements OnInit {
                         playerHole18ScoreNet
                     ),
                     playerStatus: playerStatus
-                    ? playerStatus.status
-                    : scores.length <= 0
-                    ? 'ic'
-                    : 'ac',
+                        ? playerStatus.status
+                        : scores.length <= 0
+                        ? 'ic'
+                        : 'ac',
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -1220,22 +1229,22 @@ export class MainLeaderboardComponent implements OnInit {
         if (query.length > 3) {
             this.searchName = true;
             console.log(this.allMatchResults);
-            if(this.allLeadersGross.length>0){
-                this.allMatchSearchResults = this.allLeadersGross.filter((obj) => {
-                    return obj.name
-                        .toString()
-                        .toLowerCase()
-                        .includes(query.toString().toLowerCase());
-                });
-                
-            }else{
+            if (this.allLeadersGross.length > 0) {
+                this.allMatchSearchResults = this.allLeadersGross.filter(
+                    (obj) => {
+                        return obj.name
+                            .toString()
+                            .toLowerCase()
+                            .includes(query.toString().toLowerCase());
+                    }
+                );
+            } else {
                 this.allMatchSearchResults = this.grossLeaders.filter((obj) => {
                     return obj.name
                         .toString()
                         .toLowerCase()
                         .includes(query.toString().toLowerCase());
                 });
-
             }
         } else {
             this.allMatchSearchResults = [];
@@ -1498,14 +1507,8 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     ComparatorAllGross(a, b) {
-        // if(a['holes2']==0) return 1;
-        // if(b['holes2']==0) return 1;
-        // if (a['holes2'] >= b['holes2'] ) return -1;
-        // if (a['holes2'] <= b['holes2'] ) return 1;
-
         if (a['AllGrossUnder'] < b['AllGrossUnder']) return -1;
         if (a['AllGrossUnder'] > b['AllGrossUnder']) return 1;
-
         return 0;
     }
 
@@ -1528,7 +1531,7 @@ export class MainLeaderboardComponent implements OnInit {
 
     private sortLeadersTie(leaderList: any[]) {
         //Collections.sort(grossLeaders);
-        ////console.log(leaderList);
+        console.log(leaderList);
 
         leaderList = leaderList.sort(this.ComparatorPosition);
         ////console.log(leaderList);
@@ -1589,14 +1592,7 @@ export class MainLeaderboardComponent implements OnInit {
     }
 
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
-        //Collections.sort(grossLeaders);
-        console.log(leaderGrossList);
-
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
-        // console.log(leaderGrossList);
-        ////console.log(leaderList);
-        //return false;
-
         let pos: number = 1;
         let tied: boolean;
 
@@ -1631,9 +1627,10 @@ export class MainLeaderboardComponent implements OnInit {
             }
 
             //  tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
-            if(leaderCurrent.AllGrossUnder){
-                tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
-            }else{
+            if (leaderCurrent.AllGrossUnder != undefined) {
+                tied =
+                    leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
+            } else {
                 tied = leaderCurrent.under == leaderPrevious.under;
             }
             if (tied) {
@@ -1658,7 +1655,6 @@ export class MainLeaderboardComponent implements OnInit {
 
     private sortAllNetLeadersTie(leaderList: any[]) {
         //Collections.sort(grossLeaders);
-        ////console.log(leaderList);
 
         leaderList = leaderList.sort(this.ComparatorAllNetPosition);
         ////console.log(leaderList);
@@ -1694,9 +1690,9 @@ export class MainLeaderboardComponent implements OnInit {
                 secondCompleted = leaderPrevious.completed4;
             }
 
-            if(leaderCurrent.AllGrossUnder){
-                tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
-            }else{
+            if (leaderCurrent.AllNetUnder != undefined) {
+                tied = leaderCurrent.AllNetUnder == leaderPrevious.AllNetUnder;
+            } else {
                 tied = leaderCurrent.under == leaderPrevious.under;
             }
 
@@ -1717,6 +1713,7 @@ export class MainLeaderboardComponent implements OnInit {
         }
         //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
         ////console.log("return");
+        console.log(leaderList);
         return leaderList;
     }
 

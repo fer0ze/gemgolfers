@@ -600,7 +600,7 @@
                                 </li>
                                 <li class="table-row" *ngFor="let item of allLeadersNet">
                                     <div class="col col-1">
-                                        {{ item.positionNet }}
+                                        {{ item.position }}
                                     </div>
                                     <div class="col col-2">
                                         {{ item.name }}
@@ -864,7 +864,7 @@
                     </ul>
                 </div>
             </div>
-            <div *ngIf="this.showBestBall" class="flex flex-col sm:flex-row items-center justify-center mb-1">
+            <div *ngIf="this.showBestBall && !showTaxes" class="flex flex-col sm:flex-row items-center justify-center mb-1">
                 <div id="leaderboard" class="mt-2">
                     <ul class="responsive-table" id="all" *ngIf="searchName && !showBestBall">
                         <!-- <li class="table-header">

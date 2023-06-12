@@ -139,7 +139,7 @@ export class AuthSignInComponent implements OnInit {
          this.showAlert = false;
  
          // Sign in
-         await this._authService.signIn(this.signInForm.value)
+          this._authService.signIn(this.signInForm.value)
              .subscribe(
                  () => {
  
@@ -150,7 +150,7 @@ export class AuthSignInComponent implements OnInit {
                      const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || 'signed-in-redirect';
  
                      // Navigate to the redirect url
-                     //this._router.navigateByUrl(redirectURL);
+                     //this._router.navigateByUrl(redirectURL)
                      window.location.reload();
  
                  },
