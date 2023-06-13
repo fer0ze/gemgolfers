@@ -55,6 +55,7 @@ export class PlayerHandicapComponent implements OnInit {
         'adjustedScore',
         'handicapDifferential',
         'handicapIndex',
+        'tee'
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

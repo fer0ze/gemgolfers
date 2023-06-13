@@ -827,6 +827,20 @@
                                             }}
                                         </td>
                                     </ng-container>
+                                    <ng-container matColumnDef="tee">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Tee
+                                        </th>
+                                        <td
+                                            mat-cell
+                                            *matCellDef="let row; let i = index"
+                                            
+                                        >
+                                            {{
+                                                playingTee(row.tournamentId)
+                                            }}
+                                        </td>
+                                    </ng-container>
 
                                     <tr
                                         mat-header-row

@@ -98,6 +98,7 @@ export class ViewPlayerComponent implements OnInit {
         'adjustedScore',
         'handicapDifferential',
         'handicapIndex',
+        'tee'
     ];
     topDiff: any;
     bottomDiff: any;
@@ -105,6 +106,7 @@ export class ViewPlayerComponent implements OnInit {
     bottomDiff20: any;
     playerHandicapWhsList: any[] = [];
     usedForHandicap = [];
+    memberQLs = [];
     handicapsAvailable: number;
     handicapsToUse: number;
     personLeads: any;
@@ -323,7 +325,7 @@ export class ViewPlayerComponent implements OnInit {
             this.personLeads = slicedWhs.filter(function (a) {
                 return !a.is_combined;
             }, 0);
-
+           // this.personLeads = slicedWhs
             this.WHSSource = new MatTableDataSource(this.personLeads);
 
             this.WHSSource.paginator = this.paginatorWHSHistory;
@@ -335,6 +337,7 @@ export class ViewPlayerComponent implements OnInit {
             this.currentPlayer = playerscore.PlayerQL;
             this.totalRounds = playerscore.MemberQL.length;
             let memberQLs: any = playerscore.MemberQL;
+            this.memberQLs = playerscore.MemberQL;
             this.playerWHSRound = await this.facadeService.getPlayerWHSRound(
                 courseRating
             );
@@ -741,6 +744,15 @@ export class ViewPlayerComponent implements OnInit {
         });
         return used;
     }
+    playingTee(id:string){
+        console.log(id);
+        let used = this.memberQLs.find((handicap) => {
+            return (
+                handicap.FlightQL.tournamentId==id
+            );
+        });
+        return used?General.getPlayersTeesColour(used.playingTee):'Null';    
+    }
     isPanelty(flight) {
         //console.log(this.usedForHandicap);
         if (flight && flight[0] != undefined) {
@@ -764,6 +776,7 @@ export class ViewPlayerComponent implements OnInit {
             'Adj.Score',
             'h/diff',
             'h/index',
+            'tee'
         ];
         var rows = [];
 
@@ -790,20 +803,7 @@ export class ViewPlayerComponent implements OnInit {
                     handicap.combine_handicap_id == element.Handicap_id
                 );
             });
-            // if (
-            //     element.tournamentQL.flights &&
-            //     element.tournamentQL.flights[0] != undefined
-            // ) {
-            //     panelty = element.tournamentQL.flights[0].members.some(
-            //         (element) => {
-            //             return (
-            //                 element.playerId == this.playerID &&
-            //                 element.panelty == true
-            //             );
-            //         }
-            //     );
-            // }
-
+            let tee=this.playingTee(element.tournamentId);  
             let temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
@@ -816,26 +816,29 @@ export class ViewPlayerComponent implements OnInit {
                 element.adjustedScore,
                 Math.round(element.handicapDifferential * 10) / 10,
                 Math.round(element.handicapIndex * 10) / 10,
+                tee,
                 element.highlight,
                 used,
-                element.panelty,
+                element.panelty
             ];
             rows.push(temp);
         });
         // From HTML
+        console.log(rows);
+        
         let a = 1;
         doc.autoTable(col, rows, {
             startY: 25,
             theme: 'grid',
             didParseCell: function (data) {
-                if (data.row.raw[7] == true) {
+                if (data.row.raw[8] == true) {
                     data.cell.styles.fillColor = [195, 249, 230];
                 }
-                if (data.row.raw[9] == true) {
+                if (data.row.raw[10] == true) {
                     data.cell.styles.textColor = [255, 9, 9];
                 }
                 a++;
-                if (data.row.raw[8] == true && a == 5) {
+                if (data.row.raw[9] == true && a == 5) {
                     data.cell.styles.fillColor = [249, 187, 147];
                     //console.log(1);
                     //a=false;

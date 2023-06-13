@@ -753,10 +753,12 @@ export const PlayerFlightScoresQuery = gql`
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
-            limit: 20
+            limit: 40
         ) {
+            playingTee
             FlightQL: flight {
                 date
+                tournamentId
                 ScoresQL: scores(where: { playerId: { _eq: $playerId } }) {
                     playerId
                     playerHandicap
@@ -859,12 +861,15 @@ export const PlayerHandicapQuery = gql`
             is_combined
             tee
             panelty
+            tournamentId
             combined_handicap {
                 playedAt
                 handicapDifferential
                 Handicap_id
                 handicapIndex
                 score
+                tee
+                tournamentId
                 adjustedScore
                 combined_handicap_id
                 tournamentQL: tournament {
