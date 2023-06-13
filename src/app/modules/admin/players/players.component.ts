@@ -469,184 +469,191 @@ export class PlayersComponent implements OnInit {
             // }
             // console.log(this.duplicatePlayers);
 
+            // for (let p of this.playersData) {
+            //     let obj = {
+            //         event: {
+            //             session_variables: {
+            //                 'x-hasura-role': 'admin',
+            //                 'x-hasura-allowed-roles': 'admin',
+            //             },
+            //             op: 'UPDATE',
+            //             data: {
+            //                 old: {
+            //                     tee: 'AMATEURS',
+            //                     flightRound: 0,
+            //                     time: '18:59:00+05',
+            //                     category: null,
+            //                     courseId: '-LUFS3FCQKOGpJ2IEHmf',
+            //                     startingHole: 1,
+            //                     courseHoleSetsInverted: false,
+            //                     flightNo: 1,
+            //                     date: '2022-05-27',
+            //                     tournamentId: p.tournamentId,
+            //                     courseHoleSets: 3,
+            //                     adminId: '-L61c9obophnGAu73YSM',
+            //                     id: '-N34oqug_aFn244dvq2g',
+            //                     ended: false,
+            //                     tee_id: 1,
+            //                 },
+            //                 new: {
+            //                     tee: 'AMATEURS',
+            //                     flightRound: 0,
+            //                     time: '18:59:00+05',
+            //                     category: null,
+            //                     courseId: '-LUFS3FCQKOGpJ2IEHmf',
+            //                     startingHole: 1,
+            //                     courseHoleSetsInverted: false,
+            //                     flightNo: 1,
+            //                     date: '2022-05-27',
+            //                     tournamentId: p.tournamentId,
+            //                     courseHoleSets: 3,
+            //                     adminId: '-L61c9obophnGAu73YSM',
+            //                     id: '-N34oqug_aFn244dvq2g',
+            //                     ended: true,
+            //                     tee_id: 1,
+            //                 },
+            //             },
+            //             trace_context: null,
+            //         },
+            //         created_at: '2022-05-27T14:13:07.573411Z',
+            //         id: '22a65faf-ca91-4de1-b576-04ba73814232',
+            //         delivery_info: {
+            //             max_retries: 0,
+            //             current_retry: 0,
+            //         },
+            //         trigger: {
+            //             name: 'flight_ended_trigger',
+            //         },
+            //         table: {
+            //             schema: 'public',
+            //             name: 'flight',
+            //         },
+            //     };
+
+            //     // console.log('a');
+            //     console.log(p.tournamentId);
+
+            //     await this._handicapServise
+            //         .flightEndedTrigger(obj)
+            //         .then((response) => {
+            //             console.log(response);
+            //         })
+            //         .catch((err) => {
+            //             console.log('error' + err);
+            //             this.snackBar.open('Error!.', 'x', {
+            //                 duration: 5000,
+            //             });
+            //         });
+
             for (let p of this.playersData) {
-                let obj = {
-                    event: {
-                        session_variables: {
-                            'x-hasura-role': 'admin',
-                            'x-hasura-allowed-roles': 'admin',
-                        },
-                        op: 'UPDATE',
-                        data: {
-                            old: {
-                                tee: 'AMATEURS',
-                                flightRound: 0,
-                                time: '18:59:00+05',
-                                category: null,
-                                courseId: '-LUFS3FCQKOGpJ2IEHmf',
-                                startingHole: 1,
-                                courseHoleSetsInverted: false,
-                                flightNo: 1,
-                                date: '2022-05-27',
-                                tournamentId: p.tournamentId,
-                                courseHoleSets: 3,
-                                adminId: '-L61c9obophnGAu73YSM',
-                                id: '-N34oqug_aFn244dvq2g',
-                                ended: false,
-                                tee_id: 1,
-                            },
-                            new: {
-                                tee: 'AMATEURS',
-                                flightRound: 0,
-                                time: '18:59:00+05',
-                                category: null,
-                                courseId: '-LUFS3FCQKOGpJ2IEHmf',
-                                startingHole: 1,
-                                courseHoleSetsInverted: false,
-                                flightNo: 1,
-                                date: '2022-05-27',
-                                tournamentId: p.tournamentId,
-                                courseHoleSets: 3,
-                                adminId: '-L61c9obophnGAu73YSM',
-                                id: '-N34oqug_aFn244dvq2g',
-                                ended: true,
-                                tee_id: 1,
-                            },
-                        },
-                        trace_context: null,
-                    },
-                    created_at: '2022-05-27T14:13:07.573411Z',
-                    id: '22a65faf-ca91-4de1-b576-04ba73814232',
-                    delivery_info: {
-                        max_retries: 0,
-                        current_retry: 0,
-                    },
-                    trigger: {
-                        name: 'flight_ended_trigger',
-                    },
-                    table: {
-                        schema: 'public',
-                        name: 'flight',
-                    },
-                };
-
-                // console.log('a');
-                console.log(p.tournamentId);
-
-                await this._handicapServise
-                    .flightEndedTrigger(obj)
-                    .then((response) => {
-                        console.log(response);
-                    })
-                    .catch((err) => {
-                        console.log('error' + err);
-                        this.snackBar.open('Error!.', 'x', {
-                            duration: 5000,
-                        });
-                    });
-                await this.delay(4000);
-                // console.log('b');
-
-                // this.logger.logObject(p);
-                // console.log(p);
-
-                // let exist: any = [];
-
-                // if (p.membershipNumber) {
-                //     // this.logger.log(p.membershipNumber);
-                //     console.log(p.membershipNumber);
-
-                //     exist =
-                //         await this._facadeService.getPlayerByMembershipNumber(
-                //             p.membershipNumber.toString()
-                //         );
-
-                //     if (exist.length > 0) {
-                //         this.duplicatePlayers.push(p);
-                //         //continue;
-                //     }
-                // }
-
-                // let phone="481";
-                // if (p.phone && exist.length == 0) {
-                //     // this.logger.log(p.phone);
-                //     console.log(p.phone);
-                //     if (p.phone.toString().indexOf('+92') === 0) {
-                //         phone = p.phone.toString();
-                //     } else if (p.phone.toString().indexOf('0') === 0) {
-                //         phone = p.phone.toString().replace(0, '+92');
-                //     } else if (p.phone.toString().indexOf('3') === 0) {
-                //         phone = '+92' + p.phone.toString();
-                //     }
-                //     console.log(phone);
-
-                //     exist = await this._facadeService.getPlayerByPhone(phone);
-                //     // p.phone.toString().indexOf("+") !== -1
-                //     // ? p.phone.toString()
-                //     // : "+" + p.phone.toString()
-                //     if (exist.length > 0) {
-                //         this.duplicatePlayers.push(p);
-                //         //continue;
-                //     }
-                // }
-
-                // if (p.email && exist.length == 0) {
-                //     exist = await this._facadeService.getPlayerByEmail(
-                //         p.email.toString()
-                //     );
-
-                //     if (exist.length > 0) {
-                //         // this.logger.log("email yes");
-                //         console.log('email Yes');
-
-                //         this.duplicatePlayers.push(p);
-                //         //continue;
-                //     }
-                // }
-
-                // // this.logger.log(exist);
-                // console.log(exist);
-
-                // let UniqueId: string =
-                //     exist && exist.length > 0
-                //         ? exist[0].id
-                //         : UniqueIdGenerator.generate();
-
-                // //if(p.club) {
-
-                // let member: any = {
-                //     clubId: this.loggedInuser.adminClubId,
-                //     playerId: UniqueId,
-                // };
-
-                // clubMember.push(member);
-                // //}
-
-                // let player: any = {
-                //     id: UniqueId,
-                //     adminClubId: null,
-                //     firebaseUid: null,
-                //     fcmToken: null,
-                //     gemId: null,
-                //     firstName: p.firstName,
-                //     lastName: p.lastName,
-                //     gender:  null,
-                //     dob: null,
-                //     picture:null,
-                //     email: p.email ? p.email : null,
-                //     phone: p.phone ? phone : null,
-                //     playerCategory: p.category ? p.category : null,
-                //     handicap: p.handicap ? p.handicap : 0,
-                //     online: false,
-                //     countryCode:  null,
-                //     extraData:  null,
-                //     membershipNumber: p.membershipNumber.toString(),
-                //     userRole: 3,
-                //     membership: null,
-                // };
-
-                // this.savePlayers.push(player);
+                let update = await this._facadeService.updateflightMember(p.ID);
+                if (update) {
+                    console.log('Done');
+                }
+                await this.delay(500);
             }
+            // console.log('b');
+
+            // this.logger.logObject(p);
+            // console.log(p);
+
+            // let exist: any = [];
+
+            // if (p.membershipNumber) {
+            //     // this.logger.log(p.membershipNumber);
+            //     console.log(p.membershipNumber);
+
+            //     exist =
+            //         await this._facadeService.getPlayerByMembershipNumber(
+            //             p.membershipNumber.toString()
+            //         );
+
+            //     if (exist.length > 0) {
+            //         this.duplicatePlayers.push(p);
+            //         //continue;
+            //     }
+            // }
+
+            // let phone="481";
+            // if (p.phone && exist.length == 0) {
+            //     // this.logger.log(p.phone);
+            //     console.log(p.phone);
+            //     if (p.phone.toString().indexOf('+92') === 0) {
+            //         phone = p.phone.toString();
+            //     } else if (p.phone.toString().indexOf('0') === 0) {
+            //         phone = p.phone.toString().replace(0, '+92');
+            //     } else if (p.phone.toString().indexOf('3') === 0) {
+            //         phone = '+92' + p.phone.toString();
+            //     }
+            //     console.log(phone);
+
+            //     exist = await this._facadeService.getPlayerByPhone(phone);
+            //     // p.phone.toString().indexOf("+") !== -1
+            //     // ? p.phone.toString()
+            //     // : "+" + p.phone.toString()
+            //     if (exist.length > 0) {
+            //         this.duplicatePlayers.push(p);
+            //         //continue;
+            //     }
+            // }
+
+            // if (p.email && exist.length == 0) {
+            //     exist = await this._facadeService.getPlayerByEmail(
+            //         p.email.toString()
+            //     );
+
+            //     if (exist.length > 0) {
+            //         // this.logger.log("email yes");
+            //         console.log('email Yes');
+
+            //         this.duplicatePlayers.push(p);
+            //         //continue;
+            //     }
+            // }
+
+            // // this.logger.log(exist);
+            // console.log(exist);
+
+            // let UniqueId: string =
+            //     exist && exist.length > 0
+            //         ? exist[0].id
+            //         : UniqueIdGenerator.generate();
+
+            // //if(p.club) {
+
+            // let member: any = {
+            //     clubId: this.loggedInuser.adminClubId,
+            //     playerId: UniqueId,
+            // };
+
+            // clubMember.push(member);
+            // //}
+
+            // let player: any = {
+            //     id: UniqueId,
+            //     adminClubId: null,
+            //     firebaseUid: null,
+            //     fcmToken: null,
+            //     gemId: null,
+            //     firstName: p.firstName,
+            //     lastName: p.lastName,
+            //     gender:  null,
+            //     dob: null,
+            //     picture:null,
+            //     email: p.email ? p.email : null,
+            //     phone: p.phone ? phone : null,
+            //     playerCategory: p.category ? p.category : null,
+            //     handicap: p.handicap ? p.handicap : 0,
+            //     online: false,
+            //     countryCode:  null,
+            //     extraData:  null,
+            //     membershipNumber: p.membershipNumber.toString(),
+            //     userRole: 3,
+            //     membership: null,
+            // };
+
+            // this.savePlayers.push(player);
+            //}
 
             // this.logger.log(this.savePlayers);
             // this.logger.log(this.duplicatePlayers);

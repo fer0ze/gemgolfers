@@ -107,7 +107,7 @@ export class MergeProfilesComponent implements OnInit {
                 width: '350px',
                 data: 'Do you want to calculate handicap again?',
             });
-            dialogRef.afterClosed().subscribe((result) => {
+            dialogRef.afterClosed().subscribe(async (result) => {
                 if (result != undefined && result != '') {
                     let obj: any = {};
                     if (newPlayer && newPlayer[0]) {
@@ -121,7 +121,7 @@ export class MergeProfilesComponent implements OnInit {
                             count: result,
                         };
                     }
-                    this.handicapService
+                    await this.handicapService
                         .calculateHandicap(obj)
                         .then((response) => {
                             console.log(response);
@@ -160,7 +160,7 @@ export class MergeProfilesComponent implements OnInit {
                 width: '350px',
                 data: 'Do you want to calculate handicap again?',
             });
-            dialogRef.afterClosed().subscribe((result) => {
+            dialogRef.afterClosed().subscribe(async(result) => {
                 if (result != undefined && result != '') {
                     let obj: any = {};
                     if (newPlayer && newPlayer[0]) {
@@ -174,27 +174,7 @@ export class MergeProfilesComponent implements OnInit {
                             count: result,
                         };
                     }
-                    this.handicapService
-                        .calculateHandicap(obj)
-                        .then((response) => {
-                            console.log(response);
-                            this.selectionA.clear(true);
-                            this.selectionB.clear(true);
-                            this.snackBar.open(
-                                'Handicap Calculated Successfully.',
-                                'x',
-                                {
-                                    duration: 5000,
-                                }
-                            );
-                        })
-                        .catch((err) => {
-                            console.log('error' + err);
-                            this.snackBar.open('Error!.', 'x', {
-                                duration: 5000,
-                            });
-                        });
-                    this.handicapService
+                    await this.handicapService
                         .calculateHandicapWHS(obj)
                         .then((response) => {
                             console.log(response);

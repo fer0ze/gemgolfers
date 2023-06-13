@@ -746,6 +746,13 @@ export class FacadeService {
       flightMembersToSave
     );
   }
+  updateflightMember(
+    playerId: string,
+  ) {
+    return this.flightsService.updateflightMember(
+      playerId
+    );
+  }
   createNextRoundFlights(flights: Flight[]) {
     return this.flightsService.createNextRoundFlights(flights);
   }

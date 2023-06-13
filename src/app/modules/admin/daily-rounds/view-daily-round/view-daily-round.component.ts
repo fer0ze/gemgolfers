@@ -3234,4 +3234,11 @@ export class ViewDailyRoundComponent implements OnInit {
             }
         });
     }
+
+    removePlayer(tournamentId, flightId, playerId){
+        console.log(tournamentId);
+        console.log(flightId);
+        console.log(playerId);
+                
+    }
 }
