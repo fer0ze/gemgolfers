@@ -98,7 +98,7 @@ export class ViewPlayerComponent implements OnInit {
         'adjustedScore',
         'handicapDifferential',
         'handicapIndex',
-        'tee'
+        'tee',
     ];
     topDiff: any;
     bottomDiff: any;
@@ -234,8 +234,9 @@ export class ViewPlayerComponent implements OnInit {
                 this.playerID
             );
 
-            this.playerWHSHistory =
-                this.playerWHS['HandicapHistoryWhsQL'];
+            this.playerWHSHistory = this.playerWHS['HandicapHistoryWhsQL'];
+            console.log(this.playerWHSHistory);
+
             this.usedForHandicap =
                 this.playerWHSHistory &&
                 this.playerWHSHistory.length > 0 &&
@@ -243,16 +244,16 @@ export class ViewPlayerComponent implements OnInit {
                     ? this.playerWHSHistory[0].used_handicaps
                     : [];
 
-            this.playerHandicapWhsList = this.playerWHSHistory.slice(0, 40);
+            this.playerHandicapWhsList = this.playerWHSHistory;
             this.topDiff20 =
                 this.playerHandicapWhsList.length > 0
                     ? this.playerHandicapWhsList[0].handicapDifferential
                     : null;
             console.log('Lowest Handicap=' + this.topDiff20);
 
-            this.topDiff = this.playerHandicapWhsList.sort(
-                this.ComparatorHandicapDifferentialAsc
-            );
+            // this.topDiff = this.playerHandicapWhsList.sort(
+            //     this.ComparatorHandicapDifferentialAsc
+            // );
 
             this.handicapsAvailable = this.playerHandicapWhsList.length;
 
@@ -295,37 +296,48 @@ export class ViewPlayerComponent implements OnInit {
                     this.handicapsToUse = 0;
                     break;
             }
-            this.topDiff =
-                this.topDiff.length > this.handicapsToUse
-                    ? this.topDiff[this.handicapsToUse].handicapDifferential
-                    : 0;
+            // this.topDiff =
+            //     this.topDiff.length > this.handicapsToUse
+            //         ? this.topDiff[this.handicapsToUse].handicapDifferential
+            //         : 0;
             //console.log("TopDiffer" + this.topDiff);
             //console.log("Available Handicaps" + this.playerHandicapWhsList);
             //console.log("Available Handicaps" + this.handicapsAvailable);
             //console.log("Available Handicaps" + this.handicapsToUse);
-            const slicedWhs = this.playerWHSHistory.slice(0, 40);
+            const slicedWhs = this.playerWHSHistory;
             console.log(slicedWhs);
-            for (let whsItem in slicedWhs) {
-                if (slicedWhs[+whsItem].combined_handicap) {
-                    slicedWhs.splice(
-                        +whsItem + 1,
-                        0,
-                        slicedWhs[whsItem].combined_handicap
-                    );
-                    slicedWhs[+whsItem].combined_handicap = null;
-                    slicedWhs[+whsItem].noBorder = true;
-                    slicedWhs[+whsItem].highlight = true;
-                    slicedWhs[+whsItem + 1].highlight = true;
-                }
+            // for (let whsItem in slicedWhs) {
+            //     if (slicedWhs[+whsItem].combined_handicap) {
+            //         slicedWhs.splice(
+            //             +whsItem + 1,
+            //             0,
+            //             slicedWhs[whsItem].combined_handicap
+            //         );
+            //         slicedWhs[+whsItem].combined_handicap = null;
+            //         slicedWhs[+whsItem].noBorder = true;
+            //         slicedWhs[+whsItem].highlight = true;
+            //         slicedWhs[+whsItem + 1].highlight = true;
+            //     }
 
-                // if(slicedWhs[+whsItem].is_combined)
-                //   slicedWhs.splice(+whsItem, 1);
-            }
+            //     // if(slicedWhs[+whsItem].is_combined)
+            //     //   slicedWhs.splice(+whsItem, 1);
+            // }
+            for (let whsItem of slicedWhs) {
+                if (whsItem.combined_handicap) {
+                  const index = slicedWhs.indexOf(whsItem);
+                  slicedWhs.splice(index + 1, 0, whsItem.combined_handicap);
+                  whsItem.combined_handicap = null;
+                  whsItem.noBorder = true;
+                  whsItem.highlight = true;
+                  slicedWhs[index].highlight = true;
+                  slicedWhs[index + 1].highlight = true;
+                }
+              }
 
             this.personLeads = slicedWhs.filter(function (a) {
                 return !a.is_combined;
             }, 0);
-           // this.personLeads = slicedWhs
+            // this.personLeads = slicedWhs
             this.WHSSource = new MatTableDataSource(this.personLeads);
 
             this.WHSSource.paginator = this.paginatorWHSHistory;
@@ -744,14 +756,12 @@ export class ViewPlayerComponent implements OnInit {
         });
         return used;
     }
-    playingTee(id:string){
-        console.log(id);
+    playingTee(id: string) {
+        // console.log(id);
         let used = this.memberQLs.find((handicap) => {
-            return (
-                handicap.FlightQL.tournamentId==id
-            );
+            return handicap.FlightQL.tournamentId == id;
         });
-        return used?General.getPlayersTeesColour(used.playingTee):'Null';    
+        return used ? General.getPlayersTeesColour(used.playingTee) : 'Null';
     }
     isPanelty(flight) {
         //console.log(this.usedForHandicap);
@@ -776,7 +786,7 @@ export class ViewPlayerComponent implements OnInit {
             'Adj.Score',
             'h/diff',
             'h/index',
-            'tee'
+            'tee',
         ];
         var rows = [];
 
@@ -803,15 +813,11 @@ export class ViewPlayerComponent implements OnInit {
                     handicap.combine_handicap_id == element.Handicap_id
                 );
             });
-            let tee=this.playingTee(element.tournamentId);  
+            let tee = this.playingTee(element.tournamentId);
             let temp = [
                 count,
                 this.currentPlayer[0].membershipNumber,
-                formatDate(
-                    element.playedAt,
-                    'mediumDate',
-                    'en-US'
-                ),
+                formatDate(element.playedAt, 'mediumDate', 'en-US'),
                 element.score,
                 element.adjustedScore,
                 Math.round(element.handicapDifferential * 10) / 10,
@@ -819,13 +825,13 @@ export class ViewPlayerComponent implements OnInit {
                 tee,
                 element.highlight,
                 used,
-                element.panelty
+                element.panelty,
             ];
             rows.push(temp);
         });
         // From HTML
         console.log(rows);
-        
+
         let a = 1;
         doc.autoTable(col, rows, {
             startY: 25,
