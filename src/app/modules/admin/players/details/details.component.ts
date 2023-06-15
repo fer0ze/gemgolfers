@@ -139,7 +139,7 @@ export class ContactsDetailsComponent implements OnInit {
             dateOfBirth: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),
-            handicapWhsIndex: new FormControl('0', [Validators.required]),
+            handicapWhsIndex: new FormControl('0'),
             handicapWHS: new FormControl('0', [Validators.required]),
             club: new FormControl(
                 this.loggedInuser.userRole > 1 ? this.clubTitle : '',

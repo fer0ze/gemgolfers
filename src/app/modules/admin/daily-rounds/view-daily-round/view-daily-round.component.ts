@@ -748,6 +748,7 @@ export class ViewDailyRoundComponent implements OnInit {
             if (count >= this.pageSize) break;
         }
         this.isLoading = false;
+        console.log('DETAILS' + this.flightPlayers);
         // for (let flight of tournamentData) {
         //   if (flight.FlightsQL.length > 0 && flight.FlightsQL[0].date == date) {
         //     this.setupMatchplayData(
@@ -1098,7 +1099,7 @@ export class ViewDailyRoundComponent implements OnInit {
         // console.log(flightsQLs);
         this.index = 0;
         for (let flightData of flightsQLs) {
-            console.log(flightData);
+            //console.log(flightData);
             //console.log("Flight ID: " + flightData.id);
             let membersQLs: any = flightData.MembersQL;
             let singleFlight: any[] = [];
@@ -1108,7 +1109,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 flightData.courseHoleSetsInverted,
                 courseInfo
             );
-            console.log(flightHeader);
+            //  console.log(flightHeader);
             // console.log(flightData);
 
             let courseHoleSetTitle;
@@ -1265,11 +1266,11 @@ export class ViewDailyRoundComponent implements OnInit {
                 singleFlight.push(LeaderGross);
             }
             this.index++;
-            console.log(this.index);
+            //console.log(this.index);
 
             //console.log(flightData.courseId + " -" + flightData.courseHoleSets);
 
-            console.log(flightData.id);
+            //console.log(flightData.id);
 
             this.flightPlayers.push(singleFlight);
             //console.log("members addeed");
@@ -1296,13 +1297,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
             //console.log("flight setup");
 
-            console.log(this.flightPlayers[this.findex]);
+            //console.log(this.flightPlayers[this.findex]);
 
             this.findex++;
         }
 
         this.flightPlayers = this.flightPlayers.sort(this.flightComparator);
-        console.log('DETAILS' + this.flightPlayers);
+        //  console.log('DETAILS' + this.flightPlayers);
         this.dataSource = new MatTableDataSource(this.flightPlayers);
         // this.dataSource.paginator.l = this.paginator;
         // this.dataSource.sort = this.sort;
@@ -2977,7 +2978,7 @@ export class ViewDailyRoundComponent implements OnInit {
         if (event.checked) {
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',
-                data: 'Do you want to make this player panelty?',
+                data: 'Do you want to penalize this player?',
             });
             dialogRef.afterClosed().subscribe(async (result) => {
                 if (result) {
@@ -3002,6 +3003,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         });
                     }
                 } else {
+                    event.source.checked = false;
                 }
             });
         } else {
@@ -3235,10 +3237,75 @@ export class ViewDailyRoundComponent implements OnInit {
         });
     }
 
-    removePlayer(tournamentId, flightId, playerId){
+    async removePlayer(tournamentId, flightId, playerId) {
         console.log(tournamentId);
         console.log(flightId);
         console.log(playerId);
-                
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to delete this player?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                let response = await this.facadeService.DeleteFlightMembers(
+                    flightId,
+                    playerId
+                );
+                if (response) {
+                    let playersId = [];
+                    playersId.push(playerId);
+                    const check = await this.facadeService.deletePlayerHandiCal(
+                        tournamentId,
+                        playersId
+                    );
+                    if (check) {
+                        let flightIndex = this.flightPlayers.findIndex(
+                            (a) => a.flightId == flightId
+                        );
+                        let playerIndex = this.flightPlayers[
+                            flightIndex
+                        ].findIndex((a) => a.playerId == playerId);
+                        this.flightPlayers[flightIndex].splice(playerIndex, 1);
+                        this.snackBar.open('Player has been deleted.', 'x', {
+                            duration: 2000,
+                        });
+                        if (this.flightPlayers[flightIndex].ended) {
+                            let newObj = {
+                                playerId: playerId,
+                                count: 4,
+                            };
+                            await this.handicapService
+                                .calculateHandicap(newObj)
+                                .then((response) => {
+                                    console.log(response);
+                                    this.snackBar.open('Congu-Handicap Recalculated.', 'x', {
+                                        duration: 1000,
+                                    });
+                                })
+                                .catch((err) => {
+                                    console.log('error' + err);
+                                    this.snackBar.open('Congu-Handicap Error!.', 'x', {
+                                        duration: 1000,
+                                    });
+                                });
+                            await this.handicapService
+                                .calculateHandicapWHS(newObj)
+                                .then((response) => {
+                                    console.log(response);
+                                    this.snackBar.open('WHS-Handicap Recalculated.', 'x', {
+                                        duration: 1000,
+                                    });
+                                })
+                                .catch((err) => {
+                                    console.log('error' + err);
+                                    this.snackBar.open('WHS-Handicap Error!.', 'x', {
+                                        duration: 1000,
+                                    });
+                                });
+                        }
+                    }
+                }
+            }
+        });
     }
 }

@@ -697,6 +697,19 @@ export const UpdateMutation = gql`
         }
     }
 `;
+export const UpdateHandicapMutation = gql`
+    mutation updateMutation(
+        $where: player_bool_exp!
+        $set: player_set_input!
+    ) {
+        update_player(where: $where, _set: $set) {
+            affected_rows
+            returning {
+                id
+            }
+        }
+    }
+`;
 
 // export const DeletePlayer = gql`
 // mutation DeletePlayer($where: player_bool_exp!) {
@@ -759,6 +772,7 @@ export const PlayerFlightScoresQuery = gql`
             FlightQL: flight {
                 date
                 tournamentId
+                tee
                 ScoresQL: scores(where: { playerId: { _eq: $playerId } }) {
                     playerId
                     playerHandicap

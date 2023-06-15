@@ -452,40 +452,49 @@
                         </span>
                     </td>
                     <td *ngIf="!flight.ended || item.undoHandicap">
-                        <mat-icon
-                            matSuffix
-                            color="primary"
-                            title="{{ item.name }}"
-                            class="pt-1 ml-2"
-                            (click)="
-                                savePlayerScore(flight.flightId, item.playerId)
-                            "
-                            >save</mat-icon
-                        >
-                        <mat-slide-toggle
-                            class="ml-4"
-                            [color]="'accent'"
-                            [checked]="item.panelty"
-                            [disabled]="item.panelty"
-                            (change)="
-                                paneltToggle(
-                                    flight.tournamentId,
-                                    flight.flightId,
-                                    item.playerId,
-                                    $event
-                                )
-                            "
-                        >
-                        </mat-slide-toggle>
-                        <!-- <mat-icon
-                            aria-hidden="false"
-                            aria-label="Dragable"
-                            class="remove ml-2 primary-foreground"
-                            (click)="removePlayer(flight.tournamentId,
-                                    flight.flightId,
-                                    item.playerId)"
-                            >delete_forever</mat-icon
-                        > -->
+                        <div class="flex flex-row justify-center align-center">
+                            <mat-icon
+                                matSuffix
+                                color="primary"
+                                title="{{ item.name }}"
+                                class="ml-2"
+                                (click)="
+                                    savePlayerScore(
+                                        flight.flightId,
+                                        item.playerId
+                                    )
+                                "
+                                >save</mat-icon
+                            >
+                            <mat-slide-toggle
+                                class="ml-4"
+                                [color]="'accent'"
+                                [checked]="item.panelty"
+                                [disabled]="item.panelty"
+                                (change)="
+                                    paneltToggle(
+                                        flight.tournamentId,
+                                        flight.flightId,
+                                        item.playerId,
+                                        $event
+                                    )
+                                "
+                            >
+                            </mat-slide-toggle>
+                            <mat-icon
+                                aria-hidden="false"
+                                aria-label="Dragable"
+                                class="remove ml-2 primary-foreground"
+                                (click)="
+                                    removePlayer(
+                                        flight.tournamentId,
+                                        flight.flightId,
+                                        item.playerId
+                                    )
+                                "
+                                >delete_forever</mat-icon
+                            >
+                        </div>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">
                         <span
@@ -503,19 +512,20 @@
                                 aria-hidden="true"
                                 >settings_backup_restore</mat-icon
                             >
-                            </span
+                        </span>
+                        <mat-icon
+                            aria-hidden="false"
+                            aria-label="Dragable"
+                            class="remove ml-2 pt-2 primary-foreground"
+                            (click)="
+                                removePlayer(
+                                    flight.tournamentId,
+                                    flight.flightId,
+                                    item.playerId
+                                )
+                            "
+                            >delete_forever</mat-icon
                         >
-                        <!-- <mat-icon
-                        aria-hidden="false"
-                        aria-label="Dragable"
-                        class="remove ml-2 pt-2 primary-foreground"
-                        (click)="removePlayer(flight.tournamentId,
-                                flight.flightId,
-                                item.playerId)"
-                        >delete_forever</mat-icon
-                    > -->
-
-
                     </td>
                 </tr>
                 <!-- <tr>
@@ -662,39 +672,48 @@
                         </span>
                     </td>
                     <td *ngIf="!flight.ended || item.undoHandicap">
-                        <mat-icon
-                            matSuffix
-                            color="primary"
-                            title="{{ item.name }}"
-                            class="pt-1 ml-2"
-                            (click)="
-                                savePlayerScore(flight.flightId, item.playerId)
-                            "
-                            >save</mat-icon
-                        >
-                        <mat-slide-toggle
-                            (change)="
-                                paneltToggle(
-                                    flight.tournamentId,
-                                    flight.flightId,
-                                    item.playerId,
-                                    $event
-                                )
-                            "
-                            [color]="'accent'"
-                            [checked]="item.panelty"
-                            [disabled]="item.panelty"
-                        >
-                        </mat-slide-toggle>
-                        <!-- <mat-icon
-                            aria-hidden="false"
-                            aria-label="Dragable"
-                            class="remove ml-2 primary-foreground"
-                            (click)="removePlayer(flight.tournamentId,
-                                    flight.flightId,
-                                    item.playerId)"
-                            >delete_forever</mat-icon
-                        > -->
+                        <div class="flex flex-row justify-center align-center">
+                            <mat-icon
+                                matSuffix
+                                color="primary"
+                                title="{{ item.name }}"
+                                class="mr-2"
+                                (click)="
+                                    savePlayerScore(
+                                        flight.flightId,
+                                        item.playerId
+                                    )
+                                "
+                                >save</mat-icon
+                            >
+                            <mat-slide-toggle
+                                (change)="
+                                    paneltToggle(
+                                        flight.tournamentId,
+                                        flight.flightId,
+                                        item.playerId,
+                                        $event
+                                    )
+                                "
+                                [color]="'accent'"
+                                [checked]="item.panelty"
+                                [disabled]="item.panelty"
+                            >
+                            </mat-slide-toggle>
+                            <mat-icon
+                                aria-hidden="false"
+                                aria-label="Dragable"
+                                class="remove ml-2 primary-foreground"
+                                (click)="
+                                    removePlayer(
+                                        flight.tournamentId,
+                                        flight.flightId,
+                                        item.playerId
+                                    )
+                                "
+                                >delete_forever</mat-icon
+                            >
+                        </div>
                     </td>
                     <td *ngIf="flight.ended && !item.undoHandicap">
                         <span
@@ -713,15 +732,19 @@
                                 >settings_backup_restore</mat-icon
                             ></span
                         >
-                        <!-- <mat-icon
+                        <mat-icon
                             aria-hidden="false"
                             aria-label="Dragable"
                             class="remove ml-2 pt-2 primary-foreground"
-                            (click)="removePlayer(flight.tournamentId,
+                            (click)="
+                                removePlayer(
+                                    flight.tournamentId,
                                     flight.flightId,
-                                    item.playerId)"
+                                    item.playerId
+                                )
+                            "
                             >delete_forever</mat-icon
-                        > -->
+                        >
                     </td>
                 </tr>
             </tbody>

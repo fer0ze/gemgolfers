@@ -29,6 +29,8 @@ import { Console } from 'console';
 import { runInThisContext } from 'vm';
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
 import { ApexOptions } from 'ng-apexcharts';
+import { HandicapService } from 'app/shared/services/handicap.service';
+import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
 
 @Component({
     selector: 'app-view-player',
@@ -134,7 +136,8 @@ export class ViewPlayerComponent implements OnInit {
         private location: Location,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
-        public facadeService: FacadeService
+        public facadeService: FacadeService,
+        private handicapService: HandicapService
     ) {}
 
     // bar chart
@@ -324,15 +327,15 @@ export class ViewPlayerComponent implements OnInit {
             // }
             for (let whsItem of slicedWhs) {
                 if (whsItem.combined_handicap) {
-                  const index = slicedWhs.indexOf(whsItem);
-                  slicedWhs.splice(index + 1, 0, whsItem.combined_handicap);
-                  whsItem.combined_handicap = null;
-                  whsItem.noBorder = true;
-                  whsItem.highlight = true;
-                  slicedWhs[index].highlight = true;
-                  slicedWhs[index + 1].highlight = true;
+                    const index = slicedWhs.indexOf(whsItem);
+                    slicedWhs.splice(index + 1, 0, whsItem.combined_handicap);
+                    whsItem.combined_handicap = null;
+                    whsItem.noBorder = true;
+                    whsItem.highlight = true;
+                    slicedWhs[index].highlight = true;
+                    slicedWhs[index + 1].highlight = true;
                 }
-              }
+            }
 
             this.personLeads = slicedWhs.filter(function (a) {
                 return !a.is_combined;
@@ -761,7 +764,11 @@ export class ViewPlayerComponent implements OnInit {
         let used = this.memberQLs.find((handicap) => {
             return handicap.FlightQL.tournamentId == id;
         });
-        return used ? General.getPlayersTeesColour(used.playingTee) : 'Null';
+        return used
+            ? General.getPlayersTeesColour(used.playingTee)
+            : used
+            ? used.FlightQL.tee
+            : 'White';
     }
     isPanelty(flight) {
         //console.log(this.usedForHandicap);
@@ -775,6 +782,61 @@ export class ViewPlayerComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    async changeWHSHandicap() {
+        const dialogRef = this.dialog.open(DialogMergeComponent, {
+            width: '350px',
+            data: 'Do you want to penalize this player?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result != undefined && result != '') {
+                let obj = {
+                    playerId: this.playerID,
+                    count: 40,
+                    diffChange: result,
+                };
+                this.handicapService
+                    .adjustHandicapWHS(obj)
+                    .then((response) => {
+                        console.log(response);
+                        this.snackBar.open('Handicap Adjusted Sucessfully.', 'x', {
+                            duration: 2000,
+                        });
+                        window.location.reload();
+                    })
+                    .catch((err) => {
+                        console.log('error' + err);
+                        this.snackBar.open('Error!.', 'x', {
+                            duration: 5000,
+                        });
+                    });
+            }
+        });
+    }
+
+    async changeCONGUHandicap() {
+        const dialogRef = this.dialog.open(DialogMergeComponent, {
+            width: '350px',
+            data: 'Do you want to penalize this player?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result != undefined && result != '') {
+                let newHandicap = parseFloat(
+                    (result + this.currentPlayer[0].handicap).toFixed(2)
+                );
+                let response = await this.facadeService.updateConguHandicap(
+                    this.playerID,
+                    newHandicap
+                );
+                if(response){
+                    this.snackBar.open('Handicap Adjusted Sucessfully.', 'x', {
+                        duration: 2000,
+                    });
+                    window.location.reload();
+                }
+            }
+        });
     }
     public downloadAsPDFWHS() {
         let doc = new jsPDF();

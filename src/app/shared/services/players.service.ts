@@ -936,6 +936,34 @@ export class PlayersService {
                 );
         });
     }
+    updateConguHandicap(id,newHandicap): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.UpdateHandicapMutation,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: id,
+                            },
+                        },
+                        set: {
+                            handicap: newHandicap,
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could update add due to ' + error);
+                    }
+                );
+        });
+    }
 
     deletePlayer(clubId: string, playerId: string): Promise<boolean> {
         return new Promise((resolve) => {
