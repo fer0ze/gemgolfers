@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { formatDate, Location } from '@angular/common';
+import { DatePipe, formatDate, Location } from '@angular/common';
 import {
     IPlayerHandicapWhs,
     Player,
     PlayerWHSHanidcap,
+    handicap_change_log,
 } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { Score } from 'app/shared/classes/score';
-import { General } from 'app/shared/classes/general';
+import { General, UniqueIdGenerator } from 'app/shared/classes/general';
 import {
     handicapAllocation,
     Constants,
@@ -137,7 +138,8 @@ export class ViewPlayerComponent implements OnInit {
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public facadeService: FacadeService,
-        private handicapService: HandicapService
+        private handicapService: HandicapService,
+        private datepipe: DatePipe,
     ) {}
 
     // bar chart
@@ -796,13 +798,18 @@ export class ViewPlayerComponent implements OnInit {
                     count: 40,
                     diffChange: result,
                 };
-                this.handicapService
+                await this.handicapService
                     .adjustHandicapWHS(obj)
                     .then((response) => {
                         console.log(response);
-                        this.snackBar.open('Handicap Adjusted Sucessfully.', 'x', {
-                            duration: 2000,
-                        });
+                        
+                        this.snackBar.open(
+                            'Handicap Adjusted Sucessfully.',
+                            'x',
+                            {
+                                duration: 2000,
+                            }
+                        );
                         window.location.reload();
                     })
                     .catch((err) => {
@@ -820,24 +827,66 @@ export class ViewPlayerComponent implements OnInit {
             width: '350px',
             data: 'Do you want to penalize this player?',
         });
+
         dialogRef.afterClosed().subscribe(async (result) => {
-            if (result != undefined && result != '') {
+            this.playerHandiData = this.playerHandiData.slice(0, 20);
+            console.log(this.playerHandiData);
+            let tournamentId = this.playerHandiData[0].tournamentId;
+
+            if (result) {
                 let newHandicap = parseFloat(
                     (result + this.currentPlayer[0].handicap).toFixed(2)
                 );
-                let response = await this.facadeService.updateConguHandicap(
-                    this.playerID,
-                    newHandicap
-                );
-                if(response){
-                    this.snackBar.open('Handicap Adjusted Sucessfully.', 'x', {
-                        duration: 2000,
-                    });
-                    window.location.reload();
+
+                try {
+                    let response = await this.facadeService.updateConguHandicap(
+                        this.playerID,
+                        newHandicap,
+                        tournamentId
+                    );
+                    let Hdate = new Date();
+
+                    let latest_date: any = this.datepipe.transform(
+                        Hdate,
+                        'yyyy-MM-ddThh:mm:ss.SSSSSS+00:00'
+                    );
+                    const handicap_change_log: handicap_change_log = {
+                        id: UniqueIdGenerator.generate(),
+                        playerId: this.playerID,
+                        newHandicap: newHandicap,
+                        oldHandicap: this.currentPlayer[0].handicap,
+                        whs: false,
+                        dateTime: latest_date,
+                        remarks: "Panelty By Admin",
+                        tournamentId: null,
+                        updaterId: this.loggedInuser.id,
+                    };
+
+                    console.log(handicap_change_log);
+                    //this.handicapLog = handicap_change_log;
+
+                    const remarksAdded = <boolean>(
+                        await this.facadeService.AddHandicapRemarks(
+                            handicap_change_log
+                        )
+                    );
+                    if (response && remarksAdded) {
+                        this.snackBar.open(
+                            'Handicap Adjusted Successfully.',
+                            'x',
+                            {
+                                duration: 1000,
+                            }
+                        );
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    // Handle error
                 }
             }
         });
     }
+
     public downloadAsPDFWHS() {
         let doc = new jsPDF();
         let col = [

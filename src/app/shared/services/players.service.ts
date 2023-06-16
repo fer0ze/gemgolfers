@@ -936,20 +936,15 @@ export class PlayersService {
                 );
         });
     }
-    updateConguHandicap(id,newHandicap): Promise<boolean> {
+    updateConguHandicap(id,newHandicap,tournamentId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.UpdateHandicapMutation,
                     variables: {
-                        where: {
-                            id: {
-                                _eq: id,
-                            },
-                        },
-                        set: {
-                            handicap: newHandicap,
-                        },
+                        id:id,
+                        handicap:newHandicap,
+                        tournamentId:tournamentId
                     },
                 })
                 .subscribe(
@@ -964,7 +959,6 @@ export class PlayersService {
                 );
         });
     }
-
     deletePlayer(clubId: string, playerId: string): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo

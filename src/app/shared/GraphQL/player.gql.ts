@@ -455,8 +455,8 @@ export const getPlayerByIDDetailForm = gql`
                 clubId
                 suspended
                 club {
-                  id
-                  name
+                    id
+                    name
                 }
             }
         }
@@ -699,14 +699,28 @@ export const UpdateMutation = gql`
 `;
 export const UpdateHandicapMutation = gql`
     mutation updateMutation(
-        $where: player_bool_exp!
-        $set: player_set_input!
+        $id: String!
+        $handicap: numeric!
+        $tournamentId: String!
     ) {
-        update_player(where: $where, _set: $set) {
-            affected_rows
-            returning {
-                id
+        PlayerUpdateQL: update_player(
+            where: { id: { _eq: $id } }
+            _set: { handicap: $handicap }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+        handicapUpdateQL: update_player_handicap(
+            where: {
+                _and: [
+                    {
+                        playerId: { _eq: $id }
+                        tournamentId: { _eq: $tournamentId }
+                    }
+                ]
             }
+            _set: { adjustedPanelty: true }
+        ) {
+            AffectedRowsQL: affected_rows
         }
     }
 `;
@@ -750,7 +764,9 @@ export const PlayerFlightScoresQuery = gql`
             order_by: [{ tournament: { startDate: desc } }]
             limit: 20
         ) {
+            tournamentId
             playerId
+            adjustedPanelty
             handicap
             oldHandicap
             score
@@ -876,6 +892,8 @@ export const PlayerHandicapQuery = gql`
             tee
             panelty
             tournamentId
+            adjustmentScore
+            adjustedPanelty
             combined_handicap {
                 playedAt
                 handicapDifferential
@@ -886,6 +904,8 @@ export const PlayerHandicapQuery = gql`
                 tournamentId
                 adjustedScore
                 combined_handicap_id
+                adjustmentScore
+                adjustedPanelty
                 tournamentQL: tournament {
                     title
                 }
@@ -897,9 +917,7 @@ export const PlayerHandicapQuery = gql`
             }
             tournamentQL: tournament {
                 title
-                
             }
-          
         }
     }
 `;

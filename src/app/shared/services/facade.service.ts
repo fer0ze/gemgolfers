@@ -300,8 +300,8 @@ export class FacadeService {
   updatePlayer(club: Player) {
     return this.playerService.updatePlayer(club);
   }
-  updateConguHandicap(id:string,newHandicap:any) {
-    return this.playerService.updateConguHandicap(id,newHandicap);
+  updateConguHandicap(id:string,newHandicap:any,tournamentId:any) {
+    return this.playerService.updateConguHandicap(id,newHandicap,tournamentId);
   }
   getTotalFlightPlayed(club: any, fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayed(club, fromDate, toDate);
