@@ -80,7 +80,7 @@ export class HandicapsComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-
+    playerWHSRound: any;
     dataPlayers: any;
     index: any = 0;
     aggregate = 0;
@@ -118,21 +118,22 @@ export class HandicapsComponent implements OnInit {
         console.log(this.filterCategory);
 
         this.MembersCat = this.filterCategory;
-        console.log(this.MembersCat);
-        if (this.loggedInuser.adminClubId) {
-            if (this.loggedInuser.userRole == 1) {
-                // this.getAllMemberAggregateByCategroy(
-                //     this.loggedInuser.adminClubId
-                // );
-                // this.getSuperAdminStats();
-            }
-            // this.getClubMemberAggregateByCategroy(
-            //     this.loggedInuser.adminClubId
-            // );
+        if (this.loggedInuser) {
+            let club: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
 
-            //dataTournaments = await this.facadeService.getClubActiveTournamentsList(todayDate.toDateString(), this.loggedInuser.adminClubId);
+            let courseID =
+                club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
+            let courseRating: any = {
+                courseId: courseID,
+                courseHoleSets: 3,
+            };
+            this.playerWHSRound = await this._facadeService.getPlayerWHSRound(
+                courseRating
+            );
         }
-
         if (this.loggedInuser.userRole > 1) {
             if (this.filterCategory)
                 this.dataPlayers =
@@ -298,7 +299,17 @@ export class HandicapsComponent implements OnInit {
     };
     public downloadAsPDFWHS() {
         var doc = new jsPDF();
-        var col = ['Sr.', 'M.No', 'Name', 'Category', 'HandicapIndex'];
+        var col = [
+            'Sr.',
+            'M.No',
+            'Name',
+            'Category',
+            'HandicapIndex',
+            'Yellow Tee',
+            'Blue Tee',
+            'Red Tee',
+            'White Tee',
+        ];
         var rows = [];
         doc.setFontSize(30);
         doc.text('WHS Handicap List', 15, 15);
@@ -313,6 +324,7 @@ export class HandicapsComponent implements OnInit {
         doc.setTextColor(100);
 
         let count = 0;
+        
         this.dataPlayers.player.forEach((element) => {
             if (
                 element.membershipNumber != null &&
@@ -320,6 +332,11 @@ export class HandicapsComponent implements OnInit {
                 (element.handicapWhsIndex != null || element.handicap > 0)
             ) {
                 count++;
+                let handicapIndex =
+                    element.handicapWhsIndex != null
+                        ? element.handicapWhsIndex
+                        : element.handicap;
+                let ratings=this.getTeesRating(handicapIndex);
                 var temp = [
                     count,
                     element.membershipNumber,
@@ -328,6 +345,10 @@ export class HandicapsComponent implements OnInit {
                     element.handicapWhsIndex != null
                         ? element.handicapWhsIndex
                         : element.handicap,
+                    ratings['WHITE'],
+                    ratings['BLACK'],
+                    ratings['RED'],
+                    ratings['BLUE']
                 ];
                 rows.push(temp);
             }
@@ -572,59 +593,46 @@ export class HandicapsComponent implements OnInit {
 
         this.location.navigate(['/players/view/' + id]);
     };
-
-    showUserDetails(userDetails) {
-        console.log(userDetails);
-
-        // if (userDetails) {
-        //     const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
-        //         width: '600px',
-        //         data: { userDetails },
-        //     });
-        //     console.log(userDetails);
-
-        //     dialogRef.afterClosed().subscribe((result) => {
-        //         if (result) {
-        //             //console.log("record deleted.");
-        //             //this.delete(id);
-        //             //this.ngOnInit();
-        //         } else {
-        //             //console.log("cancel delete action");
-        //         }
-        //     });
-        // }
-
-        // this.facadeService.getPlayerByID(userDetails).then((response) => {
-        //   console.log(response);
-        // });
-    }
-
-    PlayerWHSDetails(userWHSDetailsDialogue) {
-        console.log(userWHSDetailsDialogue);
-
-        // if (userWHSDetailsDialogue) {
-        //     const dialogRef = this.dialog.open(
-        //         UserWHSDeatilsDialogueComponent,
-        //         {
-        //             width: '600px',
-        //             data: { userWHSDetailsDialogue },
-        //         }
-        //     );
-        //     console.log(userWHSDetailsDialogue);
-
-        //     dialogRef.afterClosed().subscribe((result) => {
-        //         if (result) {
-        //             //console.log("record deleted.");
-        //             //this.delete(id);
-        //             //this.ngOnInit();
-        //         } else {
-        //             //console.log("cancel delete action");
-        //         }
-        //     });
-        // }
-
-        // this.facadeService.getPlayerByID(userDetails).then((response) => {
-        //   console.log(response);
-        // });
-    }
+    getTeesRating(handicapIndex) {
+        let rating = this.playerWHSRound['course_rating'];
+        let teeRatings = {}; // Object to store handicap index for each tee
+      
+        for (let item of rating) {
+          let slopeRating = item['slopeRating'];
+          let courseRating = item['courseRating'];
+          let coursePar = item['coursePar'];
+          if (item['tee'] == 'WHITE') {
+            let whiteTeeHI =
+              (handicapIndex * (slopeRating / 113.0) +
+                (courseRating - coursePar)) *
+              0.95;
+            whiteTeeHI = Math.round(whiteTeeHI);
+            teeRatings['WHITE'] = whiteTeeHI; // Store white tee handicap index
+          } else if (item['tee'] == 'BLACK') {
+            let blackTeeHI =
+              (handicapIndex * (slopeRating / 113.0) +
+                (courseRating - coursePar)) *
+              0.95;
+            blackTeeHI = Math.round(blackTeeHI);
+            teeRatings['BLACK'] = blackTeeHI; // Store black tee handicap index
+          } else if (item['tee'] == 'BLUE') {
+            let blueTeeHI =
+              (handicapIndex * (slopeRating / 113.0) +
+                (courseRating - coursePar)) *
+              0.95;
+            blueTeeHI = Math.round(blueTeeHI);
+            teeRatings['BLUE'] = blueTeeHI; // Store blue tee handicap index
+          } else if (item['tee'] == 'RED') {
+            let redTeeHI =
+              (handicapIndex * (slopeRating / 113.0) +
+                (courseRating - coursePar)) *
+              0.95;
+            redTeeHI = Math.round(redTeeHI);
+            teeRatings['RED'] = redTeeHI; // Store red tee handicap index
+          }
+        }
+      
+        return teeRatings; // Return object containing handicap index for each tee
+      }
+      
 }
