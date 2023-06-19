@@ -459,6 +459,9 @@ export const getPlayerByIDDetailForm = gql`
                     name
                 }
             }
+            handicap_history(order_by: { playedAt: desc }, limit: 1) {
+                tournamentId
+            }
         }
     }
 `;

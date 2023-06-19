@@ -79,7 +79,7 @@ export class MergeProfilesComponent implements OnInit {
                                       )
                                     : '-',
                         };
-                        rows.push(newobj)
+                        rows.push(newobj);
                     }
                     this.DataSourceA = new MatTableDataSource(rows);
                     this.DataSourceB = new MatTableDataSource(rows);
@@ -105,7 +105,10 @@ export class MergeProfilesComponent implements OnInit {
         } else {
             const dialogRef = this.dialog.open(DialogMergeComponent, {
                 width: '350px',
-                data: 'Do you want to calculate handicap again?',
+                data: {
+                    text: 'Do you want to calculate handicap again?',
+                    isPanelty: false,
+                },
             });
             dialogRef.afterClosed().subscribe(async (result) => {
                 if (result != undefined && result != '') {
@@ -158,9 +161,12 @@ export class MergeProfilesComponent implements OnInit {
         } else {
             const dialogRef = this.dialog.open(DialogMergeComponent, {
                 width: '350px',
-                data: 'Do you want to calculate handicap again?',
+                data: {
+                    text: 'Do you want to calculate handicap again?',
+                    isPanelty: false,
+                },
             });
-            dialogRef.afterClosed().subscribe(async(result) => {
+            dialogRef.afterClosed().subscribe(async (result) => {
                 if (result != undefined && result != '') {
                     let obj: any = {};
                     if (newPlayer && newPlayer[0]) {
@@ -205,7 +211,10 @@ export class MergeProfilesComponent implements OnInit {
 
         const dialogRef = this.dialog.open(DialogMergeComponent, {
             width: '350px',
-            data: 'Do you want to calculate handicap again?',
+            data: {
+                text: 'Do you want to calculate handicap again?',
+                isPanelty: false,
+            },
         });
         dialogRef.afterClosed().subscribe(async (result) => {
             console.log(result);

@@ -139,7 +139,7 @@ export class ViewPlayerComponent implements OnInit {
         public dialog: MatDialog,
         public facadeService: FacadeService,
         private handicapService: HandicapService,
-        private datepipe: DatePipe,
+        private datepipe: DatePipe
     ) {}
 
     // bar chart
@@ -789,7 +789,10 @@ export class ViewPlayerComponent implements OnInit {
     async changeWHSHandicap() {
         const dialogRef = this.dialog.open(DialogMergeComponent, {
             width: '350px',
-            data: 'Do you want to penalize this player?',
+            data: {
+                text: 'Do you want to penalize this player?',
+                isPanelty: true,
+            },
         });
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result != undefined && result != '') {
@@ -802,7 +805,7 @@ export class ViewPlayerComponent implements OnInit {
                     .adjustHandicapWHS(obj)
                     .then((response) => {
                         console.log(response);
-                        
+
                         this.snackBar.open(
                             'Handicap Adjusted Sucessfully.',
                             'x',
@@ -825,7 +828,10 @@ export class ViewPlayerComponent implements OnInit {
     async changeCONGUHandicap() {
         const dialogRef = this.dialog.open(DialogMergeComponent, {
             width: '350px',
-            data: 'Do you want to penalize this player?',
+            data: {
+                text: 'Do you want to penalize this player?',
+                isPanelty: true,
+            },
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
@@ -857,7 +863,7 @@ export class ViewPlayerComponent implements OnInit {
                         oldHandicap: this.currentPlayer[0].handicap,
                         whs: false,
                         dateTime: latest_date,
-                        remarks: "Panelty By Admin",
+                        remarks: 'Panelty By Admin',
                         tournamentId: null,
                         updaterId: this.loggedInuser.id,
                     };

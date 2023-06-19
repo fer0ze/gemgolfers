@@ -9,17 +9,20 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class DialogMergeComponent implements OnInit {
     show: boolean = false;
+    showPanelty: boolean = false;
     form: FormGroup;
+
     ngOnInit() {
         this.form = new FormGroup({
             count: new FormControl('', [Validators.required]),
         });
         this.form.get('count').clearValidators();
         this.form.get('count').updateValueAndValidity();
+        this.showPanelty=this.data.isPanelty;
     }
     constructor(
         public dialogRef: MatDialogRef<DialogMergeComponent>,
-        @Inject(MAT_DIALOG_DATA) public message: any
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {}
 
     onNoClick(): void {

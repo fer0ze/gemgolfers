@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between">
     <div class="flex-auto leading-6 cursor-pointer">
-        {{ message }}
+        {{ data.text }}
     </div>
     <mat-slide-toggle
         class="ml-2"
@@ -11,12 +11,21 @@
     </mat-slide-toggle>
 </div>
 <div *ngIf="show" class="flex">
-    <div class="flex-auto text-1xl leading-6 mt-4 cursor-pointer">
+    <div *ngIf="showPanelty" class="flex-auto text-1xl leading-6 mt-4 cursor-pointer">
        Handicap Adjustment
     </div>
-    <div [formGroup]="form">
+    <div *ngIf="!showPanelty" class="flex-auto text-1xl leading-6 mt-4 cursor-pointer">
+      No of Handicaps
+    </div>
+    <div *ngIf="showPanelty" [formGroup]="form">
         <mat-form-field>
             <input type="number"  step="0.1" matInput formControlName="count" />
+            <mat-error>The input is required.</mat-error>
+        </mat-form-field>
+    </div>
+    <div *ngIf="!showPanelty" [formGroup]="form">
+        <mat-form-field>
+            <input type="number" matInput formControlName="count" />
             <mat-error>The input is required.</mat-error>
         </mat-form-field>
     </div>

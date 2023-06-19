@@ -84,6 +84,7 @@ export class ContactsDetailsComponent implements OnInit {
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     currentPlayer: any = [];
+    tournamentId:any;
     public handicapsWhs: any[] = [];
     loggedInuser: any;
     handicapIndex: number = 0;
@@ -412,6 +413,8 @@ export class ContactsDetailsComponent implements OnInit {
             );
 
             if (this.currentPlayer.player[0].handicap !== contact.handicap) {
+                console.log(this.tournamentId);
+                
                 const handicap_change_log: handicap_change_log = {
                     id: UniqueIdGenerator.generate(),
                     playerId: this.currentPlayer.player[0].id
@@ -435,6 +438,11 @@ export class ContactsDetailsComponent implements OnInit {
                     await this._facadeService.AddHandicapRemarks(
                         handicap_change_log
                     )
+                );
+                let response = await this._facadeService.updateConguHandicap(
+                    this.playerID,
+                    contact.handicap ? contact.handicap : 0,
+                    this.tournamentId
                 );
                 console.log(remarksAdded);
             } else if (
@@ -624,6 +632,7 @@ export class ContactsDetailsComponent implements OnInit {
         if (this.playerID) {
             this.currentPlayer = 
                 await this._facadeService.getPlayerByIDDetailForm(this.playerID)
+            this.tournamentId= this.currentPlayer.player[0].handicap_history[0].tournamentId;
         
             // let whsHandicaps = await this._facadeService.getPlayerWHS(
             //     this.playerID
@@ -673,7 +682,7 @@ export class ContactsDetailsComponent implements OnInit {
             count: 40,
             diffChange: newHandicapDifferentils,
         };
-        this.handicapService
+        await this.handicapService
             .adjustHandicapWHS(obj)
             .then((response) => {
                 console.log(response);
