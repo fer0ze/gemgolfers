@@ -1168,6 +1168,7 @@ export class PlayersService {
             { id: 9, name: 'Ladies' },
             { id: 10, name: 'Junior Ladies' },
             { id: 11, name: 'Pro-Am' },
+            { id: 12, name: 'Caddy' },
         //     { id: 12, name: 'AGC Members & PAF Officers' },
         //     { id: 13, name: 'Ladies A' },
         //     { id: 14, name: 'Ladies B' },
