@@ -84,7 +84,7 @@ export class ContactsDetailsComponent implements OnInit {
     private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     currentPlayer: any = [];
-    tournamentId:any;
+    tournamentId: any;
     public handicapsWhs: any[] = [];
     loggedInuser: any;
     handicapIndex: number = 0;
@@ -121,7 +121,7 @@ export class ContactsDetailsComponent implements OnInit {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-        let dataClubs:any;
+        let dataClubs: any;
         if (this.loggedInuser) {
             let clubInfo: any =
                 this.loggedInuser.membership.length > 0
@@ -153,11 +153,12 @@ export class ContactsDetailsComponent implements OnInit {
             notes: new FormControl(''),
         });
         this.playerCategories = this._facadeService.getPlayerCategories();
-        if(this.loggedInuser.userRole > 1 ){
-             dataClubs = await this._facadeService.getClubByID(this.loggedInuser.adminClubId);
-            
-        }else{
-             dataClubs = await this._facadeService.getClubList();
+        if (this.loggedInuser.userRole > 1) {
+            dataClubs = await this._facadeService.getClubByID(
+                this.loggedInuser.adminClubId
+            );
+        } else {
+            dataClubs = await this._facadeService.getClubList();
         }
         this.golfClubs = dataClubs.club;
         console.log(this.playerCategories);
@@ -414,7 +415,7 @@ export class ContactsDetailsComponent implements OnInit {
 
             if (this.currentPlayer.player[0].handicap !== contact.handicap) {
                 console.log(this.tournamentId);
-                
+
                 const handicap_change_log: handicap_change_log = {
                     id: UniqueIdGenerator.generate(),
                     playerId: this.currentPlayer.player[0].id
@@ -630,19 +631,27 @@ export class ContactsDetailsComponent implements OnInit {
 
     async fetchData() {
         if (this.playerID) {
-            this.currentPlayer = 
-                await this._facadeService.getPlayerByIDDetailForm(this.playerID)
-            this.tournamentId= this.currentPlayer.player[0].handicap_history[0].tournamentId;
-        
+            this.currentPlayer =
+                await this._facadeService.getPlayerByIDDetailForm(
+                    this.playerID
+                );
+
+            console.log(this.currentPlayer);
+            this.tournamentId =
+                this.currentPlayer.player[0].handicap_history !== undefined &&
+                this.currentPlayer.player[0].handicap_history.length > 0
+                    ? this.currentPlayer.player[0].handicap_history[0]
+                          .tournamentId
+                    : null;
+
             // let whsHandicaps = await this._facadeService.getPlayerWHS(
             //     this.playerID
             // );
             // let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
-            // console.log(whshandicap);  
+            // console.log(whshandicap);
         }
-        console.log(this.currentPlayer);
         if (this.currentPlayer.player.length > 0) {
-            this.handicapsWhs =this.currentPlayer.player[0].handicapWhsIndex;
+            this.handicapsWhs = this.currentPlayer.player[0].handicapWhsIndex;
             this.editMode = true;
             this.contactForm.setValue({
                 firstName: this.currentPlayer.player[0].firstName,
