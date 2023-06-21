@@ -17,12 +17,11 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ProjectComponent } from 'app/modules/admin/dashboards/project/project.component';
 import { projectRoutes } from 'app/modules/admin/dashboards/project/project.routing';
 import { DatePipe } from '@angular/common';
+import { ProjectResolver } from './project.resolvers';
 
 @NgModule({
-    declarations: [
-        ProjectComponent
-    ],
-    imports     : [
+    declarations: [ProjectComponent],
+    imports: [
         RouterModule.forChild(projectRoutes),
         MatButtonModule,
         MatButtonToggleModule,
@@ -37,12 +36,8 @@ import { DatePipe } from '@angular/common';
         MatTabsModule,
         NgApexchartsModule,
         TranslocoModule,
-        SharedModule
-    ],providers:[
-        DatePipe,
-       
+        SharedModule,
     ],
+    providers: [ProjectResolver, DatePipe],
 })
-export class ProjectModule
-{
-}
+export class ProjectModule {}

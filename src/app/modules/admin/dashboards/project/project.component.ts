@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     OnDestroy,
@@ -27,7 +28,7 @@ import { DatePipe } from '@angular/common';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectComponent implements OnInit, OnDestroy {
+export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     chartGithubIssues: ApexOptions = {};
     chartTaskDistribution: ApexOptions = {};
     chartBudgetDistribution: ApexOptions = {};
@@ -75,7 +76,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
-    async ngOnInit() {
+    ngOnInit(): void {
         // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
@@ -86,43 +87,139 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 : null;
 
         this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-        // Attach SVG fill fixer to all ApexCharts
-        this.showdata = Promise.resolve(true);
-
-        console.log(this.showdata);
-
-        window['Apex'] = {
-            chart: {
-                events: {
-                    mounted: (chart: any, options?: any): void => {
-                        this._fixSvgFill(chart.el);
-                    },
-                    updated: (chart: any, options?: any): void => {
-                        this._fixSvgFill(chart.el);
-                    },
-                },
-            },
-        };
-        //this._prepareChartData();
         let currentDate = new Date();
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
-        //this.showdata = Promise.resolve(true);
-        this.fetchdata();
-        //  this.getDailyRounds(lastWeekSunday, lastWeekMonday);
-        //  this.getAllPlayers();
-        // this._projectService.data$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((data) => {
-        //         // Store the data
-        //         this.data = data;
-        //         console.log(this.data);
-        //     });
-        this.showdata = Promise.resolve(true);
-        this.loading = true;
-        console.log(this.showdata);
+        let tournamentCounts;
+        let flightCounts;
+        let playerCounts;
+        let dataPlayers: any;
+        let players: any;
+        let getall: any;
 
-        // Get the data
+        //this.showdata = Promise.resolve(true);
+        this.loading = false;
+        this._projectService.data$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                let getall = res.data;
+
+                this.tournamentCounts = getall.TournamentQL.length;
+                if (this.tournamentCounts > 6) {
+                    this.tournaments = getall.TournamentQL.splice(0, 6);
+                } else {
+                    this.tournaments = getall.TournamentQL;
+                }
+
+                console.log(this.tournamentCounts);
+
+                this.flightCounts = getall.Count.aggregate.count;
+                console.log(this.flightCounts);
+
+                this.playerCounts = getall.AggregateQL.aggregate.totalCount;
+                console.log(this.playerCounts);
+                console.log('a');
+
+                console.log(dataPlayers);
+
+                let myData: any[] = [];
+                let prevDate = null;
+                let memCounter = 0;
+                let totalFlights = 0;
+
+                let data = getall.TournamentsQLs.sort(this.ComparatorDate);
+                //let data = dataPlayers.TournamentsQL;
+                let i = 0;
+                for (let stats of data) {
+                    if (stats.ended) {
+                        this.flightCountsCal++;
+                    }
+                    if (stats.date == prevDate) {
+                        memCounter =
+                            memCounter + (stats ? stats.MembersQL.length : 0);
+                        totalFlights = totalFlights + 1;
+
+                        myData[myData.length - 1].membersCount = memCounter;
+                        myData[myData.length - 1].totalFlights = totalFlights;
+                        prevDate = stats.date;
+                    } else {
+                        memCounter = 0;
+                        totalFlights = 0;
+                        memCounter =
+                            memCounter + (stats ? stats.MembersQL.length : 0);
+                        totalFlights = totalFlights + 1;
+
+                        let obj = {
+                            date: stats.date,
+                            membersCount: memCounter,
+                            totalFlights: totalFlights,
+                        };
+
+                        myData.push(obj);
+                        prevDate = stats.date;
+                    }
+                }
+
+                console.log(myData);
+                let dataMembers: any[] = [];
+                let dataFlight: any[] = [];
+                for (let obj of myData) {
+                    this.membersCountsCal += obj.membersCount;
+                    dataMembers.push(obj.membersCount);
+                    dataFlight.push(obj.totalFlights);
+                }
+                this._series = [
+                    {
+                        data: dataMembers,
+                        name: 'Members',
+                        type: 'line',
+                    },
+                    {
+                        data: dataFlight,
+                        name: 'Rounds',
+                        type: 'column',
+                    },
+                ];
+
+                this.flightCountsNotCal =
+                    getall.TournamentsQLs.length - this.flightCountsCal;
+                console.log(this._overview);
+
+                (this._overview = {
+                    newIssues: getall.TournamentsQLs.length,
+                    closedIssues: this.membersCountsCal,
+                    fixed: this.flightCountsCal,
+                    wontfix: this.flightCountsNotCal,
+                    reopened: '20',
+                    needstriage: '36',
+                }),
+                    console.log(players);
+                if (this.loggedInuser.userRole == 1) {
+                    this._seriesPlayers['all'] = [
+                        getall.Amateurs.aggregate['count'],
+
+                        getall.Senior_Amateurs.aggregate['count'],
+
+                        getall.Veterans.aggregate['count'],
+
+                        getall.Ladies.aggregate['count'],
+                    ];
+                } else {
+                    this._seriesPlayers['all'] = [
+                        getall.club[0].Amateurs.aggregate['count'],
+
+                        getall.club[0].Senior_Amateurs.aggregate['count'],
+
+                        getall.club[0].Veterans.aggregate['count'],
+
+                        getall.club[0].Ladies.aggregate['count'],
+                    ];
+                }
+
+                // Prepare the chart data
+                this._prepareChartData();
+                this.loading = true;
+            });
     }
 
     /**
@@ -132,6 +229,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+    }
+    ngAfterViewInit(): void {
+        this.loading = true;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -148,36 +248,257 @@ export class ProjectComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
+    addNewRound() {
+        this._router.navigate(['/dailyRounds/add-daily-rounds']);
+    }
+    addNewPlayer() {
+        this._router.navigate([
+            '/players/view/' + UniqueIdGenerator.generate(),
+        ]);
+    }
+    async fetchData(): Promise<void> {
+        // Get the Tournaments Count
+        let tournamentCounts;
+        let flightCounts;
+        let playerCounts;
+        let dataPlayers: any;
+        let players: any;
+        let getall: any;
+        let lastWeekSunday = this.lastWeekSunday();
+        let lastWeekMonday = this.lastWeekMonday();
 
-    /**
-     * Fix the SVG fill references. This fix must be applied to all ApexCharts
-     * charts in order to fix 'black color on gradient fills on certain browsers'
-     * issue caused by the '<base>' tag.
-     *
-     * Fix based on https://gist.github.com/Kamshak/c84cdc175209d1a30f711abd6a81d472
-     *
-     * @param element
-     * @private
-     */
-    private _fixSvgFill(element: Element): void {
-        // Current URL
-        const currentURL = this._router.url;
+        if (this.loggedInuser.userRole == 1) {
+            // tournamentCounts =
+            //     await this._facadeService.getTournamentCountsByClubAll();
+            // //Get the Flights Count
+            // flightCounts = await this._facadeService.getTotalFlightsAll();
+            // playerCounts = await this._facadeService.getTotalPlayersAll();
+            // dataPlayers =
+            //     await this._facadeService.getDailyRoundsSingleDashboardAll(
+            //         this._datePipe.transform(
+            //             lastWeekSunday.toString(),
+            //             'yyyy-MM-dd'
+            //         ),
+            //         this._datePipe.transform(
+            //             lastWeekMonday.toString(),
+            //             'yyyy-MM-dd'
+            //         )
+            //     );
+            // players =
+            //     await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
+            getall = await this._facadeService.getAllAdmin(
+                this._datePipe.transform(
+                    lastWeekSunday.toString(),
+                    'yyyy-MM-dd'
+                ),
+                this._datePipe.transform(
+                    lastWeekMonday.toString(),
+                    'yyyy-MM-dd'
+                )
+            );
+        } else {
+            // tournamentCounts =
+            //     await this._facadeService.getTournamentCountsByClub(
+            //         this.loggedInuser.adminClubId
+            //     );
+            // //Get the Flights Count
+            // flightCounts = await this._facadeService.getTotalFlights(
+            //     this.loggedInuser.adminClubId
+            // );
+            // // Get the Flights Count
+            // playerCounts = await this._facadeService.getTotalPlayers(
+            //     this.loggedInuser.adminClubId
+            // );
+            // dataPlayers =
+            //     await this._facadeService.getDailyRoundsSingleDashboard(
+            //         this.loggedInuser.adminClubId,
+            //         this._datePipe.transform(
+            //             lastWeekSunday.toString(),
+            //             'yyyy-MM-dd'
+            //         ),
+            //         this._datePipe.transform(
+            //             lastWeekMonday.toString(),
+            //             'yyyy-MM-dd'
+            //         )
+            //     );
 
-        // 1. Find all elements with 'fill' attribute within the element
-        // 2. Filter out the ones that doesn't have cross reference so we only left with the ones that use the 'url(#id)' syntax
-        // 3. Insert the 'currentURL' at the front of the 'fill' attribute value
-        Array.from(element.querySelectorAll('*[fill]'))
-            .filter((el) => el.getAttribute('fill').indexOf('url(') !== -1)
-            .forEach((el) => {
-                const attrVal = el.getAttribute('fill');
-                el.setAttribute(
-                    'fill',
-                    `url(${currentURL}${attrVal.slice(attrVal.indexOf('#'))}`
-                );
-            });
+            // players =
+            //     await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
+            //         this.loggedInuser.adminClubId
+            //     );
+
+            this._facadeService
+                .getAll(
+                    this.loggedInuser.id,
+                    this.loggedInuser.adminClubId,
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                )
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((res) => {
+                    let getall = res;
+
+                    this.tournamentCounts = getall.TournamentQL.length;
+                    if (this.tournamentCounts > 6) {
+                        this.tournaments = getall.TournamentQL.splice(0, 6);
+                    } else {
+                        this.tournaments = getall.TournamentQL;
+                    }
+
+                    console.log(this.tournamentCounts);
+
+                    this.flightCounts = getall.Count.aggregate.count;
+                    console.log(this.flightCounts);
+
+                    this.playerCounts = getall.AggregateQL.aggregate.totalCount;
+                    console.log(this.playerCounts);
+                    console.log('a');
+
+                    console.log(dataPlayers);
+
+                    let myData: any[] = [];
+                    let prevDate = null;
+                    let memCounter = 0;
+                    let totalFlights = 0;
+
+                    let data = getall.TournamentsQLs.sort(this.ComparatorDate);
+                    //let data = dataPlayers.TournamentsQL;
+                    let i = 0;
+                    for (let stats of data) {
+                        if (stats.ended) {
+                            this.flightCountsCal++;
+                        }
+                        if (stats.date == prevDate) {
+                            memCounter =
+                                memCounter +
+                                (stats ? stats.MembersQL.length : 0);
+                            totalFlights = totalFlights + 1;
+
+                            myData[myData.length - 1].membersCount = memCounter;
+                            myData[myData.length - 1].totalFlights =
+                                totalFlights;
+                            prevDate = stats.date;
+                        } else {
+                            memCounter = 0;
+                            totalFlights = 0;
+                            memCounter =
+                                memCounter +
+                                (stats ? stats.MembersQL.length : 0);
+                            totalFlights = totalFlights + 1;
+
+                            let obj = {
+                                date: stats.date,
+                                membersCount: memCounter,
+                                totalFlights: totalFlights,
+                            };
+
+                            myData.push(obj);
+                            prevDate = stats.date;
+                        }
+                    }
+
+                    console.log(myData);
+                    let dataMembers: any[] = [];
+                    let dataFlight: any[] = [];
+                    for (let obj of myData) {
+                        this.membersCountsCal += obj.membersCount;
+                        dataMembers.push(obj.membersCount);
+                        dataFlight.push(obj.totalFlights);
+                    }
+                    this._series = [
+                        {
+                            data: dataMembers,
+                            name: 'Members',
+                            type: 'line',
+                        },
+                        {
+                            data: dataFlight,
+                            name: 'Rounds',
+                            type: 'column',
+                        },
+                    ];
+
+                    this.flightCountsNotCal =
+                        getall.TournamentsQLs.length - this.flightCountsCal;
+                    console.log(this._overview);
+
+                    (this._overview = {
+                        newIssues: getall.TournamentsQLs.length,
+                        closedIssues: this.membersCountsCal,
+                        fixed: this.flightCountsCal,
+                        wontfix: this.flightCountsNotCal,
+                        reopened: '20',
+                        needstriage: '36',
+                    }),
+                        console.log(players);
+                    if (this.loggedInuser.userRole == 1) {
+                        this._seriesPlayers['all'] = [
+                            getall.Amateurs.aggregate['count'],
+
+                            getall.Senior_Amateurs.aggregate['count'],
+
+                            getall.Veterans.aggregate['count'],
+
+                            getall.Ladies.aggregate['count'],
+                        ];
+                    } else {
+                        this._seriesPlayers['all'] = [
+                            getall.club[0].Amateurs.aggregate['count'],
+
+                            getall.club[0].Senior_Amateurs.aggregate['count'],
+
+                            getall.club[0].Veterans.aggregate['count'],
+
+                            getall.club[0].Ladies.aggregate['count'],
+                        ];
+                    }
+
+                    // Prepare the chart data
+                    this._prepareChartData();
+                });
+        }
+
+        // this._prepareChartData();
+        // console.log(this._seriesPlayers);
+        // this.showdata = Promise.resolve(true);
+    }
+
+    ComparatorDate(a, b) {
+        if (a['date'] < b['date']) return -1;
+        if (a['date'] > b['date']) return 1;
+        return 0;
+    }
+    lastWeekMonday() {
+        //let date = new Date();
+        //return new Date(date.setDate(date.getDate() - 8));
+        let date = new Date();
+        let day = date.getDay();
+        let prevMonday = new Date();
+        if (date.getDay() == 0) {
+            prevMonday.setDate(date.getDate() - 7);
+        } else {
+            prevMonday.setDate(date.getDate() - (day + 6));
+        }
+
+        return prevMonday;
+    }
+    lastWeekSunday() {
+        let date = new Date();
+        let day = date.getDay();
+        let prevSunday = new Date();
+        if (date.getDay() == 7) {
+            prevSunday.setDate(date.getDate() - 7);
+        } else {
+            prevSunday.setDate(date.getDate() - day);
+        }
+
+        return prevSunday;
     }
 
     /**
@@ -488,245 +809,5 @@ export class ProjectComponent implements OnInit, OnDestroy {
         //         },
         //     },
         // };
-    }
-
-    addNewRound() {
-        this._router.navigate(['/dailyRounds/add-daily-rounds']);
-    }
-    addNewPlayer() {
-        this._router.navigate([
-            '/players/view/' + UniqueIdGenerator.generate(),
-        ]);
-    }
-    private async fetchdata() {
-        // Get the Tournaments Count
-        this.showdata = Promise.resolve(false);
-        let tournamentCounts;
-        let flightCounts;
-        let playerCounts;
-        let dataPlayers: any;
-        let players: any;
-        let getall: any;
-        let lastWeekSunday = this.lastWeekSunday();
-        let lastWeekMonday = this.lastWeekMonday();
-        if (this.loggedInuser.userRole == 1) {
-            // tournamentCounts =
-            //     await this._facadeService.getTournamentCountsByClubAll();
-            // //Get the Flights Count
-            // flightCounts = await this._facadeService.getTotalFlightsAll();
-            // playerCounts = await this._facadeService.getTotalPlayersAll();
-            // dataPlayers =
-            //     await this._facadeService.getDailyRoundsSingleDashboardAll(
-            //         this._datePipe.transform(
-            //             lastWeekSunday.toString(),
-            //             'yyyy-MM-dd'
-            //         ),
-            //         this._datePipe.transform(
-            //             lastWeekMonday.toString(),
-            //             'yyyy-MM-dd'
-            //         )
-            //     );
-            // players =
-            //     await this._facadeService.getClubMemberAggregateByCategroyDashBoardAll();
-            getall = await this._facadeService.getAllAdmin(
-                this._datePipe.transform(
-                    lastWeekSunday.toString(),
-                    'yyyy-MM-dd'
-                ),
-                this._datePipe.transform(
-                    lastWeekMonday.toString(),
-                    'yyyy-MM-dd'
-                )
-            );
-        } else {
-            // tournamentCounts =
-            //     await this._facadeService.getTournamentCountsByClub(
-            //         this.loggedInuser.adminClubId
-            //     );
-            // //Get the Flights Count
-            // flightCounts = await this._facadeService.getTotalFlights(
-            //     this.loggedInuser.adminClubId
-            // );
-            // // Get the Flights Count
-            // playerCounts = await this._facadeService.getTotalPlayers(
-            //     this.loggedInuser.adminClubId
-            // );
-            // dataPlayers =
-            //     await this._facadeService.getDailyRoundsSingleDashboard(
-            //         this.loggedInuser.adminClubId,
-            //         this._datePipe.transform(
-            //             lastWeekSunday.toString(),
-            //             'yyyy-MM-dd'
-            //         ),
-            //         this._datePipe.transform(
-            //             lastWeekMonday.toString(),
-            //             'yyyy-MM-dd'
-            //         )
-            //     );
-
-            // players =
-            //     await this._facadeService.getClubMemberAggregateByCategroyDashBoard(
-            //         this.loggedInuser.adminClubId
-            //     );
-            getall = await this._facadeService.getAll(
-                this.loggedInuser.id,
-                this.loggedInuser.adminClubId,
-                this._datePipe.transform(
-                    lastWeekSunday.toString(),
-                    'yyyy-MM-dd'
-                ),
-                this._datePipe.transform(
-                    lastWeekMonday.toString(),
-                    'yyyy-MM-dd'
-                )
-            );
-        }
-
-        this.tournamentCounts = getall.TournamentQL.length;
-        if (this.tournamentCounts > 6) {
-            this.tournaments = getall.TournamentQL.splice(0, 6);
-        } else {
-            this.tournaments = getall.TournamentQL;
-        }
-
-        console.log(this.tournamentCounts);
-
-        this.flightCounts = getall.Count.aggregate.count;
-        console.log(this.flightCounts);
-
-        this.playerCounts = getall.AggregateQL.aggregate.totalCount;
-        console.log(this.playerCounts);
-        console.log('a');
-
-        console.log(dataPlayers);
-
-        let myData: any[] = [];
-        let prevDate = null;
-        let memCounter = 0;
-        let totalFlights = 0;
-
-        let data = getall.TournamentsQLs.sort(this.ComparatorDate);
-        //let data = dataPlayers.TournamentsQL;
-        let i = 0;
-        for (let stats of data) {
-            if (stats.ended) {
-                this.flightCountsCal++;
-            }
-            if (stats.date == prevDate) {
-                memCounter = memCounter + (stats ? stats.MembersQL.length : 0);
-                totalFlights = totalFlights + 1;
-
-                myData[myData.length - 1].membersCount = memCounter;
-                myData[myData.length - 1].totalFlights = totalFlights;
-                prevDate = stats.date;
-            } else {
-                memCounter = 0;
-                totalFlights = 0;
-                memCounter = memCounter + (stats ? stats.MembersQL.length : 0);
-                totalFlights = totalFlights +1;
-
-                let obj = {
-                    date: stats.date,
-                    membersCount: memCounter,
-                    totalFlights: totalFlights,
-                };
-
-                myData.push(obj);
-                prevDate = stats.date;
-            }
-        }
-
-        console.log(myData);
-        let dataMembers: any[] = [];
-        let dataFlight: any[] = [];
-        for (let obj of myData) {
-            this.membersCountsCal += obj.membersCount;
-            dataMembers.push(obj.membersCount);
-            dataFlight.push(obj.totalFlights);
-        }
-        this._series = [
-            {
-                data: dataMembers,
-                name: 'Members',
-                type: 'line',
-            },
-            {
-                data: dataFlight,
-                name: 'Rounds',
-                type: 'column',
-            },
-        ];
-
-        this.flightCountsNotCal =
-            getall.TournamentsQLs.length - this.flightCountsCal;
-        console.log(this._overview);
-
-        (this._overview = {
-            newIssues: getall.TournamentsQLs.length,
-            closedIssues: this.membersCountsCal,
-            fixed: this.flightCountsCal,
-            wontfix: this.flightCountsNotCal,
-            reopened: '20',
-            needstriage: '36',
-        }),
-            this._prepareChartData();
-
-        console.log(players);
-        if (this.loggedInuser.userRole == 1) {
-            this._seriesPlayers['all'] = [
-                getall.Amateurs.aggregate['count'],
-
-                getall.Senior_Amateurs.aggregate['count'],
-
-                getall.Veterans.aggregate['count'],
-
-                getall.Ladies.aggregate['count'],
-            ];
-        } else {
-            this._seriesPlayers['all'] = [
-                getall.club[0].Amateurs.aggregate['count'],
-
-                getall.club[0].Senior_Amateurs.aggregate['count'],
-
-                getall.club[0].Veterans.aggregate['count'],
-
-                getall.club[0].Ladies.aggregate['count'],
-            ];
-        }
-
-        console.log(this._seriesPlayers);
-        this.showdata = Promise.resolve(true);
-    }
-
-    ComparatorDate(a, b) {
-        if (a['date'] < b['date']) return -1;
-        if (a['date'] > b['date']) return 1;
-        return 0;
-    }
-    lastWeekMonday() {
-        //let date = new Date();
-        //return new Date(date.setDate(date.getDate() - 8));
-        let date = new Date();
-        let day = date.getDay();
-        let prevMonday = new Date();
-        if (date.getDay() == 0) {
-            prevMonday.setDate(date.getDate() - 7);
-        } else {
-            prevMonday.setDate(date.getDate() - (day + 6));
-        }
-
-        return prevMonday;
-    }
-    lastWeekSunday() {
-        let date = new Date();
-        let day = date.getDay();
-        let prevSunday = new Date();
-        if (date.getDay() == 7) {
-            prevSunday.setDate(date.getDate() - 7);
-        } else {
-            prevSunday.setDate(date.getDate() - day);
-        }
-
-        return prevSunday;
     }
 }

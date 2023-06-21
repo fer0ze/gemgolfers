@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Apollo } from 'apollo-angular';
+import * as Query from '../../../../shared/GraphQL/tournament.gql';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
-export class ProjectService
-{
+export class ProjectService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
 
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient)
-    {
-    }
+    constructor(private _httpClient: HttpClient, private apollo: Apollo) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -23,8 +22,7 @@ export class ProjectService
     /**
      * Getter for data
      */
-    get data$(): Observable<any>
-    {
+    get data$(): Observable<any> {
         return this._data.asObservable();
     }
 
@@ -35,12 +33,47 @@ export class ProjectService
     /**
      * Get data
      */
-    getData(): Observable<any>
-    {
-        return this._httpClient.get('api/dashboard').pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
+    getData(
+        id?: string,
+        clubId?: string,
+        fromDate?: any,
+        toDate?: any
+    ): Observable<any> {
+        // return this._httpClient.get('api/dashboard').pipe(
+        //     tap((response: any) => {
+        //         this._data.next(response);
+        //     })
+        // );
+        if (id) {
+            return this.apollo
+                .subscribe<any>({
+                    query: Query.getallDashboard,
+                    variables: {
+                        adminId: id,
+                        adminClubId: clubId,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .pipe(
+                    tap((response: any) => {
+                        this._data.next(response);
+                    })
+                );
+        } else {
+            return this.apollo
+                .subscribe<any>({
+                    query: Query.getAllAdmin,
+                    variables: {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .pipe(
+                    tap((response: any) => {
+                        this._data.next(response);
+                    })
+                );
+        }
     }
 }

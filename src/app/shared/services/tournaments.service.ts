@@ -14,6 +14,7 @@ import {
 import * as Query from '../GraphQL/tournament.gql';
 import { resolve } from 'url';
 import { AnyNsRecord, AnyPtrRecord } from 'dns';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -403,26 +404,21 @@ export class TournamentsService {
         clubId: string,
         fromDate: string,
         toDate: string
-    ): Promise<any> {
+    ): Observable<any> {
         // console.log(clubId);
         // console.log(fromDate);
         // console.log(toDate);
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe<any>({
-                    query: Query.getallDashboard,
-                    variables: {
-                        adminId:Id,
-                        adminClubId: clubId,
-                        fromDate: fromDate,
-                        toDate: toDate,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    // console.log(data);
-                    resolve(data);
-                });
-        });
+        return this.apollo
+            .subscribe<any>({
+                query: Query.getallDashboard,
+                variables: {
+                    adminId: Id,
+                    adminClubId: clubId,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                },
+            })
+            .pipe(tap((data) => console.log(data)));
     }
     public getAllAdmin(fromDate: string, toDate: string): Promise<any> {
         // console.log(clubId);
@@ -465,10 +461,7 @@ export class TournamentsService {
                 });
         });
     }
-    public getSingleDailyRoundAdmin(
-        Date: string
-    ): Promise<any> {
-        
+    public getSingleDailyRoundAdmin(Date: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -997,7 +990,7 @@ export class TournamentsService {
                                 flightsCategory: tmnt.flightsCategory,
                                 subTournament: tmnt.subTournament,
                                 multiFormat: tmnt.multiFormat,
-                                createdAt:tmnt.createdAt,
+                                createdAt: tmnt.createdAt,
                                 categories: {
                                     data: tmnt.categories,
                                 },
@@ -1032,7 +1025,7 @@ export class TournamentsService {
                 .mutate<any>({
                     mutation: Query.AddSubTournamentMutation,
                     variables: {
-                        subTournaments:obj,
+                        subTournaments: obj,
                     },
                 })
                 .subscribe(
