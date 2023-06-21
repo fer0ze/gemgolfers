@@ -335,9 +335,6 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({

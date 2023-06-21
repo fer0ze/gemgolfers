@@ -330,26 +330,9 @@ export const GetTournamentsForAdminCompeleted = gql`
                 firstName
                 lastName
             }
-            HandicapCalculated: player_handicaps {
-                handicap
-                oldHandicap
-                updatedAt
-                player {
-                    firstName
-                    lastName
-                }
-            }
-            PlayerHandicapWhs: player_handicaps_whs {
-                round
-                score
-                adjustedScore
-                handicapDifferential
-                handicapIndex
-                updatedAt
-                player {
-                    firstName
-                    lastName
-                }
+            HandicapCalculated: player_handicaps(limit:1) {
+                playerId
+                tournamentId
             }
         }
     }
@@ -456,26 +439,9 @@ export const GetTournamnetListForCompleted = gql`
                 firstName
                 lastName
             }
-            HandicapCalculated: player_handicaps {
-                handicap
-                oldHandicap
-                updatedAt
-                player {
-                    firstName
-                    lastName
-                }
-            }
-            PlayerHandicapWhs: player_handicaps_whs {
-                round
-                score
-                adjustedScore
-                handicapDifferential
-                handicapIndex
-                updatedAt
-                player {
-                    firstName
-                    lastName
-                }
+            HandicapCalculated: player_handicaps(limit:1) {
+                playerId
+                tournamentId
             }
         }
     }
@@ -1116,7 +1082,10 @@ export const DailyRoundsStatQueryQLs = gql`
                 courseHoleSets
                 courseHoleSetsInverted
                 MembersQL: members {
+                    flightId
+                    playerId
                     PlayerQL: player {
+                        id
                         playerCategory
                     }
                 }
@@ -1143,7 +1112,10 @@ export const DailyRoundsStatQueryAdminQLs = gql`
                 courseHoleSets
                 courseHoleSetsInverted
                 MembersQL: members {
+                    flightId
+                    playerId
                     PlayerQL: player {
+                        id
                         playerCategory
                     }
                 }
