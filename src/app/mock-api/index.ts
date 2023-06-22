@@ -23,27 +23,8 @@ import { TasksMockApi } from 'app/mock-api/apps/tasks/api';
 import { UserMockApi } from 'app/mock-api/common/user/api';
 
 export const mockApiServices = [
-    AcademyMockApi,
-    ActivitiesMockApi,
-    AnalyticsMockApi,
     AuthMockApi,
-    ChatMockApi,
-    ContactsMockApi,
-    CryptoMockApi,
-    ECommerceInventoryMockApi,
-    FileManagerMockApi,
-    FinanceMockApi,
-    HelpCenterMockApi,
     IconsMockApi,
-    MailboxMockApi,
-    MessagesMockApi,
     NavigationMockApi,
-    NotesMockApi,
-    NotificationsMockApi,
-    ProjectMockApi,
-    SearchMockApi,
-    ScrumboardMockApi,
-    ShortcutsMockApi,
-    TasksMockApi,
     UserMockApi
 ];

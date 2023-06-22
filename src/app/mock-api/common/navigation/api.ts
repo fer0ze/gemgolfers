@@ -4,10 +4,11 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import {
     compactNavigation,
-    defaultNavigation,userNavigation,
+    defaultNavigation,
+    userNavigation,
     futuristicNavigation,
     horizontalNavigation,
-    defaultNavigationSuperAdmin
+    defaultNavigationSuperAdmin,
 } from 'app/mock-api/common/navigation/data';
 import { Constants } from 'app/shared/classes/general';
 
@@ -19,8 +20,7 @@ export class NavigationMockApi {
         compactNavigation;
     private readonly _defaultNavigation: FuseNavigationItem[] =
         defaultNavigation;
-    private readonly _userNavigation: FuseNavigationItem[] =
-    userNavigation;
+    private readonly _userNavigation: FuseNavigationItem[] = userNavigation;
     private readonly _defaultNavigationSuperAdmin: FuseNavigationItem[] =
         defaultNavigationSuperAdmin;
     private readonly _futuristicNavigation: FuseNavigationItem[] =
@@ -50,114 +50,25 @@ export class NavigationMockApi {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
         );
-        console.log('aaaaaaaa');
-        
+        // console.log('aaaaaaaa');
 
         this._fuseMockApiService.onGet('api/common/navigation').reply(() => {
-            if (this.loggedInuser && this.loggedInuser.userRole==1) {
-                // Fill compact navigation children using the default navigation
-                this._compactNavigation.forEach((compactNavItem) => {
-                    this._defaultNavigationSuperAdmin.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === compactNavItem.id) {
-                            compactNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-
-                // Fill futuristic navigation children using the default navigation
-                this._futuristicNavigation.forEach((futuristicNavItem) => {
-                    this._defaultNavigationSuperAdmin.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === futuristicNavItem.id) {
-                            futuristicNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-
-                // Fill horizontal navigation children using the default navigation
-                this._horizontalNavigation.forEach((horizontalNavItem) => {
-                    this._defaultNavigationSuperAdmin.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === horizontalNavItem.id) {
-                            horizontalNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-
-                // Return the response
+            if (this.loggedInuser && this.loggedInuser.userRole == 1) {
                 return [
                     200,
                     {
-                        compact: cloneDeep(this._compactNavigation),
                         default: cloneDeep(this._defaultNavigationSuperAdmin),
-                        futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation),
                     },
                 ];
-            } else if(this.loggedInuser && this.loggedInuser.userRole > 1 &&  this.loggedInuser.adminClubId!=null){
-                // Fill compact navigation children using the default navigation
-                this._compactNavigation.forEach((compactNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === compactNavItem.id) {
-                            compactNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-
-                // Fill futuristic navigation children using the default navigation
-                this._futuristicNavigation.forEach((futuristicNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === futuristicNavItem.id) {
-                            futuristicNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-
-                // Fill horizontal navigation children using the default navigation
-                this._horizontalNavigation.forEach((horizontalNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === horizontalNavItem.id) {
-                            horizontalNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-
-                // Return the response
+            } else if (
+                this.loggedInuser &&
+                this.loggedInuser.userRole > 1 &&
+                this.loggedInuser.adminClubId != null
+            ) {
                 return [
                     200,
                     {
-                        compact: cloneDeep(this._compactNavigation),
                         default: cloneDeep(this._defaultNavigation),
-                        futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation),
-                    },
-                ];
-            }else if(this.loggedInuser && this.loggedInuser.userRole > 1 &&  this.loggedInuser.adminClubId==null){
-                this._compactNavigation.forEach((compactNavItem) => {
-                    this._userNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === compactNavItem.id) {
-                            compactNavItem.children = cloneDeep(
-                                defaultNavItem.children
-                            );
-                        }
-                    });
-                });
-                return [
-                    200,
-                    {
-                       
-                        default: cloneDeep(this._userNavigation),
-                        
                     },
                 ];
             }

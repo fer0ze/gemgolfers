@@ -765,7 +765,7 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
-            limit: 20
+            limit: 21
         ) {
             tournamentId
             playerId
