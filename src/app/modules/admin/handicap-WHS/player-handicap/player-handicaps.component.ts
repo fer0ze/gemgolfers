@@ -55,6 +55,7 @@ export class PlayerHandicapComponent implements OnInit {
         'adjustedScore',
         'handicapDifferential',
         'handicapIndex',
+        'tee'
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -91,6 +92,7 @@ export class PlayerHandicapComponent implements OnInit {
     playerHandicapWhsList: any[] = [];
     usedForHandicap = [];
     handicapsAvailable: number;
+    memberQLs = [];
     constructor(
         private location: Location,
         public snackBar: MatSnackBar,
@@ -152,8 +154,10 @@ export class PlayerHandicapComponent implements OnInit {
             this.playerWHS = await this._facadeService.getPlayerWHS(
                 this.playerID
             );
+            let membersQL= await this._facadeService.getPlayerFlights(this.playerID);
+            this.memberQLs=membersQL.MemberQL;
             //console.log(this.playerWHS);
-            this.currentPlayer = playerscore['player'];
+            this.currentPlayer = playerscore['player'   ];
 
             this.playerWHSHistory =
                 this.playerWHS['HandicapHistoryWhsQL'];
@@ -390,6 +394,7 @@ export class PlayerHandicapComponent implements OnInit {
             'Adj.Score',
             'h/diff',
             'h/index',
+            'tee'
         ];
         var rows = [];
         var rows = [];
@@ -420,6 +425,7 @@ export class PlayerHandicapComponent implements OnInit {
             //   }
 
             // }
+            let tee = this.playingTee(element.tournamentId);
             let panelty: boolean = false;
             let used: boolean = this.usedForHandicap.some((handicap) => {
                 return (
@@ -453,9 +459,11 @@ export class PlayerHandicapComponent implements OnInit {
                 element.adjustedScore,
                 Math.round(element.handicapDifferential * 10) / 10,
                 Math.round(element.handicapIndex * 10) / 10,
+                tee,
                 element.highlight,
                 used,
                 element.panelty,
+                
             ];
             rows.push(temp);
         });
@@ -465,14 +473,14 @@ export class PlayerHandicapComponent implements OnInit {
             startY: 25,
             theme: 'grid',
             didParseCell: function (data) {
-                if (data.row.raw[7] == true) {
+                if (data.row.raw[8] == true) {
                     data.cell.styles.fillColor = [195, 249, 230];
                 }
-                a++;
-                if (data.row.raw[9] == true) {
+                if (data.row.raw[10] == true) {
                     data.cell.styles.textColor = [255, 9, 9];
                 }
-                if (data.row.raw[8] == true && a == 5) {
+                a++;
+                if (data.row.raw[9] == true && a == 5) {
                     data.cell.styles.fillColor = [249, 187, 147];
                     //console.log(1);
                     //a=false;
@@ -495,5 +503,16 @@ export class PlayerHandicapComponent implements OnInit {
 
         // Download PDF document
         //doc.save('flights.pdf');
+    }
+    playingTee(id: string) {
+        // console.log(id);
+        let used = this.memberQLs.find((handicap) => {
+            return handicap.FlightQL.tournamentId == id;
+        });
+        return used
+            ? General.getPlayersTeesColour(used.playingTee)
+            : used
+            ? used.FlightQL.tee
+            : 'White';
     }
 }

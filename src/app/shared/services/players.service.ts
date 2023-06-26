@@ -1006,6 +1006,20 @@ export class PlayersService {
                 });
         });
     }
+    getPlayerFlights(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getPlayerFlightsQuery,
+                    variables: {
+                        playerId: id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    resolve(data);
+                });
+        });
+    }
 
     getPlayerlistbyName(FirstName: string, LastName: string): Promise<any> {
         return new Promise((resolve) => {
