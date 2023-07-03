@@ -765,7 +765,7 @@ export const PlayerFlightScoresQuery = gql`
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
             order_by: [{ tournament: { startDate: desc } }]
-            limit: 21
+            limit: 20
         ) {
             tournamentId
             playerId
@@ -802,6 +802,20 @@ export const PlayerFlightScoresQuery = gql`
                         par
                     }
                 }
+            }
+        }
+    }
+`;
+export const getPlayerFlightsQuery = gql`
+    query PlayerFlightScoresQuery($playerId: String!) {
+        MemberQL: flight_member(
+            where: { playerId: { _eq: $playerId } }
+            order_by: { flight: { date: desc } }
+            limit: 40
+        ) {
+            playingTee
+            FlightQL: flight {
+                tournamentId
             }
         }
     }

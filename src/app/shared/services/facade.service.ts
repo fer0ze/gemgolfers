@@ -326,6 +326,10 @@ export class FacadeService {
     return this.playerService.getPlayerFlightScores(id);
   }
 
+  getPlayerFlights(id: string) {
+    return this.playerService.getPlayerFlights(id);
+  }
+
   getAllPlayersByCategory() {
     return this.playerService.getAllPlayersByCategory();
   }

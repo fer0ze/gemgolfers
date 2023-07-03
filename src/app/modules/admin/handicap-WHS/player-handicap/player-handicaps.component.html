@@ -277,6 +277,26 @@
                                     {{ row.handicapIndex | number : "1.1-1" }}
                                 </td>
                             </ng-container>
+                            <ng-container matColumnDef="tee">
+                                <th
+                                    class="dark:bg-black dark:bg-opacity-5"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    Tee
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="{
+                                        'text-blue-400': row.highlight
+                                    }"
+                                >
+                                {{
+                                    playingTee(row.tournamentId)
+                                }}
+                                </td>
+                            </ng-container>
 
                             <tr
                                 mat-header-row
