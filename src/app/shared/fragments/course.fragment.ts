@@ -33,6 +33,7 @@ fragment CourseHoleSetsQL on course_hole_sets {
     backId
     frontId
     id
+    isActive
 }`;
 
 export const CourseRatingQL = gql`
