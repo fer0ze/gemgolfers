@@ -53,7 +53,8 @@ export class NavigationMockApi {
         // console.log('aaaaaaaa');
 
         this._fuseMockApiService.onGet('api/common/navigation').reply(() => {
-            if (this.loggedInuser && this.loggedInuser.userRole == 1) {
+            if (this.loggedInuser && this.loggedInuser.userRole == 1 &&
+                this.loggedInuser.adminClubId != null) {
                 return [
                     200,
                     {

@@ -194,6 +194,24 @@ export class AddDailyRoundComponent implements OnInit {
             starterFormValue.roundDate.toString(),
             'yyyy-MM-dd'
         );
+        let date = this.starterForm.value.roundDate;
+        for (let member of this.flightMembers) {
+            let founded = await this.facadeService.getPlayerTodayRound(
+                member.playerId,
+                this.datepipe.transform(date.toString(), 'yyyy-MM-dd')
+            );
+            if (founded && founded.length > 0) {
+                this.snackBar.open(
+                    'Player already played in a round today.',
+                    'x',
+                    {
+                        duration: 5000,
+                    }
+                );
+
+                return;
+            }
+        }
         console.log(starterFormValue.roundDate);
         const addRound: AddDailyRound = {
             holeSets: starterFormValue.holeSets,

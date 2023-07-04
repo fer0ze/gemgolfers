@@ -479,19 +479,30 @@ export const GetPlayerByFilter = gql`
             membershipNumber
         }
     }
-    ${PlayerQL}
 `;
 export const getPlayerByEmailLogin = gql`
     query PostsGetQuery($where: player_bool_exp!) {
         player(where: $where) {
-            ...PlayerQL
-            subscriptionQL: subscription {
+            id
+            adminClubId
+            firstName
+            lastName
+            fullName            userRole
+            membership {
+                clubId
                 playerId
-                subscription
+                club {
+                    id
+                    name
+                    logo
+                    courses {
+                        id
+                        name
+                    }
+                }
             }
         }
     }
-    ${PlayerQL}
 `;
 
 export const GetPlayerByMembershipNumber = gql`

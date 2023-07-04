@@ -103,7 +103,7 @@
                             [disabled]="flight.ended"
                         >
                             <mat-option
-                                *ngFor="let course of courseHoleSetNames"
+                                *ngFor="let course of courseHoleSetNamesDisplay"
                                 [value]="
                                     course.holeSets + '_' + course.inverted
                                 "
@@ -132,7 +132,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="ml-3 mt-1">
+                <!-- <div class="ml-3 mt-1">
                     <button
                         mat-raised-button
                         color="primary"
@@ -141,7 +141,7 @@
                     >
                         <span class="mat-button-wrapper">Save Changes</span>
                     </button>
-                </div>
+                </div> -->
             </div>
 
             <div class="flex mr-3">

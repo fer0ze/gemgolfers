@@ -40,7 +40,7 @@ export class AuthSignInComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
         private facade: FacadeService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -67,111 +67,58 @@ export class AuthSignInComponent implements OnInit {
      * Sign in
      */
     async signIn() {
-        // // Return if the form is invalid
-        // if (this.signInForm.invalid) {
-        //     return;
-        // }
-
-        // // Disable the form
-        // this.signInForm.disable();
-
-        // Hide the alert
-        //this.showAlert = false;
         let isAdmin = <Player>(
             await this.facade.getPlayerByEmailLogin(this.signInForm.value.email)
         );
         if (isAdmin && isAdmin[0]) {
             localStorage.setItem('aXNMb2dnZWRJbg', JSON.stringify(isAdmin[0]));
         }
-        // let isLoggedin;
-        // await this._authService
-        //     .login(this.signInForm.value.email, this.signInForm.value.password)
-        //     .then((response) => {
-        //         isLoggedin = response;
-        //     })
-        //     .catch((err) => {
-        //         isLoggedin = err;
-        //     });
 
-        // if (isAdmin && isAdmin[0] && isLoggedin) {
-        //     const redirectURL =
-        //         this._activatedRoute.snapshot.queryParamMap.get(
-        //             'redirectURL'
-        //         ) || '/signed-in-redirect';
+        // Return if the form is invalid
+        if (this.signInForm.invalid) {
+            return;
+        }
 
-        //     //Navigate to the redirect url
-        //     this._router.navigateByUrl(redirectURL);
-        //     console.log(redirectURL);
-        //     //this.signInForm.enable();
+        // Disable the form
+        this.signInForm.disable();
 
-        //    // window.location.reload();
-        // } else {
-        //     localStorage.removeItem('accessToken');
-        //     localStorage.removeItem('aXNMb2dnZWRJbg');
-        //     console.log('false');
-        //     // Re-enable the form
-        //     this.signInForm.enable();
+        // Hide the alert
+        this.showAlert = false;
 
-        //     // Reset the form
-        //     this.signInNgForm.resetForm();
+        // Sign in
+        this._authService.signIn(this.signInForm.value)
+            .subscribe(
+                () => {
 
-        //     // Set the alert
-        //     this.alert = {
-        //         type: 'error',
-        //         message: 'Wrong email or password',
-        //     };
+                    // Set the redirect url.
+                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
+                    // to the correct page after a successful sign in. This way, that url can be set via
+                    // routing file and we don't have to touch here.
+                    const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || 'signed-in-redirect';
 
-        //     // Show the alert
-        //     this.showAlert = true;
-        //     // this.show = Promise.resolve(true);
-        //     return;
-        // }
-         // Return if the form is invalid
-         if ( this.signInForm.invalid )
-         {
-             return;
-         }
- 
-         // Disable the form
-         this.signInForm.disable();
- 
-         // Hide the alert
-         this.showAlert = false;
- 
-         // Sign in
-          this._authService.signIn(this.signInForm.value)
-             .subscribe(
-                 () => {
- 
-                     // Set the redirect url.
-                     // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                     // to the correct page after a successful sign in. This way, that url can be set via
-                     // routing file and we don't have to touch here.
-                     const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || 'signed-in-redirect';
- 
-                     // Navigate to the redirect url
-                     //this._router.navigateByUrl(redirectURL)
-                     window.location.reload();
- 
-                 },
-                 (response) => {
- 
-                     // Re-enable the form
-                     this.signInForm.enable();
-                     localStorage.removeItem('accessToken');
-                     localStorage.removeItem('aXNMb2dnZWRJbg');
-                     // Reset the form
-                     this.signInNgForm.resetForm();
- 
-                     // Set the alert
-                     this.alert = {
-                         type   : 'error',
-                         message: 'Wrong email or password'
-                     };
- 
-                     // Show the alert
-                     this.showAlert = true;
-                 }
-             );
+                    // Navigate to the redirect url
+                    //this._router.navigateByUrl(redirectURL)
+                    window.location.reload();
+
+                },
+                (response) => {
+
+                    // Re-enable the form
+                    this.signInForm.enable();
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('aXNMb2dnZWRJbg');
+                    // Reset the form
+                    this.signInNgForm.resetForm();
+
+                    // Set the alert
+                    this.alert = {
+                        type: 'error',
+                        message: 'Wrong email or password'
+                    };
+
+                    // Show the alert
+                    this.showAlert = true;
+                }
+            );
     }
 }
