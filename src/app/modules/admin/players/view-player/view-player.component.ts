@@ -767,7 +767,7 @@ export class ViewPlayerComponent implements OnInit {
             return handicap.FlightQL.tournamentId == id;
         });
         return used
-            ? General.getPlayersTeesColour(used.playingTee)
+            ? General.getPlayersTeesColour(used.playingTee!=null?used.playingTee: used.FlightQL.tee)
             : used
             ? used.FlightQL.tee
             : 'White';

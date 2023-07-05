@@ -88,7 +88,7 @@ export class General {
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
 
-        return ID.id;
+        return ID ?ID.id:teeName;
     }
 
     public static getPlayersTe(teeName: String) {
