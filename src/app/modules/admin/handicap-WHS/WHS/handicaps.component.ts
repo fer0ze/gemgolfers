@@ -304,11 +304,11 @@ export class HandicapsComponent implements OnInit {
             'M.No',
             'Name',
             'Category',
-            'HandicapIndex',
-            'Yellow Tee',
+            'Handicap Index',
             'Blue Tee',
-            'Red Tee',
             'White Tee',
+            'Yellow Tee',
+            'Red Tee',
         ];
         var rows = [];
         doc.setFontSize(30);
@@ -345,16 +345,28 @@ export class HandicapsComponent implements OnInit {
                     element.handicapWhsIndex != null
                         ? element.handicapWhsIndex
                         : element.handicap,
-                    ratings['WHITE'],
-                    ratings['BLACK'],
-                    ratings['RED'],
-                    ratings['BLUE']
+                        ratings['BLACK'],//blue
+                        ratings['BLUE'],//white
+                    ratings['WHITE'],//yellow
+                    ratings['RED'],//red
                 ];
                 rows.push(temp);
             }
         });
+          // From HTML
+        var columnStyles = {
+            4: { // Adjusting the width of the "Handicap Index" column (index starts from 1)
+            cellWidth: 30, // Adjust the width as needed
+            },
+        };
         // From HTML
-        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        doc.autoTable({
+            head: [col],
+            body: rows,
+            startY: 25,
+            theme: 'grid',
+            columnStyles: columnStyles,
+          });
 
         // Open PDF document in new tab
         doc.output('dataurlnewwindow');
