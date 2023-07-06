@@ -103,7 +103,7 @@
                             [disabled]="flight.ended"
                         >
                             <mat-option
-                                *ngFor="let course of courseHoleSetNamesDisplay"
+                                *ngFor="let course of courseHoleSetNames"
                                 [value]="
                                     course.holeSets + '_' + course.inverted
                                 "

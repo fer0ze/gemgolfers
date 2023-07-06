@@ -90,6 +90,19 @@ export class General {
 
         return ID ?ID.id:teeName;
     }
+    public static getPlayersTeesColourByCategory(teeName: String) {
+        const Course_Tee = [
+            { id: 'White', name: 'Amateurs' },
+            { id: 'Red', name: 'Ladies' },
+            { id: 'Yellow', name: 'Senior Amateurs' },
+            { id: 'Yellow', name: 'Seniors' },
+            { id: 'Blue', name: 'Professionals' },
+            { id: 'Veterans', name: 'Veterans' },
+        ];
+        let ID = Course_Tee.find((element) => element.name == teeName);
+
+        return ID ?ID.id:teeName;
+    }
 
     public static getPlayersTe(teeName: String) {
         const Course_Tee = [

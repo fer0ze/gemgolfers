@@ -251,7 +251,7 @@ export class ViewDailyRoundComponent implements OnInit {
         let selectedCourseHoleSet =
             await this.facadeService.getCourseHoleSetsForCourse(courseId);
         this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
-        this.courseHoleSetNamesDisplay = selectedCourseHoleSet['course_hole_sets'].filter(a=>a.isActive==true);
+        //this.courseHoleSetNamesDisplay = selectedCourseHoleSet['course_hole_sets'].filter(a=>a.isActive==true);
         console.log(selectedCourseHoleSet);
         this.lenght = dataPlayers.TournamentsQL.length;
         // this.lenght /= 20;

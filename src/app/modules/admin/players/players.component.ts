@@ -427,46 +427,13 @@ export class PlayersComponent implements OnInit {
             this.duplicatePlayers = [];
             let clubMember: ClubMembership[] = [];
 
-            // for (let p of this.playersData) {
-            //   // this.logger.logObject(p);
-            //   console.log(p);
-
-            //   let exist: any = [];
-
-            //   if (p.membershipNumber) {
-            //     // this.logger.log(p.membershipNumber);
-            //     console.log(p.membershipNumber);
-
-            //     exist = await this.facadeService.getPlayerByMembershipNumber(
-            //       p.membershipNumber.toString()
-            //     );
-
-            //     if (exist.length > 0) {
-            //       if (exist[0].handicapQL.length > 0) {
-            //         let handicapHistory = exist[0].handicapQL;
-            //         let lastTournamentID =
-            //           handicapHistory[handicapHistory.length - 1].tournamentId;
-            //         console.log(lastTournamentID);
-
-            //         const handicapChangeLog =
-            //           await this.facadeService.updateLastHandicap(
-            //             exist[0].id,
-            //             lastTournamentID,
-            //             p.handicap
-            //           );
-            //         console.log(handicapChangeLog);
-            //       }
-
-            //       let succes = await this.facadeService.updatePlayerHandicap(
-            //         exist[0].id,
-            //         p.handicap
-            //       );
-
-            //       this.duplicatePlayers.push(exist);
-            //       //continue;
-            //     }
-            //   }
-            // }
+            for (let p of this.playersData) {
+                let update = await this._facadeService.updateflightMember(p.id);
+                if (update) {
+                    console.log('Done');
+                }
+                await this.delay(500);
+            }
             // console.log(this.duplicatePlayers);
 
             // for (let p of this.playersData) {
@@ -546,147 +513,147 @@ export class PlayersComponent implements OnInit {
             //         });
 
             // for (let p of this.playersData) {
-            //     let update = await this._facadeService.updateflightMember(p.ID);
+            //  let update = await this._facadeService.updateflightMember(p.ID);
             //     if (update) {
             //         console.log('Done');
             //     }
             //     await this.delay(500);
             // }
-            for (let p of this.playersData) {
-                // this.logger.logObject(p);
-                console.log(p);
-        
-                let exist: any = [];
-        
-                if (p.membershipNumber) {
-                  // this.logger.log(p.membershipNumber);
-                  console.log(p.membershipNumber);
-        
-                  exist = await this._facadeService.getPlayerByMembershipNumber(
-                    p.membershipNumber.toString()
-                  );
-        
-                  if (exist.length > 0) {
-                    this.duplicatePlayers.push(p);
-                    //continue;
-                  }
-                }
-        
-                if (p.phone && exist.length == 0) {
-                  // this.logger.log(p.phone);
-                  console.log(p.phone);
-                  let phone;
-                  if (p.phone.toString().indexOf("+92") === 0) {
-                    phone = p.phone.toString();
-                  } else if (p.phone.toString().indexOf("0") === 0) {
-                    phone = p.phone.toString().replace(0, "+92");
-                  } else if (p.phone.toString().indexOf("3") === 0) {
-                    phone = "+92" + p.phone.toString();
-                  }
-                  console.log(phone);
-        
-                  exist = await this._facadeService.getPlayerByPhone(phone);
-                  // p.phone.toString().indexOf("+") !== -1
-                  // ? p.phone.toString()
-                  // : "+" + p.phone.toString()
-                  if (exist.length > 0) {
-                    this.duplicatePlayers.push(p);
-                    //continue;
-                  }
-                }
-        
-                if (p.email && exist.length == 0) {
-                  exist = await this._facadeService.getPlayerByEmail(p.email.toString());
-        
-                  if (exist.length > 0) {
-                    // this.logger.log("email yes");
-                    console.log("email Yes");
-        
-                    this.duplicatePlayers.push(p);
-                    //continue;
-                  }
-                }
-        
-                // this.logger.log(exist);
-                console.log(exist);
-        
-                let UniqueId: string =
-                  exist && exist.length > 0
-                    ? exist[0].id
-                    : UniqueIdGenerator.generate();
-        
-                //if(p.club) {
-        
-                let member: any = {
-                  clubId: this.loggedInuser.adminClubId,
-                  playerId: UniqueId,
-                };
-        
-                clubMember.push(member);
-                //}
-        
-                let player: any = {
-                  id: UniqueId,
-                  adminClubId: null,
-                  firebaseUid: null,
-                  fcmToken: null,
-                  gemId: generateGemId.generate(UniqueId),
-                  firstName: p.firstName,
-                  lastName: p.lastName,
-                  gender: p.gender ? p.gender : null,
-                  dob: p.dob ? p.dob : null,
-                  picture: p.picture ? p.picture : null,
-                  email: p.email ? p.email : null,
-                  phone: p.phone ? p.phone : null,
-                  playerCategory: p.category ? p.category : null,
-                  handicap: p.handicap ? p.handicap : 0,
-                  online: false,
-                  countryCode: p.code ? p.code : null,
-                  extraData: p.extra ? p.extra : null,
-                  membershipNumber: p.membershipNumber.toString(),
-                  userRole: 3,
-                  membership: null,
-                };
-        
-                this.savePlayers.push(player);
-              }
-        
-            //   this.logger.log(this.savePlayers);
-            //   this.logger.log(this.duplicatePlayers);
-              console.log(this.savePlayers);
-        
-              let status = await this._facadeService.importPlayerList(
-                this.savePlayers,
-                clubMember
-              );
-        
-              if (status) {
-                let newProfiles =
-                  Number(this.savePlayers.length) -
-                  Number(this.duplicatePlayers.length);
-                this.snackBar.open(
-                  (newProfiles < 0 ? 0 : newProfiles) +
-                    " players have been created. " +
-                    this.duplicatePlayers.length +
-                    " player(s) were already exist.",
-                  "x",
-                  {
-                    duration: 5000,
-                  }
-                );
-        
-                this.importingList = false;
-                this.file = null;
-                this.fileInputVariable.nativeElement.value = "";
-        
-                await this.delay(5000);
-                //window.location.reload();
-              } else {
-                this.snackBar.open("There was an Error while loading file", "x", {
-                  duration: 3000,
-                });
-                this.importingList = false;
-              }
+            // for (let p of this.playersData) {
+            //     // this.logger.logObject(p);
+            //     console.log(p);
+
+            //     let exist: any = [];
+
+            //     if (p.membershipNumber) {
+            //       // this.logger.log(p.membershipNumber);
+            //       console.log(p.membershipNumber);
+
+            //       exist = await this._facadeService.getPlayerByMembershipNumber(
+            //         p.membershipNumber.toString()
+            //       );
+
+            //       if (exist.length > 0) {
+            //         this.duplicatePlayers.push(p);
+            //         //continue;
+            //       }
+            //     }
+
+            //     if (p.phone && exist.length == 0) {
+            //       // this.logger.log(p.phone);
+            //       console.log(p.phone);
+            //       let phone;
+            //       if (p.phone.toString().indexOf("+92") === 0) {
+            //         phone = p.phone.toString();
+            //       } else if (p.phone.toString().indexOf("0") === 0) {
+            //         phone = p.phone.toString().replace(0, "+92");
+            //       } else if (p.phone.toString().indexOf("3") === 0) {
+            //         phone = "+92" + p.phone.toString();
+            //       }
+            //       console.log(phone);
+
+            //       exist = await this._facadeService.getPlayerByPhone(phone);
+            //       // p.phone.toString().indexOf("+") !== -1
+            //       // ? p.phone.toString()
+            //       // : "+" + p.phone.toString()
+            //       if (exist.length > 0) {
+            //         this.duplicatePlayers.push(p);
+            //         //continue;
+            //       }
+            //     }
+
+            //     if (p.email && exist.length == 0) {
+            //       exist = await this._facadeService.getPlayerByEmail(p.email.toString());
+
+            //       if (exist.length > 0) {
+            //         // this.logger.log("email yes");
+            //         console.log("email Yes");
+
+            //         this.duplicatePlayers.push(p);
+            //         //continue;
+            //       }
+            //     }
+
+            //     // this.logger.log(exist);
+            //     console.log(exist);
+
+            //     let UniqueId: string =
+            //       exist && exist.length > 0
+            //         ? exist[0].id
+            //         : UniqueIdGenerator.generate();
+
+            //     //if(p.club) {
+
+            //     let member: any = {
+            //       clubId: this.loggedInuser.adminClubId,
+            //       playerId: UniqueId,
+            //     };
+
+            //     clubMember.push(member);
+            //     //}
+
+            //     let player: any = {
+            //       id: UniqueId,
+            //       adminClubId: null,
+            //       firebaseUid: null,
+            //       fcmToken: null,
+            //       gemId: generateGemId.generate(UniqueId),
+            //       firstName: p.firstName,
+            //       lastName: p.lastName,
+            //       gender: p.gender ? p.gender : null,
+            //       dob: p.dob ? p.dob : null,
+            //       picture: p.picture ? p.picture : null,
+            //       email: p.email ? p.email : null,
+            //       phone: p.phone ? p.phone : null,
+            //       playerCategory: p.category ? p.category : null,
+            //       handicap: p.handicap ? p.handicap : 0,
+            //       online: false,
+            //       countryCode: p.code ? p.code : null,
+            //       extraData: p.extra ? p.extra : null,
+            //       membershipNumber: p.membershipNumber.toString(),
+            //       userRole: 3,
+            //       membership: null,
+            //     };
+
+            //     this.savePlayers.push(player);
+            //   }
+
+            // //   this.logger.log(this.savePlayers);
+            // //   this.logger.log(this.duplicatePlayers);
+            //   console.log(this.savePlayers);
+
+            //   let status = await this._facadeService.importPlayerList(
+            //     this.savePlayers,
+            //     clubMember
+            //   );
+
+            //   if (status) {
+            //     let newProfiles =
+            //       Number(this.savePlayers.length) -
+            //       Number(this.duplicatePlayers.length);
+            //     this.snackBar.open(
+            //       (newProfiles < 0 ? 0 : newProfiles) +
+            //         " players have been created. " +
+            //         this.duplicatePlayers.length +
+            //         " player(s) were already exist.",
+            //       "x",
+            //       {
+            //         duration: 5000,
+            //       }
+            //     );
+
+            //     this.importingList = false;
+            //     this.file = null;
+            //     this.fileInputVariable.nativeElement.value = "";
+
+            //     await this.delay(5000);
+            //     //window.location.reload();
+            //   } else {
+            //     this.snackBar.open("There was an Error while loading file", "x", {
+            //       duration: 3000,
+            //     });
+            //     this.importingList = false;
+            //   }
             // console.log('b');
 
             // this.logger.logObject(p);

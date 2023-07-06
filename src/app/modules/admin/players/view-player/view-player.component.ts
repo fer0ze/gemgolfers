@@ -768,9 +768,7 @@ export class ViewPlayerComponent implements OnInit {
         });
         return used
             ? General.getPlayersTeesColour(used.playingTee!=null?used.playingTee: used.FlightQL.tee)
-            : used
-            ? used.FlightQL.tee
-            : 'White';
+            : General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
     }
     isPanelty(flight) {
         //console.log(this.usedForHandicap);
