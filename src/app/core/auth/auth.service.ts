@@ -26,7 +26,7 @@ export class AuthService {
         public afs: AngularFirestore, // Inject Firestore service
         public firebaseAuth: AngularFireAuth,
         private _api: AuthMockApi
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -83,7 +83,7 @@ export class AuthService {
             )
         ).pipe(
             switchMap((value: any) => {
-                
+
                 return this._httpClient.post('api/auth/sign-in', true).pipe(
                     switchMap((response: any) => {
                         // Store the access token in the local storage
@@ -91,6 +91,7 @@ export class AuthService {
 
                         // Set the authenticated flag to true
                         this._authenticated = true;
+                        
                         this.loggedInuser = JSON.parse(
                             localStorage.getItem(Constants.LOGGED_IN_USER)
                         );
@@ -286,12 +287,16 @@ export class AuthService {
     /**
      * Check the authentication status
      */
-    check(): Observable<boolean> {
+    check(redirectURL: any = null): Observable<boolean> {
         // Check if the user is logged in
+      
         if (this._authenticated) {
-            return of(true);
-        }
-
+            if (this.checkURLAccess(redirectURL!==null?redirectURL:'/dashboard')) {
+                return of(true);
+            } else{
+                return of(false)
+            }
+        }  
         // Check the access token availability
         if (!this.accessToken) {
             return of(false);
@@ -305,4 +310,24 @@ export class AuthService {
         // If the access token exists and it didn't expire, sign in using it
         return this.signInUsingToken();
     }
+    checkURLAccess(URL: string): boolean {
+        const url = URL.split("/")[1];
+        this.loggedInuser = JSON.parse(
+            localStorage.getItem(Constants.LOGGED_IN_USER)
+        );
+        // console.log(this.loggedInuser);
+        
+        switch (this.loggedInuser.userRole) {
+          case 1:
+            return true;
+          case 2:
+            return !['feedback', 'reports/signUpPlayers', 'reports/club', 'banner', 'courses', 'mergeProfile'].includes(url);
+          case 3:
+            return false;
+          case 4:
+            return false;
+          default:
+            return false; // Handle the default case or return an appropriate value
+        }
+      }
 }

@@ -356,7 +356,7 @@ export class HandicapsComponent implements OnInit {
           // From HTML
         var columnStyles = {
             4: { // Adjusting the width of the "Handicap Index" column (index starts from 1)
-            cellWidth: 30, // Adjust the width as needed
+            cellWidth: 20, // Adjust the width as needed
             },
         };
         // From HTML
