@@ -901,7 +901,16 @@ export const createMarshalQL = gql`
         }
     }
 `;
-
+export const updatePlayerCatQL = gql`
+    mutation updatePlayerCategory($membershipNumber: String!) {
+        update_player(
+            where: { membershipNumber: { _eq: $membershipNumber } }
+            _set: { playerCategory : "Veterans" }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+    }
+`;
 export const PlayerHandicapQuery = gql`
     query PlayerHandicapQuery($playerId: String!) {
         HandicapHistoryWhsQL: player_handicap_whs(

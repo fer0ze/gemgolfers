@@ -601,7 +601,7 @@ export const updateflightMemberQL = gql`
     mutation UpdateFlightMember($playerId: String!) {
         flightEndedQlA: update_flight_member(
             where: { playerId: { _eq: $playerId } }
-            _set: { tee_id: 3, playingTee: "SENIORS" }
+            _set: { tee_id: 5, playingTee: "BLACK" }
         ) {
             AffectedRowsQLi: affected_rows
         }

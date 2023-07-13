@@ -33,11 +33,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
     declarations: [
-       
+
         PlayersComponent,
-       ContactsDetailsComponent,ViewPlayerComponent
+        ContactsDetailsComponent, ViewPlayerComponent
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(playerRoutes),
         MatButtonModule,
         MatCheckboxModule,
@@ -50,7 +50,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         MatLuxonDateModule,
         MatAutocompleteModule,
         MatSortModule,
-       MatSnackBarModule,
+        MatSnackBarModule,
         MatMenuModule,
         MatProgressBarModule,
         ReactiveFormsModule,
@@ -65,17 +65,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         MatPaginatorModule,
         CommonModule,
     ],
-    providers   : [
+    providers: [
         {
-            provide : MAT_DATE_FORMATS,
+            provide: MAT_DATE_FORMATS,
             useValue: {
-                parse  : {
+                parse: {
                     dateInput: 'D'
                 },
                 display: {
-                    dateInput         : 'DDD',
-                    monthYearLabel    : 'LLL yyyy',
-                    dateA11yLabel     : 'DD',
+                    dateInput: 'DDD',
+                    monthYearLabel: 'LLL yyyy',
+                    dateA11yLabel: 'DD',
                     monthYearA11yLabel: 'LLLL yyyy'
                 }
             }
@@ -83,6 +83,5 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         DatePipe,
     ]
 })
-export class PlayersModule
-{
+export class PlayersModule {
 }

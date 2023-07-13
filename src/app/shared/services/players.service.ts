@@ -1138,6 +1138,24 @@ export class PlayersService {
                 );
         });
     }
+    public updatePlayerCategory(membershipNumber:string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.updatePlayerCatQL,
+                    variables: {
+                        membershipNumber: membershipNumber,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     getPlayerWHS(id: string): Promise<any> {
         return new Promise((resolve) => {

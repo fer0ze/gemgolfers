@@ -12,14 +12,10 @@
 
     <!-- Main -->
     <div class="flex-auto">
-        <div
-            class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
-        >
+        <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
             <!-- Title -->
             <div>
-                <div
-                    class="text-6xl font-extrabold tracking-tight leading-none mt-3"
-                >
+                <div class="text-6xl font-extrabold tracking-tight leading-none mt-3">
                     Members
                 </div>
                 <div class="ml-0.5 font-medium text-secondary">
@@ -27,13 +23,13 @@
                         {{ this.count }}
                     </ng-container>
                     {{
-                        this.count
-                            | i18nPlural
-                                : {
-                                      "=0": "No contacts",
-                                      "=1": "contact",
-                                      other: "contacts"
-                                  }
+                    this.count
+                    | i18nPlural
+                    : {
+                    "=0": "No contacts",
+                    "=1": "contact",
+                    other: "contacts"
+                    }
                     }}
                 </div>
             </div>
@@ -42,43 +38,23 @@
             <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
                 <!-- Search -->
                 <div class="flex-auto">
-                    <mat-form-field
-                        class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            matPrefix
-                            [svgIcon]="'heroicons_solid:search'"
-                        ></mat-icon>
-                        <input
-                            matInput
-                            [formControl]="searchInputControl"
-                            (keyup)="applyFilter($event.target.value)"
-                            [autocomplete]="'off'"
-                            [placeholder]="'Search contacts'"
-                        />
+                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        <input matInput [formControl]="searchInputControl" (keyup)="applyFilter($event.target.value)"
+                            [autocomplete]="'off'" [placeholder]="'Search contacts'" />
                     </mat-form-field>
                 </div>
                 <!-- Add contact button -->
                 <button class="ml-4" mat-flat-button [color]="'primary'">
-                    <a
-                        class="flex items-center"
-                        [routerLinkActive]="'active'"
-                        [routerLink]="['/players/add']"
-                    >
-                        <mat-icon
-                            [svgIcon]="'heroicons_outline:plus'"
-                        ></mat-icon>
+                    <a class="flex items-center" [routerLinkActive]="'active'" [routerLink]="['/players/add']">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                         <span class="ml-2 mr-1">Add</span>
                     </a>
                 </button>
             </div>
             <div class="flex mt-4 justify-end -mb-4">
                 <button mat-stroked-button (click)="downloadAllPlayers()">
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:dowload'"
-                    ></mat-icon>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dowload'"></mat-icon>
                     <span class="ml-2">Dowload Summary</span>
                 </button>
                 <!-- <input
@@ -100,37 +76,19 @@
                 </button> -->
             </div>
         </div>
-        <div
-            class="xl:col-span-2 flex flex-col flex-auto bg-card shadow overflow-hidden relative"
-        >
+        <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow overflow-hidden relative">
             <div class="overflow-x-auto">
-                <table
-                    class="w-full bg-transparent"
-                    *ngIf="showTable | async"
-                    mat-table
-                    matSort
-                    [dataSource]="playersDataSource"
-                    (matSortChange)="onSortChanged($event)"
-                    #event
-                >
+                <table class="w-full bg-transparent" *ngIf="showTable | async" mat-table matSort
+                    [dataSource]="playersDataSource" (matSortChange)="onSortChanged($event)" #event>
                     <!-- Serial -->
 
                     <ng-container matColumnDef="Sr">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Sr.
                         </th>
-                        <td
-                            mat-cell
-                            *matCellDef="let transaction; let i = index"
-                        >
-                            <span
-                                class="pr-6 font-medium text-sm text-secondary whitespace-nowrap"
-                            >
+                        <td mat-cell *matCellDef="let transaction; let i = index">
+                            <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">
                                 {{ i + 1 }}
                             </span>
                         </td>
@@ -139,24 +97,16 @@
                     <!-- Name -->
 
                     <ng-container matColumnDef="Name">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Name
                         </th>
                         <td mat-cell *matCellDef="let transaction">
-                            <a
-                                [routerLinkActive]="'active'"
-                                [routerLink]="[
+                            <a [routerLinkActive]="'active'" [routerLink]="[
                                     '/players/viewProfile/' + transaction.id
-                                ]"
-                            >
+                                ]">
                                 <span
-                                    class="pr-6 font-medium whitespace-nowrap underline underline-offset-1 cursor-pointer"
-                                >
+                                    class="pr-6 font-medium whitespace-nowrap underline underline-offset-1 cursor-pointer">
                                     {{ transaction.Name }}
                                 </span>
                             </a>
@@ -165,12 +115,8 @@
 
                     <!-- Phone -->
                     <ng-container matColumnDef="Phone">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Phone
                         </th>
                         <td mat-cell *matCellDef="let transaction">
@@ -182,12 +128,8 @@
 
                     <!-- Email -->
                     <ng-container matColumnDef="Email">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Email
                         </th>
                         <td mat-cell *matCellDef="let transaction">
@@ -199,12 +141,8 @@
 
                     <!-- Membership -->
                     <ng-container matColumnDef="Membership">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Membership
                         </th>
                         <td mat-cell *matCellDef="let transaction">
@@ -215,12 +153,8 @@
                     </ng-container>
                     <!-- Category -->
                     <ng-container matColumnDef="Category">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Category
                         </th>
                         <td mat-cell *matCellDef="let transaction">
@@ -231,12 +165,8 @@
                     </ng-container>
                     <!-- Handicap -->
                     <ng-container matColumnDef="Handicap">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Handicap
                         </th>
                         <td mat-cell *matCellDef="let transaction">
@@ -247,54 +177,33 @@
                     </ng-container>
                     <!-- Edit -->
                     <ng-container matColumnDef="Edit">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Edit
                         </th>
                         <td mat-cell *matCellDef="let transaction">
                             <span class="pr-6 font-medium whitespace-nowrap">
-                                <a
-                                    class="flex items-center"
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="[
+                                <a class="flex items-center" [routerLinkActive]="'active'" [routerLink]="[
                                         '/players/view/' + transaction.id
-                                    ]"
-                                >
-                                    <mat-icon
-                                        [svgIcon]="'heroicons_outline:pencil'"
-                                        color="primary"
-                                    ></mat-icon>
+                                    ]">
+                                    <mat-icon [svgIcon]="'heroicons_outline:pencil'" color="primary"></mat-icon>
                                 </a>
                             </span>
                         </td>
                     </ng-container>
                     <!-- view -->
                     <ng-container matColumnDef="view">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             View
                         </th>
                         <td mat-cell *matCellDef="let transaction">
                             <span class="pr-6 font-medium whitespace-nowrap">
-                                <a
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="[
+                                <a [routerLinkActive]="'active'" [routerLink]="[
                                         '/players/viewProfile/' + transaction.id
-                                    ]"
-                                >
+                                    ]">
                                     <button>
-                                        <mat-icon
-                                            [svgIcon]="'heroicons_outline:eye'"
-                                            color="primary"
-                                        ></mat-icon>
+                                        <mat-icon [svgIcon]="'heroicons_outline:eye'" color="primary"></mat-icon>
                                     </button>
                                 </a>
                             </span>
@@ -324,25 +233,18 @@
                         </ng-container> -->
                     <!-- Delete -->
                     <ng-container matColumnDef="Status">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                        >
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
                             Status
                         </th>
                         <td mat-cell *matCellDef="let transaction">
-                            <span
-                                *ngIf="transaction.Status.length == 0"
-                                class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50"
-                            >
+                            <span *ngIf="transaction.Status.length == 0"
+                                class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
                                 <span class="leading-relaxed whitespace-nowrap">
                                     Disable
                                 </span>
                             </span>
-                            <span
-                                *ngIf="transaction.Status.length != 0"
+                            <span *ngIf="transaction.Status.length != 0"
                                 class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                 [ngClass]="{
                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50':
@@ -350,21 +252,13 @@
                                         !transaction.Status[0].suspended,
                                     'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50':
                                         transaction.Status[0].suspended
-                                }"
-                            >
-                                <span
-                                    *ngIf="
+                                }">
+                                <span *ngIf="
                                         transaction.Status.length == 0 ||
                                         transaction.Status[0].suspended
-                                    "
-                                    class="leading-relaxed whitespace-nowrap"
-                                    >Disable</span
-                                >
-                                <span
-                                    *ngIf="!transaction.Status[0].suspended"
-                                    class="leading-relaxed whitespace-nowrap"
-                                    >Active</span
-                                >
+                                    " class="leading-relaxed whitespace-nowrap">Disable</span>
+                                <span *ngIf="!transaction.Status[0].suspended"
+                                    class="leading-relaxed whitespace-nowrap">Active</span>
                             </span>
                         </td>
                     </ng-container>
@@ -380,26 +274,15 @@
             </td>
         </ng-container> -->
 
-                    <tr
-                        mat-header-row
-                        *matHeaderRowDef="playersTableColumns"
-                    ></tr>
-                    <tr
-                        class="order-row h-16 hover:bg-gray-100"
-                        mat-row
-                        *matRowDef="let row; columns: playersTableColumns"
-                    ></tr>
+                    <tr mat-header-row *matHeaderRowDef="playersTableColumns"></tr>
+                    <tr class="order-row h-16 hover:bg-gray-100" mat-row
+                        *matRowDef="let row; columns: playersTableColumns"></tr>
                 </table>
-                <mat-paginator
-                    [pageSize]="20"
-                    [pageSizeOptions]="[10, 20, 50, 100]"
-                ></mat-paginator>
+                <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
             </div>
             <!-- No contacts -->
             <ng-template *ngIf="displayNoRecords === false">
-                <div
-                    class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
-                >
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
                     No Member Found!
                 </div>
             </ng-template>

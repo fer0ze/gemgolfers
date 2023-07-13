@@ -97,7 +97,7 @@ export class HandicapsComponent implements OnInit {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _activatedRoute: ActivatedRoute
-    ) {}
+    ) { }
 
     ngAfterViewInit(): void {
         //this.dataSource.sort = this.sort;
@@ -308,7 +308,8 @@ export class HandicapsComponent implements OnInit {
             'Blue Tee',
             'White Tee',
             'Yellow Tee',
-            'Red Tee',
+            'Black Tee',
+            'Red Tee'
         ];
         var rows = [];
         doc.setFontSize(30);
@@ -324,7 +325,7 @@ export class HandicapsComponent implements OnInit {
         doc.setTextColor(100);
 
         let count = 0;
-        
+
         this.dataPlayers.player.forEach((element) => {
             if (
                 element.membershipNumber != null &&
@@ -336,7 +337,7 @@ export class HandicapsComponent implements OnInit {
                     element.handicapWhsIndex != null
                         ? element.handicapWhsIndex
                         : element.handicap;
-                let ratings=this.getTeesRating(handicapIndex);
+                let ratings = this.getTeesRating(handicapIndex);
                 var temp = [
                     count,
                     element.membershipNumber,
@@ -345,18 +346,19 @@ export class HandicapsComponent implements OnInit {
                     element.handicapWhsIndex != null
                         ? element.handicapWhsIndex
                         : element.handicap,
-                        ratings['BLACK'],//blue
-                        ratings['BLUE'],//white
+                    ratings['BLACK'],//blue
+                    ratings['BLUE'],//white
                     ratings['WHITE'],//yellow
+                    ratings['Black-Veterans'],//Balck
                     ratings['RED'],//red
                 ];
                 rows.push(temp);
             }
         });
-          // From HTML
+        // From HTML
         var columnStyles = {
             4: { // Adjusting the width of the "Handicap Index" column (index starts from 1)
-            cellWidth: 20, // Adjust the width as needed
+                cellWidth: 20, // Adjust the width as needed
             },
         };
         // From HTML
@@ -366,13 +368,13 @@ export class HandicapsComponent implements OnInit {
             startY: 25,
             theme: 'grid',
             columnStyles: columnStyles,
-          });
+        });
 
         // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
+        //doc.output('dataurlnewwindow');
 
         // Download PDF document
-        //doc.save('flights.pdf');
+        doc.save('WHS.pdf');
     }
 
     getPlayerInformationByName(filterValue: string) {
@@ -608,43 +610,50 @@ export class HandicapsComponent implements OnInit {
     getTeesRating(handicapIndex) {
         let rating = this.playerWHSRound['course_rating'];
         let teeRatings = {}; // Object to store handicap index for each tee
-      
+
         for (let item of rating) {
-          let slopeRating = item['slopeRating'];
-          let courseRating = item['courseRating'];
-          let coursePar = item['coursePar'];
-          if (item['tee'] == 'WHITE') {
-            let whiteTeeHI =
-              (handicapIndex * (slopeRating / 113.0) +
-                (courseRating - coursePar)) *
-              0.95;
-            whiteTeeHI = Math.round(whiteTeeHI);
-            teeRatings['WHITE'] = whiteTeeHI; // Store white tee handicap index
-          } else if (item['tee'] == 'BLACK') {
-            let blackTeeHI =
-              (handicapIndex * (slopeRating / 113.0) +
-                (courseRating - coursePar)) *
-              0.95;
-            blackTeeHI = Math.round(blackTeeHI);
-            teeRatings['BLACK'] = blackTeeHI; // Store black tee handicap index
-          } else if (item['tee'] == 'BLUE') {
-            let blueTeeHI =
-              (handicapIndex * (slopeRating / 113.0) +
-                (courseRating - coursePar)) *
-              0.95;
-            blueTeeHI = Math.round(blueTeeHI);
-            teeRatings['BLUE'] = blueTeeHI; // Store blue tee handicap index
-          } else if (item['tee'] == 'RED') {
-            let redTeeHI =
-              (handicapIndex * (slopeRating / 113.0) +
-                (courseRating - coursePar)) *
-              0.95;
-            redTeeHI = Math.round(redTeeHI);
-            teeRatings['RED'] = redTeeHI; // Store red tee handicap index
-          }
+            let slopeRating = item['slopeRating'];
+            let courseRating = item['courseRating'];
+            let coursePar = item['coursePar'];
+            if (item['tee'] == 'WHITE') {
+                let whiteTeeHI =
+                    (handicapIndex * (slopeRating / 113.0) +
+                        (courseRating - coursePar)) *
+                    0.95;
+                whiteTeeHI = Math.round(whiteTeeHI);
+                teeRatings['WHITE'] = whiteTeeHI; // Store white tee handicap index
+            } else if (item['tee'] == 'BLACK') {
+                let blackTeeHI =
+                    (handicapIndex * (slopeRating / 113.0) +
+                        (courseRating - coursePar)) *
+                    0.95;
+                blackTeeHI = Math.round(blackTeeHI);
+                teeRatings['BLACK'] = blackTeeHI; // Store black tee handicap index
+            } else if (item['tee'] == 'BLUE') {
+                let blueTeeHI =
+                    (handicapIndex * (slopeRating / 113.0) +
+                        (courseRating - coursePar)) *
+                    0.95;
+                blueTeeHI = Math.round(blueTeeHI);
+                teeRatings['BLUE'] = blueTeeHI; // Store blue tee handicap index
+            } else if (item['tee'] == 'RED') {
+                let redTeeHI =
+                    (handicapIndex * (slopeRating / 113.0) +
+                        (courseRating - coursePar)) *
+                    0.95;
+                redTeeHI = Math.round(redTeeHI);
+                teeRatings['RED'] = redTeeHI; // Store red tee handicap index
+            }else if (item['tee'] == 'Black') {
+                let BlackTeeHI =
+                    (handicapIndex * (slopeRating / 113.0) +
+                        (courseRating - coursePar)) *
+                    0.95;
+                BlackTeeHI = Math.round(BlackTeeHI);
+                teeRatings['Black-Veterans'] = BlackTeeHI; // Store black(veterans) tee handicap index
+            }
         }
-      
+
         return teeRatings; // Return object containing handicap index for each tee
-      }
-      
+    }
+
 }

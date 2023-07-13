@@ -83,7 +83,7 @@ export class PlayersComponent implements OnInit {
         private _router: Router,
         public snackBar: MatSnackBar,
         private _handicapServise: HandicapService
-    ) {}
+    ) { }
     ngOnInit(): void {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
@@ -422,11 +422,35 @@ export class PlayersComponent implements OnInit {
     async importExcelData() {
         try {
             this.importingList = true;
-
+            
             this.savePlayers = [];
             this.duplicatePlayers = [];
             let clubMember: ClubMembership[] = [];
+            // for (let p of this.playersData) {
+            //     let exist: any = [];
+            //     if (p.membershipNumber) {
+            //         // this.logger.log(p.membershipNumber);
+            //         console.log(p.membershipNumber);
 
+            //         exist = await this._facadeService.getPlayerByMembershipNumber(
+            //             p.membershipNumber.toString()
+            //         );
+
+            //         if (exist.length > 0) {
+            //             this.savePlayers.push(exist);
+            //             let update = await this._facadeService.updatePlayerCategory(p.membershipNumber.toString());
+            //             if (update) {
+            //                 console.log('Done');
+            //             }
+            //             await this.delay(500);
+            //             //continue;
+            //         } else {
+            //             this.duplicatePlayers.push(p);
+            //         }
+            //     }
+            // }
+            // console.log(this.duplicatePlayers);
+            // console.log(this.savePlayers);
             for (let p of this.playersData) {
                 let update = await this._facadeService.updateflightMember(p.id);
                 if (update) {
@@ -519,104 +543,86 @@ export class PlayersComponent implements OnInit {
             //     }
             //     await this.delay(500);
             // }
-            // for (let p of this.playersData) {
-            //     // this.logger.logObject(p);
-            //     console.log(p);
 
-            //     let exist: any = [];
-
-            //     if (p.membershipNumber) {
-            //       // this.logger.log(p.membershipNumber);
-            //       console.log(p.membershipNumber);
-
-            //       exist = await this._facadeService.getPlayerByMembershipNumber(
-            //         p.membershipNumber.toString()
-            //       );
-
-            //       if (exist.length > 0) {
-            //         this.duplicatePlayers.push(p);
-            //         //continue;
-            //       }
-            //     }
-
-            //     if (p.phone && exist.length == 0) {
-            //       // this.logger.log(p.phone);
-            //       console.log(p.phone);
-            //       let phone;
-            //       if (p.phone.toString().indexOf("+92") === 0) {
+            // if (p.phone && exist.length == 0) {
+            //     // this.logger.log(p.phone);
+            //     console.log(p.phone);
+            //     let phone;
+            //     if (p.phone.toString().indexOf("+92") === 0) {
             //         phone = p.phone.toString();
-            //       } else if (p.phone.toString().indexOf("0") === 0) {
+            //     } else if (p.phone.toString().indexOf("0") === 0) {
             //         phone = p.phone.toString().replace(0, "+92");
-            //       } else if (p.phone.toString().indexOf("3") === 0) {
+            //     } else if (p.phone.toString().indexOf("3") === 0) {
             //         phone = "+92" + p.phone.toString();
-            //       }
-            //       console.log(phone);
+            //     }
+            //     console.log(phone);
 
-            //       exist = await this._facadeService.getPlayerByPhone(phone);
-            //       // p.phone.toString().indexOf("+") !== -1
-            //       // ? p.phone.toString()
-            //       // : "+" + p.phone.toString()
-            //       if (exist.length > 0) {
+            //     exist = await this._facadeService.getPlayerByPhone(phone);
+            //     // p.phone.toString().indexOf("+") !== -1
+            //     // ? p.phone.toString()
+            //     // : "+" + p.phone.toString()
+            //     if (exist.length > 0) {
             //         this.duplicatePlayers.push(p);
             //         //continue;
-            //       }
             //     }
+            // }
 
-            //     if (p.email && exist.length == 0) {
-            //       exist = await this._facadeService.getPlayerByEmail(p.email.toString());
+            // if (p.email && exist.length == 0) {
+            //     exist = await this._facadeService.getPlayerByEmail(p.email.toString());
 
-            //       if (exist.length > 0) {
+            //     if (exist.length > 0) {
             //         // this.logger.log("email yes");
             //         console.log("email Yes");
 
             //         this.duplicatePlayers.push(p);
             //         //continue;
-            //       }
             //     }
+            // }
 
-            //     // this.logger.log(exist);
-            //     console.log(exist);
+            // this.logger.log(exist);
 
-            //     let UniqueId: string =
-            //       exist && exist.length > 0
+
+            // let UniqueId: string =
+            //     exist && exist.length > 0
             //         ? exist[0].id
             //         : UniqueIdGenerator.generate();
 
-            //     //if(p.club) {
+            // //if(p.club) {
 
-            //     let member: any = {
-            //       clubId: this.loggedInuser.adminClubId,
-            //       playerId: UniqueId,
-            //     };
+            // let member: any = {
+            //     clubId: this.loggedInuser.adminClubId,
+            //     playerId: UniqueId,
+            // };
 
-            //     clubMember.push(member);
-            //     //}
+            // clubMember.push(member);
+            //}
 
-            //     let player: any = {
-            //       id: UniqueId,
-            //       adminClubId: null,
-            //       firebaseUid: null,
-            //       fcmToken: null,
-            //       gemId: generateGemId.generate(UniqueId),
-            //       firstName: p.firstName,
-            //       lastName: p.lastName,
-            //       gender: p.gender ? p.gender : null,
-            //       dob: p.dob ? p.dob : null,
-            //       picture: p.picture ? p.picture : null,
-            //       email: p.email ? p.email : null,
-            //       phone: p.phone ? p.phone : null,
-            //       playerCategory: p.category ? p.category : null,
-            //       handicap: p.handicap ? p.handicap : 0,
-            //       online: false,
-            //       countryCode: p.code ? p.code : null,
-            //       extraData: p.extra ? p.extra : null,
-            //       membershipNumber: p.membershipNumber.toString(),
-            //       userRole: 3,
-            //       membership: null,
-            //     };
+            // let player: any = {
+            //     id: UniqueId,
+            //     adminClubId: null,
+            //     firebaseUid: null,
+            //     fcmToken: null,
+            //     gemId: generateGemId.generate(UniqueId),
+            //     firstName: p.firstName,
+            //     lastName: p.lastName,
+            //     gender: p.gender ? p.gender : null,
+            //     dob: p.dob ? p.dob : null,
+            //     picture: p.picture ? p.picture : null,
+            //     email: p.email ? p.email : null,
+            //     phone: p.phone ? p.phone : null,
+            //     playerCategory: p.category ? p.category : null,
+            //     handicap: p.handicap ? p.handicap : 0,
+            //     online: false,
+            //     countryCode: p.code ? p.code : null,
+            //     extraData: p.extra ? p.extra : null,
+            //     membershipNumber: p.membershipNumber.toString(),
+            //     userRole: 3,
+            //     membership: null,
+            // };
 
-            //     this.savePlayers.push(player);
-            //   }
+            // this.savePlayers.push(player);
+
+
 
             // //   this.logger.log(this.savePlayers);
             // //   this.logger.log(this.duplicatePlayers);
