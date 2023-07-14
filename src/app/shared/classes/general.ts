@@ -97,7 +97,7 @@ export class General {
             { id: 'Yellow', name: 'Senior Amateurs' },
             { id: 'Yellow', name: 'Seniors' },
             { id: 'Blue', name: 'Professionals' },
-            { id: 'Veterans', name: 'Veterans' },
+            { id: 'Black', name: 'Veterans' },
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
 
