@@ -209,7 +209,7 @@
                                     >
                                         {{
                                             row.handicapWhsIndex != null
-                                                ? row.handicapWhsIndex
+                                                ? (row.handicapWhsIndex| number:'1.1-1')
                                                 : "-"
                                         }}
                                     </span>

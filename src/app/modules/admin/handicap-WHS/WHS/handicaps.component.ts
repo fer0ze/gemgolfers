@@ -344,8 +344,8 @@ export class HandicapsComponent implements OnInit {
                     element.firstName + ' ' + element.lastName,
                     element.playerCategory,
                     element.handicapWhsIndex != null
-                        ? element.handicapWhsIndex
-                        : element.handicap,
+                        ? element.handicapWhsIndex.toFixed(1)
+                        : element.handicap.toFixed(1),
                     ratings['BLACK'],//blue
                     ratings['BLUE'],//white
                     ratings['WHITE'],//yellow
