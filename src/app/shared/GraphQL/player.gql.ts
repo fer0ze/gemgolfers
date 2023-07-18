@@ -822,7 +822,7 @@ export const getPlayerFlightsQuery = gql`
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
-            limit: 40
+            limit: 80
         ) {
             playingTee
             FlightQL: flight {

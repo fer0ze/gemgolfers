@@ -601,7 +601,13 @@ export const updateflightMemberQL = gql`
     mutation UpdateFlightMember($playerId: String!) {
         flightEndedQlA: update_flight_member(
             where: { playerId: { _eq: $playerId } }
-            _set: { tee_id: 5, playingTee: "BLACK" }
+            _set: { tee_id: 3, playingTee: "SENIORS" }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+        WHSQL: update_player_handicap_whs(
+            where: { playerId: { _eq: $playerId } }
+            _set: { tee: "SENIORS" }
         ) {
             AffectedRowsQLi: affected_rows
         }

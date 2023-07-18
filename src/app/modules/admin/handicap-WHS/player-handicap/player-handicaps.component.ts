@@ -68,6 +68,7 @@ export class PlayerHandicapComponent implements OnInit {
     playerFlightScores: FlightScores[] = [];
     isLoading: boolean = true;
     redTeeHI: number;
+    balckVetTeeHI: number;
     blueTeeHI: number;
     whiteTeeHI: number;
     blackTeeHI: number;
@@ -102,7 +103,7 @@ export class PlayerHandicapComponent implements OnInit {
         private _handicapComponent: HandicapsComponent,
         private _facadeService: FacadeService,
         private _router: Router
-    ) {}
+    ) { }
 
     async ngOnInit() {
         this.loggedInuser = JSON.parse(
@@ -154,10 +155,10 @@ export class PlayerHandicapComponent implements OnInit {
             this.playerWHS = await this._facadeService.getPlayerWHS(
                 this.playerID
             );
-            let membersQL= await this._facadeService.getPlayerFlights(this.playerID);
-            this.memberQLs=membersQL.MemberQL;
+            let membersQL = await this._facadeService.getPlayerFlights(this.playerID);
+            this.memberQLs = membersQL.MemberQL;
             //console.log(this.playerWHS);
-            this.currentPlayer = playerscore['player'   ];
+            this.currentPlayer = playerscore['player'];
 
             this.playerWHSHistory =
                 this.playerWHS['HandicapHistoryWhsQL'];
@@ -165,8 +166,8 @@ export class PlayerHandicapComponent implements OnInit {
 
             this.usedForHandicap =
                 this.playerWHSHistory &&
-                this.playerWHSHistory.length > 0 &&
-                this.playerWHSHistory[0]
+                    this.playerWHSHistory.length > 0 &&
+                    this.playerWHSHistory[0]
                     ? this.playerWHSHistory[0].used_handicaps
                     : [];
 
@@ -177,9 +178,9 @@ export class PlayerHandicapComponent implements OnInit {
                     : null;
             console.log('Lowest Handicap=' + this.topDiff20);
 
-            this.topDiff = this.playerHandicapWhsList.sort(
-                this.ComparatorHandicapDifferentialAsc
-            );
+            // this.topDiff = this.playerHandicapWhsList.sort(
+            //     this.ComparatorHandicapDifferentialAsc
+            // );
 
             this.handicapsAvailable = this.playerHandicapWhsList.length;
 
@@ -222,51 +223,34 @@ export class PlayerHandicapComponent implements OnInit {
                     this.handicapsToUse = 0;
                     break;
             }
-            this.topDiff =
-                this.topDiff.length > this.handicapsToUse
-                    ? this.topDiff[this.handicapsToUse].handicapDifferential
-                    : 0;
+            // this.topDiff =
+            //     this.topDiff.length > this.handicapsToUse
+            //         ? this.topDiff[this.handicapsToUse].handicapDifferential
+            //         : 0;
             // console.log('TopDiffer' + this.topDiff);
             // console.log('Available Handicaps' + this.playerHandicapWhsList);
             // console.log('Available Handicaps' + this.handicapsAvailable);
             // console.log('Available Handicaps' + this.handicapsToUse);
             console.log(this.playerWHSHistory);
             // let slicedWhs = this.playerWHSHistory.slice(0, 20);
-            let slicedWhs = [];
-            let count = 0;
+            const slicedWhs = this.playerWHSHistory;
+            console.log(slicedWhs);
             this.memerbershipNumber =
                 this.currentPlayer[0].membershipNumber;
             this.fullName =
                 this.currentPlayer[0].firstName +
                 ' ' +
                 this.currentPlayer[0].lastName;
-            for (let obj of this.playerWHSHistory) {
-                count++;
-                console.log(obj);
-
-                if (count <= 20) {
-                    slicedWhs.push(obj);
+            for (let whsItem of slicedWhs) {
+                if (whsItem.combined_handicap) {
+                    const index = slicedWhs.indexOf(whsItem);
+                    slicedWhs.splice(index + 1, 0, whsItem.combined_handicap);
+                    whsItem.combined_handicap = null;
+                    whsItem.noBorder = true;
+                    whsItem.highlight = true;
+                    slicedWhs[index].highlight = true;
+                    slicedWhs[index + 1].highlight = true;
                 }
-                if (count == 20) {
-                    break;
-                }
-            }
-            console.log(slicedWhs);
-            for (let whsItem in slicedWhs) {
-                if (slicedWhs[+whsItem].combined_handicap) {
-                    slicedWhs.splice(
-                        +whsItem + 1,
-                        0,
-                        slicedWhs[whsItem].combined_handicap
-                    );
-                    slicedWhs[+whsItem].combined_handicap = null;
-                    slicedWhs[+whsItem].noBorder = true;
-                    slicedWhs[+whsItem].highlight = true;
-                    slicedWhs[+whsItem + 1].highlight = true;
-                }
-
-                // if(slicedWhs[+whsItem].is_combined)
-                //   slicedWhs.splice(+whsItem, 1);
             }
             console.log(slicedWhs);
             this.length = slicedWhs.length;
@@ -317,9 +301,16 @@ export class PlayerHandicapComponent implements OnInit {
                             (courseRating - coursePar)) *
                         0.95;
                     this.redTeeHI = Math.round(this.redTeeHI);
+                }else if (item['tee'] == 'Black') {
+                    this.balckVetTeeHI =
+                        (handicapIndex * (slopeRating / 113.0) +
+                            (courseRating - coursePar)) *
+                        0.95;
+                    this.balckVetTeeHI = Math.round(this.balckVetTeeHI);
                 }
             }
             console.log(this.redTeeHI);
+            console.log(this.balckVetTeeHI);
             console.log(this.blackTeeHI);
             console.log(this.whiteTeeHI);
             console.log(this.blueTeeHI);
@@ -401,9 +392,9 @@ export class PlayerHandicapComponent implements OnInit {
         doc.setFontSize(17);
         doc.text(
             'WHS-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
-                ' ' +
-                this.currentPlayer[0].lastName,
+            this.currentPlayer[0].firstName +
+            ' ' +
+            this.currentPlayer[0].lastName,
             14,
             15
         );
@@ -463,7 +454,7 @@ export class PlayerHandicapComponent implements OnInit {
                 element.highlight,
                 used,
                 element.panelty,
-                
+
             ];
             rows.push(temp);
         });
@@ -512,7 +503,7 @@ export class PlayerHandicapComponent implements OnInit {
         return used
             ? General.getPlayersTeesColour(used.playingTee)
             : used
-            ? used.FlightQL.tee
-            : 'White';
+                ? used.FlightQL.tee
+                : 'White';
     }
 }

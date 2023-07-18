@@ -54,6 +54,7 @@ export class ViewPlayerComponent implements OnInit {
     shotsDoubleBogeysPercent: number;
     isLoading: boolean = true;
     redTeeHI: number;
+    balckVetTeeHI: number;
     blueTeeHI: number;
     whiteTeeHI: number;
     blackTeeHI: number;
@@ -390,9 +391,16 @@ export class ViewPlayerComponent implements OnInit {
                             (courseRating - coursePar)) *
                         0.95;
                     this.redTeeHI = Math.round(this.redTeeHI);
+                }else if (item['tee'] == 'Black') {
+                    this.balckVetTeeHI =
+                        (handicapIndex * (slopeRating / 113.0) +
+                            (courseRating - coursePar)) *
+                        0.95;
+                    this.balckVetTeeHI = Math.round(this.balckVetTeeHI);
                 }
             }
             console.log(this.redTeeHI);
+            console.log(this.balckVetTeeHI);
             console.log(this.blackTeeHI);
             console.log(this.whiteTeeHI);
             console.log(this.blueTeeHI);
