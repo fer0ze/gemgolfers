@@ -236,7 +236,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
             if (!player || player.length == 0) {
                 player = <Player>(
-                    await this.facadeService.getPlayerlistbyName(query, query)
+                    await this.facadeService.getPlayerByMembershipNumberClubwise(this.clubID['id'],query, query)
                 );
             }
 

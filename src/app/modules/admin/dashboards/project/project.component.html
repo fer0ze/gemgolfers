@@ -60,10 +60,7 @@
     </div>
 
     <!-- Main -->
-    <div
-        class="flex-auto border-t -mt-px pt-4 sm:pt-6"
-        
-    >
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
         <div class="w-full max-w-screen-xl mx-auto">
             <div
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
@@ -80,28 +77,22 @@
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
                             <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="summaryMenu"
-                                        >
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:dots-vertical'
-                                                "
-                                            ></mat-icon>
-                                        </button> 
-                             <mat-menu #summaryMenu="matMenu">
-                                <a [routerLinkActive]="'active'"
-                                [routerLink]="[
-                                    '/tournaments'
-                                ]">
-
-                                    <button  mat-menu-item>
-                                        View Details
-                                    </button>
+                                mat-icon-button
+                                [matMenuTriggerFor]="summaryMenu"
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:dots-vertical'"
+                                ></mat-icon>
+                            </button>
+                            <mat-menu #summaryMenu="matMenu">
+                                <a
+                                    [routerLinkActive]="'active'"
+                                    [routerLink]="['/tournaments']"
+                                >
+                                    <button mat-menu-item>View Details</button>
                                 </a>
-                                          
-                                        </mat-menu>
+                            </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
@@ -138,32 +129,24 @@
                             DailyRounds
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                                        <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="overdueMenu"
-                                        >
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:dots-vertical'
-                                                "
-                                            ></mat-icon>
-                                        </button>
-                                        <mat-menu #overdueMenu="matMenu">
-                                            <a
-                                           
-                                            [routerLinkActive]="'active'"
-                                            [routerLink]="[
-                                                '/reports/dailyround'
-                                            ]"
-                                            >
-                                            <button mat-menu-item>
-                                               View Details
-                                            </button>
-                                        </a>
-                                           
-                                        </mat-menu>
-                                    </div>
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="overdueMenu"
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:dots-vertical'"
+                                ></mat-icon>
+                            </button>
+                            <mat-menu #overdueMenu="matMenu">
+                                <a
+                                    [routerLinkActive]="'active'"
+                                    [routerLink]="['/reports/dailyround']"
+                                >
+                                    <button mat-menu-item>View Details</button>
+                                </a>
+                            </mat-menu>
+                        </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
                         <div
@@ -199,32 +182,24 @@
                             Club Players
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                                        <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="issuesMenu"
-                                        >
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:dots-vertical'
-                                                "
-                                            ></mat-icon>
-                                        </button>
-                                        <mat-menu #issuesMenu="matMenu">
-                                            <a
-                                           
-                                            [routerLinkActive]="'active'"
-                                            [routerLink]="[
-                                                '/reports/club'
-                                            ]"
-                                            >
-                                            <button mat-menu-item>
-                                               View Details
-                                            </button>
-                                        </a>
-                                           
-                                        </mat-menu>
-                                    </div>
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="issuesMenu"
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:dots-vertical'"
+                                ></mat-icon>
+                            </button>
+                            <mat-menu #issuesMenu="matMenu">
+                                <a
+                                    [routerLinkActive]="'active'"
+                                    [routerLink]="['/reports/club']"
+                                >
+                                    <button mat-menu-item>View Details</button>
+                                </a>
+                            </mat-menu>
+                        </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
                         <div
@@ -260,32 +235,24 @@
                             Leagues
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                                        <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="featuresMenu"
-                                        >
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:dots-vertical'
-                                                "
-                                            ></mat-icon>
-                                        </button>
-                                        <mat-menu #featuresMenu="matMenu">
-                                            <a
-                                           
-                                            [routerLinkActive]="'active'"
-                                            [routerLink]="[
-                                                '/leagues'
-                                            ]"
-                                            >
-                                            <button mat-menu-item>
-                                               View Details
-                                            </button>
-                                        </a>
-                                            
-                                        </mat-menu>
-                                    </div>
+                            <button
+                                mat-icon-button
+                                [matMenuTriggerFor]="featuresMenu"
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:dots-vertical'"
+                                ></mat-icon>
+                            </button>
+                            <mat-menu #featuresMenu="matMenu">
+                                <a
+                                    [routerLinkActive]="'active'"
+                                    [routerLink]="['/leagues']"
+                                >
+                                    <button mat-menu-item>View Details</button>
+                                </a>
+                            </mat-menu>
+                        </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
                         <div
@@ -310,7 +277,6 @@
                 </div>
                 <!-- Github issues summary -->
                 <div
-                    
                     class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                 >
                     <div
@@ -321,15 +287,14 @@
                         >
                             Daily Rounds Summary
                         </div>
-                
                     </div>
                     <div
                         class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
                     >
                         <!-- New vs. Closed -->
-                        <div    class="flex flex-col flex-auto">
+                        <div class="flex flex-col flex-auto">
                             <div class="font-medium text-secondary"></div>
-                            <div  class="flex flex-col flex-auto">
+                            <div class="flex flex-col flex-auto">
                                 <apx-chart
                                     class="flex-auto w-full h-80"
                                     [chart]="chartGithubIssues.chart"
@@ -341,9 +306,7 @@
                                     [plotOptions]="
                                         chartGithubIssues.plotOptions
                                     "
-                                    [series]="
-                                        chartGithubIssues.series
-                                    "
+                                    [series]="chartGithubIssues.series"
                                     [states]="chartGithubIssues.states"
                                     [stroke]="chartGithubIssues.stroke"
                                     [tooltip]="chartGithubIssues.tooltip"
@@ -353,7 +316,7 @@
                             </div>
                         </div>
                         <!-- Overview -->
-                        <div   class="flex flex-col">
+                        <div class="flex flex-col">
                             <div class="font-medium text-secondary">
                                 Overview
                             </div>
@@ -365,9 +328,7 @@
                                     <div
                                         class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
                                     >
-                                        {{
-                                            _overview["newIssues"]
-                                        }}
+                                        {{ _overview["newIssues"] }}
                                     </div>
                                     <div
                                         class="mt-1 text-sm sm:text-lg font-medium"
@@ -382,9 +343,7 @@
                                     <div
                                         class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
                                     >
-                                        {{
-                                            _overview["closedIssues"]
-                                        }}
+                                        {{ _overview["closedIssues"] }}
                                     </div>
                                     <div
                                         class="mt-1 text-sm sm:text-lg font-medium"
@@ -399,9 +358,7 @@
                                     <div
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
-                                        {{
-                                            _overview["fixed"]
-                                        }}
+                                        {{ _overview["fixed"] }}
                                     </div>
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
@@ -416,9 +373,7 @@
                                     <div
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
-                                        {{
-                                            _overview["wontfix"]
-                                        }}
+                                        {{ _overview["wontfix"] }}
                                     </div>
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
@@ -433,9 +388,7 @@
                                     <div
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
-                                        {{
-                                            _overview["reopened"]
-                                        }}
+                                        {{ _overview["reopened"] }}
                                     </div>
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
@@ -450,9 +403,7 @@
                                     <div
                                         class="text-5xl font-semibold leading-none tracking-tight"
                                     >
-                                        {{
-                                            _overview["needstriage"]
-                                        }}
+                                        {{ _overview["needstriage"] }}
                                     </div>
                                     <div
                                         class="mt-1 text-sm font-medium text-center"
@@ -466,7 +417,7 @@
                 </div>
                 <!-- Task distribution -->
                 <div
-                 class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                 >
                     <div
                         class="flex flex-col sm:flex-row items-start justify-between"
@@ -591,9 +542,14 @@
                                         <ng-container>
                                             <div
                                                 class="py-0.5 px-3 rounded-full text-sm font-semibold text-green-800 bg-green-100"
-                                                
                                             >
-                                                {{ scheduleItem.admin.firstName+" "+scheduleItem.admin.lastName}}
+                                                {{
+                                                    scheduleItem.admin
+                                                        .firstName +
+                                                        " " +
+                                                        scheduleItem.admin
+                                                            .lastName
+                                                }}
                                             </div>
                                         </ng-container>
                                         <ng-container
@@ -611,7 +567,8 @@
                                                 >
                                                     {{
                                                         scheduleItem.noOfRounds
-                                                    }} Rounds
+                                                    }}
+                                                    Rounds
                                                 </div>
                                             </div>
                                         </ng-container>
