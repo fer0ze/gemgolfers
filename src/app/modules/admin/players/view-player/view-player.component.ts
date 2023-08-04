@@ -372,38 +372,38 @@ export class ViewPlayerComponent implements OnInit {
                         (handicapIndex * (slopeRating / 113.0) +
                             (courseRating - coursePar)) *
                         0.95;
-                    this.whiteTeeHI = Math.round(this.whiteTeeHI);
+                    this.whiteTeeHI =Math.abs(Math.round(this.whiteTeeHI));
                 } else if (item['tee'] == 'BLACK') {
                     this.blackTeeHI =
                         (handicapIndex * (slopeRating / 113.0) +
                             (courseRating - coursePar)) *
                         0.95;
-                    this.blackTeeHI = Math.round(this.blackTeeHI);
+                    this.blackTeeHI = Math.abs(Math.round(this.blackTeeHI));
                 } else if (item['tee'] == 'BLUE') {
                     this.blueTeeHI =
                         (handicapIndex * (slopeRating / 113.0) +
                             (courseRating - coursePar)) *
                         0.95;
-                    this.blueTeeHI = Math.round(this.blueTeeHI);
+                    this.blueTeeHI = Math.abs(Math.round(this.blueTeeHI));
                 } else if (item['tee'] == 'RED') {
                     this.redTeeHI =
                         (handicapIndex * (slopeRating / 113.0) +
                             (courseRating - coursePar)) *
                         0.95;
-                    this.redTeeHI = Math.round(this.redTeeHI);
+                    this.redTeeHI = Math.abs(Math.round(this.redTeeHI));
                 }else if (item['tee'] == 'Black') {
                     this.balckVetTeeHI =
                         (handicapIndex * (slopeRating / 113.0) +
                             (courseRating - coursePar)) *
                         0.95;
-                    this.balckVetTeeHI = Math.round(this.balckVetTeeHI);
+                    this.balckVetTeeHI = Math.abs(Math.round(this.balckVetTeeHI));
                 }
             }
-            console.log(this.redTeeHI);
-            console.log(this.balckVetTeeHI);
-            console.log(this.blackTeeHI);
-            console.log(this.whiteTeeHI);
-            console.log(this.blueTeeHI);
+            // console.log(this.redTeeHI);
+            // console.log(this.balckVetTeeHI);
+            // console.log(this.blackTeeHI);
+            // console.log(this.whiteTeeHI);
+            // console.log(this.blueTeeHI);
 
             //this.barChartDataGross = [];
             //this.barChartDataNet = [];
