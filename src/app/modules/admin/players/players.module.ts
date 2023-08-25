@@ -29,13 +29,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     declarations: [
-
         PlayersComponent,
-        ContactsDetailsComponent, ViewPlayerComponent
+        ContactsDetailsComponent,
+        ViewPlayerComponent,
     ],
     imports: [
         RouterModule.forChild(playerRoutes),
@@ -53,6 +53,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
         MatSnackBarModule,
         MatMenuModule,
         MatProgressBarModule,
+        MatDialogModule,
         ReactiveFormsModule,
         MatRadioModule,
         MatRippleModule,
@@ -70,18 +71,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
             provide: MAT_DATE_FORMATS,
             useValue: {
                 parse: {
-                    dateInput: 'D'
+                    dateInput: 'D',
                 },
                 display: {
                     dateInput: 'DDD',
                     monthYearLabel: 'LLL yyyy',
                     dateA11yLabel: 'DD',
-                    monthYearA11yLabel: 'LLLL yyyy'
-                }
-            }
+                    monthYearA11yLabel: 'LLLL yyyy',
+                },
+            },
         },
         DatePipe,
-    ]
+    ],
 })
-export class PlayersModule {
-}
+export class PlayersModule {}

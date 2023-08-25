@@ -29,6 +29,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClubMembership, Player } from 'app/shared/models/player.model';
 import { read, utils } from 'xlsx';
 import { HandicapService } from 'app/shared/services/handicap.service';
+import { DialogOverviewComponent } from '../dialogs/dialog-overview/dialog-overview.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-players',
@@ -56,7 +58,7 @@ export class PlayersComponent implements OnInit {
         'Status',
         'view',
         'Edit',
-        // 'Delete',
+        'Delete',
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -82,8 +84,9 @@ export class PlayersComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         public snackBar: MatSnackBar,
-        private _handicapServise: HandicapService
-    ) { }
+        private _handicapServise: HandicapService,
+        public dialog: MatDialog,
+    ) {}
     ngOnInit(): void {
         this.loggedInuser = JSON.parse(
             localStorage.getItem(Constants.LOGGED_IN_USER)
@@ -204,18 +207,33 @@ export class PlayersComponent implements OnInit {
     }
 
     async deletePlayer(player: any, index: any) {
-        console.log(index);
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to delete the player?',
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                index = this.playersDataSource.data.findIndex(
+                    (Player) => Player.id === player.id
+                );
 
-        let result = await this._facadeService.deletePlayer(
-            player.homeClubId,
-            player.id
-        );
-        if (result) {
-            this.snackBar.open('Player has been deleted.', 'x', {
-                duration: 5000,
-            });
-            this.playersDataSource.data.splice(index, 1);
-        }
+                let response = await this._facadeService.deletePlayer(
+                    player.homeClubId,
+                    player.id
+                );
+                if (response) {
+                    if (index !== -1) {
+                        this.snackBar.open('Player has been deleted.', 'x', {
+                            duration: 5000,
+                        });
+                        this.playersDataSource.data.splice(index, 1);
+                        this.playersDataSource._updateChangeSubscription();
+                    }
+
+                    // this._changeDetectorRef.markForCheck();
+                }
+            }
+        });
     }
     onBackdropClicked(): void {
         // Go back to the list
@@ -422,7 +440,7 @@ export class PlayersComponent implements OnInit {
     async importExcelData() {
         try {
             this.importingList = true;
-            
+
             this.savePlayers = [];
             this.duplicatePlayers = [];
             let clubMember: ClubMembership[] = [];
@@ -581,7 +599,6 @@ export class PlayersComponent implements OnInit {
 
             // this.logger.log(exist);
 
-
             // let UniqueId: string =
             //     exist && exist.length > 0
             //         ? exist[0].id
@@ -621,8 +638,6 @@ export class PlayersComponent implements OnInit {
             // };
 
             // this.savePlayers.push(player);
-
-
 
             // //   this.logger.log(this.savePlayers);
             // //   this.logger.log(this.duplicatePlayers);
