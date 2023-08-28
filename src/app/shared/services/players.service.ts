@@ -16,7 +16,7 @@ import * as Query from '../GraphQL/player.gql';
     providedIn: 'root',
 })
 export class PlayersService {
-    constructor(private apollo: Apollo) {}
+    constructor(private apollo: Apollo) { }
 
     public getPlayersList(): Promise<any> {
         return new Promise((resolve) => {
@@ -299,6 +299,27 @@ export class PlayersService {
                         date: fromDate,
                         sdate: toDate,
                     },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getFlightPlayedAdmin(
+        date: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getFlightPlayedAdmin,
+                    variables: {
+                        date: date
+                    }
+
                 })
                 .subscribe(({ data }) => {
                     if (!data) {
@@ -865,27 +886,27 @@ export class PlayersService {
     public importPlayerList(
         players: any[],
         clubMembers: any[]
-      ): Promise<boolean> {
+    ): Promise<boolean> {
         return new Promise((resolve) => {
-          this.apollo
-            .mutate<any>({
-              mutation: Query.SavePlayersList,
-              variables: {
-                playersToSave: players,
-                clubmembers: clubMembers,
-              },
-            })
-            .subscribe(
-              ({ data }) => {
-                resolve(true);
-              },
-              (error) => {
-                resolve(false);
-                console.log("Could not add due to " + error);
-              }
-            );
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.SavePlayersList,
+                    variables: {
+                        playersToSave: players,
+                        clubmembers: clubMembers,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log("Could not add due to " + error);
+                    }
+                );
         });
-      }
+    }
 
     updatePlayer(player: Player): Promise<boolean> {
         console.log(player.id);
@@ -936,15 +957,15 @@ export class PlayersService {
                 );
         });
     }
-    updateConguHandicap(id,newHandicap,tournamentId): Promise<boolean> {
+    updateConguHandicap(id, newHandicap, tournamentId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.UpdateHandicapMutation,
                     variables: {
-                        id:id,
-                        handicap:newHandicap,
-                        tournamentId:tournamentId
+                        id: id,
+                        handicap: newHandicap,
+                        tournamentId: tournamentId
                     },
                 })
                 .subscribe(
@@ -1138,7 +1159,7 @@ export class PlayersService {
                 );
         });
     }
-    public updatePlayerCategory(membershipNumber:string): Promise<any> {
+    public updatePlayerCategory(membershipNumber: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
@@ -1201,17 +1222,17 @@ export class PlayersService {
             { id: 10, name: 'Junior Ladies' },
             { id: 11, name: 'Pro-Am' },
             { id: 12, name: 'Caddy' },
-        //     { id: 12, name: 'AGC Members & PAF Officers' },
-        //     { id: 13, name: 'Ladies A' },
-        //     { id: 14, name: 'Ladies B' },
-        //     { id: 15, name: 'Subsidiary Amateurs' },
-        //     { id: 16, name: 'Invitational' },
-        //     { id: 17, name: 'Junior Boy(18-21)' },
-        //     { id: 18, name: 'Junior Boy(16-18)' },
-        //     { id: 19, name: 'Junior Boy(12-16)' },
-        //     { id: 20, name: 'Junior Girl(16-21)' },
-        //     { id: 21, name: 'Junior Gril(12-16)' },
-        // ];
+            //     { id: 12, name: 'AGC Members & PAF Officers' },
+            //     { id: 13, name: 'Ladies A' },
+            //     { id: 14, name: 'Ladies B' },
+            //     { id: 15, name: 'Subsidiary Amateurs' },
+            //     { id: 16, name: 'Invitational' },
+            //     { id: 17, name: 'Junior Boy(18-21)' },
+            //     { id: 18, name: 'Junior Boy(16-18)' },
+            //     { id: 19, name: 'Junior Boy(12-16)' },
+            //     { id: 20, name: 'Junior Girl(16-21)' },
+            //     { id: 21, name: 'Junior Gril(12-16)' },
+            // ];
         ]
 
         return CLUB_CATEGORIES;

@@ -424,6 +424,30 @@ export const getTotalFlightPlayedAdmin = gql`
         }
     }
 `;
+export const getFlightPlayedAdmin = gql`
+    query PostsGetQuery( $date: date!) {
+        flight(where:{date:{_eq:$date}}){
+            id
+            courseHoleSets
+            tee
+            tee_id
+            courseHoleSetsInverted
+            time
+            date
+            members{
+                flightId
+                playerId
+                player{
+                    firstName 
+                    lastName
+                    membershipNumber
+                    playerCategory
+
+                }
+            }
+        }
+    }
+`;
 
 export const GetPlayerByID = gql`
     query PostsGetQuery($where: player_bool_exp!) {

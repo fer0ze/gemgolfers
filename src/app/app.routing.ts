@@ -273,6 +273,13 @@ export const appRoutes: Route[] = [
                         'app/modules/admin/mergeProfile/merge-profiles/merge-profiles.module'
                     ).then((m) => m.MergeProfilesModule),
             },
+            {
+                path: 'reports/dailyPlayer',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/daily-players-report/daily-player-report.module'
+                    ).then((m) => m.DailyPlayerReportModule),
+            },
             //{path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
         ],
     },

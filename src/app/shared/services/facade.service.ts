@@ -313,6 +313,9 @@ export class FacadeService {
   getTotalFlightPlayedAdmin( fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayedAdmin( fromDate, toDate);
   }
+  getFlightPlayedAdmin( Date: string) {
+    return this.playerService.getFlightPlayedAdmin( Date);
+  }
 
   deletePlayer(clubId: string, playerId: string) {
     return this.playerService.deletePlayer(clubId, playerId);
