@@ -14,6 +14,7 @@ import { FacadeService } from 'app/shared/services/facade.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants, General, UniqueIdGenerator, generateGemId } from 'app/shared/classes/general';
 import { Club } from 'app/shared/models/club.model';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-dialog-player-list',
     templateUrl: './dialog-player-list.component.html',
@@ -44,13 +45,11 @@ export class DialogPlayerListComponent implements OnInit {
         public dialogRef: MatDialogRef<DialogPlayerListComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private facadeService: FacadeService,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar, private _localStorage: LocalStorageService
     ) {}
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.playerCategories = this.facadeService.getPlayerCategories();
         console.log(this.data);
         let dataClubs = await this.facadeService.getClubList();

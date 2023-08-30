@@ -7,6 +7,7 @@ import { Player } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { General, UniqueIdGenerator, Constants } from '../../../../shared/classes/general';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
   selector: 'app-dialog-club-schedule',
@@ -27,7 +28,7 @@ export class DialogClubScheduleComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DialogClubScheduleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,
-    private facadeService: FacadeService, public snackBar: MatSnackBar
+    private facadeService: FacadeService, public snackBar: MatSnackBar, private _localStorage: LocalStorageService
   ) {}
 
   async ngOnInit() {
@@ -57,7 +58,7 @@ export class DialogClubScheduleComponent implements OnInit {
   onSubmit() {
     // TODO: Use EventEmitter with form value
     
-    this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+   this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
     const schedule: any = {
       id: UniqueIdGenerator.generate(),

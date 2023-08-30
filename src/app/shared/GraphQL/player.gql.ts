@@ -425,8 +425,15 @@ export const getTotalFlightPlayedAdmin = gql`
     }
 `;
 export const getFlightPlayedAdmin = gql`
-    query PostsGetQuery( $date: date!) {
-        flight(where:{date:{_eq:$date}}){
+    query PostsGetQuery($courseId: String!, $date: date!) {
+        flight(
+            where: {
+                _and: [
+                    { date: { _eq: $date } }
+                    { courseId: { _eq: $courseId } }
+                ]
+            }
+        ) {
             id
             courseHoleSets
             tee
@@ -434,15 +441,14 @@ export const getFlightPlayedAdmin = gql`
             courseHoleSetsInverted
             time
             date
-            members{
+            members {
                 flightId
                 playerId
-                player{
-                    firstName 
+                player {
+                    firstName
                     lastName
                     membershipNumber
                     playerCategory
-
                 }
             }
         }
@@ -511,7 +517,8 @@ export const getPlayerByEmailLogin = gql`
             adminClubId
             firstName
             lastName
-            fullName            userRole
+            fullName
+            userRole
             membership {
                 clubId
                 playerId
@@ -929,7 +936,7 @@ export const updatePlayerCatQL = gql`
     mutation updatePlayerCategory($membershipNumber: String!) {
         update_player(
             where: { membershipNumber: { _eq: $membershipNumber } }
-            _set: { playerCategory : "Veterans" }
+            _set: { playerCategory: "Veterans" }
         ) {
             AffectedRowsQLi: affected_rows
         }

@@ -183,7 +183,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+   this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
     this.route.paramMap.subscribe(params => {
       this.tournamentID = params.get("id");
@@ -452,7 +452,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   async saveFlights() {
-    this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+   this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     let tournamentFlights: Flight[] = [];
     let flightsToRemove: string[] = [];
     let flightMembersToRemove: string[] = [];
@@ -668,7 +668,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   async saveSingleFlight(flightData: any, flightNo: number) {
-    this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+   this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     let tournamentFlights: Flight[] = [];
     let flightsToRemove: string[] = [];
     let flightMembersToRemove: string[] = [];

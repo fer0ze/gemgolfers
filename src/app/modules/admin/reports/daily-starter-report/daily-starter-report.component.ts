@@ -23,6 +23,7 @@ import { of } from 'rxjs';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 // import { DialogPlayerListComponent } from "../../material-components/dialog-player-list/dialog-player-list.component";
 
 @Component({
@@ -91,13 +92,12 @@ export class DailyStarterReportComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private _formBuilder: FormBuilder,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private _localStorage: LocalStorageService
     ) {}
 
     ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.Players = [];
 
         this.route.paramMap.subscribe((params) => {
@@ -120,9 +120,7 @@ export class DailyStarterReportComponent implements OnInit {
 
         console.log(this.scheduleForm);
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.weeklyRounds = [];
         of(this.weeklyRounds)

@@ -62,6 +62,7 @@ import { isNumber } from 'lodash';
 import { MatDrawer } from '@angular/material/sidenav';
 import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog-add-member.component';
 import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-flight-management',
@@ -139,13 +140,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     selectPlayer: any;
     constructor(
+        private _localStorage: LocalStorageService,
         private route?: ActivatedRoute,
         private router?: Router,
         public snackBar?: MatSnackBar,
         public dialog?: MatDialog,
         public _viewTournamentComponent?: ViewTournamentComponent,
         private facadeService?: FacadeService,
-        public changeDetection?: ChangeDetectorRef
+        public changeDetection?: ChangeDetectorRef,
     ) {}
 
     // returns all form groups under flights
@@ -167,9 +169,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         // changes.prop contains the old and the new value...
     }
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         console.log(this.loggedInuser);
 
         this.route.paramMap.subscribe((params) => {
@@ -865,9 +865,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async saveFlights() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let flightName: any[] = [];
         let flightsToRemove: string[] = [];
@@ -1311,9 +1309,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async saveSingleFlight(flightData: any, flightNo: number) {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let flightName: any[] = [];
         let flightsToRemove: string[] = [];

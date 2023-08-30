@@ -40,6 +40,7 @@ import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { HandicapsComponent } from '../WHS/handicaps.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
@@ -102,13 +103,11 @@ export class PlayerHandicapComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _handicapComponent: HandicapsComponent,
         private _facadeService: FacadeService,
-        private _router: Router
+        private _router: Router, private _localStorage: LocalStorageService
     ) { }
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this._activatedRoute.paramMap.subscribe((params) => {
             this.showTable = Promise.resolve(false);

@@ -10,6 +10,7 @@ import { Constants, UniqueIdGenerator } from "app/shared/classes/general";
 import { Course } from "app/shared/models/course.model";
 import { FacadeService } from "app/shared/services/facade.service";
 import { Hole } from "app/shared/models/hole.model";
+import { LocalStorageService } from "app/shared/services/localStorage";
 
 @Component({
   selector: "app-add-course",
@@ -51,16 +52,15 @@ export class AddCourseComponent implements OnInit {
     private router: Router,
     private location: Location,
     public snackBar: MatSnackBar,
-    public facadeService: FacadeService
+    public facadeService: FacadeService,
+    private _localStorage: LocalStorageService
   ) {}
 
   async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.courseID = params.get("id");
     });
-    this.loggedInuser = JSON.parse(
-      localStorage.getItem(Constants.LOGGED_IN_USER)
-    );
+    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     this.listCountries = Country.getCity('DEFAULT');
 
     //------------------------------------------------------------------------ Form Declaration --------------------------------------------------------------------------//

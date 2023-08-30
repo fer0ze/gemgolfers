@@ -12,9 +12,10 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { Constants } from 'app/shared/classes/general';
 import {
-    defaultNavigation,userNavigation,
-    defaultNavigationSuperAdmin,
+    defaultNavigation, userNavigation,
+    defaultNavigationSuperAdmin, sectaryNavigation
 } from 'app/mock-api/common/navigation/data';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'classy-layout',
@@ -37,8 +38,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         private _navigationService: NavigationService,
         private _userService: UserService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
-    ) {}
+        private _fuseNavigationService: FuseNavigationService,
+        private _localStorage: LocalStorageService
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -74,14 +76,14 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
                 this.navigation = navigation;
             });
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         if (this.loggedInuser.userRole == 1) {
             this.navigation['default'] = defaultNavigationSuperAdmin;
-        } else if(this.loggedInuser.adminClubId!=null){
+        } else if (this.loggedInuser.adminClubId != null && this.loggedInuser.userRole == 2) {
             this.navigation['default'] = defaultNavigation;
-        }else{
+        } else if (this.loggedInuser.userRole == 8) {
+            this.navigation['default'] = sectaryNavigation;
+        } else {
             this.navigation['default'] = userNavigation;
         }
         console.log(this.navigation);

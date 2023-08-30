@@ -18,6 +18,7 @@ import {
 } from '../../../shared/classes/general';
 import { of } from 'rxjs';
 import { DialogTeeTimeSlotComponent } from '../dialogs/dialog-tee-time-slot/dialog-tee-time-slot.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-tee-times',
@@ -58,7 +59,8 @@ export class TeeTimesComponent implements OnInit {
         private location: Router,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
-        private facadeService: FacadeService
+        private facadeService: FacadeService,
+        private _localStorage: LocalStorageService
     ) {}
 
     ngAfterViewInit(): void {
@@ -66,9 +68,7 @@ export class TeeTimesComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.teeTimes = [];
 
         of(this.teeTimes)

@@ -19,6 +19,7 @@ import { HostListener } from '@angular/core';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 import { ComponentCanDeactivate } from '../../../../shared/services/component-can-deactivate';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 
 @Component({
@@ -152,7 +153,7 @@ export class AddPlayerDailyScoreComponent implements OnInit, ComponentCanDeactiv
  
    }
 
-  constructor(private datePipe: DatePipe,private location: Router, private fb: FormBuilder, public snackBar: MatSnackBar, private facadeService: FacadeService,private router: Router, private route: ActivatedRoute, private _formBuilder: FormBuilder, public dialog: MatDialog) { }
+  constructor(private _localStorage: LocalStorageService, private datePipe: DatePipe,private location: Router, private fb: FormBuilder, public snackBar: MatSnackBar, private facadeService: FacadeService,private router: Router, private route: ActivatedRoute, private _formBuilder: FormBuilder, public dialog: MatDialog) { }
 
   ngOnInit() {
 
@@ -174,7 +175,7 @@ export class AddPlayerDailyScoreComponent implements OnInit, ComponentCanDeactiv
   
             //console.log(this.scheduleForm)
   
-          this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+         this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
           
           this.dailyRounds = [];   
   
@@ -928,7 +929,7 @@ export class AddPlayerDailyScoreComponent implements OnInit, ComponentCanDeactiv
             let todayDate: Date = General.parseToDate( mm + '/' + dd + '/' + yyyy);
             let playerScores: Score[] = [];
             
-            this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+           this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
         
             let courseQLs = null;
             let courseHoleQLs = null;
@@ -1028,7 +1029,7 @@ export class AddPlayerDailyScoreComponent implements OnInit, ComponentCanDeactiv
         
             let playerScores: Score[] = [];
         
-            this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+           this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
         
             let courseQLs = null;
             let courseHoleQLs = null;

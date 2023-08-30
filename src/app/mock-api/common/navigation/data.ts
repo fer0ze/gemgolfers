@@ -13,7 +13,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Home',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
-                link: '/dashboard',
+                link: '/dashboard'
             },
         ],
     },
@@ -189,7 +189,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 title: 'Home',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
-                link: '/dashboard',
+                link: '/dashboard'
             },
         ],
     },
@@ -409,7 +409,7 @@ export const compactNavigation: FuseNavigationItem[] = [
         title: 'DashBoard',
         type: 'basic',
         icon: 'heroicons_outline:chart-pie',
-        link: '/dashboard',
+        link: '/dashboards/project',
     },
     {
         id: 'tournaments',
@@ -457,13 +457,31 @@ export const userNavigation: FuseNavigationItem[] = [
         link: '/leaguesDashboard',
     },
 ]
+export const sectaryNavigation: FuseNavigationItem[] = [
+    {
+        id: 'report',
+        title: 'Report',
+
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'report.dasboard',
+                title: 'Report',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/reports/dailyPlayer'
+            },
+        ],
+    },
+]
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
         id: 'dashboard',
         title: 'DashBoard',
         type: 'basic',
         icon: 'heroicons_outline:chart-pie',
-        link: '/dashboard',
+        link: '/dashboards/project',
     },
     {
         id: 'tournaments',
@@ -507,7 +525,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         title: 'DashBoard',
         type: 'basic',
         icon: 'heroicons_outline:chart-pie',
-        link: '/dashboard',
+        link: '/dashboards/project',
     },
     {
         id: 'tournaments',

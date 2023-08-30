@@ -19,6 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { of } from 'rxjs';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-matchplay',
@@ -65,7 +66,7 @@ export class MatchplayComponent implements OnInit {
         private router: Router,
         private location: Router,
         private route: ActivatedRoute,
-        private apollo: Apollo,
+        private apollo: Apollo, private _localStorage: LocalStorageService,
         private _formBuilder: FormBuilder,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
@@ -884,9 +885,7 @@ export class MatchplayComponent implements OnInit {
         //let holesQLs: any = courseQLs.HolesQL;
         let playerScores: Score[] = [];
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let courseQLs = null;
         let courseHoleQLs = null;
@@ -1326,9 +1325,7 @@ export class MatchplayComponent implements OnInit {
         //let holesQLs: any = courseQLs.HolesQL;
         let playerScores: Score[] = [];
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let courseQLs = null;
         let courseHoleQLs = null;

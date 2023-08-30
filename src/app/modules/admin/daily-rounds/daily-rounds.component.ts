@@ -16,6 +16,7 @@ import { DatePipe } from '@angular/common';
 import { General } from '../../../shared/classes/general';
 
 import { of } from 'rxjs';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-daily-rounds',
@@ -57,7 +58,8 @@ export class DailyRoundsComponent implements OnInit {
         private facadeService: FacadeService,
         private route: ActivatedRoute,
         private _formBuilder: FormBuilder,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private _localStorage: LocalStorageService
     ) {
         this.showtable = false;
     }
@@ -71,9 +73,7 @@ export class DailyRoundsComponent implements OnInit {
             startDate: ['', [Validators.required]],
             endDate: ['', [Validators.required]],
         });
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.dailyRounds = [];
         // this.route.paramMap.subscribe((params) => {

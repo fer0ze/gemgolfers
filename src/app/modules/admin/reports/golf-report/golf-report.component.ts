@@ -18,6 +18,7 @@ import 'jspdf-autotable';
 // import { UserDetailsDilogueComponent } from "../../material-components/user-details-dilogue/user-details-dilogue.component";
 import { MatDialog } from '@angular/material/dialog';
 import { UserDetailsDilogueComponent } from '../../dialogs/dialog-user-details/user-details-dilogue.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-golf-report',
     templateUrl: './golf-report.component.html',
@@ -88,14 +89,12 @@ export class GolfReportComponent implements OnInit {
         public dialog: MatDialog,
         public snackBar: MatSnackBar,
         private facadeService: FacadeService,
-
+        private _localStorage: LocalStorageService,
         private route: ActivatedRoute
     ) {}
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.isLoading = false;
         this.refresh = true;
         this.scheduleForm = this.fb.group({

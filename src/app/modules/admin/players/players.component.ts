@@ -31,6 +31,7 @@ import { read, utils } from 'xlsx';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogOverviewComponent } from '../dialogs/dialog-overview/dialog-overview.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-players',
@@ -86,11 +87,10 @@ export class PlayersComponent implements OnInit {
         public snackBar: MatSnackBar,
         private _handicapServise: HandicapService,
         public dialog: MatDialog,
+        private _localStorage: LocalStorageService
     ) {}
     ngOnInit(): void {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.fecthData();
         this.showTable = Promise.resolve(true);
     }

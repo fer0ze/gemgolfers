@@ -49,6 +49,7 @@ import { PlayerManagementComponent } from '../player-management/player-managemen
 import { forEach } from 'lodash';
 import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player.component';
 import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog-add-player.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-view-tournament',
@@ -262,6 +263,7 @@ export class ViewTournamentComponent implements OnInit {
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public changeDetection: ChangeDetectorRef,
+        private _localStorage: LocalStorageService,
         //private _flightManagmentComponent: FlightManagementComponent,
         public facadeService: FacadeService // private storage: AngularFireStorage
     ) {
@@ -277,9 +279,7 @@ export class ViewTournamentComponent implements OnInit {
 
     async ngOnInit() {
         //console.log(this.route.snapshot.paramMap.get("id"));
-        this.loggedInUser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let clubInfo: any =
             this.loggedInUser.membership.length > 0
                 ? this.loggedInUser.membership[0].club

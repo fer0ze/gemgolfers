@@ -33,6 +33,7 @@ import { UntypedFormControl } from '@angular/forms';
 
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
@@ -96,7 +97,7 @@ export class HandicapsComponent implements OnInit {
         private datepipe: DatePipe,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _activatedRoute: ActivatedRoute
+        private _activatedRoute: ActivatedRoute, private _localStorage: LocalStorageService
     ) { }
 
     ngAfterViewInit(): void {
@@ -107,9 +108,7 @@ export class HandicapsComponent implements OnInit {
         //this.fecthData();
 
         this.currentDate = new Date();
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.Players = [];
 
         this._router.paramMap.subscribe((params) => {

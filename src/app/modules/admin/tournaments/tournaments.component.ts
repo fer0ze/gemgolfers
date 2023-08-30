@@ -24,6 +24,7 @@ import { FacadeService } from 'app/shared/services/facade.service';
 import { of } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
 import { DialogHanidcapListComponent } from '../dialogs/dialog-hanidcap-list/dialog-hanidcap-list.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-tournaments',
@@ -88,7 +89,8 @@ export class TournamentsComponent implements OnInit {
         private location: Router,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
-        private facadeService: FacadeService
+        private facadeService: FacadeService,
+        private _localStorage: LocalStorageService
     ) {}
 
     ngAfterViewInit(): void {
@@ -96,9 +98,7 @@ export class TournamentsComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let array = {
             id: 0,
             title: 'Completed',

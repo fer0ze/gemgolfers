@@ -19,6 +19,7 @@ import { of } from 'rxjs';
 import { DatePipe, formatDate } from '@angular/common';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-updated-handicap-report',
     templateUrl: './updated-handicap-report.component.html',
@@ -105,14 +106,12 @@ export class UpdatedHandicapReportComponent implements OnInit {
         private facadeService: FacadeService,
         private router: Router,
         private route: ActivatedRoute,
-
+        private _localStorage: LocalStorageService,
         private _formBuilder: FormBuilder
     ) {}
 
     ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.Players = [];
 
         this.route.paramMap.subscribe((params) => {
@@ -135,9 +134,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
 
         console.log(this.scheduleForm);
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.weeklyRounds = [];
         of(this.weeklyRounds)

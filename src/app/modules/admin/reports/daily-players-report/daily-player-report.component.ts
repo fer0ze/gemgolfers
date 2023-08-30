@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Constants } from 'app/shared/classes/general';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
   selector: 'app-daily-player-report',
   templateUrl: './daily-player-report.component.html',
@@ -32,15 +33,13 @@ export class DailyPlayerReportComponent implements OnInit {
   scheduleForm: FormGroup;
   Players: any[] = [];
 
-  constructor(private facadeService: FacadeService, private datePipe: DatePipe, private fb: FormBuilder,
+  constructor(private facadeService: FacadeService, private datePipe: DatePipe, private fb: FormBuilder,private _localStorage:LocalStorageService
   ) {
 
   }
 
   async ngOnInit() {
-    this.loggedInuser = JSON.parse(
-      localStorage.getItem(Constants.LOGGED_IN_USER)
-    );
+    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     this.isLoading = false;
     this.scheduleForm = this.fb.group({
       Date: ['', [Validators.required]]
@@ -52,7 +51,7 @@ export class DailyPlayerReportComponent implements OnInit {
   async getTotalReport(todayDate: Date) {
     let players: any;
     players = await this.facadeService.getFlightPlayedAdmin(
-
+      '-LUFS3FCQKOGpJ2IEHmf',
       this.datePipe.transform(
         todayDate.toString(),
         'yyyy-MM-dd')

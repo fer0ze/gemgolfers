@@ -57,6 +57,7 @@ import { DatePipe } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { DialogPlayingDatesComponent } from '../../dialogs/dialog-playing-dates/dialog-playing-dates.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 //import { DialogPlayingDatesComponent } from "../../material-components/dialog-playing-dates/dialog-playing-dates.component";
 
 @Component({
@@ -187,7 +188,7 @@ export class AddTournamentComponent implements OnInit {
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
-        public dialog: MatDialog,
+        public dialog: MatDialog, private _localStorage: LocalStorageService,
         private facadeService: FacadeService
     ) {
         this.setState(this.valid1, true);
@@ -198,9 +199,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
@@ -1766,9 +1765,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async createTournament(stepper: MatStepper) {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let tournamentCats: TournamentCategory[] = [];
 
@@ -2083,9 +2080,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async editTournaments() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentCats: TournamentCategory[] = [];
 
         let marshalsData: Marshal[] = [];
@@ -2568,9 +2563,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async createFlights() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let tournamentMember: TournamentMember[] = [];
         let flightName: any[] = [];

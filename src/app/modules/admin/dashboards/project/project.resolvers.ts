@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { ProjectService } from 'app/modules/admin/dashboards/project/project.service';
 import { Constants } from 'app/shared/classes/general';
 import { DatePipe } from '@angular/common';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Injectable({
     providedIn: 'root',
@@ -19,11 +20,9 @@ export class ProjectResolver implements Resolve<any> {
      */
     constructor(
         private _projectService: ProjectService,
-        private _datePipe: DatePipe
+        private _datePipe: DatePipe, private _localStorage: LocalStorageService
     ) {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     }
 
     // -----------------------------------------------------------------------------------------------------

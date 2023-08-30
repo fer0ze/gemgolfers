@@ -5,6 +5,7 @@ import { Hole } from '../../../../shared/models/hole.model';
 import { Constants } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { Player } from 'app/shared/models/player.model';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-dialog-player-score',
@@ -27,7 +28,7 @@ export class DialogPlayerScoreComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<DialogPlayerScoreComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private facadeService: FacadeService
+        private facadeService: FacadeService, private _localStorage: LocalStorageService
     ) {}
 
     async ngOnInit() {
@@ -36,9 +37,7 @@ export class DialogPlayerScoreComponent implements OnInit {
         if (this.data.players && this.data.players.length > 0) {
             this.isTaxes = true;
         }
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         // let club:any = this.loggedInuser.membership[0].club;
         // let courseID =
         // club.courses.length > 0 ? club.courses[0].id : "-LUFS3FCQKOGpJ2IEHmf";

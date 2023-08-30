@@ -20,7 +20,6 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
-import { LayoutLeaderModule } from './layout-Leader/layout-leader.module';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -32,7 +31,7 @@ const routerConfig: ExtraOptions = {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule.forRoot(appRoutes),
+        RouterModule.forRoot(appRoutes,routerConfig),
 
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
@@ -44,7 +43,6 @@ const routerConfig: ExtraOptions = {
 
         // Core module of your application
         CoreModule,
-        LayoutLeaderModule,
         // Layout module of your application
         LayoutModule,
 

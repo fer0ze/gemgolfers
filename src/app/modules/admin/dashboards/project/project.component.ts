@@ -21,6 +21,7 @@ import {
 import { trigger } from '@angular/animations';
 import { Player } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'project',
@@ -66,7 +67,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
         private _projectService: ProjectService,
         private _router: Router,
         private _facadeService: FacadeService,
-        private _datePipe: DatePipe
+        private _datePipe: DatePipe, private _localStorage: LocalStorageService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -78,9 +79,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     ngOnInit(): void {
         // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let clubInfo: any =
             this.loggedInuser.membership.length > 0
                 ? this.loggedInuser.membership[0].club

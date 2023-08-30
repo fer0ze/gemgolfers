@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
   selector: 'app-calculate-handicap',
   templateUrl: './calculate-handicap.component.html',
@@ -45,7 +46,7 @@ export class CalculateHandicapComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private router: Router, private route: ActivatedRoute, private location: Location, public snackBar: MatSnackBar, public dialog: MatDialog, public facadeService: FacadeService) { }
+  constructor(  private _localStorage: LocalStorageService,private router: Router, private route: ActivatedRoute, private location: Location, public snackBar: MatSnackBar, public dialog: MatDialog, public facadeService: FacadeService) { }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
@@ -265,7 +266,7 @@ export class CalculateHandicapComponent implements OnInit {
     let changeLogRemarks: string = "Handicap Calculation from Web";
     let tournamentId: string = this.tournamentID;
 
-    this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+   this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
     let updaterId: string = this.loggedInuser.id;
 

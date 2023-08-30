@@ -16,6 +16,7 @@ import { FacadeService } from '../../../../shared/services/facade.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TournamentMember } from '../../../../shared/models/tournament.model';
 import { FlightManagementComponent } from '../flight-management/flight-management.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-player-management',
@@ -68,13 +69,12 @@ export class PlayerManagementComponent implements OnInit {
         private _formBuilder: FormBuilder,
         public dialog: MatDialog,
         public _flightManagmentComponent: FlightManagementComponent,
-        private facadeService: FacadeService
+        private facadeService: FacadeService,
+        private _localStorage: LocalStorageService
     ) {}
 
     async ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         console.log(this.loggedInuser);
         let selectedClubId: string = this.loggedInuser.adminClubId;
         this.route.paramMap.subscribe((params) => {

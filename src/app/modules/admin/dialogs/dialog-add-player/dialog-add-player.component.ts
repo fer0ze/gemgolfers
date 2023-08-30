@@ -21,6 +21,7 @@ import {
     Constants,
     General,
 } from '../../../../shared/classes/general';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-dialog-add-player',
@@ -47,7 +48,7 @@ export class DialogAddPlayerComponent implements OnInit {
         private route: ActivatedRoute,
         private location: Location,
         public snackBar: MatSnackBar,
-        public facadeService: FacadeService
+        public facadeService: FacadeService, private _localStorage: LocalStorageService
     ) {}
 
     async ngOnInit() {
@@ -57,9 +58,7 @@ export class DialogAddPlayerComponent implements OnInit {
             this.playerID = params.get('id');
         });
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.playerForm = new FormGroup({
             firstName: new FormControl('', [
@@ -220,9 +219,7 @@ export class DialogAddPlayerComponent implements OnInit {
         }
 
         let clubMember: ClubMembership[] = [];
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let UniqueId: string = '';
         let GEMId: string = '';
 

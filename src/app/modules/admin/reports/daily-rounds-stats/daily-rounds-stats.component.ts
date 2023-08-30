@@ -22,6 +22,7 @@ import { of } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ApexOptions } from 'ng-apexcharts';
 import { ceil } from 'lodash';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-daily-rounds-stats',
@@ -174,6 +175,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private apollo: Apollo,
+        private _localStorage: LocalStorageService,
         private _formBuilder: FormBuilder
     ) {}
 
@@ -325,9 +327,7 @@ export class DailyRoundsStatsComponent implements OnInit {
     ];
 
     ngOnInit() {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.Players = [];
 
         this.route.paramMap.subscribe((params) => {
@@ -344,9 +344,7 @@ export class DailyRoundsStatsComponent implements OnInit {
 
         console.log(this.scheduleForm);
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.weeklyRounds = [];
         of(this.weeklyRounds)

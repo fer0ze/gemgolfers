@@ -39,6 +39,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { HandicapsComponent } from '../CONGU/handicaps.component';
 import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
@@ -88,14 +89,13 @@ export class PlayerHandicapComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _handicapComponent: HandicapsComponent,
         private _facadeService: FacadeService,
-        private _router: Router
+        private _router: Router,
+        private _localStorage: LocalStorageService
     ) {}
 
     async ngOnInit() {
         this._handicapComponent.matDrawer.open();
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this._activatedRoute.paramMap.subscribe(async (params) => {
             this.showTable = Promise.resolve(false);

@@ -50,6 +50,7 @@ import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-ov
 import { DialogChangeCourseHoleSetComponent } from '../../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { forEach } from 'lodash';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 // import { DialogChangeCourseHoleSetComponent } from "../../material-components/dialog-change-course-hole-set/dialog-change-course-hole-set.component";
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";
 @Component({
@@ -193,7 +194,7 @@ export class ViewDailyRoundComponent implements OnInit {
         private apollo: Apollo,
         private _formBuilder: FormBuilder,
         public dialog: MatDialog,
-        private logger: LogsService
+        private logger: LogsService, private _localStorage: LocalStorageService
     ) {}
 
     ngOnInit() {
@@ -201,9 +202,7 @@ export class ViewDailyRoundComponent implements OnInit {
         this.showResult = false;
         this.isLoading = true;
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         // this.dailyRounds = [];
         this.filters = this._formBuilder.group({
@@ -1337,9 +1336,7 @@ export class ViewDailyRoundComponent implements OnInit {
         //let holesQLs: any = courseQLs.HolesQL;
         let playerScores: Score[] = [];
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let courseQLs = null;
         let courseHoleQLs = null;
@@ -1477,9 +1474,7 @@ export class ViewDailyRoundComponent implements OnInit {
         //let holesQLs: any = courseQLs.HolesQL;
         let playerScores: Score[] = [];
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let courseQLs = null;
         let courseHoleQLs = null;

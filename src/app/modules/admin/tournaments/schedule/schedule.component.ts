@@ -15,6 +15,7 @@ import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { DialogClubScheduleComponent } from '../../dialogs/dialog-club-schedule/dialog-club-schedule.component';
 import { DialogViewScheduleComponent } from '../../dialogs/dialog-view-schedule/dialog-view-schedule.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
   selector: 'app-schedule',
@@ -36,7 +37,7 @@ export class ScheduleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private location: Router, private apollo: Apollo, public dialog: MatDialog, private facadeService: FacadeService) {
+  constructor(private location: Router, private apollo: Apollo, public dialog: MatDialog, private facadeService: FacadeService,private _localStorage: LocalStorageService) {
   }
 
   ngAfterViewInit(): void {
@@ -48,7 +49,7 @@ export class ScheduleComponent implements OnInit {
       //this.Tournaments = await this.facadeService.getActiveTournamentsList("2019-08-22");
       //console.log(this.Tournaments);
         this.clubSchedule = [];
-        this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+       this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         of(this.clubSchedule).pipe()
         .subscribe(async data => {

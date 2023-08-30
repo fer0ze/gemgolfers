@@ -32,6 +32,7 @@ import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-ov
 import { ApexOptions } from 'ng-apexcharts';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-view-player',
@@ -140,7 +141,7 @@ export class ViewPlayerComponent implements OnInit {
         public dialog: MatDialog,
         public facadeService: FacadeService,
         private handicapService: HandicapService,
-        private datepipe: DatePipe
+        private datepipe: DatePipe, private _localStorage: LocalStorageService
     ) {}
 
     // bar chart
@@ -203,9 +204,7 @@ export class ViewPlayerComponent implements OnInit {
 
     async ngOnInit() {
         //console.log(this.route.snapshot.paramMap.get("id"));
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.route.paramMap.subscribe((params) => {
             this.playerID = params.get('id');

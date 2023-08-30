@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { Observable, map, pipe } from 'rxjs';
 import {
     Player,
     PlayerCategory,
@@ -310,13 +310,14 @@ export class PlayersService {
         });
     }
     public getFlightPlayedAdmin(
-        date: string
+        courseId:string,date: string
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe({
                     query: Query.getFlightPlayedAdmin,
                     variables: {
+                        courseId:courseId,
                         date: date
                     }
 
@@ -665,23 +666,22 @@ export class PlayersService {
                 });
         });
     }
-    getPlayerByEmailLogin(email: string): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .watchQuery<any>({
-                    query: Query.getPlayerByEmailLogin,
-                    variables: {
-                        where: {
-                            email: {
-                                _eq: email,
-                            },
+    getPlayerByEmailLogin(email: string): Observable<any> {
+        return this.apollo
+            .subscribe<any>({
+                query: Query.getPlayerByEmailLogin,
+                variables: {
+                    where: {
+                        email: {
+                            _eq: email,
                         },
                     },
-                })
-                .valueChanges.subscribe(({ data }) => {
-                    resolve(data.player);
-                });
-        });
+                },
+            }).pipe(
+                map((item) =>
+                    item.data['player']
+                )
+            );
     }
 
     getPlayerByFirstName(firstName: string): Promise<any> {

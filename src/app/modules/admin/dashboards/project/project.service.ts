@@ -39,11 +39,6 @@ export class ProjectService {
         fromDate?: any,
         toDate?: any
     ): Observable<any> {
-        // return this._httpClient.get('api/dashboard').pipe(
-        //     tap((response: any) => {
-        //         this._data.next(response);
-        //     })
-        // );
         if (id) {
             return this.apollo
                 .subscribe<any>({

@@ -5,31 +5,31 @@ import Utf8 from 'crypto-js/enc-utf8';
 import { cloneDeep } from 'lodash-es';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import { user as userData } from 'app/mock-api/common/user/data';
-import { Constants } from 'app/shared/classes/general';
-import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import {
-    AngularFirestore,
-    AngularFirestoreDocument,
-} from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { FacadeService } from 'app/shared/services/facade.service';
+import { LocalStorageService } from 'app/shared/services/localStorage';
+import { Constants } from 'app/shared/classes/general';
+
+
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class AuthMockApi {
     private readonly _secret: any;
     private _user: any = userData;
-    private loggedInuser: any;
+
     /**
      * Constructor
      */
     constructor(
         private _fuseMockApiService: FuseMockApiService,
-        public afs: AngularFirestore, // Inject Firestore service
-        public firebaseAuth: AngularFireAuth
+        private afAuth: AngularFireAuth,
+        private _facadeService: FacadeService,
+        private _localStorage: LocalStorageService
     ) {
         // Set the mock-api
-        this._secret =
-            'YOUR_VERY_CONFIDENTIAL_SECRET_FOR_SIGNING_JWT_TOKENS!!!';
+        this._secret = 'YOUR_VERY_CONFIDENTIAL_SECRET_FOR_SIGNING_JWT_TOKENS!!!';
 
         // Register Mock API handlers
         this.registerHandlers();
@@ -42,107 +42,91 @@ export class AuthMockApi {
     /**
      * Register Mock API handlers
      */
-    async registerHandlers() {
+    registerHandlers(): void {
         // -----------------------------------------------------------------------------------------------------
         // @ Forgot password - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/auth/forgot-password', 1000)
-            .reply(() => [200, true]);
+            .reply(() =>
+                [
+                    200,
+                    true
+                ]
+            );
 
         // -----------------------------------------------------------------------------------------------------
         // @ Reset password - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/auth/reset-password', 1000)
-            .reply(() => [200, true]);
-        // -----------------------------------------------------------------------------------------------------
-        // @ Reset User - POST
-        // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/userUpdate', 1500)
-            .reply((requset) => {
-                console.log(requset);
-
-                this.loggedInuser = JSON.parse(
-                    localStorage.getItem(Constants.LOGGED_IN_USER)
-                );
-                let clubInfo: any =
-                    this.loggedInuser.membership.length > 0
-                        ? this.loggedInuser.membership[0].club
-                        : null;
-                let logo =
-                    clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-                this._user.email = this.loggedInuser.email;
-                this._user.name = this.loggedInuser.fullName;
-                this._user.avatar = 'assets/images/logo/' + logo + '';
-                return [
+            .reply(() =>
+                [
                     200,
-                    {
-                        user: cloneDeep(this._user),
-                        accessToken: this._generateJWTToken(),
-                        tokenType: 'bearer',
-                    },
-                ];
-            });
+                    true
+                ]
+            );
 
-        // -----------------------------------------------------------------------------------------------------
-        // @ Sign in - POST
-        // -----------------------------------------------------------------------------------------------------
-        // this._fuseMockApiService
-        //     .onPost('api/auth/sign-in', 1000)
-        //     .reply((request) => {
-        //         // Sign in successful
-        //         console.log(request);
-
-        //         this.loggedInuser = JSON.parse(
-        //             localStorage.getItem(Constants.LOGGED_IN_USER)
-        //         );
-        //         if (this.loggedInuser) {
-        //             let clubInfo: any =
-        //                 this.loggedInuser.membership.length > 0
-        //                     ? this.loggedInuser.membership[0].club
-        //                     : null;
-        //             let logo =
-        //                 clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-        //             this._user.email = this.loggedInuser.email;
-        //             this._user.name = this.loggedInuser.fullName;
-        //             this._user.avatar = 'assets/images/logo/' + logo + '';
-        //             return [
-        //                 200,
-        //                 {
-        //                     user: cloneDeep(this._user),
-        //                     accessToken: this._generateJWTToken(),
-        //                     tokenType: 'bearer',
-        //                 },
-        //             ];
-        //         }
-
-        //         // Invalid credentials
-        //         return [404, false];
-        //     });
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/auth/sign-in', 1500)
-            .reply(({ request }) => {
-                console.log(request);
-                // Sign in successful
-                if (request.body == true) {
-                    return [
-                        200,
-                        {
-                            user: cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType: 'bearer',
-                        },
-                    ];
-                }
+            .reply(({ request }): [number, any] | Observable<any> => {
+                return new Observable((observer) => {
+                    (async () => {
+                        try {
+                            const { email, password } = request.body;
 
-                // Invalid credentials
-                return [404, false];
+                            // Sign in using Firebase Authentication
+                            const response = await this.afAuth.signInWithEmailAndPassword(email, password);
+                            const user = response.user;
+                            // Sign in successful
+                            if (user) {
+                                //const idToken = await user.getIdToken();
+
+                                this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
+                                    //console.log(user);
+                                    this._user.name = user[0].firstName + " " + user[0].lastName;
+                                    this._user.email = user[0].email;
+                                    let clubInfo: any =
+                                        user[0].membership.length > 0
+                                            ? user[0].membership[0].club
+                                            : null;
+                                    let logo =
+                                        clubInfo && clubInfo.logo
+                                            ? clubInfo.logo
+                                            : 'e2esp.png';
+                                    this._user.avatar = 'assets/images/logo/' + logo + '';
+
+                                    this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
+                                    observer.next([
+                                        200,
+                                        {
+                                            user: cloneDeep(this._user),
+                                            accessToken: this._generateJWTToken(),
+                                            tokenType: 'bearer'
+                                        }
+                                    ]);
+                                    observer.complete();
+                                })
+
+
+                            }
+                        } catch (error) {
+                            // Invalid credentials or other error occurred
+                            console.error(error);
+                            // Invalid credentials
+                            observer.next([404, false]);
+                            observer.complete();
+                        }
+
+
+                    })();
+                });
             });
+
+
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in using the access token - POST
@@ -150,6 +134,7 @@ export class AuthMockApi {
         this._fuseMockApiService
             .onPost('api/auth/sign-in-with-token')
             .reply(({ request }) => {
+
                 // Get the access token
                 const accessToken = request.body.accessToken;
 
@@ -160,8 +145,8 @@ export class AuthMockApi {
                         {
                             user: cloneDeep(this._user),
                             accessToken: this._generateJWTToken(),
-                            tokenType: 'bearer',
-                        },
+                            tokenType: 'bearer'
+                        }
                     ];
                 }
 
@@ -169,18 +154,24 @@ export class AuthMockApi {
                 return [
                     401,
                     {
-                        error: 'Invalid token',
-                    },
+                        error: 'Invalid token'
+                    }
                 ];
             });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign up - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService.onPost('api/auth/sign-up', 1500).reply(() =>
-            // Simply return true
-            [200, true]
-        );
+        this._fuseMockApiService
+            .onPost('api/auth/sign-up', 1500)
+            .reply(() =>
+
+                // Simply return true
+                [
+                    200,
+                    true
+                ]
+            );
 
         // -----------------------------------------------------------------------------------------------------
         // @ Unlock session - POST
@@ -188,23 +179,24 @@ export class AuthMockApi {
         this._fuseMockApiService
             .onPost('api/auth/unlock-session', 1500)
             .reply(({ request }) => {
+
                 // Sign in successful
-                if (
-                    request.body.email === 'hughes.brian@company.com' &&
-                    request.body.password === 'admin'
-                ) {
+                if (request.body.email === 'hughes.brian@company.com' && request.body.password === 'admin') {
                     return [
                         200,
                         {
                             user: cloneDeep(this._user),
                             accessToken: this._generateJWTToken(),
-                            tokenType: 'bearer',
-                        },
+                            tokenType: 'bearer'
+                        }
                     ];
                 }
 
                 // Invalid credentials
-                return [404, false];
+                return [
+                    404,
+                    false
+                ];
             });
     }
 
@@ -241,23 +233,23 @@ export class AuthMockApi {
      *
      * @private
      */
-    public _generateJWTToken(): string {
+    private _generateJWTToken(): string {
         // Define token header
         const header = {
             alg: 'HS256',
-            typ: 'JWT',
+            typ: 'JWT'
         };
 
         // Calculate the issued at and expiration dates
         const date = new Date();
         const iat = Math.floor(date.getTime() / 1000);
-        const exp = Math.floor(date.setDate(date.getDate() + 7) / 1000);
+        const exp = Math.floor((date.setDate(date.getDate() + 7)) / 1000);
 
         // Define token payload
         const payload = {
             iat: iat,
             iss: 'Fuse',
-            exp: exp,
+            exp: exp
         };
 
         // Stringify and encode the header
@@ -277,54 +269,6 @@ export class AuthMockApi {
         return encodedHeader + '.' + encodedPayload + '.' + signature;
     }
 
-    login(email: string, password: string): Promise<boolean> {
-        return new Promise((resolve) => {
-            this.firebaseAuth
-                .signInWithEmailAndPassword(email, password)
-                .then((value) => {
-                    //console.log('Success!', value);
-                    //localStorage.setItem('authToken', JSON.stringify(value.user.getIdToken()));
-
-                    // const token = value.user
-                    //     .getIdToken(false)
-                    //     .then((authToken) => {
-                    //         // Set the authenticated flag to true
-
-                    //         this.loggedInuser = JSON.parse(
-                    //             localStorage.getItem(Constants.LOGGED_IN_USER)
-                    //         );
-                    //         let clubInfo: any =
-                    //             this.loggedInuser.membership.length > 0
-                    //                 ? this.loggedInuser.membership[0].club
-                    //                 : null;
-                    //         let logo =
-                    //             clubInfo && clubInfo.logo
-                    //                 ? clubInfo.logo
-                    //                 : 'e2esp.png';
-                    //         this._user.email = this.loggedInuser.email;
-                    //         this._user.name = this.loggedInuser.fullName;
-                    //         this._user.avatar =
-                    //             'assets/images/logo/' + logo + '';
-                    //         // Store the user on the user service
-
-                    //         // localStorage.setItem('accessToken', this._api._generateJWTToken());
-                    //         // localStorage.setItem('gotAuthentication', 'true');
-                    //     });
-
-                    //this.firebaseAuth.user.subscribe(a=> { console.log(a.providerData[0]); });
-
-                    //console.log('Nice, it worked!');
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 1000);
-                })
-                .catch((err) => {
-                    console.log('Something went wrong:', err.message);
-                    resolve(false);
-                });
-        });
-    }
-
     /**
      * Verify the given token
      *
@@ -339,11 +283,9 @@ export class AuthMockApi {
         const signature = parts[2];
 
         // Re-sign and encode the header and payload using the secret
-        const signatureCheck = this._base64url(
-            HmacSHA256(header + '.' + payload, this._secret)
-        );
+        const signatureCheck = this._base64url(HmacSHA256(header + '.' + payload, this._secret));
 
         // Verify that the resulting signature is valid
-        return signature === signatureCheck;
+        return (signature === signatureCheck);
     }
 }

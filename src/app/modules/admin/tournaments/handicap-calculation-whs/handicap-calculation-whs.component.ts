@@ -32,6 +32,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { of } from 'rxjs';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-handicap-calculation-whs',
@@ -113,7 +114,8 @@ export class HandicapCalculationWhsComponent implements OnInit {
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
-        public facadeService: FacadeService
+        public facadeService: FacadeService,
+        private _localStorage: LocalStorageService
     ) {}
 
     applyFilter(filterValue: string) {
@@ -141,9 +143,7 @@ export class HandicapCalculationWhsComponent implements OnInit {
             tournamentId = params.get('id');
         });
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         //console.log(tournamentId);
         const tournamentInfo = await this.facadeService.getTournamentByID(
@@ -1580,9 +1580,7 @@ export class HandicapCalculationWhsComponent implements OnInit {
             new Array<handicap_change_log>();
         let changeLogRemarks: string = 'Handicap Calculation from Web';
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let updaterId: string = this.loggedInuser.id;
 

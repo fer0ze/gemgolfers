@@ -35,6 +35,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-add-daily-round',
@@ -87,7 +88,8 @@ export class AddDailyRoundComponent implements OnInit {
         private route: ActivatedRoute,
         private location: Location,
         public snackBar: MatSnackBar,
-        public facadeService: FacadeService
+        public facadeService: FacadeService,
+        private _localStorage: LocalStorageService
     ) {}
 
     ngAfterViewInit(): void {
@@ -101,9 +103,7 @@ export class AddDailyRoundComponent implements OnInit {
             this.playerID = params.get('id');
         });
 
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.tournamentID = UniqueIdGenerator.generate();
 
         if (this.loggedInuser) {
@@ -186,9 +186,7 @@ export class AddDailyRoundComponent implements OnInit {
     };
 
     async createTournament(starterFormValue: any) {
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         starterFormValue.roundDate = this.datepipe.transform(
             starterFormValue.roundDate.toString(),
@@ -722,7 +720,7 @@ export class AddDailyRoundComponent implements OnInit {
 
     //  async executeStarterCreation(starterFormValue:any)  {
 
-    //     this.loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
+    //    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
     //     const addRound: AddDailyRound = {
     //       holeSets: starterFormValue.holeSets,

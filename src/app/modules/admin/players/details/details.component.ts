@@ -55,6 +55,7 @@ import { RequireMatch } from 'app/shared/classes/CustomValidator';
 import { FuseConfirmationSuccessService } from '@fuse/services/confirmation/confirmationsucces';
 import { Club } from 'app/shared/models/club.model';
 import { HandicapService } from 'app/shared/services/handicap.service';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'contacts-details',
@@ -104,7 +105,8 @@ export class ContactsDetailsComponent implements OnInit {
         private _router: Router,
         private datepipe: DatePipe,
         private _overlay: Overlay,
-        private _viewContainerRef: ViewContainerRef
+        private _viewContainerRef: ViewContainerRef,
+        private _localStorage: LocalStorageService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -118,9 +120,7 @@ export class ContactsDetailsComponent implements OnInit {
         this._activatedRoute.paramMap.subscribe(async (params) => {
             this.playerID = params.get('id');
         });
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let dataClubs: any;
         if (this.loggedInuser) {
             let clubInfo: any =

@@ -6,6 +6,7 @@ export const projectRoutes: Route[] = [
     {
         path     : '',
         component: ProjectComponent,
+        data: { animation: 'projectPage' },
         resolve  : {
             data: ProjectResolver
         }

@@ -32,6 +32,7 @@ import { DatePipe } from '@angular/common';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
 import { DialogAddExisitingPlayerComponent } from '../dialog-add-exisiting-player/dialog-add-exisiting-player.component';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-dialog-change-course-hole-set',
@@ -94,7 +95,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        public snackBar: MatSnackBar,
+        public snackBar: MatSnackBar, private _localStorage: LocalStorageService,
         public facadeService: FacadeService
     ) {}
 
@@ -111,9 +112,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         this.route.paramMap.subscribe((params) => {
             this.routeDate = params.get('id');
         });
-        this.loggedInuser = JSON.parse(
-            localStorage.getItem(Constants.LOGGED_IN_USER)
-        );
+         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         if (this.loggedInuser) {
             let clubInfo: any =
