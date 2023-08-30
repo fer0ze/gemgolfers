@@ -443,6 +443,7 @@ export const getFlightPlayedAdmin = gql`
             date
             members {
                 flightId
+                playingTee
                 playerId
                 player {
                     firstName

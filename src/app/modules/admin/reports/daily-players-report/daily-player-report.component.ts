@@ -71,7 +71,7 @@ export class DailyPlayerReportComponent implements OnInit {
             memebrshipNo: element.player.membershipNumber,
             name: element.player.firstName + ' ' + element.player.lastName,
             category: element.player.playerCategory,
-            tee: obj.tee,
+            tee: element.playingTee,
             holeSets: this.getCourseHoleSets(obj.courseHoleSets, obj.courseHoleSetsInverted),
             time: formattedTime,
           };
