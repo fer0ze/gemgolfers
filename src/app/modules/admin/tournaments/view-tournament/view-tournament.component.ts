@@ -279,7 +279,7 @@ export class ViewTournamentComponent implements OnInit {
 
     async ngOnInit() {
         //console.log(this.route.snapshot.paramMap.get("id"));
-         this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let clubInfo: any =
             this.loggedInUser.membership.length > 0
                 ? this.loggedInUser.membership[0].club
@@ -1688,8 +1688,8 @@ export class ViewTournamentComponent implements OnInit {
                                 copyflights.length > 0
                                     ? copyflights[0].score
                                     : flag == false
-                                    ? getResult.category[cats].cuttScore
-                                    : 1000,
+                                        ? getResult.category[cats].cuttScore
+                                        : 1000,
                             type: getResult.category[cats].type,
                             order: getResult.category[cats].order,
                             playing: getResult.category[cats].playing,
@@ -1697,72 +1697,23 @@ export class ViewTournamentComponent implements OnInit {
                                 getResult.category[cats].lastRoundPlayed,
                         };
                         console.log(cutOffCriteria);
-                        if (
-                            cutOffCriteria.score == '' &&
-                            cutOffCriteria.playing == true
-                        ) {
-                            //   if(c.value != 0)
-                            await this.closeCurrentRound(
-                                cutOffCriteria,
-                                cutOffCriteria.name,
-                                cutOffCriteria.score,
-                                cutOffCriteria.copymembers
-                            );
-                        } else if (
-                            cutOffCriteria.score !== '' &&
-                            cutOffCriteria.playing == true
-                        ) {
-                            //   if(c.value != 0)
-                            await this.closeCurrentRound(
-                                cutOffCriteria,
-                                cutOffCriteria.name,
-                                cutOffCriteria.score,
-                                cutOffCriteria.copymembers
-                            );
-                        } else if (
-                            cutOffCriteria.score !== '' &&
-                            cutOffCriteria.playing == 1
-                        ) {
-                            console.log('No Cut-Off');
-                        }
-
-                        // }
-                        this.dataFullTournament =
-                            await this.facadeService.tournamentDashBoard(
-                                this.tournamentID
-                            );
-                        // if (this.dataFullTournament.TournamentQL[0]) {
-                        //   // console.log(this.dataFullTournament);
-
-                        //   // await this.facadeService.closeActiveRound(
-                        //   //   this.tournamentID,
-                        //   //   this.activeRound + 1,
-                        //   //   cutOffCriteria
-                        //   // );
-                        // } else {
-                        // var first_json =
-                        //   this.dataFullTournament.TournamentQL[0].cutOffCriteria;
-
-                        //jsons.push(first_json);
+                        await this.closeCurrentRound(
+                            cutOffCriteria,
+                            cutOffCriteria.name,
+                            cutOffCriteria.score,
+                            cutOffCriteria.copymembers
+                        );
+                        // this.dataFullTournament =
+                        //     await this.facadeService.tournamentDashBoard(
+                        //         this.tournamentID
+                        //     );
                         jsons.push(cutOffCriteria);
-
-                        // console.log(jsons);
-                        // console.log(JSON.stringify(jsons));
-
-                        //var stringToJsonObject = JSON.parse((jsons).toString());
-                        //var stringToJsonObject = JSON.parse((jsons).toString());
-                        // var myJsonString = JSON.stringify(jsons);
-                        // console.log(myJsonString);
-
-                        // }
                     }
                     let jObject = { cutOff: jsons };
                     console.log(jObject);
                     let a = JSON.stringify(jObject);
                     var src = a.replace(/\\/g, '');
                     console.log(src);
-                    // var myJsonString = JSON.stringify(jsons);
-                    // console.log(myJsonString);
                     await this.facadeService.closeActiveRound(
                         this.tournamentID,
                         this.activeRound + 1,
@@ -1825,21 +1776,21 @@ export class ViewTournamentComponent implements OnInit {
                     result = result.filter((a) => {
                         return (
                             a.AllGrossUnder <=
-                                (categoryScore
-                                    ? categoryScore
-                                    : a.AllGrossUnder) &&
+                            (categoryScore
+                                ? categoryScore
+                                : a.AllGrossUnder) &&
                             a['holes' + this.activeRound] ==
-                                this.noOfHolesInCourse
+                            this.noOfHolesInCourse
                         );
                     });
                     console.log(result);
                     cutOffCriteria.order == 'asc'
                         ? (nextRoundPlayers = result.sort(
-                              this.ComparatorAllGross
-                          ))
+                            this.ComparatorAllGross
+                        ))
                         : (nextRoundPlayers = result.sort(
-                              this.ComparatorAllGrossDesc
-                          ));
+                            this.ComparatorAllGrossDesc
+                        ));
                 } else if (cutOffCriteria.type == LeaderType.NEW) {
                     result =
                         this.dataFullTournament.TournamentQL[0].members.filter(
@@ -1855,20 +1806,20 @@ export class ViewTournamentComponent implements OnInit {
                     result = result.filter((a) => {
                         return (
                             a.AllNetUnder <=
-                                (categoryScore
-                                    ? categoryScore
-                                    : a.AllNetUnder) &&
+                            (categoryScore
+                                ? categoryScore
+                                : a.AllNetUnder) &&
                             a['holes' + this.activeRound] ==
-                                this.noOfHolesInCourse
+                            this.noOfHolesInCourse
                         );
                     });
                     cutOffCriteria.order == 'asc'
                         ? (nextRoundPlayers = result.sort(
-                              this.ComparatorAllNet
-                          ))
+                            this.ComparatorAllNet
+                        ))
                         : (nextRoundPlayers = result.sort(
-                              this.ComparatorAllNetDesc
-                          ));
+                            this.ComparatorAllNetDesc
+                        ));
                 }
             }
             //nextRoundPlayers = result.sort(this.ComparatorAllGross);
@@ -2048,43 +1999,43 @@ export class ViewTournamentComponent implements OnInit {
                     grossAllArray[leader].handicap,
                     grossAllArray[leader].clubName,
                     grossAllArray[leader].TotalGross4 != '' &&
-                    grossAllArray[leader].TotalGross4 != undefined
+                        grossAllArray[leader].TotalGross4 != undefined
                         ? grossAllArray[leader].TotalGross4
                         : '-',
                     grossAllArray[leader].TotalNet4 != '' &&
-                    grossAllArray[leader].TotalNet4 != undefined
+                        grossAllArray[leader].TotalNet4 != undefined
                         ? grossAllArray[leader].TotalNet4
                         : '-',
                     grossAllArray[leader].TotalGross3 != '' &&
-                    grossAllArray[leader].TotalGross3 != undefined
+                        grossAllArray[leader].TotalGross3 != undefined
                         ? grossAllArray[leader].TotalGross3
                         : '-',
                     grossAllArray[leader].TotalNet3 != '' &&
-                    grossAllArray[leader].TotalNet3 != undefined
+                        grossAllArray[leader].TotalNet3 != undefined
                         ? grossAllArray[leader].TotalNet3
                         : '-',
                     grossAllArray[leader].TotalGross2 != '' &&
-                    grossAllArray[leader].TotalGross2 != undefined
+                        grossAllArray[leader].TotalGross2 != undefined
                         ? grossAllArray[leader].TotalGross2
                         : '-',
                     grossAllArray[leader].TotalNet2 != '' &&
-                    grossAllArray[leader].TotalNet2 != undefined
+                        grossAllArray[leader].TotalNet2 != undefined
                         ? grossAllArray[leader].TotalNet2
                         : '-',
                     grossAllArray[leader].TotalGross1 != '' &&
-                    grossAllArray[leader].TotalGross1 != undefined
+                        grossAllArray[leader].TotalGross1 != undefined
                         ? grossAllArray[leader].TotalGross1
                         : '-',
                     grossAllArray[leader].TotalNet1 != '' &&
-                    grossAllArray[leader].TotalNet1 != undefined
+                        grossAllArray[leader].TotalNet1 != undefined
                         ? grossAllArray[leader].TotalNet1
                         : '-',
                     grossAllArray[leader].AllGrossPoints != '' &&
-                    grossAllArray[leader].AllGrossPoints != undefined
+                        grossAllArray[leader].AllGrossPoints != undefined
                         ? grossAllArray[leader].AllGrossPoints
                         : '-',
                     grossAllArray[leader].AllNetPoints != '' &&
-                    grossAllArray[leader].AllNetPoints != undefined
+                        grossAllArray[leader].AllNetPoints != undefined
                         ? grossAllArray[leader].AllNetPoints
                         : '-',
                 ];
@@ -2175,14 +2126,14 @@ export class ViewTournamentComponent implements OnInit {
     ) {
         console.log(
             time +
-                '<>' +
-                interval +
-                '<>' +
-                startingHole +
-                '<>' +
-                flight +
-                '<>' +
-                teeBox
+            '<>' +
+            interval +
+            '<>' +
+            startingHole +
+            '<>' +
+            flight +
+            '<>' +
+            teeBox
         );
         let flightTime: string = '00:00';
 
@@ -2406,7 +2357,7 @@ export class ViewTournamentComponent implements OnInit {
         if (this.dataFullTournament['TournamentQL'][0]['handicapAllocations'])
             hcAllocation =
                 this.dataFullTournament['TournamentQL'][0][
-                    'handicapAllocations'
+                'handicapAllocations'
                 ];
         else hcAllocation = handicapAllocation.AS_IS;
 
@@ -2530,7 +2481,7 @@ export class ViewTournamentComponent implements OnInit {
                     holesPlayed <= 0 ||
                     (handicap <= 0 &&
                         player.playerCategory !=
-                            enumPlayerCategory.PROFESSIONALS)
+                        enumPlayerCategory.PROFESSIONALS)
                 ) {
                     //handicap = player.getHandicap(handicapAllocation); // need to be discuss with zain bhai will it be the same as objScore.getPlayerHandicap
                     handicap = player.handicap;
@@ -2921,7 +2872,7 @@ export class ViewTournamentComponent implements OnInit {
 
         if (
             !this.allMatchResults[leaderGross.playerId][
-                'TotalGrossUnder' + round
+            'TotalGrossUnder' + round
             ]
         )
             this.allMatchResults[leaderGross.playerId][

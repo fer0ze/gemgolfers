@@ -1293,9 +1293,7 @@ export class MatchplayComponent implements OnInit {
             let todayString: Date = new Date();
             let timeupdated: any = await this.facadeService.setScoreUpdateTime(
                 this.tournamentID,
-                todayString.toLocaleDateString() +
-                    'T' +
-                    todayString.toLocaleTimeString()
+               todayString.toISOString().slice(0, -5) + "Z"
             );
 
             if (timeupdated) return;
@@ -1484,9 +1482,7 @@ export class MatchplayComponent implements OnInit {
             let todayString: Date = new Date();
             let timeupdated: any = await this.facadeService.setScoreUpdateTime(
                 this.tournamentID,
-                todayString.toLocaleDateString() +
-                    'T' +
-                    todayString.toLocaleTimeString()
+                todayString.toISOString().slice(0, -5) + "Z"
             );
 
             if (timeupdated) return;

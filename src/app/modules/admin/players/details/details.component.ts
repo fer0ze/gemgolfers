@@ -107,7 +107,7 @@ export class ContactsDetailsComponent implements OnInit {
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private _localStorage: LocalStorageService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -120,7 +120,7 @@ export class ContactsDetailsComponent implements OnInit {
         this._activatedRoute.paramMap.subscribe(async (params) => {
             this.playerID = params.get('id');
         });
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let dataClubs: any;
         if (this.loggedInuser) {
             let clubInfo: any =
@@ -200,7 +200,7 @@ export class ContactsDetailsComponent implements OnInit {
             item != null &&
             this.playerID &&
             this.currentPlayer.player[0].handicap !==
-                this.contactForm.get('handicap').value
+            this.contactForm.get('handicap').value
         ) {
             document.getElementById('comment').classList.remove('hidden');
             this.contactForm.get('notes').addValidators([Validators.required]);
@@ -208,7 +208,7 @@ export class ContactsDetailsComponent implements OnInit {
         } else if (
             this.playerID &&
             this.currentPlayer.player[0].handicap ==
-                this.contactForm.get('handicap').value
+            this.contactForm.get('handicap').value
         ) {
             document.getElementById('comment').classList.add('hidden');
             this.contactForm.get('notes').clearValidators();
@@ -220,7 +220,7 @@ export class ContactsDetailsComponent implements OnInit {
             item != null &&
             this.playerID &&
             this.currentPlayer.player[0].handicapWhsIndex !==
-                this.contactForm.get('handicapWhsIndex').value
+            this.contactForm.get('handicapWhsIndex').value
         ) {
             document.getElementById('comment').classList.remove('hidden');
             this.contactForm.get('notes').addValidators([Validators.required]);
@@ -228,7 +228,7 @@ export class ContactsDetailsComponent implements OnInit {
         } else if (
             this.playerID &&
             this.currentPlayer.player[0].handicapWhsIndex ==
-                this.contactForm.get('handicapWhsIndex').value
+            this.contactForm.get('handicapWhsIndex').value
         ) {
             document.getElementById('comment').classList.add('hidden');
             this.contactForm.get('notes').clearValidators();
@@ -361,8 +361,8 @@ export class ContactsDetailsComponent implements OnInit {
                 typeof contact.club === 'string'
                     ? this.loggedInuser.adminClubId
                     : contact.club
-                    ? contact.club.id
-                    : '',
+                        ? contact.club.id
+                        : '',
             suspended: this.contactForm.get('status').value,
         };
         console.log(member);
@@ -521,12 +521,22 @@ export class ContactsDetailsComponent implements OnInit {
     }
 
     public Comparator(a, b) {
-        let gemIDA = parseInt(a['gemId'].slice(2));
-        let gemIDB = parseInt(b['gemId'].slice(2));
-        if (gemIDA < gemIDB) return 1;
-        if (gemIDA > gemIDB) return -1;
+        console.log(a);
+        console.log(b);
+        
+        try {
+            if (a['gemId']?.trim() !== '' && b['gemId']?.trim() !== '') {
+                let gemIDA = parseInt(a['gemId'].slice(2));
+                let gemIDB = parseInt(b['gemId'].slice(2));
+                if (gemIDA < gemIDB) return 1;
+                if (gemIDA > gemIDB) return -1;
 
-        return 0;
+                return 0;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
     public reset() {
@@ -639,9 +649,9 @@ export class ContactsDetailsComponent implements OnInit {
             console.log(this.currentPlayer);
             this.tournamentId =
                 this.currentPlayer.player[0].handicap_history !== undefined &&
-                this.currentPlayer.player[0].handicap_history.length > 0
+                    this.currentPlayer.player[0].handicap_history.length > 0
                     ? this.currentPlayer.player[0].handicap_history[0]
-                          .tournamentId
+                        .tournamentId
                     : null;
 
             // let whsHandicaps = await this._facadeService.getPlayerWHS(
@@ -675,7 +685,7 @@ export class ContactsDetailsComponent implements OnInit {
                     : '0',
                 status:
                     this.currentPlayer.player[0].membership[0] &&
-                    this.currentPlayer.player[0].membership[0].suspended
+                        this.currentPlayer.player[0].membership[0].suspended
                         ? 'true'
                         : 'false',
             });

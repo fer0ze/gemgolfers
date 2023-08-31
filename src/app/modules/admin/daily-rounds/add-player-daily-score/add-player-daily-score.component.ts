@@ -1007,7 +1007,7 @@ export class AddPlayerDailyScoreComponent implements OnInit, ComponentCanDeactiv
   
               if(selectedFlight.length > 0) {
                 let todayString : Date = new Date();
-                let timeupdated: any = await this.facadeService.setScoreUpdateTime(selectedFlight[0].tournamentId, todayString.toLocaleDateString() + "T" + todayString.toLocaleTimeString());
+                let timeupdated: any = await this.facadeService.setScoreUpdateTime(selectedFlight[0].tournamentId,  todayString.toISOString().slice(0, -5) + "Z");
   
                 if(timeupdated) return;
               }
@@ -1095,7 +1095,7 @@ export class AddPlayerDailyScoreComponent implements OnInit, ComponentCanDeactiv
   
               if(selectedFlight.length > 0) {
                 let todayString : Date = new Date();
-                let timeupdated: any = await this.facadeService.setScoreUpdateTime(selectedFlight[0].tournamentId, todayString.toLocaleDateString() + "T" + todayString.toLocaleTimeString());
+                let timeupdated: any = await this.facadeService.setScoreUpdateTime(selectedFlight[0].tournamentId,  todayString.toISOString().slice(0, -5) + "Z");
   
                 if(timeupdated) return;
               }

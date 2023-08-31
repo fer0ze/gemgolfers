@@ -1441,9 +1441,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 let timeupdated: any =
                     await this.facadeService.setScoreUpdateTime(
                         selectedFlight[0].tournamentId,
-                        todayString.toLocaleDateString() +
-                            'T' +
-                            todayString.toLocaleTimeString()
+                        todayString.toISOString().slice(0, -5) + "Z"
                     );
 
                 if (timeupdated) return;
@@ -1576,9 +1574,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 let timeupdated: any =
                     await this.facadeService.setScoreUpdateTime(
                         selectedFlight[0].tournamentId,
-                        todayString.toLocaleDateString() +
-                            'T' +
-                            todayString.toLocaleTimeString()
+                        todayString.toISOString().slice(0, -5) + "Z"
                     );
             }
             if (selectedFlight.categoryRound == 2) {
