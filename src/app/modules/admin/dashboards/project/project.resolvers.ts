@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     Resolve,
+    Router,
     RouterStateSnapshot,
 } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -20,9 +21,9 @@ export class ProjectResolver implements Resolve<any> {
      */
     constructor(
         private _projectService: ProjectService,
-        private _datePipe: DatePipe, private _localStorage: LocalStorageService
+        private _datePipe: DatePipe, private _localStorage: LocalStorageService, private _router: Router,
     ) {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -40,11 +41,12 @@ export class ProjectResolver implements Resolve<any> {
         state: RouterStateSnapshot
     ): Observable<any> {
         console.log('In Resolver');
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let lastWeekSunday = this.lastWeekSunday();
         let lastWeekMonday = this.lastWeekMonday();
-        if (this.loggedInuser.userRole == 1) {
+        if (this.loggedInuser.userRole === 1) {
             return this._projectService.getData(
-                null,null,
+                null, null,
                 this._datePipe.transform(
                     lastWeekSunday.toString(),
                     'yyyy-MM-dd'
@@ -54,7 +56,7 @@ export class ProjectResolver implements Resolve<any> {
                     'yyyy-MM-dd'
                 )
             );
-        } else {
+        } else if (this.loggedInuser.userRole === 2) {
             return this._projectService.getData(
                 this.loggedInuser.id,
                 this.loggedInuser.adminClubId,
@@ -67,6 +69,10 @@ export class ProjectResolver implements Resolve<any> {
                     'yyyy-MM-dd'
                 )
             );
+        } else if (this.loggedInuser.userRole == 8) {
+            this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
+                console.error('Navigation error:', error);
+            });
         }
     }
 
