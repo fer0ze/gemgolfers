@@ -89,12 +89,12 @@ export class AuthSignInComponent implements OnInit
                     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
                     // Navigate to the redirect url\
                     
-                    if (this.loggedInuser.userRole == 8){
+                    if (this.loggedInuser.userRole === 8){
                         this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
                             console.error('Navigation error:', error);
                         });
                     }else{
-                        this._router.navigateByUrl(redirectURL).catch((error) => {
+                        this._router.navigateByUrl('/dashboard').catch((error) => {
                             console.error('Navigation error:', error);
                         });
                     }
