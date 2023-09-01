@@ -460,14 +460,14 @@ export const userNavigation: FuseNavigationItem[] = [
 export const sectaryNavigation: FuseNavigationItem[] = [
     {
         id: 'report',
-        title: 'Report',
+        title: 'Reports',
 
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
             {
                 id: 'report.dasboard',
-                title: 'Report',
+                title: 'Players Report',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
                 link: '/reports/dailyPlayer'

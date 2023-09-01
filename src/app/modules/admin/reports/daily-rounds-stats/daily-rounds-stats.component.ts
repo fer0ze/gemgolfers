@@ -582,69 +582,6 @@ export class DailyRoundsStatsComponent implements OnInit {
             this.isLoading = false;
             this.showtable = true;
         }
-
-        // if(dataPlayers.TournamentsQL){
-        //   for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
-        //     const  dailyStat3 = {
-        //       date: dataPlayers.TournamentsQL[i].startDate,
-        //       membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
-        //       before1PM : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].time < "13:00:00+00" : false,
-        //       after1PM : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].time >= "13:00:00+00"  : false
-        //     };
-
-        //     this.dailyStats3.push(dailyStat3);
-        //   }
-
-        //   this.dailyStats3 = this.dailyStats3.sort(this.Comparator);
-        //   this.isLoading = false;
-        //   this.showtable = true;
-        // }
-
-        // if(dataPlayers.TournamentsQL){
-        //   for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
-        //     const  dailyStats4 = {
-        //       date: dataPlayers.TournamentsQL[i].startDate,
-        //       membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
-        //       nineHoles : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 1 || dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 2 || dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 8  : false,
-        //       eighteenHoles : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets != 1 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets != 2 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets != 8  : false
-        //     };
-
-        //     this.dailyStats4.push(dailyStats4);
-        //   }
-
-        //   this.dailyStats4 = this.dailyStats4.sort(this.Comparator);
-        //   this.isLoading = false;
-        //   this.showtable = true;
-        // }
-
-        // if(dataPlayers.TournamentsQL){
-        //   for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
-        //     const  dailyStats5 = {
-        //       date: dataPlayers.TournamentsQL[i].startDate,
-        //       membersCount: (dataPlayers.TournamentsQL[i].FlightsQL.length > 0)? dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL.length : 0,
-        //       redNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 1 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red 9" : [],
-        //       blueNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 2 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue 9" : [],
-        //       yellowNine : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 8 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Yellow 9" : [],
-        //       redfrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Blue Back 9" : [],
-        //       blueFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 3 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Blue Front 9 - Red Back 9" : [],
-        //       redFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Red Front 9 - Yellow Back 9" : [],
-        //       yellowFrontRedback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 9 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Red Back 9" : [],
-        //       blueFrontYellowback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == false)? "Blue Front 9 - Yellow Back 9" : [],
-        //       yellowFrontBlueback : (dataPlayers.TournamentsQL[i].FlightsQL.length > 0 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSets == 12 && dataPlayers.TournamentsQL[i].FlightsQL[0].courseHoleSetsInverted == true)? "Yellow Front 9 - Blue Back 9" : []
-        //     };
-
-        //     this.dailyStats5.push(dailyStats5);
-        //   }
-
-        //   this.dailyStats5 = this.dailyStats5.sort(this.Comparator);
-        //   this.isLoading = false;
-        //   this.showtable = true;
-        // }
-
-        console.log(this.dailyStats2);
-        console.log(this.dailyStats3);
-        console.log(this.dailyStats4);
-        console.log(this.dailyStats5);
         let myData: any[] = [];
         let myData2: any[] = [];
         let myData3: any[] = [];

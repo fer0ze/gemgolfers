@@ -10,7 +10,27 @@ export class General {
 
         return COUNTRIES;
     }
-
+    public static getCourseHoleSets(holeSet, inverted) {
+        if (holeSet == 4 && inverted == false) {
+            return 'Blue 9';
+        } else if (holeSet == 1 && inverted == false) {
+            return 'Red 9';
+        } else if (holeSet == 8 && inverted == false) {
+            return 'Yellow 9';
+        } else if (holeSet == 3 && inverted == false) {
+            return 'Red Front 9 - Blue Back 9';
+        } else if (holeSet == 12 && inverted == false) {
+            return 'Blue Front 9 - Yellow Back 9';
+        } else if (holeSet == 9 && inverted == false) {
+            return 'Red Front 9 - Yellow Back 9';
+        }
+    }
+    public static formatAMPM(hours: number, minutes: number): string {
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        return `${formattedHours}:${formattedMinutes} ${ampm}`;
+      }
     public static parseToDate(dateValue: string) {
         let datePipe = new DatePipe(Constants.LOCALE_EN_US);
 
@@ -90,7 +110,7 @@ export class General {
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
 
-        return ID ?ID.id:teeName;
+        return ID ? ID.id : teeName;
     }
     public static getPlayersTeesColourByCategory(teeName: String) {
         const Course_Tee = [
@@ -103,7 +123,7 @@ export class General {
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
 
-        return ID ?ID.id:teeName;
+        return ID ? ID.id : teeName;
     }
 
     public static getPlayersTe(teeName: String) {
@@ -622,6 +642,8 @@ export class generateGemId {
 
         return this.asciiArray;
     }
+    
+
 }
 export const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const labelsPlayers = ['Amatuers', 'S.Amatuers', 'Vetrans', 'Ladies'];

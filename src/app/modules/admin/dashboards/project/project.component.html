@@ -2,56 +2,32 @@
     <!-- Header -->
     <div class="bg-card">
         <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
-            <div
-                class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12"
-            >
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
                 <!-- Avatar and name -->
                 <div class="flex flex-auto items-center min-w-0">
                     <div class="flex-0 w-20 h-25 rounded-full overflow-hidden">
-                        <img
-                            class="w-full h-full object-cover"
-                            src="assets/images/logo/{{ clubLogo }}"
-                            alt="user"
-                        />
+                        <img class="w-full h-full object-cover" src="assets/images/logo/{{ clubLogo }}" alt="user" />
                     </div>
                     <div class="flex flex-col min-w-0 ml-4">
                         <ng-container>
                             <div
-                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate"
-                            >
+                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
                                 Welcome Back-{{ this.loggedInuser.fullName }}
                             </div>
                         </ng-container>
                         <div class="flex items-center">
-                            <div
-                                class="ml-1.5 leading-6 truncate text-secondary"
-                            ></div>
+                            <div class="ml-1.5 leading-6 truncate text-secondary"></div>
                         </div>
                     </div>
                 </div>
                 <!-- Actions -->
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
-                    <button
-                        class="bg-accent"
-                        mat-flat-button
-                        (click)="addNewRound()"
-                        [color]="'accent'"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:plus-circle'"
-                        ></mat-icon>
+                    <button class="bg-accent" mat-flat-button (click)="addNewRound()" [color]="'accent'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                         <span class="ml-2">New Round</span>
                     </button>
-                    <button
-                        mat-flat-button
-                        (click)="addNewPlayer()"
-                        [color]="'primary'"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:add-member'"
-                        ></mat-icon>
+                    <button mat-flat-button (click)="addNewPlayer()" [color]="'primary'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:add-member'"></mat-icon>
                         <span class="ml-2">New Player</span>
                     </button>
                 </div>
@@ -62,53 +38,32 @@
     <!-- Main -->
     <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
         <div class="w-full max-w-screen-xl mx-auto">
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
-            >
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                 <!-- Summary -->
-                <div
-                    class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Tournaments
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                            <button
-                                mat-icon-button
-                                [matMenuTriggerFor]="summaryMenu"
-                            >
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:dots-vertical'"
-                                ></mat-icon>
+                            <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #summaryMenu="matMenu">
-                                <a
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="['/tournaments']"
-                                >
+                                <a [routerLinkActive]="'active'" [routerLink]="['/tournaments']">
                                     <button mat-menu-item>View Details</button>
                                 </a>
                             </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div
-                            class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500"
-                        >
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
                             {{ this.tournamentCounts }}
                         </div>
-                        <div
-                            class="text-lg font-medium text-blue-600 dark:text-blue-500"
-                        >
+                        <div class="text-lg font-medium text-blue-600 dark:text-blue-500">
                             Played
                         </div>
-                        <div
-                            class="flex items-baseline justify-center w-full mt-5 text-secondary"
-                        >
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 Completed:
                             </div>
@@ -119,49 +74,30 @@
                     </div>
                 </div>
                 <!-- Overdue -->
-                <div
-                    class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             DailyRounds
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                            <button
-                                mat-icon-button
-                                [matMenuTriggerFor]="overdueMenu"
-                            >
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:dots-vertical'"
-                                ></mat-icon>
+                            <button mat-icon-button [matMenuTriggerFor]="overdueMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #overdueMenu="matMenu">
-                                <a
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="['/reports/dailyround']"
-                                >
+                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/dailyround']">
                                     <button mat-menu-item>View Details</button>
                                 </a>
                             </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div
-                            class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500"
-                        >
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">
                             {{ this.flightCounts }}
                         </div>
-                        <div
-                            class="text-lg font-medium text-red-600 dark:text-red-500"
-                        >
+                        <div class="text-lg font-medium text-red-600 dark:text-red-500">
                             Played
                         </div>
-                        <div
-                            class="flex items-baseline justify-center w-full mt-5 text-secondary"
-                        >
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 From yesterday:
                             </div>
@@ -172,49 +108,30 @@
                     </div>
                 </div>
                 <!-- Issues -->
-                <div
-                    class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Club Players
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                            <button
-                                mat-icon-button
-                                [matMenuTriggerFor]="issuesMenu"
-                            >
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:dots-vertical'"
-                                ></mat-icon>
+                            <button mat-icon-button [matMenuTriggerFor]="issuesMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #issuesMenu="matMenu">
-                                <a
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="['/reports/club']"
-                                >
+                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/club']">
                                     <button mat-menu-item>View Details</button>
                                 </a>
                             </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div
-                            class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500"
-                        >
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
                             {{ this.playerCounts }}
                         </div>
-                        <div
-                            class="text-lg font-medium text-amber-600 dark:text-amber-500"
-                        >
+                        <div class="text-lg font-medium text-amber-600 dark:text-amber-500">
                             Open
                         </div>
-                        <div
-                            class="flex items-baseline justify-center w-full mt-5 text-secondary"
-                        >
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 Added today:
                             </div>
@@ -225,49 +142,30 @@
                     </div>
                 </div>
                 <!-- Features -->
-                <div
-                    class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Leagues
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                            <button
-                                mat-icon-button
-                                [matMenuTriggerFor]="featuresMenu"
-                            >
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:dots-vertical'"
-                                ></mat-icon>
+                            <button mat-icon-button [matMenuTriggerFor]="featuresMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #featuresMenu="matMenu">
-                                <a
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="['/leagues']"
-                                >
+                                <a [routerLinkActive]="'active'" [routerLink]="['/leagues']">
                                     <button mat-menu-item>View Details</button>
                                 </a>
                             </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div
-                            class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500"
-                        >
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">
                             38
                         </div>
-                        <div
-                            class="text-lg font-medium text-green-600 dark:text-green-500"
-                        >
+                        <div class="text-lg font-medium text-green-600 dark:text-green-500">
                             Played
                         </div>
-                        <div
-                            class="flex items-baseline justify-center w-full mt-5 text-secondary"
-                        >
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 Implemented:
                             </div>
@@ -277,42 +175,25 @@
                 </div>
                 <!-- Github issues summary -->
                 <div
-                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
-                    <div
-                        class="flex flex-col sm:flex-row items-start justify-between"
-                    >
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Daily Rounds Summary
                         </div>
                     </div>
-                    <div
-                        class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
-                    >
+                    <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
                         <!-- New vs. Closed -->
                         <div class="flex flex-col flex-auto">
                             <div class="font-medium text-secondary"></div>
                             <div class="flex flex-col flex-auto">
-                                <apx-chart
-                                    class="flex-auto w-full h-80"
-                                    [chart]="chartGithubIssues.chart"
-                                    [colors]="chartGithubIssues.colors"
-                                    [dataLabels]="chartGithubIssues.dataLabels"
-                                    [grid]="chartGithubIssues.grid"
-                                    [labels]="chartGithubIssues.labels"
-                                    [legend]="chartGithubIssues.legend"
-                                    [plotOptions]="
+                                <apx-chart class="flex-auto w-full h-80" [chart]="chartGithubIssues.chart"
+                                    [colors]="chartGithubIssues.colors" [dataLabels]="chartGithubIssues.dataLabels"
+                                    [grid]="chartGithubIssues.grid" [labels]="chartGithubIssues.labels"
+                                    [legend]="chartGithubIssues.legend" [plotOptions]="
                                         chartGithubIssues.plotOptions
-                                    "
-                                    [series]="chartGithubIssues.series"
-                                    [states]="chartGithubIssues.states"
-                                    [stroke]="chartGithubIssues.stroke"
-                                    [tooltip]="chartGithubIssues.tooltip"
-                                    [xaxis]="chartGithubIssues.xaxis"
-                                    [yaxis]="chartGithubIssues.yaxis"
-                                ></apx-chart>
+                                    " [series]="chartGithubIssues.series" [states]="chartGithubIssues.states"
+                                    [stroke]="chartGithubIssues.stroke" [tooltip]="chartGithubIssues.tooltip"
+                                    [xaxis]="chartGithubIssues.xaxis" [yaxis]="chartGithubIssues.yaxis"></apx-chart>
                             </div>
                         </div>
                         <!-- Overview -->
@@ -323,91 +204,61 @@
                             <div class="flex-auto grid grid-cols-4 gap-4 mt-6">
                                 <!-- New issues -->
                                 <div
-                                    class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400"
-                                >
-                                    <div
-                                        class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
-                                    >
+                                    class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400">
+                                    <div class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
                                         {{ _overview["newIssues"] }}
                                     </div>
-                                    <div
-                                        class="mt-1 text-sm sm:text-lg font-medium"
-                                    >
+                                    <div class="mt-1 text-sm sm:text-lg font-medium">
                                         New Rounds
                                     </div>
                                 </div>
                                 <!-- Closed -->
                                 <div
-                                    class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500"
-                                >
-                                    <div
-                                        class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
-                                    >
+                                    class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500">
+                                    <div class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
                                         {{ _overview["closedIssues"] }}
                                     </div>
-                                    <div
-                                        class="mt-1 text-sm sm:text-lg font-medium"
-                                    >
+                                    <div class="mt-1 text-sm sm:text-lg font-medium">
                                         Round Players
                                     </div>
                                 </div>
                                 <!-- Fixed -->
                                 <div
-                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
-                                >
-                                    <div
-                                        class="text-5xl font-semibold leading-none tracking-tight"
-                                    >
+                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                    <div class="text-5xl font-semibold leading-none tracking-tight">
                                         {{ _overview["fixed"] }}
                                     </div>
-                                    <div
-                                        class="mt-1 text-sm font-medium text-center"
-                                    >
+                                    <div class="mt-1 text-sm font-medium text-center">
                                         Handicap Calculated
                                     </div>
                                 </div>
                                 <!-- Won't fix -->
                                 <div
-                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
-                                >
-                                    <div
-                                        class="text-5xl font-semibold leading-none tracking-tight"
-                                    >
+                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                    <div class="text-5xl font-semibold leading-none tracking-tight">
                                         {{ _overview["wontfix"] }}
                                     </div>
-                                    <div
-                                        class="mt-1 text-sm font-medium text-center"
-                                    >
+                                    <div class="mt-1 text-sm font-medium text-center">
                                         Not Calculated
                                     </div>
                                 </div>
                                 <!-- Re-opened -->
                                 <div
-                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
-                                >
-                                    <div
-                                        class="text-5xl font-semibold leading-none tracking-tight"
-                                    >
+                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                    <div class="text-5xl font-semibold leading-none tracking-tight">
                                         {{ _overview["reopened"] }}
                                     </div>
-                                    <div
-                                        class="mt-1 text-sm font-medium text-center"
-                                    >
+                                    <div class="mt-1 text-sm font-medium text-center">
                                         Edited
                                     </div>
                                 </div>
                                 <!-- Needs triage -->
                                 <div
-                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
-                                >
-                                    <div
-                                        class="text-5xl font-semibold leading-none tracking-tight"
-                                    >
+                                    class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
+                                    <div class="text-5xl font-semibold leading-none tracking-tight">
                                         {{ _overview["needstriage"] }}
                                     </div>
-                                    <div
-                                        class="mt-1 text-sm font-medium text-center"
-                                    >
+                                    <div class="mt-1 text-sm font-medium text-center">
                                         Needs Triage
                                     </div>
                                 </div>
@@ -417,53 +268,31 @@
                 </div>
                 <!-- Task distribution -->
                 <div
-                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
-                    <div
-                        class="flex flex-col sm:flex-row items-start justify-between"
-                    >
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Player Distribution
                         </div>
                     </div>
                     <div class="flex flex-col flex-auto mt-6">
-                        <apx-chart
-                            class="flex-auto w-full h-80"
-                            [chart]="chartTaskDistribution.chart"
-                            [labels]="chartTaskDistribution.labels"
-                            [legend]="chartTaskDistribution.legend"
+                        <apx-chart class="flex-auto w-full h-80" [chart]="chartTaskDistribution.chart"
+                            [labels]="chartTaskDistribution.labels" [legend]="chartTaskDistribution.legend"
                             [plotOptions]="chartTaskDistribution.plotOptions"
-                            [series]="chartTaskDistribution.series['all']"
-                            [states]="chartTaskDistribution.states"
-                            [stroke]="chartTaskDistribution.stroke"
-                            [theme]="chartTaskDistribution.theme"
-                            [tooltip]="chartTaskDistribution.tooltip"
-                            [yaxis]="chartTaskDistribution.yaxis"
-                        ></apx-chart>
+                            [series]="chartTaskDistribution.series['all']" [states]="chartTaskDistribution.states"
+                            [stroke]="chartTaskDistribution.stroke" [theme]="chartTaskDistribution.theme"
+                            [tooltip]="chartTaskDistribution.tooltip" [yaxis]="chartTaskDistribution.yaxis"></apx-chart>
                     </div>
-                    <div
-                        class="grid grid-cols-2 border-t divide-x -m-6 mt-4 bg-gray-50 dark:bg-transparent"
-                    >
-                        <div
-                            class="flex flex-col items-center justify-center p-6 sm:p-8"
-                        >
-                            <div
-                                class="text-5xl font-semibold leading-none tracking-tighter"
-                            >
+                    <div class="grid grid-cols-2 border-t divide-x -m-6 mt-4 bg-gray-50 dark:bg-transparent">
+                        <div class="flex flex-col items-center justify-center p-6 sm:p-8">
+                            <div class="text-5xl font-semibold leading-none tracking-tighter">
                                 {{ 234 }}
                             </div>
                             <div class="mt-1 text-center text-secondary">
                                 Premimum Players
                             </div>
                         </div>
-                        <div
-                            class="flex flex-col items-center justify-center p-6 sm:p-8"
-                        >
-                            <div
-                                class="text-5xl font-semibold leading-none tracking-tighter"
-                            >
+                        <div class="flex flex-col items-center justify-center p-6 sm:p-8">
+                            <div class="text-5xl font-semibold leading-none tracking-tighter">
                                 {{ this.playerCounts }}
                             </div>
                             <div class="mt-1 text-center text-secondary">
@@ -474,14 +303,9 @@
                 </div>
                 <!-- Schedule -->
                 <div
-                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 mb-4 bg-card shadow rounded-2xl overflow-hidden"
-                >
-                    <div
-                        class="flex flex-col sm:flex-row items-start justify-between"
-                    >
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                    class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 mb-4 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Tournaments
                         </div>
                         <div class="mt-3 sm:mt-0 sm:ml-2">
@@ -499,26 +323,19 @@
                         </div>
                     </div>
                     <div class="flex flex-col mt-2 divide-y">
-                        <ng-container
-                            *ngFor="
+                        <ng-container *ngFor="
                                 let scheduleItem of tournaments;
                                 trackBy: trackByFn
-                            "
-                        >
-                            <div
-                                class="flex flex-row items-center justify-between py-4 px-0.5"
-                            >
+                            ">
+                            <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                 <div class="flex flex-col">
                                     <div class="font-medium">
                                         {{ scheduleItem.title }}
                                     </div>
                                     <div
-                                        class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3"
-                                    >
+                                        class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
                                         <ng-container>
-                                            <div
-                                                class="py-0.5 px-3 rounded-full text-sm font-semibold"
-                                                [ngClass]="{
+                                            <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{
                                                     'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500':
                                                         scheduleItem.matchFormat ===
                                                         'STROKE_PLAY',
@@ -534,39 +351,30 @@
                                                     'text-red-800 bg-red-100 dark:text-red-50 dark:bg-red-500':
                                                         scheduleItem.matchFormat ===
                                                         'TWO_BALL_BEST_BALL'
-                                                }"
-                                            >
+                                                }">
                                                 {{ scheduleItem.matchFormat }}
                                             </div>
                                         </ng-container>
                                         <ng-container>
                                             <div
-                                                class="py-0.5 px-3 rounded-full text-sm font-semibold text-green-800 bg-green-100"
-                                            >
+                                                class="py-0.5 px-3 rounded-full text-sm font-semibold text-green-800 bg-green-100">
                                                 {{
-                                                    scheduleItem.admin
-                                                        .firstName +
-                                                        " " +
-                                                        scheduleItem.admin
-                                                            .lastName
+                                                scheduleItem.admin
+                                                .firstName +
+                                                " " +
+                                                scheduleItem.admin
+                                                .lastName
                                                 }}
                                             </div>
                                         </ng-container>
-                                        <ng-container
-                                            *ngIf="scheduleItem.noOfRounds"
-                                        >
+                                        <ng-container *ngIf="scheduleItem.noOfRounds">
                                             <div class="flex items-center">
-                                                <mat-icon
-                                                    class="icon-size-5 text-hint"
-                                                    [svgIcon]="
+                                                <mat-icon class="icon-size-5 text-hint" [svgIcon]="
                                                         'heroicons_solid:clipboard'
-                                                    "
-                                                ></mat-icon>
-                                                <div
-                                                    class="ml-1.5 text-md text-secondary"
-                                                >
+                                                    "></mat-icon>
+                                                <div class="ml-1.5 text-md text-secondary">
                                                     {{
-                                                        scheduleItem.noOfRounds
+                                                    scheduleItem.noOfRounds
                                                     }}
                                                     Rounds
                                                 </div>
@@ -574,18 +382,13 @@
                                         </ng-container>
                                     </div>
                                 </div>
-                                <a
-                                    [routerLinkActive]="'active'"
-                                    [routerLink]="[
+                                <a [routerLinkActive]="'active'" [routerLink]="[
                                         '/tournaments/view/' + scheduleItem.id
-                                    ]"
-                                >
+                                    ]">
                                     <button mat-icon-button>
-                                        <mat-icon
-                                            [svgIcon]="
+                                        <mat-icon [svgIcon]="
                                                 'heroicons_solid:chevron-right'
-                                            "
-                                        ></mat-icon>
+                                            "></mat-icon>
                                     </button>
                                 </a>
                             </div>

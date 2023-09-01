@@ -27,11 +27,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { UserDetailsDilogueComponent } from '../../dialogs/dialog-user-details/user-details-dilogue.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DailyPlayerReportComponent } from './daily-player-report.component';
+import { DailyPlayerReportResolver } from './daily-player.resolver';
 
 const dailyPlayerRoutes: Route[] = [
     {
         path: '',
         component: DailyPlayerReportComponent,
+        resolve: {
+            data: DailyPlayerReportResolver
+        }
     },
 ];
 
@@ -66,6 +70,6 @@ const dailyPlayerRoutes: Route[] = [
         MatDatepickerModule,
     ],
     entryComponents: [UserDetailsDilogueComponent],
-    providers: [DatePipe],
+    providers: [DailyPlayerReportResolver, DatePipe],
 })
-export class DailyPlayerReportModule {}
+export class DailyPlayerReportModule { }

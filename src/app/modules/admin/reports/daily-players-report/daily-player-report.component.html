@@ -1,70 +1,106 @@
 <div class="flex-auto">
-    <div
-        class="flex flex-col sm:flex-row md:flex-col flex-auto bg-card justify-between py-12 px-6 md:px-8 border-b"
-    >
+    <div class="flex flex-col sm:flex-row md:flex-col flex-auto bg-card justify-between py-12 px-6 md:px-8 border-b">
         <div class="flex flex-row">
             <div class="text-6xl font-extrabold tracking-tight leading-none">
-                Player Round Statistics
+                Player Round Report
             </div>
             <div class="flex items-center">
                 <div class="mx-7 w-100">
-                    <form [formGroup]="scheduleForm" autocomplete="off" novalidate>
+                    <!-- <form [formGroup]="scheduleForm" autocomplete="off" novalidate>
                         <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <input
-                                matInput
-                                [matDatepicker]="picker2"
-                                [min]="minDate"
-                                [max]="maxDate"
-                                formControlName="Date"
-                                placeholder="Pick Date"
-                                
-                            />
-                            <mat-datepicker-toggle
-                                matSuffix
-                                [for]="picker2"
-                            ></mat-datepicker-toggle>
-                            <mat-datepicker
-                                #picker2
-                                disabled="false"
-                            ></mat-datepicker>
+                            <input matInput [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
+                                formControlName="Date" placeholder="Pick Date" />
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                            <mat-error>This field is required</mat-error>
+                        </mat-form-field>
+                    </form> -->
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 p-8  rounded-2xl w-full">
+        <div class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+            <div class="flex flex-col sm:flex-row items-start  justify-between">
+                <div class="text-lg font-lg tracking-tight leading-6 truncate">
+
+                </div>
+                <div class="">
+                    <button class="rounded-full bg-hover" mat-button>
+                        <span class="font-medium text-sm text-secondary">Last 7 Days</span>
+                    </button>
+
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 -mt-6 w-full">
+                <!-- New vs. Closed -->
+                <div class="flex flex-col flex-auto ml-4">
+                    <div class="text-xl font-medium text-secondary"> Daily Rounds Summary</div>
+                    <div class="flex flex-col flex-auto">
+                        <apx-chart class="flex-auto w-full h-100" [chart]="chartGithubIssues.chart"
+                            [colors]="chartGithubIssues.colors" [dataLabels]="chartGithubIssues.dataLabels"
+                            [grid]="chartGithubIssues.grid" [labels]="chartGithubIssues.labels"
+                            [legend]="chartGithubIssues.legend" [plotOptions]="
+                            chartGithubIssues.plotOptions
+                        " [series]="chartGithubIssues.series[0]" [states]="chartGithubIssues.states"
+                            [stroke]="chartGithubIssues.stroke" [tooltip]="chartGithubIssues.tooltip"
+                            [xaxis]="chartGithubIssues.xaxis" [yaxis]="chartGithubIssues.yaxis"></apx-chart>
+                    </div>
+                </div>
+
+                <div class="flex flex-col flex-auto ml-4">
+                    <div class="text-xl font-medium text-secondary">
+                        Hole Set Summary
+                    </div>
+                    <div class="flex flex-col flex-auto">
+                        <apx-chart class="flex-auto w-full h-100" [chart]="chartBudgetDistribution.chart"
+                            [colors]="chartBudgetDistribution.colors" [dataLabels]="chartBudgetDistribution.dataLabels"
+                            [markers]="chartBudgetDistribution.markers"
+                            [plotOptions]="chartBudgetDistribution.plotOptions"
+                            [series]="chartBudgetDistribution.series" [stroke]="chartBudgetDistribution.stroke"
+                            [tooltip]="chartBudgetDistribution.tooltip" [xaxis]="chartBudgetDistribution.xaxis"
+                            [yaxis]="chartBudgetDistribution.yaxis">
+                            ></apx-chart>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="sm:col-span-6 flex flex-col flex-auto p-6 m-8 bg-card shadow rounded-2xl overflow-hidden">
+        <div class="flex flex-col sm:flex-row items-center justify-between">
+            <div class="flex flex-row md:flex-col lg:flex-col sm:inline-flex items-center">
+                <span class="text-3xl font-semibold tracking-tight leading-8 pl-4 sm:py-2">
+                    Players Data
+                </span>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
+                <div class="flex-auto min-w-40  mr-4">
+                    <form [formGroup]="scheduleForm" autocomplete="off" novalidate>
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
+                            <input matInput [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
+                                formControlName="Date" placeholder="Search By Date" (dateChange)="onDatePick()" />
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2 disabled="false"></mat-datepicker>
                             <mat-error>This field is required</mat-error>
                         </mat-form-field>
                     </form>
                 </div>
-    
-                <div>
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="onDatePick()"
-                    >
-                        Search
-                    </button>
-                    <!-- <button mat-raised-button color="primary" (click)="showDuplicates()" >Duplicates</button> -->
-                </div>
-            </div>
-        </div>
-        
-    </div>
-
-    <div
-        
-        class="sm:col-span-6 flex flex-col flex-auto p-6 m-8 bg-card shadow rounded-2xl overflow-hidden"
-    >
-        <div class="text-lg font-medium tracking-tight leading-6 truncate">
-            <div class="flex  justify-end ml-auto mb-1">
-                <div class="flex-auto max-w-xs">
+                <div class="flex-auto min-w-40 ">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
                         <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                        <input matInput (keyup)="applyFilter($event.target.value)"
-                            [autocomplete]="'off'" [placeholder]="'Search'" />
+                        <input matInput (keyup)="applyFilter($event.target.value)" [autocomplete]="'off'"
+                            [placeholder]="'Search'" />
                     </mat-form-field>
                 </div>
             </div>
         </div>
-        <div class="flex flex-col flex-auto mt-2 overflow-x-auto">
+        <div *ngIf="isPlayer; else noContacts" class="flex flex-col flex-auto mt-2 overflow-x-auto">
             <table id="a" mat-table [dataSource]="dataSource" matSort>
-               
+
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef>Sr.</th>
                     <td mat-cell *matCellDef="let row; let i = index">
@@ -96,10 +132,10 @@
                 </ng-container>
                 <ng-container matColumnDef="holeSet">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        HoleSet
+                        Hole Set
                     </th>
                     <td mat-cell *matCellDef="let row">
-                        {{ row.holeSets }}
+                        {{ row.holeSet }}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="tee">
@@ -118,23 +154,22 @@
                         {{ row.time }}
                     </td>
                 </ng-container>
-               
-           
 
-                <tr
-                    mat-header-row
-                    *matHeaderRowDef="displayedColumnsCongu"
-                ></tr>
-                <tr
-                    mat-row
-                    *matRowDef="let row; columns: displayedColumnsCongu"
-                ></tr>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsCongu"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsCongu"></tr>
             </table>
-            <mat-paginator
-                [pageSize]="20"
-                [pageSizeOptions]="[10, 20, 50, 100]"
-            ></mat-paginator>
+            <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
         </div>
+        <ng-template #noContacts>
+            <div class="flex flex-auto flex-col items-center justify-center dark:bg-transparent">
+                <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:document-search'"></mat-icon>
+                <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+                    No Player has played today. Kindly Search by Date.
+                </div>
+            </div>
+        </ng-template>
     </div>
 </div>
 <!-- <div>

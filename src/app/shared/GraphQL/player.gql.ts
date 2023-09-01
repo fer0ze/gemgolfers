@@ -446,6 +446,7 @@ export const getFlightPlayedAdmin = gql`
                 playingTee
                 playerId
                 player {
+                    id
                     firstName
                     lastName
                     membershipNumber

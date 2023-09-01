@@ -330,7 +330,7 @@ export const GetTournamentsForAdminCompeleted = gql`
                 firstName
                 lastName
             }
-            HandicapCalculated: player_handicaps(limit:1) {
+            HandicapCalculated: player_handicaps(limit: 1) {
                 playerId
                 tournamentId
             }
@@ -439,7 +439,7 @@ export const GetTournamnetListForCompleted = gql`
                 firstName
                 lastName
             }
-            HandicapCalculated: player_handicaps(limit:1) {
+            HandicapCalculated: player_handicaps(limit: 1) {
                 playerId
                 tournamentId
             }
@@ -1088,6 +1088,42 @@ export const DailyRoundsStatQueryQLs = gql`
                         id
                         playerCategory
                     }
+                }
+            }
+        }
+    }
+`;
+export const DailyRoundsSecateryQuery = gql`
+    query ClubSingleRoundFlightsQuery(
+        $courseId: String!
+        $fromDate: date!
+        $toDate: date!
+       
+    ) {
+        FlightsQL: flight(
+            where: {
+                _and: [
+                    { courseId: { _eq: $courseId } }
+                    { date: { _gte: $fromDate } }
+                    { date: { _lte:  $toDate} }
+                ]
+            }
+            order_by: { date: asc }
+        ) {
+            id
+            courseHoleSets
+            courseHoleSetsInverted
+            date
+            time
+            MembersQL: members {
+                flightId
+                playerId
+                playingTee
+                PlayerQL: player {
+                    id
+                    fullName
+                    playerCategory
+                    membershipNumber
                 }
             }
         }
