@@ -23,6 +23,8 @@ export class General {
             return 'Blue Front 9 - Yellow Back 9';
         } else if (holeSet == 9 && inverted == false) {
             return 'Red Front 9 - Yellow Back 9';
+        }else{
+            return 'Yellow Front 9 - Red Back 9';
         }
     }
     public static formatAMPM(hours: number, minutes: number): string {
