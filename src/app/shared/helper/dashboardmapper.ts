@@ -151,12 +151,12 @@ export function mapDashboardData(data: any): any {
                 professionals: professionals,
                 veterans: veterans,
                 nulls: nulls,
-                redNine:redNine,
-                blueNine:blueNine,
-                yellowNine:yellowNine,
-                redfrontBlueback:redfrontBlueback,
-                blueFrontYellowback:blueFrontYellowback,
-                redFrontYellowback:redFrontYellowback,
+                redNine: redNine,
+                blueNine: blueNine,
+                yellowNine: yellowNine,
+                redfrontBlueback: redfrontBlueback,
+                blueFrontYellowback: blueFrontYellowback,
+                redFrontYellowback: redFrontYellowback,
             };
 
             myData.push(obj);
@@ -200,6 +200,12 @@ export function mapDashboardData(data: any): any {
             }
         }
     }
+    todayData.sort((a, b) => {
+        const timeA = new Date(`01/01/2000 ${a.time}`);
+        const timeB = new Date(`01/01/2000 ${b.time}`);
+        return (timeB.getTime() - timeA.getTime()) as number; // Cast the result to number
+    });
+
     console.log(myData);
     console.log(todayData);
     let dataMembers: any[] = [];
@@ -213,12 +219,12 @@ export function mapDashboardData(data: any): any {
     let barChartDataseniorsAmatuers: any[] = [];
     let barChartDataOthers: any[] = [];
     let _labels: any[] = [];
-    redNine=0;
-    yellowNine=0;
-    blueNine=0;
-    redfrontBlueback=0;
-    redFrontYellowback=0;
-    blueFrontYellowback=0;
+    redNine = 0;
+    yellowNine = 0;
+    blueNine = 0;
+    redfrontBlueback = 0;
+    redFrontYellowback = 0;
+    blueFrontYellowback = 0;
     for (let obj of myData) {
         dataMembers.push(obj.membersCount);
         dataFlight.push(obj.date);
@@ -229,12 +235,12 @@ export function mapDashboardData(data: any): any {
         barChartDataVeteran.push(obj.veterans);
         barChartDataseniorsAmatuers.push(obj.seniorsAmatuers);
         barChartDataOthers.push(obj.nulls);
-        redNine+=obj.redNine;
-        yellowNine+=obj.yellowNine;
-        blueNine+=obj.blueNine;
-        redfrontBlueback+=obj.redfrontBlueback;
-        redFrontYellowback+=obj.redFrontYellowback;
-        blueFrontYellowback+=obj.blueFrontYellowback;
+        redNine += obj.redNine;
+        yellowNine += obj.yellowNine;
+        blueNine += obj.blueNine;
+        redfrontBlueback += obj.redfrontBlueback;
+        redFrontYellowback += obj.redFrontYellowback;
+        blueFrontYellowback += obj.blueFrontYellowback;
     }
     _labels.push(redNine);
     _labels.push(yellowNine);

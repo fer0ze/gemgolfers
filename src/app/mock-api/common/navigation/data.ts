@@ -467,7 +467,7 @@ export const sectaryNavigation: FuseNavigationItem[] = [
         children: [
             {
                 id: 'report.dasboard',
-                title: 'Players Report',
+                title: 'Daily Players Report',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
                 link: '/reports/dailyPlayer'

@@ -126,6 +126,11 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
         });
       }
     }
+    this.Players.sort((a, b) => {
+      const timeA = new Date(`01/01/2000 ${a.time}`);
+      const timeB = new Date(`01/01/2000 ${b.time}`);
+      return (timeB.getTime() - timeA.getTime()) as number; // Cast the result to number
+    });
     this.dataSource = new MatTableDataSource(this.Players);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
