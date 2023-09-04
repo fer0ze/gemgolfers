@@ -127,10 +127,8 @@ export class DailyRoundsStatsComponent implements OnInit {
         'date',
         'totalMembers',
         'amateurs',
-        'professionals',
         'ladies',
         'veterans',
-        'seniors',
         'seniorsAmatuers',
         'others',
     ];
@@ -155,11 +153,8 @@ export class DailyRoundsStatsComponent implements OnInit {
         'blueNine',
         'yellowNine',
         'redfrontBlueback',
-        'blueFrontRedback',
         'redFrontYellowback',
-        'yellowFrontRedback',
         'blueFrontYellowback',
-        'yellowFrontBlueback',
     ];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -177,7 +172,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         private apollo: Apollo,
         private _localStorage: LocalStorageService,
         private _formBuilder: FormBuilder
-    ) {}
+    ) { }
 
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -288,46 +283,28 @@ export class DailyRoundsStatsComponent implements OnInit {
             dates: this.redFrontblueBackDates,
         },
         {
-            data: this.barChartBluefrontRedback,
-            label: 'bluefrontRedback',
-            dates: this.blueFrontredBackDates,
-        },
-        {
             data: this.barChartRedfrontYellowback,
             label: 'RedfrontYellowback',
             dates: this.redFrontyellowBackDates,
         },
         {
-            data: this.barChartYellowfrontRedback,
-            label: 'yellowfrontRedback',
-            dates: this.yellowFrontredBackDates,
-        },
-        {
             data: this.barChartBluefrontYellowback,
             label: 'bluefrontYellowback',
             dates: this.blueFrontyellowBackDates,
-        },
-        {
-            data: this.barChartYellowfrontBlueback,
-            label: 'yellowfrontBlueback',
-            dates: this.yellowFrontblueBackDates,
-        },
+        }
     ];
 
     public courseholesets: any[] = [
-        'Red9',
-        'Blue9',
-        'Yell9',
-        'Red-Blu',
-        'Blu-Red',
-        'Red-Yel',
-        'Yel-Red',
-        'Blu-Yel',
-        'Yel-Blue',
+        'Red 9',
+        'Yellow 9',
+        'Blue 9',
+        'Red 9 - Blue 9',
+        'Red 9 - Yellow 9',
+        'Blue 9 - Yellow 9',
     ];
 
     ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.Players = [];
 
         this.route.paramMap.subscribe((params) => {
@@ -344,7 +321,7 @@ export class DailyRoundsStatsComponent implements OnInit {
 
         console.log(this.scheduleForm);
 
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.weeklyRounds = [];
         of(this.weeklyRounds)
@@ -387,218 +364,18 @@ export class DailyRoundsStatsComponent implements OnInit {
         this.showtable = false;
         this.showResult = false;
         this.isLoading = true;
-
-        if ((this.loggedInuser.userRole = 1)) {
-            dataPlayers = await this.facadeService.getDailyRoundsStatAdmin(
-                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
-                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
-            );
-        } else {
-            dataPlayers = await this.facadeService.getDailyRoundsStat(
-                this.loggedInuser.adminClubId,
-                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
-                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
-            );
-        }
-        console.log(dataPlayers);
-
-        if (dataPlayers.TournamentsQL) {
-            for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
-                const dailyStat2 = {
-                    date: dataPlayers.TournamentsQL[i].startDate,
-                    membersCount:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0
-                            ? dataPlayers.TournamentsQL[i].FlightsQL[0]
-                                  .MembersQL.length
-                            : 0,
-                    amateurs:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return (
-                                      a.PlayerQL.playerCategory == 'Amateurs'
-                                  );
-                              })
-                            : [],
-                    seniors:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return a.PlayerQL.playerCategory == 'Seniors';
-                              })
-                            : [],
-                    ladies:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return a.PlayerQL.playerCategory == 'Ladies';
-                              })
-                            : [],
-                    professionals:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return (
-                                      a.PlayerQL.playerCategory ==
-                                      'Professionals'
-                                  );
-                              })
-                            : [],
-                    veterans:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return (
-                                      a.PlayerQL.playerCategory == 'Veterans'
-                                  );
-                              })
-                            : [],
-                    seniorsAmatuers:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return (
-                                      a.PlayerQL.playerCategory ==
-                                      'Senior Amateurs'
-                                  );
-                              })
-                            : [],
-                    nulls:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
-                            ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return a.PlayerQL.playerCategory == null;
-                              })
-                            : [],
-                };
-                const dailyStats5 = {
-                    date: dataPlayers.TournamentsQL[i].startDate,
-                    membersCount:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0
-                            ? dataPlayers.TournamentsQL[i].FlightsQL[0]
-                                  .MembersQL.length
-                            : 0,
-                    redNine:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 1 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == false
-                            ? 'Red 9'
-                            : [],
-                    blueNine:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 2 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == false
-                            ? 'Blue 9'
-                            : [],
-                    yellowNine:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 8 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == false
-                            ? 'Yellow 9'
-                            : [],
-                    redfrontBlueback:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 3 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == false
-                            ? 'Red Front 9 - Blue Back 9'
-                            : [],
-                    blueFrontRedback:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 3 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == true
-                            ? 'Blue Front 9 - Red Back 9'
-                            : [],
-                    redFrontYellowback:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 9 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == false
-                            ? 'Red Front 9 - Yellow Back 9'
-                            : [],
-                    yellowFrontRedback:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 9 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == true
-                            ? 'Yellow Front 9 - Red Back 9'
-                            : [],
-                    blueFrontYellowback:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 12 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == false
-                            ? 'Blue Front 9 - Yellow Back 9'
-                            : [],
-                    yellowFrontBlueback:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSets == 12 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0]
-                            .courseHoleSetsInverted == true
-                            ? 'Yellow Front 9 - Blue Back 9'
-                            : [],
-                };
-
-                this.dailyStats5.push(dailyStats5);
-                this.dailyStats2.push(dailyStat2);
-            }
-
-            this.dailyStats2 = this.dailyStats2.sort(this.Comparator);
-            this.dailyStats5 = this.dailyStats5.sort(this.Comparator);
-            this.isLoading = false;
-            this.showtable = true;
-        }
-        let myData: any[] = [];
-        let myData2: any[] = [];
-        let myData3: any[] = [];
-        let myData4: any[] = [];
-        let prevDate = null;
-        let memCounter = 0;
         let amateurs = 0;
-        let seniors = 0;
+        let seniorsAmatuers = 0;
         let ladies = 0;
         let professionals = 0;
         let veterans = 0;
-        let seniorsAmatuers = 0;
         let nulls = 0;
-        let before1PM = 0;
-        let after1PM = 0;
-        let nineHoles = 0;
-        let eighteenHoles = 0;
+        let totalFlights = 0;
+        let active = 0;
+        let ended = 0;
+        let disclaimer = 0;
+        let audioRecording = 0;
+        let addedToday = 0;
         let redNine: number = 0;
         let blueNine: number = 0;
         let yellowNine: number = 0;
@@ -608,201 +385,173 @@ export class DailyRoundsStatsComponent implements OnInit {
         let yellowFrontRedback: number = 0;
         let blueFrontYellowback: number = 0;
         let yellowFrontBlueback: number = 0;
-        this.dataSource = null;
-        let index = 0;
-        for (let stats of this.dailyStats2) {
-            if (stats.date == prevDate) {
-                memCounter = memCounter + stats.membersCount;
-                amateurs = amateurs + stats.amateurs.length;
-                seniors = seniors + stats.seniors.length;
-                ladies = ladies + stats.ladies.length;
-                professionals = professionals + stats.professionals.length;
-                veterans = veterans + stats.veterans.length;
-                seniorsAmatuers =
-                    seniorsAmatuers + stats.seniorsAmatuers.length;
-                nulls = nulls + stats.nulls.length;
+        let myData: any[] = [];
+        let myData4: any[] = [];
+        let prevDate = null;
+        let memCounter = 0;
 
-                myData[myData.length - 1].membersCount = memCounter;
-                myData[myData.length - 1].amateurs = amateurs;
-                myData[myData.length - 1].seniors = seniors;
-                myData[myData.length - 1].ladies = ladies;
-                myData[myData.length - 1].professionals = professionals;
-                myData[myData.length - 1].veterans = veterans;
-                myData[myData.length - 1].seniorsAmatuers = seniorsAmatuers;
-                myData[myData.length - 1].nulls = nulls;
+        if ((this.loggedInuser.userRole === 1)) {
+            dataPlayers = await this.facadeService.getDailyRoundsStatAdmin(
+                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+            );
+        } else {
+            dataPlayers = await this.facadeService.getDailyRoundsStat(
+                this.loggedInuser.id,
+                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+            );
+        }
+        console.log(dataPlayers);
+        for (let stats of dataPlayers.FlightsQL) {
 
-                //prevDate = stats.date;
-
-                redNine =
-                    redNine +
-                    (this.dailyStats5[index].redNine.length !== 0
-                        ? Number(1)
-                        : 0);
-                blueNine =
-                    blueNine +
-                    (this.dailyStats5[index].blueNine.length !== 0
-                        ? Number(1)
-                        : 0);
-                yellowNine =
-                    yellowNine +
-                    (this.dailyStats5[index].yellowNine.length !== 0
-                        ? Number(1)
-                        : 0);
-                redfrontBlueback =
-                    redfrontBlueback +
-                    (this.dailyStats5[index].redfrontBlueback.length !== 0
-                        ? Number(1)
-                        : 0);
-                blueFrontRedback =
-                    blueFrontRedback +
-                    (this.dailyStats5[index].blueFrontRedback.length !== 0
-                        ? Number(1)
-                        : 0);
-                redFrontYellowback =
-                    redFrontYellowback +
-                    (this.dailyStats5[index].redFrontYellowback.length !== 0
-                        ? Number(1)
-                        : 0);
-                yellowFrontRedback =
-                    yellowFrontRedback +
-                    (this.dailyStats5[index].yellowFrontRedback.length !== 0
-                        ? Number(1)
-                        : 0);
-                blueFrontYellowback =
-                    blueFrontYellowback +
-                    (this.dailyStats5[index].blueFrontYellowback.length !== 0
-                        ? Number(1)
-                        : 0);
-                yellowFrontBlueback =
-                    yellowFrontBlueback +
-                    (this.dailyStats5[index].yellowFrontBlueback.length !== 0
-                        ? Number(1)
-                        : 0);
-                myData4[myData4.length - 1].membersCount = memCounter;
-                myData4[myData4.length - 1].redNine = redNine;
-                myData4[myData4.length - 1].blueNine = blueNine;
-                myData4[myData4.length - 1].yellowNine = yellowNine;
-                myData4[myData4.length - 1].redfrontBlueback = redfrontBlueback;
-                myData4[myData4.length - 1].blueFrontRedback = blueFrontRedback;
-                myData4[myData4.length - 1].redFrontYellowback =
-                    redFrontYellowback;
-                myData4[myData4.length - 1].yellowFrontRedback =
-                    yellowFrontRedback;
-                myData4[myData4.length - 1].blueFrontYellowback =
-                    blueFrontYellowback;
-                myData4[myData4.length - 1].yellowFrontBlueback =
-                    yellowFrontBlueback;
-
-                prevDate = stats.date;
+            const timestamp = stats.date;
+            if (timestamp === prevDate) {
+                memCounter += stats ? stats.MembersQL.length : 0;
+                totalFlights++;
+                amateurs += stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Amateurs'
+                        );
+                    }).length
+                    : 0;
+                seniorsAmatuers += stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Senior Amateurs'
+                        );
+                    }).length
+                    : 0;
+                ladies += stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Ladies'
+                        );
+                    }).length
+                    : 0;
+                professionals += stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Professionals'
+                        );
+                    }).length
+                    : 0;
+                veterans += stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Veterans'
+                        );
+                    }).length
+                    : 0;
+                nulls += stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == null
+                        );
+                    }).length
+                    : 0;
+                redNine += (stats.courseHoleSets == 1 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                blueNine += (stats.courseHoleSets == 4 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                redfrontBlueback += (stats.courseHoleSets == 3 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                yellowNine += (stats.courseHoleSets == 8 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                blueFrontYellowback += (stats.courseHoleSets == 12 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                redFrontYellowback += (stats.courseHoleSets == 9 && stats.courseHoleSetsInverted == false) ? 1 : 0;
             } else {
-                memCounter = 0;
-                amateurs = 0;
-                seniors = 0;
-                ladies = 0;
-                professionals = 0;
-                veterans = 0;
-                seniorsAmatuers = 0;
-                nulls = 0;
-                redNine = 0;
-                blueNine = 0;
-                yellowNine = 0;
-                redfrontBlueback = 0;
-                blueFrontRedback = 0;
-                redFrontYellowback = 0;
-                yellowFrontRedback = 0;
-                blueFrontYellowback = 0;
-                yellowFrontBlueback = 0;
-
-                memCounter = memCounter + stats.membersCount;
-                amateurs = amateurs + stats.amateurs.length;
-                seniors = seniors + stats.seniors.length;
-                ladies = ladies + stats.ladies.length;
-                professionals = professionals + stats.professionals.length;
-                veterans = veterans + stats.veterans.length;
-                seniorsAmatuers =
-                    seniorsAmatuers + stats.seniorsAmatuers.length;
-                nulls = nulls + stats.nulls.length;
-
-                redNine =
-                    redNine +
-                    (this.dailyStats5[index].redNine.length !== 0
-                        ? Number(1)
-                        : 0);
-                blueNine =
-                    blueNine +
-                    (this.dailyStats5[index].blueNine.length !== 0
-                        ? Number(1)
-                        : 0);
-                yellowNine =
-                    yellowNine +
-                    (this.dailyStats5[index].yellowNine.length !== 0
-                        ? Number(1)
-                        : 0);
-                redfrontBlueback =
-                    redfrontBlueback +
-                    (this.dailyStats5[index].redfrontBlueback.length !== 0
-                        ? Number(1)
-                        : 0);
-                blueFrontRedback =
-                    blueFrontRedback +
-                    (this.dailyStats5[index].blueFrontRedback.length !== 0
-                        ? Number(1)
-                        : 0);
-                redFrontYellowback =
-                    redFrontYellowback +
-                    (this.dailyStats5[index].redFrontYellowback.length !== 0
-                        ? Number(1)
-                        : 0);
-                yellowFrontRedback =
-                    yellowFrontRedback +
-                    (this.dailyStats5[index].yellowFrontRedback.length !== 0
-                        ? Number(1)
-                        : 0);
-                blueFrontYellowback =
-                    blueFrontYellowback +
-                    (this.dailyStats5[index].blueFrontYellowback.length !== 0
-                        ? Number(1)
-                        : 0);
-                yellowFrontBlueback =
-                    yellowFrontBlueback +
-                    (this.dailyStats5[index].yellowFrontBlueback.length !== 0
-                        ? Number(1)
-                        : 0);
-
+                memCounter = stats ? stats.MembersQL.length : 0;
+                totalFlights = 1;
+                amateurs = stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Amateurs'
+                        );
+                    }).length
+                    : 0;
+                seniorsAmatuers = stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Senior Amateurs'
+                        );
+                    }).length
+                    : 0;
+                ladies = stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Ladies'
+                        );
+                    }).length
+                    : 0;
+                professionals = stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Professionals'
+                        );
+                    }).length
+                    : 0;
+                veterans = stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == 'Veterans'
+                        );
+                    }).length
+                    : 0;
+                nulls = stats.MembersQL.length > 0
+                    ? stats.MembersQL.filter((a) => {
+                        return (
+                            a.PlayerQL.playerCategory == null
+                        );
+                    }).length
+                    : 0;
+                redNine = (stats.courseHoleSets == 1 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                blueNine = (stats.courseHoleSets == 4 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                redfrontBlueback = (stats.courseHoleSets == 3 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                yellowNine = (stats.courseHoleSets == 8 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                blueFrontYellowback = (stats.courseHoleSets == 12 && stats.courseHoleSetsInverted == false) ? 1 : 0;
+                redFrontYellowback = (stats.courseHoleSets == 9 && stats.courseHoleSetsInverted == false) ? 1 : 0;
                 let obj = {
-                    date: stats.date,
+                    date: timestamp,
                     membersCount: memCounter,
+                    totalFlights: totalFlights,
                     amateurs: amateurs,
-                    seniors: seniors,
+                    seniorsAmatuers: seniorsAmatuers,
                     ladies: ladies,
                     professionals: professionals,
                     veterans: veterans,
-                    seniorsAmatuers: seniorsAmatuers,
                     nulls: nulls,
+                   
                 };
                 let obj4 = {
-                    date: stats.date,
+                    date: timestamp,
                     redNine: redNine,
                     blueNine: blueNine,
                     yellowNine: yellowNine,
                     redfrontBlueback: redfrontBlueback,
-                    blueFrontRedback: blueFrontRedback,
-                    redFrontYellowback: redFrontYellowback,
-                    yellowFrontRedback: yellowFrontRedback,
                     blueFrontYellowback: blueFrontYellowback,
-                    yellowFrontBlueback: yellowFrontBlueback,
-                };
+                    redFrontYellowback: redFrontYellowback,
+                }
 
-                myData4.push(obj4);
                 myData.push(obj);
-                prevDate = stats.date;
+                myData4.push(obj4);
+                prevDate = timestamp;
             }
-            index++;
-        }
 
+            myData[myData.length - 1].membersCount = memCounter;
+            myData[myData.length - 1].totalFlights = totalFlights;
+            myData[myData.length - 1].amateurs = amateurs;
+            myData[myData.length - 1].seniorsAmatuers = seniorsAmatuers;
+            myData[myData.length - 1].ladies = ladies;
+            myData[myData.length - 1].professionals = professionals;
+            myData[myData.length - 1].veterans = veterans;
+            myData[myData.length - 1].nulls = nulls;
+            myData4[myData.length - 1].redNine = redNine;
+            myData4[myData.length - 1].blueNine = blueNine;
+            myData4[myData.length - 1].yellowNine = yellowNine;
+            myData4[myData.length - 1].redfrontBlueback = redfrontBlueback;
+            myData4[myData.length - 1].blueFrontYellowback = blueFrontYellowback;
+            myData4[myData.length - 1].redFrontYellowback = redFrontYellowback;
+        }
         console.log(myData);
         console.log(myData4);
-
         this.dataSource = null;
         this.dataSource = new MatTableDataSource(myData);
         // console.log(this.dataSource);
@@ -858,11 +607,9 @@ export class DailyRoundsStatsComponent implements OnInit {
             blueNine += myData4[index4].blueNine;
             yellowNine += myData4[index4].yellowNine;
             redfrontBlueback += myData4[index4].redfrontBlueback;
-            blueFrontRedback += myData4[index4].blueFrontRedback;
             redFrontYellowback += myData4[index4].redFrontYellowback;
-            yellowFrontRedback += myData4[index4].yellowFrontRedback;
             blueFrontYellowback += myData4[index4].blueFrontYellowback;
-            yellowFrontBlueback += myData4[index4].yellowFrontBlueback;
+
 
             if (data.amateurs > 0) {
                 this.amateurDates.push(data.date);
@@ -881,38 +628,11 @@ export class DailyRoundsStatsComponent implements OnInit {
             }
             index4++;
         }
-
-        redNine = ceil((redNine / dataPlayers.TournamentsQL.length) * 100);
-        blueNine = ceil((blueNine / dataPlayers.TournamentsQL.length) * 100);
-        yellowNine = ceil(
-            (yellowNine / dataPlayers.TournamentsQL.length) * 100
-        );
-        redfrontBlueback = ceil(
-            (redfrontBlueback / dataPlayers.TournamentsQL.length) * 100
-        );
-        blueFrontRedback = ceil(
-            (blueFrontRedback / dataPlayers.TournamentsQL.length) * 100
-        );
-        redFrontYellowback = ceil(
-            (redFrontYellowback / dataPlayers.TournamentsQL.length) * 100
-        );
-        yellowFrontRedback = ceil(
-            (yellowFrontRedback / dataPlayers.TournamentsQL.length) * 100
-        );
-        blueFrontYellowback = ceil(
-            (blueFrontYellowback / dataPlayers.TournamentsQL.length) * 100
-        );
-        yellowFrontBlueback = ceil(
-            (yellowFrontBlueback / dataPlayers.TournamentsQL.length) * 100
-        );
         dataMembers4.push(redNine);
         dataMembers4.push(yellowNine);
         dataMembers4.push(blueNine);
         dataMembers4.push(redfrontBlueback);
-        dataMembers4.push(blueFrontRedback);
         dataMembers4.push(redFrontYellowback);
-        dataMembers4.push(yellowFrontRedback);
-        dataMembers4.push(yellowFrontBlueback);
         dataMembers4.push(blueFrontYellowback);
         this._HolesSetsseries = [
             {
@@ -1423,7 +1143,7 @@ export class DailyRoundsStatsComponent implements OnInit {
             colors: ['#818CF8'],
             dataLabels: {
                 enabled: true,
-                formatter: (val: number): string | number => `${val}%`,
+                formatter: (val: number): string | number => `${val}`,
                 textAnchor: 'start',
                 style: {
                     fontSize: '13px',
@@ -1454,7 +1174,7 @@ export class DailyRoundsStatsComponent implements OnInit {
             tooltip: {
                 theme: 'dark',
                 y: {
-                    formatter: (val: number): string => `${val}%`,
+                    formatter: (val: number): string => `${val}`,
                 },
             },
             xaxis: {

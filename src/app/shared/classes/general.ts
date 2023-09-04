@@ -10,6 +10,24 @@ export class General {
 
         return COUNTRIES;
     }
+    
+    public static getdate(idate: any) {
+        const date = new Date(idate);
+    
+        // Explicitly type the options object
+        const options: Intl.DateTimeFormatOptions = { month: "short", day: "2-digit" };
+    
+        // Format the date using Intl.DateTimeFormat
+        const formattedDate = new Intl.DateTimeFormat("en-US", options).formatToParts(date);
+    
+        // Extract the month and day and format them as "Sep 03"
+        const formattedDateString = `${formattedDate[0].value} ${formattedDate[2].value}`;
+    
+        return formattedDateString;
+    }
+    
+    
+    
     public static getCourseHoleSets(holeSet, inverted) {
         if (holeSet == 4 && inverted == false) {
             return 'Blue 9';

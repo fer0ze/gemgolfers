@@ -310,14 +310,14 @@ export class PlayersService {
         });
     }
     public getFlightPlayedAdmin(
-        courseId:string,date: string
+        courseId: string, date: string
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe({
                     query: Query.getFlightPlayedAdmin,
                     variables: {
-                        courseId:courseId,
+                        courseId: courseId,
                         date: date
                     }
 
@@ -393,11 +393,37 @@ export class PlayersService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
+        console.log(clubId);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe({
                     query: Query.playerUpdatedHandicapReport,
                     variables: {
+                        clubId:clubId,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public playerUpdatedHandicapReportAdmin(
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.playerUpdatedHandicapReportAdmin,
+                    variables: {
+        
                         fromDate: fromDate,
                         toDate: toDate,
                     },

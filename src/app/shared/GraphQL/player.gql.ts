@@ -848,6 +848,13 @@ export const PlayerFlightScoresQuery = gql`
                 }
             }
         }
+        Aggegate: flight_member_aggregate(
+            where: { playerId: { _eq: $playerId } }
+        ) {
+            aggregate {
+                totalCount: count
+            }
+        }
     }
 `;
 export const getPlayerFlightsQuery = gql`
@@ -1202,23 +1209,111 @@ export const searchPlayerForTournamentQL = gql`
     ${PlayerQL}
 `;
 export const playerUpdatedHandicapReport = gql`
-    query playerUpdatedHandicapReport($fromDate: date!, $toDate: date!) {
+    query playerUpdatedHandicapReport(
+        $clubId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
         player_handicap(
             where: {
                 _and: [
-                    { tournament: { startDate: { _gte: $toDate } } }
+                    { tournament: { clubId: { _eq: $clubId } } }
+                    { tournament: { endDate: { _gte: $toDate } } }
                     { tournament: { endDate: { _lte: $fromDate } } }
                 ]
             }
-            order_by: [
-                { tournament: { endDate: asc } }
-                { player: { fullName: asc } }
-            ]
+            order_by: [{ tournament: { endDate: asc } }]
         ) {
-            ...PlayerHandicapQL
+            playerId
+            handicap
+            oldHandicap
+            score
+            grossScore
+            adjustedScore
+            PlayerQL: player {
+                fullName
+                membershipNumber
+            }
+            tournament {
+                endDate
+            }
+        }
+        player_handicap_whs(
+            where: {
+                _and: [
+                    { tournament: { clubId: { _eq: $clubId } } }
+                    { tournament: { endDate: { _gte: $toDate } } }
+                    { tournament: { endDate: { _lte: $fromDate } } }
+                ]
+            }
+            order_by: [{ tournament: { endDate: desc } }]
+        ) {
+            adjustedScore
+            handicapDifferential
+            handicapIndex
+            score
+            player {
+                fullName
+                membershipNumber
+            }
+            tournament {
+                endDate
+            }
         }
     }
-    ${PlayerHandicapQL}
+   
+`;
+export const playerUpdatedHandicapReportAdmin = gql`
+query playerUpdatedHandicapReport(
+    $fromDate: date!
+    $toDate: date!
+) {
+    player_handicap(
+        where: {
+            _and: [
+                { tournament: { endDate: { _gte: $toDate } } }
+                { tournament: { endDate: { _lte: $fromDate } } }
+            ]
+        }
+        order_by: [{ tournament: { endDate: asc } }]
+    ) {
+        playerId
+        handicap
+        oldHandicap
+        score
+        grossScore
+        adjustedScore
+        PlayerQL: player {
+            fullName
+            membershipNumber
+        }
+        tournament {
+            endDate
+        }
+    }
+    player_handicap_whs(
+        where: {
+            _and: [
+                { tournament: { endDate: { _gte: $toDate } } }
+                { tournament: { endDate: { _lte: $fromDate } } }
+            ]
+        }
+        order_by: [{ tournament: { endDate: desc } }]
+    ) {
+        adjustedScore
+        handicapDifferential
+        handicapIndex
+        score
+        player {
+            fullName
+            membershipNumber
+        }
+        tournament {
+            endDate
+        }
+    }
+}
+   
 `;
 export const playerUpdatedHandicapWHSReport = gql`
     query playerUpdatedHandicapReport(
@@ -1228,16 +1323,13 @@ export const playerUpdatedHandicapWHSReport = gql`
     ) {
         player_handicap_whs(
             where: {
-                player: { membership: { clubId: { _eq: $clubId } } }
                 _and: [
-                    { tournament: { endDate: { _gte: $toDate } } }
-                    { tournament: { endDate: { _lte: $fromDate } } }
+                    { tournament: { clubId: { _eq: $clubId } } }
+                    { updatedAt: { _gte: $toDate } } 
+                    { updatedAt: { _lte: $fromDate } } 
                 ]
             }
-            order_by: [
-                { tournament: { endDate: desc } }
-                { player: { fullName: asc } }
-            ]
+            order_by: [{ tournament: { endDate: desc } }]
         ) {
             adjustedScore
             handicapDifferential
@@ -1254,7 +1346,6 @@ export const playerUpdatedHandicapWHSReport = gql`
             }
         }
     }
-    ${PlayerHandicapWhsQL}
 `;
 export const playerUpdatedHandicapWHSReportAdmin = gql`
     query playerUpdatedHandicapReport($fromDate: date!, $toDate: date!) {

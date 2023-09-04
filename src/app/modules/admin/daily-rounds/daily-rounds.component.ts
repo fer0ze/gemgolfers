@@ -43,7 +43,7 @@ export class DailyRoundsComponent implements OnInit {
         'noOfFlights',
         'membersCount',
         'details',
-        'score',
+        // 'score',
     ];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -73,7 +73,7 @@ export class DailyRoundsComponent implements OnInit {
             startDate: ['', [Validators.required]],
             endDate: ['', [Validators.required]],
         });
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.dailyRounds = [];
         // this.route.paramMap.subscribe((params) => {
@@ -94,80 +94,48 @@ export class DailyRoundsComponent implements OnInit {
     async getDailyRounds(fromDate: Date, toDate: Date) {
         this.dailyStats = [];
         this.showtable = false;
-        let dataPlayers:any;
+        let dataPlayers: any;
         this.isLoading = true;
         if (this.loggedInuser.userRole == 1) {
-             dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
+            dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
             );
         } else {
-             dataPlayers = await this.facadeService.getDailyRoundsSingle(
-                this.loggedInuser.adminClubId,
+            dataPlayers = await this.facadeService.getDailyRoundsSingle(
+                this.loggedInuser.id,
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
             );
         }
         console.log(dataPlayers);
+        const totalsMap = new Map(); // Map to store totals by date
 
-        this.dailyStats = [];
-        if (dataPlayers.TournamentsQL) {
-            for (let i = 0; i < dataPlayers.TournamentsQL.length; i++) {
-                var dailyStat = null;
-                dailyStat = {
-                    date: dataPlayers.TournamentsQL[i].startDate,
-                    membersCount:
-                        dataPlayers.TournamentsQL[i].FlightsQL.length > 0
-                            ? dataPlayers.TournamentsQL[i].FlightsQL[0]
-                                  .MembersQL.length
-                            : 0,
-                    noOfFlights: dataPlayers.TournamentsQL[i].FlightsQL.length,
-                };
-                this.dailyStats.push(dailyStat);
-            }
+        // Iterate through the data and calculate totals
+        for (const entry of dataPlayers.FlightsQL) {
+            const date = entry.date;
 
-            this.dailyStats = this.dailyStats.sort(this.ComparatorDate);
-            this.isLoading = false;
-            this.showtable = true;
-
-            // this.getSelectedCourse("-LUFS3FCQKOGpJ2IEHmf");
-        }
-
-        console.log(this.dailyStats);
-        let myData: any[] = [];
-        let prevDate = null;
-        let memCounter = 0;
-        let totalFlights = 0;
-
-        for (let stats of this.dailyStats) {
-            if (stats.date == prevDate) {
-                memCounter = memCounter + stats.membersCount;
-                totalFlights = totalFlights + stats.noOfFlights;
-
-                myData[myData.length - 1].membersCount = memCounter;
-                myData[myData.length - 1].totalFlights = totalFlights;
-                prevDate = stats.date;
+            if (totalsMap.has(date)) {
+                // If date exists in the map, update the totals
+                totalsMap.get(date).membersCount += entry.MembersQL.length;
+                totalsMap.get(date).totalFlights++;
             } else {
-                memCounter = 0;
-                totalFlights = 0;
-                memCounter = memCounter + stats.membersCount;
-                totalFlights = totalFlights + stats.noOfFlights;
-
-                let obj = {
-                    date: stats.date,
-                    membersCount: memCounter,
-                    totalFlights: totalFlights,
-                };
-
-                myData.push(obj);
-                prevDate = stats.date;
+                // If date does not exist in the map, create a new entry
+                totalsMap.set(date, {
+                    date: date,
+                    membersCount: entry.MembersQL.length,
+                    totalFlights: 1,
+                });
             }
         }
 
-        console.log(myData);
+        // Convert the map values to an array
+        const totalsArray = Array.from(totalsMap.values());
 
-        this.dataSource = null;
-        this.dataSource = new MatTableDataSource(myData);
+        console.log(totalsArray);
+        this.dataSource = new MatTableDataSource(totalsArray);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
     }
 
     redirectToPlayersScore = (id: string) => {

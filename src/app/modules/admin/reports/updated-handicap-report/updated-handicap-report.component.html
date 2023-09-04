@@ -4,7 +4,7 @@
     >
         <div>
             <div class="text-5xl font-extrabold tracking-tight leading-none">
-                Daily Handicap Change Statistics
+                Daily Handicap Changes
             </div>
         </div>
         <div class="flex items-center mt-5 sm:mt-0 md:mt-7">
@@ -167,17 +167,9 @@
                                 </div>
                                 <div>
                                     <div class="flex items-center ml-auto mb-1">
-                                        <button mat-stroked-button (click)="downloadAsPDFCongu()">
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:dowload'
-                                                "
-                                            ></mat-icon>
-                                            <span class="ml-2"
-                                                >Dowload Summary</span
-                                            >
-                                        </button>
+                                       
+                                            <mat-icon aria-hidden="false" color="warn" (click)="downloadAsPDFCongu()" aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +211,7 @@
                                         *matHeaderCellDef
                                         mat-sort-header
                                     >
-                                        membership
+                                        MembershipNo
                                     </th>
                                     <td mat-cell *matCellDef="let row">
                                         {{ row.membership }}
@@ -407,17 +399,9 @@
                                         <div
                                             class="flex items-center ml-auto mb-1"
                                         >
-                                            <button mat-stroked-button     (click)="downloadAsPDFWHS()">
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="
-                                                        'heroicons_solid:dowload'
-                                                    "
-                                                ></mat-icon>
-                                                <span class="ml-2"
-                                                    >Dowload Summary</span
-                                                >
-                                            </button>
+                                            
+                                                <mat-icon aria-hidden="false" color="warn" (click)="downloadAsPDFWHS()" aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
+                                        
                                         </div>
                                     </div>
                                 </div>
@@ -448,7 +432,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="membership">
                                     <th mat-header-cell *matHeaderCellDef>
-                                        Membership
+                                        MembershipNo
                                     </th>
                                     <td
                                         mat-cell
@@ -512,7 +496,7 @@
                                 <!-- Phone Column -->
                                 <ng-container matColumnDef="adjustedScore">
                                     <th mat-header-cell *matHeaderCellDef>
-                                        adj/Sc
+                                        Adj/Sc
                                     </th>
                                     <td
                                         mat-cell
@@ -531,7 +515,7 @@
                                     matColumnDef="handicapDifferential"
                                 >
                                     <th mat-header-cell *matHeaderCellDef>
-                                        h/Diff
+                                        HC/Diff
                                     </th>
                                     <td
                                         mat-cell
@@ -551,7 +535,7 @@
 
                                 <ng-container matColumnDef="handicapIndex">
                                     <th mat-header-cell *matHeaderCellDef>
-                                        h/Index
+                                        HC/Index
                                     </th>
                                     <td
                                         mat-cell

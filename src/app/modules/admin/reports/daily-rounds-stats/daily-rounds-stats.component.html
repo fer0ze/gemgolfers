@@ -1,39 +1,22 @@
 <div class="flex-auto">
-    <div
-        class="flex flex-col sm:flex-row md:flex-col flex-auto bg-card justify-between py-8 px-6 md:px-8 border-b"
-    >
+    <div class="flex flex-col sm:flex-row md:flex-col flex-auto bg-card justify-between py-8 px-6 md:px-8 border-b">
         <div>
             <div class="text-5xl font-extrabold tracking-tight leading-none">
-                Daily Rounds Statistics
+                Daily Rounds Summary
             </div>
-            
+
         </div>
         <div class="flex items-center mt-5 sm:mt-0 md:mt-7">
             <div class="w-120">
                 <form [formGroup]="scheduleForm" autocomplete="off" novalidate>
                     <div class="flex">
-                        <mat-form-field
-                            appearance="fill"
-                            class="fuse-mat-no-subscript flex-auto"
-                           
-                        >
-                            <mat-select
-                                placeholder="Last Week"
-                                appearance="fill"
-                                (selectionChange)="Dailysetup($event)"
-                            >
-                                <mat-option value="Last_Week"
-                                    >Last Week</mat-option
-                                >
-                                <mat-option value="Last_Month"
-                                    >Last Month</mat-option
-                                >
-                                <mat-option value="Last_3_Months"
-                                    >Last 3 Months</mat-option
-                                >
-                                <mat-option value="Last_6_Months"
-                                    >Last 6 Months</mat-option
-                                >
+                        <mat-form-field appearance="fill" class="fuse-mat-no-subscript flex-auto">
+                            <mat-select placeholder="Last Week" appearance="fill"
+                                (selectionChange)="Dailysetup($event)">
+                                <mat-option value="Last_Week">Last Week</mat-option>
+                                <mat-option value="Last_Month">Last Month</mat-option>
+                                <mat-option value="Last_3_Months">Last 3 Months</mat-option>
+                                <mat-option value="Last_6_Months">Last 6 Months</mat-option>
                                 <mat-option value="Custom">Custom</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -44,22 +27,10 @@
             <div class="mx-7 w-100">
                 <form [formGroup]="scheduleForm">
                     <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <input
-                            matInput
-                            [matDatepicker]="picker2"
-                            (dateChange)="onDatePick2($event)"
-                            formControlName="BookingDate"
-                            placeholder="Pick start Date"
-                            disabled
-                        />
-                        <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker2"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker
-                            #picker2
-                            disabled="false"
-                        ></mat-datepicker>
+                        <input matInput [matDatepicker]="picker2" (dateChange)="onDatePick2($event)"
+                            formControlName="BookingDate" placeholder="Pick start Date" disabled />
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2 disabled="false"></mat-datepicker>
                         <mat-error>This field is required</mat-error>
                     </mat-form-field>
                 </form>
@@ -68,24 +39,10 @@
             <div class="mx-5 w-100">
                 <form [formGroup]="scheduleForm">
                     <mat-form-field class="fuse-mat-no-subscript w-full">
-                        <input
-                            matInput
-                            [matDatepicker]="picker"
-                            (dateChange)="onDatePick($event)"
-                            [min]="minDate"
-                            [max]="maxDate"
-                            formControlName="BookingDate"
-                            placeholder="Pick end Date"
-                            disabled
-                        />
-                        <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker
-                            #picker
-                            disabled="false"
-                        ></mat-datepicker>
+                        <input matInput [matDatepicker]="picker" (dateChange)="onDatePick($event)" [min]="minDate"
+                            [max]="maxDate" formControlName="BookingDate" placeholder="Pick end Date" disabled />
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker disabled="false"></mat-datepicker>
                         <mat-error>This field is required</mat-error>
                     </mat-form-field>
                 </form>
@@ -93,32 +50,20 @@
         </div>
     </div>
     <!-- Github issues summary -->
-    <div
-        class="flex-auto border-t -mt-px pt-4 sm:pt-6"
-        *ngIf="showdata | async"
-    >
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6" *ngIf="showdata | async">
         <div class="w-full max-w-screen-xl mx-auto">
             <!-- Tabs -->
 
             <!-- Home -->
 
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
-            >
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                 <div
-                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
-                    <div
-                        class="flex flex-col sm:flex-row items-start justify-around"
-                    >
-                        <div
-                            class="text-lg font-lg tracking-tight leading-6 truncate"
-                        >
+                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start justify-around">
+                        <div class="text-lg font-lg tracking-tight leading-6 truncate">
                             Daily Rounds Summary
                         </div>
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Players Category
                         </div>
                         <!-- <div class="mt-3 sm:mt-0 sm:ml-2">
@@ -132,132 +77,40 @@
                             </mat-button-toggle-group>
                         </div> -->
                     </div>
-                    <div
-                        class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
-                    >
+                    <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
                         <!-- New vs. Closed -->
                         <div class="flex flex-col flex-auto">
                             <div class="font-medium text-secondary"></div>
                             <div class="flex flex-col flex-auto">
-                                <apx-chart
-                                    class="flex-auto w-full h-80"
-                                    [chart]="chartGithubIssues.chart"
-                                    [colors]="chartGithubIssues.colors"
-                                    [dataLabels]="chartGithubIssues.dataLabels"
-                                    [grid]="chartGithubIssues.grid"
-                                    [labels]="chartGithubIssues.labels"
-                                    [legend]="chartGithubIssues.legend"
-                                    [plotOptions]="
+                                <apx-chart class="flex-auto w-full h-80" [chart]="chartGithubIssues.chart"
+                                    [colors]="chartGithubIssues.colors" [dataLabels]="chartGithubIssues.dataLabels"
+                                    [grid]="chartGithubIssues.grid" [labels]="chartGithubIssues.labels"
+                                    [legend]="chartGithubIssues.legend" [plotOptions]="
                                         chartGithubIssues.plotOptions
-                                    "
-                                    [series]="chartGithubIssues.series[0]"
-                                    [states]="chartGithubIssues.states"
-                                    [stroke]="chartGithubIssues.stroke"
-                                    [tooltip]="chartGithubIssues.tooltip"
-                                    [xaxis]="chartGithubIssues.xaxis"
-                                    [yaxis]="chartGithubIssues.yaxis"
-                                ></apx-chart>
+                                    " [series]="chartGithubIssues.series[0]" [states]="chartGithubIssues.states"
+                                    [stroke]="chartGithubIssues.stroke" [tooltip]="chartGithubIssues.tooltip"
+                                    [xaxis]="chartGithubIssues.xaxis" [yaxis]="chartGithubIssues.yaxis"></apx-chart>
                             </div>
                         </div>
                         <!-- Overview -->
                         <div class="flex flex-col">
-                            
-                            <div class="flex-auto grid grid-cols-4 gap-4 ">
-                                <table
-                                *ngIf="dataSource"
-                                mat-table
-                                [dataSource]="dataSource"
-                                matSort
-                            >
-                                <ng-container matColumnDef="id">
-                                    <th   mat-header-cell *matHeaderCellDef>Sr.</th>
-                                    <td mat-cell *matCellDef="let row; let i = index">
-                                        {{ i + 1 }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="date">
-                                    <th  class="p-8" mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Date
-                                    </th>
-                                    <td  mat-cell *matCellDef="let row">
-                                        {{ row.date.substring(0, 10) }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="totalMembers">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Members
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.membersCount }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="amateurs">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Amateurs
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.amateurs }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="professionals">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Pro
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.professionals }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="ladies">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Ladies
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">{{ row.ladies }}</td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="veterans">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Veterans
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.veterans }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="seniors">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Seniors
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.seniors }}
-                                    </td>
-                                </ng-container>
-                                <ng-container matColumnDef="seniorsAmatuers">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Seniors Amateurs
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.seniorsAmatuers }}
-                                    </td>
-                                </ng-container>
-                                <ng-container matColumnDef="others">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Others
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">{{ row.nulls }}</td>
-                                </ng-container>
-            
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr
-                                    mat-row
-                                    *matRowDef="let row; columns: displayedColumns"
-                                ></tr>
-                            </table>                               
+                            <div class="flex flex-col flex-auto">
+
+                                <div class="font-medium text-secondary"></div>
+                                <div class="flex flex-col flex-auto">
+                                    <apx-chart class="flex-auto w-full h-80" [chart]="chartBudgetDistribution.chart"
+                                        [colors]="chartBudgetDistribution.colors"
+                                        [dataLabels]="chartBudgetDistribution.dataLabels"
+                                        [markers]="chartBudgetDistribution.markers"
+                                        [plotOptions]="chartBudgetDistribution.plotOptions"
+                                        [series]="chartBudgetDistribution.series"
+                                        [stroke]="chartBudgetDistribution.stroke"
+                                        [tooltip]="chartBudgetDistribution.tooltip"
+                                        [xaxis]="chartBudgetDistribution.xaxis" [yaxis]="chartBudgetDistribution.yaxis">
+                                        ></apx-chart>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -268,24 +121,15 @@
 
             <!-- Home -->
 
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 mb-8 md:grid-cols-4 gap-6 w-full min-w-0"
-            >
+            <div class="grid grid-cols-1 sm:grid-cols-2 mb-8 md:grid-cols-4 gap-6 w-full min-w-0">
                 <div
-                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                >
-                    <div
-                        class="flex flex-col sm:flex-row items-start justify-around"
-                    >
-                        <div
-                            class="text-lg font-lg tracking-tight leading-6 truncate"
-                        >
+                    class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start justify-around">
+                        <div class="text-lg font-lg tracking-tight leading-6 truncate">
                             Course HoleSets Summary
                         </div>
-                        <div
-                            class="text-lg font-medium tracking-tight leading-6 truncate"
-                        >
-                        Course HoleSets Category
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                            Course HoleSets Category
                         </div>
                         <!-- <div class="mt-3 sm:mt-0 sm:ml-2">
                             <mat-button-toggle-group
@@ -298,149 +142,202 @@
                             </mat-button-toggle-group>
                         </div> -->
                     </div>
-                    <div
-                        class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
-                    >
+                    <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
                         <!-- New vs. Closed -->
-                        <div class="flex flex-col flex-auto">
-                            
-                            <div class="font-medium text-secondary"></div>
-                            <div class="flex flex-col flex-auto">
-                                <apx-chart
-                                class="flex-auto w-full h-80"
-                                [chart]="chartBudgetDistribution.chart"
-                                [colors]="chartBudgetDistribution.colors"
-                                [dataLabels]="chartBudgetDistribution.dataLabels"
-                                [markers]="chartBudgetDistribution.markers"
-                                [plotOptions]="chartBudgetDistribution.plotOptions"
-                                [series]="chartBudgetDistribution.series"
-                                [stroke]="chartBudgetDistribution.stroke"
-                                [tooltip]="chartBudgetDistribution.tooltip"
-                                [xaxis]="chartBudgetDistribution.xaxis"
-                                [yaxis]="chartBudgetDistribution.yaxis">
-                                ></apx-chart>
-                            </div>
-                        </div>
+
+                        <table *ngIf="dataSource" mat-table [dataSource]="dataSource" matSort>
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef>Sr.</th>
+                                <td mat-cell *matCellDef="let row; let i = index">
+                                    {{ i + 1 }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="date">
+                                <th class="p-8" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Date
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.date.substring(0, 10) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="totalMembers">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Members
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.membersCount }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="amateurs">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Amateurs
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.amateurs }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="professionals">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Pro
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.professionals }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ladies">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Ladies
+                                </th>
+                                <td mat-cell *matCellDef="let row">{{ row.ladies }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="veterans">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Veterans
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.veterans }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="seniors">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Seniors
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.seniors }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="seniorsAmatuers">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Seniors Amateurs
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.seniorsAmatuers }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="others">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Others
+                                </th>
+                                <td mat-cell *matCellDef="let row">{{ row.nulls }}</td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>
+
                         <!-- Overview -->
-                        <div class="flex flex-col">
-                            
-                            <div class="flex-auto grid grid-cols-4 gap-4 ">
-                                <table
-                                *ngIf="dataSource4"
-                                mat-table
-                                [dataSource]="dataSource4"
-                                matSort
-                            >
-                                <ng-container matColumnDef="id">
-                                    <th  mat-header-cell *matHeaderCellDef>Sr.</th>
-                                    <td mat-cell *matCellDef="let row; let i = index">
-                                        {{ i + 1 }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="date">
-                                    <th class="p-8"  mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        Date
-                                    </th>
-                                    <td  mat-cell *matCellDef="let row">
-                                        {{ row.date.substring(0, 10) }}
-                                    </td>
-                                </ng-container>
-            
-                                
-            
-                                <ng-container matColumnDef="redNine">
-                                    <th  mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        red9
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.redNine }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="blueNine">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        blue9
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.blueNine }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="yellowNine">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        yel9
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.yellowNine }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="redfrontBlueback">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        red-blue
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.redfrontBlueback }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="blueFrontRedback">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        blue-red
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.blueFrontRedback }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="redFrontYellowback">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        red-Yell
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.redFrontYellowback }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="yellowFrontRedback">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        yell-Red
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.yellowFrontRedback }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="blueFrontYellowback">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        blue-Yell
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.blueFrontYellowback }}
-                                    </td>
-                                </ng-container>
-            
-                                <ng-container matColumnDef="yellowFrontBlueback">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                        yell-Blue
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        {{ row.yellowFrontBlueback }}
-                                    </td>
-                                </ng-container>
-            
-                                <tr
-                                    mat-header-row
-                                    *matHeaderRowDef="displayedColumns4"
-                                ></tr>
-                                <tr
-                                    mat-row
-                                    *matRowDef="let row; columns: displayedColumns4"
-                                ></tr>
-                            </table>                               
-                            </div>
-                        </div>
+
+                        <table *ngIf="dataSource4" mat-table [dataSource]="dataSource4" matSort>
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef>Sr.</th>
+                                <td mat-cell *matCellDef="let row; let i = index">
+                                    {{ i + 1 }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="date">
+                                <th class="p-8" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Date
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.date.substring(0, 10) }}
+                                </td>
+                            </ng-container>
+
+
+
+                            <ng-container matColumnDef="redNine">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    red9
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.redNine }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="blueNine">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    blue9
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.blueNine }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="yellowNine">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    yel9
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.yellowNine }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="redfrontBlueback">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    red-blue
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.redfrontBlueback }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="blueFrontRedback">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    blue-red
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.blueFrontRedback }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="redFrontYellowback">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    red-Yell
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.redFrontYellowback }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="yellowFrontRedback">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    yell-Red
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.yellowFrontRedback }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="blueFrontYellowback">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    blue-Yell
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.blueFrontYellowback }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="yellowFrontBlueback">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    yell-Blue
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.yellowFrontBlueback }}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns4"></tr>
+                        </table>
+
                     </div>
                 </div>
             </div>

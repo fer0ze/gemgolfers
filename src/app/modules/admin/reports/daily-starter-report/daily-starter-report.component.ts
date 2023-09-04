@@ -162,12 +162,12 @@ export class DailyStarterReportComponent implements OnInit {
         let counter: number = 0;
 
         if (this.loggedInuser.userRole == 1) {
-            dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
+            dataPlayers = await this.facadeService.getDailyCardSingleAdmin(
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
             );
         } else {
-            dataPlayers = await this.facadeService.getDailyRoundsSingle(
+            dataPlayers = await this.facadeService.getDailyCardSingle(
                 this.loggedInuser.adminClubId,
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')

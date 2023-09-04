@@ -8,6 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
+import { Constants } from 'app/shared/classes/general';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-leagues',
     templateUrl: './leagues.component.html',
@@ -28,6 +30,7 @@ export class LeaguesComponent implements OnInit {
         'tournament',
         'details',
     ];
+    loggedInuser: any;
     chartBudgetDistribution: ApexOptions = {};
     chartGithubIssues: ApexOptions = {};
     public barChartLabels: string[] = [];
@@ -39,20 +42,32 @@ export class LeaguesComponent implements OnInit {
         private location: Router,
         private facadeService: FacadeService,
         private route: ActivatedRoute,
-        private apollo: Apollo
-    ) {}
+        private apollo: Apollo,
+        private _localStorage: LocalStorageService
+    ) { }
 
     ngOnInit(): void {
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.fecthData();
     }
 
     async fecthData() {
+
         let dataMembers: any[] = [];
         let dataTournaments: any[] = [];
         let clubName: any[] = [];
-        let clubs = await this.facadeService.getLeagues();
-        console.log(clubs.league);
+        let clubs: any;
+        console.log(this.loggedInuser);
+        if (this.loggedInuser.userRole == 1) {
+            clubs = await this.facadeService.getLeagues();
+        } else if (this.loggedInuser.userRole == 2) {
+            clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.adminClubId);
+        }
+        // console.log(clubs.league);
         this.clubs = clubs.league;
+        if (this.clubs.length == 0) {
+            this.showLeaderBoards = true;
+        }
         this.dataSource = new MatTableDataSource(clubs.league);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

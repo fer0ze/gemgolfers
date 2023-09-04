@@ -352,7 +352,7 @@ export class ViewPlayerComponent implements OnInit {
                 await this.facadeService.getPlayerFlightScores(this.playerID);
             console.log(playerscore);
             this.currentPlayer = playerscore.PlayerQL;
-            this.totalRounds = playerscore.MemberQL.length;
+            this.totalRounds = playerscore.Aggegate.aggregate.totalCount;
             let memberQLs: any = playerscore.MemberQL;
             this.memberQLs = playerscore.MemberQL;
             this.playerWHSRound = await this.facadeService.getPlayerWHSRound(

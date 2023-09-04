@@ -107,17 +107,17 @@ export class TournamentsComponent implements OnInit {
             id: 1,
             title: 'Live',
         };
-        let arrayb = {
-            id: 2,
-            title: 'Incomplete',
-        };
+        // let arrayb = {
+        //     id: 2,
+        //     title: 'Incomplete',
+        // };
         let arrayc = {
-            id: 3,
-            title: 'Schedule',
+            id: 2,
+            title: 'Upcoming',
         };
         this.categories.push(array);
         this.categories.push(arraya);
-        this.categories.push(arrayb);
+        //this.categories.push(arrayb);
         this.categories.push(arrayc);
         console.log(this.categories);
 
@@ -170,7 +170,7 @@ export class TournamentsComponent implements OnInit {
     }
     filterByCategory($event) {
         console.log($event);
-        if (this.loggedInuser.userRole >= 2) {
+        if (this.loggedInuser.userRole === 2) {
             if ($event.value == 1) {
                 this.selected = 1;
                 this.getTournamentLive();

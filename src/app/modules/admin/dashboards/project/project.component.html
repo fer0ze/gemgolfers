@@ -5,10 +5,10 @@
             <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
                 <!-- Avatar and name -->
                 <div class="flex flex-auto items-center min-w-0">
-                    <div class="flex-0 w-20 h-25 rounded-full overflow-hidden">
+                    <!-- <div class="flex-0 w-20 h-25 rounded-full overflow-hidden">
                         <img class="w-full h-full object-cover" src="assets/images/logo/{{ clubLogo }}" alt="user" />
-                    </div>
-                    <div class="flex flex-col min-w-0 ml-4">
+                    </div> -->
+                    <div class="flex flex-col min-w-0 ">
                         <ng-container>
                             <div
                                 class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
@@ -56,21 +56,21 @@
                             </mat-menu>
                         </div>
                     </div>
-                    <div class="flex flex-col items-center mt-2">
+                    <div class="flex flex-col items-center mt-8">
                         <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
                             {{ this.tournamentCounts }}
                         </div>
                         <div class="text-lg font-medium text-blue-600 dark:text-blue-500">
                             Played
                         </div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                        <!-- <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 Completed:
                             </div>
                             <div class="ml-1.5 text-lg font-semibold">
                                 {{ this.tournamentCounts }}
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Overdue -->
@@ -90,21 +90,21 @@
                             </mat-menu>
                         </div>
                     </div>
-                    <div class="flex flex-col items-center mt-2">
+                    <div class="flex flex-col items-center mt-8">
                         <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">
                             {{ this.flightCounts }}
                         </div>
                         <div class="text-lg font-medium text-red-600 dark:text-red-500">
                             Played
                         </div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                        <!-- <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 From yesterday:
                             </div>
                             <div class="ml-1.5 text-lg font-semibold">
                                 {{ yesterdayFlightCounts }}
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Issues -->
@@ -118,27 +118,27 @@
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #issuesMenu="matMenu">
-                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/club']">
+                                <a [routerLinkActive]="'active'" [routerLink]="['/players']">
                                     <button mat-menu-item>View Details</button>
                                 </a>
                             </mat-menu>
                         </div>
                     </div>
-                    <div class="flex flex-col items-center mt-2">
+                    <div class="flex flex-col items-center mt-8">
                         <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
                             {{ this.playerCounts }}
                         </div>
                         <div class="text-lg font-medium text-amber-600 dark:text-amber-500">
                             Open
                         </div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                        <!-- <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 Added today:
                             </div>
                             <div class="ml-1.5 text-lg font-semibold">
                                 {{ playerAddedTodayCounts }}
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Features -->
@@ -147,6 +147,7 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Leagues
                         </div>
+
                         <div class="ml-2 -mt-2 -mr-3">
                             <button mat-icon-button [matMenuTriggerFor]="featuresMenu">
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
@@ -158,19 +159,19 @@
                             </mat-menu>
                         </div>
                     </div>
-                    <div class="flex flex-col items-center mt-2">
+                    <div class="flex flex-col items-center mt-8">
                         <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">
-                            38
+                            0
                         </div>
                         <div class="text-lg font-medium text-green-600 dark:text-green-500">
                             Played
                         </div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                        <!--<div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
                                 Implemented:
                             </div>
                             <div class="ml-1.5 text-lg font-semibold">16</div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Github issues summary -->
@@ -180,6 +181,9 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">
                             Daily Rounds Summary
                         </div>
+                        <button class="rounded-full bg-hover" mat-button>
+                            <span class="font-medium text-sm text-secondary">Last 7 Days</span>
+                        </button>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
                         <!-- New vs. Closed -->
@@ -209,7 +213,7 @@
                                         {{ _overview["newIssues"] }}
                                     </div>
                                     <div class="mt-1 text-sm sm:text-lg font-medium">
-                                        New Rounds
+                                        Total Flights
                                     </div>
                                 </div>
                                 <!-- Closed -->
@@ -219,7 +223,7 @@
                                         {{ _overview["closedIssues"] }}
                                     </div>
                                     <div class="mt-1 text-sm sm:text-lg font-medium">
-                                        Round Players
+                                        Flight Players
                                     </div>
                                 </div>
                                 <!-- Fixed -->
@@ -229,7 +233,7 @@
                                         {{ _overview["fixed"] }}
                                     </div>
                                     <div class="mt-1 text-sm font-medium text-center">
-                                        Handicap Calculated
+                                        Amateurs
                                     </div>
                                 </div>
                                 <!-- Won't fix -->
@@ -239,7 +243,7 @@
                                         {{ _overview["wontfix"] }}
                                     </div>
                                     <div class="mt-1 text-sm font-medium text-center">
-                                        Not Calculated
+                                        Senior Amateurs
                                     </div>
                                 </div>
                                 <!-- Re-opened -->
@@ -249,7 +253,7 @@
                                         {{ _overview["reopened"] }}
                                     </div>
                                     <div class="mt-1 text-sm font-medium text-center">
-                                        Edited
+                                        Ladies
                                     </div>
                                 </div>
                                 <!-- Needs triage -->
@@ -259,7 +263,7 @@
                                         {{ _overview["needstriage"] }}
                                     </div>
                                     <div class="mt-1 text-sm font-medium text-center">
-                                        Needs Triage
+                                        Veterans
                                     </div>
                                 </div>
                             </div>
@@ -282,15 +286,15 @@
                             [stroke]="chartTaskDistribution.stroke" [theme]="chartTaskDistribution.theme"
                             [tooltip]="chartTaskDistribution.tooltip" [yaxis]="chartTaskDistribution.yaxis"></apx-chart>
                     </div>
-                    <div class="grid grid-cols-2 border-t divide-x -m-6 mt-4 bg-gray-50 dark:bg-transparent">
-                        <div class="flex flex-col items-center justify-center p-6 sm:p-8">
+                    <div class="grid grid-cols-1 border-t divide-x -m-6 mt-4 bg-gray-50 dark:bg-transparent">
+                        <!-- <div class="flex flex-col items-center justify-center p-6 sm:p-8">
                             <div class="text-5xl font-semibold leading-none tracking-tighter">
                                 {{ 234 }}
                             </div>
                             <div class="mt-1 text-center text-secondary">
                                 Premimum Players
                             </div>
-                        </div>
+                        </div> -->
                         <div class="flex flex-col items-center justify-center p-6 sm:p-8">
                             <div class="text-5xl font-semibold leading-none tracking-tighter">
                                 {{ this.playerCounts }}

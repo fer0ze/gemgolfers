@@ -16,21 +16,13 @@
             <!-- Title -->
             <div>
                 <div class="text-6xl font-extrabold tracking-tight leading-none mt-3">
-                    Members
+                    Club Members
                 </div>
                 <div class="ml-0.5 font-medium text-secondary">
                     <ng-container *ngIf="this.count > 0">
-                        {{ this.count }}
+                        {{ this.count }} Total Members
                     </ng-container>
-                    {{
-                    this.count
-                    | i18nPlural
-                    : {
-                    "=0": "No contacts",
-                    "=1": "contact",
-                    other: "contacts"
-                    }
-                    }}
+
                 </div>
             </div>
 
@@ -53,10 +45,7 @@
                 </button>
             </div>
             <div class="flex mt-4 justify-end -mb-4">
-                <button mat-stroked-button (click)="downloadAllPlayers()">
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dowload'"></mat-icon>
-                    <span class="ml-2">Dowload Summary</span>
-                </button>
+                <mat-icon aria-hidden="false" color="warn" (click)="downloadAllPlayers()" aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
                 <!-- <input
                     #fileInput
                     id="file-upload"
@@ -140,14 +129,14 @@
                     </ng-container>
 
                     <!-- Membership -->
-                    <ng-container matColumnDef="Membership">
+                    <ng-container matColumnDef="MembershipNo">
                         <th mat-header-cell mat-sort-header *matHeaderCellDef
                             class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
-                            Membership
+                            MembershipNo
                         </th>
                         <td mat-cell *matCellDef="let transaction">
                             <span class="pr-6 font-medium whitespace-nowrap">
-                                {{ transaction.Membership }}
+                                {{ transaction.MembershipNo }}
                             </span>
                         </td>
                     </ng-container>
@@ -211,26 +200,17 @@
                     </ng-container>
                     <!-- Delete -->
                     <ng-container matColumnDef="Delete">
-                            <th
-                                mat-header-cell
-                                mat-sort-header
-                                *matHeaderCellDef
-                                class="bg-gray-50 dark:bg-black dark:bg-opacity-5"
-                            >
-                                Delete
-                            </th>
-                            <td mat-cell *matCellDef="let transaction;let i = index">
-                                <span
-                                    class="pr-6 font-medium whitespace-nowrap cursor-pointer"
-                                >
-                                    <mat-icon
-                                        [svgIcon]="'heroicons_solid:delete'"
-                                        color="warn"
-                                        (click)="deletePlayer(transaction,i)"
-                                    ></mat-icon>
-                                </span>
-                            </td>
-                        </ng-container>
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Delete
+                        </th>
+                        <td mat-cell *matCellDef="let transaction;let i = index">
+                            <span class="pr-6 font-medium whitespace-nowrap cursor-pointer">
+                                <mat-icon [svgIcon]="'heroicons_solid:delete'" color="warn"
+                                    (click)="deletePlayer(transaction,i)"></mat-icon>
+                            </span>
+                        </td>
+                    </ng-container>
                     <!-- Delete -->
                     <ng-container matColumnDef="Status">
                         <th mat-header-cell mat-sort-header *matHeaderCellDef

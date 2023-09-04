@@ -1,20 +1,13 @@
 <div mat-dialog-content>
     <div>
         <mat-form-field>
-            <input
-                matInput
-                (keyup)="applyFilter($event.target.value)"
-                placeholder="Filter"
-            />
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
         </mat-form-field>
         <div class="flex justify-end ml-auto mb-1">
-            <button mat-stroked-button (click)="downloadAsPDF()">
-                <mat-icon
-                    class="icon-size-5"
-                    [svgIcon]="'heroicons_solid:dowload'"
-                ></mat-icon>
-                <span class="ml-2">Dowload Summary</span>
-            </button>
+
+            <mat-icon aria-hidden="false" (click)="downloadAsPDF()" color="warn" aria-label="Dragable"
+                class="remove">picture_as_pdf</mat-icon>
+
         </div>
         <table id="playerTables" mat-table [dataSource]="dataSource" matSort>
             <!-- Membership Number Column -->
@@ -49,7 +42,7 @@
                     <span *ngIf="row.handicap < 1">0</span>
                     <span *ngIf="row.handicap >= 1">{{
                         row.handicap | number : "1.1-1"
-                    }}</span>
+                        }}</span>
                 </td>
             </ng-container>
 
@@ -59,16 +52,13 @@
                 <td mat-cell *matCellDef="let row">{{ row.email }}</td>
             </ng-container>
 
-           
+
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row  *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-        <mat-paginator
-            #MatPaginatorA="matPaginator"
-            [pageSize]="10"
-            [pageSizeOptions]="[10,20,30, 50, 100]"
-        ></mat-paginator>
+        <mat-paginator #MatPaginatorA="matPaginator" [pageSize]="10"
+            [pageSizeOptions]="[10,20,30, 50, 100]"></mat-paginator>
     </div>
 </div>
 <div mat-dialog-actions class="flex justify-center mt-4">

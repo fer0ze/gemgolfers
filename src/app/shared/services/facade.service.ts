@@ -359,6 +359,16 @@ export class FacadeService {
       toDate
     );
   }
+  playerUpdatedHandicapReportAdmin(
+    fromDate: string,
+    toDate: string
+  ) {
+    return this.playerService.playerUpdatedHandicapReportAdmin(
+
+      fromDate,
+      toDate
+    );
+  }
  
   playerUpdatedHandicapWHSReport(
     clubId: string,
@@ -424,6 +434,9 @@ export class FacadeService {
 
   getLeagues() {
     return this.tournamentService.getLeagues();
+  }
+  getLeaguesByClub(id:string) {
+    return this.tournamentService.getLeaguesByClub(id);
   }
 
   getTournamentsListForLiveByAdmin(endDate: Date) {
@@ -871,6 +884,20 @@ export class FacadeService {
   }
   getDailyRoundsSingleAdmin(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleAdmin(
+      
+      fromDate,
+      toDate
+    );
+  }
+  getDailyCardSingle(clubId: string, fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyCardSingle(
+      clubId,
+      fromDate,
+      toDate
+    );
+  }
+  getDailyCardSingleAdmin(fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyCardSingleAdmin(
       
       fromDate,
       toDate

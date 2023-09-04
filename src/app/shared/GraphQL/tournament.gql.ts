@@ -241,6 +241,21 @@ export const getLeagues = gql`
         }
     }
 `;
+export const getLeaguesByClub = gql`
+    query getLeagues($adminId: String!) {
+        league(where: { adminId: { _eq: $adminId } }) {
+            id
+            name
+            dateCreated
+            members {
+                playerId
+            }
+            tournaments {
+                id
+            }
+        }
+    }
+`;
 export const getLeageLeaderBoards = gql`
     query getLeagues($leagueId: String!) {
         LeaderBoardQL: mvp_leaderboard(
@@ -483,24 +498,35 @@ export const GetTournamnetListForLive = gql`
 `;
 export const GetTournamnetListForSchedule = gql`
     query PostsGetQuery($endDate: date!, $clubId: String!) {
-        Scheduled: club_schedule(
+        Scheduled: tournament(
             where: {
-                _and: [{ date: { _gt: $endDate }, clubId: { _eq: $clubId } }]
+                _and: [
+                    {
+                        startDate: { _gte: $endDate }
+                        clubId: { _eq: $clubId }
+                        singleRound: { _eq: false }
+                    }
+                ]
             }
-            order_by: { date: desc }
         ) {
             id
-            clubId
-            courseId
-            tournamentTitle
-            date
+            title
+            startDate
+            endDate
+            noOfRounds
+            matchFormat
             admin {
                 firstName
                 lastName
             }
-            matchFormat
-            course {
-                name
+            HandicapCalculated: player_handicaps {
+                handicap
+                oldHandicap
+                updatedAt
+                player {
+                    firstName
+                    lastName
+                }
             }
         }
     }
@@ -514,15 +540,11 @@ export const GetTournamnetListForIncomplete = gql`
             order_by: { date: desc }
         ) {
             id
-            title
+            tournamentTitle
             startDate
             endDate
             noOfRounds
             matchFormat
-            admin {
-                firstName
-                lastName
-            }
         }
     }
 `;
@@ -1064,30 +1086,26 @@ export const DailyRoundsStatQueryQLs = gql`
         $fromDate: date!
         $toDate: date!
     ) {
-        TournamentsQL: tournament(
+        FlightsQL: flight(
             where: {
-                clubId: { _eq: $clubId }
-                singleRound: { _eq: true }
                 _and: [
-                    { startDate: { _gte: $toDate } }
-                    { endDate: { _lte: $fromDate } }
+                    { adminId: { _eq: $clubId } }
+                    { date: { _gte: $toDate } }
+                    { date: { _lte: $fromDate } }
                 ]
             }
+            order_by: { date: asc }
         ) {
             id
-            startDate
-            FlightsQL: flights {
-                id
-                ended
-                courseHoleSets
-                courseHoleSetsInverted
-                MembersQL: members {
-                    flightId
-                    playerId
-                    PlayerQL: player {
-                        id
-                        playerCategory
-                    }
+            date
+            courseHoleSets
+            courseHoleSetsInverted
+            MembersQL: members {
+                flightId
+                playerId
+                PlayerQL: player {
+                    id
+                    playerCategory
                 }
             }
         }
@@ -1098,14 +1116,13 @@ export const DailyRoundsSecateryQuery = gql`
         $courseId: String!
         $fromDate: date!
         $toDate: date!
-       
     ) {
         FlightsQL: flight(
             where: {
                 _and: [
                     { courseId: { _eq: $courseId } }
                     { date: { _gte: $fromDate } }
-                    { date: { _lte:  $toDate} }
+                    { date: { _lte: $toDate } }
                 ]
             }
             order_by: { date: asc }
@@ -1131,35 +1148,76 @@ export const DailyRoundsSecateryQuery = gql`
 `;
 export const DailyRoundsStatQueryAdminQLs = gql`
     query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
-        TournamentsQL: tournament(
+        FlightsQL: flight(
             where: {
-                singleRound: { _eq: true }
                 _and: [
-                    { startDate: { _gte: $toDate } }
-                    { endDate: { _lte: $fromDate } }
+                    { date: { _gte: $toDate } }
+                    { date: { _lte: $fromDate } }
                 ]
             }
+            order_by: { date: asc }
         ) {
             id
-            startDate
-            FlightsQL: flights {
-                id
-                ended
-                courseHoleSets
-                courseHoleSetsInverted
-                MembersQL: members {
-                    flightId
-                    playerId
-                    PlayerQL: player {
-                        id
-                        playerCategory
-                    }
+            date
+            courseHoleSets
+            courseHoleSetsInverted
+            MembersQL: members {
+                flightId
+                playerId
+                PlayerQL: player {
+                    id
+                    playerCategory
                 }
             }
         }
     }
 `;
 export const ClubSingleRoundFlightsQueryQLs = gql`
+    query ClubSingleRoundFlightsQuery(
+        $clubId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        FlightsQL: flight(
+            where: {
+                _and: [
+                    { adminId: { _eq: $clubId } }
+                    { flightRound: { _eq: 0 } }
+                    { date: { _lte: $fromDate } }
+                    { date: { _gte: $toDate } }
+                ]
+            }
+        ) {
+            id
+            date
+            MembersQL: members {
+                flightId
+                playerId
+            }
+        }
+    }
+`;
+export const ClubSingleRoundFlightsAdminQueryQLs = gql`
+    query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
+        FlightsQL: flight(
+            where: {
+                flightRound: { _eq: 0 }
+                _and: [
+                    { date: { _gte: $toDate } }
+                    { date: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            date
+            MembersQL: members {
+                flightId
+                playerId
+            }
+        }
+    }
+`;
+export const getDailyCardSingle = gql`
     query ClubSingleRoundFlightsQuery(
         $clubId: String!
         $fromDate: date!
@@ -1203,7 +1261,7 @@ export const ClubSingleRoundFlightsQueryQLs = gql`
         }
     }
 `;
-export const ClubSingleRoundFlightsAdminQueryQLs = gql`
+export const getDailyCardSingleAdmin = gql`
     query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
         TournamentsQL: tournament(
             where: {
@@ -1856,7 +1914,11 @@ export const getallDashboard = gql`
             date
             ended
             MembersQL: members {
+                playerId
                 attendance
+                player {
+                    playerCategory
+                }
             }
         }
     }
@@ -1925,7 +1987,11 @@ export const getAllAdmin = gql`
             date
             ended
             MembersQL: members {
+                playerId
                 attendance
+                player {
+                    playerCategory
+                }
             }
         }
     }

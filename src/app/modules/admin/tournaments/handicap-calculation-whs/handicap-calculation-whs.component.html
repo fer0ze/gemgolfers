@@ -52,11 +52,8 @@
             </div>
             <div class="flex mt-2 justify-end ">
                 <button mat-stroked-button (click)="downloadHandicapChange()">
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:dowload'"
-                    ></mat-icon>
-                    <span class="ml-2">Dowload Summary</span>
+                    <mat-icon aria-hidden="false" color="warn" (click)="downloadHandicapChange()" aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
+                
                 </button>
             </div>
             <div

@@ -285,6 +285,30 @@ export class TournamentsService {
                 });
         });
     }
+    public getDailyCardSingle(
+        clubId: string,
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // console.log(clubId);
+        // console.log(fromDate);
+        // console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getDailyCardSingle,
+                    variables: {
+                        clubId: clubId,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // console.log(data);
+                    resolve(data);
+                });
+        });
+    }
     public getDailyRoundsSingleAdmin(
         fromDate: string,
         toDate: string
@@ -296,6 +320,28 @@ export class TournamentsService {
             this.apollo
                 .subscribe<any>({
                     query: Query.ClubSingleRoundFlightsAdminQueryQLs,
+                    variables: {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // console.log(data);
+                    resolve(data);
+                });
+        });
+    }
+    public getDailyCardSingleAdmin(
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // console.log(clubId);
+        // console.log(fromDate);
+        // console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getDailyCardSingleAdmin,
                     variables: {
                         fromDate: fromDate,
                         toDate: toDate,
@@ -626,6 +672,27 @@ export class TournamentsService {
             this.apollo
                 .subscribe({
                     query: Query.getLeagues,
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data.tournament_by_pk);
+                    //console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        //console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getLeaguesByClub(id): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getLeaguesByClub,
+                    variables: {
+                        adminId: id,
+                    },
                 })
                 .subscribe(({ data }) => {
                     //console.log(data.tournament_by_pk);

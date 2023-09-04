@@ -94,7 +94,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             // },
             {
                 id: 'dailyRounds.daily',
-                title: 'Daily-Rounds',
+                title: 'Daily Rounds',
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
                 link: '/dailyRounds',
@@ -141,27 +141,27 @@ export const defaultNavigation: FuseNavigationItem[] = [
 
     {
         id: 'reports',
-        title: 'Report',
+        title: 'Reports',
         type: 'group',
         icon: 'heroicons_outline:support',
         children: [
             {
                 id: 'reports.handicap',
-                title: 'Handicap',
+                title: 'Daily Handicap',
                 type: 'basic',
                 icon: 'heroicons_outline:check-circle',
                 link: '/reports/handicap',
             },
             {
                 id: 'reports.dailyround',
-                title: 'Daily-Round',
+                title: 'Daily Round',
                 type: 'basic',
                 icon: 'heroicons_outline:pencil',
                 link: '/reports/dailyround',
             },
             {
                 id: 'reports.dailycard',
-                title: 'Daily-Card',
+                title: 'Daily Card',
                 type: 'basic',
                 icon: 'heroicons_outline:book-open',
                 link: '/reports/dailycard',
@@ -279,7 +279,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
             // },
             {
                 id: 'dailyRounds.daily',
-                title: 'Daily-Rounds',
+                title: 'Daily Rounds',
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
                 link: '/dailyRounds',
@@ -325,27 +325,27 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
 
     {
         id: 'reports',
-        title: 'Report',
+        title: 'Reports',
         type: 'group',
         icon: 'heroicons_outline:support',
         children: [
             {
                 id: 'reports.handicap',
-                title: 'Handicap',
+                title: 'Daily Handicap',
                 type: 'basic',
                 icon: 'heroicons_outline:check-circle',
                 link: '/reports/handicap',
             },
             {
                 id: 'reports.dailyround',
-                title: 'Daily-Round',
+                title: 'Daily Round',
                 type: 'basic',
                 icon: 'heroicons_outline:pencil',
                 link: '/reports/dailyround',
             },
             {
                 id: 'reports.dailycard',
-                title: 'Daily-Card',
+                title: 'Daily Card',
                 type: 'basic',
                 icon: 'heroicons_outline:book-open',
                 link: '/reports/dailycard',

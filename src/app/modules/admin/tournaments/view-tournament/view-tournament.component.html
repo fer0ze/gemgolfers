@@ -3135,19 +3135,9 @@
                                 [disabled]="activeRound < noOfROunds"
                                 label="Summary"
                             >
-                                <button
-                                    class="my-3 mx-1 float-right"
-                                    mat-stroked-button
-                                    (click)="downloadResultSheet()"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:dowload'"
-                                    ></mat-icon>
-                                    <span class="ml-2"
-                                        >Dowload Result Sheet</span
-                                    >
-                                </button>
+                                
+                                <mat-icon aria-hidden="false" color="warn" (click)="downloadResultSheet()" aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
+                
                                 <div
                                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0"
                                 >

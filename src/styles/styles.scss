@@ -2,3 +2,16 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+::ng-deep mat-table th {
+    font-size: 16px;
+    /* Your desired font size here */
+}
+
+.mat-header-cell {
+    /* Your styles here */
+    //background-color: #f0f0f0;
+    /* Example background color */
+    font-size: 13px;
+    /* Example font size */
+    /* Add any other styles you need */
+}

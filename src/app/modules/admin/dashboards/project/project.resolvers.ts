@@ -42,8 +42,8 @@ export class ProjectResolver implements Resolve<any> {
     ): Observable<any> {
         console.log('In Resolver');
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let lastWeekSunday = this.lastWeekSunday();
-        let lastWeekMonday = this.lastWeekMonday();
+        let lastWeekSunday = this.currentDate();
+        let lastWeekMonday = this.lastSevenDayDate();
         if (this.loggedInuser.userRole === 1) {
             return this._projectService.getData(
                 null, null,
@@ -76,30 +76,30 @@ export class ProjectResolver implements Resolve<any> {
         }
     }
 
-    private lastWeekMonday(): Date {
-        //let date = new Date();
-        //return new Date(date.setDate(date.getDate() - 8));
-        let date = new Date();
-        let day = date.getDay();
-        let prevMonday = new Date();
-        if (date.getDay() == 0) {
-            prevMonday.setDate(date.getDate() - 7);
-        } else {
-            prevMonday.setDate(date.getDate() - (day + 6));
-        }
+    public lastSevenDayDate(): string {
+        const currentDate = new Date();
 
-        return prevMonday;
+        // Get the date 7 days ago
+        const sevenDaysAgo = new Date(currentDate);
+        sevenDaysAgo.setDate(currentDate.getDate() - 7);
+
+        // Format the dates in the desired format (YYYY-MM-DD)
+        const formattedSevenDaysAgo = sevenDaysAgo.toISOString().slice(0, 10);
+
+        // console.log('Current Date:', formattedCurrentDate);
+        // console.log('7 Days Ago:', formattedSevenDaysAgo);
+
+        return formattedSevenDaysAgo;
     }
-    private lastWeekSunday(): Date {
-        let date = new Date();
-        let day = date.getDay();
-        let prevSunday = new Date();
-        if (date.getDay() == 7) {
-            prevSunday.setDate(date.getDate() - 7);
-        } else {
-            prevSunday.setDate(date.getDate() - day);
-        }
+    public currentDate(): string {
+        const currentDate = new Date();
+        // Format the dates in the desired format (YYYY-MM-DD)
+        const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
 
-        return prevSunday;
+        return formattedCurrentDate;
+    }
+    public today() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate()));
     }
 }

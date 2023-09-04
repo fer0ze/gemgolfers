@@ -146,6 +146,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                     // let nxtDate = new Date();
                     // nxtDate.setDate(nxtDate.getDate() + 7);
                     let yesterdayDate = this.yesterday();
+                    let toDate = this.today();
                     this.getPlayerUpdatedHandicapReport(
                         yesterdayDate,
                         yesterdayDate
@@ -172,8 +173,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
         this.toDate = toDate;
         if (this.loggedInuser.userRole == 1) {
             this.dataPlayersCongu =
-                await this.facadeService.playerUpdatedHandicapReport(
-                  'this.loggedInuser.userRole',
+                await this.facadeService.playerUpdatedHandicapReportAdmin(
+                 
                     this.datePipe.transform(
                         fromDate.toString(),
                         'yyyy-MM-ddTHH:mm:SS' + '+00:00'
@@ -183,18 +184,18 @@ export class UpdatedHandicapReportComponent implements OnInit {
                         'yyyy-MM-ddTHH:mm:SS' + '+00:00'
                     )
                 );
-            this.dataPlayersWHS =
-                await this.facadeService.playerUpdatedHandicapWHSReportAdmin(
+            // this.dataPlayersWHS =
+            //     await this.facadeService.playerUpdatedHandicapWHSReportAdmin(
                   
-                    this.datePipe.transform(
-                        fromDate.toString(),
-                        'yyyy-MM-ddTHH:mm:SS' + '+00:00'
-                    ),
-                    this.datePipe.transform(
-                        toDate.toString(),
-                        'yyyy-MM-ddTHH:mm:SS' + '+00:00'
-                    )
-                );
+            //         this.datePipe.transform(
+            //             fromDate.toString(),
+            //             'yyyy-MM-ddTHH:mm:SS' + '+00:00'
+            //         ),
+            //         this.datePipe.transform(
+            //             toDate.toString(),
+            //             'yyyy-MM-ddTHH:mm:SS' + '+00:00'
+            //         )
+            //     );
         } else {
             this.dataPlayersCongu =
                 await this.facadeService.playerUpdatedHandicapReport(
@@ -208,18 +209,18 @@ export class UpdatedHandicapReportComponent implements OnInit {
                         'yyyy-MM-ddTHH:mm:SS' + '+00:00'
                     )
                 );
-            this.dataPlayersWHS =
-                await this.facadeService.playerUpdatedHandicapWHSReport(
-                    this.loggedInuser.adminClubId,
-                    this.datePipe.transform(
-                        fromDate.toString(),
-                        'yyyy-MM-ddTHH:mm:SS' + '+00:00'
-                    ),
-                    this.datePipe.transform(
-                        toDate.toString(),
-                        'yyyy-MM-ddTHH:mm:SS' + '+00:00'
-                    )
-                );
+            // this.dataPlayersWHS =
+            //     await this.facadeService.playerUpdatedHandicapWHSReport(
+            //         this.loggedInuser.adminClubId,
+            //         this.datePipe.transform(
+            //             fromDate.toString(),
+            //             'yyyy-MM-ddTHH:mm:SS' + '+00:00'
+            //         ),
+            //         this.datePipe.transform(
+            //             toDate.toString(),
+            //             'yyyy-MM-ddTHH:mm:SS' + '+00:00'
+            //         )
+            //     );
         }
 
         // for (let obj of this.dataPlayersCongu.player_handicap) {
@@ -230,8 +231,11 @@ export class UpdatedHandicapReportComponent implements OnInit {
 
         //   //console.log(result);
         // }
+        console.log(this.dataPlayersCongu);
+        this.dataPlayersWHS=this.dataPlayersCongu.player_handicap_whs;
+        
         this.conguLength = this.dataPlayersCongu.player_handicap.length;
-        this.WHSLength = this.dataPlayersWHS.player_handicap_whs.length;
+        this.WHSLength = this.dataPlayersWHS.length;
         console.log(this.dataPlayersWHS);
         console.log(this.dataPlayersCongu);
 
@@ -251,17 +255,14 @@ export class UpdatedHandicapReportComponent implements OnInit {
                 const dailyStat = {
                     name:
                         this.dataPlayersCongu.player_handicap[this.index]
-                            .PlayerQL.firstName +
-                        ' ' +
-                        this.dataPlayersCongu.player_handicap[this.index]
-                            .PlayerQL.lastName,
+                            .PlayerQL.fullName,
                     membership:
                         this.dataPlayersCongu.player_handicap[this.index]
                             .PlayerQL.membershipNumber,
                     date: this.dataPlayersCongu.player_handicap[this.index]
-                        .tournamentQL
+                        .tournament
                         ? this.dataPlayersCongu.player_handicap[this.index]
-                              .tournamentQL.endDate
+                              .tournament.endDate
                         : '',
                     handicap:
                         this.dataPlayersCongu.player_handicap[this.index]
@@ -299,38 +300,35 @@ export class UpdatedHandicapReportComponent implements OnInit {
     getPlayerUpdatedHandicapReportWHS() {
         this.dailyStatsWHS = [];
         let count = 0;
-        if (this.dataPlayersWHS.player_handicap_whs) {
+        if (this.dataPlayersWHS) {
             for (
                 this.index;
-                this.index < this.dataPlayersWHS.player_handicap_whs.length;
+                this.index < this.dataPlayersWHS.length;
                 this.index++
             ) {
                 count++;
                 const dailyStat = {
                     name:
-                        this.dataPlayersWHS.player_handicap_whs[this.index]
-                            .player.firstName +
-                        ' ' +
-                        this.dataPlayersWHS.player_handicap_whs[this.index]
-                            .player.lastName,
+                        this.dataPlayersWHS[this.index]
+                            .player.fullName,
                     membership:
-                        this.dataPlayersWHS.player_handicap_whs[this.index]
+                        this.dataPlayersWHS[this.index]
                             .player.membershipNumber,
-                    date: this.dataPlayersWHS.player_handicap_whs[this.index]
+                    date: this.dataPlayersWHS[this.index]
                         .tournament
-                        ? this.dataPlayersWHS.player_handicap_whs[this.index]
+                        ? this.dataPlayersWHS[this.index]
                               .tournament.endDate
                         : '',
                     handicapIndex:
-                        this.dataPlayersWHS.player_handicap_whs[this.index]
+                        this.dataPlayersWHS[this.index]
                             .handicapIndex,
-                    score: this.dataPlayersWHS.player_handicap_whs[this.index]
+                    score: this.dataPlayersWHS[this.index]
                         .score,
                     handicapDifferential:
-                        this.dataPlayersWHS.player_handicap_whs[this.index]
+                        this.dataPlayersWHS[this.index]
                             .handicapDifferential,
                     adjustedScore:
-                        this.dataPlayersWHS.player_handicap_whs[this.index]
+                        this.dataPlayersWHS[this.index]
                             .adjustedScore,
                 };
 
@@ -391,7 +389,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                                 ' ' +
                                 c.PlayerQL.lastName,
                             membership: c.PlayerQL.membershipNumber,
-                            date: c.tournamentQL ? c.tournamentQL.endDate : '',
+                            date: c.tournament ? c.tournament.endDate : '',
                             handicap: c.handicap,
                             oldHandicap: c.oldHandicap,
                             grossScore: c.grossScore,
@@ -469,7 +467,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                                 ' ' +
                                 c.PlayerQL.lastName,
                             membership: c.PlayerQL.membershipNumber,
-                            date: c.tournamentQL ? c.tournamentQL.endDate : '',
+                            date: c.tournament ? c.tournament.endDate : '',
                             handicap: c.handicap,
                             oldHandicap: c.oldHandicap,
                             grossScore: c.grossScore,
@@ -646,8 +644,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
             let temp = [
                 count,
                 element.PlayerQL.membershipNumber,
-                element.PlayerQL.firstName + ' ' + element.PlayerQL.lastName,
-                formatDate(element.tournamentQL.endDate, 'mediumDate', 'en-US'),
+                element.PlayerQL.fullName,
+                formatDate(element.tournament.endDate, 'mediumDate', 'en-US'),
                 element.grossScore,
                 element.adjustedScore,
                 element.score,
@@ -700,7 +698,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
             let temp = [
                 count,
                 element.player.membershipNumber,
-                element.player.firstName + ' ' + element.player.lastName,
+                element.player.fullName,
                 formatDate(element.tournament.endDate, 'mediumDate', 'en-US'),
                 element.score,
                 element.adjustedScore,
@@ -747,6 +745,10 @@ export class UpdatedHandicapReportComponent implements OnInit {
         let date = new Date();
         return new Date(date.setDate(date.getDate() - 1));
     }
+    // today() {
+    //     let date = new Date();
+    //     return new Date(date.setDate(date.getDate()));
+    // }
 
     // onDatePick(item){
     //   console.log(item)

@@ -53,7 +53,7 @@ export class PlayersComponent implements OnInit {
         'Name',
         'Phone',
         'Email',
-        'Membership',
+        'MembershipNo',
         'Category',
         'Handicap',
         'Status',
@@ -138,7 +138,7 @@ export class PlayersComponent implements OnInit {
                                 Name: Fname + ' ' + Lname,
                                 Phone: obj.phone,
                                 Email: obj.email,
-                                Membership: obj.membershipNumber,
+                                MembershipNo: obj.membershipNumber,
                                 Category:
                                     obj.playerCategory == 'Senior'
                                         ? 'Senior Amateurs'
@@ -173,7 +173,7 @@ export class PlayersComponent implements OnInit {
                     Name: Fname + ' ' + Lname,
                     Phone: obj.phone,
                     Email: obj.email,
-                    Membership: obj.membershipNumber,
+                    MembershipNo: obj.membershipNumber,
                     Category:
                         obj.playerCategory == 'Senior'
                             ? 'Senior Amateurs'
