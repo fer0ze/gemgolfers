@@ -148,7 +148,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         public _viewTournamentComponent?: ViewTournamentComponent,
         private facadeService?: FacadeService,
         public changeDetection?: ChangeDetectorRef,
-    ) {}
+    ) { }
 
     // returns all form groups under flights
     get contactFormGroup() {
@@ -169,7 +169,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         // changes.prop contains the old and the new value...
     }
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         console.log(this.loggedInuser);
 
         this.route.paramMap.subscribe((params) => {
@@ -208,16 +208,16 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //     this.clubMembers['AggregateQL']['aggregate'].totalCount;
 
         // this.syncClubMembers();
-       
-            if (
-                this.tournamentInfo[0]['matchFormat'] ==
-                matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
-                matchFormat.BESTBALL
-            ) {
-                // this.flightRound = this.tournamentInfo[0].noOfRounds;
-                // else this.flightRound = this.tournamentInfo[0].activeRound;
-                this.showTeams = true;
-            }
+
+        if (
+            this.tournamentInfo[0]['matchFormat'] ==
+            matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
+            matchFormat.BESTBALL
+        ) {
+            // this.flightRound = this.tournamentInfo[0].noOfRounds;
+            // else this.flightRound = this.tournamentInfo[0].activeRound;
+            this.showTeams = true;
+        }
         this.getSelectedPlayers();
 
         //this.syncTournamentMembers();
@@ -350,18 +350,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             console.log(result);
             if (result && result.category) {
                 let teeBox: number;
-                
+
                 let outer = 0;
                 let category = '';
                 for (let obj of result.category) {
                     let selMembers: Player[][] = [];
                     let cnter = 0;
-                    outer=this.selectedMembers.length;
+                    outer = this.selectedMembers.length;
                     let FilteredPL: Player[] = [];
                     let flightTime: any = '9:00';
                     let flightTee: any = 'AMATEURS';
                     let flightTeeID: any = '1';
-                    
+
 
                     if (
                         this.tournamentInfo[0].matchFormat != 'TEXAS_SCRAMBLE'
@@ -387,7 +387,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             this.selectedMembers[outer][cnter] =
                                 FilteredPL[index]['player'];
 
-                            if (cnter == parseInt(PperFlight) - 1 ) {
+                            if (cnter == parseInt(PperFlight) - 1) {
                                 cnter = 0;
                                 outer++;
                             } else {
@@ -740,9 +740,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${
-            this.selection.isSelected(row) ? 'deselect' : 'select'
-        } player ${row.firstName} ${row.lastName}`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
     }
 
     updateCategorySelection(event, row) {
@@ -866,7 +865,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async saveFlights() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let flightName: any[] = [];
         let flightsToRemove: string[] = [];
@@ -890,7 +889,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         let roundTeeId: any = General.getPlayersTe(
                             this.selectedMembers[index][index2].playerCategory
                                 ? this.selectedMembers[index][index2]
-                                      .playerCategory
+                                    .playerCategory
                                 : 'AMATEURS'
                         );
                         let FM: any = {
@@ -900,8 +899,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                 'attendance'
                             ]
                                 ? this.selectedMembers[index][index2][
-                                      'attendance'
-                                  ]
+                                'attendance'
+                                ]
                                 : false,
                             playingTee: roundTeeId.result
                                 ? roundTeeId.result
@@ -918,8 +917,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                 'attendance'
                             ]
                                 ? this.selectedMembers[index][index2][
-                                      'attendance'
-                                  ]
+                                'attendance'
+                                ]
                                 : false,
                             playingTee: this.selectedMembers[index][index2]
                                 .playingTee
@@ -964,7 +963,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     )).value;
                 }
                 console.log(this.teamName);
-                
+
 
                 //let stTime: Time;
                 //stTime.hours = 9;
@@ -973,7 +972,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 let roundFlightData = this.roundFlights.filter((a) => {
                     return (
                         a.flightRound == this.flightRound &&
-                        a.id ==  this.selectedMembers[index]['id']
+                        a.id == this.selectedMembers[index]['id']
                     );
                 });
 
@@ -981,6 +980,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 console.log(this.selectedMembers[index]);
 
                 let currentFlightId: string;
+                let currentDate = new Date(this.tournamentInfo[0].startDate);
+                if (this.activeRound === 2) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                } else if (this.activeRound === 3) {
+                    currentDate.setDate(currentDate.getDate() + 2);
+                } else if (this.activeRound === 4) {
+                    currentDate.setDate(currentDate.getDate() + 3);
+                }
 
                 if (roundFlightData && roundFlightData.length > 0)
                     currentFlightId =
@@ -1019,10 +1026,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         roundFlightData.length > 0
                             ? roundFlightData[0].tee_id
                             : '1',
-                    date:
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].date
-                            : this.tournamentInfo[0].startDate,
+                    date: General.formatDate(currentDate),
                     time: startTime,
                     ended: false,
                 };
@@ -1263,7 +1267,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                 selectionArray[index]['player']['lastName'],
                             playerCategory:
                                 selectionArray[index]['player'][
-                                    'playerCategory'
+                                'playerCategory'
                                 ],
                         },
                         playerId: selectionArray[index]['player']['id'],
@@ -1310,7 +1314,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async saveSingleFlight(flightData: any, flightNo: number) {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let flightName: any[] = [];
         let flightsToRemove: string[] = [];
@@ -1643,13 +1647,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.selectedMembers[this.selectedMembers.length - 1][
             'courseHoleSets'
         ] = this.roundFlights.length
-            ? this.roundFlights[0]['courseHoleSets']
-            : this.tournamentInfo[0].courseHoleSets;
+                ? this.roundFlights[0]['courseHoleSets']
+                : this.tournamentInfo[0].courseHoleSets;
         this.selectedMembers[this.selectedMembers.length - 1][
             'courseHoleSetsInverted'
         ] = this.roundFlights.length
-            ? this.roundFlights[0]['courseHoleSetsInverted']
-            : this.tournamentInfo[0].courseHoleSetsInverted;
+                ? this.roundFlights[0]['courseHoleSetsInverted']
+                : this.tournamentInfo[0].courseHoleSetsInverted;
         this.selectedMembers[this.selectedMembers.length - 1]['courseId'] = this
             .roundFlights.length
             ? this.roundFlights[0]['courseId']
@@ -2124,8 +2128,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'flightRound'
                     ] = flight.flightRound
-                        ? flight.flightRound
-                        : this.flightRound;
+                            ? flight.flightRound
+                            : this.flightRound;
 
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tee_id'
@@ -2133,41 +2137,41 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'date'
                     ] = flight.date
-                        ? flight.date
-                        : this.tournamentInfo[0][0].startDate;
+                            ? flight.date
+                            : this.tournamentInfo[0][0].startDate;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tee'
                     ] = '';
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'flightNo'
                     ] = this.selectedMembers.length
-                        ? this.selectedMembers.length
-                        : 1;
+                            ? this.selectedMembers.length
+                            : 1;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tournamentId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['tournamentId']
-                        : this.tournamentInfo[0].id;
+                            ? this.roundFlights[0]['tournamentId']
+                            : this.tournamentInfo[0].id;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'adminId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['adminId']
-                        : this.tournamentInfo[0].adminId;
+                            ? this.roundFlights[0]['adminId']
+                            : this.tournamentInfo[0].adminId;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseHoleSets'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseHoleSets']
-                        : this.tournamentInfo[0].courseHoleSets;
+                            ? this.roundFlights[0]['courseHoleSets']
+                            : this.tournamentInfo[0].courseHoleSets;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseHoleSetsInverted'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseHoleSetsInverted']
-                        : this.tournamentInfo[0].courseHoleSetsInverted;
+                            ? this.roundFlights[0]['courseHoleSetsInverted']
+                            : this.tournamentInfo[0].courseHoleSetsInverted;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseId']
-                        : this.tournamentInfo[0][0].courseId;
+                            ? this.roundFlights[0]['courseId']
+                            : this.tournamentInfo[0][0].courseId;
                 }
                 this.selectedMembers[flight.flightNo - 1].splice(
                     this.selectedMembers[flight.flightNo - 1].length - 3,
@@ -2193,33 +2197,33 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     (this.selectedMembers[this.selectedMembers.length - 1][
                         'flightNo'
                     ] = this.selectedMembers.length
-                        ? this.selectedMembers.length
-                        : 1);
+                            ? this.selectedMembers.length
+                            : 1);
                 this.selectedMembers[this.selectedMembers.length - 1][
                     'tournamentId'
                 ] = this.roundFlights.length
-                    ? this.roundFlights[0]['tournamentId']
-                    : this.tournamentInfo[0].id;
+                        ? this.roundFlights[0]['tournamentId']
+                        : this.tournamentInfo[0].id;
                 this.selectedMembers[this.selectedMembers.length - 1][
                     'adminId'
                 ] = this.roundFlights.length
-                    ? this.roundFlights[0]['adminId']
-                    : this.tournamentInfo[0].adminId;
+                        ? this.roundFlights[0]['adminId']
+                        : this.tournamentInfo[0].adminId;
                 this.selectedMembers[this.selectedMembers.length - 1][
                     'courseHoleSets'
                 ] = this.roundFlights.length
-                    ? this.roundFlights[0]['courseHoleSets']
-                    : this.tournamentInfo[0].courseHoleSets;
+                        ? this.roundFlights[0]['courseHoleSets']
+                        : this.tournamentInfo[0].courseHoleSets;
                 this.selectedMembers[this.selectedMembers.length - 1][
                     'courseHoleSetsInverted'
                 ] = this.roundFlights.length
-                    ? this.roundFlights[0]['courseHoleSetsInverted']
-                    : this.tournamentInfo[0].courseHoleSetsInverted;
+                        ? this.roundFlights[0]['courseHoleSetsInverted']
+                        : this.tournamentInfo[0].courseHoleSetsInverted;
                 this.selectedMembers[this.selectedMembers.length - 1][
                     'courseId'
                 ] = this.roundFlights.length
-                    ? this.roundFlights[0]['courseId']
-                    : this.tournamentInfo[0].courseId;
+                        ? this.roundFlights[0]['courseId']
+                        : this.tournamentInfo[0].courseId;
                 this.newFlights[index] =
                     this.selectedMembers[this.selectedMembers.length - 1];
                 index++;
@@ -2250,41 +2254,41 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'date'
                     ] = flight.date
-                        ? flight.date
-                        : this.tournamentInfo[0].startDate;
+                            ? flight.date
+                            : this.tournamentInfo[0].startDate;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tee'
                     ] = '';
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'flightNo'
                     ] = this.selectedMembers.length
-                        ? this.selectedMembers.length
-                        : 1;
+                            ? this.selectedMembers.length
+                            : 1;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tournamentId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['tournamentId']
-                        : this.tournamentInfo[0].id;
+                            ? this.roundFlights[0]['tournamentId']
+                            : this.tournamentInfo[0].id;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'adminId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['adminId']
-                        : this.tournamentInfo[0].adminId;
+                            ? this.roundFlights[0]['adminId']
+                            : this.tournamentInfo[0].adminId;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseHoleSets'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseHoleSets']
-                        : this.tournamentInfo[0].courseHoleSets;
+                            ? this.roundFlights[0]['courseHoleSets']
+                            : this.tournamentInfo[0].courseHoleSets;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseHoleSetsInverted'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseHoleSetsInverted']
-                        : this.tournamentInfo[0].courseHoleSetsInverted;
+                            ? this.roundFlights[0]['courseHoleSetsInverted']
+                            : this.tournamentInfo[0].courseHoleSetsInverted;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseId']
-                        : this.tournamentInfo[0].courseId;
+                            ? this.roundFlights[0]['courseId']
+                            : this.tournamentInfo[0].courseId;
                 }
                 {
                     this.selectedMembers[flight.teamNo - 1].splice(
@@ -2299,8 +2303,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'flightRound'
                     ] = flight.flightRound
-                        ? flight.flightRound
-                        : this.flightRound;
+                            ? flight.flightRound
+                            : this.flightRound;
 
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tee_id'
@@ -2314,38 +2318,38 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     (this.selectedMembers[this.selectedMembers.length - 1][
                         'date'
                     ] = flight.date
-                        ? flight.date
-                        : this.tournamentInfo[0].startDate),
+                            ? flight.date
+                            : this.tournamentInfo[0].startDate),
                         (this.selectedMembers[this.selectedMembers.length - 1][
                             'flightNo'
                         ] = this.selectedMembers.length
-                            ? this.selectedMembers.length
-                            : 1);
+                                ? this.selectedMembers.length
+                                : 1);
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'tournamentId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['tournamentId']
-                        : this.tournamentInfo[0].id;
+                            ? this.roundFlights[0]['tournamentId']
+                            : this.tournamentInfo[0].id;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'adminId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['adminId']
-                        : this.tournamentInfo[0].adminId;
+                            ? this.roundFlights[0]['adminId']
+                            : this.tournamentInfo[0].adminId;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseHoleSets'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseHoleSets']
-                        : this.tournamentInfo[0].courseHoleSets;
+                            ? this.roundFlights[0]['courseHoleSets']
+                            : this.tournamentInfo[0].courseHoleSets;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseHoleSetsInverted'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseHoleSetsInverted']
-                        : this.tournamentInfo[0].courseHoleSetsInverted;
+                            ? this.roundFlights[0]['courseHoleSetsInverted']
+                            : this.tournamentInfo[0].courseHoleSetsInverted;
                     this.selectedMembers[this.selectedMembers.length - 1][
                         'courseId'
                     ] = this.roundFlights.length
-                        ? this.roundFlights[0]['courseId']
-                        : this.tournamentInfo[0].courseId;
+                            ? this.roundFlights[0]['courseId']
+                            : this.tournamentInfo[0].courseId;
                     this.newFlights[index] =
                         this.selectedMembers[this.selectedMembers.length - 1];
 

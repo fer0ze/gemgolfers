@@ -10,24 +10,24 @@ export class General {
 
         return COUNTRIES;
     }
-    
+
     public static getdate(idate: any) {
         const date = new Date(idate);
-    
+
         // Explicitly type the options object
         const options: Intl.DateTimeFormatOptions = { month: "short", day: "2-digit" };
-    
+
         // Format the date using Intl.DateTimeFormat
         const formattedDate = new Intl.DateTimeFormat("en-US", options).formatToParts(date);
-    
+
         // Extract the month and day and format them as "Sep 03"
         const formattedDateString = `${formattedDate[0].value} ${formattedDate[2].value}`;
-    
+
         return formattedDateString;
     }
-    
-    
-    
+
+
+
     public static getCourseHoleSets(holeSet, inverted) {
         if (holeSet == 4 && inverted == false) {
             return 'Blue 9';
@@ -41,7 +41,7 @@ export class General {
             return 'Blue Front 9 - Yellow Back 9';
         } else if (holeSet == 9 && inverted == false) {
             return 'Red Front 9 - Yellow Back 9';
-        }else{
+        } else {
             return 'Yellow Front 9 - Red Back 9';
         }
     }
@@ -50,7 +50,7 @@ export class General {
         const formattedHours = hours % 12 || 12;
         const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
         return `${formattedHours}:${formattedMinutes} ${ampm}`;
-      }
+    }
     public static parseToDate(dateValue: string) {
         let datePipe = new DatePipe(Constants.LOCALE_EN_US);
 
@@ -59,6 +59,13 @@ export class General {
                 datePipe.transform(dateValue, Constants.FORMAT_DATE)
             );
         else return null;
+    }
+    public static formatDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
     }
 
     public static precisionRound(number: number, precision: number) {
@@ -662,7 +669,7 @@ export class generateGemId {
 
         return this.asciiArray;
     }
-    
+
 
 }
 export const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

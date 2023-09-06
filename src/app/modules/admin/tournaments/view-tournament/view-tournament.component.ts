@@ -1911,9 +1911,15 @@ export class ViewTournamentComponent implements OnInit {
                 this.teetime++;
                 //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
                 //let startTime : string = (<HTMLInputElement>document.getElementById("flight_" + index + "_time")).value;
-                let currentDate = new Date();
-                currentDate.setDate(currentDate.getDate() + 1);
-                teeBox = this.getNextTeeBox(criteria.tee, this.teetime);
+                let currentDate = new Date(this.fullTournament.startDate);
+                if (this.activeRound === 2) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                } else if (this.activeRound === 3) {
+                    currentDate.setDate(currentDate.getDate() + 2);
+                } else if (this.activeRound === 4) {
+                    currentDate.setDate(currentDate.getDate() + 3);
+                }
+                teeBox  = this.getNextTeeBox(criteria.tee, this.teetime);
                 teeTime = this.getNextFlightTime(
                     teeTime,
                     criteria.interval,
@@ -1921,8 +1927,6 @@ export class ViewTournamentComponent implements OnInit {
                     this.teetime,
                     teeBox
                 );
-                console.log(teeBox);
-                console.log(teeTime);
                 console.log(General.parseToDate(currentDate.toDateString()));
                 let roundTeeId: any = General.getPlayersTe(categoryName);
                 console.log(roundTeeId.id);
@@ -1938,7 +1942,7 @@ export class ViewTournamentComponent implements OnInit {
                     tee: roundTeeId.result,
                     tee_id: roundTeeId.id,
                     category: categoryName,
-                    date: General.parseToDate(currentDate.toDateString()),
+                    date: General.formatDate(currentDate),
                     time: teeTime,
                     ended: false,
                     members: {
@@ -3118,7 +3122,7 @@ export class ViewTournamentComponent implements OnInit {
         let subtournamentID =
             this.dataFullTournament['SubTournamentQL'].length > 0
                 ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId
-                : '';
+                : undefined;
         const dialogRef = this.dialog.open(DialogPlayerListComponent, {
             data: {
                 players: datas.player,
