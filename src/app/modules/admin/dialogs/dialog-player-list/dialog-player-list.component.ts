@@ -33,7 +33,7 @@ export class DialogPlayerListComponent implements OnInit {
         'email',
         'select',
     ];
-    loggedInuser:any;
+    loggedInuser: any;
     public response: any;
     playerCategories: any[] = [];
     playerList: Player[] = [];
@@ -46,10 +46,10 @@ export class DialogPlayerListComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private facadeService: FacadeService,
         public snackBar: MatSnackBar, private _localStorage: LocalStorageService
-    ) {}
+    ) { }
 
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.playerCategories = this.facadeService.getPlayerCategories();
         console.log(this.data);
         let dataClubs = await this.facadeService.getClubList();
@@ -95,9 +95,8 @@ export class DialogPlayerListComponent implements OnInit {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${
-            this.selection.isSelected(row) ? 'deselect' : 'select'
-        } player ${row.firstName} ${row.lastName}`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
     }
     public downloadAsPDF() {
         var doc = new jsPDF();
@@ -147,7 +146,7 @@ export class DialogPlayerListComponent implements OnInit {
                     playerId: selectionArray[index].id,
                     status: true,
                 };
-                if(this.data.subTournamentID!=''){
+                if (this.data.subTournamentID !== undefined) {
                     let member: any = {
                         tournamentId: this.data.subTournamentID,
                         playerId: selectionArray[index].id,
@@ -217,9 +216,9 @@ export class DialogPlayerListComponent implements OnInit {
                 )
             );
             // this.player = matchingList['Result'];
-console.log(matchingList['Result']);
+            console.log(matchingList['Result']);
 
-             this.setDataSource(matchingList['Result']);
+            this.setDataSource(matchingList['Result']);
 
             // if (this.player[0]) {
             //   this.response = {
@@ -233,7 +232,7 @@ console.log(matchingList['Result']);
     }
     setDataSource(dataSource) {
         this.dataSource = new MatTableDataSource(dataSource);
-      
+
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
@@ -298,8 +297,7 @@ console.log(matchingList['Result']);
         if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
 
         if (
-            checkEmail.length > 0 )
-         {
+            checkEmail.length > 0) {
             this.snackBar.open('Email already exist.', 'x', {
                 duration: 5000,
             });
@@ -319,7 +317,7 @@ console.log(matchingList['Result']);
         }
 
         let clubMember: ClubMembership[] = [];
-       
+
         let UniqueId: string = '';
         let GEMId: string = '';
 
@@ -391,7 +389,7 @@ console.log(matchingList['Result']);
         this.playerForm.reset();
     }
 
-   
+
     public Comparator(a, b) {
         let gemIDA = parseInt(a['gemId'].slice(2));
         let gemIDB = parseInt(b['gemId'].slice(2));

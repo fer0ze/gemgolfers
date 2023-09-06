@@ -410,6 +410,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             tempSelMembers[index]['startingHole'] = teeBox;
                             tempSelMembers[index]['flightNo'] = this.teetime;
                             tempSelMembers[index]['categoryRound'] = 1;
+                            tempSelMembers[index]['courseHoleSets'] = this.tournamentInfo[0].courseHoleSets;
                             tempSelMembers[index]['tee_id'] = 1;
                             tempSelMembers[index]['name'] = 'Team' + index;
                             tempSelMembers[index]['time'] = obj.time;
@@ -1005,7 +1006,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     courseHoleSets:
                         roundFlightData.length > 0
                             ? roundFlightData[0].courseHoleSets
-                            : 0,
+                            : this.selectedMembers[index]['courseHoleSets'],
                     flightNo: flightNumber,
                     categoryRound: 1,
                     flightRound: this.flightRound,
