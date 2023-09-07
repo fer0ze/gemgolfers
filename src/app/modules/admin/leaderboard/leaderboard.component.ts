@@ -138,10 +138,6 @@ export class LeaderboardComponent implements OnInit {
     //   this.tournamentID = "-M-PqnixdM3LFf7cnoPp";
     // else {}
 
-    this.loggedInUser = JSON.parse(
-      localStorage.getItem(Constants.LOGGED_IN_USER)
-    );
-
     ////console.log(this.loggedInUser);
 
     of(this.Leaderboard)
@@ -209,12 +205,7 @@ export class LeaderboardComponent implements OnInit {
                   this.selectedCategoryValue = this.selectedCategory.category;
               }
 
-              if (this.loggedInUser && this.loggedInUser.userRole)
-                if (
-                  this.loggedInUser.adminClubId === this.Leaderboard.clubId &&
-                  this.activeRound <= this.totalRounds
-                )
-                  this.isClubAdmin = true;
+             
 
               //console.log(this.Leaderboard);
 

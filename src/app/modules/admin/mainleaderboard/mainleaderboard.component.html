@@ -284,7 +284,7 @@
                                     <div class="col col-1">POS.</div>
                                     <div class="col col-2">PLAYER</div>
                                     <div class="col col-3">GROSS</div>
-                                    <div class="col col-4 THRU">PAR</div>
+                                    <div class="col col-4 THRU par ">TO PAR</div>
                                     <div class="col col-5 THRU">THRU</div>
                                 </li>
                                 <li class="table-row" *ngFor="let item of grossLeaders">
@@ -335,7 +335,7 @@
                                     <div class="col col-1">POS.</div>
                                     <div class="col col-2">PLAYER</div>
                                     <div class="col col-3">NET</div>
-                                    <div class="col col-4 THRU">PAR</div>
+                                    <div class="col col-4 THRU par ">TO PAR</div>
                                     <div class="col col-5 THRU">THRU</div>
                                 </li>
                                 <li class="table-row" *ngFor="let item of netLeaders">
@@ -367,7 +367,12 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4">
+                                    <div class="col col-4" *ngIf="item.under >= 0" >
+
+                                        {{ item.under }}
+                                    </div>
+                                    <div class="col col-4" *ngIf="item.under < 0" style="color: red">
+        
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-5">
@@ -780,7 +785,7 @@
                             <div class="col col-1">POS.</div>
                             <div class="col col-2">TEAM</div>
                             <div class="col col-3">GROSS</div>
-                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
                         <li class="table-row" *ngFor="let item of grossLeaders">
@@ -809,7 +814,12 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4">
+                            <div class="col col-4" *ngIf="item.under >= 0" >
+
+                                {{ item.under }}
+                            </div>
+                            <div class="col col-4" *ngIf="item.under < 0" style="color: red">
+
                                 {{ item.under }}
                             </div>
                             <div class="col col-5">
@@ -823,7 +833,7 @@
                             <div class="col col-1">POS.</div>
                             <div class="col col-2">TEAM</div>
                             <div class="col col-3">NET</div>
-                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
                         <li class="table-row" *ngFor="let item of netLeaders">
@@ -854,7 +864,12 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4">
+                            <div class="col col-4" *ngIf="item.under >= 0" >
+
+                                {{ item.under }}
+                            </div>
+                            <div class="col col-4" *ngIf="item.under < 0" style="color: red">
+
                                 {{ item.under }}
                             </div>
                             <div class="col col-5">
@@ -970,7 +985,7 @@
                             <div class="col col-1">POS.</div>
                             <div class="col col-2">PLAYER</div>
                             <div class="col col-3">GROSS</div>
-                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
                         <li class="table-row  hover:bg-gray-100"  *ngFor="let item of allMatchSearchResults">
@@ -1017,7 +1032,7 @@
                             <div class="col col-1">POS.</div>
                             <div class="col col-2">PLAYER</div>
                             <div class="col col-3">GROSS</div>
-                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
                         <li class="table-row  hover:bg-gray-100" *ngFor="let item of grossLeaders">
@@ -1065,7 +1080,7 @@
                             <div class="col col-1">POS.</div>
                             <div class="col col-2">PLAYER</div>
                             <div class="col col-3">NET</div>
-                            <div class="col col-4 THRU">PAR</div>
+                            <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
                         <li class="table-row" *ngFor="let item of netLeaders">

@@ -903,14 +903,8 @@ export class ViewTournamentComponent implements OnInit {
             this.showMainTab3 = false;
             this.showMainTab4 = false;
             this.showMainTab5 = false;
-            if (this.activeRound == 1) this.calculateStatistics1();
-            this.getRound1stats(1);
-            if (this.activeRound == 2) this.calculateStatistics2();
-            this.getRound2stats(2);
-            if (this.activeRound == 3) this.calculateStatistics3();
-            this.getRound3stats(3);
-            if (this.activeRound == 4) this.calculateStatistics4();
-            this.getRound4stats(4);
+            this.calculateStatistics1();
+            this.getRound1stats(1); 
         } else if (tab.index == 1) {
             this.showMainTab1 = false;
             this.showMainTab2 = true;

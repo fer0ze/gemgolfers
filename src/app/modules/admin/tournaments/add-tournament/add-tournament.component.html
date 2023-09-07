@@ -1,192 +1,104 @@
 <div class="flex-auto">
     <div class="bg-card">
         <h2 class="mat-h2 p-4" color="mat-button primary">
-            <mat-icon
-                _ngcontent-c3=""
-                class="sidenav-icon mat-icon material-icons"
-                role="img"
-                aria-hidden="true"
-                >golf_course</mat-icon
-            >
+            <mat-icon _ngcontent-c3="" class="sidenav-icon mat-icon material-icons" role="img"
+                aria-hidden="true">golf_course</mat-icon>
             {{ stepTitle }}
         </h2>
 
         <div class="container">
-            <form
-                class="register-form"
-                [formGroup]="formGroup ? formGroup : []"
-            >
-                <mat-horizontal-stepper
-                    #linearVerticalStepper
-                    formArrayName="formArray"
-                    [linear]="true"
-                    (selectionChange)="onStepChange($event)"
-                >
+            <form class="register-form" [formGroup]="formGroup ? formGroup : []">
+                <mat-horizontal-stepper #linearVerticalStepper formArrayName="formArray" [linear]="true"
+                    (selectionChange)="onStepChange($event)">
                     <div>
-                        <mat-step
-                            formGroupName="0"
-                            [stepControl]="formArray?.get([0])"
-                        >
+                        <mat-step formGroupName="0" [stepControl]="formArray?.get([0])">
                             <ng-template matStepLabel class="cursor-pointer">
                                 <p>Tournament Setup</p>
                             </ng-template>
                             <div class="mt-6 sm:mt-0 md:mt-6">
                                 <div
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                     <div>
-                                        <div
-                                            fxLayoutAlign="start center"
-                                            class="flex my-4 text-2xl"
-                                        >
+                                        <div fxLayoutAlign="start center" class="flex my-4 text-2xl">
                                             <h3>Tournament Name</h3>
                                         </div>
                                     </div>
                                     <div class="flex flex-row items-center">
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="mx-4"
-                                        >
-                                            <mat-label
-                                                >Tournament Title</mat-label
-                                            >
-                                            <input
-                                                matInput
-                                                formControlName="titleFormCtrl"
-                                                required
-                                            />
-                                            <mat-icon
-                                                class="primary-foreground"
-                                                matSuffix
-                                                *ngIf="
+                                        <mat-form-field appearance="outline" class="mx-4">
+                                            <mat-label>Tournament Title</mat-label>
+                                            <input matInput formControlName="titleFormCtrl" required />
+                                            <mat-icon class="primary-foreground" matSuffix *ngIf="
                                                     !formArray
                                                         ?.get([0])
                                                         .get('titleFormCtrl')
                                                         .invalid
-                                                "
-                                                >check_circle</mat-icon
-                                            >
-                                            <mat-error
-                                                >This field is
-                                                required</mat-error
-                                            >
+                                                ">check_circle</mat-icon>
+                                            <mat-error>This field is
+                                                required</mat-error>
                                         </mat-form-field>
 
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="mx-4"
-                                            class="mx-4"
-                                        >
-                                            <mat-label
-                                                >Tournament Prefix</mat-label
-                                            >
-                                            <input
-                                                matInput
-                                                formControlName="prefixFormCtrl"
-                                                required
-                                            />
-                                            <mat-icon
-                                                class="primary-foreground"
-                                                matSuffix
-                                                *ngIf="
+                                        <mat-form-field appearance="outline" class="mx-4" class="mx-4">
+                                            <mat-label>Tournament Prefix</mat-label>
+                                            <input matInput formControlName="prefixFormCtrl" required />
+                                            <mat-icon class="primary-foreground" matSuffix *ngIf="
                                                     !formArray
                                                         ?.get([0])
                                                         .get('prefixFormCtrl')
                                                         .invalid
-                                                "
-                                                >check_circle</mat-icon
-                                            >
-                                            <mat-error
-                                                >This field is
-                                                required</mat-error
-                                            >
+                                                ">check_circle</mat-icon>
+                                            <mat-error>This field is
+                                                required</mat-error>
                                         </mat-form-field>
                                     </div>
                                 </div>
 
                                 <div
-                                    class="flex flex-row items-center mt-6 mr-8 flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
+                                    class="flex flex-row items-center mt-6 mr-8 flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                     <div class="flex space-around">
-                                        <mat-label class="w-100 text-2xl"
-                                            >No. of Rounds</mat-label
-                                        >
+                                        <mat-label class="w-100 text-2xl">No. of Rounds</mat-label>
 
-                                        <mat-radio-group
-                                            class="ml-10"
-                                            formControlName="numOfRounds"
-                                            fxLayoutAlign="start center"
-                                        >
-                                            <mat-radio-button
-                                                [checked]="
+                                        <mat-radio-group class="ml-10" formControlName="numOfRounds"
+                                            fxLayoutAlign="start center">
+                                            <mat-radio-button [checked]="
                                                     currentTournament &&
                                                     currentTournament.noOfRounds ==
                                                         1
                                                         ? true
                                                         : false
-                                                "
-                                                value="1"
-                                                >1</mat-radio-button
-                                            >
-                                            <mat-radio-button
-                                                [checked]="
+                                                " value="1">1</mat-radio-button>
+                                            <mat-radio-button [checked]="
                                                     currentTournament &&
                                                     currentTournament.noOfRounds ==
                                                         2
                                                         ? true
                                                         : false
-                                                "
-                                                value="2"
-                                                >2</mat-radio-button
-                                            >
-                                            <mat-radio-button
-                                                [checked]="
+                                                " value="2">2</mat-radio-button>
+                                            <mat-radio-button [checked]="
                                                     currentTournament &&
                                                     currentTournament.noOfRounds ==
                                                         3
                                                         ? true
                                                         : false
-                                                "
-                                                value="3"
-                                                >3</mat-radio-button
-                                            >
-                                            <mat-radio-button
-                                                [checked]="
+                                                " value="3">3</mat-radio-button>
+                                            <mat-radio-button [checked]="
                                                     currentTournament &&
                                                     currentTournament.noOfRounds ==
                                                         4
                                                         ? true
                                                         : false
-                                                "
-                                                value="4"
-                                                >4</mat-radio-button
-                                            >
+                                                " value="4">4</mat-radio-button>
                                         </mat-radio-group>
                                     </div>
                                     <div class="flex flex-auto">
-                                        <mat-form-field
-                                            class="mx-4"
-                                            appearance="outline"
-                                        >
+                                        <mat-form-field class="mx-4" appearance="outline">
                                             <mat-label>Club</mat-label>
-                                            <input
-                                                type="text"
-                                                matInput
-                                                formControlName="clubsFormCtrl"
-                                                [matAutocomplete]="auto"
-                                                [readonly]="hideClubs"
-                                            />
-                                            <mat-autocomplete
-                                                #auto="matAutocomplete"
-                                                [displayWith]="displayFn"
-                                            >
-                                                <mat-option
-                                                    *ngFor="
+                                            <input type="text" matInput formControlName="clubsFormCtrl"
+                                                [matAutocomplete]="auto" [readonly]="hideClubs" />
+                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                                <mat-option *ngFor="
                                                         let option of filteredClubOptions
                                                             | async
-                                                    "
-                                                    [value]="option"
-                                                >
+                                                    " [value]="option">
                                                     {{ option.name }}
                                                 </mat-option>
                                             </mat-autocomplete>
@@ -197,83 +109,40 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                     <div>
-                                        <div
-                                            fxLayoutAlign="start center"
-                                            class="flex my-4 text-2xl"
-                                        >
+                                        <div fxLayoutAlign="start center" class="flex my-4 text-2xl">
                                             <h3>Tournament Date</h3>
                                         </div>
                                     </div>
                                     <div class="flex flex-row items-center">
-                                        <mat-form-field
-                                            class="mx-4"
-                                            appearance="fill"
-                                        >
-                                            <input
-                                                matInput
-                                                [matDatepicker]="picker"
-                                                [min]="minDate"
-                                                [max]="maxDate"
-                                                (focus)="picker.open()"
-                                                (dateChange)="
+                                        <mat-form-field class="mx-4" appearance="fill">
+                                            <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate"
+                                                (focus)="picker.open()" (dateChange)="
                                                     datechange($event)
-                                                "
-                                                formControlName="startDateFormCtrl"
-                                                placeholder="start date"
-                                                required
-                                            />
-                                            <mat-datepicker-toggle
-                                                matSuffix
-                                                [for]="picker"
-                                            ></mat-datepicker-toggle>
-                                            <mat-datepicker
-                                                #picker
-                                            ></mat-datepicker>
-                                            <mat-error
-                                                >This field is
-                                                required</mat-error
-                                            >
+                                                " formControlName="startDateFormCtrl" placeholder="start date"
+                                                required />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                            <mat-error>This field is
+                                                required</mat-error>
                                         </mat-form-field>
 
-                                        <mat-form-field
-                                            class="mx-4"
-                                            appearance="fill"
-                                        >
-                                            <input
-                                                matInput
-                                                [matDatepicker]="picker2"
-                                                [min]="minDate"
-                                                [max]="maxDate"
-                                                (focus)="picker2.open()"
-                                                (onChange)="datechange($event)"
-                                                formControlName="endDateFormCtrl"
-                                                placeholder="end date"
-                                                required
-                                            />
-                                            <mat-datepicker-toggle
-                                                matSuffix
-                                                [for]="picker2"
-                                            ></mat-datepicker-toggle>
-                                            <mat-datepicker
-                                                #picker2
-                                            ></mat-datepicker>
-                                            <mat-error
-                                                >This field is
-                                                required</mat-error
-                                            >
+                                        <mat-form-field class="mx-4" appearance="fill">
+                                            <input matInput [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
+                                                (focus)="picker2.open()" (onChange)="datechange($event)"
+                                                formControlName="endDateFormCtrl" placeholder="end date" required />
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                            <mat-error>This field is
+                                                required</mat-error>
                                         </mat-form-field>
                                     </div>
                                 </div>
                                 <div
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                     <div>
-                                        <div
-                                            class="flex my-4 text-2xl items-center"
-                                        >
+                                        <div class="flex my-4 text-2xl items-center">
                                             <div class="w-full">
                                                 <h3>Course</h3>
                                             </div>
@@ -286,54 +155,31 @@
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="flex flex-row items-center"
-                                        formArrayName="courseInfo"
-                                    >
-                                        <div
-                                            *ngFor="
+                                    <div class="flex flex-row items-center" formArrayName="courseInfo">
+                                        <div *ngFor="
                                                 let url of courseFileds.controls;
                                                 let i = index
-                                            "
-                                            [formGroupName]="i"
-                                            class="flex flex-auto"
-                                        >
-                                            <mat-form-field
-                                                class="mx-1"
-                                                appearance="outline"
-                                            >
+                                            " [formGroupName]="i" class="flex flex-auto">
+                                            <mat-form-field class="mx-1" appearance="outline">
                                                 <mat-label>Course</mat-label>
-                                                <input
-                                                    type="text"
-                                                    matInput
-                                                    (keyup)="
+                                                <input type="text" matInput (keyup)="
                                                         courseChnage(
                                                             $event.target.value
                                                         )
-                                                    "
-                                                    formControlName="courseName"
-                                                    [matAutocomplete]="auto"
-                                                    placeholder="Course Name"
-                                                />
-                                                <mat-autocomplete
-                                                    autoActiveFirstOption
-                                                    #auto="matAutocomplete"
+                                                    " formControlName="courseName" [matAutocomplete]="auto"
+                                                    placeholder="Course Name" />
+                                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
                                                     [displayWith]="
                                                         displayCourseFn
-                                                    "
-                                                    (optionSelected)="
+                                                    " (optionSelected)="
                                                         getSelectedCourses(
                                                             $event.option.value
                                                         )
-                                                    "
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    ">
+                                                    <mat-option *ngFor="
                                                             let option of filteredCourseOptions
                                                                 | async
-                                                        "
-                                                        [value]="option"
-                                                    >
+                                                        " [value]="option">
                                                         {{ option.name }}
                                                     </mat-option>
                                                 </mat-autocomplete>
@@ -343,211 +189,108 @@
                                                 </mat-error>
                                             </mat-form-field>
 
-                                            <mat-form-field
-                                                class="mx-1"
-                                                appearance="outline"
-                                            >
-                                                <mat-select
-                                                    class="w-full"
-                                                    placeholder="Match Format"
-                                                    formControlName="matchFormat"
-                                                    (selectionChange)="
+                                            <mat-form-field class="mx-1" appearance="outline">
+                                                <mat-select class="w-full" placeholder="Match Format"
+                                                    formControlName="matchFormat" (selectionChange)="
                                                         texas($event)
-                                                    "
-                                                >
-                                                    <mat-option
-                                                        value="MATCH_PLAY"
-                                                        >MATCH_PLAY</mat-option
-                                                    >
-                                                    <mat-option
-                                                        value="STROKE_PLAY"
-                                                        >STROKE_PLAY</mat-option
-                                                    >
-                                                    <mat-option
-                                                        value="STABLEFORD"
-                                                        >STABLEFORD</mat-option
-                                                    >
-                                                    <mat-option
-                                                        value="TEXAS_SCRAMBLE"
-                                                        >TAXES_SCRAMBLE</mat-option
-                                                    >
+                                                    ">
+                                                    <mat-option value="MATCH_PLAY">MATCH_PLAY</mat-option>
+                                                    <mat-option value="STROKE_PLAY">STROKE_PLAY</mat-option>
+                                                    <mat-option value="STABLEFORD">STABLEFORD</mat-option>
+                                                    <mat-option value="TEXAS_SCRAMBLE">TAXES_SCRAMBLE</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
-                                            <mat-form-field
-                                                class="mx-1"
-                                                appearance="outline"
-                                            >
-                                                <mat-select
-                                                    class="w-full"
-                                                    placeholder="Match Type"
-                                                    formControlName="multiFormat"
-                                                    (selectionChange)="
+                                            <mat-form-field class="mx-1" appearance="outline">
+                                                <mat-select class="w-full" placeholder="Match Type"
+                                                    formControlName="multiFormat" (selectionChange)="
                                                         typeChange($event)
-                                                    "
-                                                >
-                                                    <mat-option value="SINGLE"
-                                                        >SINGLE</mat-option
-                                                    >
-                                                    <mat-option value="MULTI"
-                                                        >MULTI</mat-option
-                                                    >
+                                                    ">
+                                                    <mat-option value="SINGLE">SINGLE</mat-option>
+                                                    <mat-option value="MULTI">MULTI</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
                                     </div>
                                     <div *ngIf="showSubtournament">
-                                        <div
-                                            class="flex my-4 text-2xl"
-                                            fxLayoutAlign="start center"
-                                        >
+                                        <div class="flex my-4 text-2xl" fxLayoutAlign="start center">
                                             <h3>Create Sub Tournament</h3>
                                         </div>
-                                        <div
-                                            class="flex flex-row items-center"
-                                            formArrayName="subTournament"
-                                        >
-                                            <div
-                                                *ngFor="
+                                        <div class="flex flex-row items-center" formArrayName="subTournament">
+                                            <div *ngFor="
                                                     let url of subTournamentFileds.controls;
                                                     let i = index
-                                                "
-                                                [formGroupName]="i"
-                                                class="flex flex-auto"
-                                            >
-                                                <mat-form-field
-                                                    class="mx-1"
-                                                    appearance="outline"
-                                                >
+                                                " [formGroupName]="i" class="flex flex-auto">
+                                                <mat-form-field class="mx-1" appearance="outline">
                                                     <mat-label>Title</mat-label>
-                                                    <input
-                                                        type="text"
-                                                        matInput
-                                                        formControlName="title"
-                                                        placeholder="Title"
-                                                    />
+                                                    <input type="text" matInput formControlName="title"
+                                                        placeholder="Title" />
 
-                                                    <mat-error
-                                                        >This field is
-                                                        required</mat-error
-                                                    >
+                                                    <mat-error>This field is
+                                                        required</mat-error>
                                                 </mat-form-field>
-                                                <mat-form-field
-                                                    class="mx-1"
-                                                    appearance="outline"
-                                                >
+                                                <mat-form-field class="mx-1" appearance="outline">
                                                     <mat-label>Prefix</mat-label>
-                                                    <input
-                                                        type="text"
-                                                        matInput
-                                                        formControlName="prefix"
-                                                        placeholder="Prefix"
-                                                    />
+                                                    <input type="text" matInput formControlName="prefix"
+                                                        placeholder="Prefix" />
 
-                                                    <mat-error
-                                                        >This field is
-                                                        required</mat-error
-                                                    >
+                                                    <mat-error>This field is
+                                                        required</mat-error>
                                                 </mat-form-field>
 
-                                                <mat-form-field
-                                                    class="mx-1"
-                                                    appearance="outline"
-                                                >
-                                                    <mat-select
-                                                        class="w-full"
-                                                        placeholder="Match Format"
-                                                        formControlName="matchFormat"
-                                                        (selectionChange)="
+                                                <mat-form-field class="mx-1" appearance="outline">
+                                                    <mat-select class="w-full" placeholder="Match Format"
+                                                        formControlName="matchFormat" (selectionChange)="
                                                             texas($event)
-                                                        "
-                                                    >
-                                                        <mat-option
-                                                            value="MATCH_PLAY"
-                                                            >MATCH_PLAY</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="STROKE_PLAY"
-                                                            >STROKE_PLAY</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="STABLEFORD"
-                                                            >STABLEFORD</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="TEXAS_SCRAMBLE"
-                                                            >TAXES_SCRAMBLE</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="BESTBALL"
-                                                            >BESTBALL</mat-option
-                                                        >
+                                                        ">
+                                                        <mat-option value="MATCH_PLAY">MATCH_PLAY</mat-option>
+                                                        <mat-option value="STROKE_PLAY">STROKE_PLAY</mat-option>
+                                                        <mat-option value="STABLEFORD">STABLEFORD</mat-option>
+                                                        <mat-option value="TEXAS_SCRAMBLE">TAXES_SCRAMBLE</mat-option>
+                                                        <mat-option value="BESTBALL">BESTBALL</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
                                         </div>
                                     </div>
                                     <div *ngIf="showCourseHole">
-                                        <div
-                                            class="flex my-4 text-2xl"
-                                            fxLayoutAlign="start center"
-                                        >
+                                        <div class="flex my-4 text-2xl" fxLayoutAlign="start center">
                                             <h3>Select Course Hole Sets</h3>
                                         </div>
                                         <div class="mx-4">
-                                            <mat-form-field
-                                                appearance="outline"
-                                            >
-                                                <mat-select
-                                                    class="w-full"
-                                                    placeholder="Course"
-                                                    formControlName="courseHoleSet"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                            <mat-form-field appearance="outline">
+                                                <mat-select class="w-full" placeholder="Course"
+                                                    formControlName="courseHoleSet">
+                                                    <mat-option *ngFor="
                                                             let course of courseHoleSetNames
-                                                        "
-                                                        [value]="
+                                                        " [value]="
                                                             course.holeSets +
                                                             '_' +
                                                             course.inverted
-                                                        "
-                                                        >{{
-                                                            course.displayName
-                                                        }}</mat-option
-                                                    >
+                                                        ">{{
+                                                        course.displayName
+                                                        }}</mat-option>
                                                 </mat-select>
-                                                <mat-icon matSuffix
-                                                    >place</mat-icon
-                                                >
+                                                <mat-icon matSuffix>place</mat-icon>
                                             </mat-form-field>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    *ngIf="this.showCat"
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
+                                <div *ngIf="this.showCat"
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                     <div style="margin-bottom: 30px">
                                         <div>
-                                            <div
-                                                class="flex justify-center my-4 text-2xl"
-                                            >
+                                            <div class="flex justify-center my-4 text-2xl">
                                                 <h3>Player Categories</h3>
                                             </div>
                                         </div>
 
                                         <div
-                                            class="mx-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0 ng-star-inserted"
-                                        >
-                                            <div
-                                                *ngFor="
+                                            class="mx-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0 ng-star-inserted">
+                                            <div *ngFor="
                                                     let n of Categories;
                                                     let i = index
-                                                "
-                                            >
-                                                <mat-checkbox
-                                                    formArrayName="clubctgies"
-                                                    class="checkbox-margin"
+                                                ">
+                                                <mat-checkbox formArrayName="clubctgies" class="checkbox-margin"
                                                     (change)="
                                                         updateChkbxArray(
                                                             n,
@@ -555,84 +298,43 @@
                                                             $event.checked,
                                                             'clubctgies'
                                                         )
-                                                    "
-                                                    value="n.id"
-                                                    [checked]="n['checked']"
-                                                    >{{ n.name }}</mat-checkbox
-                                                >
+                                                    " value="n.id" [checked]="n['checked']">{{ n.name }}</mat-checkbox>
                                             </div>
                                         </div>
 
-                                        <div
-                                            fxLayout="column"
-                                            fxLayoutAlign="center center"
-                                            class="row"
-                                            *ngIf="isProAm"
-                                        >
+                                        <div fxLayout="column" fxLayoutAlign="center center" class="row"
+                                            *ngIf="isProAm">
                                             Handicap Ratio
-                                            <mat-form-field
-                                                [style.margin-left.px]="30"
-                                            >
-                                                <mat-label
-                                                    >Handicap Ratio</mat-label
-                                                >
-                                                <input
-                                                    matInput
-                                                    formControlName="handicapRatio"
-                                                    type="number"
-                                                />
-                                                <mat-icon matSuffix
-                                                    >aspect_ratio</mat-icon
-                                                >
+                                            <mat-form-field [style.margin-left.px]="30">
+                                                <mat-label>Handicap Ratio</mat-label>
+                                                <input matInput formControlName="handicapRatio" type="number" />
+                                                <mat-icon matSuffix>aspect_ratio</mat-icon>
                                             </mat-form-field>
                                         </div>
-                                        <div
-                                            fxLayout="column"
-                                            fxLayoutAlign="center stretch"
-                                            class="row mx-4 pt-4 pl-1"
-                                            *ngIf="isAmateur"
-                                        >
-                                            <mat-checkbox
-                                                formControlName="handicapCats"
-                                                (change)="
+                                        <div fxLayout="column" fxLayoutAlign="center stretch" class="row mx-4 pt-4 pl-1"
+                                            *ngIf="isAmateur">
+                                            <mat-checkbox formControlName="handicapCats" (change)="
                                                     handicapCategoriesSelection(
                                                         $event.checked
                                                     )
-                                                "
-                                                >Handicap
-                                                Categories</mat-checkbox
-                                            >
+                                                ">Handicap
+                                                Categories</mat-checkbox>
                                         </div>
-                                        <div
-                                            class="flex flex-row -mt-8 px-4 items-center"
-                                            *ngIf="selected"
-                                        >
+                                        <div class="flex flex-row -mt-8 px-4 items-center" *ngIf="selected">
                                             <div class="w-80 font-medium">
                                                 Prize Category A:
                                             </div>
                                             <mat-form-field class="mx-3 pt-8">
-                                                <input
-                                                    matInput
-                                                    formControlName="prizeCategoryA"
-                                                    type="number"
-                                                />
-                                                <mat-icon matSuffix
-                                                    >golf_course</mat-icon
-                                                >
+                                                <input matInput formControlName="prizeCategoryA" type="number" />
+                                                <mat-icon matSuffix>golf_course</mat-icon>
                                                 <mat-hint>From 1 to</mat-hint>
                                             </mat-form-field>
                                             <div class="w-80 font-medium">
                                                 Prize Category B:
                                             </div>
                                             <mat-form-field class="mx-3 pt-8">
-                                                <input
-                                                    matInput
-                                                    formControlName="prizeCategoryB"
-                                                    type="number"
-                                                />
-                                                <mat-icon matSuffix
-                                                    >golf_course</mat-icon
-                                                >
+                                                <input matInput formControlName="prizeCategoryB" type="number" />
+                                                <mat-icon matSuffix>golf_course</mat-icon>
                                                 <mat-hint>till 18</mat-hint>
                                             </mat-form-field>
                                         </div>
@@ -640,32 +342,18 @@
                                 </div>
 
                                 <div
-                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
-                                    <div
-                                        class="flex my-4 text-2xl"
-                                        *ngIf="!this.showCat"
-                                    >
+                                    class="mt-6 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                    <div class="flex my-4 text-2xl" *ngIf="!this.showCat">
                                         <h3>Handicap Allocation</h3>
                                     </div>
                                     <div *ngIf="!this.showCat" class="mx-4">
                                         <mat-form-field appearance="outline">
-                                            <mat-select
-                                                class="w-full"
-                                                placeholder="Handicap...?"
-                                                formControlName="handicapAllocations"
-                                            >
-                                                <mat-option value="AS_IS"
-                                                    >AS_IS</mat-option
-                                                >
-                                                <mat-option value="ONE_TENTH"
-                                                    >1/10</mat-option
-                                                >
-                                                <mat-option
-                                                    value="ONE_TENTH_DEC"
-                                                    >1/10 with
-                                                    Decimal</mat-option
-                                                >
+                                            <mat-select class="w-full" placeholder="Handicap...?"
+                                                formControlName="handicapAllocations">
+                                                <mat-option value="AS_IS">AS_IS</mat-option>
+                                                <mat-option value="ONE_TENTH">1/10</mat-option>
+                                                <mat-option value="ONE_TENTH_DEC">1/10 with
+                                                    Decimal</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -674,103 +362,60 @@
                                     </div>
                                     <div class="mx-4">
                                         <mat-form-field appearance="outline">
-                                            <mat-select
-                                                class="w-full"
-                                                placeholder="Who will enter score?"
-                                                formControlName="scoreManagement"
-                                                (selectionChange)="
+                                            <mat-select class="w-full" placeholder="Who will enter score?"
+                                                formControlName="scoreManagement" (selectionChange)="
                                                     setupMarshals($event.value)
-                                                "
-                                            >
-                                                <mat-option value="ONLY_PLAYERS"
-                                                    >Only Players</mat-option
-                                                >
-                                                <mat-option
-                                                    value="ONLY_MARSHALS"
-                                                    >Only Marshals</mat-option
-                                                >
-                                                <mat-option
-                                                    value="PLAYERS_AND_MARSHALS"
-                                                    >Players and
-                                                    Marshals</mat-option
-                                                >
+                                                ">
+                                                <mat-option value="ONLY_PLAYERS">Only Players</mat-option>
+                                                <mat-option value="ONLY_MARSHALS">Only Marshals</mat-option>
+                                                <mat-option value="PLAYERS_AND_MARSHALS">Players and
+                                                    Marshals</mat-option>
                                             </mat-select>
-                                            <mat-icon matSuffix
-                                                >golf_course</mat-icon
-                                            >
+                                            <mat-icon matSuffix>golf_course</mat-icon>
                                         </mat-form-field>
                                     </div>
                                 </div>
 
-                                <div
-                                    *ngIf="isMarshals"
-                                    class="mt-6 mr-8 flex flex-row flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                >
+                                <div *ngIf="isMarshals"
+                                    class="mt-6 mr-8 flex flex-row flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                     <div class="w-2/4 mx-2">
-                                        <mat-label
-                                            >Marshals Start With</mat-label
-                                        >
+                                        <mat-label>Marshals Start With</mat-label>
 
                                         <mat-form-field>
-                                            <input
-                                                matInput
-                                                formControlName="marshalStart"
-                                                maxlength="4"
-                                            />
+                                            <input matInput formControlName="marshalStart" maxlength="4" />
                                             <mat-icon matSuffix>face</mat-icon>
-                                            <mat-hint align="start"
-                                                >Marshals username prefix(Only 4
-                                                Char)</mat-hint
-                                            >
+                                            <mat-hint align="start">Marshals username prefix(Only 4
+                                                Char)</mat-hint>
                                         </mat-form-field>
                                     </div>
                                     <div class="w-2/4 mx-2">
                                         <mat-label>No. of Marshals</mat-label>
 
                                         <mat-form-field>
-                                            <input
-                                                matInput
-                                                formControlName="noofMarshals"
-                                                type="number"
-                                                min="1"
-                                                max="30"
-                                            />
-                                            <mat-icon matSuffix
-                                                >golf_course</mat-icon
-                                            >
+                                            <input matInput formControlName="noofMarshals" type="number" min="1"
+                                                max="30" />
+                                            <mat-icon matSuffix>golf_course</mat-icon>
                                         </mat-form-field>
                                     </div>
                                 </div>
 
                                 <div class="my-3" style="text-align: center">
-                                    <button
-                                        mat-raised-button
-                                        color="primary"
-                                        (click)="
+                                    <button mat-raised-button color="primary" (click)="
                                             createTournament(
                                                 linearVerticalStepper
                                             )
-                                        "
-                                        *ngIf="!editTournament"
-                                        style="
+                                        " *ngIf="!editTournament" style="
                                             text-align: center;
                                             justify-content: center;
-                                        "
-                                    >
+                                        ">
                                         Create Tournament
                                     </button>
                                 </div>
                                 <div class="my-3" style="text-align: center">
-                                    <button
-                                        mat-raised-button
-                                        color="warn"
-                                        (click)="editTournaments()"
-                                        style="
+                                    <button mat-raised-button color="warn" (click)="editTournaments()" style="
                                             text-align: center;
                                             justify-content: center;
-                                        "
-                                        *ngIf="editTournament"
-                                    >
+                                        " *ngIf="editTournament">
                                         Save Changes
                                     </button>
                                 </div>
@@ -790,13 +435,8 @@
                             </div> -->
                             </div>
                         </mat-step>
-                        <mat-step
-                            [stepControl]="valid1"
-                            (click)="tournamentMembersSetup()"
-                        >
-                            <ng-template class="cursor-pointer" matStepLabel
-                                >Select Players</ng-template
-                            >
+                        <mat-step [stepControl]="valid1" (click)="tournamentMembersSetup()">
+                            <ng-template class="cursor-pointer" matStepLabel>Select Players</ng-template>
                             <div class="flex flex-row mt-8">
                                 <div class="flex-auto">
                                     <!-- <button
@@ -807,25 +447,16 @@
                                         Add New Player
                                     </button> -->
                                     &nbsp;
-                                    <button
-                                        mat-raised-button
-                                        color="primary"
-                                        (click)="searchPlayer()"
-                                    >
+                                    <button mat-raised-button color="primary" (click)="searchPlayer()">
                                         Add New Player
                                     </button>
                                 </div>
                                 <div>
-                                    <button
-                                        class="mr-8"
-                                        mat-raised-button
-                                        color="warn"
-                                        (click)="
+                                    <button class="mr-8" mat-raised-button color="warn" (click)="
                                             saveTournamentMembers(
                                                 linearVerticalStepper
                                             )
-                                        "
-                                    >
+                                        ">
                                         Save Selected Members
                                     </button>
                                     <!-- &nbsp; <button mat-raised-button color="accent" (click)="tournamentSetup()" matStepperPrevious>Tournament Setup << Back</button> &nbsp; <button mat-raised-button color="primary" (click)="flightsSetup(linearVerticalStepper, 'next')">Next >> Flights Setup</button> -->
@@ -833,55 +464,33 @@
                             </div>
 
                             <div class="mt-4 mb-2 flex">
-                                <div
-                                    class="flex justify-start"
-                                    style="width: 50%"
-                                >
-                                    <span
-                                        *ngFor="let catCount of categoryCounts"
-                                        ><span
-                                            class="catCount"
-                                            *ngIf="catCount.value > 0"
-                                            ><mat-icon>emoji_people</mat-icon
-                                            >{{ catCount.name }} :
-                                            {{ catCount.value }}</span
-                                        ></span
-                                    >
+                                <div class="flex justify-start" style="width: 50%">
+                                    <span *ngFor="let catCount of categoryCounts"><span class="catCount"
+                                            *ngIf="catCount.value > 0"><mat-icon>emoji_people</mat-icon>{{ catCount.name
+                                            }} :
+                                            {{ catCount.value }}</span></span>
                                 </div>
 
-                                <div
-                                    class="flex justify-end"
-                                    style="width: min-content"
-                                >
-                                    <span
-                                        *ngFor="
+                                <div class="flex justify-end" style="width: min-content">
+                                    <span *ngFor="
                                             let catCount of TMcategoryCounts
-                                        "
-                                        ><span
-                                            class="catCount"
-                                            *ngIf="catCount.value > 0"
-                                            ><mat-icon>emoji_people</mat-icon
-                                            >{{ catCount.name }} :
-                                            {{ catCount.value }}</span
-                                        ></span
-                                    >
+                                        "><span class="catCount"
+                                            *ngIf="catCount.value > 0"><mat-icon>emoji_people</mat-icon>{{ catCount.name
+                                            }} :
+                                            {{ catCount.value }}</span></span>
                                 </div>
                             </div>
 
                             <div class="flex flex-row">
-                                <div
-                                    class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                <div class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                     style="
                                         width: 46%;
                                         box-shadow: 0 2px 8px 0
                                             rgba(0, 0, 0, 0.35);
-                                    "
-                                >
+                                    ">
                                     <div class="flex">
                                         <div>
-                                            <div
-                                                class="mt-4 text-base font-medium"
-                                            >
+                                            <div class="mt-4 text-base font-medium">
                                                 <h2>Club Members</h2>
                                             </div>
                                         </div>
@@ -889,128 +498,77 @@
                                             <div>
                                                 <mat-form-field class="mx-4">
                                                     <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
-                                                    <input
-                                                        matInput
-                                                        (keyup)="
+                                                    <input matInput (keyup)="
                                                             applyFilter(
                                                                 $event.target
                                                                     .value
                                                             )
-                                                        "
-                                                        placeholder="Filter"
-                                                    />
-                                                    <mat-icon matPrefix
-                                                        >search</mat-icon
-                                                    >
+                                                        " placeholder="Filter" />
+                                                    <mat-icon matPrefix>search</mat-icon>
                                                 </mat-form-field>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
-                                        <table
-                                            mat-table
-                                            #dsort="matSort"
-                                            [dataSource]="dataSource"
-                                            matSort
-                                        >
+                                        <table mat-table #dsort="matSort" [dataSource]="dataSource" matSort>
                                             <!-- Name Column -->
-                                            <ng-container
-                                                matColumnDef="firstName"
-                                            >
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                    mat-sort-header
-                                                >
+                                            <ng-container matColumnDef="firstName">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                     Name
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let element"
-                                                >
+                                                <td mat-cell *matCellDef="let element">
                                                     {{ element.firstName }}
                                                     {{ element.lastName }}
                                                 </td>
                                             </ng-container>
 
                                             <!-- Handicap Column -->
-                                            <ng-container
-                                                matColumnDef="handicap"
-                                            >
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                    mat-sort-header
-                                                >
+                                            <ng-container matColumnDef="handicap">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                     Handicap
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let element"
-                                                >
+                                                <td mat-cell *matCellDef="let element">
                                                     {{ element.handicap }}
                                                 </td>
                                             </ng-container>
 
                                             <!-- Handicap Column -->
-                                            <ng-container
-                                                matColumnDef="playerCategory"
-                                            >
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                    mat-sort-header
-                                                >
+                                            <ng-container matColumnDef="playerCategory">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                     Category
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let element"
-                                                >
+                                                <td mat-cell *matCellDef="let element">
                                                     {{
-                                                        element.playerCategory ==
-                                                        "Seniors"
-                                                            ? "Senior Amateurs"
-                                                            : element.playerCategory
+                                                    element.playerCategory ==
+                                                    "Seniors"
+                                                    ? "Senior Amateurs"
+                                                    : element.playerCategory
                                                     }}
                                                 </td>
                                             </ng-container>
 
                                             <!-- Checkbox Column -->
                                             <ng-container matColumnDef="select">
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                >
-                                                    <mat-checkbox
-                                                        (change)="
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="
                                                             $event
                                                                 ? masterToggle()
                                                                 : null
-                                                        "
-                                                        [checked]="
+                                                        " [checked]="
                                                             selection.hasValue() &&
                                                             isAllSelected()
-                                                        "
-                                                        [indeterminate]="
+                                                        " [indeterminate]="
                                                             selection.hasValue() &&
                                                             !isAllSelected()
-                                                        "
-                                                        [aria-label]="
+                                                        " [aria-label]="
                                                             checkboxLabel()
-                                                        "
-                                                    >
+                                                        ">
                                                     </mat-checkbox>
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let row"
-                                                >
-                                                    <mat-checkbox
-                                                        (click)="
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="
                                                             $event.stopPropagation()
-                                                        "
-                                                        (change)="
+                                                        " (change)="
                                                             $event
                                                                 ? selection.toggle(
                                                                       row
@@ -1020,64 +578,46 @@
                                                                 $event,
                                                                 row
                                                             )
-                                                        "
-                                                        [checked]="
+                                                        " [checked]="
                                                             selection.isSelected(
                                                                 row
                                                             )
-                                                        "
-                                                        [aria-label]="
+                                                        " [aria-label]="
                                                             checkboxLabel(row)
-                                                        "
-                                                    >
+                                                        ">
                                                     </mat-checkbox>
                                                 </td>
                                             </ng-container>
 
-                                            <tr
-                                                mat-header-row
-                                                *matHeaderRowDef="
+                                            <tr mat-header-row *matHeaderRowDef="
                                                     displayedColumns
-                                                "
-                                            ></tr>
-                                            <tr
-                                                mat-row
-                                                *matRowDef="
+                                                "></tr>
+                                            <tr mat-row *matRowDef="
                                                     let row;
                                                     columns: displayedColumns
-                                                "
-                                                (click)="
+                                                " (click)="
                                                     updateCategorySelection(
                                                         $event,
                                                         row
                                                     );
                                                     selection.toggle(row)
-                                                "
-                                            ></tr>
+                                                "></tr>
                                         </table>
-                                        <mat-paginator
-                                            #paginatorLegal="matPaginator"
-                                            [pageSize]="20"
-                                            [pageSizeOptions]="[
+                                        <mat-paginator #paginatorLegal="matPaginator" [pageSize]="20" [pageSizeOptions]="[
                                                 10, 20, 50, 100
-                                            ]"
-                                        ></mat-paginator>
+                                            ]"></mat-paginator>
                                     </div>
                                 </div>
 
-                                <div
-                                    class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                <div class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                                     style="
                                         width: 46%;
                                         box-shadow: 0 2px 8px 0
                                             rgba(0, 0, 0, 0.35);
-                                    "
-                                >
+                                    ">
                                     <div class="flex">
                                         <div>
-                                            <div
-                                                class="mt-4 text-base font-medium"
-                                            >
+                                            <div class="mt-4 text-base font-medium">
                                                 <h2>Tournament Members</h2>
                                             </div>
                                         </div>
@@ -1085,116 +625,66 @@
                                             <div>
                                                 <mat-form-field class="mx-4">
                                                     <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
-                                                    <input
-                                                        matInput
-                                                        (keyup)="
+                                                    <input matInput (keyup)="
                                                             applyMembersFilter(
                                                                 $event.target
                                                                     .value
                                                             )
-                                                        "
-                                                        placeholder="Filter"
-                                                    />
-                                                    <mat-icon matPrefix
-                                                        >search</mat-icon
-                                                    >
+                                                        " placeholder="Filter" />
+                                                    <mat-icon matPrefix>search</mat-icon>
                                                 </mat-form-field>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
-                                        <table
-                                            mat-table
-                                            #msort="matSort"
-                                            [dataSource]="membersSource"
-                                            matSort
-                                        >
+                                        <table mat-table #msort="matSort" [dataSource]="membersSource" matSort>
                                             <!-- Name Column -->
-                                            <ng-container
-                                                matColumnDef="firstName"
-                                            >
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                    mat-sort-header
-                                                >
+                                            <ng-container matColumnDef="firstName">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                     Name
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let element"
-                                                >
+                                                <td mat-cell *matCellDef="let element">
                                                     {{ element.firstName }}
                                                     {{ element.lastName }}
                                                 </td>
                                             </ng-container>
 
                                             <!-- Handicap Column -->
-                                            <ng-container
-                                                matColumnDef="handicap"
-                                            >
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                    mat-sort-header
-                                                >
+                                            <ng-container matColumnDef="handicap">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                     Handicap
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let element"
-                                                >
+                                                <td mat-cell *matCellDef="let element">
                                                     {{ element.handicap }}
                                                 </td>
                                             </ng-container>
 
                                             <!-- Handicap Column -->
-                                            <ng-container
-                                                matColumnDef="playerCategory"
-                                            >
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                    mat-sort-header
-                                                >
+                                            <ng-container matColumnDef="playerCategory">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                     Category
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let element"
-                                                >
+                                                <td mat-cell *matCellDef="let element">
                                                     {{
-                                                        element.playerCategory ==
-                                                        "Seniors"
-                                                            ? "Senior Amateurs"
-                                                            : element.playerCategory
+                                                    element.playerCategory ==
+                                                    "Seniors"
+                                                    ? "Senior Amateurs"
+                                                    : element.playerCategory
                                                     }}
                                                 </td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="delete">
-                                                <th
-                                                    mat-header-cell
-                                                    *matHeaderCellDef
-                                                >
+                                                <th mat-header-cell *matHeaderCellDef>
                                                     Remove
                                                 </th>
-                                                <td
-                                                    mat-cell
-                                                    *matCellDef="let row"
-                                                >
-                                                    <span
-                                                        ><mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                <td mat-cell *matCellDef="let row">
+                                                    <span><mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 removePlayer(
                                                                     row.id
                                                                 )
-                                                            "
-                                                            >delete_forever</mat-icon
-                                                        >
+                                                            ">delete_forever</mat-icon>
                                                     </span>
                                                 </td>
                                             </ng-container>
@@ -1217,27 +707,17 @@
                         </td>
                       </ng-container> -->
 
-                                            <tr
-                                                mat-header-row
-                                                *matHeaderRowDef="
+                                            <tr mat-header-row *matHeaderRowDef="
                                                     membersColumns
-                                                "
-                                            ></tr>
-                                            <tr
-                                                mat-row
-                                                *matRowDef="
+                                                "></tr>
+                                            <tr mat-row *matRowDef="
                                                     let row;
                                                     columns: membersColumns
-                                                "
-                                            ></tr>
+                                                "></tr>
                                         </table>
-                                        <mat-paginator
-                                            #paginatorGSTN="matPaginator"
-                                            [pageSize]="20"
-                                            [pageSizeOptions]="[
+                                        <mat-paginator #paginatorGSTN="matPaginator" [pageSize]="20" [pageSizeOptions]="[
                                                 10, 20, 50, 100
-                                            ]"
-                                        ></mat-paginator>
+                                            ]"></mat-paginator>
                                     </div>
                                 </div>
                             </div>
@@ -1285,39 +765,23 @@
                             </div>
                         </mat-step>
 
-                        <mat-step
-                            formGroupName="1"
-                            (click)="flightsSetup(linearVerticalStepper, '')"
-                            [stepControl]="valid2"
-                        >
+                        <mat-step formGroupName="1" (click)="flightsSetup(linearVerticalStepper, '')"
+                            [stepControl]="valid2">
                             <ng-template matStepLabel>
                                 <div>Flights Setup</div>
                             </ng-template>
-                            <mat-tab-group
-                                class="mt-5 row-change"
-                                mat-align-tabs="center"
-                                [(selectedIndex)]="selectedIndex"
-                            >
-                                <mat-tab
-                                    formArrayName="category"
-                                    class="mb-20 separator"
-                                    fxLayout="row"
-                                    fxLayout.lt-md="column"
-                                    fxLayoutGap="20px"
-                                    *ngFor="
+                            <mat-tab-group class="mt-5 row-change" mat-align-tabs="center"
+                                [(selectedIndex)]="selectedIndex">
+                                <mat-tab formArrayName="category" class="mb-20 separator" fxLayout="row"
+                                    fxLayout.lt-md="column" fxLayoutGap="20px" *ngFor="
                                         let url of categoryFormGroup.controls;
                                         let i = index
-                                    "
-                                    id="manage i"
-                                >
+                                    " id="manage i">
                                     <ng-template mat-tab-label id="abdullah">{{
                                         formArray.get([1]).get("category")
-                                            .value[i].name
-                                    }}</ng-template>
-                                    <div
-                                        [formGroupName]="i"
-                                        class="mt-4 overflow-hidden"
-                                    >
+                                        .value[i].name
+                                        }}</ng-template>
+                                    <div [formGroupName]="i" class="mt-4 overflow-hidden">
                                         <!-- <mat-card style="margin-bottom: 30px">
                                             <div
                                                 fxLayout="row"
@@ -1395,11 +859,9 @@
                                         <div>
                                             <div>
                                                 <div
-                                                    class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                                >
+                                                    class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                                     <div
-                                                        class="py-2 ml-4 px-3 mb-2 items-center rounded-full text-md w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500"
-                                                    >
+                                                        class="py-2 ml-4 px-3 mb-2 items-center rounded-full text-md w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500">
                                                         Day 1 Flights
                                                     </div>
                                                     <!-- <div
@@ -1410,150 +872,75 @@
                                                         Flights are generated
                                                         according to the cut.
                                                     </div> -->
-                                                    <div
-                                                        class="flex flex-row items-center"
-                                                    >
-                                                        <mat-form-field
-                                                            class="mx-4"
-                                                        >
-                                                            <mat-label
-                                                                >Players/Flight</mat-label
-                                                            >
-                                                            <input
-                                                                matInput
-                                                                formControlName="playersperFlight"
-                                                                type="number"
-                                                            />
-                                                            <mat-error
-                                                                >The input is
-                                                                required.</mat-error
-                                                            >
+                                                    <div class="flex flex-row items-center">
+                                                        <mat-form-field class="mx-4">
+                                                            <mat-label>Players/Flight</mat-label>
+                                                            <input matInput formControlName="playersperFlight"
+                                                                type="number" />
+                                                            <mat-error>The input is
+                                                                required.</mat-error>
                                                         </mat-form-field>
 
-                                                        <mat-form-field
-                                                            class="mx-4"
-                                                        >
-                                                            <mat-label
-                                                                >Flights
-                                                                interval</mat-label
-                                                            >
-                                                            <input
-                                                                matInput
-                                                                formControlName="flightsInterval"
-                                                                type="number"
-                                                                placeholder="Time in Minutes"
-                                                                min="1"
-                                                                max="30"
-                                                            />
-                                                            <mat-icon matSuffix
-                                                                >golf_course</mat-icon
-                                                            >
+                                                        <mat-form-field class="mx-4">
+                                                            <mat-label>Flights
+                                                                interval</mat-label>
+                                                            <input matInput formControlName="flightsInterval"
+                                                                type="number" placeholder="Time in Minutes" min="1"
+                                                                max="30" />
+                                                            <mat-icon matSuffix>golf_course</mat-icon>
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                                >
-                                                    <div
-                                                        class="flex flex-row ml-4"
-                                                    >
-                                                        <mat-radio-group
-                                                            class="w-full"
-                                                            formControlName="arrangements"
-                                                            fxLayoutAlign="start center"
-                                                        >
-                                                            <mat-radio-button
-                                                                value="0"
-                                                                >Flight Start
-                                                                Time</mat-radio-button
-                                                            >
-                                                            <mat-radio-button
-                                                                value="1"
-                                                                >Last Flight
-                                                                Time</mat-radio-button
-                                                            >
+                                                    class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                                    <div class="flex flex-row ml-4">
+                                                        <mat-radio-group class="w-full" formControlName="arrangements"
+                                                            fxLayoutAlign="start center">
+                                                            <mat-radio-button value="0">Flight Start
+                                                                Time</mat-radio-button>
+                                                            <mat-radio-button value="1">Last Flight
+                                                                Time</mat-radio-button>
                                                         </mat-radio-group>
 
-                                                        <mat-form-field
-                                                            class="mx-4"
-                                                        >
-                                                            <input
-                                                                type="time"
-                                                                formControlName="flightStartTime"
-                                                                value="{{
+                                                        <mat-form-field class="mx-4">
+                                                            <input type="time" formControlName="flightStartTime" value="{{
                                                                     selectedTime
-                                                                }}"
-                                                                atp-time-picker
-                                                                matInput
-                                                                #query
-                                                            />
-                                                            <mat-error
-                                                                >The input is
-                                                                required.</mat-error
-                                                            >
+                                                                }}" atp-time-picker matInput #query />
+                                                            <mat-error>The input is
+                                                                required.</mat-error>
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
 
                                                 <div
-                                                    class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
-                                                >
-                                                    <div
-                                                        class="flex justify-between"
-                                                    >
-                                                        <div
-                                                            fxLayoutAlign="start center"
-                                                        >
-                                                            <mat-label
-                                                                >Arrange
-                                                                By</mat-label
-                                                            >
+                                                    class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                                    <div class="flex justify-between">
+                                                        <div fxLayoutAlign="start center">
+                                                            <mat-label>Arrange
+                                                                By</mat-label>
                                                         </div>
                                                         <div>
-                                                            <mat-radio-group
-                                                                formControlName="arrangeBy"
-                                                                fxLayoutAlign="end center"
-                                                            >
+                                                            <mat-radio-group formControlName="arrangeBy"
+                                                                fxLayoutAlign="end center">
                                                                 <mat-radio-button
-                                                                    value="handicap"
-                                                                    >Handicap</mat-radio-button
-                                                                >
+                                                                    value="handicap">Handicap</mat-radio-button>
                                                                 <mat-radio-button
-                                                                    value="random"
-                                                                    >Random</mat-radio-button
-                                                                >
+                                                                    value="random">Random</mat-radio-button>
                                                             </mat-radio-group>
                                                         </div>
-                                                        <div
-                                                            fxLayoutAlign="start center"
-                                                        >
-                                                            <mat-label
-                                                                >Starting
-                                                                Hole</mat-label
-                                                            >
+                                                        <div fxLayoutAlign="start center">
+                                                            <mat-label>Starting
+                                                                Hole</mat-label>
                                                         </div>
                                                         <div>
-                                                            <mat-radio-group
-                                                                formControlName="startingHole"
-                                                                fxLayoutAlign="end center"
-                                                            >
+                                                            <mat-radio-group formControlName="startingHole"
+                                                                fxLayoutAlign="end center">
+                                                                <mat-radio-button value="1_10">1 &
+                                                                    10</mat-radio-button>
+                                                                <mat-radio-button value="1">1</mat-radio-button>
+                                                                <mat-radio-button value="10">10</mat-radio-button>
                                                                 <mat-radio-button
-                                                                    value="1_10"
-                                                                    >1 &
-                                                                    10</mat-radio-button
-                                                                >
-                                                                <mat-radio-button
-                                                                    value="1"
-                                                                    >1</mat-radio-button
-                                                                >
-                                                                <mat-radio-button
-                                                                    value="10"
-                                                                    >10</mat-radio-button
-                                                                >
-                                                                <mat-radio-button
-                                                                    value="shotgun"
-                                                                    >Shotgun</mat-radio-button
-                                                                >
+                                                                    value="shotgun">Shotgun</mat-radio-button>
                                                             </mat-radio-group>
                                                         </div>
                                                     </div>
@@ -1562,16 +949,12 @@
                                         </div>
                                     </div>
                                     <div class="flex justify-center my-12">
-                                        <button
-                                            mat-raised-button
-                                            color="primary"
-                                            (click)="
+                                        <button mat-raised-button color="primary" (click)="
                                                 getSelectedPlayers(
                                                     i,
                                                     linearVerticalStepper
                                                 )
-                                            "
-                                        >
+                                            ">
                                             Save Flights
                                         </button>
                                     </div>
@@ -1606,13 +989,8 @@
                             <!-- </div> -->
                         </mat-step>
 
-                        <mat-step
-                            [stepControl]="valid4"
-                            (click)="flightArrangementSetup()"
-                        >
-                            <ng-template matStepLabel
-                                >Flights Arrangement</ng-template
-                            >
+                        <mat-step [stepControl]="valid4" (click)="flightArrangementSetup()">
+                            <ng-template matStepLabel>Flights Arrangement</ng-template>
                             <!-- <div
                                 fxLayoutAlign="center center"
                                 class="actionPane"
@@ -1634,43 +1012,27 @@
                         
                             </div> -->
 
-                            <mat-tab-group
-                                class="mt-5 row-change"
-                                mat-align-tabs="center"
-                            >
-                                <mat-tab
-                                    class="mb-20 separator"
-                                    fxLayout="row"
-                                    fxLayout.lt-md="column"
-                                    fxLayoutGap="20px"
-                                    *ngFor="
+                            <mat-tab-group class="mt-5 row-change" mat-align-tabs="center">
+                                <mat-tab class="mb-20 separator" fxLayout="row" fxLayout.lt-md="column"
+                                    fxLayoutGap="20px" *ngFor="
                                         let m of selectedMembers;
                                         let k = index
-                                    "
-                                >
+                                    ">
                                     <ng-template mat-tab-label>{{
                                         m.title
-                                    }}</ng-template>
+                                        }}</ng-template>
 
                                     <div [formGroupName]="k">
-                                        <div
-                                            *ngIf="m.Members.length == 0"
-                                            [ngStyle]="{
+                                        <div *ngIf="m.Members.length == 0" [ngStyle]="{
                                                 margin: '5px',
                                                 'text-align': 'center',
                                                 border: 'solid 1px #3f50b5',
                                                 padding: '10px'
-                                            }"
-                                        >
+                                            }">
                                             There is no any player selected.
                                         </div>
-                                        <div
-                                            cdkDropListGroup
-                                            id="manageFlights"
-                                            class="mx-32 mt-4"
-                                        >
-                                            <div
-                                                *ngFor="
+                                        <div cdkDropListGroup id="manageFlights" class="mx-32 mt-4">
+                                            <div *ngFor="
                                                     let items of m.Members;
                                                     let i = index
                                                 "
@@ -1678,199 +1040,113 @@
                                                 style="
                                                     box-shadow: 5px 3px 18px 2px
                                                         rgb(0 0 3 / 21%);
-                                                "
-                                            >
+                                                ">
                                                 <div
-                                                    class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
-                                                >
-                                                    <mat-form-field
-                                                        class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                        [floatLabel]="'always'"
-                                                    >
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="icon-size-5"
-                                                            [svgIcon]="
+                                                    class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
+                                                    <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                        [floatLabel]="'always'">
+                                                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="
                                                                 'heroicons_solid:gift'
-                                                            "
-                                                        ></mat-icon>
-                                                        <input
-                                                            value="{{ i + 1 }}"
-                                                            matInput
-                                                            #query
-                                                        />
+                                                            "></mat-icon>
+                                                        <input value="{{ i + 1 }}" matInput #query />
                                                     </mat-form-field>
 
-                                                    <mat-form-field
-                                                        class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                        [floatLabel]="'always'"
-                                                    >
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="icon-size-5"
-                                                            [svgIcon]="
+                                                    <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                        [floatLabel]="'always'">
+                                                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="
                                                                 'heroicons_solid:flag'
-                                                            "
-                                                        ></mat-icon>
-                                                        <input
-                                                            id="flight_{{
+                                                            "></mat-icon>
+                                                        <input id="flight_{{
                                                                 k
-                                                            }}_{{ i }}_hole"
-                                                            value="{{
+                                                            }}_{{ i }}_hole" value="{{
                                                                 getNextFlighttee(
                                                                     k,
                                                                     i,
                                                                     m.title,
                                                                     m.Members[i]
                                                                 )
-                                                            }}"
-                                                            matInput
-                                                            #query
-                                                        />
+                                                            }}" matInput #query />
                                                     </mat-form-field>
-                                                    <mat-form-field
-                                                        *ngIf="showTexas"
+                                                    <mat-form-field *ngIf="showTexas"
                                                         class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                        [floatLabel]="'always'"
-                                                    >
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="icon-size-5"
-                                                            [svgIcon]="
+                                                        [floatLabel]="'always'">
+                                                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="
                                                                 'heroicons_solid:flag'
-                                                            "
-                                                        ></mat-icon>
-                                                        <input
-                                                            id="flight_{{
+                                                            "></mat-icon>
+                                                        <input id="flight_{{
                                                                 i
-                                                            }}_name"
-                                                            value="{{
+                                                            }}_name" value="{{
                                                                 items.name
-                                                            }}"
-                                                            matInput
-                                                            #query
-                                                        />
+                                                            }}" matInput #query />
                                                     </mat-form-field>
 
-                                                    <mat-form-field
-                                                        class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                        [floatLabel]="'always'"
-                                                    >
-                                                        <mat-icon
-                                                            matPrefix
-                                                            class="icon-size-5"
-                                                            [svgIcon]="
+                                                    <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                        [floatLabel]="'always'">
+                                                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="
                                                                 'heroicons_solid:clock'
-                                                            "
-                                                        ></mat-icon>
-                                                        <input
-                                                            style="
+                                                            "></mat-icon>
+                                                        <input style="
                                                                 min-width: 6rem;
-                                                            "
-                                                            type="time"
-                                                            id="flight_{{
+                                                            " type="time" id="flight_{{
                                                                 k
-                                                            }}_{{ i }}_time"
-                                                            (click)="
+                                                            }}_{{ i }}_time" (click)="
                                                                 getFC(
                                                                     $event,
                                                                     m.title
                                                                 )
-                                                            "
-                                                            atp-time-picker
-                                                            value="{{
+                                                            " atp-time-picker value="{{
                                                                 getNextFlightTime(
                                                                     k,
                                                                     i,
                                                                     m.title,
                                                                     m.Members[i]
                                                                 )
-                                                            }}"
-                                                            matInput
-                                                            #query
-                                                        />
+                                                            }}" matInput #query />
                                                     </mat-form-field>
                                                 </div>
-                                                <div
-                                                    cdkDropList
-                                                    [cdkDropListData]="items"
-                                                    (cdkDropListDropped)="
+                                                <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="
                                                         drop($event)
                                                     "
-                                                    class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card"
-                                                >
+                                                    class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
                                                     <div class="moveableList">
-                                                        <div
-                                                            class="moveableFlights"
-                                                            *ngFor="
+                                                        <div class="moveableFlights" *ngFor="
                                                                 let item of items;
                                                                 let j = index
-                                                            "
-                                                            cdkDrag
-                                                            [cdkDragData]="item"
-                                                        >
-                                                            <table
-                                                                class="overflow-y-visible"
-                                                                width="100%"
-                                                            >
+                                                            " cdkDrag [cdkDragData]="item">
+                                                            <table class="overflow-y-visible" width="100%">
                                                                 <tr>
-                                                                    <td
-                                                                        width="20%"
-                                                                    >
-                                                                        <span
-                                                                            class="font-medium"
-                                                                            >{{
-                                                                                item[
-                                                                                    "firstName"
-                                                                                ]
-                                                                            }}</span
-                                                                        >
+                                                                    <td width="20%">
+                                                                        <span class="font-medium">{{
+                                                                            item[
+                                                                            "firstName"
+                                                                            ]
+                                                                            }}</span>
                                                                     </td>
-                                                                    <td
-                                                                        width="20%"
-                                                                    >
-                                                                        <span
-                                                                            class="font-medium"
-                                                                            >{{
-                                                                                item[
-                                                                                    "lastName"
-                                                                                ]
-                                                                            }}</span
-                                                                        >
+                                                                    <td width="20%">
+                                                                        <span class="font-medium">{{
+                                                                            item[
+                                                                            "lastName"
+                                                                            ]
+                                                                            }}</span>
                                                                     </td>
-                                                                    <td
-                                                                        width="10%"
-                                                                    >
-                                                                        <span
-                                                                            class="font-medium"
-                                                                            >{{
-                                                                                item[
-                                                                                    "handicap"
-                                                                                ]
-                                                                            }}</span
-                                                                        >
+                                                                    <td width="10%">
+                                                                        <span class="font-medium">{{
+                                                                            item[
+                                                                            "handicap"
+                                                                            ]
+                                                                            }}</span>
                                                                     </td>
-                                                                    <td
-                                                                        width="25%"
-                                                                    >
-                                                                        <span
-                                                                            class="font-medium"
-                                                                            >{{
-                                                                                item[
-                                                                                    "playerCategory"
-                                                                                ]
-                                                                            }}</span
-                                                                        >
+                                                                    <td width="25%">
+                                                                        <span class="font-medium">{{
+                                                                            item[
+                                                                            "playerCategory"
+                                                                            ]
+                                                                            }}</span>
                                                                     </td>
-                                                                    <td
-                                                                        width="25%"
-                                                                        style="
+                                                                    <td width="25%" style="
                                                                             text-align: right;
-                                                                        "
-                                                                    >
-                                                                        <span
-                                                                            ><mat-icon
-                                                                                aria-hidden="false"
+                                                                        ">
+                                                                        <span><mat-icon aria-hidden="false"
                                                                                 aria-label="Dragable"
                                                                                 class="remove primary-foreground"
                                                                                 (click)="
@@ -1878,11 +1154,8 @@
                                                                                         i,
                                                                                         j
                                                                                     )
-                                                                                "
-                                                                                >delete_forever</mat-icon
-                                                                            >
-                                                                            <mat-icon
-                                                                                aria-hidden="false"
+                                                                                ">delete_forever</mat-icon>
+                                                                            <mat-icon aria-hidden="false"
                                                                                 aria-label="Dragable"
                                                                                 class="remove primary-foreground"
                                                                                 (click)="
@@ -1890,10 +1163,7 @@
                                                                                         i,
                                                                                         j
                                                                                     )
-                                                                                "
-                                                                                >edit</mat-icon
-                                                                            ></span
-                                                                        >
+                                                                                ">edit</mat-icon></span>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -1921,12 +1191,8 @@
                                 </button>
                             </div> -->
                                 <div class="flex justify-center my-12">
-                                    <button
-                                        mat-raised-button
-                                        color="primary"
-                                        (click)="createFlights()"
-                                        [disabled]="selectedMembers.length == 0"
-                                    >
+                                    <button mat-raised-button color="primary" (click)="createFlights()"
+                                        [disabled]="selectedMembers.length == 0">
                                         Start Tournament
                                     </button>
                                 </div>
