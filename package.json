@@ -41,6 +41,7 @@
     "apollo-link": "^1.2.11",
     "apollo-link-ws": "^1.0.17",
     "apollo-utilities": "^1.2.1",
+    "express": "^4.18.2",
     "chart.js": "^2.7.3",
     "crypto-js": "^3.3.0",
     "firebase": "^9.17.1",
