@@ -113,7 +113,7 @@ export class MainLeaderboardComponent implements OnInit {
         private route: ActivatedRoute,
         public dialog: MatDialog,
         public facadeService: FacadeService
-    ) {}
+    ) { }
 
     async ngOnInit() {
         this.getOnLoadData();
@@ -244,7 +244,7 @@ export class MainLeaderboardComponent implements OnInit {
                             if (this.loggedInUser && this.loggedInUser.userRole)
                                 if (
                                     this.loggedInUser.adminClubId ===
-                                        this.Leaderboard.clubId &&
+                                    this.Leaderboard.clubId &&
                                     this.activeRound <= this.totalRounds
                                 )
                                     this.isClubAdmin = true;
@@ -394,10 +394,10 @@ export class MainLeaderboardComponent implements OnInit {
 
                             if (
                                 this.allMatchResults[leader].AllGrossUnder >
-                                    this.cuttOffScore &&
+                                this.cuttOffScore &&
                                 this.cuttOffScore > 0 &&
                                 this.allMatchResults[leader].PlayingRound !=
-                                    this.activeRound
+                                this.activeRound
                             ) {
                                 remove = this.allMatchResults[leader];
                             }
@@ -407,8 +407,8 @@ export class MainLeaderboardComponent implements OnInit {
                             } else {
                                 if (
                                     this.activeRound -
-                                        this.allMatchResults[leader]
-                                            .PlayingRound >
+                                    this.allMatchResults[leader]
+                                        .PlayingRound >
                                     1
                                 ) {
                                     remove = this.allMatchResults[leader];
@@ -421,10 +421,10 @@ export class MainLeaderboardComponent implements OnInit {
                                     //     this.allMatchResults[leader]
                                     // );
                                     const matchResult = this.allMatchResults[leader];
-                                    grossAllArray.push({...matchResult});
-                                    this.allllll.push({...matchResult});
-                                    netAllArray.push({...matchResult});
-                                    this.net.push({...matchResult});
+                                    grossAllArray.push({ ...matchResult });
+                                    this.allllll.push({ ...matchResult });
+                                    netAllArray.push({ ...matchResult });
+                                    this.net.push({ ...matchResult });
                                     //netCutOffArray.push(this.allMatchResults[leader]);
                                 }
                             }
@@ -458,10 +458,10 @@ export class MainLeaderboardComponent implements OnInit {
                             let remove: any;
                             if (
                                 this.allMatchResults[leader].AllNetUnder >
-                                    this.cuttOffScore &&
+                                this.cuttOffScore &&
                                 this.cuttOffScore > 0 &&
                                 this.allMatchResults[leader].PlayingRound !=
-                                    this.activeRound
+                                this.activeRound
                             ) {
                                 remove = this.allMatchResults[leader];
                             }
@@ -530,10 +530,10 @@ export class MainLeaderboardComponent implements OnInit {
                     console.log(2312);
                     for (let leader in this.allMatchResults) {
                         const matchResult = this.allMatchResults[leader];
-                        grossAllArray.push({...matchResult});
-                        this.allllll.push({...matchResult});
-                        netAllArray.push({...matchResult});
-                        this.net.push({...matchResult});
+                        grossAllArray.push({ ...matchResult });
+                        this.allllll.push({ ...matchResult });
+                        netAllArray.push({ ...matchResult });
+                        this.net.push({ ...matchResult });
                     }
                     //console.log(this.activePlayers);
                 }
@@ -541,15 +541,15 @@ export class MainLeaderboardComponent implements OnInit {
                 netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllGrossLeadersTie(grossAllArray)
                         : this.allLeadersGross;
 
                 this.allLeadersNet =
                     this.net.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllNetLeadersTie(netAllArray)
                         : this.allLeadersNet; //this.allLeadersNet = this.sortNetLeaders(netAllArray);
                 this.allLeadersCutOffGross =
@@ -606,14 +606,14 @@ export class MainLeaderboardComponent implements OnInit {
                 netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllGrossLeadersTie(grossAllArray)
                         : this.allLeadersGross;
                 this.allLeadersNet =
                     this.net.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllNetLeadersTie(netAllArray)
                         : this.allLeadersNet; //this.allLeadersNet = this.sortNetLeaders(netAllArray);
 
@@ -864,7 +864,7 @@ export class MainLeaderboardComponent implements OnInit {
                     holesPlayed <= 0 ||
                     (handicap <= 0 &&
                         player.playerCategory !=
-                            enumPlayerCategory.PROFESSIONALS)
+                        enumPlayerCategory.PROFESSIONALS)
                 ) {
                     //handicap = player.getHandicap(handicapAllocation); // need to be discuss with zain bhai will it be the same as objScore.getPlayerHandicap
                     handicap = player.handicap;
@@ -925,11 +925,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
-                    playerStatus: playerStatus
-                        ? playerStatus.status
-                        : scores.length <= 0
-                        ? 'ic'
-                        : 'ac',
+                    playerStatus: this.getStatus(playerStatus),
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -980,11 +976,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
-                    playerStatus: playerStatus
-                        ? playerStatus.status
-                        : scores.length <= 0
-                        ? 'ic'
-                        : 'ac',
+                    playerStatus: this.getStatus(playerStatus),
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -998,6 +990,13 @@ export class MainLeaderboardComponent implements OnInit {
         if (this.isGross == true || this.isNet == true) {
             this.sortLeaders(this.grossLeaders);
             this.sortLeaders(this.netLeaders);
+        }
+    }
+    getStatus(playerStatus) {
+        if (playerStatus !== undefined) {
+            return playerStatus.status;
+        } else {
+            return "ac";
         }
     }
 
@@ -1081,7 +1080,7 @@ export class MainLeaderboardComponent implements OnInit {
 
         if (
             !this.allMatchResults[leaderGross.playerId][
-                'TotalGrossUnder' + round
+            'TotalGrossUnder' + round
             ]
         )
             this.allMatchResults[leaderGross.playerId][
@@ -1415,12 +1414,14 @@ export class MainLeaderboardComponent implements OnInit {
                         noOfHoles -= 2;
                     }
                 }
+                compare = leaderHoles - selfHoles;
+                if (compare != 0) {
+                    return compare;
+                }
             }
+
         }
-        compare = leaderHoles - selfHoles;
-        if (compare != 0) {
-            return compare;
-        }
+
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;
@@ -1493,12 +1494,13 @@ export class MainLeaderboardComponent implements OnInit {
                         noOfHoles -= 2;
                     }
                 }
+                compare = leaderHoles - selfHoles;
+                if (compare != 0) {
+                    return compare;
+                }
             }
         }
-        compare = leaderHoles - selfHoles;
-        if (compare != 0) {
-            return compare;
-        }
+       
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;
@@ -2986,7 +2988,7 @@ export class MainLeaderboardComponent implements OnInit {
                     holesPlayed <= 0 ||
                     (handicap <= 0 &&
                         player.playerCategory !=
-                            enumPlayerCategory.PROFESSIONALS)
+                        enumPlayerCategory.PROFESSIONALS)
                 ) {
                     //handicap = player.getHandicap(handicapAllocation); // need to be discuss with zain bhai will it be the same as objScore.getPlayerHandicap
                     handicap = player.handicap;
@@ -3557,9 +3559,9 @@ export class MainLeaderboardComponent implements OnInit {
         if (this.categoryLimit == 2) {
             return (
                 playerHandicap <
-                    this.selectedCategory.handicapLimits.upperLimitStart ||
+                this.selectedCategory.handicapLimits.upperLimitStart ||
                 playerHandicap >
-                    this.selectedCategory.handicapLimits.upperLimitEnd
+                this.selectedCategory.handicapLimits.upperLimitEnd
             );
         } else if (
             this.categoryLimit == 1 &&
@@ -3567,16 +3569,16 @@ export class MainLeaderboardComponent implements OnInit {
         ) {
             return (
                 playerHandicap <
-                    this.selectedCategory.handicapLimits.middleLimitStart ||
+                this.selectedCategory.handicapLimits.middleLimitStart ||
                 playerHandicap >
-                    this.selectedCategory.handicapLimits.middleLimitEnd
+                this.selectedCategory.handicapLimits.middleLimitEnd
             );
         } else {
             return (
                 playerHandicap <
-                    this.selectedCategory.handicapLimits.lowerLimitStart ||
+                this.selectedCategory.handicapLimits.lowerLimitStart ||
                 playerHandicap >
-                    this.selectedCategory.handicapLimits.lowerLimitEnd
+                this.selectedCategory.handicapLimits.lowerLimitEnd
             );
         }
     }
@@ -3587,11 +3589,11 @@ export class MainLeaderboardComponent implements OnInit {
         return (
             categoryData.handicapLimits.lowerLimitStart >= 0 &&
             categoryData.handicapLimits.lowerLimitEnd >
-                categoryData.handicapLimits.lowerLimitStart &&
+            categoryData.handicapLimits.lowerLimitStart &&
             categoryData.handicapLimits.upperLimitStart >
-                categoryData.handicapLimits.lowerLimitEnd &&
+            categoryData.handicapLimits.lowerLimitEnd &&
             categoryData.handicapLimits.upperLimitEnd >
-                categoryData.handicapLimits.upperLimitStart
+            categoryData.handicapLimits.upperLimitStart
         );
     }
 
@@ -3600,7 +3602,7 @@ export class MainLeaderboardComponent implements OnInit {
         return (
             categoryData.handicapLimits.middleLimitStart >= 0 &&
             categoryData.handicapLimits.middleLimitEnd >
-                categoryData.handicapLimits.middleLimitStart
+            categoryData.handicapLimits.middleLimitStart
         );
     }
 
