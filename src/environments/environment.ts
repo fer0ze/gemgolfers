@@ -5,6 +5,10 @@
 export const environment = {
     production: false,
     debugging: false,
+    apiUrl: 'https://gemgolfers-dev.hasura.app/v1/graphql',
+    wsUrl: 'wss://gemgolfers-dev.hasura.app/v1/graphql',
+    apiKey: 's9TQTbcPL4S2R1XWyZYT2MFFspNJmSkOBR4HiNPEXRFErgaEwOVf9XBU48ALjGrW',
+    defaultRole: 'admin',
     encryptSecretKey: 'prod-gemgolfers',
     firebase: {
         apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
