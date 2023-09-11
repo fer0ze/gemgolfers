@@ -8,6 +8,7 @@ import { split } from 'apollo-link';
 
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { environment } from 'environments/environment';
 //import { stringify } from '@angular/compiler/src/util';
 
 @NgModule({
@@ -17,30 +18,18 @@ import { getMainDefinition } from 'apollo-utilities';
 })
 export class GraphQLModule {
     constructor(apollo: Apollo, httpLink: HttpLink) {
-        //console.log('GraphQL');
-        const uri = 'https://gemgolfers-hasura.herokuapp.com/v1/graphql';
-        //const uri = "https://gemgolfers-hasura.hasura.app/v1/graphql";
-        //const uri = 'https://gemgolfers-hasura-stag.herokuapp.com/v1/graphql';
-        const wssuri = 'wss://gemgolfers-hasura.herokuapp.com/v1/graphql';
-        // const wssuri = "wss://gemgolfers-hasura.hasura.app/v1/graphql";
-        //const wssuri = 'wss://gemgolfers-hasura-stag.herokuapp.com/v1/graphql';
-        //const storedNames = JSON.parse(localStorage.getItem("authToken"));
-        //console.log(storedNames.user.refreshToken);
+        const uri = environment.uri;
+        const wssuri = environment.wssuri;
 
         const authHeader = new HttpHeaders()
             .set(
                 'X-Hasura-Admin-Secret',
-                'fercjqjjpgcngydvqoze'
+                environment.apiKey
             )
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${localStorage.getItem('authToken')}`)
             .set('X-Hasura-Role', 'admin')
             .set('X-Hasura-Allowed-Roles', ['admin']);
-        //.set('X-Hasura-User-Id', stringify('google-oauth2|107965524172514045377'));
-
-        //console.log(authHeader);
-        //console.log(localStorage.getItem('authToken'));
-        //console.log(localStorage.getItem('user_id'));
         const http = httpLink.create({ uri, headers: authHeader });
 
         // create Apollo
@@ -54,7 +43,7 @@ export class GraphQLModule {
                             'authToken'
                         )}`,
                         'X-Hasura-Admin-Secret':
-                            'fercjqjjpgcngydvqoze',
+                            environment.apiKey,
                         'X-Hasura-Role': 'admin',
                         'X-Hasura-Allowed-Roles': 'admin',
                     },

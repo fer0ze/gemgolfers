@@ -598,7 +598,7 @@ export const undoHandicapPlayerQL = gql`
     }
 `;
 export const updateflightMemberQL = gql`
-    mutation UpdateFlightMember($playerId: String!) {
+    mutation UpdateFlightMember($playerId: String!,$tournamentId: String!) {
         flightEndedQlA: update_flight_member(
             where: { playerId: { _eq: $playerId } }
             _set: { tee_id: 3, playingTee: "SENIORS" }

@@ -88,9 +88,9 @@ export class PlayersComponent implements OnInit {
         private _handicapServise: HandicapService,
         public dialog: MatDialog,
         private _localStorage: LocalStorageService
-    ) {}
+    ) { }
     ngOnInit(): void {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.fecthData();
         this.showTable = Promise.resolve(true);
     }
@@ -443,7 +443,7 @@ export class PlayersComponent implements OnInit {
 
             this.savePlayers = [];
             this.duplicatePlayers = [];
-            let clubMember: ClubMembership[] = [];
+            let clubMember: any[] = [];
             // for (let p of this.playersData) {
             //     let exist: any = [];
             //     if (p.membershipNumber) {
@@ -470,11 +470,31 @@ export class PlayersComponent implements OnInit {
             // console.log(this.duplicatePlayers);
             // console.log(this.savePlayers);
             for (let p of this.playersData) {
-                let update = await this._facadeService.updateflightMember(p.id);
-                if (update) {
-                    console.log('Done');
+                // let update = await this._facadeService.updateflightMember(p.id);
+                // if (update) {
+                //     console.log('Done');
+                // }
+                //await this.delay(500);
+                let member: any = {
+                    tournamentId: '-NddQacHUwjnptTHOeSP',
+                    playerId: p.id,
+                    status: true,
+                };
+                clubMember.push(member)
+            }
+            let result = <any>(
+                await this._facadeService.insertTournamentMember(clubMember)
+            );
+            if (result) {
+                {
+                    this.snackBar.open(
+                        'YOYO',
+                        'x',
+                        {
+                            duration: 3000,
+                        }
+                    );
                 }
-                await this.delay(500);
             }
             // console.log(this.duplicatePlayers);
 
