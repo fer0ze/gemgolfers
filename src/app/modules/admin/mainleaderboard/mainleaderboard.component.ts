@@ -113,7 +113,7 @@ export class MainLeaderboardComponent implements OnInit {
         private route: ActivatedRoute,
         public dialog: MatDialog,
         public facadeService: FacadeService
-    ) {}
+    ) { }
 
     async ngOnInit() {
         this.getOnLoadData();
@@ -147,132 +147,131 @@ export class MainLeaderboardComponent implements OnInit {
         //     this.clubLogo =
         //         clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
         // }
-        of(this.Leaderboard)
-            .pipe()
-            .subscribe(async (data) => {
-                this.apollo
-                    .subscribe({
-                        query: LeaderboardSubscription,
-                        variables: {
-                            tournamentPrefix: this.tournamentID,
-                        },
-                    })
-                    .subscribe(({ data }) => {
-                        if (!data) {
-                            //console.log(data);
-                        } else {
-                            let dataLeaderboard: any = data;
-                            console.log(data);
-                            //console.log(dataLeaderboard);
 
-                            this.allMatchResults = [];
-                            this.allLeadersGross = [];
-                            this.allLeadersCutOffGross = [];
-                            this.allLeadersNet = [];
-                            this.grossLeaders = [];
-                            this.netLeaders = [];
-                            this.grossAllLeaders = [];
-                            this.netAllLeaders = [];
+        this.apollo
+            .watchQuery({
+                query: LeaderboardSubscription,
+                variables: {
+                    tournamentPrefix: this.tournamentID,
+                },
+                pollInterval:10000,
+            })
+            .valueChanges.subscribe(({ data }) => {
+                if (!data) {
+                    //console.log(data);
+                } else {
+                    let dataLeaderboard: any = data;
+                    console.log(data);
+                    //console.log(dataLeaderboard);
 
-                            this.tRounds = [];
-                            this.teamMatch = false;
+                    this.allMatchResults = [];
+                    this.allLeadersGross = [];
+                    this.allLeadersCutOffGross = [];
+                    this.allLeadersNet = [];
+                    this.grossLeaders = [];
+                    this.netLeaders = [];
+                    this.grossAllLeaders = [];
+                    this.netAllLeaders = [];
 
-                            this.Leaderboard = dataLeaderboard.TournamentQL[0];
-                            if (!this.clubLogo) {
-                                this.clubLogo =
-                                    this.Leaderboard.AdminQL.membership[0].club.logo;
-                            }
-                            ////console.log(this.Leaderboard);
-                            if (this.Leaderboard.cutOffCriteria != null) {
+                    this.tRounds = [];
+                    this.teamMatch = false;
+
+                    this.Leaderboard = dataLeaderboard.TournamentQL[0];
+                    if (!this.clubLogo) {
+                        this.clubLogo =
+                            this.Leaderboard.AdminQL.membership[0].club.logo;
+                    }
+                    ////console.log(this.Leaderboard);
+                    if (this.Leaderboard.cutOffCriteria != null) {
+                        if (
+                            'cutOff' in this.Leaderboard.cutOffCriteria
+                        ) {
+                            if (this.Leaderboard.cutOffCriteria) {
                                 if (
-                                    'cutOff' in this.Leaderboard.cutOffCriteria
-                                ) {
-                                    if (this.Leaderboard.cutOffCriteria) {
-                                        if (
-                                            Object.keys(
-                                                this.Leaderboard.cutOffCriteria
-                                            ).length
-                                        )
-                                            this.cutOffList =
-                                                this.Leaderboard.cutOffCriteria;
-                                        // //console.log(this.cutOffList);
-                                        // //console.log(this.cutOffList.cutOff);
-
-                                        //console.log(this.cutOffList["cutOff"]);
-                                    }
-                                }
-                            }
-
-                            this.activeRound = this.Leaderboard.activeRound;
-                            this.totalRounds = this.Leaderboard.noOfRounds;
-                            this.matchFormat = this.Leaderboard.matchFormat;
-                            this.teamMatch = this.Leaderboard.teamMatch;
-                            if (
-                                this.matchFormat == matchFormat.TEXAS_SCRAMBLE
-                            ) {
-                                this.showTaxes = true;
-                            }
-                            if (this.matchFormat == matchFormat.BESTBALL) {
-                                this.showBestBall = true;
-                            }
-
-                            if (this.Leaderboard.webLogoUrl)
-                                this.webLogoUrl = this.Leaderboard.webLogoUrl;
-                            this.Leaderboard.CategoriesQL.sort(
-                                this.sortCategory
-                            );
-                            if (!this.selectedCategoryValue) {
-                                this.updateCategoryNames();
-                            }
-                            let count = 0;
-                            if (this.Leaderboard.CategoriesQL.length > 0) {
-                                if (!this.selectedCategoryValue) {
-                                    this.selectedCategory =
-                                        this.Leaderboard.CategoriesQL.find(
-                                            (a) => {
-                                                this.selectedIndex = count;
-                                                count++;
-
-                                                return a.default == true;
-                                            }
-                                        );
-                                    this.selectedCategoryValue =
-                                        this.selectedCategory.category;
-                                }
-                            }
-
-                            if (this.loggedInUser && this.loggedInUser.userRole)
-                                if (
-                                    this.loggedInUser.adminClubId ===
-                                        this.Leaderboard.clubId &&
-                                    this.activeRound <= this.totalRounds
+                                    Object.keys(
+                                        this.Leaderboard.cutOffCriteria
+                                    ).length
                                 )
-                                    this.isClubAdmin = true;
+                                    this.cutOffList =
+                                        this.Leaderboard.cutOffCriteria;
+                                // //console.log(this.cutOffList);
+                                // //console.log(this.cutOffList.cutOff);
 
-                            //console.log(this.Leaderboard);
-
-                            if (this.tRounds.length >= 0) {
-                                for (
-                                    let round = 1;
-                                    round <= this.Leaderboard.noOfRounds;
-                                    round++
-                                ) {
-                                    let r: any = {
-                                        Text: 'Round ' + round,
-                                        Value: round,
-                                    };
-                                    this.tRounds.push(r);
-                                }
+                                //console.log(this.cutOffList["cutOff"]);
                             }
-
-                            this.selectedSubTournament = this.tournamentID;
-
-                            this.parseSubscriptionResponse(this.Leaderboard);
-
-                            //resolve(data);
                         }
-                    });
+                    }
+
+                    this.activeRound = this.Leaderboard.activeRound;
+                    this.totalRounds = this.Leaderboard.noOfRounds;
+                    this.matchFormat = this.Leaderboard.matchFormat;
+                    this.teamMatch = this.Leaderboard.teamMatch;
+                    if (
+                        this.matchFormat == matchFormat.TEXAS_SCRAMBLE
+                    ) {
+                        this.showTaxes = true;
+                    }
+                    if (this.matchFormat == matchFormat.BESTBALL) {
+                        this.showBestBall = true;
+                    }
+
+                    if (this.Leaderboard.webLogoUrl)
+                        this.webLogoUrl = this.Leaderboard.webLogoUrl;
+                    this.Leaderboard.CategoriesQL.sort(
+                        this.sortCategory
+                    );
+                    if (!this.selectedCategoryValue) {
+                        this.updateCategoryNames();
+                    }
+                    let count = 0;
+                    if (this.Leaderboard.CategoriesQL.length > 0) {
+                        if (!this.selectedCategoryValue) {
+                            this.selectedCategory =
+                                this.Leaderboard.CategoriesQL.find(
+                                    (a) => {
+                                        this.selectedIndex = count;
+                                        count++;
+
+                                        return a.default == true;
+                                    }
+                                );
+                            this.selectedCategoryValue =
+                                this.selectedCategory.category;
+                        }
+                    }
+
+                    if (this.loggedInUser && this.loggedInUser.userRole)
+                        if (
+                            this.loggedInUser.adminClubId ===
+                            this.Leaderboard.clubId &&
+                            this.activeRound <= this.totalRounds
+                        )
+                            this.isClubAdmin = true;
+
+                    //console.log(this.Leaderboard);
+
+                    if (this.tRounds.length >= 0) {
+                        for (
+                            let round = 1;
+                            round <= this.Leaderboard.noOfRounds;
+                            round++
+                        ) {
+                            let r: any = {
+                                Text: 'Round ' + round,
+                                Value: round,
+                            };
+                            this.tRounds.push(r);
+                        }
+                    }
+
+                    this.selectedSubTournament = this.tournamentID;
+
+                    this.parseSubscriptionResponse(this.Leaderboard);
+
+                    //resolve(data);
+                }
             });
+
     }
     private parseSubscriptionResponse(data: any): boolean {
         this.isLoading = false;
@@ -394,10 +393,10 @@ export class MainLeaderboardComponent implements OnInit {
 
                             if (
                                 this.allMatchResults[leader].AllGrossUnder >
-                                    this.cuttOffScore &&
+                                this.cuttOffScore &&
                                 this.cuttOffScore > 0 &&
                                 this.allMatchResults[leader].PlayingRound !=
-                                    this.activeRound
+                                this.activeRound
                             ) {
                                 remove = this.allMatchResults[leader];
                             }
@@ -407,8 +406,8 @@ export class MainLeaderboardComponent implements OnInit {
                             } else {
                                 if (
                                     this.activeRound -
-                                        this.allMatchResults[leader]
-                                            .PlayingRound >
+                                    this.allMatchResults[leader]
+                                        .PlayingRound >
                                     1
                                 ) {
                                     remove = this.allMatchResults[leader];
@@ -421,10 +420,10 @@ export class MainLeaderboardComponent implements OnInit {
                                     //     this.allMatchResults[leader]
                                     // );
                                     const matchResult = this.allMatchResults[leader];
-                                    grossAllArray.push({...matchResult});
-                                    this.allllll.push({...matchResult});
-                                    netAllArray.push({...matchResult});
-                                    this.net.push({...matchResult});
+                                    grossAllArray.push({ ...matchResult });
+                                    this.allllll.push({ ...matchResult });
+                                    netAllArray.push({ ...matchResult });
+                                    this.net.push({ ...matchResult });
                                     //netCutOffArray.push(this.allMatchResults[leader]);
                                 }
                             }
@@ -458,10 +457,10 @@ export class MainLeaderboardComponent implements OnInit {
                             let remove: any;
                             if (
                                 this.allMatchResults[leader].AllNetUnder >
-                                    this.cuttOffScore &&
+                                this.cuttOffScore &&
                                 this.cuttOffScore > 0 &&
                                 this.allMatchResults[leader].PlayingRound !=
-                                    this.activeRound
+                                this.activeRound
                             ) {
                                 remove = this.allMatchResults[leader];
                             }
@@ -530,10 +529,10 @@ export class MainLeaderboardComponent implements OnInit {
                     console.log(2312);
                     for (let leader in this.allMatchResults) {
                         const matchResult = this.allMatchResults[leader];
-                        grossAllArray.push({...matchResult});
-                        this.allllll.push({...matchResult});
-                        netAllArray.push({...matchResult});
-                        this.net.push({...matchResult});
+                        grossAllArray.push({ ...matchResult });
+                        this.allllll.push({ ...matchResult });
+                        netAllArray.push({ ...matchResult });
+                        this.net.push({ ...matchResult });
                     }
                     //console.log(this.activePlayers);
                 }
@@ -541,15 +540,15 @@ export class MainLeaderboardComponent implements OnInit {
                 netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllGrossLeadersTie(grossAllArray)
                         : this.allLeadersGross;
 
                 this.allLeadersNet =
                     this.net.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllNetLeadersTie(netAllArray)
                         : this.allLeadersNet; //this.allLeadersNet = this.sortNetLeaders(netAllArray);
                 this.allLeadersCutOffGross =
@@ -606,14 +605,14 @@ export class MainLeaderboardComponent implements OnInit {
                 netAllArray.sort(this.ComparatorAllNet);
                 this.allLeadersGross =
                     this.allllll.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllGrossLeadersTie(grossAllArray)
                         : this.allLeadersGross;
                 this.allLeadersNet =
                     this.net.length > 0 ||
-                    this.cuttOffScore > 0 ||
-                    !this.cutOffList
+                        this.cuttOffScore > 0 ||
+                        !this.cutOffList
                         ? this.sortAllNetLeadersTie(netAllArray)
                         : this.allLeadersNet; //this.allLeadersNet = this.sortNetLeaders(netAllArray);
 
@@ -864,7 +863,7 @@ export class MainLeaderboardComponent implements OnInit {
                     holesPlayed <= 0 ||
                     (handicap <= 0 &&
                         player.playerCategory !=
-                            enumPlayerCategory.PROFESSIONALS)
+                        enumPlayerCategory.PROFESSIONALS)
                 ) {
                     //handicap = player.getHandicap(handicapAllocation); // need to be discuss with zain bhai will it be the same as objScore.getPlayerHandicap
                     handicap = player.handicap;
@@ -925,11 +924,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
-                    playerStatus: playerStatus
-                        ? playerStatus.status
-                        : scores.length <= 0
-                        ? 'ic'
-                        : 'ac',
+                    playerStatus: this.getStatus(playerStatus),
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -980,11 +975,7 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
-                    playerStatus: playerStatus
-                        ? playerStatus.status
-                        : scores.length <= 0
-                        ? 'ic'
-                        : 'ac',
+                    playerStatus: this.getStatus(playerStatus),
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -998,6 +989,13 @@ export class MainLeaderboardComponent implements OnInit {
         if (this.isGross == true || this.isNet == true) {
             this.sortLeaders(this.grossLeaders);
             this.sortLeaders(this.netLeaders);
+        }
+    }
+    getStatus(playerStatus) {
+        if (playerStatus !== undefined) {
+            return playerStatus.status;
+        } else {
+            return "ac";
         }
     }
 
@@ -1081,7 +1079,7 @@ export class MainLeaderboardComponent implements OnInit {
 
         if (
             !this.allMatchResults[leaderGross.playerId][
-                'TotalGrossUnder' + round
+            'TotalGrossUnder' + round
             ]
         )
             this.allMatchResults[leaderGross.playerId][
@@ -1415,12 +1413,14 @@ export class MainLeaderboardComponent implements OnInit {
                         noOfHoles -= 2;
                     }
                 }
+                compare = leaderHoles - selfHoles;
+                if (compare != 0) {
+                    return compare;
+                }
             }
+
         }
-        compare = leaderHoles - selfHoles;
-        if (compare != 0) {
-            return compare;
-        }
+
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;
@@ -1493,12 +1493,13 @@ export class MainLeaderboardComponent implements OnInit {
                         noOfHoles -= 2;
                     }
                 }
+                compare = leaderHoles - selfHoles;
+                if (compare != 0) {
+                    return compare;
+                }
             }
         }
-        compare = leaderHoles - selfHoles;
-        if (compare != 0) {
-            return compare;
-        }
+
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;
@@ -2986,7 +2987,7 @@ export class MainLeaderboardComponent implements OnInit {
                     holesPlayed <= 0 ||
                     (handicap <= 0 &&
                         player.playerCategory !=
-                            enumPlayerCategory.PROFESSIONALS)
+                        enumPlayerCategory.PROFESSIONALS)
                 ) {
                     //handicap = player.getHandicap(handicapAllocation); // need to be discuss with zain bhai will it be the same as objScore.getPlayerHandicap
                     handicap = player.handicap;
@@ -3557,9 +3558,9 @@ export class MainLeaderboardComponent implements OnInit {
         if (this.categoryLimit == 2) {
             return (
                 playerHandicap <
-                    this.selectedCategory.handicapLimits.upperLimitStart ||
+                this.selectedCategory.handicapLimits.upperLimitStart ||
                 playerHandicap >
-                    this.selectedCategory.handicapLimits.upperLimitEnd
+                this.selectedCategory.handicapLimits.upperLimitEnd
             );
         } else if (
             this.categoryLimit == 1 &&
@@ -3567,16 +3568,16 @@ export class MainLeaderboardComponent implements OnInit {
         ) {
             return (
                 playerHandicap <
-                    this.selectedCategory.handicapLimits.middleLimitStart ||
+                this.selectedCategory.handicapLimits.middleLimitStart ||
                 playerHandicap >
-                    this.selectedCategory.handicapLimits.middleLimitEnd
+                this.selectedCategory.handicapLimits.middleLimitEnd
             );
         } else {
             return (
                 playerHandicap <
-                    this.selectedCategory.handicapLimits.lowerLimitStart ||
+                this.selectedCategory.handicapLimits.lowerLimitStart ||
                 playerHandicap >
-                    this.selectedCategory.handicapLimits.lowerLimitEnd
+                this.selectedCategory.handicapLimits.lowerLimitEnd
             );
         }
     }
@@ -3587,11 +3588,11 @@ export class MainLeaderboardComponent implements OnInit {
         return (
             categoryData.handicapLimits.lowerLimitStart >= 0 &&
             categoryData.handicapLimits.lowerLimitEnd >
-                categoryData.handicapLimits.lowerLimitStart &&
+            categoryData.handicapLimits.lowerLimitStart &&
             categoryData.handicapLimits.upperLimitStart >
-                categoryData.handicapLimits.lowerLimitEnd &&
+            categoryData.handicapLimits.lowerLimitEnd &&
             categoryData.handicapLimits.upperLimitEnd >
-                categoryData.handicapLimits.upperLimitStart
+            categoryData.handicapLimits.upperLimitStart
         );
     }
 
@@ -3600,7 +3601,7 @@ export class MainLeaderboardComponent implements OnInit {
         return (
             categoryData.handicapLimits.middleLimitStart >= 0 &&
             categoryData.handicapLimits.middleLimitEnd >
-                categoryData.handicapLimits.middleLimitStart
+            categoryData.handicapLimits.middleLimitStart
         );
     }
 

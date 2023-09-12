@@ -6,24 +6,24 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Constants } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
-    selector     : 'auth-sign-in',
-    templateUrl  : './sign-in.component.html',
+    selector: 'auth-sign-in',
+    templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class AuthSignInComponent implements OnInit
-{
+export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
         message: ''
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
-    loggedInuser:any;
+    loggedInuser: any;
 
     /**
      * Constructor
@@ -33,9 +33,9 @@ export class AuthSignInComponent implements OnInit
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
-        private _localStorage: LocalStorageService
-    )
-    {
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -45,12 +45,11 @@ export class AuthSignInComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            email     : ['', [Validators.required, Validators.email]],
-            password  : ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required],
             rememberMe: ['']
         });
     }
@@ -62,11 +61,9 @@ export class AuthSignInComponent implements OnInit
     /**
      * Sign in
      */
-    signIn(): void
-    {
+    signIn(): void {
         // Return if the form is invalid
-        if ( this.signInForm.invalid )
-        {
+        if (this.signInForm.invalid) {
             return;
         }
 
@@ -75,6 +72,13 @@ export class AuthSignInComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
+        let body = {
+            username: this.signInForm.value.email,
+            userid: "",
+            firebaseUid: "",
+            additionalData:navigator.userAgent,
+        }
+        this.logger.log('User Logging In', "info", body);
 
         // Sign in
         this._authService.signIn(this.signInForm.value)
@@ -88,12 +92,19 @@ export class AuthSignInComponent implements OnInit
                     const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
                     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
                     // Navigate to the redirect url\
-                    
-                    if (this.loggedInuser.userRole === 8){
+                    let body = {
+                        username: this.signInForm.value.email,
+                        userid: this.loggedInuser.id,
+                        firebaseUid: this.loggedInuser.firebaseUid,
+                        additionalData:  navigator.userAgent,
+                    }
+                    this.logger.log('User Logged In Succesfully', "info", body);
+
+                    if (this.loggedInuser.userRole === 8) {
                         this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
                             console.error('Navigation error:', error);
                         });
-                    }else{
+                    } else {
                         this._router.navigateByUrl('/dashboard').catch((error) => {
                             console.error('Navigation error:', error);
                         });
@@ -110,7 +121,7 @@ export class AuthSignInComponent implements OnInit
 
                     // Set the alert
                     this.alert = {
-                        type   : 'error',
+                        type: 'error',
                         message: 'Wrong email or password'
                     };
 

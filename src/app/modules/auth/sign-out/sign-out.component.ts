@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector     : 'auth-sign-out',
@@ -22,7 +23,8 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
      */
     constructor(
         private _authService: AuthService,
-        private _router: Router
+        private _router: Router,
+        private logger: LogsService
     )
     {
     }
@@ -43,6 +45,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
         timer(1000, 1000)
             .pipe(
                 finalize(() => {
+                   // this.logger.log('User Logged Out Succesfully');
                     this._router.navigate(['sign-in']);
                 }),
                 takeWhile(() => this.countdown > 0),

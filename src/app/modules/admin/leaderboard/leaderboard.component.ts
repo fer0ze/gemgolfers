@@ -40,7 +40,7 @@ import { DialogPlayerScoreComponent } from "../dialogs/dialog-player-score/dialo
 export class LeaderboardComponent implements OnInit {
 
   @Input()
-	tournamentID: string;
+  tournamentID: string;
   // private tournamentID: string;
   Leaderboard: any;
   clubLogo: any;
@@ -117,7 +117,7 @@ export class LeaderboardComponent implements OnInit {
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
     public facadeService: FacadeService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.getOnLoadData();
@@ -138,110 +138,102 @@ export class LeaderboardComponent implements OnInit {
     //   this.tournamentID = "-M-PqnixdM3LFf7cnoPp";
     // else {}
 
-    this.loggedInUser = JSON.parse(
-      localStorage.getItem(Constants.LOGGED_IN_USER)
-    );
-
     ////console.log(this.loggedInUser);
 
-    of(this.Leaderboard)
-      .pipe()
-      .subscribe(async (data) => {
-        this.apollo
-          .subscribe({
-            query: Query.LeaderboardSubscription,
-            variables: {
-              tournamentPrefix: this.tournamentID,
-            },
-          })
-          .subscribe(({ data }) => {
-            if (!data) {
-              //console.log(data);
-            } else {
-              let dataLeaderboard: any = data;
-              //console.log(data);
-              //console.log(dataLeaderboard);
 
-              this.allMatchResults = [];
-              this.allLeadersGross = [];
-              this.allLeadersCutOffGross = [];
-              this.allLeadersNet = [];
-              this.grossLeaders = [];
-              this.netLeaders = [];
-              this.grossAllLeaders = [];
-              this.netAllLeaders = [];
+    this.apollo
+      .watchQuery({
+        query: Query.LeaderboardSubscription,
+        variables: {
+          tournamentPrefix: this.tournamentID,
+          
+        },
+        pollInterval:20000,
+        
+      })
+      .valueChanges.subscribe(({ data }) => {
+        if (!data) {
+          //console.log(data);
+        } else {
+          let dataLeaderboard: any = data;
+          //console.log(data);
+          //console.log(dataLeaderboard);
 
-              this.tRounds = [];
-              this.teamMatch = false;
-              
+          this.allMatchResults = [];
+          this.allLeadersGross = [];
+          this.allLeadersCutOffGross = [];
+          this.allLeadersNet = [];
+          this.grossLeaders = [];
+          this.netLeaders = [];
+          this.grossAllLeaders = [];
+          this.netAllLeaders = [];
 
-              this.Leaderboard = dataLeaderboard.TournamentQL[0];
-              ////console.log(this.Leaderboard);
-              if (this.Leaderboard.cutOffCriteria != null) {
-                if ("cutOff" in this.Leaderboard.cutOffCriteria) {
-                  if (this.Leaderboard.cutOffCriteria) {
-                    if (Object.keys(this.Leaderboard.cutOffCriteria).length)
-                      this.cutOffList = this.Leaderboard.cutOffCriteria;
-                    // //console.log(this.cutOffList);
-                    // //console.log(this.cutOffList.cutOff);
+          this.tRounds = [];
+          this.teamMatch = false;
 
-                    //console.log(this.cutOffList["cutOff"]);
-                  }
-                }
+
+          this.Leaderboard = dataLeaderboard.TournamentQL[0];
+          ////console.log(this.Leaderboard);
+          if (this.Leaderboard.cutOffCriteria != null) {
+            if ("cutOff" in this.Leaderboard.cutOffCriteria) {
+              if (this.Leaderboard.cutOffCriteria) {
+                if (Object.keys(this.Leaderboard.cutOffCriteria).length)
+                  this.cutOffList = this.Leaderboard.cutOffCriteria;
+                // //console.log(this.cutOffList);
+                // //console.log(this.cutOffList.cutOff);
+
+                //console.log(this.cutOffList["cutOff"]);
               }
-
-              
-              this.activeRound = this.Leaderboard.activeRound;
-              this.totalRounds = this.Leaderboard.noOfRounds;
-              this.matchFormat = this.Leaderboard.matchFormat;
-              this.teamMatch = this.Leaderboard.teamMatch;
-              if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-                this.showTaxes = true;
-              }
-
-              if (this.Leaderboard.webLogoUrl)
-                this.webLogoUrl = this.Leaderboard.webLogoUrl;
-              this.Leaderboard.CategoriesQL.sort(this.sortCategory);
-              if (this.Leaderboard.CategoriesQL.length > 0) {
-                this.selectedCategory = this.Leaderboard.CategoriesQL[0];
-
-                if (!this.selectedCategoryValue)
-                  this.selectedCategoryValue = this.selectedCategory.category;
-              }
-
-              if (this.loggedInUser && this.loggedInUser.userRole)
-                if (
-                  this.loggedInUser.adminClubId === this.Leaderboard.clubId &&
-                  this.activeRound <= this.totalRounds
-                )
-                  this.isClubAdmin = true;
-
-              //console.log(this.Leaderboard);
-
-              if (this.tRounds.length >= 0) {
-                for (
-                  let round = 1;
-                  round <= this.Leaderboard.noOfRounds;
-                  round++
-                ) {
-                  let r: any = {
-                    Text: "Round " + round,
-                    Value: round,
-                  };
-                  this.tRounds.push(r);
-                }
-              }
-
-              this.selectedSubTournament = this.tournamentID;
-
-              this.parseSubscriptionResponse(this.Leaderboard);
-
-              this.updateCategoryNames();
-              //resolve(data);
-              this.isLoading = true;
             }
-          });
+          }
+
+
+          this.activeRound = this.Leaderboard.activeRound;
+          this.totalRounds = this.Leaderboard.noOfRounds;
+          this.matchFormat = this.Leaderboard.matchFormat;
+          this.teamMatch = this.Leaderboard.teamMatch;
+          if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+            this.showTaxes = true;
+          }
+
+          if (this.Leaderboard.webLogoUrl)
+            this.webLogoUrl = this.Leaderboard.webLogoUrl;
+          this.Leaderboard.CategoriesQL.sort(this.sortCategory);
+          if (this.Leaderboard.CategoriesQL.length > 0) {
+            this.selectedCategory = this.Leaderboard.CategoriesQL[0];
+
+            if (!this.selectedCategoryValue)
+              this.selectedCategoryValue = this.selectedCategory.category;
+          }
+
+
+
+          //console.log(this.Leaderboard);
+
+          if (this.tRounds.length >= 0) {
+            for (
+              let round = 1;
+              round <= this.Leaderboard.noOfRounds;
+              round++
+            ) {
+              let r: any = {
+                Text: "Round " + round,
+                Value: round,
+              };
+              this.tRounds.push(r);
+            }
+          }
+
+          this.selectedSubTournament = this.tournamentID;
+
+          this.parseSubscriptionResponse(this.Leaderboard);
+
+          this.updateCategoryNames();
+          //resolve(data);
+          this.isLoading = true;
+        }
       });
+
   }
   private parseSubscriptionResponse(data: any): boolean {
     if (data == null) {
@@ -356,7 +348,7 @@ export class LeaderboardComponent implements OnInit {
       if (this.Leaderboard.cutOffCriteria != null) {
         if ("cutOff" in this.Leaderboard.cutOffCriteria) {
           if (
-            this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
+            this.Leaderboard.cutOffCriteria.cutOff.length > 0 && this.cutOffLine.score > 0 &&
             this.cutOffLine.type == "GROSS" &&
             this.cutOffLine.copymembers == null
           ) {
@@ -368,7 +360,7 @@ export class LeaderboardComponent implements OnInit {
 
                 if (
                   this.allMatchResults[leader].AllGrossUnder >
-                    this.cuttOffScore &&
+                  this.cuttOffScore &&
                   this.cuttOffScore > 0 &&
                   this.allMatchResults[leader].PlayingRound != this.activeRound
                 ) {
@@ -380,7 +372,7 @@ export class LeaderboardComponent implements OnInit {
                 } else {
                   if (
                     this.activeRound -
-                      this.allMatchResults[leader].PlayingRound >
+                    this.allMatchResults[leader].PlayingRound >
                     1
                   ) {
                     remove = this.allMatchResults[leader];
@@ -410,7 +402,7 @@ export class LeaderboardComponent implements OnInit {
               }
             }
           } else if (
-            this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
+            this.Leaderboard.cutOffCriteria.cutOff.length > 0 && this.cutOffLine.score > 0 &&
             this.cutOffLine.type == "NET" &&
             this.cutOffLine.copymembers == null
           ) {
@@ -419,7 +411,7 @@ export class LeaderboardComponent implements OnInit {
                 let remove: any;
                 if (
                   this.allMatchResults[leader].AllNetUnder >
-                    this.cuttOffScore &&
+                  this.cuttOffScore &&
                   this.cuttOffScore > 0 &&
                   this.allMatchResults[leader].PlayingRound != this.activeRound
                 ) {
@@ -457,7 +449,7 @@ export class LeaderboardComponent implements OnInit {
                 this.net.push(this.allMatchResults[leader]);
               }
             }
-          } else if ( this.cutOffList["cutOff"].length >0 && this.cutOffLine.copymembers > 0) {
+          } else if (this.cutOffList["cutOff"].length > 0 && this.cutOffLine.copymembers > 0) {
             for (let leader in this.allMatchResults) {
               let remove: any;
               if (this.checkRoundCut(this.allMatchResults[leader]) == true) {
@@ -874,7 +866,7 @@ export class LeaderboardComponent implements OnInit {
           tied: false,
           courseId: flightData.courseId,
           holeSets: flightData.courseHoleSets,
-          holeSetsInverted:flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted:false,
+          holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
           playerId: playerId,
           name: name,
           picture: picture,
@@ -897,7 +889,7 @@ export class LeaderboardComponent implements OnInit {
         };
 
         this.grossLeaders.push(LeaderGross);
-        console.log("Gross:"+this.grossLeaders);
+        console.log("Gross:" + this.grossLeaders);
 
         this.grossAllLeaders.push(LeaderGross);
         //console.log(this.grossAllLeaders);
@@ -908,7 +900,7 @@ export class LeaderboardComponent implements OnInit {
           playerId: playerId,
           courseId: flightData.courseId,
           holeSets: flightData.courseHoleSets,
-          holeSetsInverted:flightData.courseHoleSetsInverted?flightData.courseHoleSetsInverted:false,
+          holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
           name: name,
           picture: picture,
           handicap: handicap,
@@ -1750,7 +1742,7 @@ export class LeaderboardComponent implements OnInit {
       if (item.tab.textLabel.search('#') == -1) {
         originalCategory = item.tab.textLabel;
       } else {
-          let splitted = item.tab.textLabel.split('#', 3);
+        let splitted = item.tab.textLabel.split('#', 3);
         originalCategory = splitted[0];
         this.categoryLimit = splitted[1];
       }
@@ -1772,7 +1764,7 @@ export class LeaderboardComponent implements OnInit {
       if (item.tab.textLabel.search('#') == -1) {
         originalCategory = item.tab.textLabel;
       } else {
-          let splitted = item.tab.textLabel.split('#', 3);
+        let splitted = item.tab.textLabel.split('#', 3);
         originalCategory = splitted[0];
         this.categoryLimit = splitted[1];
       }
@@ -2008,7 +2000,7 @@ export class LeaderboardComponent implements OnInit {
     courseId: string,
     courseHoleSets: string,
     playerId: string,
-    holeSetsInverted:string,
+    holeSetsInverted: string,
     scoreType: string
   ) {
     let playerGrossScore: any;
@@ -2064,7 +2056,7 @@ export class LeaderboardComponent implements OnInit {
           course: courseId,
           players: playerPerTeam[0]["MembersQL"],
           holeSets: courseHoleSets,
-          courseHoleSetsInverted:holeSetsInverted,
+          courseHoleSetsInverted: holeSetsInverted,
           allGross: playerGrossScore,
           allNet: playerNetScore,
           round: this.flightRound,
@@ -2079,7 +2071,7 @@ export class LeaderboardComponent implements OnInit {
           course: courseId,
           holeSets: courseHoleSets,
           allGross: playerGrossScore,
-          courseHoleSetsInverted:holeSetsInverted,
+          courseHoleSetsInverted: holeSetsInverted,
           allNet: playerNetScore,
           round: this.flightRound,
           type: scoreType,
@@ -2201,8 +2193,8 @@ export class LeaderboardComponent implements OnInit {
           //console.log(hole);
 
           if (hole) {
-            playerHole18ScoreGross[i ] = hole.grossScore;
-            playerHole18ScoreNet[i ] = hole.netScore;
+            playerHole18ScoreGross[i] = hole.grossScore;
+            playerHole18ScoreNet[i] = hole.netScore;
           } else {
             playerHole18ScoreGross[i] = 0;
             playerHole18ScoreNet[i] = 0;
@@ -2244,7 +2236,7 @@ export class LeaderboardComponent implements OnInit {
         playerId: flightData.id,
         name: name,
         holeSets: flightData.courseHoleSets,
-        holeSetsInverted:flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted:false,
+        holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
         picture: "",
         handicap: scoreHandicap,
         score: grossTotal,
@@ -2282,7 +2274,7 @@ export class LeaderboardComponent implements OnInit {
         holeSets: flightData.courseHoleSets,
         name: name,
         picture: "",
-        holeSetsInverted:flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted:false,
+        holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
         handicap: scoreHandicap,
         score: netTotal,
         type: LeaderType.NET,
@@ -3387,7 +3379,7 @@ export class LeaderboardComponent implements OnInit {
     ) {
       return (
         playerHandicap <
-          this.selectedCategory.handicapLimits.middleLimitStart ||
+        this.selectedCategory.handicapLimits.middleLimitStart ||
         playerHandicap > this.selectedCategory.handicapLimits.middleLimitEnd
       );
     } else {
@@ -3404,11 +3396,11 @@ export class LeaderboardComponent implements OnInit {
     return (
       categoryData.handicapLimits.lowerLimitStart >= 0 &&
       categoryData.handicapLimits.lowerLimitEnd >
-        categoryData.handicapLimits.lowerLimitStart &&
+      categoryData.handicapLimits.lowerLimitStart &&
       categoryData.handicapLimits.upperLimitStart >
-        categoryData.handicapLimits.lowerLimitEnd &&
+      categoryData.handicapLimits.lowerLimitEnd &&
       categoryData.handicapLimits.upperLimitEnd >
-        categoryData.handicapLimits.upperLimitStart
+      categoryData.handicapLimits.upperLimitStart
     );
   }
 
@@ -3417,7 +3409,7 @@ export class LeaderboardComponent implements OnInit {
     return (
       categoryData.handicapLimits.middleLimitStart >= 0 &&
       categoryData.handicapLimits.middleLimitEnd >
-        categoryData.handicapLimits.middleLimitStart
+      categoryData.handicapLimits.middleLimitStart
     );
   }
 

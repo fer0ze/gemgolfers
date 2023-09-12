@@ -518,6 +518,8 @@ export const getPlayerByEmailLogin = gql`
             id
             adminClubId
             firstName
+            email 
+            firebaseUid
             lastName
             fullName
             userRole
