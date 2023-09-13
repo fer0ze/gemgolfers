@@ -3,17 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import * as Query from '../../../../shared/GraphQL/tournament.gql';
+import { Constants } from 'app/shared/classes/general';
+import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ProjectService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+    loggedInuser: any;
 
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient, private apollo: Apollo) {}
+    constructor(private _httpClient: HttpClient, private apollo: Apollo, private _localStorage: LocalStorageService, private logger: LogsService) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -39,36 +43,46 @@ export class ProjectService {
         fromDate?: any,
         toDate?: any
     ): Observable<any> {
-        if (id) {
-            return this.apollo
-                .subscribe<any>({
-                    query: Query.getallDashboard,
-                    variables: {
-                        adminId: id,
-                        adminClubId: clubId,
-                        fromDate: fromDate,
-                        toDate: toDate,
-                    },
-                })
-                .pipe(
-                    tap((response: any) => {
-                        this._data.next(response);
+        try {
+            if (id) {
+                return this.apollo
+                    .subscribe<any>({
+                        query: Query.getallDashboard,
+                        variables: {
+                            adminId: id,
+                            adminClubId: clubId,
+                            fromDate: fromDate,
+                            toDate: toDate,
+                        },
                     })
-                );
-        } else {
-            return this.apollo
-                .subscribe<any>({
-                    query: Query.getAllAdmin,
-                    variables: {
-                        fromDate: fromDate,
-                        toDate: toDate,
-                    },
-                })
-                .pipe(
-                    tap((response: any) => {
-                        this._data.next(response);
+                    .pipe(
+                        tap((response: any) => {
+                            this.logger.log('Getting Dashboard Data Successfull', "info");
+                            this._data.next(response);
+                        })
+                    );
+            } else {
+                return this.apollo
+                    .subscribe<any>({
+                        query: Query.getAllAdmin,
+                        variables: {
+                            fromDate: fromDate,
+                            toDate: toDate,
+                        },
                     })
-                );
+                    .pipe(
+                        tap((response: any) => {
+                            this.logger.log('Getting Dashboard Data Successfull', "info");
+                            this._data.next(response);
+                        })
+                    );
+            }
+        } catch (error) {
+            // Handle the error here or re-throw it if necessary
+            console.error('An error occurred:', error);
+            this.logger.log('Getting Dashboard Data Failed', "error", error.toString());
+            throw error;
         }
     }
+
 }

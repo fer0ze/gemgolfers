@@ -72,13 +72,7 @@ export class AuthSignInComponent implements OnInit {
 
         // Hide the alert
         this.showAlert = false;
-        let body = {
-            username: this.signInForm.value.email,
-            userid: "",
-            firebaseUid: "",
-            additionalData:navigator.userAgent,
-        }
-        this.logger.log('User Logging In', "info", body);
+        this.logger.log('User Logging In', "info");
 
         // Sign in
         this._authService.signIn(this.signInForm.value)
@@ -92,13 +86,8 @@ export class AuthSignInComponent implements OnInit {
                     const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
                     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
                     // Navigate to the redirect url\
-                    let body = {
-                        username: this.signInForm.value.email,
-                        userid: this.loggedInuser.id,
-                        firebaseUid: this.loggedInuser.firebaseUid,
-                        additionalData:  navigator.userAgent,
-                    }
-                    this.logger.log('User Logged In Succesfully', "info", body);
+
+                    this.logger.log('User Logged In Succesfully', "info");
 
                     if (this.loggedInuser.userRole === 8) {
                         this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
@@ -124,6 +113,8 @@ export class AuthSignInComponent implements OnInit {
                         type: 'error',
                         message: 'Wrong email or password'
                     };
+                    this.logger.log('User Logging In Failed', "error", "Wrong email or password");
+
 
                     // Show the alert
                     this.showAlert = true;

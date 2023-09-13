@@ -2,31 +2,42 @@ import { Injectable } from '@angular/core';
 //import { environment } from '../../../environments/environment';
 import { Apollo } from 'apollo-angular';
 import * as Query from '../GraphQL/log.gql';
+import { LocalStorageService } from './localStorage';
+import { Constants } from '../classes/general';
+import { add } from 'lodash';
 @Injectable({
   providedIn: 'root',
 })
-
 export class LogsService {
-  constructor(private apollo: Apollo) { }
-  log(msg: any, level: any, body: any) {
+  loggedInuser: any;
+  constructor(
+    private apollo: Apollo,
+    private _localStorage: LocalStorageService,
+  ) { }
+  log(msg: any, level: any, additionalData: any = "") {
+    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     console.log(msg);
+    console.log(level);
+    console.log(additionalData);
 
-    this.apollo.query({
-      query: Query.LogQL,
-      variables: {
-        request: {
-          name: "Actify-Leads-Angular",
-          message: msg,
-          level: level,
-          body: {
-            username: body.username,
-            userid: body.userid,
-            firebaseUid: body.firebaseUid,
-            additionalData: body.additionalData,
-          }
-        }
-      }
-    }).subscribe();
+    this.apollo
+      .query({
+        query: Query.LogQL,
+        variables: {
+          request: {
+            name: 'Actify-Leads-Angular',
+            message: msg,
+            level: level,
+            body: {
+              userId: this.loggedInuser && this.loggedInuser.id ? this.loggedInuser.id : '',
+              email: this.loggedInuser && this.loggedInuser.email ? this.loggedInuser.email : '',
+              additionalData: additionalData,
+              clientSideData: navigator.userAgent,
+            },
+          },
+        },
+      })
+      .subscribe();
   }
 
   logObject(object: any) {

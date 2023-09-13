@@ -2780,7 +2780,7 @@ export class LeaderboardComponent implements OnInit {
       ////console.log(bestThreeUnder);
       ////console.log(bestThreeUnder.reduce((a, b) => a + b));
 
-      // const result = roles.filter(role => role.groups.find(group => user.groups.includes(group.id)));
+      // const result = roles.filter(role => role.flights.find(group => user.flights.includes(group.id)));
       // //console.log(result);
 
       ////console.log(bestThree);

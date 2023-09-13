@@ -10,6 +10,7 @@ import { ProjectService } from 'app/modules/admin/dashboards/project/project.ser
 import { Constants } from 'app/shared/classes/general';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,8 +23,9 @@ export class ProjectResolver implements Resolve<any> {
     constructor(
         private _projectService: ProjectService,
         private _datePipe: DatePipe, private _localStorage: LocalStorageService, private _router: Router,
+        private logger: LogsService
     ) {
-        
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -40,39 +42,44 @@ export class ProjectResolver implements Resolve<any> {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<any> {
-        console.log('In Resolver');
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let lastWeekSunday = this.currentDate();
-        let lastWeekMonday = this.lastSevenDayDate();
-        if (this.loggedInuser.userRole === 1) {
-            return this._projectService.getData(
-                null, null,
-                this._datePipe.transform(
-                    lastWeekSunday.toString(),
-                    'yyyy-MM-dd'
-                ),
-                this._datePipe.transform(
-                    lastWeekMonday.toString(),
-                    'yyyy-MM-dd'
-                )
-            );
-        } else if (this.loggedInuser.userRole === 2) {
-            return this._projectService.getData(
-                this.loggedInuser.id,
-                this.loggedInuser.adminClubId,
-                this._datePipe.transform(
-                    lastWeekSunday.toString(),
-                    'yyyy-MM-dd'
-                ),
-                this._datePipe.transform(
-                    lastWeekMonday.toString(),
-                    'yyyy-MM-dd'
-                )
-            );
-        } else if (this.loggedInuser.userRole == 8) {
-            this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
-                console.error('Navigation error:', error);
-            });
+        try {
+
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.logger.log('Getting Dashboard Data', "info");
+            let lastWeekSunday = this.currentDate();
+            let lastWeekMonday = this.lastSevenDayDate();
+            if (this.loggedInuser.userRole === 1) {
+                return this._projectService.getData(
+                    null, null,
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                );
+            } else if (this.loggedInuser.userRole === 2) {
+                return this._projectService.getData(
+                    this.loggedInuser.id,
+                    this.loggedInuser.adminClubId,
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                );
+            } else if (this.loggedInuser.userRole == 8) {
+                this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
+                    console.error('Navigation error:', error);
+                });
+            }
+        } catch (error) {
+            this.logger.log('Getting Dashboard Data Failed', "error", error.toString());
         }
     }
 

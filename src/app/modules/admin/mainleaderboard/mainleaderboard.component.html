@@ -240,14 +240,14 @@
                                 </li>
                             </ul>
                             <ul class="responsive-table" *ngIf="searchName">
-                                <li class="table-row  hover:bg-gray-100"  *ngFor="let item of allMatchSearchResults">
+                                <li class="table-row  hover:bg-gray-100" *ngFor="let item of allMatchSearchResults">
                                     <div class="col col-1">
                                         {{ item.position }}
                                     </div>
                                     <div class="col col-2">
                                         {{ item.name }}
                                         <div class="text-xs flex items-center">
-        
+
                                             <div class="cursor-pointer py-0.5 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                                 (click)="
                                                     viewPlayerScore(
@@ -266,12 +266,12 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4" *ngIf="item.under >= 0" >
-        
+                                    <div class="col col-4" *ngIf="item.under >= 0">
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-4" *ngIf="item.under < 0" style="color: red">
-        
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-5">
@@ -293,11 +293,11 @@
                                     </div>
                                     <div class="col col-2">
                                         {{ item.name }}
-                                        <div  class="text-xs flex items-center">
+                                        <div class="text-xs flex items-center">
                                             <span *ngIf="item.handicap > 0">
                                                 HC:{{ item.handicap }}
                                             </span>
-                                            
+
                                             <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                                 (click)="
                                                     viewPlayerScore(
@@ -316,12 +316,12 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4" *ngIf="item.under >= 0" >
-        
+                                    <div class="col col-4" *ngIf="item.under >= 0">
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-4" *ngIf="item.under < 0" style="color: red">
-        
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-5">
@@ -367,12 +367,12 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4" *ngIf="item.under >= 0" >
+                                    <div class="col col-4" *ngIf="item.under >= 0">
 
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-4" *ngIf="item.under < 0" style="color: red">
-        
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-5">
@@ -434,8 +434,8 @@
                                     </div>
                                     <div class="col col-4">
                                         {{
-                                        item.TotalGross1
-                                        ? item.TotalGross1
+                                        item.TotalGrossUnder1 !== undefined
+                                        ? item.TotalGrossUnder1
                                         : "-"
                                         }}
                                     </div>
@@ -452,8 +452,8 @@
                                             activeRound >= 2 && totalRounds >= 2
                                         ">
                                         {{
-                                        item.TotalGross2
-                                        ? item.TotalGross2
+                                        item.TotalGrossUnder2 !== undefined
+                                        ? item.TotalGrossUnder2
                                         : "-"
                                         }}
                                     </div>
@@ -470,8 +470,8 @@
                                             activeRound >= 3 && totalRounds >= 3
                                         ">
                                         {{
-                                        item.TotalGross3
-                                        ? item.TotalGross3
+                                        item.TotalGrossUnder3!== undefined
+                                        ? item.TotalGrossUnder3
                                         : "-"
                                         }}
                                     </div>
@@ -489,8 +489,8 @@
                                             activeRound >= 4 && totalRounds == 4
                                         ">
                                         {{
-                                        item.TotalGross4
-                                        ? item.TotalGross4
+                                        item.TotalGrossUnder4 !== undefined
+                                        ? item.TotalGrossUnder4
                                         : "-"
                                         }}
                                     </div>
@@ -635,8 +635,8 @@
                                     </div>
                                     <div class="col col-4">
                                         {{
-                                        item.TotalNet1
-                                        ? item.TotalNet1
+                                        item.TotalNetUnder1 !== undefined
+                                        ? item.TotalNetUnder1
                                         : "-"
                                         }}
                                     </div>
@@ -648,7 +648,9 @@
                                     <div class="col col-5" *ngIf="
                                             activeRound >= 2 && totalRounds >= 2
                                         ">
-                                        {{ item.TotalNet2 }}
+                                        {{ item.TotalNetUnder2 !== undefined
+                                        ? item.TotalNetUnder2
+                                        : "-"}}
                                     </div>
                                     <div class="col col-5" *ngIf="
                                             activeRound == 2 ||
@@ -662,7 +664,9 @@
                                     <div class="col col-5" *ngIf="
                                             activeRound >= 3 && totalRounds >= 3
                                         ">
-                                        {{ item.TotalNet3 }}
+                                        {{ item.TotalNetUnder3 !== undefined
+                                        ? item.TotalNetUnder3
+                                        : "-"}}
                                     </div>
                                     <div class="col col-5" *ngIf="
                                             activeRound == 3 ||
@@ -677,7 +681,9 @@
                                     <div class="col col-5" *ngIf="
                                             activeRound >= 4 && totalRounds == 4
                                         ">
-                                        {{ item.TotalNet4 }}
+                                        {{ item.TotalNetUnder4!== undefined
+                                        ? item.TotalNetUnder4
+                                        : "-" }}
                                     </div>
                                     <div class="col col-5" *ngIf="
                                             activeRound >= 4 && totalRounds == 4
@@ -814,7 +820,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -864,7 +870,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -879,7 +885,8 @@
                     </ul>
                 </div>
             </div>
-            <div *ngIf="this.showBestBall && !showTaxes" class="flex flex-col sm:flex-row items-center justify-center mb-1">
+            <div *ngIf="this.showBestBall && !showTaxes"
+                class="flex flex-col sm:flex-row items-center justify-center mb-1">
                 <div id="leaderboard" class="mt-2">
                     <ul class="responsive-table" id="all" *ngIf="searchName && !showBestBall">
                         <!-- <li class="table-header">
@@ -988,7 +995,7 @@
                             <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
-                        <li class="table-row  hover:bg-gray-100"  *ngFor="let item of allMatchSearchResults">
+                        <li class="table-row  hover:bg-gray-100" *ngFor="let item of allMatchSearchResults">
                             <div class="col col-1">
                                 {{ item.position }}
                             </div>
@@ -1014,7 +1021,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -1061,7 +1068,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -1110,7 +1117,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>

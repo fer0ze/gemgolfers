@@ -172,7 +172,7 @@ export class DialogCloseRoundComponent implements OnInit {
 
                 console.log(this.PlayingFlight);
             } else {
-                console.log('Flights No');
+                console.log('flights No');
             }
             // if(PlayingFlight.length > 0)
             // {
@@ -196,7 +196,7 @@ export class DialogCloseRoundComponent implements OnInit {
                     });
                 console.log(this.PlayingFlight);
             } else {
-                console.log('Flights No');
+                console.log('flights No');
             }
         }
         //   this.playingCat = true

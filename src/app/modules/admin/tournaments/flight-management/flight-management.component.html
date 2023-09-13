@@ -15,14 +15,14 @@
                         color="accent"
                         (click)="createAutoFlights()"
                     >
-                        Create Auto-Flights
+                        Create Auto-Groups
                     </button>
                     <button
                         mat-raised-button
                         color="primary"
                         (click)="addFlight(1)"
                     >
-                        Add New Flight
+                        Add New Group
                     </button>
                 </div>
                 <ng-container>
@@ -57,7 +57,7 @@
                                                 <span
                                                     *ngIf="!this.showTeams"
                                                     class="text-base font-black text-gray-400 min-w-max"
-                                                    >Flight No:</span
+                                                    >Group No:</span
                                                 >
                                                 <span
                                                     *ngIf="this.showTeams"
@@ -428,7 +428,7 @@
                                     <span
                                         *ngIf="!this.showTeams"
                                         class="text-base font-black text-gray-400 min-w-max"
-                                        >Flight No:</span
+                                        >Group No:</span
                                     >
                                     <span
                                         *ngIf="this.showTeams"
@@ -773,7 +773,7 @@
                                 >
                                     <span
                                         class="text-base font-black text-gray-400 min-w-max"
-                                        >Flight No:</span
+                                        >Group No:</span
                                     >
                                     <input
                                         value="{{ items['flightNo'] }}"
@@ -1098,7 +1098,7 @@
                                 >
                                     <span
                                         class="text-base font-black text-gray-400 min-w-max"
-                                        >Flight No:</span
+                                        >Group No:</span
                                     >
                                     <input
                                         value="{{ items['flightNo'] }}"

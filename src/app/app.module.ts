@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
@@ -20,6 +20,7 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
+import { GlobalErrorHandler } from './errorhandler.module';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -31,7 +32,7 @@ const routerConfig: ExtraOptions = {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule.forRoot(appRoutes,routerConfig),
+        RouterModule.forRoot(appRoutes, routerConfig),
 
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
@@ -54,5 +55,9 @@ const routerConfig: ExtraOptions = {
         GraphQLModule,
     ],
     bootstrap: [AppComponent],
+    // providers: [{
+    //     provide: ErrorHandler,
+    //     useClass: GlobalErrorHandler,
+    // }]
 })
-export class AppModule {}
+export class AppModule { }

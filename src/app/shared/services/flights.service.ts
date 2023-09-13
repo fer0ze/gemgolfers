@@ -12,7 +12,7 @@ export class FlightsService {
 
     public SaveTournamentFlights(
         tournamentId: string,
-        flightsToSave: any,
+        flightsToSave: any ,
         flightMembersToSave: any
     ): Promise<boolean> {
         return new Promise((resolve) => {

@@ -1579,7 +1579,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     flightsSetup(stepper: MatStepper, action: string) {
-        this.stepTitle = 'Flights Setup Form';
+        this.stepTitle = 'flights Setup Form';
         //this.saveTournamentMembers();
         console.log(this.formArray.get([0]).value.courseInfo[0].matchFormat);
         if (
@@ -1636,7 +1636,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     dateSetup() {
-        //this.stepTitle = "Flights Setup Form";
+        //this.stepTitle = "flights Setup Form";
         //this.saveTournamentMembers();
 
         console.log(this.formArray.get([0]).get('clubctgies').value);
@@ -1683,7 +1683,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     flightArrangementSetup() {
-        this.stepTitle = 'Flights Arrangement';
+        this.stepTitle = 'flights Arrangement';
     }
 
     getGrossNetTop(selectedCTName, type) {

@@ -760,7 +760,7 @@ export const material = [
     'group_add',
     'group_off',
     'group_work',
-    'groups',
+    'flights',
     'h_mobiledata',
     'h_plus_mobiledata',
     'hail',
