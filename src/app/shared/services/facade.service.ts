@@ -774,9 +774,10 @@ export class FacadeService {
   }
   updateflightMember(
     playerId: string,
+    handicapAllocation,
   ) {
     return this.flightsService.updateflightMember(
-      playerId
+      playerId,handicapAllocation
     );
   }
   createNextRoundFlights(flights: Flight[]) {

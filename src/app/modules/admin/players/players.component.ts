@@ -126,7 +126,7 @@ export class PlayersComponent implements OnInit {
                 )
                 .subscribe(
                     async (data) => {
-                        
+
 
                         // this.Players = dataPlayers.player;
                         // this.isLoading = false;
@@ -364,7 +364,7 @@ export class PlayersComponent implements OnInit {
     public onSortChanged(e) {
         this.sorting = e.direction;
         this.name = e.active;
-        this.logger.log('Sorting Function Click on Players Table', "info",this.name);
+        this.logger.log('Sorting Function Click on Players Table', "info", this.name);
     }
 
     public ComparatordscN(a, b) {
@@ -497,7 +497,9 @@ export class PlayersComponent implements OnInit {
             // console.log(this.duplicatePlayers);
             // console.log(this.savePlayers);
             for (let p of this.playersData) {
-                let update = await this._facadeService.updateflightMember(p.id);
+                let id = p.id;
+                let handicapAllocation = p.handicapAllocation !== "" ? p.handicapAllocation : null;
+                let update = await this._facadeService.updateflightMember(id, handicapAllocation);
                 if (update) {
                     console.log('Done');
                 }

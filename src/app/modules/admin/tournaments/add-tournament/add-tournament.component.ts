@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { StepperOrientation } from '@angular/material/stepper';
 import {
     AbstractControl,
     FormBuilder,
@@ -58,6 +59,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { DialogPlayingDatesComponent } from '../../dialogs/dialog-playing-dates/dialog-playing-dates.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { BreakpointObserver } from '@angular/cdk/layout';
 //import { DialogPlayingDatesComponent } from "../../material-components/dialog-playing-dates/dialog-playing-dates.component";
 
 @Component({
@@ -136,6 +138,7 @@ export class AddTournamentComponent implements OnInit {
     courseHoleSetCount: number = 0;
     showCourseHole: boolean = false;
     atpTime: any;
+    stepperOrientation: Observable<StepperOrientation>;
     editTournament: boolean = false;
     playingDat: any[] = [];
     @ViewChild('paginatorLegal') paginator: MatPaginator;
@@ -183,6 +186,7 @@ export class AddTournamentComponent implements OnInit {
 
     constructor(
         private atp: AmazingTimePickerService,
+        private breakpointObserver: BreakpointObserver,
         private datePipe: DatePipe,
         private router: Router,
         private route: ActivatedRoute,
@@ -196,10 +200,14 @@ export class AddTournamentComponent implements OnInit {
         this.setState(this.valid3, true);
         this.setState(this.valid4, true);
         this.setState(this.valid5, true);
+        this.stepperOrientation = breakpointObserver
+            .observe('(min-width: 800px)')
+            .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+
     }
 
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
@@ -225,7 +233,7 @@ export class AddTournamentComponent implements OnInit {
                     handicapAllocations: ['AS_IS', Validators.required],
                     startDateFormCtrl: ['', Validators.required],
                     endDateFormCtrl: ['', Validators.required],
-
+                    teamMatch:['2', Validators.required],
                     clubsFormCtrl: [
                         this.loggedInuser.userRole > 1
                             ? this.loggedInuser.membership.length > 0
@@ -343,8 +351,8 @@ export class AddTournamentComponent implements OnInit {
                     numOfRounds: this.currentTournament.noOfRounds,
                     courseHoleSet:
                         this.currentTournament.courseHoleSets +
-                        '_' +
-                        this.currentTournament.courseHoleSetsInverted
+                            '_' +
+                            this.currentTournament.courseHoleSetsInverted
                             ? 'true'
                             : 'false',
                 });
@@ -699,8 +707,8 @@ export class AddTournamentComponent implements OnInit {
         return typeof course === 'string'
             ? course
             : course.course
-            ? course.course.name
-            : course.name;
+                ? course.course.name
+                : course.name;
     }
 
     private _filter(value: string): Club[] {
@@ -1520,11 +1528,11 @@ export class AddTournamentComponent implements OnInit {
         //console.log("2020-01-01 " + ((index == 0)? this.formArray.get([1]).value.flightStartTime : this.preFlightTime) + "");
         let dateNow: Date = new Date(
             Constants.DEFAULT_DATE +
-                ' ' +
-                (index == 0
-                    ? FilteredFlight[0].flightStartTime
-                    : this.preFlightTime) +
-                ''
+            ' ' +
+            (index == 0
+                ? FilteredFlight[0].flightStartTime
+                : this.preFlightTime) +
+            ''
         );
         console.log(FilteredFlight[0].flightStartTime);
 
@@ -1532,11 +1540,11 @@ export class AddTournamentComponent implements OnInit {
         if (arrangements == '0') {
             makeInterval
                 ? dateNow.setMinutes(
-                      dateNow.getMinutes() +
-                          (FilteredFlight[0].flightsInterval && index > 0
-                              ? parseInt(FilteredFlight[0].flightsInterval)
-                              : 0)
-                  )
+                    dateNow.getMinutes() +
+                    (FilteredFlight[0].flightsInterval && index > 0
+                        ? parseInt(FilteredFlight[0].flightsInterval)
+                        : 0)
+                )
                 : '';
             console.log(dateNow);
 
@@ -1548,11 +1556,11 @@ export class AddTournamentComponent implements OnInit {
         } else {
             makeInterval
                 ? dateNow.setMinutes(
-                      dateNow.getMinutes() -
-                          (FilteredFlight[0].flightsInterval && index > 0
-                              ? parseInt(FilteredFlight[0].flightsInterval)
-                              : 0)
-                  )
+                    dateNow.getMinutes() -
+                    (FilteredFlight[0].flightsInterval && index > 0
+                        ? parseInt(FilteredFlight[0].flightsInterval)
+                        : 0)
+                )
                 : '';
             console.log(dateNow);
 
@@ -1613,7 +1621,7 @@ export class AddTournamentComponent implements OnInit {
                         ) {
                             this.addFlightField(
                                 this.formArray.get([0]).get('clubctgies').value[
-                                    i
+                                i
                                 ]
                             );
                         }
@@ -1765,7 +1773,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async createTournament(stepper: MatStepper) {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let tournamentCats: TournamentCategory[] = [];
 
@@ -1890,6 +1898,8 @@ export class AddTournamentComponent implements OnInit {
             handicapAllocation: this.formArray.get([0]).value
                 .handicapAllocations,
         };
+        console.log(handicapAllocations);
+
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             'TEXAS_SCRAMBLE'
@@ -1911,7 +1921,7 @@ export class AddTournamentComponent implements OnInit {
             leagueId: null,
             courseId: this.formArray.get([0]).value.courseInfo[0]
                 ? this.formArray.get([0]).value.courseInfo[0].courseName.course
-                      .id
+                    .id
                 : '',
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
@@ -1932,13 +1942,14 @@ export class AddTournamentComponent implements OnInit {
                 .matchFormat,
             multiFormat:
                 this.formArray.get([0]).value.courseInfo[0].multiFormat ==
-                'SINGLE'
+                    'SINGLE'
                     ? false
                     : true,
             pointsFormats: null,
             subTournament: false,
             pointsValues: null,
-            handicapAllocations: handicapAllocations,
+            handicapAllocations: handicapAllocations.handicapAllocation,
+            handicapAllocation: handicapAllocations.handicapAllocation,
             tee: 'AMATEURS',
             tee_id: 1,
             scoreManagement: 'ONLY_PLAYERS',
@@ -1963,7 +1974,7 @@ export class AddTournamentComponent implements OnInit {
                         : false
                     : false,
             categories: tournamentCats,
-            createdAt:new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             marshals: marshalsData,
             flights: [],
             members: [],
@@ -1997,9 +2008,9 @@ export class AddTournamentComponent implements OnInit {
                 this.currentTournament = tournament;
                 console.log(result);
                 if (result) {
-                    
+
                     if (
-                        this.showSubtournament==true
+                        this.showSubtournament == true
                     ) {
                         this.createSubtournament(this.tournamentID);
                     }
@@ -2014,7 +2025,7 @@ export class AddTournamentComponent implements OnInit {
                             this.loggedInuser.userRole > 1
                                 ? this.loggedInuser.adminClubId
                                 : this.formArray.get([0]).value.clubsFormCtrl
-                                      .id;
+                                    .id;
                         this.clubMembers = [];
                         console.log(selectedClubId);
                         console.log(
@@ -2080,7 +2091,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async editTournaments() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentCats: TournamentCategory[] = [];
 
         let marshalsData: Marshal[] = [];
@@ -2156,9 +2167,9 @@ export class AddTournamentComponent implements OnInit {
             let tc: any = {
                 id: this.tournamentID
                     ? this.checkCatToUpdate(
-                          this.formArray.get([0]).value.clubctgies[index].name,
-                          true
-                      )
+                        this.formArray.get([0]).value.clubctgies[index].name,
+                        true
+                    )
                     : UniqueIdGenerator.generate(),
                 tournamentId: this.tournamentID,
                 category: this.formArray.get([0]).value.clubctgies[index].name,
@@ -2218,10 +2229,10 @@ export class AddTournamentComponent implements OnInit {
             leagueId: null,
             courseId:
                 this.loggedInuser.userRole > 1 &&
-                this.currentTournament &&
-                this.courseChange == true
+                    this.currentTournament &&
+                    this.courseChange == true
                     ? this.formArray.get([0]).value.courseInfo[0].courseName
-                          .course.id
+                        .course.id
                     : this.currentTournament['CourseQL'].id,
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
@@ -2242,7 +2253,7 @@ export class AddTournamentComponent implements OnInit {
                 .matchFormat,
             pointsFormats: null,
             pointsValues: null,
-            handicapAllocations: handicapAllocations,
+            handicapAllocations: handicapAllocations.handicapAllocation,
             tee: 'AMATEURS',
             tee_id: 1,
             scoreManagement: 'ONLY_PLAYERS',
@@ -2333,7 +2344,7 @@ export class AddTournamentComponent implements OnInit {
                     playerId: selectionArray[index].id,
                     status: true,
                 };
-                if(this.showSubtournament){
+                if (this.showSubtournament) {
                     let member: any = {
                         tournamentId: this.subTournamentID,
                         playerId: selectionArray[index].id,
@@ -2396,7 +2407,7 @@ export class AddTournamentComponent implements OnInit {
                                         this.formArray
                                             .get([0])
                                             .get('clubctgies').value[i].name ==
-                                            obj.name
+                                        obj.name
                                     ) {
                                         this.addFlightField(
                                             this.formArray
@@ -2563,7 +2574,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async createFlights() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let tournamentMember: TournamentMember[] = [];
         let flightName: any[] = [];
@@ -2676,7 +2687,7 @@ export class AddTournamentComponent implements OnInit {
                                 courseHoleSetsInverted: this.currentTournament
                                     .courseHoleSetsInverted
                                     ? this.currentTournament
-                                          .courseHoleSetsInverted
+                                        .courseHoleSetsInverted
                                     : false,
                                 members: {
                                     data: tournamentFlightMembers,
@@ -2990,9 +3001,8 @@ export class AddTournamentComponent implements OnInit {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${
-            this.selection.isSelected(row) ? 'deselect' : 'select'
-        } player ${row.firstName} ${row.lastName}`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
     }
 
     addFlight() {
@@ -3077,7 +3087,7 @@ export class AddTournamentComponent implements OnInit {
             this.loggedInuser.adminClubId
         );
         const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-            data: { players: datas.player, tournamentID: this.tournamentID,subTournamentID:this.subTournamentID },
+            data: { players: datas.player, tournamentID: this.tournamentID, subTournamentID: this.subTournamentID },
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
@@ -3219,7 +3229,7 @@ export class AddTournamentComponent implements OnInit {
 
     async createSubtournament(tournamentID) {
         let subTournamentId = UniqueIdGenerator.generate();
-        this.subTournamentID=subTournamentId;
+        this.subTournamentID = subTournamentId;
 
         let courseHoleSetsData = this.formArray.get([0]).value.courseHoleSet;
 
@@ -3235,7 +3245,7 @@ export class AddTournamentComponent implements OnInit {
             leagueId: null,
             courseId: this.formArray.get([0]).value.courseInfo[0]
                 ? this.formArray.get([0]).value.courseInfo[0].courseName.course
-                      .id
+                    .id
                 : '',
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.subTournament[0].title,
@@ -3260,7 +3270,7 @@ export class AddTournamentComponent implements OnInit {
             pointsFormats: null,
             pointsValues: null,
             handicapAllocations: this.formArray.get([0]).value
-                .handicapAllocations,
+                .handicapAllocations.handicapAllocation,
             tee: 'AMATEURS',
             tee_id: 1,
             scoreManagement: 'ONLY_PLAYERS',

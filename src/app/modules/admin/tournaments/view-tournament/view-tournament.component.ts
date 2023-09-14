@@ -2178,7 +2178,7 @@ export class ViewTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result) {
-                let jObject = { cutOff: [{}] };
+                let jObject = null;
                 console.log('====================================');
                 console.log(jObject);
                 console.log('====================================');

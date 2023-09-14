@@ -9,12 +9,9 @@
     }
    
     ::ng-deep .mat-horizontal-stepper-header-container {
-      background-color: #aad8ff;
+      background-color: #05467e;
       // border-radius: 5px;
       // margin-bottom: 40px;
-      width: 16rem;
-       display: block !important;
-       min-height: 100vh;
       // flex-direction: column;
       // align-items: baseline;
 
@@ -247,7 +244,9 @@
     color: #fff;
   }
 }
-
+mat-stepper {
+  border-radius: 10px;
+}
 .separators {
   width: 170px;
 }

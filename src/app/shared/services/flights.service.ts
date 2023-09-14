@@ -8,11 +8,11 @@ import * as Query from '../GraphQL/flights.gql';
     providedIn: 'root',
 })
 export class FlightsService {
-    constructor(private apollo: Apollo) {}
+    constructor(private apollo: Apollo) { }
 
     public SaveTournamentFlights(
         tournamentId: string,
-        flightsToSave: any ,
+        flightsToSave: any,
         flightMembersToSave: any
     ): Promise<boolean> {
         return new Promise((resolve) => {
@@ -626,7 +626,7 @@ export class FlightsService {
                 );
         });
     }
-    public undoFlightHandicap(flightId: string,playerId:string): Promise<any> {
+    public undoFlightHandicap(flightId: string, playerId: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -646,7 +646,7 @@ export class FlightsService {
         });
     }
 
-    public undoHandicapPlayer(flightId: string,playerId:string): Promise<any> {
+    public undoHandicapPlayer(flightId: string, playerId: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -665,13 +665,20 @@ export class FlightsService {
                 });
         });
     }
-    public updateflightMember(playerId:string): Promise<any> {
+    public updateflightMember(playerId: string, handicapAllocation: any): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.updateflightMemberQL,
                     variables: {
-                        playerId: playerId,
+                        where: {
+                            id: {
+                                _eq: playerId,
+                            },
+                        },
+                        set: {
+                            handicapAllocations: handicapAllocation
+                        },
                     },
                 })
                 .subscribe(({ data }) => {
@@ -683,7 +690,7 @@ export class FlightsService {
                 });
         });
     }
-    public markPlayerPanelty(tournamentId:string,flightId: string,playerId:string): Promise<any> {
+    public markPlayerPanelty(tournamentId: string, flightId: string, playerId: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -691,7 +698,7 @@ export class FlightsService {
                     variables: {
                         flightId: flightId,
                         playerId: playerId,
-                        tournamentId:tournamentId,
+                        tournamentId: tournamentId,
                     },
                 })
                 .subscribe(({ data }) => {
