@@ -41,60 +41,48 @@ export const LeaderboardSubscription = gql`
             webLogoUrl
             title
             matchFormat
-            tee_id
-            FlightsQL: flights {
-                id
-                courseId
-                courseHoleSets
-                flightRound
-                categoryRound
-                flightNo
-                name {
-                    name
-                }
-                MembersQL: members {
-                    playerId
-                    PlayerQL: player {
-                        id
-                        playerCategory
-                        handicap
-                        firstName
-                        lastName
-                    }
-                    ScoresQL: scores {
-                        playerId
-                        playerHandicap
-                        grossScore
-                        hole {
-                            holeNo
-                            index
-                            par
-                        }
-                    }
-                }
-                CourseQL: course {
-                    id
-                    noOfHoles
-                }
-            }
             CategoriesQL: categories {
                 ...TournamentMemberCategoryQL
             }
-            MemberStatusesQL: member_statuses {
-                ...TournamentMemberStatusQL
-            }
-            AdminQL: admin {
-                membership {
-                    club {
-                        logo
-                    }
-                }
-            }
+        }
+        LeaderBoardQL: leaderboard_score(
+            where: { prefix: { _eq: $tournamentPrefix } }
+        ) {
+            playerId
+            handicap
+            underGross
+            underGross1
+            underGross2
+            underGross3
+            underGross4
+            playingRound
+            name
+            scoreR1
+            scoreR2
+            scoreR3
+            scoreR4
+            holesPlayedR1
+            holesPlayedR2
+            holesPlayedR3
+            holesPlayedR4
+            status
+            category
+            netScoreR1
+            netScoreR2
+            netScoreR3
+            netScoreR4
+            underNet
+            underNet1
+            underNet2
+            underNet3
+            underNet4
+            holeScoreLast9
+        holeScoreLast6
+        holeScoreLast3
+        holeScoreLast1
         }
     }
-
     ${TournamentMemberCategoryQL}
-    ${TournamentMemberStatusQL}
 `;
 
 export const tournamentDashBoard = gql`

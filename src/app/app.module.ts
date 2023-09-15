@@ -22,17 +22,14 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
 import { GlobalErrorHandler } from './errorhandler.module';
 
-const routerConfig: ExtraOptions = {
-    preloadingStrategy: PreloadAllModules,
-    scrollPositionRestoration: 'enabled',
-};
+
 
 @NgModule({
     declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule.forRoot(appRoutes, routerConfig),
+        RouterModule.forRoot(appRoutes),
 
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
