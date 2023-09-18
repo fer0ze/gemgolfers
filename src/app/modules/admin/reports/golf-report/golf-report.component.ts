@@ -19,6 +19,7 @@ import 'jspdf-autotable';
 import { MatDialog } from '@angular/material/dialog';
 import { UserDetailsDilogueComponent } from '../../dialogs/dialog-user-details/user-details-dilogue.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
     selector: 'app-golf-report',
     templateUrl: './golf-report.component.html',
@@ -90,20 +91,28 @@ export class GolfReportComponent implements OnInit {
         public snackBar: MatSnackBar,
         private facadeService: FacadeService,
         private _localStorage: LocalStorageService,
-        private route: ActivatedRoute
-    ) {}
+        private route: ActivatedRoute,
+        private logger: LogsService
+    ) { }
 
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.isLoading = false;
-        this.refresh = true;
-        this.scheduleForm = this.fb.group({
-            startDate: ['', [Validators.required]],
-            endDate: ['', [Validators.required]],
-        });
-        let yesterdayDate = this.yesterday();
+        try {
 
-        this.getTotalReport(yesterdayDate, yesterdayDate);
+            this.logger.log('Admin Come to Player Round Page', "info");
+            this.logger.log('Getting Player Round Data', "info", "Yesterday");
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.isLoading = false;
+            this.refresh = true;
+            this.scheduleForm = this.fb.group({
+                startDate: ['', [Validators.required]],
+                endDate: ['', [Validators.required]],
+            });
+            let yesterdayDate = this.yesterday();
+
+            this.getTotalReport(yesterdayDate, yesterdayDate);
+        } catch (error) {
+            this.logger.log('Getting Player Round Data Failed', "error", error.toString());    
+        }
     }
 
     async getTotalReport(fromDate: Date, toDate: Date) {
@@ -112,7 +121,7 @@ export class GolfReportComponent implements OnInit {
         let players: any;
         if (this.loggedInuser.userRole == 1) {
             players = await this.facadeService.getTotalFlightPlayedAdmin(
-                
+
                 this.datePipe.transform(
                     fromDate.toString(),
                     'yyyy-MM-ddTHH:mm:SS' + '+00:00'
@@ -166,29 +175,30 @@ export class GolfReportComponent implements OnInit {
         console.log(id);
 
         if (id) {
-          const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
-            width: "600px",
-            data: {
-              id: id,
-              from: this.formdate,
-              to: this.toDate,
-            },
-          });
-          console.log(id);
+            const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
+                width: "600px",
+                data: {
+                    id: id,
+                    from: this.formdate,
+                    to: this.toDate,
+                },
+            });
+            console.log(id);
 
-          dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-              //console.log("record deleted.");
-              //this.delete(id);
-              //this.ngOnInit();
-            } else {
-              //console.log("cancel delete action");
-            }
-          });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    //console.log("record deleted.");
+                    //this.delete(id);
+                    //this.ngOnInit();
+                } else {
+                    //console.log("cancel delete action");
+                }
+            });
         }
     };
 
     applyFilter(filterValue: string) {
+        
         console.log(this.dataSource.data);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -205,6 +215,7 @@ export class GolfReportComponent implements OnInit {
     }
 
     public downloadAsPDF() {
+        this.logger.log('Admin Click Download Pdf Daily Player Report', "info");
         let doc = new jsPDF();
         let res = doc.autoTableHtmlToJson(document.getElementById('a'));
         let columns = [
@@ -235,6 +246,8 @@ export class GolfReportComponent implements OnInit {
         //doc.save('flights.pdf');
     }
     onDatePick() {
+        const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
+        this.logger.log('Getting Daily starter Data By date', "info",combinedData);
         console.log(this.scheduleForm.value.startDate);
         console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
@@ -255,6 +268,8 @@ export class GolfReportComponent implements OnInit {
         return new Date(date.setDate(date.getDate() - 1));
     }
     Dailysetup(selectedValue) {
+        this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
+        
         console.log(selectedValue);
         this.isLoading = false;
         this.refresh = true;

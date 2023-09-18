@@ -130,7 +130,8 @@ export class TournamentsComponent implements OnInit {
             let yyyy = today.getFullYear();
 
             let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-
+            this.logger.log('Admin comes to Tournament Page', "info");
+            this.logger.log('Getting Tournaments Data', "info");
             if (this.loggedInuser.userRole == 1) {
                 let dataTournamentsForCompleted =
                     await this.facadeService.getTournamentsListForCompleted(
@@ -298,6 +299,8 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentLive() {
         try {
+            this.logger.log('Getting Live Tournaments Data', "info");
+            this.logger.log('Getting Live Tournaments Sucessfully', "info");
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -319,6 +322,8 @@ export class TournamentsComponent implements OnInit {
     }
     async getTournamentSchedule() {
         try {
+            this.logger.log('Getting Schedule Tournaments Data', "info");
+            this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -343,6 +348,7 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentIncompelete() {
         try {
+
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -365,6 +371,8 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentCompeletedForAdmin() {
         try {
+            this.logger.log('Getting Compeleted Tournaments Data', "info");
+            this.logger.log('Getting Compeleted Tournaments Sucessfully', "info");
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -393,6 +401,8 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentLiveForAdmin() {
         try {
+            this.logger.log('Getting Live Tournaments Data', "info");
+            this.logger.log('Getting Live Tournaments Sucessfully', "info");
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -414,6 +424,8 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentScheduleForAdmin() {
         try {
+            this.logger.log('Getting Schedule Tournaments Data', "info");
+            this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -436,6 +448,8 @@ export class TournamentsComponent implements OnInit {
 
     async getTournamentIncompeleteForAdmin() {
         try {
+            this.logger.log('Getting Incompelete Tournaments Data', "info");
+            this.logger.log('Getting Incompelete Tournaments Sucessfully', "info");
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -454,6 +468,7 @@ export class TournamentsComponent implements OnInit {
     }
 
     applyFilter(filterValue: string) {
+        this.logger.log('Admin Search in Tournamnet Page', "info", filterValue);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
         this.dataSource.filter = filterValue;
@@ -475,6 +490,7 @@ export class TournamentsComponent implements OnInit {
 
     redirectToDetails = (id: string) => {
         //console.log(id);
+        this.logger.log('Admin Click on View in Tournamnet Page', "info", id);
         this.location.navigate(['tournaments/view/' + id]);
     };
 

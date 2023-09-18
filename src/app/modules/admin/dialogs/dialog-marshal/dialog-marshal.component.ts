@@ -2,8 +2,9 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Marshal } from 'app/shared/models/player.model';
+import { LogsService } from 'app/shared/services/logs.service';
 
-import * as jsPDF from 'jspdf'; 
+import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 @Component({
@@ -18,8 +19,8 @@ export class DialogMarshalComponent implements OnInit {
   marshalList: Marshal[] = [];
 
   constructor(
-      public dialogRef: MatDialogRef<DialogMarshalComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any) {}
+    public dialogRef: MatDialogRef<DialogMarshalComponent>, private logger: LogsService,
+      @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
     this.marshalList = this.data.marshals;
@@ -33,11 +34,12 @@ export class DialogMarshalComponent implements OnInit {
     this.dataSource.filter = filterValue;
 
     if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
+      this.dataSource.paginator.firstPage();
     }
   }
 
   public downloadAsPDF() {
+    this.logger.log('Admin dowloads marshals list', "info");
     var doc = new jsPDF()
 
     doc.setFontSize(18);
@@ -46,14 +48,14 @@ export class DialogMarshalComponent implements OnInit {
     doc.setTextColor(100);
 
     // From HTML
-    doc.autoTable({ 
-      html: '#pdfTable', 
+    doc.autoTable({
+      html: '#pdfTable',
       startY: 25,
       theme: 'grid',
-      styles: {fontSize: 15},
+      styles: { fontSize: 15 },
       useCss: false,
     });
-  
+
     // Open PDF document in new tab
     doc.output('dataurlnewwindow');
 
@@ -62,7 +64,7 @@ export class DialogMarshalComponent implements OnInit {
   }
 
   onNoClick(): void {
-      this.dialogRef.close();
+    this.dialogRef.close();
   }
 
 }

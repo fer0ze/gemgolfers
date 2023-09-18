@@ -20,6 +20,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
     selector: 'app-updated-handicap-report',
     templateUrl: './updated-handicap-report.component.html',
@@ -107,56 +108,65 @@ export class UpdatedHandicapReportComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private _localStorage: LocalStorageService,
-        private _formBuilder: FormBuilder
-    ) {}
+        private _formBuilder: FormBuilder, private logger: LogsService
+    ) { }
 
     ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.Players = [];
+        try {
 
-        this.route.paramMap.subscribe((params) => {
-            this.filterCategory = params.get('category');
-        });
+            this.logger.log('Admin Come to Daily Updated Handicap Page', "info");
+            this.logger.log('Getting Daily Updated Handicap Data', "info", "Yesterday");
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.Players = [];
 
-        this.showtable = false;
-        this.showResult = false;
-        this.isLoading = true;
+            this.route.paramMap.subscribe((params) => {
+                this.filterCategory = params.get('category');
+            });
 
-        //  this.scheduleForm = this.fb.group({
+            this.showtable = false;
+            this.showResult = false;
+            this.isLoading = true;
 
-        //   BookingDate: ['', [Validators.required]]
-        // });
+            //  this.scheduleForm = this.fb.group({
 
-        this.scheduleForm = this.fb.group({
-            startDate: ['', [Validators.required]],
-            endDate: ['', [Validators.required]],
-        });
+            //   BookingDate: ['', [Validators.required]]
+            // });
 
-        console.log(this.scheduleForm);
+            this.scheduleForm = this.fb.group({
+                startDate: ['', [Validators.required]],
+                endDate: ['', [Validators.required]],
+            });
 
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            console.log(this.scheduleForm);
 
-        this.weeklyRounds = [];
-        of(this.weeklyRounds)
-            .pipe()
-            .subscribe(
-                async (data) => {
-                    // let currentDate = new Date();
-                    // currentDate.setDate(currentDate.getDate());
-                    // let nxtDate = new Date();
-                    // nxtDate.setDate(nxtDate.getDate() + 7);
-                    let yesterdayDate = this.yesterday();
-                    let toDate = this.today();
-                    this.getPlayerUpdatedHandicapReport(
-                        yesterdayDate,
-                        yesterdayDate
-                    );
-                },
-                (error) => (this.isLoading = false)
-            );
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
+            this.weeklyRounds = [];
+            of(this.weeklyRounds)
+                .pipe()
+                .subscribe(
+                    async (data) => {
+                        // let currentDate = new Date();
+                        // currentDate.setDate(currentDate.getDate());
+                        // let nxtDate = new Date();
+                        // nxtDate.setDate(nxtDate.getDate() + 7);
+                        let yesterdayDate = this.yesterday();
+                        let toDate = this.today();
+                        this.getPlayerUpdatedHandicapReport(
+                            yesterdayDate,
+                            yesterdayDate
+                        );
+                    },
+                    (error) => (this.isLoading = false)
+                );
+        } catch (error) {
+            this.logger.log('Getting Daily Updated Handicap Data Failed', "error", error.toString());
+
+        }
     }
 
     applyFilter(filterValue: string) {
+        this.logger.log('Admin Search in Updated Handicap Page', "info", filterValue);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
         this.dataSourceCONGU.filter = filterValue;
@@ -171,10 +181,11 @@ export class UpdatedHandicapReportComponent implements OnInit {
         this.isLoading = true;
         this.formdate = fromDate;
         this.toDate = toDate;
+        const combinedData = `fromDate=${fromDate}, toDate=${toDate}`;
         if (this.loggedInuser.userRole == 1) {
             this.dataPlayersCongu =
                 await this.facadeService.playerUpdatedHandicapReportAdmin(
-                 
+
                     this.datePipe.transform(
                         fromDate.toString(),
                         'yyyy-MM-ddTHH:mm:SS' + '+00:00'
@@ -186,7 +197,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                 );
             // this.dataPlayersWHS =
             //     await this.facadeService.playerUpdatedHandicapWHSReportAdmin(
-                  
+
             //         this.datePipe.transform(
             //             fromDate.toString(),
             //             'yyyy-MM-ddTHH:mm:SS' + '+00:00'
@@ -231,9 +242,10 @@ export class UpdatedHandicapReportComponent implements OnInit {
 
         //   //console.log(result);
         // }
-        console.log(this.dataPlayersCongu);
-        this.dataPlayersWHS=this.dataPlayersCongu.player_handicap_whs;
-        
+        this.logger.log('Getting Daily Updated Handicap Data Sucessfully', "info", combinedData);
+        console.log(this.dataPlayersCongu)
+        this.dataPlayersWHS = this.dataPlayersCongu.player_handicap_whs;
+
         this.conguLength = this.dataPlayersCongu.player_handicap.length;
         this.WHSLength = this.dataPlayersWHS.length;
         console.log(this.dataPlayersWHS);
@@ -262,7 +274,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                     date: this.dataPlayersCongu.player_handicap[this.index]
                         .tournament
                         ? this.dataPlayersCongu.player_handicap[this.index]
-                              .tournament.endDate
+                            .tournament.endDate
                         : '',
                     handicap:
                         this.dataPlayersCongu.player_handicap[this.index]
@@ -317,7 +329,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                     date: this.dataPlayersWHS[this.index]
                         .tournament
                         ? this.dataPlayersWHS[this.index]
-                              .tournament.endDate
+                            .tournament.endDate
                         : '',
                     handicapIndex:
                         this.dataPlayersWHS[this.index]
@@ -344,15 +356,20 @@ export class UpdatedHandicapReportComponent implements OnInit {
         this.showtable = true;
     }
     tabClicked(tab: any) {
-        this.index = 0;
+        try {
 
-        this.pageSize = 20;
-        if (tab.index == 1) {
-            this.getPlayerUpdatedHandicapReportWHS();
-            this.tabindex = 1;
-        } else {
-            this.getPlayerUpdatedHandicapReportCongu();
-            this.tabindex = 0;
+            this.logger.log('Admin Click tab on Updated Handicap Page', "info");
+            this.index = 0;
+            this.pageSize = 20;
+            if (tab.index == 1) {
+                this.getPlayerUpdatedHandicapReportWHS();
+                this.tabindex = 1;
+            } else {
+                this.getPlayerUpdatedHandicapReportCongu();
+                this.tabindex = 0;
+            }
+        } catch (error) {
+
         }
     }
     onPageFired(event) {
@@ -369,6 +386,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
         console.log(event);
     }
     async getPlayerInformationByMembershipNumber(filterValue: string) {
+        this.logger.log('Admin Search by membershipNo in Updated Handicap Report', "info", filterValue);
         console.log(filterValue);
         //let membershipNumber : string = (<HTMLInputElement>document.getElementById("membershipNumber")).value;
         filterValue = filterValue.trim().toLowerCase().toString(); // Remove whitespace
@@ -426,6 +444,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
         }
     }
     getPlayerInformationByName(filterValue: string) {
+        this.logger.log('Admin Search by name in Updated Handicap Report', "info", filterValue);
+        
         console.log(filterValue);
         if (filterValue == '') {
             this.getPlayerUpdatedHandicapReportCongu();
@@ -547,6 +567,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
     }
 
     Dailysetup(selectedValue) {
+        this.logger.log('Getting Updated Handicap Data By Dropdown', "info", selectedValue.value.toString());
+        
         console.log(selectedValue);
 
         if (selectedValue.value == Constants.DR_TODAY) {
@@ -608,6 +630,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
     };
 
     public downloadAsPDFCongu() {
+        this.logger.log('Admin Click Download Congu Pdf Updated Handicap Report', "info");
         let doc = new jsPDF();
         let col = [
             'Sr.',
@@ -625,9 +648,9 @@ export class UpdatedHandicapReportComponent implements OnInit {
         doc.setFontSize(15);
         doc.text(
             'CONGU-Handicap Change Log From ' +
-                this.datePipe.transform(this.toDate.toString(), 'MMM d, y') +
-                ' to ' +
-                this.datePipe.transform(this.formdate.toString(), 'MMM d, y'),
+            this.datePipe.transform(this.toDate.toString(), 'MMM d, y') +
+            ' to ' +
+            this.datePipe.transform(this.formdate.toString(), 'MMM d, y'),
             20,
             15
         );
@@ -665,6 +688,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
         doc.save('CONGU-Handicap Change Log.pdf');
     }
     public downloadAsPDFWHS() {
+        this.logger.log('Admin Click Download WHS Pdf Updated Handicap Report', "info");
         let doc = new jsPDF();
         let col = [
             'Sr.',
@@ -680,9 +704,9 @@ export class UpdatedHandicapReportComponent implements OnInit {
         doc.setFontSize(22);
         doc.text(
             'WHS-Handicap Change Log' +
-                this.datePipe.transform(this.toDate.toString(), 'MMM d, y') +
-                ' to ' +
-                this.datePipe.transform(this.formdate.toString(), 'MMM d, y'),
+            this.datePipe.transform(this.toDate.toString(), 'MMM d, y') +
+            ' to ' +
+            this.datePipe.transform(this.formdate.toString(), 'MMM d, y'),
             20,
             15
         );
@@ -717,6 +741,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
         doc.save('WHS-Handicap Change Log.pdf');
     }
     onDatePick() {
+        const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
+        this.logger.log('Getting Updated Handicap Data By date', "info",combinedData);
         console.log(this.scheduleForm.value.startDate);
         console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {

@@ -32,6 +32,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
@@ -98,85 +99,95 @@ export class HandicapsComponent implements OnInit {
         private datepipe: DatePipe,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _activatedRoute: ActivatedRoute, private _localStorage: LocalStorageService
-    ) {}
+        private logger: LogsService,
+        private _activatedRoute: ActivatedRoute, private _localStorage: LocalStorageService,
+    ) { }
 
     ngAfterViewInit(): void {
         //this.dataSource.sort = this.sort;
     }
 
     async ngOnInit() {
-        this.currentDate = new Date();
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.Players = [];
+        try {
 
-        this._router.paramMap.subscribe((params) => {
-            this.filterCategory = params.get('category');
-        });
-        //console.log(this.filterCategory);
+            this.logger.log('Admin Come to Congu Handicap Page', "info");
+            this.currentDate = new Date();
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.Players = [];
 
-        this.MembersCat = this.filterCategory;
-        console.log(this.MembersCat);
-        if (this.loggedInuser.userRole > 1) {
-            if (this.filterCategory)
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByClubAndCategory(
-                        this.loggedInuser.adminClubId,
-                        General.capitalizeFirstLetter(this.filterCategory)
-                    );
-            else {
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByClubCONGU(
-                        this.loggedInuser.adminClubId
-                    );
-                // this.aggregate =
-                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                console.log(this.aggregate);
-                this.syncHandicapCongu();
-            }
-        } else {
-            if (this.filterCategory)
-                this.dataPlayers =
-                    await this._facadeService.getPlayerByCategory(
-                        General.capitalizeFirstLetter(this.filterCategory)
-                    );
-            else {
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByAdminCONGU();
-                console.log(this.dataPlayers);
-
-                // this.aggregate =
-                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                console.log(this.aggregate);
-                this.syncHandicapCongu();
-            }
-        }
-        this.showTable = Promise.resolve(true);
-        // Subscribe to MatDrawer opened change
-        this.matDrawer.openedChange.subscribe((opened) => {
-            if (!opened) {
-                // Remove the selected contact when drawer closed
-                //this.selectedContact = null;
-                console.log(opened);
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            }
-        });
-
-        this._fuseMediaWatcherService.onMediaChange$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({ matchingAliases }) => {
-                // Set the drawerMode if the given breakpoint is active
-                if (matchingAliases.includes('lg')) {
-                    this.drawerMode = 'side';
-                } else {
-                    this.drawerMode = 'over';
-                }
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
+            this._router.paramMap.subscribe((params) => {
+                this.filterCategory = params.get('category');
             });
+            //console.log(this.filterCategory);
+
+            this.MembersCat = this.filterCategory;
+            console.log(this.MembersCat);
+            if (this.loggedInuser.userRole > 1) {
+                this.logger.log('Getting Congu Handicap Data', "info", this.loggedInuser.adminClubId);
+                if (this.filterCategory)
+                    this.dataPlayers =
+                        await this._facadeService.getPlayersListByClubAndCategory(
+                            this.loggedInuser.adminClubId,
+                            General.capitalizeFirstLetter(this.filterCategory)
+                        );
+                else {
+                    this.dataPlayers =
+                        await this._facadeService.getPlayersListByClubCONGU(
+                            this.loggedInuser.adminClubId
+                        );
+                    // this.aggregate =
+                    //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                    console.log(this.aggregate);
+                    this.syncHandicapCongu();
+                }
+            } else {
+                this.logger.log('Getting Congu Handicap Data', "info", 'Super Admin');
+                if (this.filterCategory)
+                    this.dataPlayers =
+                        await this._facadeService.getPlayerByCategory(
+                            General.capitalizeFirstLetter(this.filterCategory)
+                        );
+                else {
+                    this.dataPlayers =
+                        await this._facadeService.getPlayersListByAdminCONGU();
+                    console.log(this.dataPlayers);
+
+                    // this.aggregate =
+                    //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                    console.log(this.aggregate);
+                    this.syncHandicapCongu();
+                }
+            }
+            this.showTable = Promise.resolve(true);
+            // Subscribe to MatDrawer opened change
+            this.matDrawer.openedChange.subscribe((opened) => {
+                if (!opened) {
+                    // Remove the selected contact when drawer closed
+                    //this.selectedContact = null;
+                    console.log(opened);
+
+                    // Mark for check
+                    this._changeDetectorRef.markForCheck();
+                }
+            });
+
+            this._fuseMediaWatcherService.onMediaChange$
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe(({ matchingAliases }) => {
+                    // Set the drawerMode if the given breakpoint is active
+                    if (matchingAliases.includes('lg')) {
+                        this.drawerMode = 'side';
+                    } else {
+                        this.drawerMode = 'over';
+                    }
+
+                    // Mark for check
+                    this._changeDetectorRef.markForCheck();
+                });
+        } catch (error) {
+            this.logger.log('Getting All Congu Handicap Data Failed', "error", error.toString());
+       
+        }
 
         //this.fecthData();
 
@@ -212,18 +223,18 @@ export class HandicapsComponent implements OnInit {
                     oldhandicap:
                         obj.handicapQL.length > 0
                             ? obj.handicapQL[obj.handicapQL.length - 1]
-                                  .oldHandicap
+                                .oldHandicap
                             : obj.handicap,
                     oldactualhandicap:
                         obj.handicapQL.length > 0
                             ? obj.handicapQL[obj.handicapQL.length - 1]
-                                  .oldHandicap
+                                .oldHandicap
                             : obj.handicap,
                     updatedAt:
                         obj.handicapQL.length > 0
                             ? obj.handicapQL[
-                                  obj.handicapQL.length - 1
-                              ].updatedAt.substring(0, 10)
+                                obj.handicapQL.length - 1
+                            ].updatedAt.substring(0, 10)
                             : '',
                     actualhandicap:
                         obj.handicapQL.length > 0
@@ -253,6 +264,9 @@ export class HandicapsComponent implements OnInit {
         }
     }
     public downloadAsPDFCongu() {
+        try {
+            
+            this.logger.log('Download Handicap Congu Button Click', "info");
         let holeObj = document.getElementById('a');
         console.log(holeObj);
 
@@ -331,12 +345,16 @@ export class HandicapsComponent implements OnInit {
 
         // Open PDF document in new tab
         doc.output('dataurlnewwindow');
-
+    } catch (error) {
+        this.logger.log('Downloading Congu Handicap Data Failed', "error", error.toString());
+         
+    }
         // Download PDF document
         //doc.save('flights.pdf');
     }
 
     redirectToHandicapDetails = (id: string) => {
+        this.logger.log('View Player Handicap Congu Button Click', "info",id);
         this.location.navigate(['./', id], {
             relativeTo: this._activatedRoute,
         });
@@ -348,6 +366,7 @@ export class HandicapsComponent implements OnInit {
     };
 
     getPlayerInformationByName(filterValue: string) {
+        this.logger.log('Search in Handicap Congu', "info",filterValue);
         console.log(filterValue);
         if (filterValue == '') {
             this.syncHandicapCongu();
@@ -422,18 +441,18 @@ export class HandicapsComponent implements OnInit {
                     oldhandicap:
                         obj.handicapQL.length > 0
                             ? obj.handicapQL[obj.handicapQL.length - 1]
-                                  .oldHandicap
+                                .oldHandicap
                             : 0,
                     oldactualhandicap:
                         obj.handicapQL.length > 0
                             ? obj.handicapQL[obj.handicapQL.length - 1]
-                                  .oldHandicap
+                                .oldHandicap
                             : 0,
                     updatedAt:
                         obj.handicapQL.length > 0
                             ? obj.handicapQL[
-                                  obj.handicapQL.length - 1
-                              ].updatedAt.substring(0, 10)
+                                obj.handicapQL.length - 1
+                            ].updatedAt.substring(0, 10)
                             : '',
                     actualhandicap:
                         obj.handicapQL.length > 0

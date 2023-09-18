@@ -10,6 +10,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { DailyReportService } from './daily-player.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
   selector: 'app-daily-player-report',
   templateUrl: './daily-player-report.component.html',
@@ -54,34 +55,42 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private fb: FormBuilder,
     private _localStorage: LocalStorageService,
-    private _reportService: DailyReportService
+    private _reportService: DailyReportService,
+    private logger: LogsService
   ) { }
 
 
   async ngOnInit() {
-    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-    this.isPlayer = true;
-    this._reportService.data$
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((data) => {
-        console.log(data);
-        this.chart(data.series, data.labels, data.holesSet)
-        if (data.todayData.length > 0) {
-          this.isPlayer = true;
-          this.dataSource = new MatTableDataSource(data.todayData);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.isLoading = true;
-        } else {
-          this.isPlayer = false;
-        }
+    try {
+      this.logger.log('Sectary Come to Daily Players Round Page', "info");
+      this.logger.log('Getting Daily Players Round Data', "info", "Today");
+      this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+      this.isPlayer = true;
+      this._reportService.data$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((data) => {
+          console.log(data);
+          this.chart(data.series, data.labels, data.holesSet)
+          if (data.todayData.length > 0) {
+            this.isPlayer = true;
+            this.dataSource = new MatTableDataSource(data.todayData);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            this.isLoading = true;
+          } else {
+            this.isPlayer = false;
+          }
+        });
+      this.isLoading = false;
+      this.scheduleForm = this.fb.group({
+        Date: ['', [Validators.required]],
       });
-    this.isLoading = false;
-    this.scheduleForm = this.fb.group({
-      Date: ['', [Validators.required]],
-    });
-    let todayDate = this.today();
+      let todayDate = this.today();
 
+    } catch (error) {
+      this.logger.log('Getting Daily Players Round Data Failed', "error", error.toString());
+      
+    }
     //his.getTotalReport(todayDate);
   }
   ngAfterViewInit(): void {
@@ -143,6 +152,7 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
   }
 
   onDatePick() {
+    this.logger.log('Sectary Click on Date in Daily Players Round Page', "info");
     if (this.scheduleForm.value.Date) {
       //let lastDate = this.scheduleForm.value.endDate;
       let Date = this.scheduleForm.value.Date;

@@ -40,6 +40,7 @@ import { HandicapsComponent } from '../CONGU/handicaps.component';
 import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
@@ -90,18 +91,26 @@ export class PlayerHandicapComponent implements OnInit {
         private _handicapComponent: HandicapsComponent,
         private _facadeService: FacadeService,
         private _router: Router,
-        private _localStorage: LocalStorageService
-    ) {}
+        private _localStorage: LocalStorageService, private logger: LogsService,
+    ) { }
 
     async ngOnInit() {
-        this._handicapComponent.matDrawer.open();
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        try {
 
-        this._activatedRoute.paramMap.subscribe(async (params) => {
-            this.showTable = Promise.resolve(false);
-            this.playerID = params.get('id');
-            this.fetchData();
-        });
+
+            this._handicapComponent.matDrawer.open();
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
+            this._activatedRoute.paramMap.subscribe(async (params) => {
+                this.showTable = Promise.resolve(false);
+                this.playerID = params.get('id');
+                this.logger.log('Player Congu Handicap Sidebar Open', "info", this.playerID);
+                this.fetchData();
+            });
+        } catch (error) {
+            this.logger.log('Getting Player Wise Congu Handicap Data Failed', "error", error.toString());
+
+        }
     }
 
     /**
@@ -184,86 +193,94 @@ export class PlayerHandicapComponent implements OnInit {
     }
 
     cancel() {
+        this.logger.log('BackDrop click on Player Congu Handicap', "info");
+
         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
     public downloadAsPDFCongu() {
-        var doc = new jsPDF();
-        var col = [
-            'Sr.',
-            'Mem.No',
-            'Date',
-            'G.Score',
-            'Adj.Gross',
-            'Net',
-            'Crnt H/C',
-            "H'Cap Adj",
-            'Exact H/C',
-        ];
-        var rows = [];
-        doc.setFontSize(17);
-        doc.text(
-            'CONGU-Handicap Change-Log of ' +
+        try {
+            this.logger.log('Download Player Congu Handicap Button Click', "info");
+            var doc = new jsPDF();
+            var col = [
+                'Sr.',
+                'Mem.No',
+                'Date',
+                'G.Score',
+                'Adj.Gross',
+                'Net',
+                'Crnt H/C',
+                "H'Cap Adj",
+                'Exact H/C',
+            ];
+            var rows = [];
+            doc.setFontSize(17);
+            doc.text(
+                'CONGU-Handicap Change-Log of ' +
                 this.currentPlayer[0].firstName +
                 ' ' +
                 this.currentPlayer[0].lastName,
-            14,
-            15
-        );
-        doc.setFontSize(18);
-        doc.setTextColor(100);
+                14,
+                15
+            );
+            doc.setFontSize(18);
+            doc.setTextColor(100);
 
-        let count = 0;
-        this.playerHandiData = this.playerHandiData.slice(0, this.pageSize);
-        this.playerHandiData.forEach((element) => {
-            let panelty: boolean = false;
-            count++;
-            // if (
-            //     element.tournamentQL.flights &&
-            //     element.tournamentQL.flights[0] != undefined
-            // ) {
-            //     panelty = element.tournamentQL.flights[0].members.some(
-            //         (element) => {
-            //             return (
-            //                 element.playerId == this.playerID &&
-            //                 element.panelty == true
-            //             );
-            //         }
-            //     );
-            // }
-            var temp = [
-                count,
-                this.currentPlayer[0].membershipNumber,
-                formatDate(
-                    element.tournamentQL.startDate,
-                    'mediumDate',
-                    'en-US'
-                ),
-                element.grossScore ? element.grossScore : '-',
-                element.adjustedScore ? element.adjustedScore : '-',
-                element.score,
-                element.oldHandicap,
-                Math.round((element.handicap - element.oldHandicap) * 10) / 10,
-                element.handicap,
-                element.panelty,
-            ];
-            rows.push(temp);
-        });
-        //From HTML
-        doc.autoTable(col, rows, {
-            startY: 25,
-            theme: 'grid',
-            didParseCell: function (data) {
-                if (data.row.raw[9] == true) {
-                    data.cell.styles.textColor = [255, 9, 9];
-                }
-            },
-        });
+            let count = 0;
+            this.playerHandiData = this.playerHandiData.slice(0, this.pageSize);
+            this.playerHandiData.forEach((element) => {
+                let panelty: boolean = false;
+                count++;
+                // if (
+                //     element.tournamentQL.flights &&
+                //     element.tournamentQL.flights[0] != undefined
+                // ) {
+                //     panelty = element.tournamentQL.flights[0].members.some(
+                //         (element) => {
+                //             return (
+                //                 element.playerId == this.playerID &&
+                //                 element.panelty == true
+                //             );
+                //         }
+                //     );
+                // }
+                var temp = [
+                    count,
+                    this.currentPlayer[0].membershipNumber,
+                    formatDate(
+                        element.tournamentQL.startDate,
+                        'mediumDate',
+                        'en-US'
+                    ),
+                    element.grossScore ? element.grossScore : '-',
+                    element.adjustedScore ? element.adjustedScore : '-',
+                    element.score,
+                    element.oldHandicap,
+                    Math.round((element.handicap - element.oldHandicap) * 10) / 10,
+                    element.handicap,
+                    element.panelty,
+                ];
+                rows.push(temp);
+            });
+            //From HTML
+            doc.autoTable(col, rows, {
+                startY: 25,
+                theme: 'grid',
+                didParseCell: function (data) {
+                    if (data.row.raw[9] == true) {
+                        data.cell.styles.textColor = [255, 9, 9];
+                    }
+                },
+            });
 
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
+            // Open PDF document in new tab
+            doc.output('dataurlnewwindow');
 
-        // Download PDF document
-        //doc.save('flights.pdf');
+            // Download PDF document
+            //doc.save('flights.pdf');
+        } catch (error) {
+            this.logger.log('Download Player Handicap Congu Failed', "error", error.toString());
+       
+        }
     }
     pageEvents(event) {
         console.log(event);

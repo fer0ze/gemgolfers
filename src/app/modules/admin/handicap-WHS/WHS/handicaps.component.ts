@@ -34,6 +34,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
@@ -96,7 +97,7 @@ export class HandicapsComponent implements OnInit {
         private _facadeService: FacadeService,
         private datepipe: DatePipe,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private _changeDetectorRef: ChangeDetectorRef, private logger: LogsService,
         private _activatedRoute: ActivatedRoute, private _localStorage: LocalStorageService
     ) { }
 
@@ -106,97 +107,104 @@ export class HandicapsComponent implements OnInit {
 
     async ngOnInit() {
         //this.fecthData();
+        try {
 
-        this.currentDate = new Date();
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.Players = [];
+            this.logger.log('Admin Come to WHS Handicap Page', "info");
+            this.currentDate = new Date();
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.Players = [];
 
-        this._router.paramMap.subscribe((params) => {
-            this.filterCategory = params.get('category');
-        });
-        console.log(this.filterCategory);
-
-        this.MembersCat = this.filterCategory;
-        if (this.loggedInuser) {
-            let club: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
-
-            let courseID =
-                club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
-            let courseRating: any = {
-                courseId: courseID,
-                courseHoleSets: 3,
-            };
-            this.playerWHSRound = await this._facadeService.getPlayerWHSRound(
-                courseRating
-            );
-        }
-        if (this.loggedInuser.userRole > 1) {
-            if (this.filterCategory)
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByClubAndCategory(
-                        this.loggedInuser.adminClubId,
-                        General.capitalizeFirstLetter(this.filterCategory)
-                    );
-            else {
-                this.dataPlayers =
-                    await this._facadeService.getPlayersListByClubOnlyWHS(
-                        this.loggedInuser.adminClubId
-                    );
-                // this.aggregate =
-                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                console.log(this.aggregate);
-                this.syncHandicapWHS();
-
-                // this.WHSSource = new MatTableDataSource(this.HandicapIndex);
-                // console.log(this.WHSSource);
-                // this.WHSSource.sort = this.sort;
-                // setTimeout(() => (this.WHSSource.paginator = this.paginator), 1000);
-            }
-        } else {
-            if (this.filterCategory)
-                this.dataPlayers =
-                    await this._facadeService.getPlayerByCategory(
-                        General.capitalizeFirstLetter(this.filterCategory)
-                    );
-            else {
-                this.dataPlayers = await this._facadeService.getPlayersList();
-                console.log(this.dataPlayers);
-
-                // this.aggregate =
-                //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                console.log(this.aggregate);
-                this.syncHandicapWHS();
-            }
-        }
-        this.showTable = Promise.resolve(true);
-        // Subscribe to MatDrawer opened change
-        this.matDrawer.openedChange.subscribe((opened) => {
-            if (!opened) {
-                // Remove the selected contact when drawer closed
-                //this.selectedContact = null;
-                console.log(opened);
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            }
-        });
-
-        this._fuseMediaWatcherService.onMediaChange$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({ matchingAliases }) => {
-                // Set the drawerMode if the given breakpoint is active
-                if (matchingAliases.includes('lg')) {
-                    this.drawerMode = 'side';
-                } else {
-                    this.drawerMode = 'over';
-                }
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
+            this._router.paramMap.subscribe((params) => {
+                this.filterCategory = params.get('category');
             });
+            console.log(this.filterCategory);
+
+            this.MembersCat = this.filterCategory;
+            if (this.loggedInuser) {
+                let club: any =
+                    this.loggedInuser.membership.length > 0
+                        ? this.loggedInuser.membership[0].club
+                        : null;
+
+                let courseID =
+                    club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
+                let courseRating: any = {
+                    courseId: courseID,
+                    courseHoleSets: 3,
+                };
+                this.playerWHSRound = await this._facadeService.getPlayerWHSRound(
+                    courseRating
+                );
+            }
+            this.logger.log('Getting WHS Handicap Data', "info");
+            if (this.loggedInuser.userRole > 1) {
+                if (this.filterCategory)
+                    this.dataPlayers =
+                        await this._facadeService.getPlayersListByClubAndCategory(
+                            this.loggedInuser.adminClubId,
+                            General.capitalizeFirstLetter(this.filterCategory)
+                        );
+                else {
+                    this.dataPlayers =
+                        await this._facadeService.getPlayersListByClubOnlyWHS(
+                            this.loggedInuser.adminClubId
+                        );
+                    // this.aggregate =
+                    //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                    console.log(this.aggregate);
+                    this.syncHandicapWHS();
+
+                    // this.WHSSource = new MatTableDataSource(this.HandicapIndex);
+                    // console.log(this.WHSSource);
+                    // this.WHSSource.sort = this.sort;
+                    // setTimeout(() => (this.WHSSource.paginator = this.paginator), 1000);
+                }
+            } else {
+                if (this.filterCategory)
+                    this.dataPlayers =
+                        await this._facadeService.getPlayerByCategory(
+                            General.capitalizeFirstLetter(this.filterCategory)
+                        );
+                else {
+                    this.dataPlayers = await this._facadeService.getPlayersList();
+                    console.log(this.dataPlayers);
+
+                    // this.aggregate =
+                    //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
+                    console.log(this.aggregate);
+                    this.syncHandicapWHS();
+                }
+            }
+            this.showTable = Promise.resolve(true);
+            // Subscribe to MatDrawer opened change
+            this.matDrawer.openedChange.subscribe((opened) => {
+                if (!opened) {
+                    // Remove the selected contact when drawer closed
+                    //this.selectedContact = null;
+                    console.log(opened);
+
+                    // Mark for check
+                    this._changeDetectorRef.markForCheck();
+                }
+            });
+
+            this._fuseMediaWatcherService.onMediaChange$
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe(({ matchingAliases }) => {
+                    // Set the drawerMode if the given breakpoint is active
+                    if (matchingAliases.includes('lg')) {
+                        this.drawerMode = 'side';
+                    } else {
+                        this.drawerMode = 'over';
+                    }
+
+                    // Mark for check
+                    this._changeDetectorRef.markForCheck();
+                });
+        } catch (error) {
+            this.logger.log('Getting All WHS Handicap Data Failed', "error", error.toString());
+       
+        }
         //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
     }
 
@@ -208,6 +216,8 @@ export class HandicapsComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
     updatePlayer(id: string): void {
+        this.logger.log('View Player Handicap WHS Button Click', "info",id);
+        
         this.location.navigate(['./', id], {
             relativeTo: this._activatedRoute,
         });
@@ -297,6 +307,9 @@ export class HandicapsComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     };
     public downloadAsPDFWHS() {
+        try {
+            
+            this.logger.log('Download Handicap WHS Button Click', "info");
         var doc = new jsPDF();
         var col = [
             'Sr.',
@@ -374,10 +387,15 @@ export class HandicapsComponent implements OnInit {
 
         // Download PDF document
         doc.save('WHS.pdf');
+    } catch (error) {
+        this.logger.log('Downloading WHS Handicap Data Failed', "error", error.toString());
+         
+    }
     }
 
     getPlayerInformationByName(filterValue: string) {
         console.log(filterValue);
+        this.logger.log('Search in Handicap WHS', "info",filterValue);
         if (filterValue == '') {
             this.syncHandicapWHS();
             return;
@@ -642,7 +660,7 @@ export class HandicapsComponent implements OnInit {
                     0.95;
                 redTeeHI = Math.round(redTeeHI);
                 teeRatings['RED'] = redTeeHI; // Store red tee handicap index
-            }else if (item['tee'] == 'Black') {
+            } else if (item['tee'] == 'Black') {
                 let BlackTeeHI =
                     (handicapIndex * (slopeRating / 113.0) +
                         (courseRating - coursePar)) *
