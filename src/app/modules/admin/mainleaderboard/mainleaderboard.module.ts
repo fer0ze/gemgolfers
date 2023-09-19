@@ -9,9 +9,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StrokePlayComponent } from './strokePlay/strokePlay.component';
+import { StableFordComponent } from './stableFord/stableFord.component';
 
 @NgModule({
-    declarations: [MainLeaderboardComponent, StrokePlayComponent],
+    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent],
     imports: [
         CommonModule,
         MainleaderboardRoutingModule,

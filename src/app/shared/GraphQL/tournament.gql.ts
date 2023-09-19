@@ -26,25 +26,6 @@ import {
 
 export const LeaderboardSubscription = gql`
     query LeaderboardSimpleSubscription($tournamentPrefix: String!) {
-        TournamentQL: tournament(
-            where: {
-                _or: [
-                    { id: { _eq: $tournamentPrefix } }
-                    { prefix: { _eq: $tournamentPrefix } }
-                ]
-            }
-        ) {
-            cutOffCriteria
-            activeRound
-            handicapAllocations
-            noOfRounds
-            webLogoUrl
-            title
-            matchFormat
-            CategoriesQL: categories {
-                ...TournamentMemberCategoryQL
-            }
-        }
         LeaderBoardQL: leaderboard_score(
             where: { prefix: { _eq: $tournamentPrefix } }
         ) {
@@ -81,6 +62,26 @@ export const LeaderboardSubscription = gql`
         holeScoreLast3
         holeScoreLast1
         }
+        TournamentQL: tournament(
+            where: {
+                _or: [
+                    { id: { _eq: $tournamentPrefix } }
+                    { prefix: { _eq: $tournamentPrefix } }
+                ]
+            }
+        ) {
+            cutOffCriteria
+            activeRound
+            handicapAllocations
+            noOfRounds
+            webLogoUrl
+            title
+            matchFormat
+            CategoriesQL: categories {
+                ...TournamentMemberCategoryQL
+            }
+        }
+        
     }
     ${TournamentMemberCategoryQL}
 `;

@@ -183,6 +183,24 @@
                                 </mat-form-field>
                             </div>
                         </div>
+                        <div class="sm:col-span-1" *ngIf="showCourseHole">
+                            <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                <mat-label>Course Hole Set</mat-label>
+                                <mat-select class="w-full" placeholder="Course" formControlName="courseHoleSet">
+                                    <mat-option *ngFor="
+                                                            let course of courseHoleSetNames
+                                                        " [value]="
+                                                            course.holeSets +
+                                                            '_' +
+                                                            course.inverted
+                                                        ">{{
+                                        course.displayName
+                                        }}</mat-option>
+                                </mat-select>
+                                <mat-icon matSuffix>place</mat-icon>
+                            </mat-form-field>
+
+                        </div>
                         <div class="sm:col-span-1" formArrayName="courseInfo">
                             <div *ngFor="
                                                 let url of courseFileds.controls;
@@ -219,30 +237,13 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="sm:col-span-1" *ngIf="showCourseHole">
-                            <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
-                                <mat-label>Course Hole Set</mat-label>
-                                <mat-select class="w-full" placeholder="Course" formControlName="courseHoleSet">
-                                    <mat-option *ngFor="
-                                                            let course of courseHoleSetNames
-                                                        " [value]="
-                                                            course.holeSets +
-                                                            '_' +
-                                                            course.inverted
-                                                        ">{{
-                                        course.displayName
-                                        }}</mat-option>
-                                </mat-select>
-                                <mat-icon matSuffix>place</mat-icon>
-                            </mat-form-field>
 
-                        </div>
                         <div class="sm:col-span-1" *ngIf="!showCourseHole">
                         </div>
 
 
-                        <div *ngIf="showSubtournament" class="flex my-4 text-2xl" fxLayoutAlign="start center">
-                            <h3>Create Sub Tournament</h3>
+                        <div *ngIf="showSubtournament" class="flex my-4 text-2xl" fxLayoutAlign="start end">
+                            <h3>New Sub LeaderBoard</h3>
                         </div>
                         <div *ngIf="showSubtournament" class="sm:col-span-1" formArrayName="subTournament">
                             <div *ngFor="
@@ -505,7 +506,7 @@
                                 </div>
                                 <div class="flex-auto mr-4">
                                     <div>
-                                        <mat-form-field class="mx-4">
+                                        <mat-form-field class="mx-4 w-full">
                                             <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
                                             <input matInput (keyup)="
                                                             applyFilter(
@@ -632,7 +633,7 @@
                                 </div>
                                 <div class="flex-auto mr-4">
                                     <div>
-                                        <mat-form-field class="mx-4">
+                                        <mat-form-field class="mx-4 w-full">
                                             <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
                                             <input matInput (keyup)="
                                                             applyMembersFilter(
@@ -789,8 +790,8 @@
                                 formArray.get([1]).get("category")
                                 .value[i].name
                                 }}</ng-template>
-                            <div [formGroupName]="i" class="mt-4 overflow-hidden">
-                                <!-- <mat-card style="margin-bottom: 30px">
+
+                            <!-- <mat-card style="margin-bottom: 30px">
                                             <div
                                                 fxLayout="row"
                                                 fxLayout.lt-md="column"
@@ -864,15 +865,14 @@
                                             </div>
                                         </mat-card> -->
 
-                                <div>
-                                    <div>
-                                        <div
-                                            class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                            <div
-                                                class="py-2 ml-4 px-3 mb-2 items-center rounded-full text-md w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500">
-                                                Day 1 Group
-                                            </div>
-                                            <!-- <div
+                            <div [formGroupName]="i" class="grid sm:grid-cols-4 gap-6 w-full mb-10">
+
+
+                                <!-- <div
+                                        class="py-2 ml-4 px-3 mb-2 items-center rounded-full text-md w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500">
+                                        Day 1 Group
+                                    </div> -->
+                                <!-- <div
                                                         class="ml-5 mt-1 mb-4 text-slate-600 font-extrabold"
                                                     >
                                                         Note*: These are only
@@ -880,76 +880,94 @@
                                                         flights are generated
                                                         according to the cut.
                                                     </div> -->
-                                            <div class="flex flex-row items-center">
-                                                <mat-form-field class="mx-4">
-                                                    <mat-label>Players/Group</mat-label>
-                                                    <input matInput formControlName="playersperFlight" type="number" />
-                                                    <mat-error>The input is
-                                                        required.</mat-error>
-                                                </mat-form-field>
+                                <div class="sm:col-span-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                        <mat-label>Players/Group</mat-label>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'"
+                                            matPrefix></mat-icon>
+                                        <input matInput formControlName="playersperFlight" type="number" />
+                                        <mat-error>The input is
+                                            required.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                        <mat-label>Group
+                                            interval</mat-label>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'"
+                                            matPrefix></mat-icon>
+                                        <input matInput formControlName="flightsInterval" type="number"
+                                            placeholder="Time in Minutes" min="1" max="30" />
+                                        <mat-icon matSuffix>golf_course</mat-icon>
+                                    </mat-form-field>
+                                </div>
 
-                                                <mat-form-field class="mx-4">
-                                                    <mat-label>Group
-                                                        interval</mat-label>
-                                                    <input matInput formControlName="flightsInterval" type="number"
-                                                        placeholder="Time in Minutes" min="1" max="30" />
-                                                    <mat-icon matSuffix>golf_course</mat-icon>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                            <div class="flex flex-row ml-4">
-                                                <mat-radio-group class="w-full" formControlName="arrangements"
-                                                    fxLayoutAlign="start center">
-                                                    <mat-radio-button value="0">Group Start
-                                                        Time</mat-radio-button>
-                                                    <mat-radio-button value="1">Last Group
-                                                        Time</mat-radio-button>
-                                                </mat-radio-group>
 
-                                                <mat-form-field class="mx-4">
-                                                    <input type="time" formControlName="flightStartTime" value="{{
+                                <div class="sm:col-span-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                        <mat-label>Time Selection</mat-label>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'"
+                                            matPrefix></mat-icon>
+                                        <mat-select formControlName="arrangements" class="w-full" placeholder="Pick one">
+                                            <mat-option [value]="0">Group Start Time</mat-option>
+                                            <mat-option [value]="1">Last Group Time</mat-option>
+                                            
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                        <mat-label>Group Time</mat-label>
+                                        <input type="time" formControlName="flightStartTime" value="{{
                                                                     selectedTime
                                                                 }}" atp-time-picker matInput #query />
-                                                    <mat-error>The input is
-                                                        required.</mat-error>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            class="mt-2 mb-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                            <div class="flex justify-between">
-                                                <div fxLayoutAlign="start center">
-                                                    <mat-label>Arrange
-                                                        By</mat-label>
-                                                </div>
-                                                <div>
-                                                    <mat-radio-group formControlName="arrangeBy"
-                                                        fxLayoutAlign="end center">
-                                                        <mat-radio-button value="handicap">Handicap</mat-radio-button>
-                                                        <mat-radio-button value="random">Random</mat-radio-button>
-                                                    </mat-radio-group>
-                                                </div>
-                                                <div fxLayoutAlign="start center">
-                                                    <mat-label>Starting
-                                                        Hole</mat-label>
-                                                </div>
-                                                <div>
-                                                    <mat-radio-group formControlName="startingHole"
-                                                        fxLayoutAlign="end center">
-                                                        <mat-radio-button value="1_10">1 &
-                                                            10</mat-radio-button>
-                                                        <mat-radio-button value="1">1</mat-radio-button>
-                                                        <mat-radio-button value="10">10</mat-radio-button>
-                                                        <mat-radio-button value="shotgun">Shotgun</mat-radio-button>
-                                                    </mat-radio-group>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        <mat-error>The input is
+                                            required.</mat-error>
+                                    </mat-form-field>
                                 </div>
+                                <div class="sm:col-span-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                        <mat-label>Arrange By</mat-label>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'"
+                                            matPrefix></mat-icon>
+                                        <mat-select formControlName="arrangeBy" class="w-full" placeholder="Pick one">
+                                            <mat-option value="handicap">Handicap</mat-option>
+                                            <mat-option value="random">Random</mat-option>
+                                            
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <!-- <div class="sm:col-span-1">
+                                    <mat-label>Starting
+                                        Hole</mat-label>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <mat-radio-group formControlName="startingHole" fxLayoutAlign="end center">
+                                        <mat-radio-button value="1_10">1 &
+                                            10</mat-radio-button>
+                                        <mat-radio-button value="1">1</mat-radio-button>
+                                        <mat-radio-button value="10">10</mat-radio-button>
+                                        <mat-radio-button value="shotgun">Shotgun</mat-radio-button>
+                                    </mat-radio-group>
+                                </div> -->
+                                <div class="sm:col-span-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                        <mat-label>Starting Hole</mat-label>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'"
+                                            matPrefix></mat-icon>
+                                        <mat-select formControlName="startingHole" class="w-full" placeholder="Pick one">
+                                            <mat-option value="1_10">1 &
+                                                10</mat-option>
+                                            <mat-option value="1">1</mat-option>
+                                            <mat-option value="10">10</mat-option>
+                                            <mat-option value="shotgun">Shotgun</mat-option>
+                                            
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+
+
                             </div>
                             <div class="flex justify-center my-12">
                                 <button mat-raised-button color="primary" (click)="

@@ -25,7 +25,7 @@ export class LogsService {
         query: Query.LogQL,
         variables: {
           request: {
-            name: 'Actify-Leads-Angular',
+            name: 'GemGolfers-WebApp',
             message: msg,
             level: level,
             body: {

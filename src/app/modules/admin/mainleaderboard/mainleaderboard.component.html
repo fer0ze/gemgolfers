@@ -36,17 +36,17 @@
             </div>
         </div>
     </div>
-    <div  *ngIf="!isLoading" class="mt-8">
+    <div *ngIf="!isLoading" class="mt-8">
         <ng-container [ngSwitch]="matchFormat">
             <ng-container *ngSwitchCase="'STROKE_PLAY'">
                 <app-stroke-play [data]="Leaderboard"></app-stroke-play>
             </ng-container>
-            <!-- <ng-container *ngSwitchCase="'STABLEFORD'"> 
-                <settings-account></settings-account>
+             <ng-container *ngSwitchCase="'STABLEFORD'"> 
+                <app-stable-ford [data]="Leaderboard"></app-stable-ford>
             </ng-container>
-            <ng-container *ngSwitchCase="'TEXAS_SCRAMBLE'">
+            <!-- <ng-container *ngSwitchCase="'TEXAS_SCRAMBLE'">
                 <settings-account></settings-account>
-            </ng-container> -->
+            </ng-container>  -->
         </ng-container>
     </div>
     

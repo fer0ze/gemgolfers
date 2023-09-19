@@ -1,5 +1,5 @@
 // Import necessary modules and components
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPlayerScoreComponent } from '../../dialogs/dialog-player-score/dialog-player-score.component';
 import { handicapAllocation } from 'app/shared/classes/general';
@@ -15,7 +15,7 @@ import { LeaderTypeValue } from 'app/shared/classes/leader';
     templateUrl: './strokePlay.component.html', // HTML template file path
     styleUrls: ['./strokePlay.component.scss'] // CSS/SCSS styles file(s) path
 })
-export class StrokePlayComponent implements OnInit {
+export class StrokePlayComponent implements OnInit, OnChanges {
     @Input() data: any;
     Leaderboard: any;
     LeaderboardAllPlayers: any[] = [];
@@ -91,6 +91,11 @@ export class StrokePlayComponent implements OnInit {
         }
         this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
 
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(changes);
+        //this.data = changes.data.currentValue;
+        this.ngOnInit();
     }
     getPlayers(leaders: any[], round: any, lastTab: any) {
         this.LeaderboardPlayers = [];

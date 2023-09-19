@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -26,10 +26,12 @@ import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialo
 import { LeaderboardSubscription } from 'app/shared/GraphQL/tournament.gql';
 import { LeaderboardService } from './mainleaderboard.service';
 
+
 @Component({
     selector: 'app-mainleaderboard',
     templateUrl: './mainleaderboard.component.html',
     styleUrls: ['./mainleaderboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLeaderboardComponent implements OnInit {
     private tournamentID: string;
@@ -115,7 +117,8 @@ export class MainLeaderboardComponent implements OnInit {
         private route: ActivatedRoute,
         public dialog: MatDialog,
         public facadeService: FacadeService,
-        private _leaderBoardService: LeaderboardService
+        private _leaderBoardService: LeaderboardService,
+        private cdr:ChangeDetectorRef
     ) { }
 
     async ngOnInit() {
@@ -157,7 +160,7 @@ export class MainLeaderboardComponent implements OnInit {
                 variables: {
                     tournamentPrefix: this.tournamentID,
                 },
-                pollInterval: 10000,
+                pollInterval: 2000,
             })
             .valueChanges.subscribe(({ data }) => {
                 if (!data) {
@@ -167,95 +170,97 @@ export class MainLeaderboardComponent implements OnInit {
                     this.Leaderboard = data;
                     this.matchFormat = this.Leaderboard.TournamentQL[0].matchFormat;
                     this.isLoading = false;
-                    // let dataLeaderboard: any = data;
-                    // //console.log(dataLeaderboard);
-
-                    // this.allMatchResults = [];
-                    // this.allLeadersGross = [];
-                    // this.allLeadersCutOffGross = [];
-                    // this.allLeadersNet = [];
-                    // this.grossLeaders = [];
-                    // this.netLeaders = [];
-                    // this.grossAllLeaders = [];
-                    // this.netAllLeaders = [];
-
-                    // this.tRounds = [];
-                    // this.teamMatch = false;
-
-                    // this.Leaderboard = dataLeaderboard.TournamentQL[0];
-                    // if (!this.clubLogo) {
-                    //     this.clubLogo =
-                    //         this.Leaderboard.AdminQL.membership[0].club.logo;
-                    // }
-                    // ////console.log(this.Leaderboard);
-                    // if (this.Leaderboard.cutOffCriteria != null) {
-                    //     if ('cutOff' in this.Leaderboard.cutOffCriteria) {
-                    //         if (this.Leaderboard.cutOffCriteria) {
-                    //             if (
-                    //                 Object.keys(this.Leaderboard.cutOffCriteria)
-                    //                     .length
-                    //             )
-                    //                 this.cutOffList =
-                    //                     this.Leaderboard.cutOffCriteria;
-                    //             // //console.log(this.cutOffList);
-                    //             // //console.log(this.cutOffList.cutOff);
-
-                    //             //console.log(this.cutOffList["cutOff"]);
-                    //         }
-                    //     }
-                    // }
-
-                    // this.activeRound = this.Leaderboard.activeRound;
-                    // this.totalRounds = this.Leaderboard.noOfRounds;
-                    // this.matchFormat = this.Leaderboard.matchFormat;
-                    // this.teamMatch = this.Leaderboard.teamMatch;
-                    // if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-                    //     this.showTaxes = true;
-                    // }
-                    // if (this.matchFormat == matchFormat.BESTBALL) {
-                    //     this.showBestBall = true;
-                    // }
-
-                    // if (this.Leaderboard.webLogoUrl)
-                    //     this.webLogoUrl = this.Leaderboard.webLogoUrl;
-                    // this.Leaderboard.CategoriesQL.sort(this.sortCategory);
-                    // if (!this.selectedCategoryValue) {
-                    //     this.updateCategoryNames();
-                    // }
-                    // let count = 0;
-
-
-                    // if (this.loggedInUser && this.loggedInUser.userRole)
-                    //     if (
-                    //         this.loggedInUser.adminClubId ===
-                    //         this.Leaderboard.clubId &&
-                    //         this.activeRound <= this.totalRounds
-                    //     )
-                    //         this.isClubAdmin = true;
-
-                    // //console.log(this.Leaderboard);
-
-                    // if (this.tRounds.length >= 0) {
-                    //     for (
-                    //         let round = 1;
-                    //         round <= this.Leaderboard.noOfRounds;
-                    //         round++
-                    //     ) {
-                    //         let r: any = {
-                    //             Text: 'Round ' + round,
-                    //             Value: round,
-                    //         };
-                    //         this.tRounds.push(r);
-                    //     }
-                    // }
-
-                    // this.selectedSubTournament = this.tournamentID;
-
-                    // this.parseSubscriptionResponse(this.Leaderboard);
-
-                    //resolve(data);
+                    this.cdr.detectChanges();
                 }
             });
+        // let dataLeaderboard: any = data;
+        // //console.log(dataLeaderboard);
+
+        // this.allMatchResults = [];
+        // this.allLeadersGross = [];
+        // this.allLeadersCutOffGross = [];
+        // this.allLeadersNet = [];
+        // this.grossLeaders = [];
+        // this.netLeaders = [];
+        // this.grossAllLeaders = [];
+        // this.netAllLeaders = [];
+
+        // this.tRounds = [];
+        // this.teamMatch = false;
+
+        // this.Leaderboard = dataLeaderboard.TournamentQL[0];
+        // if (!this.clubLogo) {
+        //     this.clubLogo =
+        //         this.Leaderboard.AdminQL.membership[0].club.logo;
+        // }
+        // ////console.log(this.Leaderboard);
+        // if (this.Leaderboard.cutOffCriteria != null) {
+        //     if ('cutOff' in this.Leaderboard.cutOffCriteria) {
+        //         if (this.Leaderboard.cutOffCriteria) {
+        //             if (
+        //                 Object.keys(this.Leaderboard.cutOffCriteria)
+        //                     .length
+        //             )
+        //                 this.cutOffList =
+        //                     this.Leaderboard.cutOffCriteria;
+        //             // //console.log(this.cutOffList);
+        //             // //console.log(this.cutOffList.cutOff);
+
+        //             //console.log(this.cutOffList["cutOff"]);
+        //         }
+        //     }
+        // }
+
+        // this.activeRound = this.Leaderboard.activeRound;
+        // this.totalRounds = this.Leaderboard.noOfRounds;
+        // this.matchFormat = this.Leaderboard.matchFormat;
+        // this.teamMatch = this.Leaderboard.teamMatch;
+        // if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+        //     this.showTaxes = true;
+        // }
+        // if (this.matchFormat == matchFormat.BESTBALL) {
+        //     this.showBestBall = true;
+        // }
+
+        // if (this.Leaderboard.webLogoUrl)
+        //     this.webLogoUrl = this.Leaderboard.webLogoUrl;
+        // this.Leaderboard.CategoriesQL.sort(this.sortCategory);
+        // if (!this.selectedCategoryValue) {
+        //     this.updateCategoryNames();
+        // }
+        // let count = 0;
+
+
+        // if (this.loggedInUser && this.loggedInUser.userRole)
+        //     if (
+        //         this.loggedInUser.adminClubId ===
+        //         this.Leaderboard.clubId &&
+        //         this.activeRound <= this.totalRounds
+        //     )
+        //         this.isClubAdmin = true;
+
+        // //console.log(this.Leaderboard);
+
+        // if (this.tRounds.length >= 0) {
+        //     for (
+        //         let round = 1;
+        //         round <= this.Leaderboard.noOfRounds;
+        //         round++
+        //     ) {
+        //         let r: any = {
+        //             Text: 'Round ' + round,
+        //             Value: round,
+        //         };
+        //         this.tRounds.push(r);
+        //     }
+        // }
+
+        // this.selectedSubTournament = this.tournamentID;
+
+        // this.parseSubscriptionResponse(this.Leaderboard);
+
+        //resolve(data);
+
     }
     private parseSubscriptionResponse(data: any): boolean {
         this.isLoading = false;

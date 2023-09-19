@@ -431,12 +431,22 @@ export class AddTournamentComponent implements OnInit {
                                         : [],
                             })
                         );
-                        let obj = {
-                            id: 1,
-                            name: p.name,
-                            // playingDates: result[i]['dates'],
-                        };
-                        this.dates.push(obj);
+                        if (founded[0].flightSettings.length > 0) {
+                            for (let obj of founded[0].flightSettings) {
+                                let objA = {
+                                    id: p.id,
+                                    name: p.name,
+                                    playingDates: obj,
+                                };
+                                this.dates.push(objA);
+                            }
+                        }
+                        // let obj = {
+                        //     id: 1,
+                        //     name: p.name,
+                        //     // playingDates: result[i]['dates'],
+                        // };
+                        // this.dates.push(obj);
                     }
 
                     let checkBoxCat: any = {
@@ -2008,12 +2018,14 @@ export class AddTournamentComponent implements OnInit {
                 this.currentTournament = tournament;
                 console.log(result);
                 if (result) {
-
+                    // this.valid2.reset();
+                    this.setState(this.valid2, false);
                     if (
                         this.showSubtournament == true
                     ) {
                         this.createSubtournament(this.tournamentID);
                     }
+                    this.valid2.reset();
                     this.snackBar.open('Tournament has been created.', 'x', {
                         duration: 3000,
                     });
@@ -2050,7 +2062,7 @@ export class AddTournamentComponent implements OnInit {
                         console.log(this.clubMembers);
 
                         this.syncClubMembers();
-
+                        
                         stepper.next();
 
                         //console.log(this.clubMembers);
