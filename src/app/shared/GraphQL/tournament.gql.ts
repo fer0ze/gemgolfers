@@ -109,6 +109,12 @@ export const LeaderboardSubscription = gql`
                 upScore
                 remainingHoles
             }
+            TeamResultDoublesQL:team_match_result_doubles{
+                tournamentId
+                finalResult
+                upScore
+                remainingHoles
+            }
         }
     }
     ${TournamentMemberCategoryQL}

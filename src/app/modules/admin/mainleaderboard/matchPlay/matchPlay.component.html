@@ -1,6 +1,12 @@
 <div class="flex flex-auto p-6 sm:p-10">
     <div class="flex flex-col flex-auto w-full max-w-7xl sm:max-w-5xl mx-auto">
         <div class="mt-3 flex flex-col sm:flex-row items-center justify-end sm:mt-0 sm:ml-2">
+            <mat-form-field class="fuse-mat-no-subscript pb-2 w-full sm:w-36 mx-2">
+                <mat-select (selectionChange)="selectionChanged($event)" value="1">
+                    <mat-option value="1">FOUR BALL</mat-option>
+                    <mat-option value="2">SINGLES</mat-option>
+                </mat-select>
+            </mat-form-field>
             <mat-form-field *ngIf="Leaderboard?.noOfRounds > 1" class="fuse-mat-no-subscript pb-2 w-full sm:w-36">
                 <mat-select (selectionChange)="changeRound($event)" [(value)]="flightRound">
                     <mat-option [value]="0">All Rounds</mat-option>
@@ -14,33 +20,168 @@
             </mat-form-field>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center mb-1">
-
+        <div *ngIf="isDoubles" class="flex flex-col sm:flex-row items-center justify-center mb-1">
             <div id="leaderboard" class="mt-2">
-
-
                 <ul class="responsive-table flex flex-auto justify-between gap-8">
-                    <li class="table-header" style="flex-basis: 100%; flex-direction: column;" *ngFor="let item of allTeams; let last = last">
+                    <li class="table-header" style="flex-basis: 100%; flex-direction: column"
+                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        *ngFor="let item of Team1; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
+                        <div class="col col-1">Total:{{ team1Point }}</div>
                         <!-- Render "VS" text only if it's not the last item -->
-                        <div class="col col-2" *ngFor="let player of item?.members">
-                            <div class="col col-2">
+                        <div class="col col-2 my-1" *ngFor="let player of item?.members"
+                            style="justify-content: center; display: flex">
+                            <div class="col col-2" style="
+                                    background: white;
+                                    flex-basis: 60%;
+                                   
+                                    border: px solid black;
+                                    border-radius: 8px;
+                                    border-color: black;
+                                    padding: 4px;
+                                    /* width: 70%; */
+                                " [ngStyle]="{ 'color': '#' + item.color }">
                                 {{ player.name }}
                                 <div class="text-xs flex items-center">
                                     HC:{{ player.handicap }}
                                 </div>
                             </div>
                         </div>
-                    </li> 
+                    </li>
+                    <ul class="responsive-table flex flex-auto justify-between gap-2"
+                        style="height: 50%; margin-top: auto; min-width: 11rem">
+                        <li *ngIf="isDoubleWon" class="table-header" style="
+                                flex-basis: 100%;
+                                flex-direction: column;
+                                padding: 0px;
+                            ">
+                            <div class="col col-1 pt-2" [ngStyle]="{
+                                    'background-color': '#' + signleWinColour
+                                }">
+                                Flight {{activeRound}}
+                            </div>
+                            <div class="col col-1 pb-3 bg-card" [ngStyle]="{ color: '#' + signleWinColour }">
+                                {{doubleScore}} up & 0
+                            </div>
+                        </li>
+                        <li *ngIf="!isDoubleWon" class="table-header" style="
+                                flex-basis: 100%;
+                                flex-direction: column;
+                                padding: 0px;
+                            ">
+                            <div class="col col-1 pt-2" [ngStyle]="{
+                                    'background-color': '#' + signleWinColour
+                                }">
+                                Flight {{activeRound}}
+                            </div>
+                            <div class="col col-1 pb-3 bg-card" [ngStyle]="{ color: '#' + signleWinColour }">
+                                Tied
+                            </div>
+                        </li>
+                    </ul>
+                    <li class="table-header" style="flex-basis: 100%; flex-direction: column"
+                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        *ngFor="let item of Team2; let last = last">
+                        <div class="col col-1">{{ item.name }}</div>
+                        <div class="col col-1">Total:{{ team2Point }}</div>
+                        <!-- Render "VS" text only if it's not the last item -->
+                        <div class="col col-2 my-1" *ngFor="let player of item?.members"
+                            style="justify-content: center; display: flex">
+                            <div class="col col-2" style="
+                                    background: white;
+                                    flex-basis: 60%;
+                                    border: px solid black;
+                                    border-radius: 8px;
+                                    border-color: black;
+                                    padding: 4px;
+                                    /* width: 70%; */
+                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                {{ player.name }}
+                                <div class="text-xs flex items-center">
+                                    HC:{{ player.handicap }}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
-
-
-
-
-
             </div>
-
         </div>
-
+        <div *ngIf="isSingles" class="flex flex-col sm:flex-row items-center justify-center mb-1">
+            <div id="leaderboard" class="mt-2">
+                <ul class="responsive-table flex flex-auto justify-between gap-8">
+                    <li class="table-header" style="flex-basis: 100%; flex-direction: column"
+                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        *ngFor="let item of Team1; let last = last">
+                        <div class="col col-1">{{ item.name }}</div>
+                        <div class="col col-1">Total:{{ team1Point }}</div>
+                        <!-- Render "VS" text only if it's not the last item -->
+                        <div class="col col-2 my-1" *ngFor="let player of item?.members"
+                            style="justify-content: center; display: flex">
+                            <div class="col col-2" style="
+                                    background: white;
+                                    flex-basis: 60%;
+                                   
+                                    border: px solid black;
+                                    border-radius: 8px;
+                                    border-color: black;
+                                    padding: 4px;
+                                    /* width: 70%; */
+                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                {{ player.name }}
+                                <div class="text-xs flex items-center">
+                                    HC:{{ player.handicap }}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <ul *ngIf="isDoubleWon" class="gap-2 pt-16"
+                        style="min-width: 11rem; flex-direction: column;">
+                        <li class="table-header my-2" style="
+                                flex-basis: 100%;
+                                flex-direction: column;background-color: transparent;
+                                padding: 0px;
+                            " *ngFor="let item of LeaderboardAllPlayers; let index = index">
+                            <div class="col col-1" [ngStyle]="{
+                                    'background-color': '#' + signleWinColour
+                                }">
+                                Flight {{activeRound}}
+                            </div>
+                            <div class="col col-1 bg-card " *ngIf="item.upScore>0"
+                                [ngStyle]="{ color: '#' + signleWinColour }">
+                                {{item.upScore}} up & {{item.holes}}
+                            </div>
+                            <div class="col col-1 bg-card " *ngIf="item.upScore===0"
+                                [ngStyle]="{ color: '#' + signleWinColour }">
+                                Tied & {{item.holes}}
+                            </div>
+                        </li>
+                    </ul>
+                    <li class="table-header" style="flex-basis: 100%; flex-direction: column"
+                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        *ngFor="let item of Team2; let last = last">
+                        <div class="col col-1">{{ item.name }}</div>
+                        <div class="col col-1">Total:{{ team2Point }}</div>
+                        <!-- Render "VS" text only if it's not the last item -->
+                        <div class="col col-2 my-1" *ngFor="let player of item?.members"
+                            style="justify-content: center; display: flex">
+                            <div class="col col-2" style="
+                                    background: white;
+                                    flex-basis: 60%;
+                                    border: px solid black;
+                                    border-radius: 8px;
+                                    border-color: black;
+                                    padding: 4px;
+                                    /* width: 70%; */
+                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                {{ player.name }}
+                                <div class="text-xs flex items-center">
+                                    HC:{{ player.handicap }}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

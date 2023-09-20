@@ -14,18 +14,25 @@ import { LeaderTypeValue } from 'app/shared/classes/leader';
 export class MatchPlayComponent implements OnInit, OnChanges {
     @Input() data: any;
     Leaderboard: any;
+    LeaderboardScore: any;
     LeaderboardAllPlayers: any[] = [];
     LeaderboardPlayers: any[] = [];
     allLeadersCutOffGross: any[] = [];
     allLeadersCutOffNet: any[] = [];
-    allTeams: any[] = [];
+    Team1: any[] = [];
+    Team2: any[] = [];
     selectedCategory: any;
+    signleWinColour: any = '21ACB5';
+    doubleWinColour: any = '21ACB5';
+    team1Point: any = 1;
+    team2Point: any = 1;
     selectedIndex: any = 0;
     flightRound: any = 0;
     activeRound: any = 1;
     totalRounds: any = 1;
     lastActiveTab: any = 1;
     cuttOffScore: number = 0;
+
 
     showBestBall: boolean = false;
     isCuttOffRequired: boolean = false;
@@ -37,6 +44,10 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
     isGross: boolean = false;
     isNet: boolean = true;
+    isDoubles: boolean = true;
+    isSingles: boolean = false;
+    isDoubleWon: boolean = false;
+    doubleScore = 0;
 
     selectedCategoryValue: string = '';
     eventCategories: string[] = [];
@@ -49,9 +60,11 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
+        this.LeaderboardScore = this.data.LeaderBoardQL;
         this.activeRound = this.Leaderboard.activeRound;
         this.totalRounds = this.Leaderboard.noOfRounds;
-        this.allTeams = [];
+        this.Team1 = [];
+        this.Team2 = [];
         let count = 1;
         this.Leaderboard.TeamQL.forEach(element => {
             let obj = {
@@ -60,10 +73,62 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 members: this.getMembers(this.Leaderboard.TeamQL[0], count),
             }
             count++;
-            this.allTeams.push(obj);
+            if (count == 2) {
+                this.Team1.push(obj);
+            } else {
+                this.Team2.push(obj);
+
+            }
         });
-        console.log(this.allTeams);
-        
+        if (this.Leaderboard.TeamResultDoublesQL.length > 0) {
+            let doubleResult = this.Leaderboard.TeamResultDoublesQL[0].upScore;
+            if (doubleResult > 0) {
+                this.doubleScore = doubleResult;
+                this.isDoubleWon = true;
+            } else {
+                this.isDoubleWon = false;
+            }
+        }
+        console.log('a');
+        this.LeaderboardAllPlayers=[];
+        if (this.Leaderboard.TeamQL[0].OpponentsQL.length > 0) {
+            let members = this.Leaderboard.TeamQL[0].OpponentsQL;
+            let upScore = 0;
+            for (let mem of members) {
+                let team1MemberId = mem.team1MemberId;
+                let team2MemberId = mem.team2MemberId;
+                let Score1 = this.LeaderboardScore.filter(a => { return a.playerId == team1MemberId });
+                let Score2 = this.LeaderboardScore.filter(a => { return a.playerId == team2MemberId });
+                if (Score1.length > 0 && Score2.length > 0) {
+                    let score1 = Score1[0].scoreR1;
+                    let score2 = Score2[0].scoreR1;
+                    let holes = 18 - Score1[0].holesPlayedR1;
+                    if (score1 > score2) {
+                        upScore = score1 - score2;
+                    } else if (score1 < score2) {
+                        upScore = score2 - score1;
+                    } else {
+                        upScore = 0;
+                    }
+                    let obj = {
+                        holes: holes,
+                        upScore: upScore
+                    }
+                    this.LeaderboardAllPlayers.push(obj)
+                } else {
+                    let obj = {
+                        holes: 0,
+                        upScore: 0
+                    }
+                    this.LeaderboardAllPlayers.push(obj);
+                }
+            }
+            console.log(this.LeaderboardAllPlayers);
+
+        }
+
+        /// console.log(this.allTeams);
+
         // this.LeaderboardAllPlayers = this.data.LeaderBoardQL;
         // this.tRounds = [];
         // if (this.tRounds.length >= 0) {
@@ -82,6 +147,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         // this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
 
     }
+
     getMembers(element, count) {
         let players = [];
         element.OpponentsQL.forEach(obj => {
@@ -169,54 +235,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         this.sortLeadersNet(this.LeaderboardPlayers, round);
 
     }
-    getScoreByRoundG(item: any, round: number): string {
-        const propertyName = `scoreR${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
-    }
-    getUnderByRoundG(item: any, round: number): string {
-        const propertyName = `underGross${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
-    }
-    getHolesByRoundG(item: any, round: number): string {
-        const propertyName = `holesPlayedR${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
-    }
-    getScoreByRoundN(item: any, round: number): string {
-        const propertyName = `netScoreR${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
-    }
-    getUnderByRoundN(item: any, round: number): string {
-        const propertyName = `underNet${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
-    }
-    getHolesByRoundN(item: any, round: number): string {
-        const propertyName = `holesPlayedR${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
-    }
-    getUnderStyleG(item: any, round: number): { [key: string]: string } {
-        const underValue = parseFloat(this.getUnderByRoundG(item, round)); // Parse the value if needed
-        const style = {};
 
-        if (underValue < 0) {
-            style['color'] = 'red'; // Set the 'color' property to 'red'
-        }
-
-        // Add more style properties as needed
-
-        return style;
-    }
-    getUnderStyleN(item: any, round: number): { [key: string]: string } {
-        const underValue = parseFloat(this.getUnderByRoundN(item, round)); // Parse the value if needed
-        const style = {};
-
-        if (underValue < 0) {
-            style['color'] = 'red'; // Set the 'color' property to 'red'
-        }
-
-        // Add more style properties as needed
-
-        return style;
-    }
     changeRound(item) {
         this.flightRound = item.value;
         if (item.value == '0') {
@@ -280,62 +299,70 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         }
     }
     selectionChanged(item) {
-        this.activeRound = this.Leaderboard.activeRound;
-        if (this.flightRound == 0) {
-            if (item.value == LeaderTypeValue.GROSS) {
-                ////console.log("Selected value: " + item.value);
-                this.allRoundGrossScore = true;
-                this.allRoundCutOff = true;
+        // this.activeRound = this.Leaderboard.activeRound;
+        // if (this.flightRound == 0) {
+        //     if (item.value == LeaderTypeValue.GROSS) {
+        //         ////console.log("Selected value: " + item.value);
+        //         this.allRoundGrossScore = true;
+        //         this.allRoundCutOff = true;
 
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
+        //         this.allRoundNetScore = false;
+        //         this.allRoundCutOffNet = false;
 
-                this.isGross = false;
-                this.isNet = false;
-                this.lastActiveTab = 1;
-                this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
+        //         this.isGross = false;
+        //         this.isNet = false;
+        //         this.lastActiveTab = 1;
+        //         this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
 
-            } else if (item.value == LeaderTypeValue.NET) {
-                ////console.log("Selected value: " + item.value);
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
+        //     } else if (item.value == LeaderTypeValue.NET) {
+        //         ////console.log("Selected value: " + item.value);
+        //         this.allRoundGrossScore = false;
+        //         this.allRoundCutOff = false;
 
-                this.allRoundNetScore = true;
-                this.allRoundCutOffNet = true;
-                this.isNet = false;
-                this.isGross = false;
-                this.lastActiveTab = 2;
-                this.getPlayers(this.LeaderboardAllPlayers, 0, 2)
+        //         this.allRoundNetScore = true;
+        //         this.allRoundCutOffNet = true;
+        //         this.isNet = false;
+        //         this.isGross = false;
+        //         this.lastActiveTab = 2;
+        //         this.getPlayers(this.LeaderboardAllPlayers, 0, 2)
 
-            }
+        //     }
 
+        // } else {
+        //     if (item.value == LeaderTypeValue.GROSS) {
+        //         ////console.log("Selected value: " + item.value);
+        //         this.isGross = true;
+        //         this.isNet = false;
+        //         this.allRoundGrossScore = false;
+        //         this.allRoundCutOff = false;
+
+        //         this.allRoundNetScore = false;
+        //         this.allRoundCutOffNet = false;
+        //         this.lastActiveTab = 1;
+        //         this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
+
+        //     } else if (item.value == LeaderTypeValue.NET) {
+        //         ////console.log("Selected value: " + item.value);
+        //         this.isNet = true;
+        //         this.isGross = false;
+        //         this.allRoundGrossScore = false;
+        //         this.allRoundCutOff = false;
+
+        //         this.allRoundNetScore = false;
+        //         this.allRoundCutOffNet = false;
+        //         this.lastActiveTab = 2;
+        //         this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 2)
+
+        //     }
+        // }
+        if (item.value == '1') {
+            this.isDoubles = true;
+            this.isSingles = false;
         } else {
-            if (item.value == LeaderTypeValue.GROSS) {
-                ////console.log("Selected value: " + item.value);
-                this.isGross = true;
-                this.isNet = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.lastActiveTab = 1;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-
-            } else if (item.value == LeaderTypeValue.NET) {
-                ////console.log("Selected value: " + item.value);
-                this.isNet = true;
-                this.isGross = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.lastActiveTab = 2;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 2)
-
-            }
+            this.isDoubles = false;
+            this.isSingles = true;
         }
+
     }
     filterByQuery(query) {
         // if (query.length > 3) {
