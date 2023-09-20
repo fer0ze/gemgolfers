@@ -10,9 +10,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StrokePlayComponent } from './strokePlay/strokePlay.component';
 import { StableFordComponent } from './stableFord/stableFord.component';
+import { MatchPlayComponent } from './matchPlay/matchPlay.component';
 
 @NgModule({
-    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent],
+    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent],
     imports: [
         CommonModule,
         MainleaderboardRoutingModule,

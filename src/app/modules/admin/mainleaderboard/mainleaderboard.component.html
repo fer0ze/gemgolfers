@@ -25,11 +25,13 @@
             <div class="flex flex-col justify-center sm:inline md:hidden">
                 <div class="flex flex-row justify-evenly">
                     <div class="flex flex-col text-center">
-                        <span class="leading-none text-sky-400 text-xl font-semibold">{{ Leaderboard?.TournamentQL[0].noOfRounds }}</span>
+                        <span class="leading-none text-sky-400 text-xl font-semibold">{{
+                            Leaderboard?.TournamentQL[0].noOfRounds }}</span>
                         <span class="leading-none mt-1  text-neutral-50 font-semibold">No.of Rounds</span>
                     </div>
                     <div class="flex flex-col text-center">
-                        <span class="leading-none text-sky-400 text-1xl font-semibold">{{ Leaderboard?.TournamentQL[0].activeRound }}</span>
+                        <span class="leading-none text-sky-400 text-1xl font-semibold">{{
+                            Leaderboard?.TournamentQL[0].activeRound }}</span>
                         <span class="leading-none mt-1  text-neutral-50 font-semibold">Active Round</span>
                     </div>
                 </div>
@@ -41,15 +43,15 @@
             <ng-container *ngSwitchCase="'STROKE_PLAY'">
                 <app-stroke-play [data]="Leaderboard"></app-stroke-play>
             </ng-container>
-             <ng-container *ngSwitchCase="'STABLEFORD'"> 
+            <ng-container *ngSwitchCase="'STABLEFORD'">
                 <app-stable-ford [data]="Leaderboard"></app-stable-ford>
             </ng-container>
-            <!-- <ng-container *ngSwitchCase="'TEXAS_SCRAMBLE'">
-                <settings-account></settings-account>
-            </ng-container>  -->
+            <ng-container *ngSwitchCase="'MATCH_PLAY'">
+                <app-match-play [data]="Leaderboard"></app-match-play>
+            </ng-container>
         </ng-container>
     </div>
-    
+
     <div class="outer-spinner" *ngIf="isLoading">
         <!-- <img
             src="assets/images/logo/logo.svg"

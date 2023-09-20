@@ -80,8 +80,36 @@ export const LeaderboardSubscription = gql`
             CategoriesQL: categories {
                 ...TournamentMemberCategoryQL
             }
+            TeamQL: teams {
+                id
+                name
+                color
+                OpponentsQL:opponentsTeam1{
+                    id
+                    team1Id
+                    team2Id
+                    team1MemberId
+                    team2MemberId
+                    playerTeam1{
+                        firstName
+                        lastName
+                        handicap
+                    }
+                    playerTeam2{
+                        firstName
+                        lastName
+                        handicap
+                    }
+                }
+            }
+            TeamResultQL:team_match_result_singles{
+                tournamentId
+                teamOpponentId
+                finalResult
+                upScore
+                remainingHoles
+            }
         }
-        
     }
     ${TournamentMemberCategoryQL}
 `;

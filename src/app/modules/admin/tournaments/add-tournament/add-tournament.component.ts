@@ -121,6 +121,7 @@ export class AddTournamentComponent implements OnInit {
     isMarshals: boolean;
     hideClubs: boolean = true;
     showTexas: boolean = false;
+    showMatchPlay: boolean = false;
     clubTitle: string;
     sDate: Date;
     tournamentID: string;
@@ -233,7 +234,7 @@ export class AddTournamentComponent implements OnInit {
                     handicapAllocations: ['AS_IS', Validators.required],
                     startDateFormCtrl: ['', Validators.required],
                     endDateFormCtrl: ['', Validators.required],
-                    teamMatch:['2', Validators.required],
+                    teamMatch: ["2", Validators.required],
                     clubsFormCtrl: [
                         this.loggedInuser.userRole > 1
                             ? this.loggedInuser.membership.length > 0
@@ -349,6 +350,7 @@ export class AddTournamentComponent implements OnInit {
                     startDateFormCtrl: this.currentTournament.startDate,
                     endDateFormCtrl: this.currentTournament.endDate,
                     numOfRounds: this.currentTournament.noOfRounds,
+                    teamMatch: this.currentTournament.teamMatch == true ? "2" : "1",
                     courseHoleSet:
                         this.currentTournament.courseHoleSets +
                             '_' +
@@ -356,6 +358,13 @@ export class AddTournamentComponent implements OnInit {
                             ? 'true'
                             : 'false',
                 });
+                if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
+                    this.showMatchPlay = true;
+                    this.showCat = false;
+                } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+                    this.showCat = false;
+                    this.showTexas = true;
+                }
 
                 //this.stepIndex = 1;
 
@@ -400,6 +409,13 @@ export class AddTournamentComponent implements OnInit {
                     .setValue({
                         name: this.currentTournament['CourseQL'].name,
                     });
+                this.formGroup.get('formArray')!
+                    .get([0])
+                    .get('courseInfo')!
+                    .get([0])
+                    .get('matchFormat')!
+                    .setValue(this.currentTournament.matchFormat);
+
 
                 // this.formArray
                 // .get([0])
@@ -1271,7 +1287,7 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
-    async getSelectedPlayers(index, stepper: MatStepper) {
+    getSelectedPlayers(index, stepper: MatStepper) {
         console.log(index);
 
         //console.log(this.selection.selected.length);
@@ -1394,13 +1410,24 @@ export class AddTournamentComponent implements OnInit {
         //Pdate=Pdate.replace('-');
 
         if (
-            this.formArray.get([0]).value.courseInfo[0].matchFormat !=
-            'TEXAS_SCRAMBLE'
+            this.formArray.get([0]).value.courseInfo[0].matchFormat == 'STROKE_PLAY' || this.formArray.get([0]).value.courseInfo[0].matchFormat == 'STABLEFORD'
         ) {
             FilteredPL = this.tournamentMembers.filter((a) => {
                 return a.playerCategory == PLcategory;
             });
         } else {
+            if (
+                this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+                'TEXAS_SCRAMBLE'
+            ) {
+                this.showTexas = true;
+            }
+            if (
+                this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+                'MATCH_PLAY'
+            ) {
+                this.showMatchPlay = true;
+            }
             FilteredPL = this.tournamentMembers;
         }
 
@@ -1915,8 +1942,12 @@ export class AddTournamentComponent implements OnInit {
             'TEXAS_SCRAMBLE'
         ) {
             this.showTexas = true;
-        } else {
-            this.showTexas = false;
+        }
+        if (
+            this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            'MATCH_PLAY'
+        ) {
+            this.showMatchPlay = true;
         }
         courseHoleSetsData.length > 0
             ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
@@ -1940,7 +1971,7 @@ export class AddTournamentComponent implements OnInit {
                 courseHoleSetsData.length > 0
                     ? Number(courseHoleSetsData[0])
                     : 0,
-            teamMatch: false,
+            teamMatch: this.formArray.get([0]).value.courseInfo[0].multiFormat == '1' ? false : true,
             pairsMatch: false,
             interLeague: false,
             playingOnWhs: false,
@@ -2062,7 +2093,7 @@ export class AddTournamentComponent implements OnInit {
                         console.log(this.clubMembers);
 
                         this.syncClubMembers();
-                        
+
                         stepper.next();
 
                         //console.log(this.clubMembers);
@@ -2392,7 +2423,8 @@ export class AddTournamentComponent implements OnInit {
                 if (!resultA) {
                     if (
                         this.formArray.get([0]).value.courseInfo[0]
-                            .matchFormat != 'TEXAS_SCRAMBLE'
+                            .matchFormat != 'TEXAS_SCRAMBLE' && this.formArray.get([0]).value.courseInfo[0]
+                                .matchFormat != 'MATCH_PLAY'
                     ) {
                         let sDate = new Date(
                             this.formArray.get([0]).value.startDateFormCtrl
@@ -3377,7 +3409,7 @@ export class AddTournamentComponent implements OnInit {
         console.log(this.formGroup.value);
 
         console.log(event);
-        if (event.value == matchFormat.TEXAS_SCRAMBLE) {
+        if (event.value == matchFormat.TEXAS_SCRAMBLE || event.value == matchFormat.MATCH_PLAY) {
             // let obj={
             //   id:1,
             //   name:"Amateurs"
