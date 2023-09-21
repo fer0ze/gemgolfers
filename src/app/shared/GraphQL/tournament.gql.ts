@@ -58,9 +58,9 @@ export const LeaderboardSubscription = gql`
             underNet3
             underNet4
             holeScoreLast9
-        holeScoreLast6
-        holeScoreLast3
-        holeScoreLast1
+            holeScoreLast6
+            holeScoreLast3
+            holeScoreLast1
         }
         TournamentQL: tournament(
             where: {
@@ -84,32 +84,32 @@ export const LeaderboardSubscription = gql`
                 id
                 name
                 color
-                OpponentsQL:opponentsTeam1{
+                OpponentsQL: opponentsTeam1 {
                     id
                     team1Id
                     team2Id
                     team1MemberId
                     team2MemberId
-                    playerTeam1{
+                    playerTeam1 {
                         firstName
                         lastName
                         handicap
                     }
-                    playerTeam2{
+                    playerTeam2 {
                         firstName
                         lastName
                         handicap
                     }
                 }
             }
-            TeamResultQL:team_match_result_singles{
+            TeamResultQL: team_match_result_singles {
                 tournamentId
                 teamOpponentId
                 finalResult
                 upScore
                 remainingHoles
             }
-            TeamResultDoublesQL:team_match_result_doubles{
+            TeamResultDoublesQL: team_match_result_doubles {
                 tournamentId
                 finalResult
                 upScore
@@ -1067,6 +1067,31 @@ export const insertTournamentMemberQL = gql`
             on_conflict: {
                 constraint: tournament_member_pkey
                 update_columns: [status]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
+export const insertTournamentTeamQL = gql`
+    mutation insertTournamentTeamQL(
+        $teamsToSave: [tournament_team_insert_input!]!
+        $teamMembersToSave: [tournament_team_opponent_insert_input!]!
+    ) {
+        insert_tournament_team(
+            objects: $teamsToSave
+            on_conflict: {
+                constraint: tournament_team_pkey
+                update_columns: [name, color]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+        insert_tournament_team_opponent(
+            objects: $teamMembersToSave
+            on_conflict: {
+                constraint: tournament_team_opponent_pkey
+                update_columns: [team1MemberId, team2MemberId, flightId]
             }
         ) {
             AffectedRowsQL: affected_rows

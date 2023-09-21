@@ -1346,6 +1346,30 @@ export class TournamentsService {
                 );
         });
     }
+    public insertTournamentTeam(
+        teamsToSave,teamMembersToSave
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertTournamentTeamQL,
+                    variables: {
+                        teamsToSave: teamsToSave,
+                        teamMembersToSave: teamMembersToSave,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
     public insertTournamentMemberStatus(
         tournamentMembers: any[]
     ): Promise<any> {

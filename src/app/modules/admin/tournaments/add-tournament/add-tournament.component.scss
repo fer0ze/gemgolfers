@@ -243,6 +243,13 @@
 
 }
 
+.color {
+  ::ng-deep .mat-form-field-infix {
+    max-height: 18px;
+    margin-top: 13px;
+  }
+}
+
 .catCount {
   background: #f66d00;
   padding: 10px;
