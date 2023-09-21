@@ -24,7 +24,7 @@
             <div id="leaderboard" class="mt-2">
                 <ul class="responsive-table flex flex-auto justify-between gap-8">
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        [ngStyle]="{ 'background-color':  item.color }"
                         *ngFor="let item of Team1; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
                         <div class="col col-1">Total:{{ team1Point }}</div>
@@ -40,7 +40,7 @@
                                     border-color: black;
                                     padding: 4px;
                                     /* width: 70%; */
-                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                " [ngStyle]="{ 'color': item.color }">
                                 {{ player.name }}
                                 <div class="text-xs flex items-center">
                                     HC:{{ player.handicap }}
@@ -80,7 +80,7 @@
                         </li>
                     </ul>
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        [ngStyle]="{ 'background-color':  item.color }"
                         *ngFor="let item of Team2; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
                         <div class="col col-1">Total:{{ team2Point }}</div>
@@ -95,7 +95,7 @@
                                     border-color: black;
                                     padding: 4px;
                                     /* width: 70%; */
-                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                " [ngStyle]="{ 'color':  item.color }">
                                 {{ player.name }}
                                 <div class="text-xs flex items-center">
                                     HC:{{ player.handicap }}
@@ -110,7 +110,7 @@
             <div id="leaderboard" class="mt-2">
                 <ul class="responsive-table flex flex-auto justify-between gap-8">
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        [ngStyle]="{ 'background-color':  item.color }"
                         *ngFor="let item of Team1; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
                         <div class="col col-1">Total:{{ team1Point }}</div>
@@ -126,7 +126,7 @@
                                     border-color: black;
                                     padding: 4px;
                                     /* width: 70%; */
-                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                " [ngStyle]="{ 'color':  item.color }">
                                 {{ player.name }}
                                 <div class="text-xs flex items-center">
                                     HC:{{ player.handicap }}
@@ -134,7 +134,7 @@
                             </div>
                         </div>
                     </li>
-                    <ul *ngIf="isDoubleWon" class="gap-2 pt-16"
+                    <ul  class="gap-2 pt-16"
                         style="min-width: 11rem; flex-direction: column;">
                         <li class="table-header my-2" style="
                                 flex-basis: 100%;
@@ -157,7 +157,7 @@
                         </li>
                     </ul>
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color': '#' + item.color }"
+                        [ngStyle]="{ 'background-color':  item.color }"
                         *ngFor="let item of Team2; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
                         <div class="col col-1">Total:{{ team2Point }}</div>
@@ -172,7 +172,7 @@
                                     border-color: black;
                                     padding: 4px;
                                     /* width: 70%; */
-                                " [ngStyle]="{ 'color': '#' + item.color }">
+                                " [ngStyle]="{ 'color':  item.color }">
                                 {{ player.name }}
                                 <div class="text-xs flex items-center">
                                     HC:{{ player.handicap }}
