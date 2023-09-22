@@ -34,9 +34,11 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     totalRounds: any = 1;
     lastActiveTab: any = 1;
     cuttOffScore: number = 0;
+    doubleHoles: number = 0;
 
 
     showBestBall: boolean = false;
+    doubleScoreEnd: boolean = false;
     isCuttOffRequired: boolean = false;
     allRoundGrossScore: boolean = false;
     allRoundNetScore: boolean;
@@ -85,6 +87,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         if (this.Leaderboard.TeamResultDoublesQL.length > 0) {
             let doubleResult = this.Leaderboard.TeamResultDoublesQL[0].upScore;
             let finalResult = this.Leaderboard.TeamResultDoublesQL[0].finalResult;
+            let doublesHoles = this.Leaderboard.TeamResultDoublesQL[0].remainingHoles;
             if (doubleResult > 0) {
                 if (finalResult == 'A_WON') {
                     this.doubleWinColour = this.Team1[0]['color'];
@@ -94,6 +97,10 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                     this.doubleWinColour = this.Team2[0]['color'];
                     this.team1PointD = 0;
                     this.team2PointD = 1;
+                }
+                if (doubleResult > doublesHoles) {
+                    this.doubleScoreEnd = true;
+                    this.doubleHoles =  doublesHoles;
                 }
                 this.doubleScore = doubleResult;
                 this.isDoubleWon = true;
@@ -126,7 +133,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
                         upScore = score1;
                         this.team1PointS += 1;
-                        
+
                     } else if (score1 < score2) {
                         //  color = this.Team2[0].members.filter(a => { return a.id == Score2[0].playerId });
                         color = this.getcolor(this.Team2[0], Score2[0].playerId);

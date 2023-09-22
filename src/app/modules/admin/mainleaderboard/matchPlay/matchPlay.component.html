@@ -59,8 +59,11 @@
                                 }">
                                 Flight {{activeRound}}
                             </div>
-                            <div class="col col-1 pb-3 bg-card" [ngStyle]="{ color:  doubleWinColour }">
+                            <div *ngIf="!doubleScoreEnd" class="col col-1 pb-3 bg-card" [ngStyle]="{ color:  doubleWinColour }">
                                 {{doubleScore}} up
+                            </div>
+                            <div *ngIf="doubleScoreEnd" class="col col-1 pb-3 bg-card" [ngStyle]="{ color:  doubleWinColour }">
+                                {{doubleScore}} up & {{doubleHoles}}
                             </div>
                         </li>
                         <li *ngIf="!isDoubleWon" class="table-header" style="
