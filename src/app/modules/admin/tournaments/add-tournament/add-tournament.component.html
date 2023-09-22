@@ -447,7 +447,7 @@
                             </button>
                             <!-- &nbsp; <button mat-raised-button color="accent" (click)="tournamentSetup()" matStepperPrevious>Tournament Setup << Back</button> &nbsp; <button mat-raised-button color="primary" (click)="flightsSetup(linearVerticalStepper, 'next')">Next >> flights Setup</button> -->
                         </div>
-                        <div *ngIf="showMatchPlay">
+                        <div *ngIf="showMatchPlay && this.selectedTeams.length < 2">
                             <button class="mr-8" mat-raised-button color="primary" (click)="AddTeam()">
                                 Add Tournament Team
                             </button>
@@ -695,25 +695,26 @@
                                                     let j = index;
                                                     trackBy: trackByFn
                                                 ">
-                                                <div class="grid sm:grid-cols-4 w-full items-center" [ngStyle]="{ 'background-color': '#' + items.color }">
+                                                <div class="grid sm:grid-cols-4 w-full items-center"
+                                                    [ngStyle]="{ 'background-color': '#' + items.color }">
                                                     <div class="sm:col-span-2 px-2 py-1">
                                                         <mat-form-field class="fuse-mat-no-subscript w-full">
-                                                           
-                                                            <span
-                                                                class="text-base font-black text-gray-400 min-w-max">Name:</span>
+
+                                                            <!-- <span
+                                                                class="text-base font-black text-gray-400 min-w-max">Name:</span> -->
                                                             <input value="{{
                                                                     items[
                                                                         'name'
                                                                     ]
                                                                 }}" matInput id="team_{{
                                                                     i
-                                                                }}_name" #query />
+                                                                }}_name" #query placeholder="Team Name" />
                                                         </mat-form-field>
                                                     </div>
                                                     <div class="sm:col-span-1 px-2 py-1">
                                                         <mat-form-field class="color fuse-mat-no-subscript w-full">
-                                                            <span
-                                                                class="text-base font-black text-gray-400 min-w-max"></span>
+                                                            <!-- <span
+                                                                class="text-base font-black text-gray-400 min-w-max"></span> -->
                                                             <input matInput type="color" value="{{
                                                                     items[
                                                                         'color'
@@ -756,7 +757,7 @@
                                                         drop($event)
                                                     "
                                                     class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
-                                                    
+
                                                     <div class="moveableList">
                                                         <div class="moveableFlights" *ngFor="
                                                                 let item of items;
@@ -792,7 +793,7 @@
                                                                             ]
                                                                             }}</span>
                                                                     </td>
-                                                                    
+
                                                                     <td width="10%" style="
                                                                             text-align: right;
                                                                         ">
@@ -1180,8 +1181,8 @@
                                                 <input id="flight_{{ i }}_name" value="{{ items.name }}" matInput
                                                     #query />
                                             </mat-form-field>
-                                           
-                    
+
+
 
                                             <mat-form-field class="fuse-mat-no-subscript mb-2 " [floatLabel]="'always'">
                                                 <mat-icon matPrefix class="icon-size-5" [svgIcon]="
@@ -1207,7 +1208,7 @@
                                                 <div class="moveableFlights sm:col-span-1" *ngFor="
                                                         let item of items;
                                                         let j = index
-                                                    " cdkDrag [cdkDragData]="item" [ngStyle]="getUnderStyle(item)">
+                                                    " cdkDrag [cdkDragData]="item" [ngStyle]="getUnderStyle(item)" [cdkDragLockAxis]="'y'">
                                                     <table class="overflow-y-visible" width="100%">
                                                         <tr>
                                                             <td width="20%">

@@ -596,7 +596,7 @@ export class AddTournamentComponent implements OnInit {
                     Validators.compose([Validators.required]),
                 ],
                 playersperFlight: [
-                    '3',
+                    '2',
                     Validators.compose([Validators.required]),
                 ],
                 flightStartTime: ['08:00', Validators.required],
