@@ -24,8 +24,10 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     selectedCategory: any;
     signleWinColour: any = '21ACB5';
     doubleWinColour: any = '21ACB5';
-    team1Point: any = 1;
-    team2Point: any = 1;
+    team1PointS: any = 1;
+    team2PointS: any = 1;
+    team1PointD: any = 1;
+    team2PointD: any = 1;
     selectedIndex: any = 0;
     flightRound: any = 0;
     activeRound: any = 1;
@@ -82,7 +84,17 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         });
         if (this.Leaderboard.TeamResultDoublesQL.length > 0) {
             let doubleResult = this.Leaderboard.TeamResultDoublesQL[0].upScore;
+            let finalResult = this.Leaderboard.TeamResultDoublesQL[0].finalResult;
             if (doubleResult > 0) {
+                if (finalResult == 'A_WON') {
+                    this.doubleWinColour = this.Team1[0]['color'];
+                    this.team1PointD = 1;
+                    this.team2PointD = 0;
+                } else if (finalResult == 'B_WON') {
+                    this.doubleWinColour = this.Team2[0]['color'];
+                    this.team1PointD = 0;
+                    this.team2PointD = 1;
+                }
                 this.doubleScore = doubleResult;
                 this.isDoubleWon = true;
             } else {
@@ -90,35 +102,56 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             }
         }
         console.log('a');
-        this.LeaderboardAllPlayers=[];
+        this.LeaderboardAllPlayers = [];
+        this.team1PointS = 0;
+        this.team2PointS = 0;
         if (this.Leaderboard.TeamQL[0].OpponentsQL.length > 0) {
             let members = this.Leaderboard.TeamQL[0].OpponentsQL;
             let upScore = 0;
+            let color = '';
+            let end: boolean = false;
             for (let mem of members) {
+                end = false;
                 let team1MemberId = mem.team1MemberId;
                 let team2MemberId = mem.team2MemberId;
                 let Score1 = this.LeaderboardScore.filter(a => { return a.playerId == team1MemberId });
                 let Score2 = this.LeaderboardScore.filter(a => { return a.playerId == team2MemberId });
-                if (Score1.length > 0 && Score2.length > 0) {
+                if (Score1 && Score2) {
                     let score1 = Score1[0].scoreR1;
                     let score2 = Score2[0].scoreR1;
                     let holes = 18 - Score1[0].holesPlayedR1;
                     if (score1 > score2) {
-                        upScore = score1 - score2;
+                        // color = this.Team1[0].members.filter(a => { return a.id == Score1[0].playerId });
+                        color = this.getcolor(this.Team1[0], Score1[0].playerId);
+
+                        upScore = score1;
+                        this.team1PointS += 1;
+                        
                     } else if (score1 < score2) {
-                        upScore = score2 - score1;
+                        //  color = this.Team2[0].members.filter(a => { return a.id == Score2[0].playerId });
+                        color = this.getcolor(this.Team2[0], Score2[0].playerId);
+                        upScore = score2;
+                        this.team2PointS += 1;
                     } else {
                         upScore = 0;
+                        color = '#818181'
+                    }
+                    if (upScore > holes) {
+                        end = true;
                     }
                     let obj = {
                         holes: holes,
-                        upScore: upScore
+                        upScore: upScore,
+                        color: color,
+                        end: end,
                     }
                     this.LeaderboardAllPlayers.push(obj)
                 } else {
                     let obj = {
                         holes: 0,
-                        upScore: 0
+                        upScore: 0,
+                        color: '#818181',
+                        end: false,
                     }
                     this.LeaderboardAllPlayers.push(obj);
                 }
@@ -155,17 +188,27 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 let play = {
                     name: obj.playerTeam1.firstName + " " + obj.playerTeam1.lastName,
                     handicap: obj.playerTeam1.handicap,
+                    id: obj.team1MemberId,
                 }
                 players.push(play)
             } else {
                 let play = {
                     name: obj.playerTeam2.firstName + " " + obj.playerTeam2.lastName,
                     handicap: obj.playerTeam2.handicap,
+                    id: obj.team2MemberId,
                 }
                 players.push(play)
             }
         });
         return players;
+
+    }
+    getcolor(team, id) {
+
+        let find = team.members.filter(a => { return a.id == id });
+        if (find) {
+            return team.color;
+        }
 
     }
     ngOnChanges(changes: SimpleChanges): void {

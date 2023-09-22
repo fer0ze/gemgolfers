@@ -24,10 +24,9 @@
             <div id="leaderboard" class="mt-2">
                 <ul class="responsive-table flex flex-auto justify-between gap-8">
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color':  item.color }"
-                        *ngFor="let item of Team1; let last = last">
+                        [ngStyle]="{ 'background-color':  item.color }" *ngFor="let item of Team1; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
-                        <div class="col col-1">Total:{{ team1Point }}</div>
+                        <div class="col col-1 text-xs">Total:{{ team1PointD }}</div>
                         <!-- Render "VS" text only if it's not the last item -->
                         <div class="col col-2 my-1" *ngFor="let player of item?.members"
                             style="justify-content: center; display: flex">
@@ -56,12 +55,12 @@
                                 padding: 0px;
                             ">
                             <div class="col col-1 pt-2" [ngStyle]="{
-                                    'background-color': '#' + signleWinColour
+                                    'background-color':  doubleWinColour
                                 }">
                                 Flight {{activeRound}}
                             </div>
-                            <div class="col col-1 pb-3 bg-card" [ngStyle]="{ color: '#' + signleWinColour }">
-                                {{doubleScore}} up & 0
+                            <div class="col col-1 pb-3 bg-card" [ngStyle]="{ color:  doubleWinColour }">
+                                {{doubleScore}} up
                             </div>
                         </li>
                         <li *ngIf="!isDoubleWon" class="table-header" style="
@@ -80,10 +79,9 @@
                         </li>
                     </ul>
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color':  item.color }"
-                        *ngFor="let item of Team2; let last = last">
+                        [ngStyle]="{ 'background-color':  item.color }" *ngFor="let item of Team2; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
-                        <div class="col col-1">Total:{{ team2Point }}</div>
+                        <div class="col col-1 text-xs">Total:{{ team2PointD }}</div>
                         <!-- Render "VS" text only if it's not the last item -->
                         <div class="col col-2 my-1" *ngFor="let player of item?.members"
                             style="justify-content: center; display: flex">
@@ -110,10 +108,9 @@
             <div id="leaderboard" class="mt-2">
                 <ul class="responsive-table flex flex-auto justify-between gap-8">
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color':  item.color }"
-                        *ngFor="let item of Team1; let last = last">
+                        [ngStyle]="{ 'background-color':  item.color }" *ngFor="let item of Team1; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
-                        <div class="col col-1">Total:{{ team1Point }}</div>
+                        <div class="col col-1 text-xs">Total:{{ team1PointS }}</div>
                         <!-- Render "VS" text only if it's not the last item -->
                         <div class="col col-2 my-1" *ngFor="let player of item?.members"
                             style="justify-content: center; display: flex">
@@ -134,33 +131,35 @@
                             </div>
                         </div>
                     </li>
-                    <ul  class="gap-2 pt-16"
-                        style="min-width: 11rem; flex-direction: column;">
+                    <ul class="gap-2 pt-18" style="min-width: 11rem; flex-direction: column;">
                         <li class="table-header my-2" style="
                                 flex-basis: 100%;
                                 flex-direction: column;background-color: transparent;
                                 padding: 0px;
                             " *ngFor="let item of LeaderboardAllPlayers; let index = index">
                             <div class="col col-1" [ngStyle]="{
-                                    'background-color': '#' + signleWinColour
+                                    'background-color':  item.color
                                 }">
                                 Flight {{activeRound}}
                             </div>
-                            <div class="col col-1 bg-card " *ngIf="item.upScore>0"
-                                [ngStyle]="{ color: '#' + signleWinColour }">
+                            <div class="col col-1 bg-card " *ngIf="item.upScore>0 && !item.end"
+                                [ngStyle]="{ color:   item.color }">
+                                {{item.upScore}} up
+                            </div>
+                            <div class="col col-1 bg-card " *ngIf="item.upScore>0 && item.end"
+                                [ngStyle]="{ color:   item.color }">
                                 {{item.upScore}} up & {{item.holes}}
                             </div>
                             <div class="col col-1 bg-card " *ngIf="item.upScore===0"
-                                [ngStyle]="{ color: '#' + signleWinColour }">
-                                Tied & {{item.holes}}
+                                [ngStyle]="{ color:   item.color }">
+                                Tied
                             </div>
                         </li>
                     </ul>
                     <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                        [ngStyle]="{ 'background-color':  item.color }"
-                        *ngFor="let item of Team2; let last = last">
+                        [ngStyle]="{ 'background-color':  item.color }" *ngFor="let item of Team2; let last = last">
                         <div class="col col-1">{{ item.name }}</div>
-                        <div class="col col-1">Total:{{ team2Point }}</div>
+                        <div class="col col-1 text-xs">Total:{{ team2PointS }}</div>
                         <!-- Render "VS" text only if it's not the last item -->
                         <div class="col col-2 my-1" *ngFor="let player of item?.members"
                             style="justify-content: center; display: flex">
