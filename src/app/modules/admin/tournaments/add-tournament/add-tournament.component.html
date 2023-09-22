@@ -425,16 +425,16 @@
                                     </button> -->
                             &nbsp;
                             <button mat-raised-button color="primary" (click)="searchPlayer()">
-                                Add New Player
+                                Add Member
                             </button>
-                            <button mat-raised-button class="mx-2" color="primary" (click)="
+                            <!-- <button mat-raised-button class="mx-2" color="primary" (click)="
                                     saveTournamentMembers(
                                         linearVerticalStepper,
                                         false
                                     )
                                 ">
                                 Save Team Member
-                            </button>
+                            </button> -->
                         </div>
                         <div *ngIf="!showMatchPlay">
                             <button class="mr-8" mat-raised-button color="warn" (click)="
@@ -447,8 +447,8 @@
                             </button>
                             <!-- &nbsp; <button mat-raised-button color="accent" (click)="tournamentSetup()" matStepperPrevious>Tournament Setup << Back</button> &nbsp; <button mat-raised-button color="primary" (click)="flightsSetup(linearVerticalStepper, 'next')">Next >> flights Setup</button> -->
                         </div>
-                        <div *ngIf="showMatchPlay && this.selectedTeams.length < 2">
-                            <button class="mr-8" mat-raised-button color="primary" (click)="AddTeam()">
+                        <div *ngIf="showMatchPlay && this.index < 2 ">
+                            <button class="mr-8" mat-raised-button color="primary" (click)="AddTeam(1)">
                                 Add Tournament Team
                             </button>
                             <!-- &nbsp; <button mat-raised-button color="accent" (click)="tournamentSetup()" matStepperPrevious>Tournament Setup << Back</button> &nbsp; <button mat-raised-button color="primary" (click)="flightsSetup(linearVerticalStepper, 'next')">Next >> flights Setup</button> -->
@@ -478,7 +478,8 @@
                     </div>
 
                     <div class="flex flex-row">
-                        <div class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                        <div *ngIf="!showMatchPlay"
+                            class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                             style="
                                 width: 46%;
                                 box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
@@ -593,20 +594,287 @@
                                     [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
                             </div>
                         </div>
+                        <div *ngIf="showMatchPlay"
+                            class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                            style="
+                                width: 46%;
+                                box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
+                            ">
+                            <div class="flex justify-center">
+                                <div>
+                                    <div class=" text-4xl font-extrabold tracking-tight leading-tight">
+                                        Team 1
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div  cdkDropListGroup id="manageFlights" class="m-4">
+                                    <ng-container>
+                                        <div class="mb-10 w-full min-w-0 rounded-2xl" style="
+                                                box-shadow: 5px 3px 18px 2px
+                                                    rgb(0 0 3 / 21%);
+                                            " *ngFor="
+                                                let teamA of this.selectedTeams1
+                                                let i = index;
+                                                let j = index;
+                                                trackBy: trackByFn
+                                            ">
+                                            <div class="flightHeader primary-background bg-blue-200 grid sm:grid-cols-4 rounded-tr-lg rounded-tl-lg w-full teamA-center">
+                                                <div class="sm:col-span-2 px-2 py-1">
+                                                    <mat-form-field class="fuse-mat-no-subscript w-full">
 
-                        <div class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                                                        <!-- <span
+                                                            class="text-base font-black text-gray-400 min-w-max">Name:</span> -->
+                                                        <input value="{{
+                                                                teamA[
+                                                                    'name'
+                                                                ]
+                                                            }}" matInput id="team_{{
+                                                                i
+                                                            }}_name" #query placeholder="Team Name" />
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="sm:col-span-1 px-2 py-1">
+                                                    <mat-form-field class="color fuse-mat-no-subscript w-full">
+                                                        <!-- <span
+                                                            class="text-base font-black text-gray-400 min-w-max"></span> -->
+                                                        <input matInput type="color" value="{{
+                                                                teamA[
+                                                                    'color'
+                                                                ]
+                                                            }}" id="team_{{
+                                                                i
+                                                            }}_color" #query />
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="sm:col-span-1 flex justify-end items-center px-2">
+
+                                                    <button mat-raised-button color="primary" color="primary" (click)="
+                                                            editTeam(
+                                                                teamA.id,
+                                                                i
+                                                            )
+                                                        ">
+
+                                                        <span class="ml-2">Add Member</span>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                            <div cdkDropList [cdkDropListData]="teamA" (cdkDropListDropped)="
+                                                    drop($event)
+                                                "
+                                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-lg flex-auto p-6 bg-card">
+
+                                                <div class="moveableList">
+                                                    <div class="moveableFlights p-4" *ngFor="
+                                                            let item of teamA;
+                                                            let j = index
+                                                        " cdkDrag [cdkDragData]="item">
+                                                        <table class="overflow-y-visible" width="100%">
+                                                            <tr>
+                                                                <td width="20%">
+                                                                    <span class="font-medium text-base">{{
+                                                                        item[
+                                                                        "firstName"
+                                                                        ]
+                                                                        }}</span>
+                                                                </td>
+                                                                <td width="20%">
+                                                                    <span class="font-medium text-base">{{
+                                                                        item[
+                                                                        "lastName"
+                                                                        ]
+                                                                        }}</span>
+                                                                </td>
+                                                                <td width="10%">
+                                                                    <span class="font-medium text-base">{{
+                                                                        item[
+                                                                        "handicap"
+                                                                        ]
+                                                                        }}</span>
+                                                                </td>
+                                                                <td width="20%">
+                                                                    <span class="font-medium text-base">{{
+                                                                        item[
+                                                                        "playerCategory"
+                                                                        ]
+                                                                        }}</span>
+                                                                </td>
+
+                                                                <td width="10%" style="
+                                                                        text-align: right;
+                                                                    ">
+                                                                    <span>
+                                                                        <mat-icon aria-hidden="false"
+                                                                            aria-label="Dragable"
+                                                                            class="remove primary-foreground" (click)="
+                                                                                removeTeamPlayer(
+                                                                                    i,
+                                                                                    j,
+                                                                                    1
+                                                                                )
+                                                                            ">delete_forever</mat-icon>
+                                                                        
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="showMatchPlay"
+                            class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                            style="
+                                width: 46%;
+                                box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
+                            ">
+                            <div class="flex justify-center">
+                                <div>
+                                    <div class=" text-4xl font-extrabold tracking-tight leading-tight">
+                                        Team 2
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div  cdkDropListGroup id="manageFlights" class="m-4">
+                                <ng-container>
+                                    <div class="mb-10 w-full min-w-0 rounded-2xl" style="
+                                    box-shadow: 5px 3px 18px 2px
+                                        rgb(0 0 3 / 21%);
+                                        " *ngFor="
+                                            let items of this.selectedTeams2
+                                            let i = index;
+                                            let j = index;
+                                            trackBy: trackByFn
+                                        ">
+                                        <div class="flightHeader primary-background bg-blue-200 grid sm:grid-cols-4 rounded-tr-lg rounded-tl-lg w-full teamA-center">
+                                            <div class="sm:col-span-2 px-2 py-1">
+                                                <mat-form-field class="fuse-mat-no-subscript w-full">
+
+                                                    <!-- <span
+                                                        class="text-base font-black text-gray-400 min-w-max">Name:</span> -->
+                                                    <input value="{{
+                                                            items[
+                                                                'name'
+                                                            ]
+                                                        }}" matInput id="team_{{
+                                                            i
+                                                        }}_name" #query placeholder="Team Name" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="sm:col-span-1 px-2 py-1">
+                                                <mat-form-field class="color fuse-mat-no-subscript w-full">
+                                                    <!-- <span
+                                                        class="text-base font-black text-gray-400 min-w-max"></span> -->
+                                                    <input matInput type="color" value="{{
+                                                            items[
+                                                                'color'
+                                                            ]
+                                                        }}" id="team_{{
+                                                            i
+                                                        }}_color" #query />
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="sm:col-span-1 flex justify-end items-center px-2">
+
+                                                <button mat-raised-button color="primary" color="primary" (click)="
+                                                        editTeam(
+                                                            items.id,
+                                                            2
+                                                        )
+                                                    ">
+
+                                                    <span class="ml-2">Add Member</span>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                        <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="
+                                                drop($event)
+                                            "
+                                            class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-lg flex-auto p-6 bg-card">
+
+                                            <div class="moveableList">
+                                                <div class="moveableFlights p-4" *ngFor="
+                                                        let item of items;
+                                                        let j = index
+                                                    " cdkDrag [cdkDragData]="item">
+                                                    <table class="overflow-y-visible" width="100%">
+                                                        <tr>
+                                                            <td width="20%">
+                                                                <span class="font-medium text-base">{{
+                                                                    item[
+                                                                    "firstName"
+                                                                    ]
+                                                                    }}</span>
+                                                            </td>
+                                                            <td width="20%">
+                                                                <span class="font-medium text-base">{{
+                                                                    item[
+                                                                    "lastName"
+                                                                    ]
+                                                                    }}</span>
+                                                            </td>
+                                                            <td width="10%">
+                                                                <span class="font-medium text-base">{{
+                                                                    item[
+                                                                    "handicap"
+                                                                    ]
+                                                                    }}</span>
+                                                            </td>
+                                                            <td width="20%">
+                                                                <span class="font-medium text-base">{{
+                                                                    item[
+                                                                    "playerCategory"
+                                                                    ]
+                                                                    }}</span>
+                                                            </td>
+
+                                                            <td width="10%" style="
+                                                                    text-align: right;
+                                                                ">
+                                                                <span>
+                                                                    <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                                        class="remove primary-foreground" (click)="
+                                                                            removeTeamPlayer(
+                                                                                i,
+                                                                                j,
+                                                                                2
+                                                                            )
+                                                                        ">delete_forever</mat-icon>
+                                                                    
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+
+                        <div *ngIf="!showMatchPlay"
+                            class="mt-2 mr-8 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
                             style="
                                 width: 46%;
                                 box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
                             ">
                             <div class="flex">
                                 <div>
-                                    <div *ngIf="!showMatchPlay" class="mt-4 text-base font-medium">
+                                    <div class="mt-4 text-base font-medium">
                                         <h2>Tournament Members</h2>
                                     </div>
-                                    <div *ngIf="showMatchPlay" class="mt-4 text-base font-medium">
-                                        <h2>Tournament Teams</h2>
-                                    </div>
+
                                 </div>
                                 <div class="flex-auto mr-4">
                                     <div>
@@ -682,152 +950,7 @@
                                 <mat-paginator #paginatorGSTN="matPaginator" [pageSize]="20"
                                     [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
                             </div>
-                            <div *ngIf="showMatchPlay">
-                                <div *ngIf="selectedTeams.length > 0">
-                                    <div cdkDropListGroup id="manageFlights" class="m-4">
-                                        <ng-container>
-                                            <div class="mb-10 w-full min-w-0" style="
-                                                    box-shadow: 5px 3px 18px 2px
-                                                        rgb(0 0 3 / 21%);
-                                                " *ngFor="
-                                                    let items of selectedTeams;
-                                                    let i = index;
-                                                    let j = index;
-                                                    trackBy: trackByFn
-                                                ">
-                                                <div class="grid sm:grid-cols-4 w-full items-center"
-                                                    [ngStyle]="{ 'background-color': '#' + items.color }">
-                                                    <div class="sm:col-span-2 px-2 py-1">
-                                                        <mat-form-field class="fuse-mat-no-subscript w-full">
 
-                                                            <!-- <span
-                                                                class="text-base font-black text-gray-400 min-w-max">Name:</span> -->
-                                                            <input value="{{
-                                                                    items[
-                                                                        'name'
-                                                                    ]
-                                                                }}" matInput id="team_{{
-                                                                    i
-                                                                }}_name" #query placeholder="Team Name" />
-                                                        </mat-form-field>
-                                                    </div>
-                                                    <div class="sm:col-span-1 px-2 py-1">
-                                                        <mat-form-field class="color fuse-mat-no-subscript w-full">
-                                                            <!-- <span
-                                                                class="text-base font-black text-gray-400 min-w-max"></span> -->
-                                                            <input matInput type="color" value="{{
-                                                                    items[
-                                                                        'color'
-                                                                    ]
-                                                                }}" id="team_{{
-                                                                    i
-                                                                }}_color" #query />
-                                                        </mat-form-field>
-                                                    </div>
-                                                    <div class="sm:col-span-1 flex justify-end items-center px-2">
-
-                                                        <button mat-raised-button color="primary" color="primary"
-                                                            (click)="
-                                                                editTeam(
-                                                                    items.id,
-                                                                    i
-                                                                )
-                                                            ">
-
-                                                            <span class="ml-2">Add Member</span>
-                                                        </button>
-                                                    </div>
-                                                    <!-- <div class="sm:col-span-1 flex justify-center items-center">
-
-                                                        <span class="flex items-center -mr-6 cursor-pointer" *ngIf="
-                                                                items.length ==
-                                                                0
-                                                            ">
-                                                            <mat-icon aria-hidden="false" aria-label="Dragable"
-                                                                color="warn" (click)="
-                                                                    deleteEmptyFlight(
-                                                                        items.id,
-                                                                        i
-                                                                    )
-                                                                ">delete_forever</mat-icon>
-                                                        </span>
-                                                    </div> -->
-                                                </div>
-                                                <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="
-                                                        drop($event)
-                                                    "
-                                                    class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
-
-                                                    <div class="moveableList">
-                                                        <div class="moveableFlights" *ngFor="
-                                                                let item of items;
-                                                                let j = index
-                                                            " cdkDrag [cdkDragData]="item">
-                                                            <table class="overflow-y-visible" width="100%">
-                                                                <tr>
-                                                                    <td width="20%">
-                                                                        <span class="font-medium text-base">{{
-                                                                            item[
-                                                                            "firstName"
-                                                                            ]
-                                                                            }}</span>
-                                                                    </td>
-                                                                    <td width="20%">
-                                                                        <span class="font-medium text-base">{{
-                                                                            item[
-                                                                            "lastName"
-                                                                            ]
-                                                                            }}</span>
-                                                                    </td>
-                                                                    <td width="10%">
-                                                                        <span class="font-medium text-base">{{
-                                                                            item[
-                                                                            "handicap"
-                                                                            ]
-                                                                            }}</span>
-                                                                    </td>
-                                                                    <td width="20%">
-                                                                        <span class="font-medium text-base">{{
-                                                                            item[
-                                                                            "playerCategory"
-                                                                            ]
-                                                                            }}</span>
-                                                                    </td>
-
-                                                                    <td width="10%" style="
-                                                                            text-align: right;
-                                                                        ">
-                                                                        <span>
-                                                                            <mat-icon aria-hidden="false"
-                                                                                aria-label="Dragable"
-                                                                                class="remove primary-foreground"
-                                                                                (click)="
-                                                                                    removeTeamPlayer(
-                                                                                        i,
-                                                                                        j
-                                                                                    )
-                                                                                ">delete_forever</mat-icon>
-                                                                            <mat-icon aria-hidden="false"
-                                                                                aria-label="Dragable"
-                                                                                class="remove primary-foreground"
-                                                                                (click)="
-                                                                                    movePlayer(
-                                                                                        i,
-                                                                                        j
-                                                                                    )
-                                                                                ">edit</mat-icon>
-                                                                        </span>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -1208,7 +1331,8 @@
                                                 <div class="moveableFlights sm:col-span-1" *ngFor="
                                                         let item of items;
                                                         let j = index
-                                                    " cdkDrag [cdkDragData]="item" [ngStyle]="getUnderStyle(item)" [cdkDragLockAxis]="'y'">
+                                                    " cdkDrag [cdkDragData]="item" [ngStyle]="getUnderStyle(item)"
+                                                    [cdkDragLockAxis]="'y'">
                                                     <table class="overflow-y-visible" width="100%">
                                                         <tr>
                                                             <td width="20%">
