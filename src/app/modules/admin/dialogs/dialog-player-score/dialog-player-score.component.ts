@@ -6,7 +6,8 @@ import { Constants } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { Player } from 'app/shared/models/player.model';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 @Component({
     selector: 'app-dialog-player-score',
     templateUrl: './dialog-player-score.component.html',
@@ -29,7 +30,7 @@ export class DialogPlayerScoreComponent implements OnInit {
         public dialogRef: MatDialogRef<DialogPlayerScoreComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private facadeService: FacadeService, private _localStorage: LocalStorageService
-    ) {}
+    ) { }
 
     async ngOnInit() {
         //  console.log(this.data.course);
@@ -37,7 +38,7 @@ export class DialogPlayerScoreComponent implements OnInit {
         if (this.data.players && this.data.players.length > 0) {
             this.isTaxes = true;
         }
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         // let club:any = this.loggedInuser.membership[0].club;
         // let courseID =
         // club.courses.length > 0 ? club.courses[0].id : "-LUFS3FCQKOGpJ2IEHmf";
@@ -322,8 +323,8 @@ export class DialogPlayerScoreComponent implements OnInit {
             let IsRemovedFromScoring =
                 this.data.removed.length > 0
                     ? this.data.removed.filter((a) => {
-                          return a.playerId == score.playerId;
-                      })
+                        return a.playerId == score.playerId;
+                    })
                     : [];
 
             console.log(gross27Total);
@@ -368,7 +369,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                     playerHole9Score[i] = score.holeScores[i];
                     net9Total += playerHole9Score[i];
                 }
-               
+
 
                 for (let i = 9; i < 18; i++) {
                     playerHole18Score[i - 9] = score.holeScores[i];
@@ -388,7 +389,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                 //         net36Total += playerHole36Score[i - 27];
                 //     }
                 // }
-                 if (this.data.players.length > 0) {
+                if (this.data.players.length > 0) {
                     for (let player of this.data.players) {
                         let obj = {
                             firstname: player['PlayerQL'].firstName,
@@ -560,5 +561,28 @@ export class DialogPlayerScoreComponent implements OnInit {
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes28to36) != 0
         );
+    }
+    public downloadAsPDF() {
+        var doc = new jsPDF()
+
+        doc.setFontSize(18);
+        doc.text("Score Details", 15, 15);
+
+        doc.setTextColor(100);
+
+        // From HTML
+        doc.autoTable({
+            html: '#pdfTable',
+            startY: 25,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: [1, 1] },
+            useCss: false,
+        });
+
+        // Open PDF document in new tab
+        doc.output('dataurlnewwindow');
+
+        // Download PDF document  
+        //doc.save('flights.pdf');
     }
 }

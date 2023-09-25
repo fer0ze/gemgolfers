@@ -4,10 +4,7 @@
     </h2>
     <div class="box" *ngIf="this.isTaxes">
         <div *ngFor="let t of this.players; let i = index">
-            <button
-                mat-raised-button
-                mat-button
-                style="
+            <button mat-raised-button mat-button style="
                     color: snow;
                     background-color: #171d54;
                     margin-right: 3px;
@@ -17,8 +14,7 @@
                     height: 37px;
                     border-color: white;
                     font-size: 17px;
-                "
-            >
+                ">
                 {{ t.firstName }} {{ t.lastName }} ({{ t.handicap }})
             </button>
         </div>
@@ -28,10 +24,7 @@
     </h2>
     <div class="box" *ngIf="this.isTaxesScoreBor">
         <div *ngFor="let t of this.players; let i = index">
-            <button
-                mat-raised-button
-                mat-button
-                style="
+            <button mat-raised-button mat-button style="
                     color: snow;
                     background-color: #135364;
                     margin-right: 3px;
@@ -41,8 +34,7 @@
                     height: 49px;
                     border-color: white;
                     font-size: 17px;
-                "
-            >
+                ">
                 {{ t.firstName }}
             </button>
         </div>
@@ -51,7 +43,11 @@
         <div>
             <h1 class="text-2xl font-extrabold">{{ data.name }}({{data.type}} Score)</h1>
         </div>
-        <table *ngIf="!this.isTaxesScoreBor" class="mat-elevation-z8">
+        <div style="text-align: right; padding-top: 10px; color: red; cursor: pointer">
+            <mat-icon aria-hidden="false" aria-label="Dragable" class="remove"
+                (click)="downloadAsPDF()">picture_as_pdf</mat-icon>
+        </div>
+        <table *ngIf="!this.isTaxesScoreBor" id="pdfTable" class="mat-elevation-z8">
             <thead>
                 <tr *ngFor="let item of scoreHeader" class="topheader">
                     <th></th>
@@ -151,14 +147,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    *ngFor="let item of allScores; let i = index"
-                    class="scorebody"
-                    [ngClass]="{
+                <tr *ngFor="let item of allScores; let i = index" class="scorebody" [ngClass]="{
                         scorebody: item.scoring,
                         scorebodyred: !item.scoring
-                    }"
-                >
+                    }">
                     <td *ngIf="data.round > 0 && !data.team">
                         {{ item.name }}
                     </td>
@@ -167,84 +159,61 @@
                     </td>
                     <td *ngIf="data.team">{{ item.name }}</td>
                     <!-- for per hole calculation <td *ngFor="let score of item.Hole9Scores; let i = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[i]}">{{score}}</td> -->
-                    <td
-                        *ngFor="let score of item.Hole9Scores; let j = index"
-                        [ngClass]="{
+                    <td *ngFor="let score of item.Hole9Scores; let j = index" [ngClass]="{
                             eagle: (score - scoreHeader[0].courseHoles9[j]['par'])==-2,
                             birdy: (score - scoreHeader[0].courseHoles9[j]['par'])==-1,
                             bogey : (score - scoreHeader[0].courseHoles9[j]['par'])==1,
                             doublebogey: (score - scoreHeader[0].courseHoles9[j]['par'])==2 
-                        }"
-                    >
+                        }">
                         <span class="class_name_round">
                             {{ score }}
                         </span>
                     </td>
-                    <td
-                        style="background-color: #e8e8e7"
-                        *ngIf="item.Hole9Scores.length > 0"
-                    >
+                    <td style="background-color: #e8e8e7" *ngIf="item.Hole9Scores.length > 0">
                         <span>{{ item.hole9Total }}</span>
                     </td>
-                    <td
-                        *ngFor="let score of item.Hole18Scores; let j = index"
-                        [ngClass]="{
+                    <td *ngFor="let score of item.Hole18Scores; let j = index" [ngClass]="{
                             eagle: (score - scoreHeader[0].courseHoles18[j]['par'])==-2,
                             birdy: (score - scoreHeader[0].courseHoles18[j]['par'])==-1,
                             bogey : (score - scoreHeader[0].courseHoles18[j]['par'])==1,
                             doublebogey: (score - scoreHeader[0].courseHoles18[j]['par'])==2 
-                        }"
-                    >
+                        }">
                         <span>
                             {{ score }}
                         </span>
                     </td>
-                    <td
-                        style="background-color: #e8e8e7"
-                        *ngIf="item.Hole18Scores.length > 0"
-                    >
+                    <td style="background-color: #e8e8e7" *ngIf="item.Hole18Scores.length > 0">
                         <span class="class_name_round">{{
                             item.hole18Total
-                        }}</span>
+                            }}</span>
                     </td>
-                    <td
-                        *ngFor="let score of item.Hole27Scores; let k = index"
-                        [ngClass]="{
+                    <td *ngFor="let score of item.Hole27Scores; let k = index" [ngClass]="{
                             scorebodyred: item.playerId == data.removed[k + 18]
-                        }"
-                    >
+                        }">
                         {{ score }}
                     </td>
                     <td *ngIf="item.Hole27Scores.length > 0">
                         <span>{{ item.hole27Total }}</span>
                     </td>
-                    <td
-                        *ngFor="let score of item.Hole36Scores; let l = index"
-                        [ngClass]="{
+                    <td *ngFor="let score of item.Hole36Scores; let l = index" [ngClass]="{
                             scorebodyred: item.playerId == data.removed[l + 27]
-                        }"
-                    >
+                        }">
                         {{ score }}
                     </td>
-                    <td
-                        style="background-color: #e8e8e7"
-                        *ngIf="item.Hole36Scores.length > 0"
-                    >
+                    <td style="background-color: #e8e8e7" *ngIf="item.Hole36Scores.length > 0">
                         <span>{{ item.hole36Total }}</span>
                     </td>
                     <td style="background-color: #e8e8e7">
                         <span class="class_name_round">{{
                             item.holesTotal
-                        }}</span>
+                            }}</span>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <mat-card
-        *ngIf="isLoading && !this.isTaxesScoreBor"
-        style="display: flex; justify-content: center; align-items: center"
-    >
+    <mat-card *ngIf="isLoading && !this.isTaxesScoreBor"
+        style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner color="primary" mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>
