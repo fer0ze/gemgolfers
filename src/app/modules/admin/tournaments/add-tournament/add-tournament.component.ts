@@ -1519,33 +1519,41 @@ export class AddTournamentComponent implements OnInit {
         return selMembers;
     }
 
-    // getUnderStyle(item: any) {
-    //     console.log(item);
-    //     let color = '';
+    getUnderStyle(item: any) {
+        console.log(item);
+        let color = '';
 
-    //     for (let index in this.selectedTeams) {
-    //         for (let index2 in this.selectedTeams[index]) {
-    //             if (Number.isInteger(Number(index2))) {
-    //                 let team1MemberId = this.selectedTeams[index][index2]['id'];
-    //                 if (team1MemberId == item.id) {
-    //                     color = this.selectedTeams[index]['color'];
-    //                     break; // Stop searching once a match is found for this item
-    //                 }
-    //             }
-    //         }
-    //         if (color) {
-    //             break; // Stop searching in other teams once a match is found for this item
-    //         }
-    //     }
+        for (let index in this.selectedTeams1) {
+            for (let index2 in this.selectedTeams1[index]) {
+                if (Number.isInteger(Number(index2))) {
+                    let team1MemberId = this.selectedTeams1[index][index2]['id'];
+                    if (team1MemberId == item.id) {
+                        color = this.selectedTeams1[index]['color'];
+                        break; // Stop searching once a match is found for this item
+                    }
+                }
+            }
+        }
+        for (let index in this.selectedTeams2) {
+            for (let index2 in this.selectedTeams2[index]) {
+                if (Number.isInteger(Number(index2))) {
+                    let team1MemberId = this.selectedTeams2[index][index2]['id'];
+                    if (team1MemberId == item.id) {
+                        color = this.selectedTeams2[index]['color'];
+                        break; // Stop searching once a match is found for this item
+                    }
+                }
+            }
+        }
 
-    //     const style = {};
-    //     style['background-color'] = color;
+        const style = {};
+        style['background-color'] = color;
 
-    //     // Add more style properties as needed
+        // Add more style properties as needed
 
-    //     console.log(color);
-    //     return style;
-    // }
+        console.log(color);
+        return style;
+    }
 
 
 
@@ -1689,8 +1697,7 @@ export class AddTournamentComponent implements OnInit {
         //this.saveTournamentMembers();
         console.log(this.formArray.get([0]).value.courseInfo[0].matchFormat);
         if (
-            this.formArray.get([0]).value.courseInfo[0].matchFormat !=
-            'TEXAS_SCRAMBLE'
+            this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY
         ) {
             let sDate = new Date(
                 this.formArray.get([0]).value.startDateFormCtrl
@@ -1729,11 +1736,11 @@ export class AddTournamentComponent implements OnInit {
                     this.formArray.get([0]).get('clubctgies').value.length
                 );
             }
-        } else {
+        } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat !== matchFormat.MATCH_PLAY) {
             this.addFlightField('Teams');
         }
 
-        console.log(this.formArray.get([1]).get('category'));
+        // console.log(this.formArray.get([1]).get('category'));
         if (action === 'next') stepper.next();
         else if (action === 'back') stepper.previous();
         else {
@@ -1745,7 +1752,7 @@ export class AddTournamentComponent implements OnInit {
         //this.stepTitle = "flights Setup Form";
         //this.saveTournamentMembers();
 
-        console.log(this.formArray.get([0]).get('clubctgies').value);
+        // console.log(this.formArray.get([0]).get('clubctgies').value);
 
         if (!this.setupInitialized) {
             for (
@@ -1771,7 +1778,7 @@ export class AddTournamentComponent implements OnInit {
             //this.setupInitialized = true;
         }
 
-        console.log(this.formArray.get([1]).get('category'));
+        // console.log(this.formArray.get([1]).get('category'));
         //this.router.navigate(["/tournaments/view/" + this.tournamentID]);
     }
 
@@ -2484,8 +2491,7 @@ export class AddTournamentComponent implements OnInit {
                 if (!resultA) {
                     if (
                         this.formArray.get([0]).value.courseInfo[0]
-                            .matchFormat != 'TEXAS_SCRAMBLE' && this.formArray.get([0]).value.courseInfo[0]
-                                .matchFormat != 'MATCH_PLAY'
+                            .matchFormat == matchFormat.STROKE_PLAY
                     ) {
                         let sDate = new Date(
                             this.formArray.get([0]).value.startDateFormCtrl
@@ -2524,7 +2530,8 @@ export class AddTournamentComponent implements OnInit {
                             }
                             this.setupInitialized = true;
                         }
-                    } else {
+                    } else if (this.formArray.get([0]).value.courseInfo[0]
+                        .matchFormat != matchFormat.MATCH_PLAY) {
                         this.addFlightField('Teams');
                     }
 
@@ -2561,119 +2568,144 @@ export class AddTournamentComponent implements OnInit {
             this.categoryCounts = [];
         }
     }
-    // async saveTournamentTeams(stepper: MatStepper, team: boolean) {
-    //     let tournamentMember: any[] = [];
-    //     let counter: number;
-    //     let DelplayerIndex: any;
-    //     let DelplayerInfo: any;
-    //     this.teamMembersToSave = [];
-    //     let teamsToSave: any[] = [];
-    //     // let selectionArray = Object.assign({}, this.selection.selected);
-    //     let flag: boolean = true;
-    //     for (let index in this.selectedTeams) {
-    //         if (flag == true) {
-    //             for (let index2 in this.selectedTeams[index]) {
-    //                 if (Number.isInteger(Number(index2))) {
-    //                     let FM: any = {
-    //                         id: UniqueIdGenerator.generate(),
-    //                         team1Id: this.selectedTeams[index]['id'],
-    //                         team2Id: this.selectedTeams[1]['id'],
-    //                         team1MemberId: this.selectedTeams[index][index2]['id'],
-    //                         team2MemberId: this.selectedTeams[1][index2]['id'],
-    //                         tournamentId: this.tournamentID,
-    //                         flightId: null,
-    //                     };
-    //                     this.teamMembersToSave.push(FM);
-    //                 }
-    //             }
-    //             flag = false;
-    //         }
+    async saveTournamentTeams(stepper: MatStepper, team: boolean) {
+        let tournamentMember: any[] = [];
+        let counter: number;
+        let DelplayerIndex: any;
+        let DelplayerInfo: any;
+        this.teamMembersToSave = [];
+        let teamsToSave: any[] = [];
+        // let selectionArray = Object.assign({}, this.selection.selected);
+        let flag: boolean = true;
+        for (let index in this.selectedTeams1) {
+            if (flag == true) {
+                for (let index2 in this.selectedTeams1[index]) {
+                    if (Number.isInteger(Number(index2))) {
+                        let FM: any = {
+                            id: UniqueIdGenerator.generate(),
+                            team1Id: this.selectedTeams1[index]['id'],
+                            team2Id: this.selectedTeams2[index]['id'],
+                            team1MemberId: this.selectedTeams1[index][index2]['id'],
+                            team2MemberId: this.selectedTeams2[index][index2]['id'],
+                            tournamentId: this.tournamentID,
+                            flightId: null,
+                        };
+                        this.teamMembersToSave.push(FM);
+                    }
+                }
+                flag = false;
+            }
 
-    //         let name: string = (<HTMLInputElement>(
-    //             document.getElementById(
-    //                 'team_' + index + '_name'
-    //             )
-    //         )).value;
-    //         this.selectedTeams[index]['name'] = name;
-    //         console.log(name);
-    //         let color: string = (<HTMLInputElement>(
-    //             document.getElementById(
-    //                 'team_' + index + '_color'
-    //             )
-    //         )).value;
-    //         console.log(name);
-    //         this.selectedTeams[index]['color'] = color;
-    //         let team: any = {
-    //             tournamentId: this.tournamentID,
-    //             adminId: this.loggedInuser.id,
-    //             id: this.selectedTeams[index]['id'],
-    //             name: name,
-    //             color: color,
-    //         };
-    //         teamsToSave.push(team)
-    //     }
-    //     console.log(teamsToSave);
-    //     console.log(this.teamMembersToSave);
-    //     let result = <any>(
-    //         await this.facadeService.insertTournamentTeam(teamsToSave, this.teamMembersToSave)
-    //     );
+            let nameA: string = (<HTMLInputElement>(
+                document.getElementById(
+                    'teamA_' + index + '_name'
+                )
+            )).value;
 
-    //     if (result) {
-    //         if (
-    //             this.formArray.get([0]).value.courseInfo[0].matchFormat === matchFormat.STROKE_PLAY
-    //         ) {
-    //             let sDate = new Date(
-    //                 this.formArray.get([0]).value.startDateFormCtrl
-    //             );
-    //             let dteday = this.datePipe.transform(sDate, 'yyyyMMdd');
-    //             let date =
-    //                 dteday.substring(8, 6) +
-    //                 '-' +
-    //                 dteday.substring(6, 4) +
-    //                 '-' +
-    //                 +dteday.substring(0, 4);
-    //             console.log(date);
-    //             if (!this.setupInitialized) {
-    //                 for (
-    //                     let i = 0;
-    //                     i <
-    //                     this.formArray.get([0]).get('clubctgies').value
-    //                         .length;
-    //                     i++
-    //                 ) {
-    //                     for (let obj of this.dates) {
-    //                         if (
-    //                             obj.playingDates['dates'] == date &&
-    //                             this.formArray
-    //                                 .get([0])
-    //                                 .get('clubctgies').value[i].name ==
-    //                             obj.name
-    //                         ) {
-    //                             this.addFlightField(
-    //                                 this.formArray
-    //                                     .get([0])
-    //                                     .get('clubctgies').value[i]
-    //                             );
-    //                         }
-    //                     }
-    //                 }
-    //                 this.setupInitialized = true;
-    //             }
-    //         } else {
-    //             this.addFlightField('Teams');
-    //         }
+            let colorA: string = (<HTMLInputElement>(
+                document.getElementById(
+                    'teamA_' + index + '_color'
+                )
+            )).value;
+            let nameB: string = (<HTMLInputElement>(
+                document.getElementById(
+                    'items_' + index + '_name'
+                )
+            )).value;
 
-    //         stepper.next();
-    //     }
+            let colorB: string = (<HTMLInputElement>(
+                document.getElementById(
+                    'items_' + index + '_color'
+                )
+            )).value;
+            this.selectedTeams1[index]['name'] = nameA;
+            this.selectedTeams1[index]['color'] = colorA;
+            this.selectedTeams2[index]['name'] = nameB;
+            this.selectedTeams2[index]['color'] = colorB;
+            let teamA: any = {
+                tournamentId: this.tournamentID,
+                adminId: this.loggedInuser.id,
+                id: this.selectedTeams1[index]['id'],
+                name: nameA,
+                color: colorA,
+            };
+            teamsToSave.push(teamA);
+            let teamB: any = {
+                tournamentId: this.tournamentID,
+                adminId: this.loggedInuser.id,
+                id: this.selectedTeams2[index]['id'],
+                name: nameB,
+                color: colorB,
+            };
+            teamsToSave.push(teamB);
+        }
+        console.log(teamsToSave);
+        console.log(this.teamMembersToSave);
+        let result = <any>(
+            await this.facadeService.insertTournamentTeam(teamsToSave, this.teamMembersToSave)
+        );
 
-    //     this.snackBar.open('Tournament Teams have been saved.', 'x', {
-    //         duration: 5000,
-    //     });
-    //     this.valid1.reset();
-    //     this.syncTournamentMembers();
-    //     this.syncClubMembers();
-    //     this.categoryCounts = [];
-    // }
+        if (result) {
+            if (
+                this.formArray.get([0]).value.courseInfo[0].matchFormat === matchFormat.STROKE_PLAY
+            ) {
+
+                let sDate = new Date(
+                    this.formArray.get([0]).value.startDateFormCtrl
+                );
+                let dteday = this.datePipe.transform(sDate, 'yyyyMMdd');
+                let date =
+                    dteday.substring(8, 6) +
+                    '-' +
+                    dteday.substring(6, 4) +
+                    '-' +
+                    +dteday.substring(0, 4);
+                console.log(date);
+                if (!this.setupInitialized) {
+                    for (
+                        let i = 0;
+                        i <
+                        this.formArray.get([0]).get('clubctgies').value
+                            .length;
+                        i++
+                    ) {
+                        for (let obj of this.dates) {
+                            if (
+                                obj.playingDates['dates'] == date &&
+                                this.formArray
+                                    .get([0])
+                                    .get('clubctgies').value[i].name ==
+                                obj.name
+                            ) {
+                                this.addFlightField(
+                                    this.formArray
+                                        .get([0])
+                                        .get('clubctgies').value[i]
+                                );
+                            }
+                        }
+                    }
+                    this.setupInitialized = true;
+                }
+            } else {
+                this.addFlightField('Teams');
+            }
+            this.snackBar.open('Tournament Teams have been saved.', 'x', {
+                duration: 2000,
+            });
+            stepper.next();
+        } else {
+            this.snackBar.open('Error!.Try Again', 'x', {
+                duration: 2000,
+            });
+        }
+
+
+        this.valid1.reset();
+        this.syncTournamentMembers();
+        this.syncClubMembers();
+        this.categoryCounts = [];
+    }
     AddTeam(index) {
 
 
@@ -2685,16 +2717,25 @@ export class AddTournamentComponent implements OnInit {
             this.selectedTeams1[this.selectedTeams1.length] = [];
             this.selectedTeams1[this.selectedTeams1.length - 1]['id'] = UniqueIdGenerator.generate();
             this.selectedTeams1[this.selectedTeams1.length - 1]['name'] = '';
-            this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = '21ACB5';
+            this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = '#a31b1b';
         } else {
             this.selectedTeams2[this.selectedTeams2.length] = [];
             this.selectedTeams2[this.selectedTeams2.length - 1]['id'] = UniqueIdGenerator.generate();
             this.selectedTeams2[this.selectedTeams2.length - 1]['name'] = '';
-            this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = '21ACB5';
+            this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = '#2265b9';
         }
         this.index++;
 
 
+    }
+    onColorChange(event: Event, index: any) {
+        const inputElement = event.target as HTMLInputElement;
+        if (index == 1) {
+            this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = inputElement.value;
+        } else {
+            this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = inputElement.value;
+        }
+        // this.teamA['color'] = inputElement.value;
     }
     // deleteEmptyFlight(id, index) {
     //     console.log(id);
@@ -3752,6 +3793,12 @@ export class AddTournamentComponent implements OnInit {
                 "STABLEFORD",
             ]
             this.showCat = true;
+            this.formGroup.get('formArray')!
+                .get([0])
+                .get('courseInfo')!
+                .get([0])
+                .get('matchFormat')!
+                .setValue("STROKE_PLAY");
         } else {
             this.matchFormats = [
                 "MATCH_PLAY",
@@ -3760,6 +3807,12 @@ export class AddTournamentComponent implements OnInit {
                 "3_BALL_SCRAMBLE",
             ]
             this.showCat = false;
+            this.formGroup.get('formArray')!
+                .get([0])
+                .get('courseInfo')!
+                .get([0])
+                .get('matchFormat')!
+                .setValue("MATCH_PLAY");
         }
     }
 
