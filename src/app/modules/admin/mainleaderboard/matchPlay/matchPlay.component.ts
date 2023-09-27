@@ -9,7 +9,7 @@ import { LeaderTypeValue } from 'app/shared/classes/leader';
 @Component({
     selector: 'app-match-play', // This is the selector for the component
     templateUrl: './matchPlay.component.html', // HTML template file path
-    styleUrls: ['../strokePlay/strokePlay.component.scss'] // CSS/SCSS styles file(s) path
+    styleUrls: ['./matchPlay.component.scss'] // CSS/SCSS styles file(s) path
 })
 export class MatchPlayComponent implements OnInit, OnChanges {
     @Input() data: any;
@@ -50,7 +50,8 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     isNet: boolean = true;
     isDoubles: boolean = true;
     isSingles: boolean = false;
-    isDoubleWon: boolean = false;
+    isDoubleWonA: boolean = false;
+    isDoubleWonB: boolean = false;
     doubleScore = 0;
 
     selectedCategoryValue: string = '';
@@ -90,22 +91,25 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             let doublesHoles = this.Leaderboard.TeamResultDoublesQL[0].remainingHoles;
             if (doubleResult > 0) {
                 if (finalResult == 'A_WON') {
+                    this.isDoubleWonA = true;
                     this.doubleWinColour = this.Team1[0]['color'];
                     this.team1PointD = 1;
                     this.team2PointD = 0;
                 } else if (finalResult == 'B_WON') {
+                    this.isDoubleWonB = true;
                     this.doubleWinColour = this.Team2[0]['color'];
                     this.team1PointD = 0;
                     this.team2PointD = 1;
                 }
                 if (doubleResult > doublesHoles) {
                     this.doubleScoreEnd = true;
-                    this.doubleHoles =  doublesHoles;
+                    this.doubleHoles = doublesHoles;
                 }
                 this.doubleScore = doubleResult;
-                this.isDoubleWon = true;
+
             } else {
-                this.isDoubleWon = false;
+                this.isDoubleWonA = false;
+                this.isDoubleWonB = false;
             }
         }
         console.log('a');
@@ -117,6 +121,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             let upScore = 0;
             let color = '';
             let end: boolean = false;
+            let id = '';
             for (let mem of members) {
                 end = false;
                 let team1MemberId = mem.team1MemberId;
@@ -133,21 +138,33 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
                         upScore = score1;
                         this.team1PointS += 1;
-
+                        id = Score1[0].playerId;
                     } else if (score1 < score2) {
                         //  color = this.Team2[0].members.filter(a => { return a.id == Score2[0].playerId });
                         color = this.getcolor(this.Team2[0], Score2[0].playerId);
                         upScore = score2;
                         this.team2PointS += 1;
+                        id = Score2[0].playerId;
                     } else {
+                        id = Score2[0].playerId;
                         upScore = 0;
-                        color = '#818181'
+                        color = '#818181';
+                        let obj = {
+                            holes: holes,
+                            id: id,
+                            upScore: upScore,
+                            color: color,
+                            end: end,
+                        }
+                        this.LeaderboardAllPlayers.push(obj)
+                        id = Score1[0].playerId;
                     }
                     if (upScore > holes) {
                         end = true;
                     }
                     let obj = {
                         holes: holes,
+                        id: id,
                         upScore: upScore,
                         color: color,
                         end: end,
@@ -156,6 +173,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 } else {
                     let obj = {
                         holes: 0,
+                        id: id,
                         upScore: 0,
                         color: '#818181',
                         end: false,
@@ -209,6 +227,33 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         });
         return players;
 
+    }
+
+    getSinglesBG(item: any): { [key: string]: string } {
+        console.log(item);
+        const underValue = this.LeaderboardAllPlayers.filter((a) => { return a.id == item.id })
+        console.log(underValue);
+        const style = {};
+        if (underValue.length > 0) {
+            style['background-color'] = underValue[0]['color']; // Set the 'color' property to 'red'
+        }
+        return style;
+    }
+    getSinglePlayerScore(item: any): string {
+        console.log(item);
+        const underValue = this.LeaderboardAllPlayers.filter((a) => { return a.id == item.id })
+        if (underValue.length > 0) {
+            if (underValue[0]['upScore'] > 0) {
+                if (underValue[0]['upScore'] > underValue[0]['holes']) {
+                    return `WINS ${underValue[0]['upScore']} up & ${underValue[0]['holes']}`;
+                } else {
+                    return `WINS ${underValue[0]['upScore']} up `;
+                }
+            } else if (underValue[0]['upScore'] == 0) {
+                return 'TIED';
+            }
+        }
+        return '';
     }
     getcolor(team, id) {
 
