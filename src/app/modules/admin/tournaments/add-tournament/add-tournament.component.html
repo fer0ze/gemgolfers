@@ -1121,7 +1121,7 @@
                                         <mat-icon class="icon-size-5" [svgIcon]="
                                                 'heroicons_solid:office-building'
                                             " matPrefix></mat-icon>
-                                        <input matInput formControlName="playersperFlight" type="number" />
+                                        <input matInput formControlName="playersperFlight" [disabled]="showTexas" type="number" />
                                         <mat-error>The input is required.</mat-error>
                                     </mat-form-field>
                                 </div>
@@ -1145,8 +1145,8 @@
                                             " matPrefix></mat-icon>
                                         <mat-select formControlName="arrangements" class="w-full"
                                             placeholder="Pick one">
-                                            <mat-option [value]="0">Group Start Time</mat-option>
-                                            <mat-option [value]="1">Last Group Time</mat-option>
+                                            <mat-option [value]="'0'">Group Start Time</mat-option>
+                                            <mat-option [value]="'1'">Last Group Time</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -1315,7 +1315,7 @@
                                             <mat-form-field *ngIf="showTexas" class="fuse-mat-no-subscript mb-2 "
                                                 [floatLabel]="'always'">
                                                 <mat-icon matPrefix class="icon-size-5" [svgIcon]="
-                                                        'heroicons_solid:flag'
+                                                        'heroicons_solid:chevron-right'
                                                     "></mat-icon>
                                                 <input id="flight_{{ i }}_name" value="{{ items.name }}" matInput
                                                     #query />
@@ -1384,7 +1384,7 @@
                                                 </div>
                                             </div>
                                             <div *ngIf="!showMatchPlay" class="moveableList ">
-                                                <div class="moveableFlights " *ngFor="
+                                                <div class="moveableFlights p-4 " *ngFor="
                                                         let item of items;
                                                         let j = index
                                                     " cdkDrag [cdkDragData]="item">

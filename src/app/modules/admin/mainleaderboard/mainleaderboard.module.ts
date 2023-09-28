@@ -11,9 +11,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { StrokePlayComponent } from './strokePlay/strokePlay.component';
 import { StableFordComponent } from './stableFord/stableFord.component';
 import { MatchPlayComponent } from './matchPlay/matchPlay.component';
+import { ScrambleComponent } from './texasScramble/texasScramble.component';
 
 @NgModule({
-    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent],
+    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent,ScrambleComponent],
     imports: [
         CommonModule,
         MainleaderboardRoutingModule,

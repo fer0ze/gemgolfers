@@ -570,6 +570,7 @@ export class AddTournamentComponent implements OnInit {
     // }
 
     createCategory(cat: any): FormGroup {
+        let playersperFlight = '2';
         if (cat != 'Teams') {
             return this._formBuilder.group({
                 name: [
@@ -592,13 +593,21 @@ export class AddTournamentComponent implements OnInit {
                 playingDate: this.checkDate(cat),
             });
         } else {
+            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+                playersperFlight = '4'
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TWO_Ball_SCRAMBLE) {
+                playersperFlight = '2'
+
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE) {
+                playersperFlight = '3'
+            }
             return this._formBuilder.group({
                 name: [
                     cat ? cat : '',
                     Validators.compose([Validators.required]),
                 ],
                 playersperFlight: [
-                    '2',
+                    playersperFlight,
                     Validators.compose([Validators.required]),
                 ],
                 flightStartTime: ['08:00', Validators.required],
@@ -606,9 +615,9 @@ export class AddTournamentComponent implements OnInit {
                 arrangements: ['0', Validators.required],
                 startingHole: ['1_10', Validators.required],
                 flightsInterval: ['10'],
-
                 playingDate: null,
             });
+
         }
     }
     setState(control: FormControl, state: boolean) {
@@ -2007,7 +2016,9 @@ export class AddTournamentComponent implements OnInit {
 
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            'TEXAS_SCRAMBLE'
+            matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.THREE_BALL_SCRAMBLE
         ) {
             this.showTexas = true;
         }
@@ -2300,7 +2311,14 @@ export class AddTournamentComponent implements OnInit {
             tournamentCats.push(tc);
             console.log(tournamentCats);
         }
-
+        if (
+            this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.THREE_BALL_SCRAMBLE
+        ) {
+            this.showTexas = true;
+        }
         for (let i = 1; i <= this.formArray.get([0]).value.noofMarshals; i++) {
             let uniquePassword: string = passwordGenerator.generate();
 
@@ -2781,44 +2799,24 @@ export class AddTournamentComponent implements OnInit {
             dialogRef.afterClosed().subscribe((result) => {
                 if (result.length > 0) {
                     for (let obj of result) {
-                        if (index == 0) {
-                            let exist = this.selectedTeams1.find((item) =>
-                                item.some((f) => f.id == obj.id)
+                        let exist1 = this.selectedTeams1.find((item) =>
+                            item.some((f) => f.id == obj.id)
+                        );
+                        let exist2 = this.selectedTeams2.find((item) =>
+                            item.some((f) => f.id == obj.id)
+                        );
+                        if (exist1 || exist2) {
+                            this.snackBar.open(
+                                'Player already exist in the list.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
                             );
-                            if (exist) {
-                                this.snackBar.open(
-                                    'Player already exist in the list.',
-                                    'x',
-                                    {
-                                        duration: 5000,
-                                    }
-                                );
 
-                                return;
-                            } else {
-
-                                this.selectedTeams1[0].push(obj);
-
-                            }
+                            return;
                         } else {
-                            let exist = this.selectedTeams2.find((item) =>
-                                item.some((f) => f.id == obj.id)
-                            );
-                            if (exist) {
-                                this.snackBar.open(
-                                    'Player already exist in the list.',
-                                    'x',
-                                    {
-                                        duration: 5000,
-                                    }
-                                );
-
-                                return;
-                            } else {
-
-                                this.selectedTeams2[0].push(obj);
-
-                            }
+                            this.selectedTeams1[0].push(obj);
                         }
                     }
                 }

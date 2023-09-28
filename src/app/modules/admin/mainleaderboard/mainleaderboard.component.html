@@ -49,6 +49,15 @@
             <ng-container *ngSwitchCase="'MATCH_PLAY'">
                 <app-match-play [data]="Leaderboard"></app-match-play>
             </ng-container>
+            <ng-container *ngSwitchCase="'TEXAS_SCRAMBLE'">
+                <app-scramble [data]="Leaderboard"></app-scramble>
+            </ng-container>
+            <ng-container *ngSwitchCase="'2_BALL_SCRAMBLE'">
+                <app-scramble [data]="Leaderboard"></app-scramble>
+            </ng-container>
+            <ng-container *ngSwitchCase="'3_BALL_SCRAMBLE'">
+                <app-scramble [data]="Leaderboard"></app-scramble>
+            </ng-container>
         </ng-container>
     </div>
 
