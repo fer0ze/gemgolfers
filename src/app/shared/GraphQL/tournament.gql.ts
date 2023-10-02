@@ -771,6 +771,21 @@ export const GetTournamentByID = gql`
                 category
                 flightSettings
             }
+            teams{
+                id
+                adminId
+                tournamentId
+                name
+                color
+               
+            }
+            opponents{
+                id
+                team1Id
+                team2Id
+                team1MemberId
+                team2MemberId
+            }
         }
     }
     ${TournamentQL}
@@ -1077,7 +1092,15 @@ export const insertTournamentTeamQL = gql`
     mutation insertTournamentTeamQL(
         $teamsToSave: [tournament_team_insert_input!]!
         $teamMembersToSave: [tournament_team_opponent_insert_input!]!
+        $tournamentId:String!
     ) {
+        delete_tournament_team_opponent(
+            where: {
+                tournamentId: { _eq: $tournamentId }
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
         insert_tournament_team(
             objects: $teamsToSave
             on_conflict: {

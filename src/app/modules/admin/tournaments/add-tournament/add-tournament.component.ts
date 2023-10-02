@@ -340,6 +340,7 @@ export class AddTournamentComponent implements OnInit {
         });
 
         if (this.tournamentID) {
+            this.valid1.reset();
             let tournamentInfo = await this.facadeService.getTournamentByID(
                 this.tournamentID
             );
@@ -351,6 +352,7 @@ export class AddTournamentComponent implements OnInit {
                     : [];
 
             console.log(this.currentTournament);
+            console.log(this.currentTournament.teams);
 
             this.getSelectedCourse(this.currentTournament['CourseQL']);
 
@@ -370,6 +372,16 @@ export class AddTournamentComponent implements OnInit {
                             : 'false',
                 });
                 if (this.currentTournament.teamMatch) {
+                    this.index = this.currentTournament.teams.length;
+                    this.selectedTeams1[0] = [];
+                    this.selectedTeams2[0] = [];
+                    this.selectedTeams1[this.selectedTeams1.length - 1]['id'] = this.currentTournament.teams[0].id;
+                    this.selectedTeams1[this.selectedTeams1.length - 1]['name'] = this.currentTournament.teams[0].name;
+                    this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = this.currentTournament.teams[0].color;
+                    this.selectedTeams2[this.selectedTeams2.length - 1]['id'] = this.currentTournament.teams[1].id;
+                    this.selectedTeams2[this.selectedTeams2.length - 1]['name'] = this.currentTournament.teams[1].name;
+                    this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = this.currentTournament.teams[1].color;
+
                     this.matchFormats = [
                         "MATCH_PLAY",
                         "TEXAS_SCRAMBLE",
@@ -396,8 +408,20 @@ export class AddTournamentComponent implements OnInit {
                 this.syncTournamentMembers();
 
                 //this.selection = new SelectionModel<Player>(true, this.tournamentMembers);
-
+                let TM = [];
                 console.log(this.tournamentMembers);
+                for (let obj of this.tournamentMembers) {
+                    if (this.currentTournament.opponents.length > 0) {
+                        for (let objA of this.currentTournament.opponents) {
+                            if (objA.team1MemberId == obj.id && objA.team1Id == this.selectedTeams1[0]['id']) {
+                                this.selectedTeams1[0].push(obj);
+                            }
+                            if (objA.team2MemberId == obj.id && objA.team2Id == this.selectedTeams2[0]['id']) {
+                                this.selectedTeams2[0].push(obj);
+                            }
+                        }
+                    }
+                }
 
                 let selectedClubId: string =
                     this.loggedInuser.userRole > 1
@@ -743,14 +767,16 @@ export class AddTournamentComponent implements OnInit {
         const control = this.formArray.get([1]).get('category') as FormArray;
 
         console.log(control.length);
+        control.clear();
+
 
         control.push(this.createCategory(category));
         console.log(control);
-
-        //newControl.push(this.createPlayingDate("Date of play"));
-        //console.log(this.formArray.get([1]).get("category"));
-        //console.log(this.formArray.get([1]).get("category").value[0].playingDate);
     }
+
+    //newControl.push(this.createPlayingDate("Date of play"));
+    //console.log(this.formArray.get([1]).get("category"));
+    //console.log(this.formArray.get([1]).get("category").value[0].playingDate);
 
     displayFn(club: Club): string {
         return typeof club === 'string' ? club : club ? club.name : '';
@@ -1487,27 +1513,35 @@ export class AddTournamentComponent implements OnInit {
             console.log(FilteredPL);
 
             for (let obj of FilteredPL) {
-                if (cnter == 0) selMembers[outer] = [];
-                selMembers[outer][cnter] = obj;
-                if (
-                    this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-                    'MATCH_PLAY'
-                ) {
-                    let oponentId = '';
-                    oponentId = this.getSecondOppoenent(this.teamMembersToSave, obj)
-                    if (oponentId != '' && oponentId != 'AB') {
-                        const indexOf = FilteredPL.findIndex(player => player.id === oponentId);
-                        selMembers[outer][++cnter] = FilteredPL[indexOf];
-                        FilteredPL.splice(indexOf, 1)
-
+                if (this.showMatchPlay) {
+                    if (this.checkTeamMembers(this.teamMembersToSave, obj.id)) {
+                        if (cnter == 0) selMembers[outer] = [];
+                        selMembers[outer][cnter] = obj;
+                        let oponentId = '';
+                        oponentId = this.getSecondOppoenent(this.teamMembersToSave, obj)
+                        if (oponentId != '' && oponentId != 'AB') {
+                            const indexOf = FilteredPL.findIndex(player => player.id === oponentId);
+                            selMembers[outer][++cnter] = FilteredPL[indexOf];
+                            FilteredPL.splice(indexOf, 1)
+                            if (cnter == parseInt(PperFlight) - 1) {
+                                cnter = 0;
+                                outer++;
+                            } else {
+                                cnter++;
+                            }
+                        }
+                    }
+                } else {
+                    if (cnter == 0) selMembers[outer] = [];
+                    selMembers[outer][cnter] = obj;
+                    if (cnter == parseInt(PperFlight) - 1) {
+                        cnter = 0;
+                        outer++;
+                    } else {
+                        cnter++;
                     }
                 }
-                if (cnter == parseInt(PperFlight) - 1) {
-                    cnter = 0;
-                    outer++;
-                } else {
-                    cnter++;
-                }
+
             }
             let tempSelMembers: any[] = [];
             for (const index in selMembers) {
@@ -2595,6 +2629,12 @@ export class AddTournamentComponent implements OnInit {
         let teamsToSave: any[] = [];
         // let selectionArray = Object.assign({}, this.selection.selected);
         let flag: boolean = true;
+        if (this.selectedTeams1[0].length !== this.selectedTeams2[0].length) {
+            this.snackBar.open('Teams Members are not equal.', 'x', {
+                duration: 2000,
+            });
+            return;
+        }
         for (let index in this.selectedTeams1) {
             if (flag == true) {
                 for (let index2 in this.selectedTeams1[index]) {
@@ -2660,7 +2700,7 @@ export class AddTournamentComponent implements OnInit {
         console.log(teamsToSave);
         console.log(this.teamMembersToSave);
         let result = <any>(
-            await this.facadeService.insertTournamentTeam(teamsToSave, this.teamMembersToSave)
+            await this.facadeService.insertTournamentTeam(teamsToSave, this.teamMembersToSave,this.tournamentID)
         );
 
         if (result) {
@@ -2816,7 +2856,12 @@ export class AddTournamentComponent implements OnInit {
 
                             return;
                         } else {
-                            this.selectedTeams1[0].push(obj);
+                            if (index == 1) {
+                                this.selectedTeams1[0].push(obj);
+                            } else {
+                                this.selectedTeams2[0].push(obj);
+
+                            }
                         }
                     }
                 }
@@ -2927,11 +2972,9 @@ export class AddTournamentComponent implements OnInit {
             );
     }
     getSecondOppoenent(teamMembersToSave, playerId): string {
-
         let oppoentId: string = 'AB';
         let opponentTeamId;
         let playerTeamId;
-
         for (let data of teamMembersToSave) {
             if (data.team1MemberId == playerId.id) {
                 oppoentId = data.team2MemberId;
@@ -2944,9 +2987,17 @@ export class AddTournamentComponent implements OnInit {
             }
         }
         return oppoentId;
+    }
+    checkTeamMembers(teamMembersToSave, playerId): boolean {
 
-
-
+        for (let data of teamMembersToSave) {
+            if (data.team1MemberId == playerId) {
+                return true;
+            } else if (data.team2MemberId == playerId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     applyFilter(filterValue: string) {

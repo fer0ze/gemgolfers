@@ -1347,7 +1347,7 @@ export class TournamentsService {
         });
     }
     public insertTournamentTeam(
-        teamsToSave,teamMembersToSave
+        teamsToSave,teamMembersToSave,tournamentId
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -1356,6 +1356,7 @@ export class TournamentsService {
                     variables: {
                         teamsToSave: teamsToSave,
                         teamMembersToSave: teamMembersToSave,
+                        tournamentId: tournamentId,
                     },
                 })
                 .subscribe(
