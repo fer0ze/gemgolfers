@@ -954,6 +954,9 @@ export class FacadeService {
   getRoundScore(Id: any) {
     return this.tournamentService.getRoundScore(Id);
   }
+  getPlayerScorebyID(Id: any) {
+    return this.tournamentService.getPlayerScorebyID(Id);
+  }
 
   isTeeTimeDateExist(clubId: string, selectedDate: Date) {
     return this.TeeTimeService.isTeeTimeDateExist(clubId, selectedDate);

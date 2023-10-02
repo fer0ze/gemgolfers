@@ -90,7 +90,7 @@ export class AddDailyRoundComponent implements OnInit {
         public snackBar: MatSnackBar,
         public facadeService: FacadeService,
         private _localStorage: LocalStorageService
-    ) {}
+    ) { }
 
     ngAfterViewInit(): void {
         //console.log("Init");
@@ -103,7 +103,7 @@ export class AddDailyRoundComponent implements OnInit {
             this.playerID = params.get('id');
         });
 
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.tournamentID = UniqueIdGenerator.generate();
 
         if (this.loggedInuser) {
@@ -186,7 +186,7 @@ export class AddDailyRoundComponent implements OnInit {
     };
 
     async createTournament(starterFormValue: any) {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         starterFormValue.roundDate = this.datepipe.transform(
             starterFormValue.roundDate.toString(),
@@ -416,17 +416,17 @@ export class AddDailyRoundComponent implements OnInit {
                 console.log(founded);
 
                 if (founded.length == 0) {
-                    // if (this.flightMembers.length > 3) {
-                    //   this.snackBar.open(
-                    //     "Maximum 4 players are allowed per flight.",
-                    //     "x",
-                    //     {
-                    //       duration: 5000,
-                    //     }
-                    //   );
+                    if (this.flightMembers.length > 4) {
+                        this.snackBar.open(
+                            "Maximum 5 players are allowed per flight.",
+                            "x",
+                            {
+                                duration: 5000,
+                            }
+                        );
 
-                    //   return false;
-                    // }
+                        return false;
+                    }
 
                     let member: any = {
                         playerId: player[0].id,
@@ -514,17 +514,17 @@ export class AddDailyRoundComponent implements OnInit {
                         console.log(founded);
 
                         if (founded.length == 0) {
-                            // if (this.flightMembers.length > 3) {
-                            //   this.snackBar.open(
-                            //     "Maximum 4 players are allowed per flight.",
-                            //     "x",
-                            //     {
-                            //       duration: 5000,
-                            //     }
-                            //   );
+                            if (this.flightMembers.length > 4) {
+                              this.snackBar.open(
+                                "Maximum 5 players are allowed per flight.",
+                                "x",
+                                {
+                                  duration: 5000,
+                                }
+                              );
 
-                            //   return false;
-                            // }
+                              return false;
+                            }
 
                             let member: any = {
                                 playerId: result.player.id,
@@ -622,8 +622,8 @@ export class AddDailyRoundComponent implements OnInit {
                     console.log(this.tournamentMembers);
                     this.tournamentMembers.forEach(
                         (obj, i) =>
-                            (obj['fullName'] =
-                                obj.firstName + ' ' + obj.lastName)
+                        (obj['fullName'] =
+                            obj.firstName + ' ' + obj.lastName)
                     );
                     this.membersSource = new MatTableDataSource(
                         this.tournamentMembers

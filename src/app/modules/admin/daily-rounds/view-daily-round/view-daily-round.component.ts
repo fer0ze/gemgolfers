@@ -3022,9 +3022,6 @@ export class ViewDailyRoundComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result) {
-                this.loggedInuser = JSON.parse(
-                    localStorage.getItem(Constants.LOGGED_IN_USER)
-                );
                 let selectedFlight: any = this.flightPlayers.find((a) => {
                     return a.flightId == player.flightId;
                 });

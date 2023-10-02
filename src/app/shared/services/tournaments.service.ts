@@ -535,6 +535,22 @@ export class TournamentsService {
                 });
         });
     }
+    public getPlayerScorebyID(Id: any): Promise<any> {
+        console.log(Id);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getPlayerScorebyIDQLA,
+                    variables: {
+                        id: Id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    console.log(data);
+                    resolve(data);
+                });
+        });
+    }
 
     public getClubActiveTournamentsList(
         endDate: string,
