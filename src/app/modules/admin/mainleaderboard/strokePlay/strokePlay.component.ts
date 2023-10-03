@@ -74,6 +74,15 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             }
             console.log(this.selectedCategoryValue);
 
+        } else {
+            this.eventCategories = [];
+            let eventCat: any = {
+                Text: 'All',
+                Value: 'All',
+                Limit: false,
+            };
+
+            this.eventCategories.push(eventCat);
         }
         this.tRounds = [];
         if (this.tRounds.length >= 0) {
@@ -103,9 +112,13 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         this.allLeadersCutOffNet = [];
         if (round == 0) {
             if (leaders.length > 0) {
-                this.LeaderboardPlayers = leaders.filter(obj => {
-                    return obj.category === this.selectedCategoryValue
-                })
+                if (this.Leaderboard.CategoriesQL.length > 0) {
+                    this.LeaderboardPlayers = leaders.filter(obj => {
+                        return obj.category === this.selectedCategoryValue
+                    })
+                } else {
+                    this.LeaderboardPlayers = leaders;
+                }
                 console.log(this.LeaderboardPlayers);
                 if (this.Leaderboard.cutOffCriteria !== null) {
                     this.cutLeaders(this.Leaderboard.cutOffCriteria, this.LeaderboardPlayers)
@@ -159,10 +172,17 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     getPlayersByRound(leaders: any[], round: number, lastTab: any) {
         this.LeaderboardPlayers = [];
         if (leaders.length > 0) {
-            this.LeaderboardPlayers = leaders.filter(obj => {
-                const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
-                return obj.category === this.selectedCategoryValue && obj[propertyName] > 0;
-            });
+            if (this.Leaderboard.CategoriesQL.length > 0) {
+                this.LeaderboardPlayers = leaders.filter(obj => {
+                    const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
+                    return obj.category === this.selectedCategoryValue && obj[propertyName] > 0;
+                });
+            } else {
+                this.LeaderboardPlayers = leaders.filter(obj => {
+                    const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
+                    return obj[propertyName] > 0;
+                });
+            }
         }
         if (lastTab == 1) {
             this.LeaderboardPlayers.sort((a, b) => {
@@ -186,7 +206,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     }
     getHolesByRoundG(item: any, round: number): string {
         const propertyName = `holesPlayedR${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+        return item[propertyName]===18 ? 'F' : ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
     getScoreByRoundN(item: any, round: number): string {
         const propertyName = `netScoreR${round}`;
@@ -198,7 +218,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     }
     getHolesByRoundN(item: any, round: number): string {
         const propertyName = `holesPlayedR${round}`;
-        return item[propertyName] || ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+        return item[propertyName]===18 ? 'F' : ''; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
     getUnderStyleG(item: any, round: number): { [key: string]: string } {
         const underValue = parseFloat(this.getUnderByRoundG(item, round)); // Parse the value if needed
