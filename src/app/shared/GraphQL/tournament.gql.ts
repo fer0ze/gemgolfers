@@ -29,6 +29,7 @@ export const LeaderboardSubscription = gql`
         LeaderBoardQL: leaderboard_score(
             where: { prefix: { _eq: $tournamentPrefix } }
         ) {
+            
             playerId
             handicap
             underGross
@@ -70,6 +71,10 @@ export const LeaderboardSubscription = gql`
                 ]
             }
         ) {
+            id
+            courseId
+            courseHoleSets
+            courseHoleSetsInverted
             cutOffCriteria
             activeRound
             handicapAllocations
