@@ -13,11 +13,11 @@ import { FacadeService } from 'app/shared/services/facade.service';
 
 
 @Component({
-    selector: 'app-scramble', // This is the selector for the component
+    selector: 'app-mini-scramble', // This is the selector for the component
     templateUrl: './texaScramble.component.html', // HTML template file path
     styleUrls: ['../strokePlay/strokePlay.component.scss'] // CSS/SCSS styles file(s) path
 })
-export class ScrambleComponent implements OnInit, OnChanges {
+export class ScrambleMiniComponent implements OnInit, OnChanges {
     @Input() data: any;
     isGross: boolean = true;
     isNet: boolean = false;

@@ -824,6 +824,9 @@ export class FacadeService {
   getTournamentsFlights( tournamentId: string) {
     return this.flightsService.getTournamentsFlights( tournamentId);
   }
+  getTournamentsTeams( tournamentId: string) {
+    return this.flightsService.getTournamentsTeams(tournamentId);
+  }
 
   markPlayerAttendance(flightId: string, playerId: string, status: boolean) {
     return this.flightsService.markPlayerAttendance(flightId, playerId, status);
@@ -999,6 +1002,9 @@ export class FacadeService {
 
   getTorunamentScoreQuery(tournamentId: string) {
     return this.playerHandicapWhsService.getTorunamentScoreQuery(tournamentId);
+  }
+  getTorunamentScoreViewQuery(tournamentId: string) {
+    return this.playerHandicapWhsService.getTorunamentScoreViewQuery(tournamentId);
   }
 
   getPlayersHandicapWhsHistory(playerIds: string[], playingDate: Date) {

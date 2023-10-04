@@ -13,11 +13,11 @@ import { FacadeService } from 'app/shared/services/facade.service';
 
 
 @Component({
-    selector: 'app-stroke-play', // This is the selector for the component
+    selector: 'app-mini-stroke-play', // This is the selector for the component
     templateUrl: './strokePlay.component.html', // HTML template file path
     styleUrls: ['./strokePlay.component.scss'] // CSS/SCSS styles file(s) path
 })
-export class StrokePlayComponent implements OnInit, OnChanges {
+export class StrokePlayMiniComponent implements OnInit, OnChanges {
     @Input() data: any;
     Leaderboard: any;
     LeaderboardAllPlayers: any[] = [];

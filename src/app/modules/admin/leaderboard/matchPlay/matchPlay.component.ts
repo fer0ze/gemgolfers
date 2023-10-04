@@ -6,14 +6,12 @@ import { handicapAllocation } from 'app/shared/classes/general';
 import { Player } from 'app/shared/models/player.model';
 import { Score } from 'app/shared/classes/score';
 import { LeaderTypeValue } from 'app/shared/classes/leader';
-import { PlayersScoreLoader } from 'app/shared/helper/PlayersViewScore';
-import { FacadeService } from 'app/shared/services/facade.service';
 @Component({
-    selector: 'app-match-play', // This is the selector for the component
+    selector: 'app-mini-match-play', // This is the selector for the component
     templateUrl: './matchPlay.component.html', // HTML template file path
     styleUrls: ['./matchPlay.component.scss'] // CSS/SCSS styles file(s) path
 })
-export class MatchPlayComponent implements OnInit, OnChanges {
+export class MatchPlayMiniComponent implements OnInit, OnChanges {
     @Input() data: any;
     Leaderboard: any;
     LeaderboardScore: any;
@@ -61,7 +59,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     tRounds: any[] = [];
     categoryLimit: number;
     constructor(
-        public dialog: MatDialog, private facadeService: FacadeService
+        public dialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
@@ -75,10 +73,9 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         let count = 1;
         this.Leaderboard.TeamQL.forEach(element => {
             let obj = {
-                id:element.id,
                 name: element.name,
                 color: element.color,
-                members: this.getMembers(element.id,this.Leaderboard.TeamQL[0], count),
+                members: this.getMembers(this.Leaderboard.TeamQL[0], count),
             }
             count++;
             if (count == 2) {
@@ -88,8 +85,6 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
             }
         });
-        console.log(this.Team1);
-        
         if (this.Leaderboard.TeamResultDoublesQL.length > 0) {
             let doubleResult = this.Leaderboard.TeamResultDoublesQL[0].upScore;
             let finalResult = this.Leaderboard.TeamResultDoublesQL[0].finalResult;
@@ -211,7 +206,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
     }
 
-    getMembers(teamId,element, count) {
+    getMembers(element, count) {
         let players = [];
         element.OpponentsQL.forEach(obj => {
             if (count == 1) {
@@ -219,7 +214,6 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                     name: obj.playerTeam1.firstName + " " + obj.playerTeam1.lastName,
                     handicap: obj.playerTeam1.handicap,
                     id: obj.team1MemberId,
-                    teamId:teamId,
                 }
                 players.push(play)
             } else {
@@ -227,7 +221,6 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                     name: obj.playerTeam2.firstName + " " + obj.playerTeam2.lastName,
                     handicap: obj.playerTeam2.handicap,
                     id: obj.team2MemberId,
-                    teamId:teamId,
                 }
                 players.push(play)
             }
@@ -252,9 +245,9 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         if (underValue.length > 0) {
             if (underValue[0]['upScore'] > 0) {
                 if (underValue[0]['upScore'] > underValue[0]['holes']) {
-                    return `WINS ${underValue[0]['upScore']} UP & ${underValue[0]['holes']}`;
+                    return `WINS ${underValue[0]['upScore']} up & ${underValue[0]['holes']}`;
                 } else {
-                    return `WINS ${underValue[0]['upScore']} UP `;
+                    return `WINS ${underValue[0]['upScore']} up `;
                 }
             } else if (underValue[0]['upScore'] == 0) {
                 return 'TIED';
@@ -502,86 +495,191 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
         return hcAllocation;
     }
-    async viewPlayerScore(
-        name: string,
-        courseId: string,
-        courseHoleSets: string,
-        playerId: string,
-        holeSetsInverted: string,
-        scoreType: string
-    ) {
-        let playerGrossScore: any[] = [];
-        let playerNetScore: any[] = [];
-        let playerPerTeam: any[];
-        let team: boolean = false;
-        let removed: string[] = [];
-        let scores: any[];
-        let scoresArray: any[] = [];
-        let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
-        await ScoreLoader.fetchTournamentScores();
-        let scoreResult = ScoreLoader.getMatchPlayScore(playerId);
-        console.log(scoreResult);
+    // viewPlayerScore(
+    //     name: string,
+    //     courseId: string,
+    //     courseHoleSets: string,
+    //     playerId: string,
+    //     holeSetsInverted: string,
+    //     scoreType: string
+    // ) {
+    //     let playerGrossScore: any[] = [];
+    //     let playerNetScore: any[] = [];
+    //     let playerPerTeam: any[];
+    //     let team: boolean = false;
+    //     let removed: string[] = [];
+    //     let scores: any[];
+    //     let scoresArray: any[] = [];
+    //     //console.log(playerId);
+    //     let handicapAllocation: string = this.getHandicapAllocation();
+    //     if (this.showBestBall == true) {
+    //         for (let flightData of this.Leaderboard.FlightsQL) {
+    //             if (flightData.id == playerId) {
+    //                 let membersQLs: any = flightData.MembersQL;
+    //                 for (let membersQL of membersQLs) {
+    //                     scores = membersQL.ScoresQL;
+    //                     let player: Player = membersQL.PlayerQL;
+    //                     // if (scores.length <= 0) continue;
 
-        const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-            data: {
-                name: name,
-                tee_id:
-                    this.Leaderboard.tee_id != null
-                        ? this.Leaderboard.tee_id
-                        : 1,
-                course: this.Leaderboard.courseId,
-                players: [],
-                holeSets: this.Leaderboard.courseHoleSets ? this.Leaderboard.courseHoleSets : 3,
-                allGross: scoreResult.grossScore,
-                courseHoleSetsInverted: this.Leaderboard.courseHoleSetsInverted,
-                allNet: scoreResult.netScore,
-                round: this.flightRound,
-                type: 'Net',
-                team: team,
-                removed: removed,
-            },
-        });
-    }
-    async viewTeamScore(
-        name: string,
-        courseId: string,
-        courseHoleSets: string,
-        playerId: string,
-        holeSetsInverted: string,
-        scoreType: string
-    ) {
-        let playerGrossScore: any[] = [];
-        let playerNetScore: any[] = [];
-        let playerPerTeam: any[];
-        let team: boolean = false;
-        let removed: string[] = [];
-        let scores: any[];
-        let scoresArray: any[] = [];
-        let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
-        await ScoreLoader.fetchTournamentScores();
-        let scoreResult = ScoreLoader.getMatchPlayTeamScore(playerId);
-        console.log(scoreResult);
+    //                     for (let score of scores) {
+    //                         let objScore: Score = new Score(
+    //                             score.playerId,
+    //                             score.playerHandicap,
+    //                             score.hole.index,
+    //                             score.hole.par,
+    //                             score.grossScore
+    //                         );
+    //                         let gross: number = score.grossScore;
+    //                         // if (gross <= 0) {
+    //                         //     continue;
+    //                         // }
+    //                         let currentNet: number =
+    //                             objScore.getNetScore(handicapAllocation);
+    //                         score['netScore'] = currentNet;
+    //                         score['check'] = false;
+    //                         scoresArray.push(score.grossScore);
+    //                     }
+    //                     let playerHole18ScoreGross: any[] = [];
+    //                     let playerHole18ScoreNet: any[] = [];
 
-        const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-            data: {
-                name: name,
-                tee_id:
-                    this.Leaderboard.tee_id != null
-                        ? this.Leaderboard.tee_id
-                        : 1,
-                course: this.Leaderboard.courseId,
-                players: [],
-                holeSets: this.Leaderboard.courseHoleSets ? this.Leaderboard.courseHoleSets : 3,
-                allGross: scoreResult.grossScore,
-                courseHoleSetsInverted: this.Leaderboard.courseHoleSetsInverted,
-                allNet: scoreResult.netScore,
-                round: this.flightRound,
-                type: 'Net',
-                team: team,
-                removed: removed,
-            },
-        });
-    }
+    //                     for (
+    //                         let i = 0;
+    //                         i < flightData.CourseQL.noOfHoles;
+    //                         i++
+    //                     ) {
+    //                         let hole = scores.find((a) => {
+    //                             return a.hole.holeNo == i + 1;
+    //                         });
+
+    //                         if (hole) {
+    //                             playerHole18ScoreGross[i] = hole.grossScore;
+    //                             playerHole18ScoreNet[i] = hole.netScore;
+    //                         } else {
+    //                             playerHole18ScoreGross[i] = 0;
+    //                             playerHole18ScoreNet[i] = 0;
+    //                         }
+    //                     }
+    //                     let teamName: string = flightData.name
+    //                         ? flightData.name.name
+    //                         : 'UNKNOWN TEAM';
+    //                     let LeaderGross: any = {
+    //                         name: player.firstName + ' ' + player.lastName,
+    //                         holeScores: playerHole18ScoreGross,
+    //                     };
+    //                     let LeaderNet: any = {
+    //                         name: player.firstName + ' ' + player.lastName,
+    //                         holeScores: playerHole18ScoreNet,
+    //                     };
+    //                     playerGrossScore.push(LeaderGross);
+    //                     playerNetScore.push(LeaderNet);
+    //                 }
+    //             }
+    //         }
+    //         console.log(playerGrossScore);
+    //     } else if (this.flightRound == 0) {
+    //         playerGrossScore = this.grossAllLeaders.filter((g) => {
+    //             return g.playerId == playerId;
+    //         });
+
+    //         playerNetScore = this.netAllLeaders.filter((g) => {
+    //             return g.playerId == playerId;
+    //         });
+    //     } else {
+    //         playerGrossScore = this.grossLeaders.filter((g) => {
+    //             return g.playerId == playerId;
+    //         });
+
+    //         playerNetScore = this.netLeaders.filter((g) => {
+    //             return g.playerId == playerId;
+    //         });
+    //     }
+    //     playerPerTeam = this.Leaderboard.FlightsQL.filter((a) => {
+    //         return a.id == playerId;
+    //     });
+
+    //     ////console.log(playerGrossScore);
+    //     if (
+    //         this.teamMatch &&
+    //         (this.matchFormat == matchFormat.BEST_THREE ||
+    //             this.matchFormat == matchFormat.COMBINE_ALL)
+    //     ) {
+    //         removed =
+    //             playerGrossScore.length > 0 && playerGrossScore[0].removedScore
+    //                 ? playerGrossScore[0].removedScore
+    //                 : [];
+    //         playerGrossScore =
+    //             playerGrossScore.length > 0
+    //                 ? playerGrossScore[0].holeScores
+    //                 : [];
+    //         playerNetScore =
+    //             playerNetScore.length > 0 ? playerNetScore[0].holeScores : [];
+
+    //         if (!removed) removed = [];
+
+    //         team = true;
+    //     }
+    //     if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+    //         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
+    //             data: {
+    //                 name: name,
+    //                 tee_id:
+    //                     this.Leaderboard.tee_id != null
+    //                         ? this.Leaderboard.tee_id
+    //                         : 1,
+    //                 course: courseId,
+    //                 players: playerPerTeam[0]['MembersQL'],
+    //                 holeSets: courseHoleSets,
+    //                 courseHoleSetsInverted: holeSetsInverted,
+    //                 allGross: playerGrossScore,
+    //                 allNet: playerNetScore,
+    //                 round: this.flightRound,
+    //                 type: scoreType,
+    //                 team: team,
+    //                 removed: removed,
+    //             },
+    //         });
+    //     } else if (this.matchFormat == matchFormat.BESTBALL) {
+    //         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
+    //             data: {
+    //                 name: name,
+    //                 tee_id:
+    //                     this.Leaderboard.tee_id != null
+    //                         ? this.Leaderboard.tee_id
+    //                         : 1,
+    //                 course: courseId,
+    //                 players: [],
+    //                 holeSets: courseHoleSets,
+    //                 courseHoleSetsInverted: holeSetsInverted,
+    //                 allGross: playerGrossScore,
+    //                 allNet: playerNetScore,
+    //                 round: this.flightRound,
+    //                 type: this.allRoundNetScore || this.isNet ? 'Net' : 'Gross',
+    //                 team: team,
+    //                 removed: removed,
+    //             },
+    //         });
+    //     } else {
+    //         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
+    //             data: {
+    //                 name: name,
+    //                 tee_id:
+    //                     this.Leaderboard.tee_id != null
+    //                         ? this.Leaderboard.tee_id
+    //                         : 1,
+    //                 course: courseId,
+    //                 players: [],
+    //                 holeSets: courseHoleSets,
+    //                 allGross: playerGrossScore,
+    //                 courseHoleSetsInverted: holeSetsInverted,
+    //                 allNet: playerNetScore,
+    //                 round: this.flightRound,
+    //                 type: this.allRoundNetScore ? 'Net' : 'Gross',
+    //                 team: team,
+    //                 removed: removed,
+    //             },
+    //         });
+    //     }
+    // }
     ComparatorAllNet(a, b) {
         if (a['scoreR1'] < b['scoreR1']) return -1;
         if (a['scoreR1'] > b['scoreR1']) return 1;

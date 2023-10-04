@@ -27,7 +27,12 @@ import {
 export const LeaderboardSubscription = gql`
     query LeaderboardSimpleSubscription($tournamentPrefix: String!) {
         LeaderBoardQL: leaderboard_score(
-            where: { prefix: { _eq: $tournamentPrefix } }
+            where: {
+                _or: [
+                  { prefix: { _eq: $tournamentPrefix } },
+                  { tournamentId: { _eq: $tournamentPrefix } }
+                ]
+              }
         ) {
             
             playerId
@@ -62,6 +67,11 @@ export const LeaderboardSubscription = gql`
             holeScoreLast6
             holeScoreLast3
             holeScoreLast1
+            pointsRound1
+            pointsRound2
+            pointsRound3
+            pointsRound4
+
         }
         TournamentQL: tournament(
             where: {

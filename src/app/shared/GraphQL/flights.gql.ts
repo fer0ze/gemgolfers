@@ -435,6 +435,42 @@ export const FlightManagersQuery = gql`
         }
     }
 `;
+export const TeamManagersQuery = gql`
+query PostsGetQuery($tournamentId: String!) {
+    tournament(where: { id: { _eq: $tournamentId } }){
+        id
+        teamMatch
+        teams{
+            id
+            adminId
+            tournamentId
+            name
+            color
+           
+        }
+        opponents{
+            id
+            team1Id
+            team2Id
+            team1MemberId
+            team2MemberId
+        }
+        members {
+            playerId
+            tournamentId
+            player {
+                id
+                firstName
+                lastName
+                handicap
+                playerCategory
+                membershipNumber
+                email
+            }
+        }
+    }
+}
+`;
 // OwnQLi: player_by_pk(id: $playerId) {
 //     PermissionsQLi: permissions {
 //         handicapAdmin

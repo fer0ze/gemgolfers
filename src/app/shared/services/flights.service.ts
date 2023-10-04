@@ -357,6 +357,24 @@ export class FlightsService {
                 });
         });
     }
+    public getTournamentsTeams(tournamentId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.TeamManagersQuery,
+                    variables: {
+                        tournamentId: tournamentId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public markPlayerAttendance(
         flightId: string,

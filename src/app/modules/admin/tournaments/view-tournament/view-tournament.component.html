@@ -514,6 +514,7 @@
                             >
                                 <mat-tab label="Overview"></mat-tab>
                                 <mat-tab class="pl-5" label="Groups"></mat-tab>
+                                <mat-tab *ngIf="showMatchPlay" label="Teams"></mat-tab>
                                 <mat-tab label="Scores"></mat-tab>
                                 <mat-tab label="Leaderboard"></mat-tab>
                                 <mat-tab label="Members"></mat-tab>
@@ -3600,6 +3601,16 @@
                         <app-flight-management
                             [tournamentID]="tournamentID"
                         ></app-flight-management>
+                    </div>
+                </div>
+                <div
+                    *ngIf="this.showMainTab6"
+                    class="flex-auto border-t -mt-px pt-4 sm:pt-6"
+                >
+                    <div class="w-full max-w-screen-xl mx-auto">
+                        <app-team-management
+                            [tournamentID]="tournamentID"
+                        ></app-team-management>
                     </div>
                 </div>
                 <div

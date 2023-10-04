@@ -27,6 +27,24 @@ export class PlayerHandicapWhsService {
                 });
         });
     }
+    public getTorunamentScoreViewQuery(tournamentId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTorunamentScoreViewQueryQL,
+                    variables: {
+                        tournamentId: tournamentId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public getPlayersHandicapWhsHistory(
         playerIds: string[],

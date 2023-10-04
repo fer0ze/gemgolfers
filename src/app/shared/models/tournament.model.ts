@@ -105,7 +105,8 @@ export enum matchFormat {
 
 export enum TexasScrampleTeamSize {
     FOURH = 4,
-    THREE = 3
+    THREE = 3,
+    TWO = 2,
 }
 
 export interface TournamentRounds {

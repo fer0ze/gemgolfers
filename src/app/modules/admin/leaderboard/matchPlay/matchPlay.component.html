@@ -27,11 +27,11 @@
                     <div class="font-bold text-2xl text-gray-50">
                         {{ item.name }}
                     </div>
-
-                    <div *ngIf="isDoubles" class="font-bold text-2xl text-gray-50">
+                    
+                    <div  *ngIf="isDoubles" class="font-bold text-2xl text-gray-50">
                         {{ team1PointD }}
                     </div>
-                    <div *ngIf="isSingles" class="font-bold text-2xl text-gray-50">
+                    <div  *ngIf="isSingles" class="font-bold text-2xl text-gray-50">
                         {{ team1PointS }}
                     </div>
                 </div>
@@ -42,10 +42,10 @@
                     <div class="font-bold text-2xl text-gray-50">
                         {{ item.name }}
                     </div>
-                    <div *ngIf="isDoubles" class="text-2xl font-bold text-gray-50">
+                    <div  *ngIf="isDoubles" class="text-2xl font-bold text-gray-50">
                         {{ team2PointD }}
                     </div>
-                    <div *ngIf="isSingles" class="text-2xl font-bold text-gray-50">
+                    <div  *ngIf="isSingles" class="text-2xl font-bold text-gray-50">
                         {{ team2PointS }}
                     </div>
                 </div>
@@ -59,28 +59,15 @@
                                 {{ player.name }}
                                 <span *ngIf="!lastPlayer"> / </span>
                             </ng-container>
-                            <div class="cursor-pointer pt-0.5 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold "
-                                (click)="
-                                                            viewTeamScore(
-                                                                item.teamId,
-                                                                item.courseId,
-                                                                item.holeSets,
-                                                                item.id,
-                                                                item.holeSetsInverted,
-                                                                item.type
-                                                            )
-                                                        ">
-                                view score
-                            </div>
                         </div>
                         <div *ngIf="isDoubleWonA">
                             <div *ngIf="!doubleScoreEnd" class=" text-gray-50 rounded px-2"
                                 [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP
+                                WINS {{doubleScore}} up
                             </div>
                             <div *ngIf="doubleScoreEnd" class=" text-gray-50 rounded px-2"
                                 [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP & {{doubleHoles}}
+                                WINS {{doubleScore}} up & {{doubleHoles}}
                             </div>
                         </div>
                         <div *ngIf="!isDoubleWonA && !isDoubleWonB">
@@ -102,28 +89,15 @@
                                 {{ player.name }}
                                 <span *ngIf="!lastPlayer"> / </span>
                             </ng-container>
-                            <div class="cursor-pointer pt-0.5 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold"
-                                (click)="
-                                                        viewTeamScore(
-                                                            item.teamId,
-                                                            item.courseId,
-                                                            item.holeSets,
-                                                            item.id,
-                                                            item.holeSetsInverted,
-                                                            item.type
-                                                        )
-                                                    ">
-                                view score
-                            </div>
                         </div>
                         <div *ngIf="isDoubleWonB">
                             <div *ngIf="!doubleScoreEnd" class=" text-gray-50 rounded px-2"
                                 [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP
+                                WINS {{doubleScore}} up
                             </div>
                             <div *ngIf="doubleScoreEnd" class=" text-gray-50 rounded px-2"
                                 [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP & {{doubleHoles}}
+                                WINS {{doubleScore}} up & {{doubleHoles}}
                             </div>
                         </div>
                         <div *ngIf="!isDoubleWonA && !isDoubleWonB">
@@ -152,19 +126,6 @@
                             </div>
                             <div class="text-xs flex items-center" [ngStyle]="{ 'color': item.color }">
                                 HC:{{ player.handicap }}
-                                <div class="cursor-pointer w-18 leading-2 flex justify-center rounded-full text-sm font-semibold "
-                                    (click)="
-                                                            viewPlayerScore(
-                                                                player.name,
-                                                                item.courseId,
-                                                                item.holeSets,
-                                                                player.id,
-                                                                item.holeSetsInverted,
-                                                                item.type
-                                                            )
-                                                        ">
-                                    view score
-                                </div>
                             </div>
 
                         </div>
@@ -190,19 +151,6 @@
                             </div>
                             <div class="text-xs flex items-center" [ngStyle]="{ 'color': item.color }">
                                 HC:{{ player.handicap }}
-                                <div class="cursor-pointer w-18 leading-2 flex justify-center rounded-full text-sm font-semibold "
-                                    (click)="
-                                                            viewPlayerScore(
-                                                                player.name,
-                                                                item.courseId,
-                                                                item.holeSets,
-                                                                player.id,
-                                                                item.holeSetsInverted,
-                                                                item.type
-                                                            )
-                                                        ">
-                                    view score
-                                </div>
                             </div>
 
                         </div>
@@ -257,15 +205,15 @@
                                 }">
                             Flight {{ activeRound }}
                         </div>
-                        <div class="col col-1 bg-card" *ngIf="item.UPScore > 0 && !item.end"
+                        <div class="col col-1 bg-card" *ngIf="item.upScore > 0 && !item.end"
                             [ngStyle]="{ color: item.color }">
-                            {{ item.UPScore }} UP
+                            {{ item.upScore }} up
                         </div>
-                        <div class="col col-1 bg-card" *ngIf="item.UPScore > 0 && item.end"
+                        <div class="col col-1 bg-card" *ngIf="item.upScore > 0 && item.end"
                             [ngStyle]="{ color: item.color }">
-                            {{ item.UPScore }} UP & {{ item.holes }}
+                            {{ item.upScore }} up & {{ item.holes }}
                         </div>
-                        <div class="col col-1 bg-card" *ngIf="item.UPScore === 0" [ngStyle]="{ color: item.color }">
+                        <div class="col col-1 bg-card" *ngIf="item.upScore === 0" [ngStyle]="{ color: item.color }">
                             Tied
                         </div>
                     </li>

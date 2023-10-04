@@ -325,7 +325,7 @@ export class TournamentsComponent implements OnInit {
             this.logger.log('Getting Schedule Tournaments Data', "info");
             this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
             let today: Date = new Date();
-            let dd = String(today.getDate()).padStart(2, '0');
+            let dd = String(today.getDate() + 1).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             let yyyy = today.getFullYear();
 
@@ -427,7 +427,7 @@ export class TournamentsComponent implements OnInit {
             this.logger.log('Getting Schedule Tournaments Data', "info");
             this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
             let today: Date = new Date();
-            let dd = String(today.getDate()).padStart(2, '0');
+            let dd = String(today.getDate()+1).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             let yyyy = today.getFullYear();
 

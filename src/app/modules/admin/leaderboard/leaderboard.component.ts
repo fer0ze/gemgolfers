@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, Input } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation, ViewChild, Input, ChangeDetectorRef, OnChanges, SimpleChanges } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MatPaginator } from '@angular/material/paginator';
@@ -31,7 +31,7 @@ import { Apollo } from "apollo-angular";
 import * as Query from "app/shared/GraphQL/tournament.gql";
 import { async } from "@angular/core/testing";
 import { DialogPlayerScoreComponent } from "../dialogs/dialog-player-score/dialog-player-score.component";
-
+import { LeaderboardSubscription } from 'app/shared/GraphQL/tournament.gql';
 @Component({
   selector: "app-leaderboard",
   templateUrl: "./leaderboard.component.html",
@@ -116,7 +116,7 @@ export class LeaderboardComponent implements OnInit {
     private location: Location,
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    public facadeService: FacadeService
+    public facadeService: FacadeService, private cdr: ChangeDetectorRef
   ) { }
 
   async ngOnInit() {
@@ -143,98 +143,30 @@ export class LeaderboardComponent implements OnInit {
 
     this.apollo
       .watchQuery({
-        query: Query.LeaderboardSubscription,
+        query: LeaderboardSubscription,
         variables: {
           tournamentPrefix: this.tournamentID,
-          
         },
-        pollInterval:20000,
-        
       })
       .valueChanges.subscribe(({ data }) => {
         if (!data) {
           //console.log(data);
         } else {
-          let dataLeaderboard: any = data;
-          //console.log(data);
-          //console.log(dataLeaderboard);
-
-          this.allMatchResults = [];
-          this.allLeadersGross = [];
-          this.allLeadersCutOffGross = [];
-          this.allLeadersNet = [];
-          this.grossLeaders = [];
-          this.netLeaders = [];
-          this.grossAllLeaders = [];
-          this.netAllLeaders = [];
-
-          this.tRounds = [];
-          this.teamMatch = false;
-
-
-          this.Leaderboard = dataLeaderboard.TournamentQL[0];
-          ////console.log(this.Leaderboard);
-          if (this.Leaderboard.cutOffCriteria != null) {
-            if ("cutOff" in this.Leaderboard.cutOffCriteria) {
-              if (this.Leaderboard.cutOffCriteria) {
-                if (Object.keys(this.Leaderboard.cutOffCriteria).length)
-                  this.cutOffList = this.Leaderboard.cutOffCriteria;
-                // //console.log(this.cutOffList);
-                // //console.log(this.cutOffList.cutOff);
-
-                //console.log(this.cutOffList["cutOff"]);
-              }
-            }
-          }
-
-
-          this.activeRound = this.Leaderboard.activeRound;
-          this.totalRounds = this.Leaderboard.noOfRounds;
-          this.matchFormat = this.Leaderboard.matchFormat;
-          this.teamMatch = this.Leaderboard.teamMatch;
-          if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-            this.showTaxes = true;
-          }
-
-          if (this.Leaderboard.webLogoUrl)
-            this.webLogoUrl = this.Leaderboard.webLogoUrl;
-          this.Leaderboard.CategoriesQL.sort(this.sortCategory);
-          if (this.Leaderboard.CategoriesQL.length > 0) {
-            this.selectedCategory = this.Leaderboard.CategoriesQL[0];
-
-            if (!this.selectedCategoryValue)
-              this.selectedCategoryValue = this.selectedCategory.category;
-          }
-
-
-
-          //console.log(this.Leaderboard);
-
-          if (this.tRounds.length >= 0) {
-            for (
-              let round = 1;
-              round <= this.Leaderboard.noOfRounds;
-              round++
-            ) {
-              let r: any = {
-                Text: "Round " + round,
-                Value: round,
-              };
-              this.tRounds.push(r);
-            }
-          }
-
-          this.selectedSubTournament = this.tournamentID;
-
-          this.parseSubscriptionResponse(this.Leaderboard);
-
-          this.updateCategoryNames();
-          //resolve(data);
-          this.isLoading = true;
+          console.log(data);
+          this.Leaderboard = data;
+          this.matchFormat = this.Leaderboard.TournamentQL[0].matchFormat;
+          console.log(this.matchFormat);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
 
   }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   console.log(changes);
+  //   //this.data = changes.data.currentValue;
+  //   this.ngOnInit();
+  // }
   private parseSubscriptionResponse(data: any): boolean {
     if (data == null) {
       return false;

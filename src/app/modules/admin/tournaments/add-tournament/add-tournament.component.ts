@@ -3089,23 +3089,20 @@ export class AddTournamentComponent implements OnInit {
                                     playingTee: roundTeeId.result,
                                     tee_id: roundTeeId.id,
                                 };
-                                console.log(TM);
+                             
 
                                 tournamentMember.push(TM);
                             }
                         }
-                        console.log(
-                            this.selectedMembers[index][index2][index3][index4]
-                                .playerCategory
-                        );
+                        
 
                         let roundTeeId1: any = General.getPlayersTees(
                             tournamentFlightMembers[0].playingTee
                         );
-                        console.log(roundTeeId1.id);
+                        
 
                         if (tournamentFlightMembers.length > 0) {
-                            console.log(tournamentFlightMembers);
+                            // console.log(tournamentFlightMembers);
                             fcnter++;
                             let flight: any = {
                                 id: UniqueIdGenerator.generate(),
@@ -3145,7 +3142,7 @@ export class AddTournamentComponent implements OnInit {
                             if (this.showTexas) {
                                 let name: string = (<HTMLInputElement>(
                                     document.getElementById(
-                                        'flight_' + index + '_name'
+                                        'flight_' + counter + '_name'
                                     )
                                 )).value;
                                 console.log(name);
@@ -3157,6 +3154,7 @@ export class AddTournamentComponent implements OnInit {
 
                                 flightName.push(flightNames);
                             }
+                            counter = counter + 1;
 
                             console.log(flight);
                             tournamentFlights.push(flight);
@@ -3165,7 +3163,7 @@ export class AddTournamentComponent implements OnInit {
 
                             //break;
                         }
-                        counter = counter + 1;
+                        
                     }
                 }
             }

@@ -1121,7 +1121,7 @@
                                         <mat-icon class="icon-size-5" [svgIcon]="
                                                 'heroicons_solid:office-building'
                                             " matPrefix></mat-icon>
-                                        <input matInput formControlName="playersperFlight" [disabled]="showTexas" type="number" />
+                                        <input matInput formControlName="playersperFlight" [disabled]="showTexas" [readonly]="showTexas" type="number" />
                                         <mat-error>The input is required.</mat-error>
                                     </mat-form-field>
                                 </div>
@@ -1315,7 +1315,7 @@
                                             <mat-form-field *ngIf="showTexas" class="fuse-mat-no-subscript mb-2 "
                                                 [floatLabel]="'always'">
                                                 <mat-icon matPrefix class="icon-size-5" [svgIcon]="
-                                                        'heroicons_solid:chevron-right'
+                                                        'heroicons_outline:user-group'
                                                     "></mat-icon>
                                                 <input id="flight_{{ i }}_name" value="{{ items.name }}" matInput
                                                     #query />

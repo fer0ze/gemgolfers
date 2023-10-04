@@ -113,6 +113,7 @@ export class ViewTournamentComponent implements OnInit {
     courseImg: string;
     tournamentPlayersAdd: boolean = true;
     showCloseBtn: boolean = true;
+    showMatchPlay: boolean = false;
     categories: TournamentCategory[] = [];
     FlightsQL: any[] = [];
     selectedMembers: Player[][] = [];
@@ -151,6 +152,7 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab3: boolean = false;
     showMainTab4: boolean = false;
     showMainTab5: boolean = false;
+    showMainTab6: boolean = false;
     showSummary: boolean = false;
     tournamentMember: any = [];
     tournamentMembers: any = [];
@@ -331,6 +333,12 @@ export class ViewTournamentComponent implements OnInit {
                         ].length;
                     this.showCloseBtn = false;
                     this.tournamentPlayersAdd = true;
+                }
+                if (
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
+                    matchFormat.MATCH_PLAY
+                ) {
+                    this.showMatchPlay = true;
                 }
 
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
@@ -936,46 +944,103 @@ export class ViewTournamentComponent implements OnInit {
     maintabClicked(tab: any) {
         try {
             this.logger.log('Admin click on Main Tab in View Tournament Page', "info", tab.toString());
-            if (tab.index == 0) {
-                this.showMainTab1 = true;
-                this.showMainTab2 = false;
-                this.showMainTab3 = false;
-                this.showMainTab4 = false;
-                this.showMainTab5 = false;
-                if (this.activeRound == 1) this.calculateStatistics1();
-                this.getRound1stats(1);
-                if (this.activeRound == 2) this.calculateStatistics2();
-                this.getRound2stats(2);
-                if (this.activeRound == 3) this.calculateStatistics3();
-                this.getRound3stats(3);
-                if (this.activeRound == 4) this.calculateStatistics4();
-                this.getRound4stats(4);
-            } else if (tab.index == 1) {
-                this.showMainTab1 = false;
-                this.showMainTab2 = true;
-                this.showMainTab3 = false;
-                this.showMainTab4 = false;
-                this.showMainTab5 = false;
-            } else if (tab.index == 2) {
-                this.showMainTab1 = false;
-                this.showMainTab2 = false;
-                this.showMainTab3 = true;
-                this.showMainTab4 = false;
-                this.showMainTab5 = false;
-            } else if (tab.index == 3) {
-                this.showMainTab1 = false;
-                this.showMainTab2 = false;
-                this.showMainTab3 = false;
-                this.showMainTab4 = true;
-                this.showMainTab5 = false;
-            } else if (tab.index == 4) {
-                this.showMainTab1 = false;
-                this.showMainTab2 = false;
-                this.showMainTab3 = false;
-                this.showMainTab4 = false;
-                this.getTournamentMembers();
-                this.showMainTab5 = true;
+            if (!this.showMatchPlay) {
+                if (tab.index == 0) {
+                    this.showMainTab1 = true;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    if (this.activeRound == 1) this.calculateStatistics1();
+                    this.getRound1stats(1);
+                    if (this.activeRound == 2) this.calculateStatistics2();
+                    this.getRound2stats(2);
+                    if (this.activeRound == 3) this.calculateStatistics3();
+                    this.getRound3stats(3);
+                    if (this.activeRound == 4) this.calculateStatistics4();
+                    this.getRound4stats(4);
+                } else if (tab.index == 1) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = true;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                } else if (tab.index == 2) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = true;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                } else if (tab.index == 3) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = true;
+                    this.showMainTab5 = false;
+                } else if (tab.index == 4) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.getTournamentMembers();
+                    this.showMainTab5 = true;
+                }
+            } else {
+                if (tab.index == 0) {
+                    this.showMainTab1 = true;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                    if (this.activeRound == 1) this.calculateStatistics1();
+                    this.getRound1stats(1);
+                    if (this.activeRound == 2) this.calculateStatistics2();
+                    this.getRound2stats(2);
+                    if (this.activeRound == 3) this.calculateStatistics3();
+                    this.getRound3stats(3);
+                    if (this.activeRound == 4) this.calculateStatistics4();
+                    this.getRound4stats(4);
+                } else if (tab.index == 1) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = true;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                } else if (tab.index == 2) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = true;
+                } else if (tab.index == 3) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = true;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                } else if (tab.index == 4) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = true;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                }else{
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.getTournamentMembers();
+                    this.showMainTab5 = true;
+                    this.showMainTab6 = false;
+
+                }
             }
+
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }

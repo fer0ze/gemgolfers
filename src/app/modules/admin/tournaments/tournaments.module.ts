@@ -63,6 +63,11 @@ import { DialogPlayingDatesComponent } from '../dialogs/dialog-playing-dates/dia
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-add-member.component';
 import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
+import { StrokePlayMiniComponent } from '../leaderboard/strokePlay/strokePlay.component';
+import { ScrambleMiniComponent } from '../leaderboard/texasScramble/texasScramble.component';
+import { MatchPlayMiniComponent } from '../leaderboard/matchPlay/matchPlay.component';
+import { StableFordMiniComponent } from '../leaderboard/stableFord/stableFord.component';
+import { TeamManagementComponent } from './team-management/team-management.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -83,10 +88,10 @@ import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.co
         ViewTournamentComponent,
         DialogMarshalComponent,
         DialogPlayingCategoryComponent,
-        DialogAddMemberComponent,
+        DialogAddMemberComponent,TeamManagementComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
-        DialogPlayingDatesComponent,
+        DialogPlayingDatesComponent,StrokePlayMiniComponent,ScrambleMiniComponent,MatchPlayMiniComponent,StableFordMiniComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
