@@ -136,9 +136,22 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                     this.sortAllNetLeadersTie(this.allLeadersCutOffNet)
                 }
                 if (lastTab == 1) {
+                    if (this.allLeadersCutOffGross.length > 0) {
+                        this.allRoundCutOff = true;
+                    }else{
+                        this.allRoundCutOff = false;
+
+                    }
+                    this.allRoundCutOffNet = false;
                     this.LeaderboardPlayers.sort(this.ComparatorAllGross);
                     this.sortAllGrossLeadersTie(this.LeaderboardPlayers)
                 } else {
+                    if (this.allLeadersCutOffNet.length > 0) {  
+                        this.allRoundCutOffNet = true;
+                    }else{
+                        this.allRoundCutOffNet = false;
+                    }
+                    this.allRoundCutOff = false;
                     this.LeaderboardPlayers.sort(this.ComparatorAllNet);
                     this.sortAllNetLeadersTie(this.LeaderboardPlayers)
                 }
@@ -151,7 +164,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         let cutObj = this.Leaderboard.cutOffCriteria["cutOff"].filter(
             (obj) => obj.name === this.selectedCategoryValue
         );
-        if (cutObj) {
+        if (cutObj && cutObj.length > 0) {
             this.cuttOffScore = cutObj[0].score;
             for (let i = leaders.length - 1; i >= 0; i--) {
                 const item = leaders[i];
@@ -162,10 +175,12 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 ) {
                     leaders.splice(i, 1);
                     this.allLeadersCutOffGross.push(item);
+                    this.allLeadersCutOffNet.push(item);
                 } else if (cutObj[0].type == 'NET' && item.underNet > cutObj[0].score &&
                     cutObj[0].score > 0 &&
                     item.PlayingRound != this.activeRound) {
                     leaders.splice(i, 1);
+                    this.allLeadersCutOffGross.push(item);
                     this.allLeadersCutOffNet.push(item);
                 }
             }
@@ -201,16 +216,16 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     getScoreByRoundG(item: any, round: number): string {
         const propertyName = `scoreR${round}`;
         return (item[propertyName] !== undefined && item[propertyName] !== null)
-        ? item[propertyName].toString()
-        : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+            ? item[propertyName].toString()
+            : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
     getUnderByRoundG(item: any, round: number): string {
         const propertyName = `underGross${round}`;
         return (item[propertyName] !== undefined && item[propertyName] !== null)
-          ? item[propertyName].toString()
-          : '0';
-      }
-      
+            ? item[propertyName].toString()
+            : '0';
+    }
+
     getHolesByRoundG(item: any, round: number): string {
         const propertyName = `holesPlayedR${round}`;
         return item[propertyName] === 18 ? 'F' : (item[propertyName] || '');// Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
@@ -218,14 +233,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     getScoreByRoundN(item: any, round: number): string {
         const propertyName = `netScoreR${round}`;
         return (item[propertyName] !== undefined && item[propertyName] !== null)
-          ? item[propertyName].toString()
-          : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+            ? item[propertyName].toString()
+            : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
     getUnderByRoundN(item: any, round: number): string {
         const propertyName = `underNet${round}`;
         return (item[propertyName] !== undefined && item[propertyName] !== null)
-          ? item[propertyName].toString()
-          : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+            ? item[propertyName].toString()
+            : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
     getHolesByRoundN(item: any, round: number): string {
         const propertyName = `holesPlayedR${round}`;
@@ -275,7 +290,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = true;
                 this.allRoundCutOffNet = true;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
+                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 2)
             } else {
                 this.isGross = false;
                 this.isNet = false;
@@ -304,7 +319,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
+                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 2)
             } else {
                 this.isGross = true;
                 this.isNet = false;

@@ -1051,6 +1051,8 @@ export class TournamentsService {
                                 sponsorLogo: tmnt.sponsorLogo,
                                 mobileLogoUrl: tmnt.mobileLogoUrl,
                                 webLogoUrl: tmnt.webLogoUrl,
+                                noofMarshals: tmnt.noofMarshals,
+                                marshalStart: tmnt.marshalStart,
                                 flightsCategory: tmnt.flightsCategory,
                                 subTournament: tmnt.subTournament,
                                 multiFormat: tmnt.multiFormat,

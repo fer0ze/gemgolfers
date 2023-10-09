@@ -5,6 +5,7 @@ import * as Query from '../GraphQL/log.gql';
 import { LocalStorageService } from './localStorage';
 import { Constants } from '../classes/general';
 import { add } from 'lodash';
+import { environment } from 'environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,7 +26,7 @@ export class LogsService {
         query: Query.LogQL,
         variables: {
           request: {
-            name: 'GemGolfers-WebApp',
+            name: environment.logName,
             message: msg,
             level: level,
             body: {

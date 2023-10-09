@@ -264,7 +264,7 @@ export class AddTournamentComponent implements OnInit {
                             multiFormat: ['SINGLE'],
                         }),
                     ]),
-                    courseHoleSet: [],
+                    courseHoleSet: [''],
                     subTournament: this._formBuilder.array([
                         this._formBuilder.group({
                             title: [''],
@@ -311,7 +311,7 @@ export class AddTournamentComponent implements OnInit {
 
         // this.Categories =  this.facadeService.getPlayerCategories();
         this._courseHoles = this.facadeService.getCourseHoles('');
-        console.log(this.Categories);
+        //console.log(this.Categories);
 
         let playerCategoryList = this.facadeService.getPlayerCategories();
         console.log(playerCategoryList);
@@ -366,11 +366,17 @@ export class AddTournamentComponent implements OnInit {
                     teamMatch: this.currentTournament.teamMatch == true ? '2' : '1',
                     courseHoleSet:
                         this.currentTournament.courseHoleSets +
-                            '_' +
-                            this.currentTournament.courseHoleSetsInverted
-                            ? 'true'
-                            : 'false',
+                        '_' +
+                        this.currentTournament.courseHoleSetsInverted,
+                    scoreManagement: this.currentTournament.scoreManagement,
+                    marshalStart: this.currentTournament.marshalsStartWith,
+                    noofMarshals: this.currentTournament.noOfMarshals,
+
                 });
+                if (this.currentTournament.scoreManagement != Constants.SM_ONLY_PLAYERS) {
+                    this.isMarshals = true;
+
+                }
                 if (this.currentTournament.teamMatch) {
                     this.index = this.currentTournament.teams.length;
                     this.selectedTeams1[0] = [];
@@ -458,6 +464,13 @@ export class AddTournamentComponent implements OnInit {
                     .get([0])
                     .get('matchFormat')!
                     .setValue(this.currentTournament.matchFormat);
+                this.formArray
+                    .get([0])
+                    .get('clubsFormCtrl')!
+                    .setValue(
+                        this._filterClub(this.currentTournament.clubId)[0],
+                    );
+
 
 
                 // this.formArray
@@ -542,6 +555,8 @@ export class AddTournamentComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.Clubs.slice()))
             );
+        console.log(this.filteredClubOptions);
+
         // this.formArray
         // .get([0])
         // .get('courseInfo')
@@ -804,6 +819,18 @@ export class AddTournamentComponent implements OnInit {
         }
 
         return this.Clubs;
+    }
+    private _filterClub(value: string) {
+        console.log(value);
+
+        if (value) {
+            const filterValue = value.toLowerCase();
+
+            return this.Clubs.filter(
+                (option) => option.id.toLowerCase().indexOf(filterValue) === 0
+            );
+        }
+
     }
 
     private _filterCourse(value: any): Course[] {
@@ -2085,7 +2112,7 @@ export class AddTournamentComponent implements OnInit {
                 courseHoleSetsData.length > 0
                     ? Number(courseHoleSetsData[0])
                     : 0,
-            teamMatch: this.formArray.get([0]).value.courseInfo[0].multiFormat == '1' ? false : true,
+            teamMatch: this.formArray.get([0]).value.courseInfo[0].teamMatch == '1' ? false : true,
             pairsMatch: false,
             interLeague: false,
             playingOnWhs: false,
@@ -2106,8 +2133,10 @@ export class AddTournamentComponent implements OnInit {
             handicapAllocations: handicapAllocations.handicapAllocation,
             handicapAllocation: handicapAllocations.handicapAllocation,
             tee: 'AMATEURS',
+            marshalsStartWith: this.formArray.get([0]).value.marshalStart,
+            noOfMarshals: this.formArray.get([0]).value.noofMarshals,
             tee_id: 1,
-            scoreManagement: 'ONLY_PLAYERS',
+            scoreManagement: this.formArray.get([0]).value.scoreManagement,
             startDate: General.parseToDate(
                 this.formArray.get([0]).value.startDateFormCtrl
             ),
@@ -2405,7 +2434,7 @@ export class AddTournamentComponent implements OnInit {
                 courseHoleSetsData.length > 0
                     ? Number(courseHoleSetsData[0])
                     : 0,
-            teamMatch: false,
+            teamMatch: this.formArray.get([0]).value.courseInfo[0].teamMatch == '1' ? false : true,
             pairsMatch: false,
             interLeague: false,
             playingOnWhs: false,
@@ -2415,12 +2444,19 @@ export class AddTournamentComponent implements OnInit {
             activeRound: 1,
             matchFormat: this.formArray.get([0]).value.courseInfo[0]
                 .matchFormat,
+            multiFormat:
+                this.formArray.get([0]).value.courseInfo[0].multiFormat ==
+                    'SINGLE'
+                    ? false
+                    : true,
             pointsFormats: null,
             pointsValues: null,
             handicapAllocations: handicapAllocations.handicapAllocation,
             tee: 'AMATEURS',
             tee_id: 1,
-            scoreManagement: 'ONLY_PLAYERS',
+            scoreManagement: this.formArray.get([0]).value.scoreManagement,
+            marshalsStartWith: this.formArray.get([0]).value.marshalStart,
+            noOfMarshals: this.formArray.get([0]).value.noofMarshals,
             startDate: General.parseToDate(
                 this.formArray.get([0]).value.startDateFormCtrl
             ),

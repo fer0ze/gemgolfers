@@ -3,22 +3,23 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    debugging: false,
-    apiUrl: 'https://gemgolfers-dev.hasura.app/v1/graphql',
-    wsUrl: 'wss://gemgolfers-dev.hasura.app/v1/graphql',
-    apiKey: 's9TQTbcPL4S2R1XWyZYT2MFFspNJmSkOBR4HiNPEXRFErgaEwOVf9XBU48ALjGrW',
-    defaultRole: 'admin',
-    encryptSecretKey: 'prod-gemgolfers',
-    firebase: {
-        apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
-        authDomain: "gemtour-4c90a.firebaseapp.com",
-        databaseURL: "https://gemtour-4c90a.firebaseio.com",
-        projectId: "gemtour-4c90a",
-        storageBucket: "gemtour-4c90a.appspot.com",
-        messagingSenderId: "335312640323"
-      },
-      api:"http://localhost:18000",
+  production: false,
+  debugging: false,
+  apiUrl: 'https://gemgolfers-dev.hasura.app/v1/graphql',
+  wsUrl: 'wss://gemgolfers-dev.hasura.app/v1/graphql',
+  logName: 'Gemgolfers-WebApp-Dev',
+  apiKey: 's9TQTbcPL4S2R1XWyZYT2MFFspNJmSkOBR4HiNPEXRFErgaEwOVf9XBU48ALjGrW',
+  defaultRole: 'admin',
+  encryptSecretKey: 'prod-gemgolfers',
+  firebase: {
+    apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
+    authDomain: "gemtour-4c90a.firebaseapp.com",
+    databaseURL: "https://gemtour-4c90a.firebaseio.com",
+    projectId: "gemtour-4c90a",
+    storageBucket: "gemtour-4c90a.appspot.com",
+    messagingSenderId: "335312640323"
+  },
+  api: "http://localhost:18000",
 };
 
 /*

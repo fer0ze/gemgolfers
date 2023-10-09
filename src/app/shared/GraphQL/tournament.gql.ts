@@ -870,6 +870,8 @@ export const UpdateMutation = gql`
                     scoreManagement
                     startDate
                     endDate
+                    marshalStart
+                    noofMarshals
                 ]
             }
         ) {
