@@ -24,6 +24,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     LeaderboardPlayers: any[] = [];
     allLeadersCutOffGross: any[] = [];
     allLeadersCutOffNet: any[] = [];
+    allMatchSearchResults: any[] = [];
     selectedCategory: any;
     selectedIndex: any = 0;
     flightRound: any = 0;
@@ -49,7 +50,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     categoryLimit: number;
     constructor(
         public dialog: MatDialog, public facadeService: FacadeService
-    ) { }
+    ) {
+        this.flightRound = 0;
+    }
 
     ngOnInit(): void {
         console.log(this.data);
@@ -57,7 +60,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         this.activeRound = this.Leaderboard.activeRound
         this.totalRounds = this.Leaderboard.noOfRounds
         this.LeaderboardAllPlayers = this.data.LeaderBoardQL;
-
+        this.flightRound = 0;
         if (!this.selectedCategoryValue) {
             this.updateCategoryNames();
         }
@@ -522,30 +525,30 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         );
     }
     filterByQuery(query) {
-        // if (query.length > 3) {
-        //     this.searchName = true;
-        //     console.log(this.allMatchResults);
-        //     if (this.allLeadersGross.length > 0) {
-        //         this.allMatchSearchResults = this.allLeadersGross.filter(
-        //             (obj) => {
-        //                 return obj.name
-        //                     .toString()
-        //                     .toLowerCase()
-        //                     .includes(query.toString().toLowerCase());
-        //             }
-        //         );
-        //     } else {
-        //         this.allMatchSearchResults = this.grossLeaders.filter((obj) => {
-        //             return obj.name
-        //                 .toString()
-        //                 .toLowerCase()
-        //                 .includes(query.toString().toLowerCase());
-        //         });
-        //     }
-        // } else {
-        //     this.allMatchSearchResults = [];
-        //     this.searchName = false;
-        // }
+        if (query.length > 3) {
+            this.searchName = true;
+            // console.log(this.allMatchResults);
+            if (this.LeaderboardPlayers.length > 0) {
+                this.allMatchSearchResults = this.LeaderboardPlayers.filter(
+                    (obj) => {
+                        return obj.name
+                            .toString()
+                            .toLowerCase()
+                            .includes(query.toString().toLowerCase());
+                    }
+                );
+            } else {
+                this.allMatchSearchResults = this.LeaderboardPlayers.filter((obj) => {
+                    return obj.name
+                        .toString()
+                        .toLowerCase()
+                        .includes(query.toString().toLowerCase());
+                });
+            }
+        } else {
+            this.allMatchSearchResults = [];
+            this.searchName = false;
+        }
     }
     getHandicapAllocation(): string {
         let hcAllocation: string;
@@ -680,175 +683,6 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 removed: removed,
             },
         });
-        //console.log(playerId);
-        // let handicapAllocation: string = this.getHandicapAllocation();
-        // if (this.showBestBall == true) {
-        //     for (let flightData of this.Leaderboard.FlightsQL) {
-        //         if (flightData.id == playerId) {
-        //             let membersQLs: any = flightData.MembersQL;
-        //             for (let membersQL of membersQLs) {
-        //                 scores = membersQL.ScoresQL;
-        //                 let player: Player = membersQL.PlayerQL;
-        //                 // if (scores.length <= 0) continue;
-
-        //                 for (let score of scores) {
-        //                     let objScore: Score = new Score(
-        //                         score.playerId,
-        //                         score.playerHandicap,
-        //                         score.hole.index,
-        //                         score.hole.par,
-        //                         score.grossScore
-        //                     );
-        //                     let gross: number = score.grossScore;
-        //                     // if (gross <= 0) {
-        //                     //     continue;
-        //                     // }
-        //                     let currentNet: number =
-        //                         objScore.getNetScore(handicapAllocation);
-        //                     score['netScore'] = currentNet;
-        //                     score['check'] = false;
-        //                     scoresArray.push(score.grossScore);
-        //                 }
-        //                 let playerHole18ScoreGross: any[] = [];
-        //                 let playerHole18ScoreNet: any[] = [];
-
-        //                 for (
-        //                     let i = 0;
-        //                     i < flightData.CourseQL.noOfHoles;
-        //                     i++
-        //                 ) {
-        //                     let hole = scores.find((a) => {
-        //                         return a.hole.holeNo == i + 1;
-        //                     });
-
-        //                     if (hole) {
-        //                         playerHole18ScoreGross[i] = hole.grossScore;
-        //                         playerHole18ScoreNet[i] = hole.netScore;
-        //                     } else {
-        //                         playerHole18ScoreGross[i] = 0;
-        //                         playerHole18ScoreNet[i] = 0;
-        //                     }
-        //                 }
-        //                 let teamName: string = flightData.name
-        //                     ? flightData.name.name
-        //                     : 'UNKNOWN TEAM';
-        //                 let LeaderGross: any = {
-        //                     name: player.firstName + ' ' + player.lastName,
-        //                     holeScores: playerHole18ScoreGross,
-        //                 };
-        //                 let LeaderNet: any = {
-        //                     name: player.firstName + ' ' + player.lastName,
-        //                     holeScores: playerHole18ScoreNet,
-        //                 };
-        //                 playerGrossScore.push(LeaderGross);
-        //                 playerNetScore.push(LeaderNet);
-        //             }
-        //         }
-        //     }
-        //     console.log(playerGrossScore);
-        // } else if (this.flightRound == 0) {
-        //     playerGrossScore = this.grossAllLeaders.filter((g) => {
-        //         return g.playerId == playerId;
-        //     });
-
-        //     playerNetScore = this.netAllLeaders.filter((g) => {
-        //         return g.playerId == playerId;
-        //     });
-        // } else {
-        //     playerGrossScore = this.grossLeaders.filter((g) => {
-        //         return g.playerId == playerId;
-        //     });
-
-        //     playerNetScore = this.netLeaders.filter((g) => {
-        //         return g.playerId == playerId;
-        //     });
-        // }
-        // playerPerTeam = this.Leaderboard.FlightsQL.filter((a) => {
-        //     return a.id == playerId;
-        // });
-
-        // ////console.log(playerGrossScore);
-        // if (
-        //     this.teamMatch &&
-        //     (this.matchFormat == matchFormat.BEST_THREE ||
-        //         this.matchFormat == matchFormat.COMBINE_ALL)
-        // ) {
-        //     removed =
-        //         playerGrossScore.length > 0 && playerGrossScore[0].removedScore
-        //             ? playerGrossScore[0].removedScore
-        //             : [];
-        //     playerGrossScore =
-        //         playerGrossScore.length > 0
-        //             ? playerGrossScore[0].holeScores
-        //             : [];
-        //     playerNetScore =
-        //         playerNetScore.length > 0 ? playerNetScore[0].holeScores : [];
-
-        //     if (!removed) removed = [];
-
-        //     team = true;
-        // }
-        // if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
-        //     const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-        //         data: {
-        //             name: name,
-        //             tee_id:
-        //                 this.Leaderboard.tee_id != null
-        //                     ? this.Leaderboard.tee_id
-        //                     : 1,
-        //             course: courseId,
-        //             players: playerPerTeam[0]['MembersQL'],
-        //             holeSets: courseHoleSets,
-        //             courseHoleSetsInverted: holeSetsInverted,
-        //             allGross: playerGrossScore,
-        //             allNet: playerNetScore,
-        //             round: this.flightRound,
-        //             type: scoreType,
-        //             team: team,
-        //             removed: removed,
-        //         },
-        //     });
-        // } else if (this.matchFormat == matchFormat.BESTBALL) {
-        //     const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-        //         data: {
-        //             name: name,
-        //             tee_id:
-        //                 this.Leaderboard.tee_id != null
-        //                     ? this.Leaderboard.tee_id
-        //                     : 1,
-        //             course: courseId,
-        //             players: [],
-        //             holeSets: courseHoleSets,
-        //             courseHoleSetsInverted: holeSetsInverted,
-        //             allGross: playerGrossScore,
-        //             allNet: playerNetScore,
-        //             round: this.flightRound,
-        //             type: this.allRoundNetScore || this.isNet ? 'Net' : 'Gross',
-        //             team: team,
-        //             removed: removed,
-        //         },
-        //     });
-        // } else {
-        //     const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-        //         data: {
-        //             name: name,
-        //             tee_id:
-        //                 this.Leaderboard.tee_id != null
-        //                     ? this.Leaderboard.tee_id
-        //                     : 1,
-        //             course: courseId,
-        //             players: [],
-        //             holeSets: courseHoleSets,
-        //             allGross: playerGrossScore,
-        //             courseHoleSetsInverted: holeSetsInverted,
-        //             allNet: playerNetScore,
-        //             round: this.flightRound,
-        //             type: this.allRoundNetScore ? 'Net' : 'Gross',
-        //             team: team,
-        //             removed: removed,
-        //         },
-        //     });
-        // }
     }
     sortCategory(a, b) {
         if (a['category'] < b['category']) {
@@ -894,16 +728,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     private sortLeadersGross(leaderList: any[], round) {
         //Collections.sort(grossLeaders);
         console.log(leaderList);
+        this.flightRound = round;
 
-        leaderList = leaderList.sort(this.ComparatorPosition);
-        ////console.log(leaderList);
-        //return false;
-
+        leaderList = leaderList.sort(this.ComparatorPositionGross(round));
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -912,33 +744,8 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             let previousHoleScore: number = 0;
 
             tied = leaderCurrent[`underGross${round}`] == leaderPrevious[`underGross${round}`];
-            ////console.log(tied);
-            if (tied && leaderCurrent.completed && leaderPrevious.completed) {
-                let noOfHoles = 9;
-                while (tied && noOfHoles > 0) {
-                    //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
-                    currentHoleScore = this.getLastHolesTotal(
-                        noOfHoles,
-                        leaderCurrent.holeScores
-                    );
-                    previousHoleScore = this.getLastHolesTotal(
-                        noOfHoles,
-                        leaderPrevious.holeScores
-                    );
-
-                    tied = currentHoleScore == previousHoleScore;
-
-                    if (noOfHoles > 3) {
-                        noOfHoles -= 3;
-                    } else {
-                        noOfHoles -= 2;
-                    }
-                }
-            }
 
             if (tied) {
-                //leaderCurrent["tied"]= true;
-                //leaderPrevious["tied"]= true;
                 leaderList[i]['tied'] = true;
                 leaderList[i - 1]['tied'] = true;
                 leaderList[i]['position'] = 'T' + pos;
@@ -947,24 +754,16 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
-        //leaderList = leaderList.sort(this.ComparatorPosition);
     }
     private sortLeadersNet(leaderList: any[], round) {
-        //Collections.sort(grossLeaders);
-        console.log(leaderList);
+        this.flightRound = round;
 
-        leaderList = leaderList.sort(this.ComparatorPosition);
-        ////console.log(leaderList);
-        //return false;
-
+        leaderList = leaderList.sort(this.ComparatorPositionNet(round));
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -973,33 +772,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             let previousHoleScore: number = 0;
 
             tied = leaderCurrent[`underNet${round}`] == leaderPrevious[`underNet${round}`];
-            ////console.log(tied);
-            if (tied && leaderCurrent.completed && leaderPrevious.completed) {
-                let noOfHoles = 9;
-                while (tied && noOfHoles > 0) {
-                    //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
-                    currentHoleScore = this.getLastHolesTotal(
-                        noOfHoles,
-                        leaderCurrent.holeScores
-                    );
-                    previousHoleScore = this.getLastHolesTotal(
-                        noOfHoles,
-                        leaderPrevious.holeScores
-                    );
-
-                    tied = currentHoleScore == previousHoleScore;
-
-                    if (noOfHoles > 3) {
-                        noOfHoles -= 3;
-                    } else {
-                        noOfHoles -= 2;
-                    }
-                }
-            }
 
             if (tied) {
-                //leaderCurrent["tied"]= true;
-                //leaderPrevious["tied"]= true;
+
                 leaderList[i]['tied'] = true;
                 leaderList[i - 1]['tied'] = true;
                 leaderList[i]['position'] = 'T' + pos;
@@ -1008,66 +783,128 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
-        //leaderList = leaderList.sort(this.ComparatorPosition);
+
     }
-    ComparatorPosition(a, b) {
-        // let compare: number;
+    ComparatorPositionGross(round) {
+        return (a, b) => {
+            let compare: number;
 
-        // compare = Number(a.status) - Number(b.status);
-        // if (compare != 0) {
-        //     return compare;
-        // }
-        if (a.status < b.status) {
-            return -1;
+            // compare = Number(a.status) - Number(b.status);
+            // if (compare != 0) {
+            //     return compare;
+            // }
+            // this.flightRound = this.flightRound;
+            if (a.status < b.status) {
+                return -1;
+            }
+            if (a.status > b.status) {
+                return 1;
+            }
+            // let round = this.getFlightRound(this.flightRound);
+            // console.log(round);
+
+            let selfHoles: number = a[`holesPlayedR${round}`]
+            let leaderHoles: number = b[`holesPlayedR${round}`]
+
+            if (selfHoles != 0 && leaderHoles != 0) {
+                compare = a[`underGross${round}`] - b[`underGross${round}`];
+
+                if (compare != 0) {
+                    return compare;
+                }
+                if (a[`completed${round}`] && b[`completed${round}`]) {
+                    let noOfHoles: number = 9;
+                    while (noOfHoles > 0) {
+                        if (noOfHoles == 9)
+                            compare = a.holeScoreLast9 - b.holeScoreLast9;
+                        else if (noOfHoles == 6)
+                            compare = a.holeScoreLast6 - b.holeScoreLast6;
+                        else if (noOfHoles == 3)
+                            compare = a.holeScoreLast3 - b.holeScoreLast3;
+                        else if (noOfHoles < 3)
+                            compare = a.holeScoreLast1 - b.holeScoreLast1;
+
+                        if (compare != 0) {
+                            return compare;
+                        }
+                        if (noOfHoles > 3) {
+                            noOfHoles -= 3;
+                        } else {
+                            noOfHoles -= 2;
+                        }
+                    }
+                }
+            }
+            compare = leaderHoles - selfHoles;
+            if (compare != 0) {
+                return compare;
+            }
+
+            //if (a["position"] < b["position"]) return -1;
+            //if (a["position"] > b["position"]) return 1;
+
+            return 0;
         }
-        if (a.status > b.status) {
-            return 1;
+
+    }
+    ComparatorPositionNet(round) {
+        return (a, b) => {
+            let compare: number;
+
+            // compare = Number(a.status) - Number(b.status);
+            // if (compare != 0) {
+            //     return compare;
+            // }
+            if (a.status < b.status) {
+                return -1;
+            }
+            if (a.status > b.status) {
+                return 1;
+            }
+
+            let selfHoles: number = a[`holesPlayedR${round}`]
+            let leaderHoles: number = b[`holesPlayedR${round}`]
+
+            if (selfHoles != 0 && leaderHoles != 0) {
+                compare = a[`underNet${round}`] - b[`underNet${round}`];
+
+                if (compare != 0) {
+                    return compare;
+                }
+                if (a[`completed${round}`] && b[`completed${round}`]) {
+                    let noOfHoles: number = 9;
+                    while (noOfHoles > 0) {
+                        if (noOfHoles == 9)
+                            compare = a.holeScoreLast9 - b.holeScoreLast9;
+                        else if (noOfHoles == 6)
+                            compare = a.holeScoreLast6 - b.holeScoreLast6;
+                        else if (noOfHoles == 3)
+                            compare = a.holeScoreLast3 - b.holeScoreLast3;
+                        else if (noOfHoles < 3)
+                            compare = a.holeScoreLast1 - b.holeScoreLast1;
+
+                        if (compare != 0) {
+                            return compare;
+                        }
+                        if (noOfHoles > 3) {
+                            noOfHoles -= 3;
+                        } else {
+                            noOfHoles -= 2;
+                        }
+                    }
+                }
+            }
+            compare = leaderHoles - selfHoles;
+            if (compare != 0) {
+                return compare;
+            }
+
+            //if (a["position"] < b["position"]) return -1;
+            //if (a["position"] > b["position"]) return 1;
+
+            return 0;
         }
-
-        // let selfHoles: number = a.holes;
-        // let leaderHoles: number = b.holes;
-
-        // if (selfHoles != 0 && leaderHoles != 0) {
-        //     compare = a.under - b.under;
-
-        //     if (compare != 0) {
-        //         return compare;
-        //     }
-        //     if (a.completed && b.completed) {
-        //         let noOfHoles: number = 9;
-        //         while (noOfHoles > 0) {
-        //             if (noOfHoles == 9)
-        //                 compare = a.holeScoreLast9 - b.holeScoreLast9;
-        //             else if (noOfHoles == 6)
-        //                 compare = a.holeScoreLast6 - b.holeScoreLast6;
-        //             else if (noOfHoles == 3)
-        //                 compare = a.holeScoreLast3 - b.holeScoreLast3;
-        //             else if (noOfHoles < 3)
-        //                 compare = a.holeScoreLast1 - b.holeScoreLast1;
-
-        //             if (compare != 0) {
-        //                 return compare;
-        //             }
-        //             if (noOfHoles > 3) {
-        //                 noOfHoles -= 3;
-        //             } else {
-        //                 noOfHoles -= 2;
-        //             }
-        //         }
-        //     }
-        // }
-        // compare = leaderHoles - selfHoles;
-        // if (compare != 0) {
-        //     return compare;
-        // }
-
-        //if (a["position"] < b["position"]) return -1;
-        //if (a["position"] > b["position"]) return 1;
-
-        return 0;
     }
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
@@ -1185,7 +1022,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         return leaderList;
     }
 
-
+    getFlightRound(round): any {
+        return round;
+    }
     ComparatorAllGrossPosition(a, b) {
         let compare: number;
 
