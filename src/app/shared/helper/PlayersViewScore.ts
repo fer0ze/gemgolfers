@@ -312,6 +312,7 @@ export class PlayersScoreLoader {
                     picture: picture,
                     handicap: handicap,
                     score: netTotal,
+                    playerId: playerId,
                     players: membersQLs,
                     playingRound: flightData.flightRound,
                     type: LeaderType.NET,

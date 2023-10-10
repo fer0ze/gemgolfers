@@ -77,14 +77,16 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             console.log(this.selectedCategoryValue);
 
         } else {
-            this.eventCategories = [];
-            let eventCat: any = {
-                Text: 'All',
-                Value: 'All',
-                Limit: false,
-            };
-
-            this.eventCategories.push(eventCat);
+            if (!this.selectedCategoryValue) {
+                this.eventCategories = [];
+                let eventCat: any = {
+                    Text: 'All',
+                    Value: 'All',
+                    Limit: false,
+                };
+                this.selectedCategoryValue = 'All';
+                this.eventCategories.push(eventCat);
+            }
         }
         this.tRounds = [];
         if (this.tRounds.length >= 0) {
@@ -100,7 +102,31 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.tRounds.push(r);
             }
         }
-        this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
+        if (this.totalRounds > 1) {
+            this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
+        } else {
+            this.flightRound = 1;
+            if (this.lastActiveTab == 1) {
+                this.isGross = true;
+                this.isNet = false;
+                this.allRoundGrossScore = false;
+                this.allRoundCutOff = false;
+
+                this.allRoundNetScore = false;
+                this.allRoundCutOffNet = false;
+                this.getPlayers(this.LeaderboardAllPlayers, 1, 1)
+            } else {
+                this.isNet = true;
+                this.isGross = false;
+                this.allRoundGrossScore = false;
+                this.allRoundCutOff = false;
+
+                this.allRoundNetScore = false;
+                this.allRoundCutOffNet = false;
+                this.getPlayers(this.LeaderboardAllPlayers, 1, 2)
+            }
+        }
+
 
     }
     ngOnChanges(changes: SimpleChanges): void {
@@ -138,7 +164,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 if (lastTab == 1) {
                     if (this.allLeadersCutOffGross.length > 0) {
                         this.allRoundCutOff = true;
-                    }else{
+                    } else {
                         this.allRoundCutOff = false;
 
                     }
@@ -146,9 +172,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                     this.LeaderboardPlayers.sort(this.ComparatorAllGross);
                     this.sortAllGrossLeadersTie(this.LeaderboardPlayers)
                 } else {
-                    if (this.allLeadersCutOffNet.length > 0) {  
+                    if (this.allLeadersCutOffNet.length > 0) {
                         this.allRoundCutOffNet = true;
-                    }else{
+                    } else {
                         this.allRoundCutOffNet = false;
                     }
                     this.allRoundCutOff = false;
@@ -195,10 +221,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                     return obj.category === this.selectedCategoryValue && obj[propertyName] > 0;
                 });
             } else {
-                this.LeaderboardPlayers = leaders.filter(obj => {
-                    const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
-                    return obj[propertyName] > 0;
-                });
+                if (this.Leaderboard.noOfRounds == 1) {
+                    this.LeaderboardPlayers = leaders;
+                } else {
+                    this.LeaderboardPlayers = leaders.filter(obj => {
+                        const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
+                        return obj[propertyName] > 0;
+                    });
+                }
             }
         }
         if (lastTab == 1) {
@@ -226,11 +256,11 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             : '0';
     }
 
-    getHolesByRoundG(item: any, round: number): string {
+    getHolesByRoundG(item: any, round: number): any {
         const propertyName = `holesPlayedR${round}`;
-        return item[propertyName] === 18 ? 'F' : (item[propertyName] || '');// Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+        return item[propertyName] === 18 ? 'F' : (item[propertyName] || 0);// Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
-    getScoreByRoundN(item: any, round: number): string {
+    getScoreByRoundN(item: any, round: number): any {
         const propertyName = `netScoreR${round}`;
         return (item[propertyName] !== undefined && item[propertyName] !== null)
             ? item[propertyName].toString()
@@ -242,9 +272,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             ? item[propertyName].toString()
             : '0'; // Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
-    getHolesByRoundN(item: any, round: number): string {
+    getHolesByRoundN(item: any, round: number): any {
         const propertyName = `holesPlayedR${round}`;
-        return item[propertyName] === 18 ? 'F' : (item[propertyName] || '');// Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
+        return item[propertyName] === 18 ? 'F' : (item[propertyName] || 0);// Return the scoreR1 or scoreR2 property if it exists, or an empty string if it doesn't
     }
     getUnderStyleG(item: any, round: number): { [key: string]: string } {
         const underValue = parseFloat(this.getUnderByRoundG(item, round)); // Parse the value if needed
@@ -865,7 +895,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         //Collections.sort(grossLeaders);
         console.log(leaderList);
 
-        //leaderList = leaderList.sort(this.ComparatorPosition);
+        leaderList = leaderList.sort(this.ComparatorPosition);
         ////console.log(leaderList);
         //return false;
 
@@ -926,7 +956,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         //Collections.sort(grossLeaders);
         console.log(leaderList);
 
-        //leaderList = leaderList.sort(this.ComparatorPosition);
+        leaderList = leaderList.sort(this.ComparatorPosition);
         ////console.log(leaderList);
         //return false;
 
@@ -984,49 +1014,55 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         //leaderList = leaderList.sort(this.ComparatorPosition);
     }
     ComparatorPosition(a, b) {
-        let compare: number;
+        // let compare: number;
 
-        compare = Number(a.status) - Number(b.status);
-        if (compare != 0) {
-            return compare;
+        // compare = Number(a.status) - Number(b.status);
+        // if (compare != 0) {
+        //     return compare;
+        // }
+        if (a.status < b.status) {
+            return -1;
+        }
+        if (a.status > b.status) {
+            return 1;
         }
 
-        let selfHoles: number = a.holes;
-        let leaderHoles: number = b.holes;
+        // let selfHoles: number = a.holes;
+        // let leaderHoles: number = b.holes;
 
-        if (selfHoles != 0 && leaderHoles != 0) {
-            compare = a.under - b.under;
+        // if (selfHoles != 0 && leaderHoles != 0) {
+        //     compare = a.under - b.under;
 
-            if (compare != 0) {
-                return compare;
-            }
-            if (a.completed && b.completed) {
-                let noOfHoles: number = 9;
-                while (noOfHoles > 0) {
-                    if (noOfHoles == 9)
-                        compare = a.holeScoreLast9 - b.holeScoreLast9;
-                    else if (noOfHoles == 6)
-                        compare = a.holeScoreLast6 - b.holeScoreLast6;
-                    else if (noOfHoles == 3)
-                        compare = a.holeScoreLast3 - b.holeScoreLast3;
-                    else if (noOfHoles < 3)
-                        compare = a.holeScoreLast1 - b.holeScoreLast1;
+        //     if (compare != 0) {
+        //         return compare;
+        //     }
+        //     if (a.completed && b.completed) {
+        //         let noOfHoles: number = 9;
+        //         while (noOfHoles > 0) {
+        //             if (noOfHoles == 9)
+        //                 compare = a.holeScoreLast9 - b.holeScoreLast9;
+        //             else if (noOfHoles == 6)
+        //                 compare = a.holeScoreLast6 - b.holeScoreLast6;
+        //             else if (noOfHoles == 3)
+        //                 compare = a.holeScoreLast3 - b.holeScoreLast3;
+        //             else if (noOfHoles < 3)
+        //                 compare = a.holeScoreLast1 - b.holeScoreLast1;
 
-                    if (compare != 0) {
-                        return compare;
-                    }
-                    if (noOfHoles > 3) {
-                        noOfHoles -= 3;
-                    } else {
-                        noOfHoles -= 2;
-                    }
-                }
-            }
-        }
-        compare = leaderHoles - selfHoles;
-        if (compare != 0) {
-            return compare;
-        }
+        //             if (compare != 0) {
+        //                 return compare;
+        //             }
+        //             if (noOfHoles > 3) {
+        //                 noOfHoles -= 3;
+        //             } else {
+        //                 noOfHoles -= 2;
+        //             }
+        //         }
+        //     }
+        // }
+        // compare = leaderHoles - selfHoles;
+        // if (compare != 0) {
+        //     return compare;
+        // }
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;
@@ -1153,14 +1189,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     ComparatorAllGrossPosition(a, b) {
         let compare: number;
 
-        compare = Number(a.status) - Number(b.status);
-        if (compare != 0) {
-            return compare;
-        }
-        if (a.playerStatus < b.playerStatus) {
+        // compare = Number(a.status) - Number(b.status);
+        // if (compare != 0) {
+        //     return compare;
+        // }
+        if (a.status < b.status) {
             return -1;
         }
-        if (a.playerStatus > b.playerStatus) {
+        if (a.status > b.status) {
             return 1;
         }
 
@@ -1178,29 +1214,25 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             a.activeRound > a.totalRounds ? a.totalRounds : a.activeRound;
 
         if (checkRoundPlayed == 1) {
-            selfHoles = a.holes1;
-            leaderHoles = b.holes1;
-
+            selfHoles = a.holesPlayedR1;
+            leaderHoles = b.holesPlayedR1;
             completed = a.completed1 && b.completed1;
         } else if (checkRoundPlayed == 2) {
-            selfHoles = a.holes2;
-            leaderHoles = b.holes2;
-
+            selfHoles = a.holesPlayedR2;
+            leaderHoles = b.holesPlayedR2;
             completed = a.completed2 && b.completed2;
         } else if (checkRoundPlayed == 3) {
-            selfHoles = a.holes3;
-            leaderHoles = b.holes3;
-
+            selfHoles = a.holesPlayedR3;
+            leaderHoles = b.holesPlayedR3;
             completed = a.completed3 && b.completed3;
         } else if (checkRoundPlayed == 4) {
-            selfHoles = a.holes4;
-            leaderHoles = b.holes4;
-
+            selfHoles = a.holesPlayedR4;
+            leaderHoles = b.holesPlayedR4;
             completed = a.completed4 && b.completed4;
         }
 
         if (selfHoles != 0 && leaderHoles != 0) {
-            compare = a.AllGrossUnder - b.AllGrossUnder;
+            compare = a.underGross - b.underGross;
 
             if (compare != 0) {
                 return compare;
@@ -1242,14 +1274,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     ComparatorAllNetPosition(a, b) {
         let compare: number;
 
-        compare = Number(a.status) - Number(b.status);
-        if (compare != 0) {
-            return compare;
-        }
-        if (a.playerStatus < b.playerStatus) {
+        // compare = Number(a.status) - Number(b.status);
+        // if (compare != 0) {
+        //     return compare;
+        // }
+        if (a.status < b.status) {
             return -1;
         }
-        if (a.playerStatus > b.playerStatus) {
+        if (a.status > b.status) {
             return 1;
         }
 
@@ -1260,20 +1292,20 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             a.activeRound > a.totalRounds ? a.totalRounds : a.activeRound;
 
         if (checkRoundPlayed == 1) {
-            selfHoles = a.holes1;
-            leaderHoles = b.holes1;
+            selfHoles = a.holesPlayedR1;
+            leaderHoles = b.holesPlayedR1;
             completed = a.completed1 && b.completed1;
         } else if (checkRoundPlayed == 2) {
-            selfHoles = a.holes2;
-            leaderHoles = b.holes2;
+            selfHoles = a.holesPlayedR2;
+            leaderHoles = b.holesPlayedR2;
             completed = a.completed2 && b.completed2;
         } else if (checkRoundPlayed == 3) {
-            selfHoles = a.holes3;
-            leaderHoles = b.holes3;
+            selfHoles = a.holesPlayedR3;
+            leaderHoles = b.holesPlayedR3;
             completed = a.completed3 && b.completed3;
         } else if (checkRoundPlayed == 4) {
-            selfHoles = a.holes4;
-            leaderHoles = b.holes4;
+            selfHoles = a.holesPlayedR4;
+            leaderHoles = b.holesPlayedR4;
             completed = a.completed4 && b.completed4;
         }
 

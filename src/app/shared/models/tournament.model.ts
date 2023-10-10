@@ -101,7 +101,7 @@ export enum matchFormat {
     BEST_THREE = "BEST_THREE",
     COMBINE_ALL = "COMBINE_ALL",
     BESTBALL = "BESTBALL",
-    SHAMBLES = "BESTBALL",
+    SHAMBLES = "SHAMBLES",
 }
 
 export enum TexasScrampleTeamSize {

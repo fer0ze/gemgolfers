@@ -71,6 +71,11 @@ export const LeaderboardSubscription = gql`
             pointsRound2
             pointsRound3
             pointsRound4
+            activeRound
+            completed1
+            completed2
+            completed3
+            completed4
 
         }
         TournamentQL: tournament(

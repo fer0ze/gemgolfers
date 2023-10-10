@@ -218,7 +218,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.TWO_Ball_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.THREE_BALL_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
-            matchFormat.BESTBALL 
+            matchFormat.BESTBALL || this.tournamentInfo[0]['matchFormat'] ==
+            matchFormat.SHAMBLES 
         ) {
             // this.flightRound = this.tournamentInfo[0].noOfRounds;
             // else this.flightRound = this.tournamentInfo[0].activeRound;

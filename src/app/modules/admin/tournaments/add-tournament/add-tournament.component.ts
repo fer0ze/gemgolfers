@@ -393,6 +393,7 @@ export class AddTournamentComponent implements OnInit {
                         "TEXAS_SCRAMBLE",
                         "2_BALL_SCRAMBLE",
                         "3_BALL_SCRAMBLE",
+                        "SHAMBLES",
                     ]
                 }
                 if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
@@ -639,6 +640,8 @@ export class AddTournamentComponent implements OnInit {
 
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE) {
                 playersperFlight = '3'
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES) {
+                playersperFlight = '2'
             }
             return this._formBuilder.group({
                 name: [
@@ -2080,7 +2083,8 @@ export class AddTournamentComponent implements OnInit {
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.THREE_BALL_SCRAMBLE
+            matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.SHAMBLES
         ) {
             this.showTexas = true;
         }
@@ -2379,7 +2383,9 @@ export class AddTournamentComponent implements OnInit {
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.THREE_BALL_SCRAMBLE
+            matchFormat.THREE_BALL_SCRAMBLE ||
+            this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.SHAMBLES
         ) {
             this.showTexas = true;
         }
@@ -3895,6 +3901,7 @@ export class AddTournamentComponent implements OnInit {
                 "TEXAS_SCRAMBLE",
                 "2_BALL_SCRAMBLE",
                 "3_BALL_SCRAMBLE",
+                "SHAMBLES",
             ]
             this.showCat = false;
             this.formGroup.get('formArray')!

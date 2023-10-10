@@ -1029,7 +1029,7 @@ export class ViewTournamentComponent implements OnInit {
                     this.showMainTab4 = true;
                     this.showMainTab5 = false;
                     this.showMainTab6 = false;
-                }else{
+                } else {
                     this.showMainTab1 = false;
                     this.showMainTab2 = false;
                     this.showMainTab3 = false;
@@ -1840,12 +1840,14 @@ export class ViewTournamentComponent implements OnInit {
                         console.log(src);
                         const resultString = JSON.stringify(result);
                         this.logger.log('Result from Close Round Dialog Box', "info", resultString);
-                        await this.facadeService.closeActiveRound(
+                        let response = await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
                             jObject
                         );
-                        window.location.reload();
+                        if (response) {
+                            window.location.reload();
+                        }
                     } else {
                         //console.log("cancel delete action");
                     }
@@ -1962,7 +1964,7 @@ export class ViewTournamentComponent implements OnInit {
                         cutOffCriteria.players
                     );
                     //console.log(this.selectedMembers);
-                    this.saveCategoryFlights(cutOffCriteria, categoryName);
+                    await this.saveCategoryFlights(cutOffCriteria, categoryName);
                 }
             } else {
                 nextRoundPlayers = result;
@@ -2016,7 +2018,7 @@ export class ViewTournamentComponent implements OnInit {
         try {
             let tournamentFlights: Flight[] = [];
             //let fcnter = 0;
-            console.log(criteria);
+            //console.log(criteria);
             this.changer++;
 
             let tournamentFlightMembers: FlightMembers[];
@@ -2028,11 +2030,11 @@ export class ViewTournamentComponent implements OnInit {
                     if (Number.isInteger(Number(index2))) {
                         // console.log(this.selectedMembers[index][index2]["playerCategory"]);
                         // console.log(this.selectedMembers[index][index2].playerCategory);
-                        console.log(categoryName);
+                        //console.log(categoryName);
                         // console.log(this.selectedMembers[index][index2]["name"]);
 
                         let roundTeeId: any = General.getPlayersTe(categoryName);
-                        console.log(roundTeeId.id);
+                       // console.log(roundTeeId.id);
                         let FM: any = {
                             playerId: this.selectedMembers[index][index2]['id']
                                 ? this.selectedMembers[index][index2]['id']
@@ -2047,7 +2049,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 if (tournamentFlightMembers.length > 0) {
                     //console.log(tournamentFlightMembers);
-                    console.log('Before Running' + this.runningFlights);
+                   // console.log('Before Running' + this.runningFlights);
                     this.runningFlights++;
                     this.teetime++;
                     //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
@@ -2062,9 +2064,9 @@ export class ViewTournamentComponent implements OnInit {
                         this.teetime,
                         teeBox
                     );
-                    console.log(teeBox);
-                    console.log(teeTime);
-                    console.log(General.parseToDate(currentDate.toDateString()));
+                   // console.log(teeBox);
+                   // console.log(teeTime);
+                   // console.log(General.parseToDate(currentDate.toDateString()));
                     let roundTeeId: any = General.getPlayersTe(categoryName);
                     console.log(roundTeeId.id);
                     let flight: any = {
@@ -2086,16 +2088,16 @@ export class ViewTournamentComponent implements OnInit {
                             data: tournamentFlightMembers,
                         },
                     };
-                    console.log(flight);
+                    //console.log(flight);
                     tournamentFlights.push(flight);
                     //break;
-                    console.log('After loop' + this.runningFlights);
+                    //console.log('After loop' + this.runningFlights);
                 }
             }
             this.teetime = 0;
             await this.facadeService.createNextRoundFlights(tournamentFlights);
-            console.log(tournamentFlights);
-            console.log('After Function' + this.runningFlights);
+            //console.log(tournamentFlights);
+           // console.log('After Function' + this.runningFlights);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
