@@ -726,8 +726,6 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         return total;
     }
     private sortLeadersGross(leaderList: any[], round) {
-        //Collections.sort(grossLeaders);
-        console.log(leaderList);
         this.flightRound = round;
 
         leaderList = leaderList.sort(this.ComparatorPositionGross(round));
@@ -743,7 +741,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             let currentHoleScore: number = 0;
             let previousHoleScore: number = 0;
 
-            tied = leaderCurrent[`underGross${round}`] == leaderPrevious[`underGross${round}`];
+            tied = leaderCurrent[`scoreR${round}`] == leaderPrevious[`scoreR${round}`];
 
             if (tied) {
                 leaderList[i]['tied'] = true;
@@ -771,7 +769,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             let currentHoleScore: number = 0;
             let previousHoleScore: number = 0;
 
-            tied = leaderCurrent[`underNet${round}`] == leaderPrevious[`underNet${round}`];
+            tied = leaderCurrent[`netScoreR${round}`] == leaderPrevious[`netScoreR${round}`];
 
             if (tied) {
 
