@@ -239,6 +239,17 @@ export class MainLeaderboardComponent implements OnInit {
                                     this.selectedCategoryValue =
                                         this.selectedCategory.category;
                                 }
+                            } else {
+                                if (!this.selectedCategoryValue) {
+                                    this.eventCategories = [];
+                                    let eventCat: any = {
+                                        Text: 'All',
+                                        Value: 'All',
+                                        Limit: false,
+                                    };
+                                    this.selectedCategoryValue = 'All';
+                                    this.eventCategories.push(eventCat);
+                                }
                             }
 
                             if (this.loggedInUser && this.loggedInUser.userRole)
@@ -760,7 +771,7 @@ export class MainLeaderboardComponent implements OnInit {
                     );
                 }
 
-                if (this.selectedCategoryValue != '') {
+                if (this.selectedCategoryValue != '' && this.selectedCategoryValue != 'All') {
                     let handicapLimits: any =
                         this.selectedCategory.handicapLimits;
 
@@ -925,7 +936,11 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
-                    playerStatus: this.getStatus(playerStatus),
+                    playerStatus: playerStatus
+                        ? playerStatus.status
+                        : scores.length <= 0
+                            ? "mc"
+                            : "ac"
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -976,7 +991,11 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
-                    playerStatus: this.getStatus(playerStatus),
+                    playerStatus: playerStatus
+                        ? playerStatus.status
+                        : scores.length <= 0
+                            ? "mc"
+                            : "ac"
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -1500,7 +1519,7 @@ export class MainLeaderboardComponent implements OnInit {
                 }
             }
         }
-       
+
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;

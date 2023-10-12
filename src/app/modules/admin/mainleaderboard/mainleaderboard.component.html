@@ -240,14 +240,14 @@
                                 </li>
                             </ul>
                             <ul class="responsive-table" *ngIf="searchName">
-                                <li class="table-row  hover:bg-gray-100"  *ngFor="let item of allMatchSearchResults">
+                                <li class="table-row  hover:bg-gray-100" *ngFor="let item of allMatchSearchResults">
                                     <div class="col col-1">
                                         {{ item.position }}
                                     </div>
                                     <div class="col col-2">
                                         {{ item.name }}
                                         <div class="text-xs flex items-center">
-        
+
                                             <div class="cursor-pointer py-0.5 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                                 (click)="
                                                     viewPlayerScore(
@@ -266,12 +266,12 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4" *ngIf="item.under >= 0" >
-        
+                                    <div class="col col-4" *ngIf="item.under >= 0">
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-4" *ngIf="item.under < 0" style="color: red">
-        
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-5">
@@ -293,11 +293,11 @@
                                     </div>
                                     <div class="col col-2">
                                         {{ item.name }}
-                                        <div  class="text-xs flex items-center">
+                                        <div class="text-xs flex items-center">
                                             <span *ngIf="item.handicap > 0">
                                                 HC:{{ item.handicap }}
                                             </span>
-                                            
+
                                             <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                                 (click)="
                                                     viewPlayerScore(
@@ -316,16 +316,19 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4" *ngIf="item.under >= 0" >
-        
+                                    <div class="col col-4" *ngIf="item.under >= 0">
+
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-4" *ngIf="item.under < 0" style="color: red">
-        
+
                                         {{ item.under }}
                                     </div>
-                                    <div class="col col-5">
-                                        {{ item.holes }}
+                                    <div class="col col-5" *ngIf="item.holes == 18">
+                                        <strong> F</strong>
+                                    </div>
+                                    <div class="col col-5" *ngIf="item.holes != 18">
+                                        <strong> {{ item.holes }}</strong>
                                     </div>
                                 </li>
                             </ul>
@@ -367,16 +370,19 @@
                                     <div class="col col-3">
                                         {{ item.score }}
                                     </div>
-                                    <div class="col col-4" *ngIf="item.under >= 0" >
+                                    <div class="col col-4" *ngIf="item.under >= 0">
 
                                         {{ item.under }}
                                     </div>
                                     <div class="col col-4" *ngIf="item.under < 0" style="color: red">
-        
+
                                         {{ item.under }}
                                     </div>
-                                    <div class="col col-5">
-                                        {{ item.holes }}
+                                    <div class="col col-5" *ngIf="item.holes == 18">
+                                        <strong> F</strong>
+                                    </div>
+                                    <div class="col col-5" *ngIf="item.holes != 18">
+                                        <strong> {{ item.holes }}</strong>
                                     </div>
                                 </li>
                             </ul>
@@ -814,7 +820,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -864,7 +870,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -879,7 +885,8 @@
                     </ul>
                 </div>
             </div>
-            <div *ngIf="this.showBestBall && !showTaxes" class="flex flex-col sm:flex-row items-center justify-center mb-1">
+            <div *ngIf="this.showBestBall && !showTaxes"
+                class="flex flex-col sm:flex-row items-center justify-center mb-1">
                 <div id="leaderboard" class="mt-2">
                     <ul class="responsive-table" id="all" *ngIf="searchName && !showBestBall">
                         <!-- <li class="table-header">
@@ -988,7 +995,7 @@
                             <div class="col col-4 THRU par ">TO PAR</div>
                             <div class="col col-5 THRU">THRU</div>
                         </li>
-                        <li class="table-row  hover:bg-gray-100"  *ngFor="let item of allMatchSearchResults">
+                        <li class="table-row  hover:bg-gray-100" *ngFor="let item of allMatchSearchResults">
                             <div class="col col-1">
                                 {{ item.position }}
                             </div>
@@ -1014,7 +1021,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -1022,7 +1029,10 @@
 
                                 {{ item.under }}
                             </div>
-                            <div class="col col-5">
+                            <div class="col col-5" *ngIf="item.holes == 18">
+                                F
+                            </div>
+                            <div class="col col-5" *ngIf="item.holes != 18">
                                 {{ item.holes }}
                             </div>
                         </li>
@@ -1061,7 +1071,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -1069,7 +1079,10 @@
 
                                 {{ item.under }}
                             </div>
-                            <div class="col col-5">
+                            <div class="col col-5" *ngIf="item.holes == 18">
+                                F
+                            </div>
+                            <div class="col col-5" *ngIf="item.holes != 18">
                                 {{ item.holes }}
                             </div>
                         </li>
@@ -1110,7 +1123,7 @@
                             <div class="col col-3">
                                 {{ item.score }}
                             </div>
-                            <div class="col col-4" *ngIf="item.under >= 0" >
+                            <div class="col col-4" *ngIf="item.under >= 0">
 
                                 {{ item.under }}
                             </div>
@@ -1118,7 +1131,10 @@
 
                                 {{ item.under }}
                             </div>
-                            <div class="col col-5">
+                            <div class="col col-5" *ngIf="item.holes == 18">
+                                F
+                            </div>
+                            <div class="col col-5" *ngIf="item.holes != 18">
                                 {{ item.holes }}
                             </div>
                         </li>
