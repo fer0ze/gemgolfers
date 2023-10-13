@@ -173,6 +173,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     drop(event: CdkDragDrop<string[]>) {
+        //console.log(event);
         if (event.previousContainer === event.container) {
             moveItemInArray(
                 event.container.data,
@@ -186,9 +187,35 @@ export class AddTournamentComponent implements OnInit {
                 event.previousIndex,
                 event.currentIndex
             );
+
         }
     }
+    swapArrayElements<T>(arr: T[], indexA: number, indexB: number): void {
+        if (indexA < 0 || indexB < 0 || indexA >= arr.length || indexB >= arr.length) {
+            // Check if the indices are within the valid range of the array
+            return;
+        }
 
+        const temp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = temp;
+    }
+    dragDropped(event: CdkDragDrop<string[]>) {
+        const newIndex = event.currentIndex;
+        const previousIndex = event.previousIndex;
+        console.log(newIndex);
+        console.log(previousIndex);
+        if ((previousIndex % 2 == 0) && (newIndex % 2 == 0)) {
+            this.swapArrayElements(event.container.data, previousIndex, newIndex);
+        } else if ((previousIndex % 2 === 1) && (newIndex % 2 == 1)) {
+            this.swapArrayElements(event.container.data, previousIndex, newIndex);
+        }
+
+
+        // Use newIndex to access the correct index where the item was dropped.
+        // For example, you can swap elements in the `items` array using `swapArrayElements`.
+        // Example: swapArrayElements(this.items, event.previousIndex, newIndex);
+    }
     /** Returns a FormArray with the name 'formArray'. */
     get formArray(): AbstractControl | null {
         return this.formGroup.get('formArray');
@@ -217,6 +244,8 @@ export class AddTournamentComponent implements OnInit {
             .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
     }
+
+
 
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
@@ -1513,7 +1542,7 @@ export class AddTournamentComponent implements OnInit {
             ) {
                 this.showMatchPlay = true;
             }
-            FilteredPL = this.tournamentMembers;
+            FilteredPL = [...this.tournamentMembers];
         }
 
         const FilteredFlight = this.formArray
@@ -1594,7 +1623,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     getUnderStyle(item: any) {
-        console.log(item);
+        // console.log(item);
         let color = '';
 
         for (let index in this.selectedTeams1) {
@@ -1625,7 +1654,7 @@ export class AddTournamentComponent implements OnInit {
 
         // Add more style properties as needed
 
-        console.log(color);
+        // console.log(color);
         return style;
     }
 
@@ -2795,6 +2824,11 @@ export class AddTournamentComponent implements OnInit {
                     this.setupInitialized = true;
                 }
             } else {
+                const control = this.formArray.get([1]).get('category') as FormArray;
+
+                console.log(control.length);
+
+                control.clear();
                 this.addFlightField('Teams');
             }
             this.snackBar.open('Tournament Teams have been saved.', 'x', {

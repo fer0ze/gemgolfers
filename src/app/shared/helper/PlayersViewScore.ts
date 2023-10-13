@@ -47,7 +47,7 @@ export class PlayersScoreLoader {
             } else if (tournamentQL.matchFormat === matchFormat.MATCH_PLAY) {
                 let calResult = this.matchPlayCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.TEXAS_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_Ball_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
+            } else if (tournamentQL.matchFormat === matchFormat.TEXAS_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_Ball_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.SHAMBLES) {
                 let calResult = this.scrambleCalculation(tournamentQL);
 
             } else {
@@ -552,18 +552,21 @@ export class PlayersScoreLoader {
                 }
             });
             membersQLs.map((member, index) => {
-                let percentage;
-
-                if (index === 0) {
-                    percentage = 20;
-                } else if (index === 1) {
-                    percentage = 15;
-                } else if (index === 2) {
-                    percentage = 10;
-                } else if (index === 3) {
-                    percentage = 5;
-                } else {
-                    percentage = 0; // All other players get 0% combined handicap
+                let percentage =80;
+                if (tournamentQL.matchFormat !== matchFormat.SHAMBLES) {
+                    if (index === 0 && tournamentQL.matchFormat == matchFormat.TWO_Ball_SCRAMBLE) {
+                        percentage = 35;
+                    } else if (index === 0) {
+                        percentage = 20;
+                    } else if (index === 1) {
+                        percentage = 15;
+                    } else if (index === 2) {
+                        percentage = 10;
+                    } else if (index === 3) {
+                        percentage = 5;
+                    } else {
+                        percentage = 0; // All other players get 0% combined handicap
+                    }
                 }
                 const playerHandicap = member.ScoresQL.length > 0 ? member.ScoresQL[0].playerHandicap : 0;
                 const combinedHandicaps = (percentage / 100) * playerHandicap;
