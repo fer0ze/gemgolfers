@@ -134,6 +134,7 @@ export const LeaderboardSubscription = gql`
                 finalResult
                 upScore
                 remainingHoles
+                round
             }
         }
     }

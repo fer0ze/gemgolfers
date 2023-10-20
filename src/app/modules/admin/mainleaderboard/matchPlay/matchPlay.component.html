@@ -15,9 +15,7 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field class="fuse-mat-no-subscript pb-2 w-full sm:w-48 sm:inline md:hidden">
-                <input (input)="filterByQuery(query.value)" placeholder="Search by Name" matInput #query />
-            </mat-form-field>
+            <!-- -->
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-2 gap-2 mb-10 md:grid-cols-2 w-full min-w-0 rounded-2xl">
@@ -73,20 +71,156 @@
                                 view score
                             </div>
                         </div>
-                        <div *ngIf="isDoubleWonA">
-                            <div *ngIf="!doubleScoreEnd" class=" text-gray-50 rounded px-2"
-                                [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP
-                            </div>
-                            <div *ngIf="doubleScoreEnd" class=" text-gray-50 rounded px-2"
-                                [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP & {{doubleHoles}}
-                            </div>
-                        </div>
-                        <div *ngIf="!isDoubleWonA && !isDoubleWonB">
+                        <div *ngFor="let item of Team1; let last = last">
+                            <div class="flex" *ngIf="flightRound==0 && totalRounds >1">
+                                <div class="mx-1" *ngIf="item.scoreR1 !== undefined && item.scoreR1>0">
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R1</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR1}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 != 1000"
+                                        class="flex flex-col text-center text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R1</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR1}} UP & {{item.holesR1}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.tiedR1 == true">
 
-                            <div class=" text-gray-50 rounded px-2 bg-gray-800">
-                                TIED
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.scoreR2 !== undefined && item.scoreR2>0">
+                                    <div *ngIf="item.tiedR2 == false && item.holesR2 == 1000"
+                                        class="flex flex-col text-center text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+
+                                        <span class="text-md">R2</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR2}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR2 == false && item.holesR2 != 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R2</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR2}} UP & {{item.holesR2}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.tiedR2 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.scoreR3 !== undefined && item.scoreR3>0">
+                                    <div *ngIf="item.tiedR3 == false && item.holesR3 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R3</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR3}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR3 == false && item.holesR3 != 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R3</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR3}} UP & {{item.holesR3}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.tiedR3 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.scoreR4 !== undefined && item.scoreR4>0">
+                                    <div *ngIf="item.tiedR4 == false && item.holesR4 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R4</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR4}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR4 == false && item.holesR4 != 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R4</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR4}} UP & {{item.holesR4}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.tiedR4 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="flightRound!==0">
+                                <div
+                                    *ngIf="item['scoreR' + flightRound] !== undefined && item['scoreR' + flightRound]>0">
+                                    <div *ngIf="item['tiedR'+flightRound] == false && item['holesR' + flightRound] == 1000"
+                                        class="  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+
+                                        <span>
+                                            WINS {{item['scoreR' + flightRound]}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item['tiedR'+flightRound] == false && item['holesR' + flightRound] != 1000"
+                                        class=" text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+
+                                        <span>
+                                            WINS {{item['scoreR' + flightRound]}} UP & {{item['holesR' + flightRound]}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item['tiedR'+flightRound]== true">
+
+                                    <div class="  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex" *ngIf="flightRound==0 && totalRounds == 1">
+                                <div class="mx-1" *ngIf="item.scoreR1 !== undefined && item.scoreR1>0">
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="">
+                                            WINS {{item.scoreR1}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 != 1000"
+                                        class="flex flex-col text-center text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span >
+                                            WINS {{item.scoreR1}} UP & {{item.holesR1}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.tiedR1 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500" >
+                                        TIED
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -116,20 +250,156 @@
                                 view score
                             </div>
                         </div>
-                        <div *ngIf="isDoubleWonB">
-                            <div *ngIf="!doubleScoreEnd" class=" text-gray-50 rounded px-2"
-                                [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP
-                            </div>
-                            <div *ngIf="doubleScoreEnd" class=" text-gray-50 rounded px-2"
-                                [ngStyle]="{ 'background-color': doubleWinColour }">
-                                WINS {{doubleScore}} UP & {{doubleHoles}}
-                            </div>
-                        </div>
-                        <div *ngIf="!isDoubleWonA && !isDoubleWonB">
+                        <div *ngFor="let item of Team2; let last = last">
+                            <div *ngIf="flightRound==0 && totalRounds>1">
+                                <div *ngIf="item.scoreR1 !== undefined && item.scoreR1>0">
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R1</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR1}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 != 1000"
+                                        class="flex flex-col text-center text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R1</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR1}} UP & {{item.holesR1}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.tiedR1 == true">
 
-                            <div class=" text-gray-50 rounded px-2 bg-gray-800">
-                                TIED
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                                <div *ngIf="item.scoreR2 !== undefined && item.scoreR2>0">
+                                    <div *ngIf="item.tiedR2 == false && item.holesR2 == 1000"
+                                        class="flex flex-col text-center text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+
+                                        <span class="text-md">R2</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR2}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR2 == false && item.holesR2 != 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R2</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR2}} UP & {{item.holesR2}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.tiedR2 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                                <div *ngIf="item.scoreR3 !== undefined && item.scoreR3>0">
+                                    <div *ngIf="item.tiedR3 == false && item.holesR3 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R3</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR3}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR3 == false && item.holesR3 != 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R3</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR3}} UP & {{item.holesR3}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.tiedR3 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                                <div *ngIf="item.scoreR4 !== undefined && item.scoreR4>0">
+                                    <div *ngIf="item.tiedR4 == false && item.holesR4 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R4</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR4}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR4 == false && item.holesR4 != 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span class="text-md">R4</span>
+                                        <span class="text-xs whitespace-nowrap">
+                                            WINS {{item.scoreR4}} UP & {{item.holesR4}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.tiedR4 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="flightRound!==0">
+                                <div
+                                    *ngIf="item['scoreR' + flightRound] !== undefined && item['scoreR' + flightRound]>0">
+                                    <div *ngIf="item['tiedR'+flightRound] == false && item['holesR' + flightRound] == 1000"
+                                        class=" text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+
+                                        <span>
+                                            WINS {{item['scoreR' + flightRound]}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item['tiedR'+flightRound] == false && item['holesR' + flightRound] != 1000"
+                                        class="text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+
+                                        <span>
+                                            WINS {{item['scoreR' + flightRound]}} UP & {{item['holesR' + flightRound]}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item['tiedR'+flightRound]== true">
+
+                                    <div class="  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex" *ngIf="totalRounds == 1">
+                                <div class="mx-1" *ngIf="item.scoreR1 !== undefined && item.scoreR1>0">
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 == 1000"
+                                        class="flex flex-col text-center  text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span >
+                                            WINS {{item.scoreR1}} UP
+                                        </span>
+                                    </div>
+                                    <div *ngIf="item.tiedR1 == false && item.holesR1 != 1000"
+                                        class="flex flex-col text-center text-gray-50 rounded px-2"
+                                        [ngStyle]="{ 'background-color': item.color }">
+                                        <span >
+                                            WINS {{item.scoreR1}} UP & {{item.holesR1}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mx-1" *ngIf="item.tiedR1 == true">
+
+                                    <div class="flex flex-col text-center  text-gray-50 rounded px-2 bg-gray-500">
+                                        TIED
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -168,11 +438,66 @@
                             </div>
 
                         </div>
-                        <div>
-                            <div class=" text-gray-50 rounded px-2" [ngStyle]="getSinglesBG(player)">
-                                {{getSinglePlayerScore(player)}}
+                        <div *ngIf="flightRound==0 && totalRounds>1" class="flex">
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R1</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,1)}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R2</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,2)}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R3</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,3)}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R4</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,4)}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="flightRound!==0" class="flex">
+                            <div class="mx-1">
+                                <div class="text-gray-50 rounded px-2" [ngStyle]="getSinglesBG(player)">
+
+                                    <span>
+                                        {{getSinglePlayerScore(player,this.flightRound)}}
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                        <div *ngIf="flightRound==0 && totalRounds ==1" class="flex">
+                            <div class="mx-1">
+                                <div class="text-gray-50 rounded px-2" [ngStyle]="getSinglesBG(player)">
+
+                                    <span>
+                                        {{getSinglePlayerScore(player,1)}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
@@ -206,96 +531,70 @@
                             </div>
 
                         </div>
-                        <div>
-                            <div class=" text-gray-50 rounded px-2" [ngStyle]="getSinglesBG(player)">
-                                {{getSinglePlayerScore(player)}}
+                        <div *ngIf="flightRound==0 && totalRounds > 1" class="flex">
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R1</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,1)}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R2</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,2)}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R3</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,3)}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mx-1">
+                                <div class="flex flex-col text-center text-gray-50 rounded px-2"
+                                    [ngStyle]="getSinglesBG(player)">
+                                    <span class="text-md">R4</span>
+                                    <span class="text-xs whitespace-nowrap">
+                                        {{getSinglePlayerScore(player,4)}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="flightRound!==0" class="flex">
+                            <div class="mx-1">
+                                <div class="text-gray-50 rounded px-2" [ngStyle]="getSinglesBG(player)">
+
+                                    <span>
+                                        {{getSinglePlayerScore(player,this.flightRound)}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="flightRound==0 && totalRounds ==1" class="flex">
+                            <div class="mx-1">
+                                <div class="text-gray-50 rounded px-2" [ngStyle]="getSinglesBG(player)">
+
+                                    <span>
+                                        {{getSinglePlayerScore(player,1)}}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
-            <!-- <ul class="responsive-table flex flex-auto justify-between gap-8">
-                <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                    [ngStyle]="{ 'background-color': item.color }" *ngFor="let item of Team1; let last = last">
-                    <div class="col col-1">{{ item.name }}</div>
-                    <div class="col col-1 text-xs">
-                        Total:{{ team1PointS }}
-                    </div>
-                  
-                    <div class="col col-2 my-1" *ngFor="let player of item?.members"
-                        style="justify-content: center; display: flex">
-                        <div class="col col-2" style="
-                                    background: white;
-                                    flex-basis: 60%;
-
-                                    border: px solid black;
-                                    border-radius: 8px;
-                                    border-color: black;
-                                    padding: 4px;
-                                    /* width: 70%; */
-                                " [ngStyle]="{ color: item.color }">
-                            {{ player.name }}
-                            <div class="text-xs flex items-center">
-                                HC:{{ player.handicap }}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <ul class="gap-2 pt-18" style="min-width: 11rem; flex-direction: column">
-                    <li class="table-header my-2" style="
-                                flex-basis: 100%;
-                                flex-direction: column;
-                                background-color: transparent;
-                                padding: 0px;
-                            " *ngFor="
-                                let item of LeaderboardAllPlayers;
-                                let index = index
-                            ">
-                        <div class="col col-1" [ngStyle]="{
-                                    'background-color': item.color
-                                }">
-                            Flight {{ activeRound }}
-                        </div>
-                        <div class="col col-1 bg-card" *ngIf="item.UPScore > 0 && !item.end"
-                            [ngStyle]="{ color: item.color }">
-                            {{ item.UPScore }} UP
-                        </div>
-                        <div class="col col-1 bg-card" *ngIf="item.UPScore > 0 && item.end"
-                            [ngStyle]="{ color: item.color }">
-                            {{ item.UPScore }} UP & {{ item.holes }}
-                        </div>
-                        <div class="col col-1 bg-card" *ngIf="item.UPScore === 0" [ngStyle]="{ color: item.color }">
-                            Tied
-                        </div>
-                    </li>
-                </ul>
-                <li class="table-header" style="flex-basis: 100%; flex-direction: column"
-                    [ngStyle]="{ 'background-color': item.color }" *ngFor="let item of Team2; let last = last">
-                    <div class="col col-1">{{ item.name }}</div>
-                    <div class="col col-1 text-xs">
-                        Total:{{ team2PointS }}
-                    </div>
-                   
-                    <div class="col col-2 my-1" *ngFor="let player of item?.members"
-                        style="justify-content: center; display: flex">
-                        <div class="col col-2" style="
-                                    background: white;
-                                    flex-basis: 60%;
-                                    border: px solid black;
-                                    border-radius: 8px;
-                                    border-color: black;
-                                    padding: 4px;
-                                    /* width: 70%; */
-                                " [ngStyle]="{ color: item.color }">
-                            {{ player.name }}
-                            <div class="text-xs flex items-center">
-                                HC:{{ player.handicap }}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul> -->
 
         </div>
     </div>

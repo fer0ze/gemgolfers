@@ -1636,115 +1636,116 @@ export class ViewTournamentComponent implements OnInit {
                 let newstartDate = startDate.getDate();
 
                 console.log(newstartDate);
+                if (this.categories.length > 0) {
+                    for (let newObj of this.categories) {
+                        let flightSettings: any = newObj.flightSettings;
 
-                for (let newObj of this.categories) {
-                    let flightSettings: any = newObj.flightSettings;
+                        if (
+                            Object.prototype.toString
+                                .call(flightSettings)
+                                .indexOf('Array') > -1 &&
+                            flightSettings.length > 0
+                        ) {
+                            for (let obj of flightSettings) {
+                                let chngDate = obj.dates.replaceAll('-', '').toString();
+                                let newDate =
+                                    chngDate.substring(4, 8) +
+                                    '-' +
+                                    chngDate.substring(2, 4) +
+                                    '-' +
+                                    +chngDate.substring(0, 2);
+                                // console.log(newDate);
 
-                    if (
-                        Object.prototype.toString
-                            .call(flightSettings)
-                            .indexOf('Array') > -1 &&
-                        flightSettings.length > 0
-                    ) {
-                        for (let obj of flightSettings) {
-                            let chngDate = obj.dates.replaceAll('-', '').toString();
-                            let newDate =
-                                chngDate.substring(4, 8) +
-                                '-' +
-                                chngDate.substring(2, 4) +
-                                '-' +
-                                +chngDate.substring(0, 2);
-                            // console.log(newDate);
-
-                            let flightDate = new Date(newDate).getDate();
-                            console.log(flightDate);
-                            if (flightDate == newstartDate) {
-                                allowCat = true;
-                                newObj['allowCat'] = true;
-                                break;
-                            }
-
-                            //console.log(this.calculateDiff(newstartDate,flightDate));
-                        }
-                        if (!allowCat) {
-                            newObj['allowCat'] = false;
-                        }
-                        for (let obj of flights) {
-                            if (obj.flightRound == this.activeRound) {
-                                let check = obj.MembersQL.filter((a) => {
-                                    return (
-                                        a.PlayerQL.playerCategory == newObj.category
-                                    );
-                                });
-                                if (check.length > 0) {
-                                    newObj['cut'] = true;
-                                    check = [];
+                                let flightDate = new Date(newDate).getDate();
+                                console.log(flightDate);
+                                if (flightDate == newstartDate) {
+                                    allowCat = true;
+                                    newObj['allowCat'] = true;
                                     break;
-                                } else {
-                                    newObj['cut'] = false;
+                                }
+
+                                //console.log(this.calculateDiff(newstartDate,flightDate));
+                            }
+                            if (!allowCat) {
+                                newObj['allowCat'] = false;
+                            }
+                            for (let obj of flights) {
+                                if (obj.flightRound == this.activeRound) {
+                                    let check = obj.MembersQL.filter((a) => {
+                                        return (
+                                            a.PlayerQL.playerCategory == newObj.category
+                                        );
+                                    });
+                                    if (check.length > 0) {
+                                        newObj['cut'] = true;
+                                        check = [];
+                                        break;
+                                    } else {
+                                        newObj['cut'] = false;
+                                    }
                                 }
                             }
-                        }
-                    } else if (
-                        Object.prototype.toString
-                            .call(flightSettings)
-                            .indexOf('Object') > -1
-                    ) {
-                        for (let obj of flightSettings['playingDate']) {
-                            let chngDate = obj.dates.replaceAll('-', '').toString();
-                            let newDate =
-                                chngDate.substring(4, 8) +
-                                '-' +
-                                chngDate.substring(2, 4) +
-                                '-' +
-                                +chngDate.substring(0, 2);
+                        } else if (
+                            Object.prototype.toString
+                                .call(flightSettings)
+                                .indexOf('Object') > -1
+                        ) {
+                            for (let obj of flightSettings['playingDate']) {
+                                let chngDate = obj.dates.replaceAll('-', '').toString();
+                                let newDate =
+                                    chngDate.substring(4, 8) +
+                                    '-' +
+                                    chngDate.substring(2, 4) +
+                                    '-' +
+                                    +chngDate.substring(0, 2);
 
-                            let flightDate = new Date(newDate).getDate();
-                            console.log(flightDate);
-                            if (flightDate == newstartDate) {
-                                allowCat = true;
-                                newObj['allowCat'] = true;
-                                break;
-                            }
-                            //console.log(this.calculateDiff(newstartDate,flightDate));
-                        }
-                        if (!allowCat) {
-                            newObj['allowCat'] = false;
-                        }
-                        for (let obj of flights) {
-                            if (obj.flightRound == this.activeRound) {
-                                let check = obj.MembersQL.filter((a) => {
-                                    return (
-                                        a.PlayerQL.playerCategory == newObj.category
-                                    );
-                                });
-                                if (check.length > 0) {
-                                    newObj['cut'] = true;
-                                    check = [];
+                                let flightDate = new Date(newDate).getDate();
+                                console.log(flightDate);
+                                if (flightDate == newstartDate) {
+                                    allowCat = true;
+                                    newObj['allowCat'] = true;
                                     break;
-                                } else {
-                                    newObj['cut'] = false;
+                                }
+                                //console.log(this.calculateDiff(newstartDate,flightDate));
+                            }
+                            if (!allowCat) {
+                                newObj['allowCat'] = false;
+                            }
+                            for (let obj of flights) {
+                                if (obj.flightRound == this.activeRound) {
+                                    let check = obj.MembersQL.filter((a) => {
+                                        return (
+                                            a.PlayerQL.playerCategory == newObj.category
+                                        );
+                                    });
+                                    if (check.length > 0) {
+                                        newObj['cut'] = true;
+                                        check = [];
+                                        break;
+                                    } else {
+                                        newObj['cut'] = false;
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        for (let obj of flights) {
-                            if (obj.flightRound == this.activeRound) {
-                                let check = obj.MembersQL.filter((a) => {
-                                    return (
-                                        a.PlayerQL.playerCategory == newObj.category
-                                    );
-                                });
-                                if (check.length > 0) {
-                                    newObj['cut'] = true;
-                                    check = [];
-                                    break;
-                                } else {
-                                    newObj['cut'] = false;
+                        } else {
+                            for (let obj of flights) {
+                                if (obj.flightRound == this.activeRound) {
+                                    let check = obj.MembersQL.filter((a) => {
+                                        return (
+                                            a.PlayerQL.playerCategory == newObj.category
+                                        );
+                                    });
+                                    if (check.length > 0) {
+                                        newObj['cut'] = true;
+                                        check = [];
+                                        break;
+                                    } else {
+                                        newObj['cut'] = false;
+                                    }
                                 }
                             }
+                            newObj['allowCat'] = true;
                         }
-                        newObj['allowCat'] = true;
                     }
                 }
                 const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
@@ -1764,7 +1765,7 @@ export class ViewTournamentComponent implements OnInit {
                     let flag = true;
                     jsons = [];
                     console.log(getResult);
-                    if (getResult && getResult.category) {
+                    if (getResult && getResult.category && this.matchFormat == matchFormat.STROKE_PLAY) {
                         console.log(getResult.category);
                         for (let cats in getResult.category) {
                             if (getResult.category[cats].copyFlights == 'No') {
@@ -1849,7 +1850,18 @@ export class ViewTournamentComponent implements OnInit {
                             window.location.reload();
                         }
                     } else {
-                        //console.log("cancel delete action");
+                        for (let cats in getResult.category) {
+                            await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+                        }
+                        let jObject = { cutOff: jsons };
+                        let response = await this.facadeService.closeActiveRound(
+                            this.tournamentID,
+                            this.activeRound + 1,
+                            jObject
+                        );
+                        if (response) {
+                            window.location.reload();
+                        }
                     }
                 });
             }
@@ -1934,7 +1946,7 @@ export class ViewTournamentComponent implements OnInit {
                             );
                         this.makePlayerFlights(result, cutOffCriteria.players);
                         //console.log(this.selectedMembers);
-                        this.saveCategoryFlights(cutOffCriteria, categoryName);
+                        await this.saveCategoryFlights(cutOffCriteria, categoryName);
                     } else {
                         result = result.filter((a) => {
                             return (
@@ -1970,7 +1982,7 @@ export class ViewTournamentComponent implements OnInit {
                 nextRoundPlayers = result;
                 this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
                 //console.log(this.selectedMembers);
-                this.saveCategoryFlights(cutOffCriteria, categoryName);
+                await this.saveCategoryFlights(cutOffCriteria, categoryName);
             }
         } catch (error) {
             this.logger.log('Cut calculation Failed after Close Round.', "info", cutOffCriteria.toString());
@@ -2034,7 +2046,7 @@ export class ViewTournamentComponent implements OnInit {
                         // console.log(this.selectedMembers[index][index2]["name"]);
 
                         let roundTeeId: any = General.getPlayersTe(categoryName);
-                       // console.log(roundTeeId.id);
+                        // console.log(roundTeeId.id);
                         let FM: any = {
                             playerId: this.selectedMembers[index][index2]['id']
                                 ? this.selectedMembers[index][index2]['id']
@@ -2049,7 +2061,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 if (tournamentFlightMembers.length > 0) {
                     //console.log(tournamentFlightMembers);
-                   // console.log('Before Running' + this.runningFlights);
+                    // console.log('Before Running' + this.runningFlights);
                     this.runningFlights++;
                     this.teetime++;
                     //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
@@ -2064,9 +2076,9 @@ export class ViewTournamentComponent implements OnInit {
                         this.teetime,
                         teeBox
                     );
-                   // console.log(teeBox);
-                   // console.log(teeTime);
-                   // console.log(General.parseToDate(currentDate.toDateString()));
+                    // console.log(teeBox);
+                    // console.log(teeTime);
+                    // console.log(General.parseToDate(currentDate.toDateString()));
                     let roundTeeId: any = General.getPlayersTe(categoryName);
                     console.log(roundTeeId.id);
                     let flight: any = {
@@ -2097,7 +2109,67 @@ export class ViewTournamentComponent implements OnInit {
             this.teetime = 0;
             await this.facadeService.createNextRoundFlights(tournamentFlights);
             //console.log(tournamentFlights);
-           // console.log('After Function' + this.runningFlights);
+            // console.log('After Function' + this.runningFlights);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
+    }
+    async saveCategoryFlightsForMatchPlay(flights: any[]) {
+        try {
+            let tournamentFlights: Flight[] = [];
+            //let fcnter = 0;
+            //console.log(criteria);
+            this.changer++;
+
+            let tournamentFlightMembers: FlightMembers[];
+            let teeBox: number;
+            let teeTime: string = "08:00:00+00";
+            for (var index in flights) {
+                tournamentFlightMembers = [];
+                for (var index2 in flights[index]['MembersQL']) {
+                    let FM: any = {
+                        playerId: flights[index]['MembersQL'][index2]['playerId'],
+                        attendance: false,
+                        playingTee: 'AMATEURS',
+                        tee_id: 1,
+                    };
+                    tournamentFlightMembers.push(FM);
+                }
+                if (tournamentFlightMembers.length > 0) {
+
+                    this.runningFlights++;
+                    this.teetime++;
+                    let currentDate = new Date();
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    let flight: any = {
+                        id: UniqueIdGenerator.generate(),
+                        tournamentId: this.tournamentID,
+                        courseId: this.fullTournament.courseId,
+                        adminId: this.loggedInUser.id,
+                        courseHoleSets: 0,
+                        flightNo: this.runningFlights,
+                        flightRound: this.activeRound + 1,
+                        startingHole: teeBox,
+                        tee: 'AMATEURS',
+                        tee_id: 1,
+                        category: 'AMATEURS',
+                        date: General.parseToDate(currentDate.toDateString()),
+                        time: teeTime,
+                        ended: false,
+                        members: {
+                            data: tournamentFlightMembers,
+                        },
+                    };
+                    //console.log(flight);
+                    tournamentFlights.push(flight);
+                    //break;
+                    //console.log('After loop' + this.runningFlights);
+                }
+            }
+            this.teetime = 0;
+            await this.facadeService.createNextRoundFlights(tournamentFlights);
+            //console.log(tournamentFlights);
+            // console.log('After Function' + this.runningFlights);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
