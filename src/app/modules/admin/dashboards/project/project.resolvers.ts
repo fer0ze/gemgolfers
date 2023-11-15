@@ -23,7 +23,7 @@ export class ProjectResolver implements Resolve<any> {
         private _projectService: ProjectService,
         private _datePipe: DatePipe, private _localStorage: LocalStorageService, private _router: Router,
     ) {
-        
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ export class ProjectResolver implements Resolve<any> {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let lastWeekSunday = this.currentDate();
         let lastWeekMonday = this.lastSevenDayDate();
-        if (this.loggedInuser.userRole === 1) {
+        if (this.loggedInuser && this.loggedInuser.userRole === 1) {
             return this._projectService.getData(
                 null, null,
                 this._datePipe.transform(
@@ -56,7 +56,7 @@ export class ProjectResolver implements Resolve<any> {
                     'yyyy-MM-dd'
                 )
             );
-        } else if (this.loggedInuser.userRole === 2) {
+        } else if (this.loggedInuser && this.loggedInuser.userRole === 2) {
             return this._projectService.getData(
                 this.loggedInuser.id,
                 this.loggedInuser.adminClubId,
@@ -69,7 +69,7 @@ export class ProjectResolver implements Resolve<any> {
                     'yyyy-MM-dd'
                 )
             );
-        } else if (this.loggedInuser.userRole == 8) {
+        } else if (this.loggedInuser && this.loggedInuser.userRole == 8) {
             this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
                 console.error('Navigation error:', error);
             });

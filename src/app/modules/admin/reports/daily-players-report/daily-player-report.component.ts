@@ -47,6 +47,9 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
   scheduleForm: FormGroup;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   Players: any[] = [];
+  flights: any[] = [];
+  copyFlights: any[] = [];
+  courseHoleSetNames;
   _series: any = [];
 
   constructor(
@@ -63,14 +66,22 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
     this.isPlayer = true;
     this._reportService.data$
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((data) => {
+      .subscribe(async (data) => {
         console.log(data);
         this.chart(data.series, data.labels, data.holesSet)
         if (data.todayData.length > 0) {
+          let selectedCourseHoleSet =
+            await this.facadeService.getCourseHoleSetsForCourse('-LUFS3FCQKOGpJ2IEHmf');
+          this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
+          console.log(selectedCourseHoleSet);
           this.isPlayer = true;
-          this.dataSource = new MatTableDataSource(data.todayData);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+          // this.dataSource = new MatTableDataSource(data.todayData);
+          // this.dataSource.paginator = this.paginator;
+          // this.dataSource.sort = this.sort;
+          this.flights = [];
+          this.copyFlights = [];
+          this.flights = data.todayData;
+          this.copyFlights = data.todayData;
           this.isLoading = true;
         } else {
           this.isPlayer = false;
@@ -85,10 +96,10 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
     //his.getTotalReport(todayDate);
   }
   ngAfterViewInit(): void {
-    if (this.isPlayer) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+    // if (this.isPlayer) {
+    //   this.dataSource.paginator = this.paginator;
+    //   this.dataSource.sort = this.sort;
+    // }
   }
   async getTotalReport(todayDate: Date) {
     let players: any;
@@ -107,33 +118,29 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
         const hour = parseInt(timeParts[0], 10);
         const minute = parseInt(timeParts[1], 10);
         const formattedTime = General.formatAMPM(hour, minute);
-        obj.members.forEach((element) => {
-          let newobj = {
-            memebrshipNo: element.player.membershipNumber,
-            name:
-              element.player.firstName +
-              ' ' +
-              element.player.lastName,
-            category: element.player.playerCategory,
-            tee: element.playingTee,
-            holeSet: General.getCourseHoleSets(
-              obj.courseHoleSets,
-              obj.courseHoleSetsInverted
-            ),
-            time: formattedTime,
-          };
-          this.Players.push(newobj);
-        });
+        let newobj = {
+          members: obj.members,
+          time: formattedTime,
+          courseHoleSetKey: obj.courseHoleSets
+            ? obj.courseHoleSets +
+            '_' +
+            obj.courseHoleSetsInverted
+            : '',
+        };
+        this.Players.push(newobj);
       }
     }
+    this.flights = this.Players;
+    this.copyFlights = this.Players;
+
     this.Players.sort((a, b) => {
       const timeA = new Date(`01/01/2000 ${a.time}`);
       const timeB = new Date(`01/01/2000 ${b.time}`);
       return (timeB.getTime() - timeA.getTime()) as number; // Cast the result to number
     });
-    this.dataSource = new MatTableDataSource(this.Players);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource = new MatTableDataSource(this.Players);
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
     this.isLoading = true;
   }
 
@@ -152,7 +159,26 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
+    // this.dataSource.filter = filterValue;
+    let findFFlight = [];
+    if (filterValue.length > 3) {
+      for (const flight of this.flights) {
+        // Filter the members array of the current flight based on the fullName property
+        const filteredMembers = flight.members.filter((member) =>
+          member.PlayerQL.fullName.toLowerCase().includes(filterValue)
+        );
+
+        // If there are filtered members, add the flight with the filtered members to the result array
+        if (filteredMembers.length > 0) {
+          findFFlight.push(flight);
+        }
+      }
+      if (findFFlight.length > 0) {
+        this.flights = findFFlight;
+      }
+    } else {
+      this.flights = this.copyFlights;
+    }
   }
 
   chart(series, lables, _HolesSetsseries) {

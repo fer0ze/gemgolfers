@@ -183,20 +183,16 @@ export function mapDashboardData(data: any): any {
                 const hour = parseInt(timeParts[0], 10);
                 const minute = parseInt(timeParts[1], 10);
                 const formattedTime = General.formatAMPM(hour, minute);
-                stats.MembersQL.forEach((element) => {
-                    let newobj = {
-                        memebrshipNo: element.PlayerQL.membershipNumber ? element.PlayerQL.membershipNumber : '-',
-                        name: element.PlayerQL.fullName,
-                        category: element.PlayerQL.playerCategory,
-                        tee: element.playingTee,
-                        holeSet: General.getCourseHoleSets(
-                            stats.courseHoleSets,
-                            stats.courseHoleSetsInverted
-                        ),
-                        time: formattedTime,
-                    };
-                    todayData.push(newobj);
-                });
+                let newobj = {
+                    members: stats.MembersQL,
+                    time: formattedTime,
+                    courseHoleSetKey: stats.courseHoleSets
+                        ? stats.courseHoleSets +
+                        '_' +
+                        stats.courseHoleSetsInverted
+                        : '',
+                };
+                todayData.push(newobj);
             }
         }
     }

@@ -367,7 +367,7 @@ export class General {
 
         return tee;
     }
-    public static createClm(round) {
+    public static createClmGross(round) {
         switch (round) {
             case 1:
                 return [
@@ -375,10 +375,8 @@ export class General {
                     'Name',
                     'HCP',
                     'Club',
-                    'Gross Rd1',
-                    'Net Rd1',
-                    'Total Gross',
-                    'Total Net',
+                    'Gross',
+                    'To Par',
                 ];
                 break;
             case 2:
@@ -388,11 +386,8 @@ export class General {
                     'HCP',
                     'Club',
                     'Gross Rd2',
-                    'Net Rd2',
                     'Gross Rd1',
-                    'Net Rd1',
                     'Total Gross',
-                    'Total Net',
                 ];
                 break;
             case 3:
@@ -402,13 +397,13 @@ export class General {
                     'HCP',
                     'Club',
                     'Gross Rd3',
-                    'Net Rd3',
+
                     'Gross Rd2',
-                    'Net Rd2',
+
                     'Gross Rd1',
-                    'Net Rd1',
+
                     'Total Gross',
-                    'Total Net',
+
                 ];
                 break;
             case 4:
@@ -418,15 +413,15 @@ export class General {
                     'HCP',
                     'Club',
                     'Gross Rd4',
-                    'Net Rd4',
+
                     'Gross Rd3',
-                    'Net Rd3',
+
                     'Gross Rd2',
-                    'Net Rd2',
+
                     'Gross Rd1',
-                    'Net Rd1',
+
                     'Total Gross',
-                    'Total Net',
+
                 ];
                 break;
             default:
@@ -436,14 +431,94 @@ export class General {
                     'HCP',
                     'Club',
                     'Gross Rd4',
-                    'Net Rd4',
+
                     'Gross Rd3',
-                    'Net Rd3',
+
                     'Gross Rd2',
-                    'Net Rd2',
+
                     'Gross Rd1',
-                    'Net Rd1',
+
                     'Total Gross',
+                    ,
+                ];
+                break;
+        }
+    }
+    public static createClmNet(round) {
+        switch (round) {
+            case 1:
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+                    'Net',
+                    'To Par',
+                ];
+                break;
+            case 2:
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+
+                    'Net Rd2',
+
+                    'Net Rd1',
+
+                    'Total Net',
+                ];
+                break;
+            case 3:
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+
+                    'Net Rd3',
+
+                    'Net Rd2',
+
+                    'Net Rd1',
+
+                    'Total Net',
+                ];
+                break;
+            case 4:
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+
+                    'Net Rd4',
+
+                    'Net Rd3',
+
+                    'Net Rd2',
+
+                    'Net Rd1',
+
+                    'Total Net',
+                ];
+                break;
+            default:
+                return [
+                    'Sr.',
+                    'Name',
+                    'HCP',
+                    'Club',
+
+                    'Net Rd4',
+
+                    'Net Rd3',
+
+                    'Net Rd2',
+
+                    'Net Rd1',
+
                     'Total Net',
                 ];
                 break;
