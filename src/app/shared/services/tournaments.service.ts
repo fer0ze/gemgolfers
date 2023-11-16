@@ -14,13 +14,14 @@ import {
 import * as Query from '../GraphQL/tournament.gql';
 import { resolve } from 'url';
 import { AnyNsRecord, AnyPtrRecord } from 'dns';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap ,from,switchMap,map} from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TournamentsService {
-    constructor(private apollo: Apollo) {}
+    constructor(private apollo: Apollo,private storage: AngularFireStorage ) {}
 
     public getTournamentsListForCompleted(endDate: Date): Promise<any> {
         return new Promise((resolve) => {
@@ -131,6 +132,28 @@ export class TournamentsService {
             this.apollo
                 .subscribe({
                     query: Query.GetTournamnetListForCompleted,
+                    variables: {
+                        endDate: endDate,
+                        clubId: clubId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getTournamentsListByTourForCompleted(
+        endDate: Date,
+        clubId: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTournamentsListByTourForCompleted,
                     variables: {
                         endDate: endDate,
                         clubId: clubId,
@@ -1011,7 +1034,36 @@ export class TournamentsService {
     //     });
     //   });
     // }
+    public addTour(tour:any, file: File): Observable<string> {
+        const fileName = 'tour/' + tour.id + '.png';
+        const ref = this.storage.ref(fileName);
+        const task = ref.put(file);
 
+        return from(task).pipe(
+            switchMap((snapshot: any) => {
+                return ref.getDownloadURL();
+            }),
+            switchMap((downloadUrl: string) => {
+                // Update the picture URL in the account object
+                tour.logo = downloadUrl;
+
+                // Perform the mutation using Apollo client
+                return this.apollo
+                    .mutate<any>({
+                        mutation: Query.insertTourQL,
+                        variables: {
+                            tour:tour
+                        },
+                    })
+                    .pipe(
+                        map((response: any) => {
+                            // Return the download URL
+                            return downloadUrl;
+                        })
+                    );
+            })
+        );
+    }
     public addTournament(tmnt: any): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

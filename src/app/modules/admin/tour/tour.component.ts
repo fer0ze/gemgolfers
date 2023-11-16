@@ -1,0 +1,83 @@
+import { Component, OnInit } from '@angular/core';
+import { TourService } from './tour.service';
+import { Subject, takeUntil } from 'rxjs';
+import { DialogAddTourComponent } from '../dialogs/dialog-add-tour/dialog-add-tour.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FacadeService } from 'app/shared/services/facade.service';
+import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
+import { Player } from 'app/shared/models/player.model';
+import { LocalStorageService } from 'app/shared/services/localStorage';
+
+@Component({
+  selector: 'app-tour',
+  templateUrl: './tour.component.html',
+  styleUrls: ['./tour.component.scss']
+})
+export class TourComponent implements OnInit {
+
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+  tours: any[];
+  loggedInuser: Player;
+
+  constructor(
+    private _tourService: TourService,
+    public dialog: MatDialog,
+    private facadeService: FacadeService,
+    private _localStorage: LocalStorageService,
+  ) { }
+
+  ngOnInit(): void {
+    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+    this._tourService.data$.pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        console.log(res);
+        this.tours = [];
+        for (let tour of res) {
+          let obj = {
+            id: tour.id,
+            title: tour.name,
+            logo: tour.logo,
+            date: tour.dateCreated,
+            tournaments: tour.tournaments.length,
+            members: tour.members.length,
+          }
+          this.tours.push(obj);
+        }
+
+      })
+  }
+
+  async addnewTour() {
+    const dialogRef = this.dialog.open(DialogAddTourComponent);
+    dialogRef.afterClosed().subscribe(async (result) => {
+      console.log(result);
+      if (result) {
+        let tour = {
+          id: UniqueIdGenerator.generate(),
+          adminId: this.loggedInuser.id,
+          name: result.title,
+          logo: null,
+          dateCreated:new Date().toISOString(),
+        }
+        this.facadeService.addTour(tour, result.file).subscribe((result) => {
+          console.log(result);
+          if (result) {
+            this.tours.push({
+              id: tour.id,
+              title: tour.name,
+              logo: result,
+              date: Date.now(),
+              tournaments: 0,
+              members: 0
+            });
+          }
+        })
+
+      }
+
+    })
+
+  }
+
+}

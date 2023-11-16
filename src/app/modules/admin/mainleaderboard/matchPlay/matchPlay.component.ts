@@ -77,7 +77,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 id: element.id,
                 name: element.name,
                 color: element.color,
-                members: this.getMembers(element.id, this.Leaderboard.TeamQL[0], count),
+                members: this.getMembers(element.tournamentId, element.id, this.Leaderboard.TeamQL[0], count),
             }
             count++;
             if (count == 2) {
@@ -130,7 +130,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                     // this.doubleScore = score;
 
                 } else {
-                    
+
                     this.Team1[0]['tiedR' + round] = true;
                     this.Team2[0]['tiedR' + round] = true;
                 }
@@ -269,25 +269,27 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
     }
 
-    getMembers(teamId, element, count) {
+    getMembers(tournamentId, teamId, element, count) {
         let players = [];
         element.OpponentsQL.forEach(obj => {
-            if (count == 1) {
-                let play = {
-                    name: obj.playerTeam1.firstName + " " + obj.playerTeam1.lastName,
-                    handicap: obj.playerTeam1.handicap,
-                    id: obj.team1MemberId,
-                    teamId: teamId,
+            if (obj.tournamentId == tournamentId) {
+                if (count == 1) {
+                    let play = {
+                        name: obj.playerTeam1.firstName + " " + obj.playerTeam1.lastName,
+                        handicap: obj.playerTeam1.handicap,
+                        id: obj.team1MemberId,
+                        teamId: teamId,
+                    }
+                    players.push(play)
+                } else {
+                    let play = {
+                        name: obj.playerTeam2.firstName + " " + obj.playerTeam2.lastName,
+                        handicap: obj.playerTeam2.handicap,
+                        id: obj.team2MemberId,
+                        teamId: teamId,
+                    }
+                    players.push(play)
                 }
-                players.push(play)
-            } else {
-                let play = {
-                    name: obj.playerTeam2.firstName + " " + obj.playerTeam2.lastName,
-                    handicap: obj.playerTeam2.handicap,
-                    id: obj.team2MemberId,
-                    teamId: teamId,
-                }
-                players.push(play)
             }
         });
         return players;

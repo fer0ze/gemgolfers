@@ -459,6 +459,12 @@ export class FacadeService {
       clubId
     );
   }
+  getTournamentsListByTourForCompleted(endDate: Date, clubId: string) {
+    return this.tournamentService.getTournamentsListByTourForCompleted(
+      endDate,
+      clubId
+    );
+  }
 
   getTournamentsListByClubForLive(endDate: Date, clubId: string) {
     return this.tournamentService.getTournamentsListForLive(endDate, clubId);
@@ -568,6 +574,9 @@ export class FacadeService {
 
   addTournament(tournament: any) {
     return this.tournamentService.addTournament(tournament);
+  }
+  addTour(tour:any,file:any) {
+    return this.tournamentService.addTour(tour,file);
   }
   addSubTournament(obj: any) {
     return this.tournamentService.addSubTournament(obj);

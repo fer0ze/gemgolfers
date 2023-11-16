@@ -102,6 +102,7 @@ export const LeaderboardSubscription = gql`
             }
             TeamQL: teams {
                 id
+                tournamentId
                 name
                 color
                 OpponentsQL: opponentsTeam1 {
@@ -110,6 +111,7 @@ export const LeaderboardSubscription = gql`
                     team2Id
                     team1MemberId
                     team2MemberId
+                    tournamentId
                     playerTeam1 {
                         firstName
                         lastName
@@ -482,6 +484,37 @@ export const GetTournamnetListForCompleted = gql`
                     {
                         endDate: { _lt: $endDate }
                         clubId: { _eq: $clubId }
+                        singleRound: { _eq: false }
+                    }
+                ]
+            }
+            order_by: { endDate: desc }
+        ) {
+            id
+            title
+            startDate
+            endDate
+            matchFormat
+            noOfRounds
+            admin {
+                firstName
+                lastName
+            }
+            HandicapCalculated: player_handicaps(limit: 1) {
+                playerId
+                tournamentId
+            }
+        }
+    }
+`;
+export const getTournamentsListByTourForCompleted = gql`
+    query PostsGetQuery($endDate: date!, $clubId: String!) {
+        CompletedRecently: tournament(
+            where: {
+                _and: [
+                    {
+                        endDate: { _lt: $endDate }
+                        adminId: { _eq: $clubId }
                         singleRound: { _eq: false }
                     }
                 ]
@@ -1167,6 +1200,19 @@ export const insertClubMemberQL = gql`
             on_conflict: {
                 constraint: club_member_pkey
                 update_columns: [playerId]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
+export const insertTourQL = gql`
+    mutation insertTourQL($tour: [tour_insert_input!]!) {
+        insert_tour(
+            objects: $tour
+            on_conflict: {
+                constraint: tour_pkey
+                update_columns: [name]
             }
         ) {
             AffectedRowsQL: affected_rows
@@ -2013,6 +2059,77 @@ export const getallDashboard = gql`
                 player {
                     playerCategory
                 }
+            }
+        }
+    }
+`;
+export const getTourDashboard = gql`
+    query getTourDashboard($adminId: String!, $fromDate: date!,
+        $toDate: date!) {
+        tour(
+            where: { adminId: { _eq: $adminId } }
+            order_by: [{ dateCreated: desc }] 
+        ) {
+            id
+            name
+            tournaments {
+                id
+                leagueId
+                title
+                matchFormat
+                noOfRounds
+                startDate
+                admin {
+                    firstName
+                    lastName
+                }
+            }
+            members{
+                playerId
+                player{
+                    id
+                    playerCategory
+                }
+            }
+        }
+        TournamentsQLs: tournament(
+            where: {
+                adminId: { _eq: $adminId }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            startDate
+            MembersQL: members {
+                playerId
+                player {
+                    id
+                    playerCategory
+                }
+            }
+        }
+    }
+`;
+export const getTours = gql`
+    query getTourDashboard($adminId: String!) {
+        tour(
+            where: { adminId: { _eq: $adminId } }
+            order_by: [{ dateCreated: desc }] 
+        ) {
+            id
+            name
+            logo
+            dateCreated
+            tournaments {
+                id
+                leagueId
+                title
+            }
+            members{
+                playerId
             }
         }
     }

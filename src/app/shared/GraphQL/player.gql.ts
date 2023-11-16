@@ -536,6 +536,14 @@ export const getPlayerByEmailLogin = gql`
                     }
                 }
             }
+            role{
+                id
+                name
+            }
+            tour_admin{
+                id
+                adminId
+            }
         }
     }
 `;

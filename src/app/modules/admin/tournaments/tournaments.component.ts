@@ -21,11 +21,12 @@ import {
 import { FacadeService } from 'app/shared/services/facade.service';
 // import { DialogOverviewComponent } from "../material-components/dialog-overview/dialog-overview.component";
 
-import { of } from 'rxjs';
+import { Subject, of, takeUntil } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
 import { DialogHanidcapListComponent } from '../dialogs/dialog-hanidcap-list/dialog-hanidcap-list.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { TourService } from '../tour/tour.service';
 
 @Component({
     selector: 'app-tournaments',
@@ -57,7 +58,7 @@ export class TournamentsComponent implements OnInit {
     file: File;
     dataSourceSchedule: MatTableDataSource<Tournament>;
     displayedColumnsSchedule = ['id', 'tournamentTitle', 'course', 'date'];
-
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     dataSourceIncomplete: MatTableDataSource<Tournament>;
     displayedColumnsIncomplete = ['id', 'title', 'date', 'noOfRounds'];
     playersData: any;
@@ -88,7 +89,7 @@ export class TournamentsComponent implements OnInit {
 
     constructor(
         private location: Router,
-        public snackBar: MatSnackBar,
+        public snackBar: MatSnackBar, private _tourService: TourService,
         public dialog: MatDialog,
         private facadeService: FacadeService,
         private _localStorage: LocalStorageService,
@@ -145,7 +146,7 @@ export class TournamentsComponent implements OnInit {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
                 this.isLoading = false;
-            } else if (this.loggedInuser.userRole >= 2) {
+            } else if (this.loggedInuser.userRole == 2) {
                 let dataTournamentsForCompleted =
                     await this.facadeService.getTournamentsListByClubForCompleted(
                         todayDate,
@@ -161,6 +162,30 @@ export class TournamentsComponent implements OnInit {
 
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
+            } else if (this.loggedInuser.userRole == 4) {
+                this._tourService.data$.pipe(takeUntil(this._unsubscribeAll))
+                    .subscribe(async(res) => {
+                        console.log(res);
+                        if (res) {
+                            let dataTournamentsForCompleted =
+                                await this.facadeService.getTournamentsListByTourForCompleted(
+                                    todayDate,
+                                    res
+                                );
+
+                            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                            this.copiedcompletedTournaments = this.Tournaments;
+                            this.isIncompletedLoading = false;
+                            this.isLoading = false;
+                            console.log(this.Tournaments);
+                            this.dataSource = new MatTableDataSource(this.Tournaments);
+
+                            this.dataSource.paginator = this.paginator;
+                            this.dataSource.sort = this.sort;
+                        }
+
+                    })
+
             }
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -427,7 +452,7 @@ export class TournamentsComponent implements OnInit {
             this.logger.log('Getting Schedule Tournaments Data', "info");
             this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
             let today: Date = new Date();
-            let dd = String(today.getDate()+1).padStart(2, '0');
+            let dd = String(today.getDate() + 1).padStart(2, '0');
             let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             let yyyy = today.getFullYear();
 

@@ -452,6 +452,7 @@ query PostsGetQuery($tournamentId: String!) {
             id
             team1Id
             team2Id
+            tournamentId
             team1MemberId
             team2MemberId
         }

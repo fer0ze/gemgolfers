@@ -77,6 +77,22 @@ export class ProjectResolver implements Resolve<any> {
                 this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
                     console.error('Navigation error:', error);
                 });
+            } else if (this.loggedInuser.userRole == 4) {
+                return this._projectService.getTourData(
+                    this.loggedInuser.id,
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                );
+            } else {
+                this._router.navigateByUrl('/sign-out').catch((error) => {
+                    console.error('Navigation error:', error);
+                });
             }
         } catch (error) {
             this.logger.log('Getting Dashboard Data Failed', "error", error.toString());

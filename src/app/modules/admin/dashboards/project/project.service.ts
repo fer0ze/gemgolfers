@@ -17,7 +17,12 @@ export class ProjectService {
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient, private apollo: Apollo, private _localStorage: LocalStorageService, private logger: LogsService) { }
+    constructor(
+        private _httpClient: HttpClient,
+        private apollo: Apollo,
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -57,7 +62,10 @@ export class ProjectService {
                     })
                     .pipe(
                         tap((response: any) => {
-                            this.logger.log('Getting Dashboard Data Successfull', "info");
+                            this.logger.log(
+                                'Getting Dashboard Data Successfull',
+                                'info'
+                            );
                             this._data.next(response);
                         })
                     );
@@ -72,7 +80,10 @@ export class ProjectService {
                     })
                     .pipe(
                         tap((response: any) => {
-                            this.logger.log('Getting Dashboard Data Successfull', "info");
+                            this.logger.log(
+                                'Getting Dashboard Data Successfull',
+                                'info'
+                            );
                             this._data.next(response);
                         })
                     );
@@ -80,9 +91,33 @@ export class ProjectService {
         } catch (error) {
             // Handle the error here or re-throw it if necessary
             console.error('An error occurred:', error);
-            this.logger.log('Getting Dashboard Data Failed', "error", error.toString());
+            this.logger.log(
+                'Getting Dashboard Data Failed',
+                'error',
+                error.toString()
+            );
             throw error;
         }
     }
 
+    getTourData(id: String, fromDate?: any, toDate?: any): Observable<any> {
+        return this.apollo
+            .subscribe<any>({
+                query: Query.getTourDashboard,
+                variables: {
+                    adminId: id,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                },
+            })
+            .pipe(
+                tap((response: any) => {
+                    this.logger.log(
+                        'Getting Tour Dashboard Data Successfull',
+                        'info'
+                    );
+                    this._data.next(response);
+                })
+            );
+    }
 }

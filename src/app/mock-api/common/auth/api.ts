@@ -86,7 +86,7 @@ export class AuthMockApi {
                                 //const idToken = await user.getIdToken();
 
                                 this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
-                                    //console.log(user);
+                                    console.log(user);
                                     this._user.name = user[0].firstName + " " + user[0].lastName;
                                     this._user.email = user[0].email;
                                     let clubInfo: any =
@@ -98,6 +98,8 @@ export class AuthMockApi {
                                             ? clubInfo.logo
                                             : 'e2esp.png';
                                     this._user.avatar = 'assets/images/logo/' + logo + '';
+                                    user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
+                                    //this._user.role = user[0].role[0].length > 0 ? user[0].role[0].id : null;
 
                                     this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
                                     observer.next([

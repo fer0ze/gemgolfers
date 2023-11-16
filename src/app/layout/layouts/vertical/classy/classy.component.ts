@@ -13,7 +13,7 @@ import { UserService } from 'app/core/user/user.service';
 import { Constants } from 'app/shared/classes/general';
 import {
     defaultNavigation, userNavigation,
-    defaultNavigationSuperAdmin, sectaryNavigation
+    defaultNavigationSuperAdmin, sectaryNavigation, tourNavigation
 } from 'app/mock-api/common/navigation/data';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
@@ -67,7 +67,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             .subscribe((user: User) => {
                 this.user = user;
             });
-        console.log(this.user);
+       // console.log(this.user);
 
         // Subscribe to navigation data
         this._navigationService.navigation$
@@ -83,10 +83,10 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             this.navigation['default'] = defaultNavigation;
         } else if (this.loggedInuser.userRole == 8) {
             this.navigation['default'] = sectaryNavigation;
-        } else {
-            this.navigation['default'] = userNavigation;
+        } else if (this.loggedInuser.userRole == 4) {
+            this.navigation['default'] = tourNavigation;
         }
-        console.log(this.navigation);
+       // console.log(this.navigation);
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
