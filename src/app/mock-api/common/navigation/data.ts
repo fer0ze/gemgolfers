@@ -198,13 +198,13 @@ export const tourNavigation: FuseNavigationItem[] = [
         type: 'group',
         icon: 'heroicons_outline:view-boards',
         children: [
-            {
-                id: 'tour.newTour',
-                title: 'New Tour',
-                type: 'basic',
-                icon: 'heroicons_outline:academic-cap',
-                link: '/tours/add',
-            },
+            // {
+            //     id: 'tour.newTour',
+            //     title: 'New Tour',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/tours/add',
+            // },
             {
                 id: 'tour.viewtours',
                 title: 'All Tours',
@@ -214,28 +214,28 @@ export const tourNavigation: FuseNavigationItem[] = [
             },
         ],
     },
-    {
-        id: 'tournaments',
-        title: 'Tournament',
-        type: 'group',
-        icon: 'heroicons_outline:home',
-        children: [
-            {
-                id: 'tournaments.newTournament',
-                title: 'New Tournament',
-                type: 'basic',
-                icon: 'heroicons_outline:academic-cap',
-                link: '/tournaments/add',
-            },
-            {
-                id: 'tournaments.viewtournaments',
-                title: 'All Tournaments',
-                type: 'basic',
-                icon: 'heroicons_outline:view-list',
-                link: '/tournaments',
-            },
-        ],
-    },
+    // {
+    //     id: 'tournaments',
+    //     title: 'Tournament',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:home',
+    //     children: [
+    //         {
+    //             id: 'tournaments.newTournament',
+    //             title: 'New Tournament',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:academic-cap',
+    //             link: '/tournaments/add',
+    //         },
+    //         {
+    //             id: 'tournaments.viewtournaments',
+    //             title: 'All Tournaments',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:view-list',
+    //             link: '/tournaments',
+    //         },
+    //     ],
+    // },
     // },
     // {
     //     id: 'leagues',
@@ -260,21 +260,21 @@ export const tourNavigation: FuseNavigationItem[] = [
     //         },
     //     ],
     // },
-    {
-        id: 'players',
-        title: 'Members',
-        type: 'group',
-        icon: 'heroicons_outline:menu-alt-2',
-        children: [
-            {
-                id: 'players.viewplayers',
-                title: 'All Members',
-                type: 'basic',
-                icon: 'heroicons_outline:user-group',
-                link: '/players',
-            },
-        ],
-    },
+    // {
+    //     id: 'players',
+    //     title: 'Members',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:menu-alt-2',
+    //     children: [
+    //         {
+    //             id: 'players.viewplayers',
+    //             title: 'All Members',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:user-group',
+    //             link: '/players',
+    //         },
+    //     ],
+    // },
 ];
 export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
     {

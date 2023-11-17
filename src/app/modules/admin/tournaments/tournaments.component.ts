@@ -86,7 +86,7 @@ export class TournamentsComponent implements OnInit {
     categories: any[] = [];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-
+    tourId: string = '';
     constructor(
         private location: Router,
         public snackBar: MatSnackBar, private _tourService: TourService,
@@ -163,28 +163,23 @@ export class TournamentsComponent implements OnInit {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
             } else if (this.loggedInuser.userRole == 4) {
-                this._tourService.data$.pipe(takeUntil(this._unsubscribeAll))
-                    .subscribe(async(res) => {
-                        console.log(res);
-                        if (res) {
-                            let dataTournamentsForCompleted =
-                                await this.facadeService.getTournamentsListByTourForCompleted(
-                                    todayDate,
-                                    res
-                                );
+                this.tourId = this._localStorage.get(Constants.TOUR_ID);
+                if (this.tourId) {
+                    let dataTournamentsForCompleted =
+                        await this.facadeService.getTournamentsListByTourForCompleted(
+                            this.tourId
+                        );
 
-                            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
-                            this.copiedcompletedTournaments = this.Tournaments;
-                            this.isIncompletedLoading = false;
-                            this.isLoading = false;
-                            console.log(this.Tournaments);
-                            this.dataSource = new MatTableDataSource(this.Tournaments);
+                    this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
+                    this.copiedcompletedTournaments = this.Tournaments;
+                    this.isIncompletedLoading = false;
+                    this.isLoading = false;
+                    console.log(this.Tournaments);
+                    this.dataSource = new MatTableDataSource(this.Tournaments);
 
-                            this.dataSource.paginator = this.paginator;
-                            this.dataSource.sort = this.sort;
-                        }
-
-                    })
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }
 
             }
         } catch (error) {
@@ -258,6 +253,9 @@ export class TournamentsComponent implements OnInit {
         } else if (query == '' && this.selected == 3) {
             this.Tournaments = this.copiedTournamentsIncomplete;
         }
+    }
+    addNewRound() {
+        this.location.navigate(['/tournaments/add']);
     }
     tabClicked(tab: any) {
         console.log(tab);

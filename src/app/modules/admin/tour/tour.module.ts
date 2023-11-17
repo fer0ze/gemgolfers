@@ -42,8 +42,10 @@ import { playerRoutes } from '../players/players.routing';
 import { tourRoutes } from './tour.routing.module';
 import { DialogAddTourComponent } from '../dialogs/dialog-add-tour/dialog-add-tour.component';
 import { DetailTourComponent } from './detail/detailTour.component';
+import { TourGuideComponent } from './guides/guide.component';
+import { QuillModule } from 'ngx-quill';
 @NgModule({
-    declarations: [TourComponent,DialogAddTourComponent,DetailTourComponent],
+    declarations: [TourComponent,DialogAddTourComponent,DetailTourComponent,TourGuideComponent],
     imports: [
         CommonModule,
         NgApexchartsModule,
@@ -52,12 +54,6 @@ import { DetailTourComponent } from './detail/detailTour.component';
         NgTemplateOutlet,
         MatFormFieldModule,
         MatButtonToggleModule,
-        MatPaginatorModule,
-        MatInputModule,
-        WhiteSectionModule,
-        TopPlayerModule,
-        MatButtonModule,
-        GraphQLModule,
         MatIconModule,
         MatSortModule,
         MatStepperModule,
@@ -68,20 +64,16 @@ import { DetailTourComponent } from './detail/detailTour.component';
         MatSelectModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        QuillModule.forRoot(),
         MatProgressBarModule,
         MatProgressSpinnerModule,
         MatExpansionModule,
-        MatTabsModule,
         MatSnackBarModule,
-        MatToolbarModule,
-        DragDropModule,
         ApolloModule,
+        MatButtonModule,
         MatDialogModule,
         RouterModule.forChild(tourRoutes),
         FormsModule,
-        MatAutocompleteModule,
-        MatSidenavModule,
-        AmazingTimePickerModule,
         FlexLayoutModule,
     ],
 })

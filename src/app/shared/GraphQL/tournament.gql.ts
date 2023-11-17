@@ -29,12 +29,11 @@ export const LeaderboardSubscription = gql`
         LeaderBoardQL: leaderboard_score(
             where: {
                 _or: [
-                  { prefix: { _eq: $tournamentPrefix } },
-                  { tournamentId: { _eq: $tournamentPrefix } }
+                    { prefix: { _eq: $tournamentPrefix } }
+                    { tournamentId: { _eq: $tournamentPrefix } }
                 ]
-              }
+            }
         ) {
-            
             playerId
             handicap
             underGross
@@ -76,7 +75,6 @@ export const LeaderboardSubscription = gql`
             completed2
             completed3
             completed4
-
         }
         TournamentQL: tournament(
             where: {
@@ -271,6 +269,16 @@ export const LeaderboardSubscriptions = gql`
         }
     }
     ${TournamentMemberCategoryQL}
+`;
+export const getTourGuides = gql`
+    query getGuides($tourId:String!) {
+        tour_guide(where: { tourId: { _eq: $tourId } } ,order_by: { date: asc }) {
+            id
+            tourId
+            date
+            details
+        }
+    }
 `;
 export const getLeagues = gql`
     query getLeagues {
@@ -508,32 +516,26 @@ export const GetTournamnetListForCompleted = gql`
     }
 `;
 export const getTournamentsListByTourForCompleted = gql`
-    query PostsGetQuery($endDate: date!, $clubId: String!) {
-        CompletedRecently: tournament(
-            where: {
-                _and: [
-                    {
-                        endDate: { _lt: $endDate }
-                        adminId: { _eq: $clubId }
-                        singleRound: { _eq: false }
-                    }
-                ]
-            }
-            order_by: { endDate: desc }
+    query PostsGetQuery($tourId: String!) {
+        CompletedRecently: tour(
+            where: { id: { _eq: $tourId } }
         ) {
             id
-            title
-            startDate
-            endDate
-            matchFormat
-            noOfRounds
-            admin {
-                firstName
-                lastName
-            }
-            HandicapCalculated: player_handicaps(limit: 1) {
-                playerId
-                tournamentId
+            tournaments{
+                id
+                title
+                startDate
+                endDate
+                matchFormat
+                noOfRounds
+                admin {
+                    firstName
+                    lastName
+                }
+                HandicapCalculated: player_handicaps(limit: 1) {
+                    playerId
+                    tournamentId
+                }
             }
         }
     }
@@ -825,15 +827,14 @@ export const GetTournamentByID = gql`
                 category
                 flightSettings
             }
-            teams{
+            teams {
                 id
                 adminId
                 tournamentId
                 name
                 color
-               
             }
-            opponents{
+            opponents {
                 id
                 team1Id
                 team2Id
@@ -1105,6 +1106,13 @@ export const DeleteTournamentMember = gql`
         }
     }
 `;
+export const DeleteTourGuide = gql`
+    mutation DeleteTournamentMember($where: tour_guide_bool_exp!) {
+        delete_tour_guide(where: $where) {
+            affected_rows
+        }
+    }
+`;
 
 export const markActiveTournamentMemberQL = gql`
     mutation markActiveTournamentMemberQL(
@@ -1144,16 +1152,29 @@ export const insertTournamentMemberQL = gql`
         }
     }
 `;
+export const insertTourGuideQL = gql`
+    mutation insertTournamentMemberQL(
+        $tourGuide: [tour_guide_insert_input!]!
+    ) {
+        insert_tour_guide(
+            objects: $tourGuide
+            on_conflict: {
+                constraint: tour_guide_pkey
+                update_columns: [details]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
 export const insertTournamentTeamQL = gql`
     mutation insertTournamentTeamQL(
         $teamsToSave: [tournament_team_insert_input!]!
         $teamMembersToSave: [tournament_team_opponent_insert_input!]!
-        $tournamentId:String!
+        $tournamentId: String!
     ) {
         delete_tournament_team_opponent(
-            where: {
-                tournamentId: { _eq: $tournamentId }
-            }
+            where: { tournamentId: { _eq: $tournamentId } }
         ) {
             AffectedRowsQL: affected_rows
         }
@@ -1210,10 +1231,7 @@ export const insertTourQL = gql`
     mutation insertTourQL($tour: [tour_insert_input!]!) {
         insert_tour(
             objects: $tour
-            on_conflict: {
-                constraint: tour_pkey
-                update_columns: [name]
-            }
+            on_conflict: { constraint: tour_pkey, update_columns: [name] }
         ) {
             AffectedRowsQL: affected_rows
         }
@@ -2064,11 +2082,14 @@ export const getallDashboard = gql`
     }
 `;
 export const getTourDashboard = gql`
-    query getTourDashboard($adminId: String!, $fromDate: date!,
-        $toDate: date!) {
+    query getTourDashboard(
+        $adminId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
         tour(
             where: { adminId: { _eq: $adminId } }
-            order_by: [{ dateCreated: desc }] 
+            order_by: [{ dateCreated: desc }]
         ) {
             id
             name
@@ -2084,9 +2105,9 @@ export const getTourDashboard = gql`
                     lastName
                 }
             }
-            members{
+            members {
                 playerId
-                player{
+                player {
                     id
                     playerCategory
                 }
@@ -2117,7 +2138,7 @@ export const getTours = gql`
     query getTourDashboard($adminId: String!) {
         tour(
             where: { adminId: { _eq: $adminId } }
-            order_by: [{ dateCreated: desc }] 
+            order_by: [{ dateCreated: desc }]
         ) {
             id
             name
@@ -2128,7 +2149,7 @@ export const getTours = gql`
                 leagueId
                 title
             }
-            members{
+            members {
                 playerId
             }
         }

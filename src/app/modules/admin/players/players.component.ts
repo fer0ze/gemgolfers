@@ -168,7 +168,7 @@ export class PlayersComponent implements OnInit {
                     },
                     (error) => console.log('error')
                 );
-        } else {
+        } else if (this.loggedInuser.userRole == 2) {
             data = await this._facadeService.getPlayersListByClub(
                 this.loggedInuser.adminClubId
             );
@@ -192,6 +192,38 @@ export class PlayersComponent implements OnInit {
                             : obj.playerCategory,
                     Handicap: obj.handicap,
                     Status: obj.membershipQL,
+                };
+                this.TablePlayers.push(newobj);
+            }
+
+            this.playersDataSource = new MatTableDataSource(this.TablePlayers);
+            this.playersDataSource.paginator = this.paginator;
+            this.playersDataSource.sort = this.sort;
+        } else if (this.loggedInuser.userRole == 4) {
+            let tourId = this._localStorage.get(Constants.TOUR_ID);
+            data = await this._facadeService.getPlayersListByTour(
+                tourId
+            );
+            console.log(data);
+            this.count = data.tour_member.length;
+            this.Players = data.tour_member;
+            for (let obj of this.Players) {
+                let Fname = obj.player.firstName
+                    ? obj.player.firstName.trim()
+                    : obj.player.firstName;
+                let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
+                let newobj = {
+                    id: obj.player.id,
+                    Name: Fname + ' ' + Lname,
+                    Phone: obj.player.phone,
+                    Email: obj.player.email,
+                    MembershipNo: obj.player.membershipNumber,
+                    Category:
+                        obj.player.playerCategory == 'Senior'
+                            ? 'Senior Amateurs'
+                            : obj.player.playerCategory,
+                    Handicap: obj.player.handicap,
+                    Status: obj.player.membershipQL,
                 };
                 this.TablePlayers.push(newobj);
             }

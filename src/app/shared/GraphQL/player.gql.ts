@@ -275,6 +275,34 @@ export const GetPlayersByClub = gql`
         }
     }
 `;
+export const GetPlayersByTour = gql`
+    query getPlayerListByTour($where: tour_member_bool_exp!) {
+        AggregateQL: tour_member_aggregate(where: $where) {
+            aggregate {
+                totalCount: count
+            }
+        }
+        tour_member(where: $where) {
+            tourId
+            playerId
+            player{
+                id
+                firstName
+                lastName
+                playerCategory
+                handicap
+                homeClubId
+                handicapWhsIndex
+                phone
+                email
+                membershipNumber
+                membershipQL: membership {
+                    suspended
+                }
+            }
+        }
+    }
+`;
 export const getPlayersList = gql`
     query PostsGetQuery($where: player_bool_exp!) {
         player(where: $where, order_by: { firstName: asc }) {
@@ -631,6 +659,20 @@ export const AddMutation = gql`
         insert_player(objects: $objects) {
             returning {
                 id
+            }
+        }
+    }
+`;
+export const AddTourMemberMutation = gql`
+    mutation insert_player($objects: [player_insert_input!]!,$tourMember:[tour_member_insert_input!]!) {
+        insert_player(objects: $objects) {
+            returning {
+                id
+            }
+        }
+        insert_tour_member(objects: $tourMember) {
+            returning {
+                playerId
             }
         }
     }

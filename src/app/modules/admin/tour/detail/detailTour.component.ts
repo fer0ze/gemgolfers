@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TourService } from '../tour.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { LocalStorageService } from 'app/shared/services/localStorage';
+import { Constants } from 'app/shared/classes/general';
 
 @Component({
   selector: 'app-_detailtour',
@@ -10,7 +12,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 export class DetailTourComponent implements OnInit {
 
   private tourId: string;
-  constructor(private router: ActivatedRoute, private route: Router, private _tourService: TourService) { }
+  constructor(private router: ActivatedRoute, private route: Router, private _tourService: TourService, private _localStorage: LocalStorageService) { }
 
   ngOnInit(): void {
     this.router.paramMap.subscribe((params) => {
@@ -18,8 +20,15 @@ export class DetailTourComponent implements OnInit {
     });
   }
   viewTournaments() {
-    this._tourService.setData(this.tourId);
+    this._localStorage.setTourId(Constants.TOUR_ID, this.tourId);
     this.route.navigate(['/tournaments/']);
-
+  }
+  viewMembers() {
+    this._localStorage.setTourId(Constants.TOUR_ID, this.tourId);
+    this.route.navigate(['/players/']);
+  }
+  viewGuides() {
+    this._localStorage.setTourId(Constants.TOUR_ID, this.tourId);
+    this.route.navigate(['/tours/guides/', this.tourId]);
   }
 }

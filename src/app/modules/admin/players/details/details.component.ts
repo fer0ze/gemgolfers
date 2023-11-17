@@ -128,7 +128,7 @@ export class ContactsDetailsComponent implements OnInit {
             this.logger.log('Admin comes to Player Edit Page', "info", this.playerID);
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             let dataClubs: any;
-            if (this.loggedInuser) {
+            if (this.loggedInuser <= 2) {
                 let clubInfo: any =
                     this.loggedInuser.membership.length > 0
                         ? this.loggedInuser.membership[0].club
@@ -159,34 +159,45 @@ export class ContactsDetailsComponent implements OnInit {
                 notes: new FormControl(''),
             });
             this.playerCategories = this._facadeService.getPlayerCategories();
-            if (this.loggedInuser.userRole > 1) {
+            if (this.loggedInuser.userRole == 2) {
                 dataClubs = await this._facadeService.getClubByID(
                     this.loggedInuser.adminClubId
                 );
-            } else {
+                this.golfClubs = dataClubs.club;
+                this.filteredClubOptions = this.contactForm
+                    .get('club')!
+                    .valueChanges.pipe(
+                        startWith(''),
+                        map((value) =>
+                            typeof value === 'string' ? value : value ? value.name : ''
+                        ),
+                        map((name) => (name ? this._filter(name) : this.golfClubs))
+                    );
+                console.log(this.filteredClubOptions);
+            } else if (this.loggedInuser.userRole == 1) {
                 dataClubs = await this._facadeService.getClubList();
+                this.golfClubs = dataClubs.club;
+                this.filteredClubOptions = this.contactForm
+                    .get('club')!
+                    .valueChanges.pipe(
+                        startWith(''),
+                        map((value) =>
+                            typeof value === 'string' ? value : value ? value.name : ''
+                        ),
+                        map((name) => (name ? this._filter(name) : this.golfClubs))
+                    );
+                console.log(this.filteredClubOptions);
             }
-            this.golfClubs = dataClubs.club;
-            console.log(this.playerCategories);
             if (this.playerID) {
                 await this.fetchData();
             }
-            this.filteredClubOptions = this.contactForm
-                .get('club')!
-                .valueChanges.pipe(
-                    startWith(''),
-                    map((value) =>
-                        typeof value === 'string' ? value : value ? value.name : ''
-                    ),
-                    map((name) => (name ? this._filter(name) : this.golfClubs))
-                );
-            console.log(this.filteredClubOptions);
+
 
             if (this.loggedInuser.userRole > 1) {
                 this.contactForm.get('club').clearValidators();
                 //this.contactForm.get('club').updateValueAndValidity();
             }
-          
+
 
         } catch (error) {
             this.logger.log('Getting Players Profile Edit Data Failed', "error", error.toString());
@@ -354,7 +365,7 @@ export class ContactsDetailsComponent implements OnInit {
             let GEMId: string = '';
             let players: any[] = await this._facadeService.getallPlayersforGGid();
             var sortarray = players['player'];
-            sortarray.sort(this.Comparator);
+          //      sortarray.sort(this.Comparator);
             console.log(sortarray);
 
             this.playerID
@@ -366,17 +377,19 @@ export class ContactsDetailsComponent implements OnInit {
             console.log(GEMId);
 
             //console.log(playerFormValue.playerClubMember);
-            let member: any = {
-                clubId:
-                    typeof contact.club === 'string'
-                        ? this.loggedInuser.adminClubId
-                        : contact.club
-                            ? contact.club.id
-                            : '',
-                suspended: this.contactForm.get('status').value,
-            };
-            console.log(member);
-            clubMember.push(member);
+            if (this.loggedInuser.userRole < 3) {
+                let member: any = {
+                    clubId:
+                        typeof contact.club === 'string'
+                            ? this.loggedInuser.adminClubId
+                            : contact.club
+                                ? contact.club.id
+                                : '',
+                    suspended: this.contactForm.get('status').value,
+                };
+                console.log(member);
+                clubMember.push(member);
+            }
             const player: Player = {
                 id: UniqueId,
                 adminClubId: null,
@@ -407,16 +420,34 @@ export class ContactsDetailsComponent implements OnInit {
             console.log(contact);
 
             if (!this.editMode) {
-                const isSuccess = <boolean>(
-                    await this._facadeService.AddPlayer(player)
-                );
-                if (isSuccess) {
-                    this.save = true;
-                    this.snackBar.open('Player has been created.', 'x', {
-                        duration: 1000,
-                    });
-                    this.reset();
-                    this._router.navigate(['/players']);
+                if (this.loggedInuser.userRole < 3) {
+                    const isSuccess = <boolean>(
+                        await this._facadeService.AddPlayer(player)
+                    );
+                    if (isSuccess) {
+                        this.save = true;
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 1000,
+                        });
+                        this.reset();
+                        this._router.navigate(['/players']);
+                    }
+                } else {
+                    let tourMember = {
+                        tourId: this._localStorage.get(Constants.TOUR_ID),
+                        playerId: UniqueId,
+                    }
+                    const isSuccess = <boolean>(
+                        await this._facadeService.AddTourPlayer(player, tourMember)
+                    );
+                    if (isSuccess) {
+                        this.save = true;
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 1000,
+                        });
+                        this.reset();
+                        this._router.navigate(['/players']);
+                    }
                 }
             } else {
                 const isSuccess = <boolean>(
