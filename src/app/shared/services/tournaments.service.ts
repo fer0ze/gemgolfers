@@ -1128,6 +1128,7 @@ export class TournamentsService {
                                 subTournament: tmnt.subTournament,
                                 multiFormat: tmnt.multiFormat,
                                 createdAt: tmnt.createdAt,
+                                tourId: tmnt.tourId,
                                 categories: {
                                     data: tmnt.categories,
                                 },
@@ -1448,7 +1449,7 @@ export class TournamentsService {
         });
     }
     public insertTourGuide(
-        tourGuide:any[]
+        tourGuide: any[]
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

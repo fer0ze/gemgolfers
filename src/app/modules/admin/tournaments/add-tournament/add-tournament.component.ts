@@ -2195,6 +2195,7 @@ export class AddTournamentComponent implements OnInit {
             marshals: marshalsData,
             flights: [],
             members: [],
+            tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
         };
 
         console.log(tournament);
@@ -2251,20 +2252,39 @@ export class AddTournamentComponent implements OnInit {
                             this.formArray.get([0]).get('clubctgies').value
                         );
 
-                        let clubMembersData: any =
-                            await this.facadeService.getPlayerByClub(
-                                selectedClubId
-                            );
+                        if (this.loggedInuser.userRole == 4) {
+                            selectedClubId = this._localStorage.get(Constants.TOUR_ID);
+                            let clubMembersData: any =
+                                await this.facadeService.getPlayersListByTour(
+                                    selectedClubId
+                                );
 
-                        for (
-                            let i = 0;
-                            i < clubMembersData.club_member.length;
-                            i++
-                        ) {
-                            this.clubMembers.push(
-                                clubMembersData.club_member[i].player
-                            );
+                            for (
+                                let i = 0;
+                                i < clubMembersData.tour_member.length;
+                                i++
+                            ) {
+                                this.clubMembers.push(
+                                    clubMembersData.tour_member[i].player
+                                );
+                            }
+                        } else {
+                            let clubMembersData: any =
+                                await this.facadeService.getPlayerByClub(
+                                    selectedClubId
+                                );
+
+                            for (
+                                let i = 0;
+                                i < clubMembersData.club_member.length;
+                                i++
+                            ) {
+                                this.clubMembers.push(
+                                    clubMembersData.club_member[i].player
+                                );
+                            }
                         }
+
 
                         console.log(this.clubMembers);
 
@@ -3845,6 +3865,7 @@ export class AddTournamentComponent implements OnInit {
             marshals: [],
             flights: [],
             members: [],
+            tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
         };
         let result = <any>await this.facadeService.addTournament(tournament);
         // console.log(tournament)
