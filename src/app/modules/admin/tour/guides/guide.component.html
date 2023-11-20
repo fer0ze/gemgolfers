@@ -2,8 +2,17 @@
 
     <!-- Main -->
     <div class="flex flex-col items-center p-6 sm:p-10">
+        <div class="flex w-full justify-start">
+            <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/tours', tourID]">
+                <span class="inline-flex items-center">
+                    <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                    <span class="ml-1.5 font-medium leading-5">Back to Tour</span>
+                </span>
+            </a>
+        </div>
         <div class="flex flex-col w-full max-w-4xl">
-            <div class="flex justify-between items-center mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+            <div
+                class="flex justify-between items-center mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
                 <span>
                     Tour Guides
                 </span>
@@ -14,7 +23,7 @@
             </div>
             <mat-accordion class="max-w-4xl mt-16">
                 <ng-container *ngFor="let faq of guides; trackBy: trackByFn;let i=index">
-                    <mat-expansion-panel (opened)="onPanelOpened(faq.id)">
+                    <mat-expansion-panel #myPanel (opened)="onPanelOpened(faq.id)">
                         <mat-expansion-panel-header [collapsedHeight]="'56px'">
                             <mat-panel-title class="font-medium leading-tight">Guide {{i+1}}</mat-panel-title>
                         </mat-expansion-panel-header>

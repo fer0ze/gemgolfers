@@ -141,8 +141,8 @@ export class ContactsDetailsComponent implements OnInit {
                 firstName: new FormControl('', [Validators.required]),
                 lastName: new FormControl('', [Validators.required]),
                 gender: new FormControl('male'),
-                email: new FormControl(''),
-                phoneNumbers: new FormControl('', [Validators.required]),
+                email: new FormControl('', [Validators.required]),
+                phoneNumbers: new FormControl(''),
                 dateOfBirth: new FormControl(''),
                 category: new FormControl('', [Validators.required]),
                 handicap: new FormControl('0', [Validators.required]),
@@ -365,7 +365,7 @@ export class ContactsDetailsComponent implements OnInit {
             let GEMId: string = '';
             let players: any[] = await this._facadeService.getallPlayersforGGid();
             var sortarray = players['player'];
-          //      sortarray.sort(this.Comparator);
+            //      sortarray.sort(this.Comparator);
             console.log(sortarray);
 
             this.playerID

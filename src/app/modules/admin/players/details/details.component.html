@@ -117,7 +117,7 @@
                             </mat-form-field>
                         </div> -->
                         <!-- Handicap WHS-->
-                        <div class="sm:col-span-2">
+                        <div  *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2" class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Handicap Differential Change</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"

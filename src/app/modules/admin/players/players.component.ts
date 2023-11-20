@@ -62,6 +62,7 @@ export class PlayersComponent implements OnInit {
         'Edit',
         'Delete',
     ];
+    tourID: string = '';
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     count: any = 0;
@@ -200,9 +201,9 @@ export class PlayersComponent implements OnInit {
             this.playersDataSource.paginator = this.paginator;
             this.playersDataSource.sort = this.sort;
         } else if (this.loggedInuser.userRole == 4) {
-            let tourId = this._localStorage.get(Constants.TOUR_ID);
+            this.tourID = this._localStorage.get(Constants.TOUR_ID);
             data = await this._facadeService.getPlayersListByTour(
-                tourId
+                this.tourID
             );
             console.log(data);
             this.count = data.tour_member.length;

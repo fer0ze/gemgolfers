@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FacadeService } from 'app/shared/services/facade.service';
@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, UntypedFormArray, Validators } from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
     selector: 'app-tour-guide',
@@ -22,6 +23,7 @@ export class TourGuideComponent implements OnInit {
     tourID: string = '';
     loggedInuser: Player;
     guideForm: FormGroup;
+    @ViewChild('myPanel') myPanel: MatExpansionPanel;
 
     quillModules: any = {
         toolbar: [
@@ -35,7 +37,7 @@ export class TourGuideComponent implements OnInit {
         private router: ActivatedRoute,
         private _formBuilder: FormBuilder,
         private facadeService: FacadeService,
-        public snackBar: MatSnackBar,
+        private snackBar: MatSnackBar,
         private _localStorage: LocalStorageService,
         private _fuseConfirmationService: FuseConfirmationService,
     ) { }
@@ -101,6 +103,7 @@ export class TourGuideComponent implements OnInit {
             this.snackBar.open('Guide is added.', 'x', {
                 duration: 2000,
             });
+            this.myPanel.close();
         }
 
     }

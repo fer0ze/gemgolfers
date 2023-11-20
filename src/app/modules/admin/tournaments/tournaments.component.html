@@ -1,6 +1,12 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
     <!-- Header -->
-    <div class="relative flex-0 py-8 px-4 sm:p-14 overflow-hidden border-b bg-card">
+    <div *ngIf="this.loggedInuser.userRole== 4" class="relative flex-0 py-8 px-4 sm:p-14 overflow-hidden border-b bg-card">
+        <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/tours', tourId]">
+            <span class="inline-flex items-center">
+                <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                <span class="ml-1.5 font-medium leading-5">Back to Tour</span>
+            </span>
+        </a>
         <div class="text-6xl font-extrabold tracking-tight leading-none">
             Your Tournaments
         </div>
@@ -11,7 +17,8 @@
         <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
             <!-- Filters -->
             <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
-                <mat-form-field *ngIf="this.loggedInuser.userRole== 1 || this.loggedInuser.userRole==2" class="fuse-mat-no-subscript w-full sm:w-36">
+                <mat-form-field *ngIf="this.loggedInuser.userRole== 1 || this.loggedInuser.userRole==2"
+                    class="fuse-mat-no-subscript w-full sm:w-36">
                     <mat-select [value]="0" (selectionChange)="filterByCategory($event)">
 
                         <ng-container *ngFor="
@@ -86,7 +93,7 @@
                                 <div class="py-0.5 px-1 rounded-full text-sm font-semibold text-green-800 bg-green-100"
                                     style="width: fit-content !important;">
 
-                                   Created By: {{ course.admin.firstName+" "+ course.admin.lastName }}
+                                    Created By: {{ course.admin.firstName+" "+ course.admin.lastName }}
                                 </div>
                                 <!-- <div class="mt-0.5 line-clamp-2 text-secondary">{{course.description}}</div> -->
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
