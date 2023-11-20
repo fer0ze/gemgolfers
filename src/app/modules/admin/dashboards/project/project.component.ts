@@ -24,6 +24,8 @@ import { Player } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
 
 @Component({
     selector: 'project',
@@ -72,6 +74,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private _projectService: ProjectService,
         private _router: Router,
+        public dialog: MatDialog,
         private _facadeService: FacadeService,
         private _datePipe: DatePipe, private _localStorage: LocalStorageService, private logger: LogsService
     ) { }
@@ -780,4 +783,30 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
         //     },
         // };
     }
+    async addnewTour() {
+        const dialogRef = this.dialog.open(DialogAddTourMainComponent);
+        dialogRef.afterClosed().subscribe(async (result) => {
+          console.log(result);
+          if (result) {
+            let tour = {
+              id: UniqueIdGenerator.generate(),
+              adminId: this.loggedInuser.id,
+              name: result.title,
+              logo: null,
+              dateCreated:new Date().toISOString(),
+              startDate:result.startDate,
+              endDate:result.endDate,
+            }
+            this._facadeService.addTour(tour, result.file).subscribe((result) => {
+              console.log(result);
+              if (result) {
+                
+              }
+            })
+    
+          }
+    
+        })
+    
+      }
 }

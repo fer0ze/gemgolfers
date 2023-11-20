@@ -26,21 +26,21 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 @Component({
-    selector: 'app-dialog-add-tour',
-    templateUrl: './dialog-add-tour.component.html',
-    styleUrls: ['./dialog-add-tour.component.scss'],
+    selector: 'app-dialog-add-tour-main',
+    templateUrl: './dialog-add-tour-main.component.html',
+    styleUrls: ['./dialog-add-tour-main.component.scss'],
 })
-export class DialogAddTourComponent implements OnInit {
+export class DialogAddTourMainComponent implements OnInit {
 
     public tourForm: FormGroup;
     pictureUrl: any;
     file: any;
-    @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
+    @ViewChild('avatarFileInputMain') private _avatarFileInput: ElementRef;
     minDate: Date;
     maxDate: Date;
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
-        public dialogRef: MatDialogRef<DialogAddTourComponent>
+        public dialogRef: MatDialogRef<DialogAddTourMainComponent>
     ) { }
 
     ngOnInit(): void {

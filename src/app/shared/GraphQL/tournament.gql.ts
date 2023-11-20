@@ -2144,6 +2144,8 @@ export const getTours = gql`
             name
             logo
             dateCreated
+            startDate
+            endDate
             tournaments {
                 id
                 leagueId

@@ -41,6 +41,8 @@ export class TourComponent implements OnInit {
             date: tour.dateCreated,
             tournaments: tour.tournaments.length,
             members: tour.members.length,
+            startDate:tour.startDate,
+            endDate:tour.endDate,
           }
           this.tours.push(obj);
         }
@@ -59,6 +61,8 @@ export class TourComponent implements OnInit {
           name: result.title,
           logo: null,
           dateCreated:new Date().toISOString(),
+          startDate:result.startDate,
+          endDate:result.endDate,
         }
         this.facadeService.addTour(tour, result.file).subscribe((result) => {
           console.log(result);

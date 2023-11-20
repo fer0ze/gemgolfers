@@ -53,6 +53,7 @@ import { QuillModule } from 'ngx-quill';
         MatTableModule,
         NgTemplateOutlet,
         MatFormFieldModule,
+        MatInputModule,
         MatButtonToggleModule,
         MatIconModule,
         MatSortModule,

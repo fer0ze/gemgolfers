@@ -11,13 +11,13 @@
                     class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
                     <div class=" flex items-center justify-center h-40 w-40">
                         <div>
-                            <input id="avatar-file-input" formControlName="logo"
+                            <input id="avatar-file-input-main" formControlName="logo"
                                 class="absolute h-0 w-0 opacity-0 invisible pointer-events-none" type="file"
                                 [multiple]="false" [accept]="'image/jpeg, image/png, image/jpg'"
-                                (change)="uploadAvatar(avatarFileInput.files)" #avatarFileInput>
+                                (change)="uploadAvatar(avatarFileInputMain.files)" #avatarFileInputMain>
                             <label
                                 class="flex items-center justify-center w-0 h-0 rounded-full cursor-pointer hover:bg-hover"
-                                for="avatar-file-input" matRipple>
+                                for="avatar-file-input-main" matRipple>
                                 <mat-icon class="icon-size-12" [svgIcon]="'heroicons_outline:camera'"></mat-icon>
                             </label>
                         </div>

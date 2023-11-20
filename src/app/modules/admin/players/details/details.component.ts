@@ -144,7 +144,7 @@ export class ContactsDetailsComponent implements OnInit {
                 email: new FormControl('', [Validators.required]),
                 phoneNumbers: new FormControl(''),
                 dateOfBirth: new FormControl(''),
-                category: new FormControl('', [Validators.required]),
+                category: new FormControl('Amateurs', [Validators.required]),
                 handicap: new FormControl('0', [Validators.required]),
                 handicapWhsIndex: new FormControl('0'),
                 handicapWHS: new FormControl('0', [Validators.required]),

@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatRippleModule } from '@angular/material/core';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -16,27 +16,42 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { ProjectComponent } from 'app/modules/admin/dashboards/project/project.component';
 import { projectRoutes } from 'app/modules/admin/dashboards/project/project.routing';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { ProjectResolver } from './project.resolvers';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
+import { MatCardActions, MatCardModule } from '@angular/material/card';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-    declarations: [ProjectComponent],
+    declarations: [ProjectComponent,DialogAddTourMainComponent],
     imports: [
+        CommonModule,
+        ReactiveFormsModule,
         RouterModule.forChild(projectRoutes),
         MatButtonModule,
         MatButtonToggleModule,
         MatDividerModule,
         MatIconModule,
-        MatMenuModule,
+        MatMenuModule,NgTemplateOutlet,
         MatProgressBarModule,
         MatRippleModule,
         MatSidenavModule,
         MatSortModule,
         MatTableModule,
         MatTabsModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        MatInputModule,MatCardModule,
         NgApexchartsModule,
-        TranslocoModule,
+        TranslocoModule,MatDialogModule,
         SharedModule,
+        FormsModule,FlexLayoutModule,
     ],
     providers: [ProjectResolver, DatePipe],
 })
