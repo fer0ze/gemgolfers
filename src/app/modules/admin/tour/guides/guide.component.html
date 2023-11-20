@@ -14,18 +14,18 @@
             <div
                 class="flex justify-between items-center mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
                 <span>
-                    Tour Guides
+                    Tour Itinerary
                 </span>
                 <button class="ml-2" mat-flat-button [color]="'primary'" (click)="addNewGuide()">
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                    Add New Guide
+                    Add New itinerary
                 </button>
             </div>
             <mat-accordion class="max-w-4xl mt-16">
                 <ng-container *ngFor="let faq of guides; trackBy: trackByFn;let i=index">
                     <mat-expansion-panel #myPanel (opened)="onPanelOpened(faq.id)">
                         <mat-expansion-panel-header [collapsedHeight]="'56px'">
-                            <mat-panel-title class="font-medium leading-tight">Guide {{i+1}}</mat-panel-title>
+                            <mat-panel-title class="font-medium leading-tight">Itinerary {{i+1}}</mat-panel-title>
                         </mat-expansion-panel-header>
                         <div class="flex flex-col">
                             <div>
