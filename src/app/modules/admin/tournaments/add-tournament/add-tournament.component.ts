@@ -133,6 +133,7 @@ export class AddTournamentComponent implements OnInit {
     hideClubs: boolean = true;
     showTexas: boolean = false;
     showMatchPlay: boolean = false;
+    showShambles: boolean = false;
     clubTitle: string;
     sDate: Date;
     tournamentID: string;
@@ -199,6 +200,57 @@ export class AddTournamentComponent implements OnInit {
         const temp = arr[indexA];
         arr[indexA] = arr[indexB];
         arr[indexB] = temp;
+    }
+    swapOuterObjects(previousArray: any[], newArray: any[], index1: number, index2: number): void {
+        let newindex = 0;
+        let newindex2 = 0;
+        if (index2 < 2) {
+            newindex = 0
+        } else {
+            newindex = 1;
+        }
+        if (index1 < 2) {
+            newindex2 = 0
+        } else {
+            newindex2 = 1;
+        }
+        index2 = index2 % 2;
+        index1 = index1 % 2;
+        const temp = previousArray[newindex2][index1];
+        previousArray[newindex2][index1] = newArray[newindex][index2];
+        newArray[newindex][index2] = temp;
+    }
+    swapInnerObjects(mainArray: any[], index1: number, index2: number): void {
+        // Assuming mainArray[index1] and mainArray[index2] are arrays with the 'PairName' property
+        index2 = index2 % 2;
+        const temp = mainArray[0][index1];
+        mainArray[0][index1] = mainArray[1][index2];
+        mainArray[1][index2] = temp;
+    }
+    dragDroppedShambles(event: CdkDragDrop<string[]>) {
+        const newIndex = event.currentIndex;
+        const previousIndex = event.previousIndex;
+        console.log(newIndex);
+        console.log(previousIndex);
+        if (event.previousContainer === event.container) {
+            if (previousIndex == 0 && newIndex == 1) {
+                console.log('No changes');
+            } else if ((previousIndex == 0 || previousIndex == 1) && (newIndex == 2 || newIndex == 3)) {
+                this.swapInnerObjects(event.container.data, previousIndex, newIndex);
+            } else if ((previousIndex == 2 || previousIndex == 3) && (newIndex == 0 || newIndex == 1)) {
+                this.swapInnerObjects(event.container.data, newIndex, previousIndex);
+            }
+        }
+        else {
+            if (previousIndex == 0 && newIndex == 1) {
+                console.log('No changes');
+            } else if ((previousIndex == 0 || previousIndex == 1) && (newIndex == 2 || newIndex == 3)) {
+                this.swapOuterObjects(event.previousContainer.data, event.container.data, previousIndex, newIndex)
+            } else if ((previousIndex == 2 || previousIndex == 3) && (newIndex == 0 || newIndex == 1)) {
+                this.swapOuterObjects(event.previousContainer.data, event.container.data, newIndex, previousIndex)
+            }
+        }
+
     }
     dragDropped(event: CdkDragDrop<string[]>) {
         const newIndex = event.currentIndex;
@@ -358,7 +410,7 @@ export class AddTournamentComponent implements OnInit {
       firstNameCtrl: ['', Validators.required],
       lastNameCtrl: ['', Validators.required],
     });
-
+    
     this.emailFormGroup = this._formBuilder.group({
       emailCtrl: ['', Validators.email]
     });
@@ -428,7 +480,7 @@ export class AddTournamentComponent implements OnInit {
                 if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
                     this.showMatchPlay = true;
                     this.showCat = false;
-                } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+                } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.THREE_BALL_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.TWO_Ball_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.SHAMBLES) {
                     this.showCat = false;
                     this.showTexas = true;
                 }
@@ -670,7 +722,7 @@ export class AddTournamentComponent implements OnInit {
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE) {
                 playersperFlight = '3'
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES) {
-                playersperFlight = '2'
+                playersperFlight = '4'
             }
             return this._formBuilder.group({
                 name: [
@@ -1447,7 +1499,7 @@ export class AddTournamentComponent implements OnInit {
             }
             console.log(person);
 
-            console.log(this.formArray.get([1]).get('category'));
+            // console.log(this.formArray.get([1]).get('category'));
             // for (let j in this.formArray.get([1]).get('category').value[i]
             //     .playingDate) {
             //     let sDte =
@@ -1469,14 +1521,14 @@ export class AddTournamentComponent implements OnInit {
 
             //     //this.formArray.get([1]).get("category").value[i].playingDate[j].Date = this.datePipe.transform(this.formArray.get([1]).get("category").value[i].playingDate[j].Date, 'yyyyMMdd');
             // }
-            console.log(this.formArray.get([1]).get('category').value[i]);
+            // console.log(this.formArray.get([1]).get('category').value[i]);
             this.formArray.get([1]).get('category').value[i].playingDate =
                 this.checkDate(
                     this.formArray.get([1]).get('category').value[i]
                 );
-            console.log(
-                this.formArray.get([1]).get('category').value[i].playingDate
-            );
+            // console.log(
+            //     this.formArray.get([1]).get('category').value[i].playingDate
+            // );
 
             // let flightSettingsStatus: any =
             //     await this.facadeService.updateFlightSettings(
@@ -1506,7 +1558,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     getFilteredCategory(PLcategory: any) {
-        let selMembers: Player[][] = [];
+        let selMembers: any[][] = [];
 
         let FilteredPL: Player[] = [];
         let flightTime: any = '9:00 AM';
@@ -1514,6 +1566,7 @@ export class AddTournamentComponent implements OnInit {
         let flightTeeID: any = '1';
 
         let cnter = 0;
+        let lanter = 0;
         let outer = 0;
 
         let Pdate: any = this.datePipe.transform(
@@ -1591,7 +1644,7 @@ export class AddTournamentComponent implements OnInit {
                             }
                         }
                     }
-                } else {
+                } else if (!this.showShambles) {
                     if (cnter == 0) selMembers[outer] = [];
                     selMembers[outer][cnter] = obj;
                     if (cnter == parseInt(PperFlight) - 1) {
@@ -1600,8 +1653,29 @@ export class AddTournamentComponent implements OnInit {
                     } else {
                         cnter++;
                     }
+                } else if (this.showShambles) {
+                    if (cnter == 0 && lanter == 0) {
+                        selMembers[outer] = [];
+                        selMembers[outer][cnter] = [];
+                        selMembers[outer][cnter]['PairName'] = obj.firstName + '/' + obj.lastName;
+                    }
+                    if (cnter == 0 && lanter !== 0) {
+                        selMembers[outer][lanter] = [];
+                        selMembers[outer][lanter]['PairName'] = obj.firstName + '/' + obj.lastName;
+                    }
+                    selMembers[outer][lanter].push(obj);
+                    if (cnter == 1 && lanter == 0 && selMembers[outer].length != 2) {
+                        cnter = 0;
+                        //outer++;
+                        lanter++;
+                    } else if (selMembers[outer][lanter].length == 2) {
+                        cnter = 0;
+                        outer++;
+                        lanter = 0;
+                    } else {
+                        cnter++;
+                    }
                 }
-
             }
             let tempSelMembers: any[] = [];
             for (const index in selMembers) {
@@ -1616,6 +1690,7 @@ export class AddTournamentComponent implements OnInit {
                 selMembers = tempSelMembers;
             }
             console.log(selMembers);
+
         }
 
         // }
@@ -2112,10 +2187,13 @@ export class AddTournamentComponent implements OnInit {
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.SHAMBLES
+            matchFormat.THREE_BALL_SCRAMBLE
         ) {
             this.showTexas = true;
+        }
+        if (this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.SHAMBLES) {
+            this.showShambles = true;
         }
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
@@ -2163,8 +2241,7 @@ export class AddTournamentComponent implements OnInit {
             pointsFormats: null,
             subTournament: false,
             pointsValues: null,
-            handicapAllocations: handicapAllocations.handicapAllocation,
-            handicapAllocation: handicapAllocations.handicapAllocation,
+            handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
             marshalsStartWith: this.formArray.get([0]).value.marshalStart,
             noOfMarshals: this.formArray.get([0]).value.noofMarshals,
@@ -2432,11 +2509,14 @@ export class AddTournamentComponent implements OnInit {
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.THREE_BALL_SCRAMBLE ||
-            this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.SHAMBLES
+            matchFormat.THREE_BALL_SCRAMBLE
+
         ) {
             this.showTexas = true;
+        }
+        if (this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.SHAMBLES) {
+            this.showShambles = true;
         }
         for (let i = 1; i <= this.formArray.get([0]).value.noofMarshals; i++) {
             let uniquePassword: string = passwordGenerator.generate();
@@ -2506,7 +2586,7 @@ export class AddTournamentComponent implements OnInit {
                     : true,
             pointsFormats: null,
             pointsValues: null,
-            handicapAllocations: handicapAllocations.handicapAllocation,
+            handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
             tee_id: 1,
             scoreManagement: this.formArray.get([0]).value.scoreManagement,
@@ -3134,6 +3214,7 @@ export class AddTournamentComponent implements OnInit {
         let ind: number = 0;
 
         let tournamentFlightMembers: FlightMembers[];
+        let tournamentPairs: any[];
 
         if (this.currentTournament)
             this.tournamentID = this.currentTournament.id;
@@ -3141,6 +3222,7 @@ export class AddTournamentComponent implements OnInit {
             let counter: number = 0;
 
             tournamentFlightMembers = [];
+            tournamentPairs=[];
             const FilteredFlight = this.formArray
                 .get([1])
                 .get('category')
@@ -3153,51 +3235,99 @@ export class AddTournamentComponent implements OnInit {
 
             for (let index2 in this.selectedMembers[index]) {
                 if (index2 != 'title') {
+                   
                     for (var index3 in this.selectedMembers[index][index2]) {
-                        for (var index4 in this.selectedMembers[index][index2][
-                            index3
-                        ]) {
-                            if (Number.isInteger(Number(index4))) {
-                                console.log(
-                                    this.selectedMembers[index][index2][index3][
-                                        index4
-                                    ].playerCategory
-                                );
+                        tournamentPairs=[];
+                        for (var index4 in this.selectedMembers[index][index2][index3]) {
+                            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES) {
+                                if (Number.isInteger(Number(index4))) {
+                                    let pair = {
+                                        id: UniqueIdGenerator.generate(),
+                                        tournamentId: this.tournamentID,
+                                        pairName: this.selectedMembers[index][index2][index3][index4].PairName,
+                                        member1Id: this.selectedMembers[index][index2][index3][index4][0].id,
+                                        member2Id: this.selectedMembers[index][index2][index3][index4][1].id,
+                                    }
+                                    tournamentPairs.push(pair);
+                                    for (var index5 in this.selectedMembers[index][index2][index3][index4]) {
+                                        if (Number.isInteger(Number(index5))) {
+                                            console.log(this.selectedMembers[index][index2][index3][index4][index5].playerCategory);
 
-                                let roundTeeId: any = General.getPlayersTe(
-                                    this.selectedMembers[index][index2][index3][
-                                        index4
-                                    ].playerCategory
-                                );
-                                console.log(roundTeeId.id);
-                                let FM: any = {
-                                    playerId:
-                                        this.selectedMembers[index][index2][
-                                            index3
-                                        ][index4].id,
-                                    attendance: false,
-                                    playingTee: roundTeeId.result,
-                                    tee_id: roundTeeId.id,
-                                };
-                                console.log(FM);
+                                            let roundTeeId: any = General.getPlayersTe(
+                                                this.selectedMembers[index][index2][index3][index4][index5].playerCategory
+                                            );
+                                            console.log(roundTeeId.id);
+                                            let FM: any = {
+                                                playerId:
+                                                    this.selectedMembers[index][index2][index3][index4][index5].id,
+                                                attendance: false,
+                                                playingTee: roundTeeId.result,
+                                                tee_id: roundTeeId.id,
+                                            };
+                                            console.log(FM);
 
-                                tournamentFlightMembers.push(FM);
+                                            tournamentFlightMembers.push(FM);
 
-                                let TM: any = {
-                                    playerId:
-                                        this.selectedMembers[index][index2][
-                                            index3
-                                        ][index4].id,
-                                    status: true,
-                                    playingTee: roundTeeId.result,
-                                    tee_id: roundTeeId.id,
-                                };
+                                            let TM: any = {
+                                                playerId:
+                                                    this.selectedMembers[index][index2][
+                                                        index3
+                                                    ][index4][index5].id,
+                                                status: true,
+                                                playingTee: roundTeeId.result,
+                                                tee_id: roundTeeId.id,
+                                            };
 
 
-                                tournamentMember.push(TM);
+                                            tournamentMember.push(TM);
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (Number.isInteger(Number(index4))) {
+                                    console.log(
+                                        this.selectedMembers[index][index2][index3][
+                                            index4
+                                        ].playerCategory
+                                    );
+
+                                    let roundTeeId: any = General.getPlayersTe(
+                                        this.selectedMembers[index][index2][index3][
+                                            index4
+                                        ].playerCategory
+                                    );
+                                    console.log(roundTeeId.id);
+                                    let FM: any = {
+                                        playerId:
+                                            this.selectedMembers[index][index2][
+                                                index3
+                                            ][index4].id,
+                                        attendance: false,
+                                        playingTee: roundTeeId.result,
+                                        tee_id: roundTeeId.id,
+                                    };
+                                    console.log(FM);
+
+                                    tournamentFlightMembers.push(FM);
+
+                                    let TM: any = {
+                                        playerId:
+                                            this.selectedMembers[index][index2][
+                                                index3
+                                            ][index4].id,
+                                        status: true,
+                                        playingTee: roundTeeId.result,
+                                        tee_id: roundTeeId.id,
+                                    };
+
+
+                                    tournamentMember.push(TM);
+                                }
                             }
                         }
 
+                        console.log(tournamentFlightMembers);
+                        console.log(tournamentPairs);
 
                         let roundTeeId1: any = General.getPlayersTees(
                             tournamentFlightMembers[0].playingTee
@@ -3241,6 +3371,9 @@ export class AddTournamentComponent implements OnInit {
                                 members: {
                                     data: tournamentFlightMembers,
                                 },
+                                pairs: {
+                                    data: tournamentPairs,
+                                }
                             };
                             if (this.showTexas) {
                                 let name: string = (<HTMLInputElement>(
@@ -3441,7 +3574,7 @@ export class AddTournamentComponent implements OnInit {
         // }
 
         let result = <any>(
-            await this.facadeService.createNextRoundFlights(tournamentFlights)
+           await  this.facadeService.createNextRoundFlights(tournamentFlights)
         );
         if (this.showTexas == true) {
             await this.facadeService.addFlightName(flightName);
@@ -3799,7 +3932,10 @@ export class AddTournamentComponent implements OnInit {
         this.subTournamentID = subTournamentId;
 
         let courseHoleSetsData = this.formArray.get([0]).value.courseHoleSet;
-
+        let handicapAllocations = {
+            handicapAllocation: this.formArray.get([0]).value
+                .handicapAllocations,
+        };
         courseHoleSetsData.length > 0
             ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
             : (courseHoleSetsData = []);
@@ -3836,8 +3972,7 @@ export class AddTournamentComponent implements OnInit {
 
             pointsFormats: null,
             pointsValues: null,
-            handicapAllocations: this.formArray.get([0]).value
-                .handicapAllocations.handicapAllocation,
+            handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
             tee_id: 1,
             scoreManagement: 'ONLY_PLAYERS',

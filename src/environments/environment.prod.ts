@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
   debugging: false,
-  apiUrl: 'https://gemgolfers-dev.hasura.app/v1/graphql',
-  wsUrl: 'wss://gemgolfers-dev.hasura.app/v1/graphql',
-  apiKey: 's9TQTbcPL4S2R1XWyZYT2MFFspNJmSkOBR4HiNPEXRFErgaEwOVf9XBU48ALjGrW',
+  apiUrl: 'https://upright-shark-94.hasura.app/v1/graphql',
+  wsUrl: 'wss://upright-shark-94.hasura.app/v1/graphql',
+  apiKey: 'G618jQ1cFvfNs8ehXwdCy1cZpIHK4RHyl7rsP3hTQLo4VCdrj6yXSd5xB67SPT14',
   defaultRole: 'admin',
   logName: 'Gemgolfers-WebApp-Dev',
   encryptSecretKey: 'prod-gemgolfers',
