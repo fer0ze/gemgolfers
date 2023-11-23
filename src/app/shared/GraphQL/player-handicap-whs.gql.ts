@@ -61,6 +61,66 @@ export const TournamentScoresQueryQL = gql`
     ${PlayerHandicapQL}
     ${PlayerHandicapWhsQL}
 `;
+export const getTorunamentScoreViewQueryQL = gql`
+    query TournamentScoresQuery($tournamentId: String!) {
+        TournamentQL: tournament_by_pk(id: $tournamentId) {
+           id 
+           handicapAllocations
+           matchFormat
+            CourseQL: course {
+                id
+                noOfHoles  
+            }
+            FlightsQL: flights(order_by: [{ flightRound: asc }]) {
+                id
+                flightRound
+                name {
+                    name
+                }
+                MembersQL: members(order_by: [{ player: { firstName: asc } }]) {
+                    playerId
+                    PlayerQL: player {
+                        id
+                        firstName
+                        lastName
+                        picture
+                        playerCategory
+                        handicap
+                    }
+                    ScoresQL: scores(where: { grossScore: { _gt: 0 } }) {
+                        ...ScoreQL
+                    }
+                }
+            }
+            TeamsQL: teams {
+                id
+                tournamentId
+                name
+                
+            }
+            OpponentsQL: opponents {
+                id
+                flightId
+                team1Id
+                team2Id
+                team1MemberId
+                team2MemberId
+                tournamentId
+        
+            }
+            PairsQL:pairs{
+                id
+                flightId
+                tournamentId
+                pairName
+                member1Id
+                member2Id
+            }
+        }
+    }
+
+    ${ScoreQL}  
+`;
 
 export const PlayersHandicapWhsHistoryQueryQL = gql`
     query PlayersHandicapWhsHistoryQuery(

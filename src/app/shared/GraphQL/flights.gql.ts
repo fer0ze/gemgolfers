@@ -435,6 +435,43 @@ export const FlightManagersQuery = gql`
         }
     }
 `;
+export const TeamManagersQuery = gql`
+query PostsGetQuery($tournamentId: String!) {
+    tournament(where: { id: { _eq: $tournamentId } }){
+        id
+        teamMatch
+        teams{
+            id
+            adminId
+            tournamentId
+            name
+            color
+           
+        }
+        opponents{
+            id
+            team1Id
+            team2Id
+            tournamentId
+            team1MemberId
+            team2MemberId
+        }
+        members {
+            playerId
+            tournamentId
+            player {
+                id
+                firstName
+                lastName
+                handicap
+                playerCategory
+                membershipNumber
+                email
+            }
+        }
+    }
+}
+`;
 // OwnQLi: player_by_pk(id: $playerId) {
 //     PermissionsQLi: permissions {
 //         handicapAdmin
@@ -598,6 +635,7 @@ export const undoHandicapPlayerQL = gql`
     }
 `;
 export const updateflightMemberQL = gql`
+
     mutation UpdateFlightMember($playerId: String!,$tournamentId: String!) {
         flightEndedQlA: update_flight_member(
             where: { playerId: { _eq: $playerId } }
@@ -611,6 +649,7 @@ export const updateflightMemberQL = gql`
         ) {
             AffectedRowsQLi: affected_rows
         }
+
     }
 `;
 export const markPlayerPaneltyQL = gql`

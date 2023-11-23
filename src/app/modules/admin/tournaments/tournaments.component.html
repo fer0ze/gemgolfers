@@ -1,6 +1,12 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
     <!-- Header -->
-    <div class="relative flex-0 py-8 px-4 sm:p-14 overflow-hidden border-b bg-card">
+    <div *ngIf="this.loggedInuser.userRole== 4" class="relative flex-0 py-8 px-4 sm:p-14 overflow-hidden border-b bg-card">
+        <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/tours', tourId]">
+            <span class="inline-flex items-center">
+                <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                <span class="ml-1.5 font-medium leading-5">Back to Tour</span>
+            </span>
+        </a>
         <div class="text-6xl font-extrabold tracking-tight leading-none">
             Your Tournaments
         </div>
@@ -11,7 +17,8 @@
         <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
             <!-- Filters -->
             <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
-                <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
+                <mat-form-field *ngIf="this.loggedInuser.userRole== 1 || this.loggedInuser.userRole==2"
+                    class="fuse-mat-no-subscript w-full sm:w-36">
                     <mat-select [value]="0" (selectionChange)="filterByCategory($event)">
 
                         <ng-container *ngFor="
@@ -29,6 +36,10 @@
                     <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
                     <input (input)="filterByQuery(query.value)" placeholder="Search by title" matInput #query />
                 </mat-form-field>
+                <button class="bg-accent" mat-flat-button (click)="addNewRound()" [color]="'accent'">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                    <span class="ml-2">New Tournament</span>
+                </button>
                 <!-- <mat-slide-toggle
                     class="mt-8 sm:mt-0 sm:ml-auto"
                     [color]="'primary'"
@@ -82,7 +93,7 @@
                                 <div class="py-0.5 px-1 rounded-full text-sm font-semibold text-green-800 bg-green-100"
                                     style="width: fit-content !important;">
 
-                                   Created By: {{ course.admin.firstName+" "+ course.admin.lastName }}
+                                    Created By: {{ course.admin.firstName+" "+ course.admin.lastName }}
                                 </div>
                                 <!-- <div class="mt-0.5 line-clamp-2 text-secondary">{{course.description}}</div> -->
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
@@ -103,7 +114,16 @@
                                                         'TEXAS_SCRAMBLE',
                                                     'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500':
                                                         course.matchFormat ===
-                                                        'STROKE_PLAY'
+                                                        'STROKE_PLAY',
+                                                    'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500':
+                                                        course.matchFormat ===
+                                                        'MATCH_PLAY',
+                                                    'text-red-800 bg-red-100 dark:text-red-50 dark:bg-red-500':
+                                                        course.matchFormat ===
+                                                        '2_BALL_SCRAMBLE',
+                                                    'text-yellow-800 bg-yellow-100 dark:text-yellow-50 dark:bg-yellow-500':
+                                                        course.matchFormat ===
+                                                        '3_BALL_SCRAMBLE'
                                                 }">
                                             {{ course.matchFormat }}
                                         </div>

@@ -1,7 +1,7 @@
 {
   "name": "gemgolfers",
   "version": "2.0.0",
-  "description": "Gemgolfers - This application to manage golf events.",
+  "description": "Gemgolfers - The application to manage golf events.",
   "author": "http://e2esp.com/about-us/#leadership",
   "license": "http://e2esp.com/about-us",
   "private": true,
@@ -41,6 +41,7 @@
     "apollo-link": "^1.2.11",
     "apollo-link-ws": "^1.0.17",
     "apollo-utilities": "^1.2.1",
+    "express": "^4.18.2",
     "chart.js": "^2.7.3",
     "crypto-js": "^3.3.0",
     "firebase": "^9.17.1",

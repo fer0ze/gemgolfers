@@ -2,14 +2,18 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MainLeaderboardComponent } from './mainleaderboard.component';
 
+
 const routes: Routes = [
     {
         path: '',
-        component: MainLeaderboardComponent
+        component: MainLeaderboardComponent,
     },
     {
         path: ':id',
         component: MainLeaderboardComponent,
+        // resolve: {
+        //     data: LeaderboardResolver,
+        // },
     },
 ];
 

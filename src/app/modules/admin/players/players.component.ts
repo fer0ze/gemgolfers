@@ -14,7 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Subject, takeUntil, Observable, of } from 'rxjs';
+import { Subject, takeUntil, Observable, of, switchMap } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
@@ -33,6 +33,7 @@ import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogOverviewComponent } from '../dialogs/dialog-overview/dialog-overview.component';
 import { MatDialog } from '@angular/material/dialog';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-players',
@@ -62,6 +63,7 @@ export class PlayersComponent implements OnInit {
         'Edit',
         'Delete',
     ];
+    tourID: string = '';
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     count: any = 0;
@@ -88,12 +90,22 @@ export class PlayersComponent implements OnInit {
         public snackBar: MatSnackBar,
         private _handicapServise: HandicapService,
         public dialog: MatDialog,
-        private _localStorage: LocalStorageService
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
     ) { }
     ngOnInit(): void {
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.fecthData();
-        this.showTable = Promise.resolve(true);
+        try {
+            this.logger.log('Admin comes to Players Page', "info");
+            this.logger.log('Getting Players Data', "info");
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.fecthData();
+            this.showTable = Promise.resolve(true);
+            this.logger.log('Getting Players Data SuccessFull', "info");
+        } catch (error) {
+            this.logger.log('Getting Players Data Failed', "error", error.toString());
+        }
+
+
     }
 
     applyFilter(filterValue: string) {
@@ -112,10 +124,12 @@ export class PlayersComponent implements OnInit {
         if (this.loggedInuser.userRole == 1) {
             //data = await this._facadeService.getPlayersList();
             of(this.Players)
-                .pipe()
+                .pipe(
+                    switchMap(() => this._facadeService.getPlayersList())
+                )
                 .subscribe(
                     async (data) => {
-                        data = await this._facadeService.getPlayersList();
+
 
                         // this.Players = dataPlayers.player;
                         // this.isLoading = false;
@@ -157,7 +171,7 @@ export class PlayersComponent implements OnInit {
                     },
                     (error) => console.log('error')
                 );
-        } else {
+        } else if (this.loggedInuser.userRole == 2) {
             data = await this._facadeService.getPlayersListByClub(
                 this.loggedInuser.adminClubId
             );
@@ -188,6 +202,38 @@ export class PlayersComponent implements OnInit {
             this.playersDataSource = new MatTableDataSource(this.TablePlayers);
             this.playersDataSource.paginator = this.paginator;
             this.playersDataSource.sort = this.sort;
+        } else if (this.loggedInuser.userRole == 4) {
+            this.tourID = this._localStorage.get(Constants.TOUR_ID);
+            data = await this._facadeService.getPlayersListByTour(
+                this.tourID
+            );
+            console.log(data);
+            this.count = data.tour_member.length;
+            this.Players = data.tour_member;
+            for (let obj of this.Players) {
+                let Fname = obj.player.firstName
+                    ? obj.player.firstName.trim()
+                    : obj.player.firstName;
+                let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
+                let newobj = {
+                    id: obj.player.id,
+                    Name: Fname + ' ' + Lname,
+                    Phone: obj.player.phone,
+                    Email: obj.player.email,
+                    MembershipNo: obj.player.membershipNumber,
+                    Category:
+                        obj.player.playerCategory == 'Senior'
+                            ? 'Senior Amateurs'
+                            : obj.player.playerCategory,
+                    Handicap: obj.player.handicap,
+                    Status: obj.player.membershipQL,
+                };
+                this.TablePlayers.push(newobj);
+            }
+
+            this.playersDataSource = new MatTableDataSource(this.TablePlayers);
+            this.playersDataSource.paginator = this.paginator;
+            this.playersDataSource.sort = this.sort;
         }
     }
 
@@ -208,33 +254,38 @@ export class PlayersComponent implements OnInit {
     }
 
     async deletePlayer(player: any, index: any) {
-        const dialogRef = this.dialog.open(DialogOverviewComponent, {
-            width: '350px',
-            data: 'Do you want to delete the player?',
-        });
-        dialogRef.afterClosed().subscribe(async (result) => {
-            if (result) {
-                index = this.playersDataSource.data.findIndex(
-                    (Player) => Player.id === player.id
-                );
+        try {
+            this.logger.log('Players Delete Dialog Open', "info", player.toString());
+            const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                width: '350px',
+                data: 'Do you want to delete the player?',
+            });
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    index = this.playersDataSource.data.findIndex(
+                        (Player) => Player.id === player.id
+                    );
 
-                let response = await this._facadeService.deletePlayer(
-                    player.homeClubId,
-                    player.id
-                );
-                if (response) {
-                    if (index !== -1) {
-                        this.snackBar.open('Player has been deleted.', 'x', {
-                            duration: 5000,
-                        });
-                        this.playersDataSource.data.splice(index, 1);
-                        this.playersDataSource._updateChangeSubscription();
+                    let response = await this._facadeService.deletePlayer(
+                        player.homeClubId,
+                        player.id
+                    );
+                    if (response) {
+                        if (index !== -1) {
+                            this.snackBar.open('Player has been deleted.', 'x', {
+                                duration: 5000,
+                            });
+                            this.playersDataSource.data.splice(index, 1);
+                            this.playersDataSource._updateChangeSubscription();
+                        }
+                        this.logger.log('Players is Deleted', "info", player.toString());
+                        // this._changeDetectorRef.markForCheck();
                     }
-
-                    // this._changeDetectorRef.markForCheck();
                 }
-            }
-        });
+            });
+        } catch (error) {
+            this.logger.log('Player Deleting Failed', "error", error.toString());
+        }
     }
     onBackdropClicked(): void {
         // Go back to the list
@@ -244,6 +295,7 @@ export class PlayersComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
     updatePlayer(id: string): void {
+        this.logger.log('Players Edit Page Open', "info", id.toString());
         this._router.navigate(['./view/', id], {
             relativeTo: this._activatedRoute,
         });
@@ -254,91 +306,100 @@ export class PlayersComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
     viewProfile(id: string): void {
+        this.logger.log('Players View Profile Page Open', "info", id.toString());
         this._router.navigate(['/players/viewProfile/' + id]);
     }
 
     downloadAllPlayers(): void {
-        let doc = new jsPDF();
+        try {
+            this.logger.log('Download All Players Button Click', "info");
+            let doc = new jsPDF();
 
-        let col = [
-            'Sr.',
-            'Name',
-            'Phone',
-            'Email',
-            'Mem/No',
-            'Category',
-            'Handicap',
-        ];
-        var rows = [];
-        doc.setFontSize(18);
-        doc.text('Leaderboard Scores:', 15, 15);
-        doc.setFontSize(11);
-        doc.setTextColor(100);
-        var sortarray = [...this.Players];
-        if (this.sorting == 'desc') {
-            if (this.name == 'Name') {
-                sortarray.sort(this.ComparatordscN);
-            } else if (this.name == 'Email') {
-                sortarray.sort(this.ComparatordscE);
-            } else if (this.name == 'Membership') {
-                sortarray.sort(this.ComparatordscM);
-            } else if (this.name == 'Category') {
-                sortarray.sort(this.ComparatordscC);
-            } else if (this.name == 'Handicap') {
-                sortarray.sort(this.ComparatordscH);
-            }
-        } else if (this.sorting == 'asc') {
-            if (this.name == 'Name') {
-                sortarray.sort(this.ComparatorascN);
-            } else if (this.name == 'Email') {
-                sortarray.sort(this.ComparatorascE);
-            } else if (this.name == 'Membership') {
-                sortarray.sort(this.ComparatorascM);
-            } else if (this.name == 'Category') {
-                sortarray.sort(this.ComparatorascC);
-            } else if (this.name == 'Handicap') {
-                sortarray.sort(this.ComparatorascH);
-            }
-        }
-        let count = 0;
-        sortarray.forEach((element) => {
-            count++;
-            var temp = [
-                count,
-
-                element.firstName + ' ' + element.lastName,
-                element.phone,
-                element.email,
-                element.membershipNumber,
-                element.playerCategory,
-                element.handicap,
+            let col = [
+                'Sr.',
+                'Name',
+                'Phone',
+                'Email',
+                'Mem/No',
+                'Category',
+                'Handicap',
             ];
-            rows.push(temp);
-        });
-        // From HTML
-        doc.autoTable(col, rows, {
-            startY: 25,
-            theme: 'grid',
-            columnStyles: {
-                0: { cellWidth: 12 },
-                1: { cellWidth: 35 },
-                2: { cellWidth: 30 },
-                3: { cellWidth: 45 },
-                4: { cellWidth: 20 },
-                5: { cellWidth: 30 },
-                6: { cellWidth: 20 },
+            var rows = [];
+            doc.setFontSize(18);
+            doc.text('Leaderboard Scores:', 15, 15);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            var sortarray = [...this.Players];
+            if (this.sorting == 'desc') {
+                if (this.name == 'Name') {
+                    sortarray.sort(this.ComparatordscN);
+                } else if (this.name == 'Email') {
+                    sortarray.sort(this.ComparatordscE);
+                } else if (this.name == 'Membership') {
+                    sortarray.sort(this.ComparatordscM);
+                } else if (this.name == 'Category') {
+                    sortarray.sort(this.ComparatordscC);
+                } else if (this.name == 'Handicap') {
+                    sortarray.sort(this.ComparatordscH);
+                }
+            } else if (this.sorting == 'asc') {
+                if (this.name == 'Name') {
+                    sortarray.sort(this.ComparatorascN);
+                } else if (this.name == 'Email') {
+                    sortarray.sort(this.ComparatorascE);
+                } else if (this.name == 'Membership') {
+                    sortarray.sort(this.ComparatorascM);
+                } else if (this.name == 'Category') {
+                    sortarray.sort(this.ComparatorascC);
+                } else if (this.name == 'Handicap') {
+                    sortarray.sort(this.ComparatorascH);
+                }
+            }
+            let count = 0;
+            sortarray.forEach((element) => {
+                count++;
+                var temp = [
+                    count,
 
-                // etc
-            },
-        });
+                    element.firstName + ' ' + element.lastName,
+                    element.phone,
+                    element.email,
+                    element.membershipNumber,
+                    element.playerCategory,
+                    element.handicap,
+                ];
+                rows.push(temp);
+            });
+            // From HTML
+            doc.autoTable(col, rows, {
+                startY: 25,
+                theme: 'grid',
+                columnStyles: {
+                    0: { cellWidth: 12 },
+                    1: { cellWidth: 35 },
+                    2: { cellWidth: 30 },
+                    3: { cellWidth: 45 },
+                    4: { cellWidth: 20 },
+                    5: { cellWidth: 30 },
+                    6: { cellWidth: 20 },
 
-        // Open PDF document in new tab
-        doc.save('Club-Players.pdf');
+                    // etc
+                },
+            });
+
+            // Open PDF document in new tab
+            doc.save('Club-Players.pdf');
+            this.logger.log('Downloading All Players Successfully', "info");
+        } catch (error) {
+            this.logger.log('Download All Players Function Failed', "error", error.toString());
+        }
+
     }
 
     public onSortChanged(e) {
         this.sorting = e.direction;
         this.name = e.active;
+        this.logger.log('Sorting Function Click on Players Table', "info", this.name);
     }
 
     public ComparatordscN(a, b) {
@@ -472,6 +533,7 @@ export class PlayersComponent implements OnInit {
             // console.log(this.savePlayers);
             let data: any[][] = [];
             for (let p of this.playersData) {
+
                 // let update = await this._facadeService.updateflightMember(p.id);
                 // if (update) {
                 //     console.log('Done');
@@ -503,6 +565,7 @@ export class PlayersComponent implements OnInit {
                         // Push the hole number and its average score to the holeAverages array
                         holeAverages.push({ holeNo: holeNo, avgScore: avgScore });
                     }
+
                 }
 
                 console.log(holeAverages);

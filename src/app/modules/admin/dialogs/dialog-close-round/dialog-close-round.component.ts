@@ -34,7 +34,7 @@ export class DialogCloseRoundComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private fb: FormBuilder,
         private facadeService: FacadeService
-    ) {}
+    ) { }
 
     async ngOnInit() {
         this.cutOffform = this.fb.group({
@@ -46,65 +46,54 @@ export class DialogCloseRoundComponent implements OnInit {
         let sDate = new Date(this.data.startDate);
 
         this.categoryList = this.cutOffform.get('category') as FormArray;
-        for (let c of this.data.categories) {
-            // // console.log(c);
-            // let chngDate = c.flightSettings[0].dates
-            //     .replaceAll('-', '')
-            //     .toString();
-            // let chngDates =
-            //     chngDate.substring(4, 8) +
-            //     '-' +
-            //     chngDate.substring(2, 4) +
-            //     '-' +
-            //     +chngDate.substring(0, 2);
-
-            // console.log(sDate);
-            // console.log(new Date(chngDates));
-            // console.log(this.calculateDiff(sDate, new Date(chngDates)));
-
-            //console.log(c.category);
-            this.tournament_member_category =
-                await this.facadeService.getFlightSettings(
-                    this.data.tournament,
-                    c.category
-                );
-            //console.log(this.tournament_member_category);
-
-            this.tournament_member_category =
-                this.tournament_member_category.tournament_member_category;
-            //console.log(this.tournament_member_category);
-        }
-
-        // for(let c of this.data.categories) {
-        //   this.addField(c);
-        // }
-        this.data.categories.sort(function (a, b) {
-            var textA = a.category.toUpperCase();
-            var textB = b.category.toUpperCase();
-            return textA < textB ? -1 : textA > textB ? 1 : 0;
-        });
-        console.log(this.data.categories);
-
-        for (let c of this.data.categories) {
-            if (c.allowCat) {
-                this.catArray[c.category] = [];
-                this.catArray[c.category]['value'] = true;
-                this.catArray[c.category]['time'] = c.flightSettings[
-                    'flightStartTime'
-                ]
-                    ? c.flightSettings['flightStartTime']
-                    : '"08:00"';
-                if (c.cut) {
-                    this.catArray[c.category]['cutshow'] = true;
-                    this.catArray[c.category]['showCutCopy'] = true;
-                } else {
-                    this.catArray[c.category]['cutshow'] = false;
-                    this.catArray[c.category]['showCutCopy'] = false;
-                }
-                //console.log(this.catArray);
-                this.addCategoryFlightField(c);
+        if (this.data.categories.length > 0) {
+            for (let c of this.data.categories) {
+                this.tournament_member_category =
+                    await this.facadeService.getFlightSettings(
+                        this.data.tournament,
+                        c.category
+                    );
+                this.tournament_member_category = this.tournament_member_category.tournament_member_category;
             }
+            this.data.categories.sort(function (a, b) {
+                var textA = a.category.toUpperCase();
+                var textB = b.category.toUpperCase();
+                return textA < textB ? -1 : textA > textB ? 1 : 0;
+            });
+            console.log(this.data.categories);
+            for (let c of this.data.categories) {
+                if (c.allowCat) {
+                    this.catArray[c.category] = [];
+                    this.catArray[c.category]['value'] = true;
+                    this.catArray[c.category]['time'] = c.flightSettings[
+                        'flightStartTime'
+                    ]
+                        ? c.flightSettings['flightStartTime']
+                        : '"08:00"';
+                    if (c.cut) {
+                        this.catArray[c.category]['cutshow'] = true;
+                        this.catArray[c.category]['showCutCopy'] = true;
+                    } else {
+                        this.catArray[c.category]['cutshow'] = false;
+                        this.catArray[c.category]['showCutCopy'] = false;
+                    }
+                    //console.log(this.catArray);
+                    this.addCategoryFlightField(c);
+                }
+            }
+        } else {
+            this.catArray['All'] = [];
+            this.catArray['All']['value'] = true;
+            this.catArray['All']['time'] = '"08:00"';
+            this.catArray['All']['cutshow'] = false;
+            this.catArray['All']['showCutCopy'] = false;
+
+            //console.log(this.catArray);
+            this.addCategoryFlightField('All');
         }
+
+
+
 
         //this.categoryList.removeAt(0);
         // console.log(this.categoryList);
@@ -135,19 +124,30 @@ export class DialogCloseRoundComponent implements OnInit {
         );
         return days;
     }
+    createFlightSettingsForMatchPlay(cat: any): FormGroup {
+        return this.fb.group({
+            name: [
+                cat,
+                Validators.compose([Validators.required]),
+            ],
+            copy: ['0', Validators.required],
+            players: [3, Validators.required],
+            time: ['09:00', Validators.required],
+            interval: [10, Validators.required],
+            tee: ['1_10', Validators.required],
+            type: [ 'GROSS', Validators.required],
+            order: ['desc', Validators.required],
+            copyFlights: ['No', Validators.required],
+            cuttScore: [''],
+            playing: [true],
+            lastRoundPlayed: [this.PlayingFlight],
+        });
+    }
     createFlightSettings(cat: any): FormGroup {
-        console.log(this.categoryList);
-
-        console.log(this.tournament_member_category);
-        console.log(cat);
-        console.log(this.data.startDate);
 
         const FilteredFlight = this.tournament_member_category.filter((a) => {
             return a.category == cat.category;
         });
-
-        console.log(FilteredFlight);
-        console.log(this.data.round);
 
         if (this.data.round - 1 > 1) {
             //var startDate = new Date(this.datePipe.transform(this.data.startDate, 'dd-MM-yyyy'));
@@ -172,7 +172,7 @@ export class DialogCloseRoundComponent implements OnInit {
 
                 console.log(this.PlayingFlight);
             } else {
-                console.log('Flights No');
+                console.log('flights No');
             }
             // if(PlayingFlight.length > 0)
             // {
@@ -196,7 +196,7 @@ export class DialogCloseRoundComponent implements OnInit {
                     });
                 console.log(this.PlayingFlight);
             } else {
-                console.log('Flights No');
+                console.log('flights No');
             }
         }
         //   this.playingCat = true
@@ -216,7 +216,7 @@ export class DialogCloseRoundComponent implements OnInit {
             time: ['09:00', Validators.required],
             interval: [10, Validators.required],
             tee: ['1_10', Validators.required],
-            type: [cat.cut == true ? 'GROSS' : 'NEW', Validators.required],
+            type: [cat.cut == true ? 'GROSS' : 'NET', Validators.required],
             order: ['desc', Validators.required],
             copyFlights: ['No', Validators.required],
             cuttScore: [''],
@@ -261,10 +261,16 @@ export class DialogCloseRoundComponent implements OnInit {
 
     addCategoryFlightField(category: any) {
         const control = this.cutOffform.get('category') as FormArray;
-        console.log(this.catArray[category.category].value);
+        //console.log(this.catArray[category.category].value);
         //if(this.catArray[category].value == true)
         //{
-        control.push(this.createFlightSettings(category));
+        if (category !== 'All') {
+
+            control.push(this.createFlightSettings(category));
+        } else {
+
+            control.push(this.createFlightSettingsForMatchPlay(category));
+        }
         console.log(control);
         //}
     }
@@ -278,10 +284,10 @@ export class DialogCloseRoundComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    saveCutSettings(index,event): void {
+    saveCutSettings(index, event): void {
         console.log(this.tabGroup);
         // /console.log(event);
-        
+
         // console.log(document.getElementById('mat-tab-label-5-' + index));
         // console.log(document.getElementById('mat-tab-label-6-' + index));
         // console.log(document.getElementById('mat-tab-label-7-' + index));

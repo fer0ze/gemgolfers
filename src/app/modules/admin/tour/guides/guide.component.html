@@ -1,0 +1,58 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex flex-col items-center p-6 sm:p-10">
+        <div class="flex w-full justify-start">
+            <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/tours', tourID]">
+                <span class="inline-flex items-center">
+                    <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                    <span class="ml-1.5 font-medium leading-5">Back to Tour</span>
+                </span>
+            </a>
+        </div>
+        <div class="flex flex-col w-full max-w-4xl">
+            <div
+                class="flex justify-between items-center mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+                <span>
+                    Tour Itinerary
+                </span>
+                <button class="ml-2" mat-flat-button [color]="'primary'" (click)="addNewGuide()">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                    Add New itinerary
+                </button>
+            </div>
+            <mat-accordion class="max-w-4xl mt-16">
+                <ng-container *ngFor="let faq of guides; trackBy: trackByFn;let i=index">
+                    <mat-expansion-panel #myPanel (opened)="onPanelOpened(faq.id)">
+                        <mat-expansion-panel-header [collapsedHeight]="'56px'">
+                            <mat-panel-title class="font-medium leading-tight">Itinerary {{i+1}}</mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="flex flex-col">
+                            <div>
+                                <form [formGroup]="guideForm">
+                                    <quill-editor class="mt-2 w-full" [formControlName]="'script'" [bounds]="'self'"
+                                        [modules]="quillModules"></quill-editor>
+                                </form>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-end mt-4 sm:mt-6">
+                                <div class="flex items-center mt-4 sm:mt-0">
+                                    <button class="sm:mx-3" mat-stroked-button (click)="delete(faq.id)">
+                                        <span>Delete</span>
+                                    </button>
+                                    <!-- Send -->
+                                    <button class="order-first sm:order-last" mat-flat-button [color]="'primary'"
+                                        (click)="save(faq.id)">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </mat-expansion-panel>
+                </ng-container>
+            </mat-accordion>
+        </div>
+    </div>
+
+</div>

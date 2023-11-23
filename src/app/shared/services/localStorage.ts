@@ -13,6 +13,9 @@ export class LocalStorageService {
     public set(key: string, value: object) {
         localStorage.setItem(key, Crypto.encryptData(value));
     }
+    public setTourId(key: string, value: any) {
+        localStorage.setItem(key, Crypto.encryptData(value));
+    }
 
     get(key: string): any {
         let user = Crypto.decryptData(localStorage.getItem(key));

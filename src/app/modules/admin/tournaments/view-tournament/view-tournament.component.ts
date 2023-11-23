@@ -50,6 +50,7 @@ import { forEach } from 'lodash';
 import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player.component';
 import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog-add-player.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-view-tournament',
@@ -112,6 +113,7 @@ export class ViewTournamentComponent implements OnInit {
     courseImg: string;
     tournamentPlayersAdd: boolean = true;
     showCloseBtn: boolean = true;
+    showMatchPlay: boolean = false;
     categories: TournamentCategory[] = [];
     FlightsQL: any[] = [];
     selectedMembers: Player[][] = [];
@@ -150,6 +152,7 @@ export class ViewTournamentComponent implements OnInit {
     showMainTab3: boolean = false;
     showMainTab4: boolean = false;
     showMainTab5: boolean = false;
+    showMainTab6: boolean = false;
     showSummary: boolean = false;
     tournamentMember: any = [];
     tournamentMembers: any = [];
@@ -264,6 +267,7 @@ export class ViewTournamentComponent implements OnInit {
         public dialog: MatDialog,
         public changeDetection: ChangeDetectorRef,
         private _localStorage: LocalStorageService,
+        private logger: LogsService,
         //private _flightManagmentComponent: FlightManagementComponent,
         public facadeService: FacadeService // private storage: AngularFireStorage
     ) {
@@ -279,264 +283,430 @@ export class ViewTournamentComponent implements OnInit {
 
     async ngOnInit() {
         //console.log(this.route.snapshot.paramMap.get("id"));
-        this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let clubInfo: any =
-            this.loggedInUser.membership.length > 0
-                ? this.loggedInUser.membership[0].club
-                : null;
+        try {
+            this.logger.log('Admin comes to View Tournament Page', "info");
 
-        this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-        this.route.paramMap.subscribe((params) => {
-            this.tournamentID = params.get('id');
-        });
+            this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            let clubInfo: any =
+                this.loggedInUser.membership.length > 0
+                    ? this.loggedInUser.membership[0].club
+                    : null;
 
-        if (this.tournamentID) {
-            this.url = 'golfcourse.jpg';
-            this.dataFullTournament =
-                await this.facadeService.tournamentDashBoard(this.tournamentID);
-            console.log(this.dataFullTournament);
-            // this.getTournamentMembers();
-            this.memberStatusesQLs =
-                this.dataFullTournament['TournamentQL'][0].MemberStatusesQL;
-            this.noOfROund =
-                this.dataFullTournament['TournamentQL'][0].noOfRounds;
+            this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+            this.route.paramMap.subscribe((params) => {
+                this.tournamentID = params.get('id');
+            });
 
-            if (
-                this.dataFullTournament['TournamentQL'][0]['CourseQL'].picture
-            ) {
-            } else {
+            if (this.tournamentID) {
+                this.logger.log('Getting Tournament Data', "info", this.tournamentID);
                 this.url = 'golfcourse.jpg';
-            }
+                this.dataFullTournament =
+                    await this.facadeService.tournamentDashBoard(this.tournamentID);
+                console.log(this.dataFullTournament);
+                // this.getTournamentMembers();
+                this.memberStatusesQLs =
+                    this.dataFullTournament['TournamentQL'][0].MemberStatusesQL;
+                this.noOfROund =
+                    this.dataFullTournament['TournamentQL'][0].noOfRounds;
 
-            if (this.dataFullTournament.TournamentQL.length == 0) {
-                alert('no record found.');
-                this.isLoading = false;
-                return false;
-            }
-            this.matchFormat =
-                this.dataFullTournament['TournamentQL'][0]['matchFormat'];
-            if (
-                this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
-                matchFormat.TEXAS_SCRAMBLE
-            ) {
-                this.totalPlayers =
-                    this.dataFullTournament['TournamentQL'][0][
-                        'members'
-                    ].length;
-                this.showCloseBtn = false;
-                this.tournamentPlayersAdd = true;
-            }
-
-            this.fullTournament = this.dataFullTournament.TournamentQL[0];
-            this.isLoading = false;
-
-            if (this.fullTournament) {
-                this.activeRound = this.fullTournament.activeRound;
-                this.noOfRounds = this.fullTournament.noOfRounds;
-                this.categories = this.fullTournament.CategoriesQL;
-                if (this.dataFullTournament['TournamentQL'][0]['CategoriesQL'].length > 0) {
-                    this.tournamentCategories =
-                        this.dataFullTournament['TournamentQL'][0]['CategoriesQL'];
+                if (
+                    this.dataFullTournament['TournamentQL'][0]['CourseQL'].picture
+                ) {
                 } else {
-                    this.tournamentCategories = [];
-                    let cat = {
-                        id: 1,
-                        category: 'All',
-                    }
-                    this.tournamentCategories.push(cat)
+                    this.url = 'golfcourse.jpg';
                 }
-                // this.playersUpdatedHandicap =
-                //   this.fullTournament.HandicapCalculated;
 
-                if (this.fullTournament.webLogoUrl)
-                    this.webLogo = this.fullTournament.webLogoUrl;
-                else this.webLogo = Constants.DEFAULT_CLUB_LOGO;
 
-                if (this.activeRound > this.noOfRounds) {
-                    if (this.fullTournament.prefix) {
-                        this.selected = this.noOfRounds - 1;
-                        //else //this.selected = this.activeRound - 1;
-
-                        this.leaderboardUrl =
-                            'https://app.gemgolfers.com/leaderboard/' +
-                            this.fullTournament.prefix;
-                    } else {
-                        this.leaderboardUrl =
-                            'https://app.gemgolfers.com/leaderboard/' +
-                            this.tournamentID;
-                    }
-                } else {
-                    this.selected = this.activeRound - 1;
+                if (this.dataFullTournament.TournamentQL.length == 0) {
+                    alert('no record found.');
+                    this.isLoading = false;
+                    return false;
+                }
+                this.matchFormat =
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'];
+                if (
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
+                    matchFormat.TEXAS_SCRAMBLE
+                ) {
+                    this.totalPlayers =
+                        this.dataFullTournament['TournamentQL'][0][
+                            'members'
+                        ].length;
+                    this.showCloseBtn = false;
+                    this.tournamentPlayersAdd = true;
                 }
                 if (
-                    this.dataFullTournament['TournamentQL'][0]['CategoriesQL']
-                        .length == 0
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
+                    matchFormat.MATCH_PLAY
                 ) {
-                    this.playerCategoryList =
-                        this.facadeService.getPlayerCategories();
-                    //console.log(playerCategoryList);
+                    this.showMatchPlay = true;
                 }
-            } else this.router.navigate(['/tournaments/']);
 
-            //console.log(this.fullTournament);
 
-            this.calculateStatistics();
-            // if (this.tournamentPlayersAdd) {
-            //     this.GrossData(
-            //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
-            //             .category
-            //     );
-            //     this.NetData(
-            //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
-            //             .category
-            //     );
-            // }
-            if (this.activeRound > this.noOfRounds) {
-                if (this.selected == 0) {
-                    this.getRound1stats(1);
+                this.fullTournament = this.dataFullTournament.TournamentQL[0];
+                this.isLoading = false;
 
-                    this.calculateStatistics1();
-                } else if (this.selected == 1) {
-                    this.getRound2stats(2);
-                    this.calculateStatistics2();
-                } else if (this.selected == 2) {
-                    this.getRound3stats(3);
-                    this.calculateStatistics3();
-                } else if (this.selected == 3) {
-                    this.getRound4stats(4);
-                    this.calculateStatistics4();
+                if (this.fullTournament) {
+                    this.activeRound = this.fullTournament.activeRound;
+                    this.noOfRounds = this.fullTournament.noOfRounds;
+                    this.categories = this.fullTournament.CategoriesQL;
+                    this.tournamentCategories =
+                        this.dataFullTournament['TournamentQL'][0]['CategoriesQL'];
+                    // this.playersUpdatedHandicap =
+                    //   this.fullTournament.HandicapCalculated;
+
+                    if (this.fullTournament.webLogoUrl)
+                        this.webLogo = this.fullTournament.webLogoUrl;
+                    else this.webLogo = Constants.DEFAULT_CLUB_LOGO;
+
+                    if (this.activeRound > this.noOfRounds) {
+                        if (this.fullTournament.prefix) {
+                            this.selected = this.noOfRounds - 1;
+                            //else //this.selected = this.activeRound - 1;
+
+                            this.leaderboardUrl =
+                                'https://app.gemgolfers.com/leaderboard/' +
+                                this.fullTournament.prefix;
+                        } else {
+                            this.leaderboardUrl =
+                                'https://app.gemgolfers.com/leaderboard/' +
+                                this.tournamentID;
+                        }
+                    } else {
+                        this.selected = this.activeRound - 1;
+                    }
+                    if (
+                        this.dataFullTournament['TournamentQL'][0]['CategoriesQL']
+                            .length == 0
+                    ) {
+                        this.playerCategoryList =
+                            this.facadeService.getPlayerCategories();
+                        //console.log(playerCategoryList);
+                    }
+                } else this.router.navigate(['/tournaments/']);
+
+                //console.log(this.fullTournament);
+
+                this.calculateStatistics();
+                // if (this.tournamentPlayersAdd) {
+                //     this.GrossData(
+                //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+                //             .category
+                //     );
+                //     this.NetData(
+                //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+                //             .category
+                //     );
+                // }
+                if (this.activeRound > this.noOfRounds) {
+                    if (this.selected == 0) {
+                        this.getRound1stats(1);
+
+                        this.calculateStatistics1();
+                    } else if (this.selected == 1) {
+                        this.getRound2stats(2);
+                        this.calculateStatistics2();
+                    } else if (this.selected == 2) {
+                        this.getRound3stats(3);
+                        this.calculateStatistics3();
+                    } else if (this.selected == 3) {
+                        this.getRound4stats(4);
+                        this.calculateStatistics4();
+                    } else {
+                        this.getRound4stats(4);
+                        this.calculateStatistics4();
+                    }
                 } else {
-                    this.getRound4stats(4);
-                    this.calculateStatistics4();
+                    if (this.activeRound == 0) {
+                        this.getRoundsstats();
+                        //this.calculateStatistics();
+                    } else if (this.activeRound == 1) {
+                        this.getRound1stats(1);
+                        //this.calculateStatistics();
+                        this.calculateStatistics1();
+                    } else if (this.activeRound == 2) {
+                        this.getRound2stats(2);
+                        this.calculateStatistics2();
+                    } else if (this.activeRound == 3) {
+                        this.getRound3stats(3);
+                        this.calculateStatistics3();
+                    } else if (this.activeRound == 4) {
+                        this.getRound4stats(4);
+                        this.calculateStatistics4();
+                    } else {
+                        this.getRound4stats(4);
+                        this.calculateStatistics4();
+                    }
                 }
+
+                //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
             } else {
-                if (this.activeRound == 0) {
-                    this.getRoundsstats();
-                    //this.calculateStatistics();
-                } else if (this.activeRound == 1) {
-                    this.getRound1stats(1);
-                    //this.calculateStatistics();
-                    this.calculateStatistics1();
-                } else if (this.activeRound == 2) {
-                    this.getRound2stats(2);
-                    this.calculateStatistics2();
-                } else if (this.activeRound == 3) {
-                    this.getRound3stats(3);
-                    this.calculateStatistics3();
-                } else if (this.activeRound == 4) {
-                    this.getRound4stats(4);
-                    this.calculateStatistics4();
-                } else {
-                    this.getRound4stats(4);
-                    this.calculateStatistics4();
-                }
+                this.router.navigate(['/tournaments/']);
             }
-
-            //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
-        } else {
-            this.router.navigate(['/tournaments/']);
+        } catch (error) {
+            this.logger.log('Getting View Tournament Data Failed', "error", error.toString());
         }
     }
 
     calculateStatistics() {
-        this.FlightsQL = [];
-        this.topMembers = [];
-        this.AmateursCount = 0;
-        this.JuniorsCount = 0;
-        this.SeniorsCount = 0;
-        this.VeteransCount = 0;
-        this.LadiesCount = 0;
-        this.AmateursPlayingDates = [];
-        this.SeniorsPlayingDates = [];
-        this.JuniorsPlayingDates = [];
-        this.VeteransPlayingDates = [];
-        this.LadiesPlayingDates = [];
+        try {
 
-        if (this.fullTournament.FlightsQL.length > 6) {
-            this.FlightsQL = this.fullTournament.FlightsQL.slice(0, 7);
-        } else {
-            this.FlightsQL = this.fullTournament.FlightsQL;
-        }
-        // this.FlightsQL.slice(0,6);
-        let totalPlayers =
-            this.dataFullTournament['TournamentQL'][0]['members'];
-        console.log(totalPlayers);
 
-        totalPlayers.sort(this.ComparatorHandicap);
-        console.log(totalPlayers);
-        let count = 0;
+            this.FlightsQL = [];
+            this.topMembers = [];
+            this.AmateursCount = 0;
+            this.JuniorsCount = 0;
+            this.SeniorsCount = 0;
+            this.VeteransCount = 0;
+            this.LadiesCount = 0;
+            this.AmateursPlayingDates = [];
+            this.SeniorsPlayingDates = [];
+            this.JuniorsPlayingDates = [];
+            this.VeteransPlayingDates = [];
+            this.LadiesPlayingDates = [];
 
-        for (const c of totalPlayers) {
-            if (count < 10) {
-                let obj = {
-                    id: c.playerId,
-                    title:
-                        c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                    handicap: c.PlayerQL['handicap'],
-                    category: c.PlayerQL['playerCategory'],
-                    class: c.PlayerQL['playerCategory'],
-                };
-                this.topMembers.push(obj);
+            if (this.fullTournament.FlightsQL.length > 6) {
+                this.FlightsQL = this.fullTournament.FlightsQL.slice(0, 7);
+            } else {
+                this.FlightsQL = this.fullTournament.FlightsQL;
             }
-            count++;
-        }
-        console.log(this.topMembers);
-        this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
-        this.totalPlayers =
-            this.dataFullTournament['TournamentQL'][0]['members'].length;
-        if (
-            this.dataFullTournament['TournamentQL'][0]['CategoriesQL'].length ==
-            0
-        ) {
-            const colors = ['warn', 'success', 'info', 'danger'];
-            let indeca = 0;
-            if (this.fullTournament.FlightsQL.length > 0) {
-                for (let c of this.fullTournament.FlightsQL) {
-                    for (let index = 0; index < c.MembersQL.length; index++) {
-                        if (c.MembersQL.length > indeca) {
-                            this.membersData.push(
-                                c.MembersQL[indeca]['PlayerQL']
-                            );
-                            indeca++;
-                        } else {
-                            indeca = 0;
+            // this.FlightsQL.slice(0,6);
+            let totalPlayers =
+                this.dataFullTournament['TournamentQL'][0]['members'];
+            console.log(totalPlayers);
+
+            totalPlayers.sort(this.ComparatorHandicap);
+            console.log(totalPlayers);
+            let count = 0;
+
+            for (const c of totalPlayers) {
+                if (count < 10) {
+                    let obj = {
+                        id: c.playerId,
+                        title:
+                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                        handicap: c.PlayerQL['handicap'],
+                        category: c.PlayerQL['playerCategory'],
+                        class: c.PlayerQL['playerCategory'],
+                    };
+                    this.topMembers.push(obj);
+                }
+                count++;
+            }
+            console.log(this.topMembers);
+            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
+            this.totalPlayers =
+                this.dataFullTournament['TournamentQL'][0]['members'].length;
+            if (
+                this.dataFullTournament['TournamentQL'][0]['CategoriesQL'].length ==
+                0
+            ) {
+                const colors = ['warn', 'success', 'info', 'danger'];
+                let indeca = 0;
+                if (this.fullTournament.FlightsQL.length > 0) {
+                    for (let c of this.fullTournament.FlightsQL) {
+                        for (let index = 0; index < c.MembersQL.length; index++) {
+                            if (c.MembersQL.length > indeca) {
+                                this.membersData.push(
+                                    c.MembersQL[indeca]['PlayerQL']
+                                );
+                                indeca++;
+                            } else {
+                                indeca = 0;
+                            }
+                        }
+                    }
+                } else if (this.fullTournament.members.length > 0) {
+                    for (let c of this.fullTournament.members) {
+                        this.membersData.push(c['PlayerQL']);
+                    }
+                }
+                let index: number = 0;
+                for (const c of this.playerCategoryList) {
+                    let m = this.membersData.filter((a) => {
+                        return a.playerCategory == c.name;
+                    });
+
+                    // const distinctThings = m.filter((thing, i, arr) => {
+                    //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+                    // });
+                    if (m && m.length > 0) {
+                        if (c.name == 'Amateurs') {
+                            this.AmateursCount = m.length;
+                        }
+                        if (c.name.includes('Junior')) {
+                            this.JuniorsCount = m.length;
+                        }
+                        if (c.name.includes('Senior')) {
+                            this.SeniorsCount = m.length;
+                        }
+                        if (c.name == 'Professionals') {
+                            this.VeteransCount = m.length;
+                        }
+                        if (c.name == 'Ladies') {
+                            this.LadiesCount = m.length;
+                        }
+                        {
+                            this.totalMembers += m.length;
+                            let stat: any = {
+                                title: c.name,
+                                count: m.length,
+                                class: colors[index],
+                            };
+                            this.membersStats.push(stat);
+                            index++;
+
+                            if (index > 3) index = 0;
                         }
                     }
                 }
-            } else if (this.fullTournament.members.length > 0) {
-                for (let c of this.fullTournament.members) {
-                    this.membersData.push(c['PlayerQL']);
-                }
-            }
-            let index: number = 0;
-            for (const c of this.playerCategoryList) {
-                let m = this.membersData.filter((a) => {
-                    return a.playerCategory == c.name;
+                console.log(this.SeniorsCount);
+
+                console.log(this.membersStats);
+                this.totalPlayers = this.totalMembers;
+                console.log(this.totalMembers);
+
+                let activeFights = this.fullTournament.FlightsQL.filter((a) => {
+                    return a.flightRound == this.activeRound;
                 });
 
-                // const distinctThings = m.filter((thing, i, arr) => {
-                //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-                // });
-                if (m && m.length > 0) {
-                    if (c.name == 'Amateurs') {
+                for (let flightData of activeFights) {
+                    for (let member of flightData.MembersQL) {
+                        if (member.ScoresQL.length > 0) {
+                            this.scoreAdded = true;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                console.log('dsdsds');
+                const colors = ['warn', 'success', 'info', 'danger'];
+                //console.log(this.fullTournament.FlightsQL);
+                //console.log(this.playersCatgery.TournamentMemberQL[0]);
+                for (
+                    let index = 0;
+                    index <
+                    this.dataFullTournament['TournamentQL'][0]['members'].length;
+                    index++
+                ) {
+                    this.membersData.push(
+                        this.dataFullTournament['TournamentQL'][0]['members'][index]
+                    );
+                }
+                console.log(this.membersData);
+                //console.log(this.membersData);
+
+                let index: number = 0;
+                console.log(this.fullTournament.CategoriesQL);
+
+                for (const c of this.fullTournament.CategoriesQL) {
+                    let m = this.membersData.filter((a) => {
+                        return a['PlayerQL'].playerCategory == c.category;
+                    });
+
+                    // const distinctThings = m.filter((thing, i, arr) => {
+                    //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+                    // });
+                    if (c.category == 'Amateurs') {
                         this.AmateursCount = m.length;
+                        if (
+                            c.flightSettings &&
+                            c.flightSettings['playingDate'] &&
+                            c.flightSettings['playingDate'].length > 0
+                        ) {
+                            for (let obj of c.flightSettings['playingDate']) {
+                                this.AmateursPlayingDates.push(obj);
+                            }
+                        } else if (
+                            c.flightSettings &&
+                            c.flightSettings.length > 0
+                        ) {
+                            for (let obj of c.flightSettings) {
+                                this.AmateursPlayingDates.push(obj);
+                            }
+                        }
                     }
-                    if (c.name.includes('Junior')) {
+                    if (c.category.includes('Junior')) {
                         this.JuniorsCount = m.length;
+
+                        if (
+                            c.flightSettings &&
+                            c.flightSettings['playingDate'] &&
+                            c.flightSettings['playingDate'].length > 0
+                        ) {
+                            for (let obj of c.flightSettings['playingDate']) {
+                                this.JuniorsPlayingDates.push(obj);
+                            }
+                        } else if (
+                            c.flightSettings &&
+                            c.flightSettings.length > 0
+                        ) {
+                            for (let obj of c.flightSettings) {
+                                this.JuniorsPlayingDates.push(obj);
+                            }
+                        }
                     }
-                    if (c.name.includes('Senior')) {
+                    if (c.category.includes('Senior')) {
                         this.SeniorsCount = m.length;
+                        if (
+                            c.flightSettings &&
+                            c.flightSettings['playingDate'] &&
+                            c.flightSettings['playingDate'].length > 0
+                        ) {
+                            for (let obj of c.flightSettings['playingDate']) {
+                                this.SeniorsPlayingDates.push(obj);
+                            }
+                        } else if (
+                            c.flightSettings &&
+                            c.flightSettings.length > 0
+                        ) {
+                            for (let obj of c.flightSettings) {
+                                this.SeniorsPlayingDates.push(obj);
+                            }
+                        }
                     }
-                    if (c.name == 'Professionals') {
+                    if (c.category == 'Professionals') {
                         this.VeteransCount = m.length;
+                        if (
+                            c.flightSettings &&
+                            c.flightSettings['playingDate'] &&
+                            c.flightSettings['playingDate'].length > 0
+                        ) {
+                            for (let obj of c.flightSettings['playingDate']) {
+                                this.VeteransPlayingDates.push(obj);
+                            }
+                        } else if (
+                            c.flightSettings &&
+                            c.flightSettings.length > 0
+                        ) {
+                            for (let obj of c.flightSettings) {
+                                this.VeteransPlayingDates.push(obj);
+                            }
+                        }
                     }
-                    if (c.name == 'Ladies') {
+                    if (c.category == 'Ladies') {
                         this.LadiesCount = m.length;
+                        if (
+                            c.flightSettings &&
+                            c.flightSettings['playingDate'] &&
+                            c.flightSettings['playingDate'].length > 0
+                        ) {
+                            for (let obj of c.flightSettings['playingDate']) {
+                                this.LadiesPlayingDates.push(obj);
+                            }
+                        } else if (
+                            c.flightSettings &&
+                            c.flightSettings.length > 0
+                        ) {
+                            for (let obj of c.flightSettings) {
+                                this.LadiesPlayingDates.push(obj);
+                            }
+                        }
                     }
                     {
                         this.totalMembers += m.length;
                         let stat: any = {
-                            title: c.name,
+                            title: c.category,
                             count: m.length,
                             class: colors[index],
                         };
@@ -546,321 +716,185 @@ export class ViewTournamentComponent implements OnInit {
                         if (index > 3) index = 0;
                     }
                 }
-            }
-            console.log(this.SeniorsCount);
 
-            console.log(this.membersStats);
-            this.totalPlayers = this.totalMembers;
-            console.log(this.totalMembers);
-
-            let activeFights = this.fullTournament.FlightsQL.filter((a) => {
-                return a.flightRound == this.activeRound;
-            });
-
-            for (let flightData of activeFights) {
-                for (let member of flightData.MembersQL) {
-                    if (member.ScoresQL.length > 0) {
-                        this.scoreAdded = true;
-                        break;
-                    }
-                }
-            }
-        } else {
-            console.log('dsdsds');
-            const colors = ['warn', 'success', 'info', 'danger'];
-            //console.log(this.fullTournament.FlightsQL);
-            //console.log(this.playersCatgery.TournamentMemberQL[0]);
-            for (
-                let index = 0;
-                index <
-                this.dataFullTournament['TournamentQL'][0]['members'].length;
-                index++
-            ) {
-                this.membersData.push(
-                    this.dataFullTournament['TournamentQL'][0]['members'][index]
-                );
-            }
-            console.log(this.membersData);
-            //console.log(this.membersData);
-
-            let index: number = 0;
-            console.log(this.fullTournament.CategoriesQL);
-
-            for (const c of this.fullTournament.CategoriesQL) {
-                let m = this.membersData.filter((a) => {
-                    return a['PlayerQL'].playerCategory == c.category;
+                let activeFights = this.fullTournament.FlightsQL.filter((a) => {
+                    return a.flightRound == this.activeRound;
                 });
 
-                // const distinctThings = m.filter((thing, i, arr) => {
-                //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-                // });
-                if (c.category == 'Amateurs') {
-                    this.AmateursCount = m.length;
-                    if (
-                        c.flightSettings &&
-                        c.flightSettings['playingDate'] &&
-                        c.flightSettings['playingDate'].length > 0
-                    ) {
-                        for (let obj of c.flightSettings['playingDate']) {
-                            this.AmateursPlayingDates.push(obj);
+                for (let flightData of activeFights) {
+                    for (let member of flightData.MembersQL) {
+                        if (member.ScoresQL.length > 0) {
+                            this.scoreAdded = true;
+                            break;
                         }
-                    } else if (
-                        c.flightSettings &&
-                        c.flightSettings.length > 0
-                    ) {
-                        for (let obj of c.flightSettings) {
-                            this.AmateursPlayingDates.push(obj);
-                        }
-                    }
-                }
-                if (c.category.includes('Junior')) {
-                    this.JuniorsCount = m.length;
-
-                    if (
-                        c.flightSettings &&
-                        c.flightSettings['playingDate'] &&
-                        c.flightSettings['playingDate'].length > 0
-                    ) {
-                        for (let obj of c.flightSettings['playingDate']) {
-                            this.JuniorsPlayingDates.push(obj);
-                        }
-                    } else if (
-                        c.flightSettings &&
-                        c.flightSettings.length > 0
-                    ) {
-                        for (let obj of c.flightSettings) {
-                            this.JuniorsPlayingDates.push(obj);
-                        }
-                    }
-                }
-                if (c.category.includes('Senior')) {
-                    this.SeniorsCount = m.length;
-                    if (
-                        c.flightSettings &&
-                        c.flightSettings['playingDate'] &&
-                        c.flightSettings['playingDate'].length > 0
-                    ) {
-                        for (let obj of c.flightSettings['playingDate']) {
-                            this.SeniorsPlayingDates.push(obj);
-                        }
-                    } else if (
-                        c.flightSettings &&
-                        c.flightSettings.length > 0
-                    ) {
-                        for (let obj of c.flightSettings) {
-                            this.SeniorsPlayingDates.push(obj);
-                        }
-                    }
-                }
-                if (c.category == 'Professionals') {
-                    this.VeteransCount = m.length;
-                    if (
-                        c.flightSettings &&
-                        c.flightSettings['playingDate'] &&
-                        c.flightSettings['playingDate'].length > 0
-                    ) {
-                        for (let obj of c.flightSettings['playingDate']) {
-                            this.VeteransPlayingDates.push(obj);
-                        }
-                    } else if (
-                        c.flightSettings &&
-                        c.flightSettings.length > 0
-                    ) {
-                        for (let obj of c.flightSettings) {
-                            this.VeteransPlayingDates.push(obj);
-                        }
-                    }
-                }
-                if (c.category == 'Ladies') {
-                    this.LadiesCount = m.length;
-                    if (
-                        c.flightSettings &&
-                        c.flightSettings['playingDate'] &&
-                        c.flightSettings['playingDate'].length > 0
-                    ) {
-                        for (let obj of c.flightSettings['playingDate']) {
-                            this.LadiesPlayingDates.push(obj);
-                        }
-                    } else if (
-                        c.flightSettings &&
-                        c.flightSettings.length > 0
-                    ) {
-                        for (let obj of c.flightSettings) {
-                            this.LadiesPlayingDates.push(obj);
-                        }
-                    }
-                }
-                {
-                    this.totalMembers += m.length;
-                    let stat: any = {
-                        title: c.category,
-                        count: m.length,
-                        class: colors[index],
-                    };
-                    this.membersStats.push(stat);
-                    index++;
-
-                    if (index > 3) index = 0;
-                }
-            }
-
-            let activeFights = this.fullTournament.FlightsQL.filter((a) => {
-                return a.flightRound == this.activeRound;
-            });
-
-            for (let flightData of activeFights) {
-                for (let member of flightData.MembersQL) {
-                    if (member.ScoresQL.length > 0) {
-                        this.scoreAdded = true;
-                        break;
                     }
                 }
             }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
     calculateStatistics1() {
-        this.FlightsQL = [];
-        this.topMembers = [];
-        this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == 1;
-        });
-        if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(6, this.FlightsQL.length);
-        }
-        let totalPlayers = [];
-        for (const c of this.FlightsQL) {
-            for (let obj of c['MembersQL']) {
-                totalPlayers.push(obj);
-            }
-        }
-        console.log(totalPlayers);
-        totalPlayers.sort(this.ComparatorHandicap);
-        let count = 0;
+        try {
 
-        for (const c of totalPlayers) {
-            if (count < 10) {
-                let obj = {
-                    id: c.playerId,
-                    title:
-                        c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                    handicap: c.PlayerQL['handicap'],
-                    category: c.PlayerQL['playerCategory'],
-                    class: c.PlayerQL['playerCategory'],
-                };
-                this.topMembers.push(obj);
+
+            this.FlightsQL = [];
+            this.topMembers = [];
+            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
+                return a.flightRound == 1;
+            });
+            if (this.FlightsQL.length > 6) {
+                this.FlightsQL.splice(6, this.FlightsQL.length);
             }
-            count++;
+            let totalPlayers = [];
+            for (const c of this.FlightsQL) {
+                for (let obj of c['MembersQL']) {
+                    totalPlayers.push(obj);
+                }
+            }
+            console.log(totalPlayers);
+            totalPlayers.sort(this.ComparatorHandicap);
+            let count = 0;
+
+            for (const c of totalPlayers) {
+                if (count < 10) {
+                    let obj = {
+                        id: c.playerId,
+                        title:
+                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                        handicap: c.PlayerQL['handicap'],
+                        category: c.PlayerQL['playerCategory'],
+                        class: c.PlayerQL['playerCategory'],
+                    };
+                    this.topMembers.push(obj);
+                }
+                count++;
+            }
+            console.log(this.topMembers);
+            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
-        console.log(this.topMembers);
-        this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
     }
     calculateStatistics2() {
-        this.FlightsQL = [];
-        this.topMembers = [];
-        this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == 2;
-        });
-        if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(6, this.FlightsQL.length);
-        }
-        let totalPlayers = [];
-        for (const c of this.FlightsQL) {
-            for (let obj of c['MembersQL']) {
-                totalPlayers.push(obj);
+        try {
+            this.FlightsQL = [];
+            this.topMembers = [];
+            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
+                return a.flightRound == 2;
+            });
+            if (this.FlightsQL.length > 6) {
+                this.FlightsQL.splice(6, this.FlightsQL.length);
             }
-        }
-        totalPlayers.sort(this.ComparatorHandicap);
-        console.log(totalPlayers);
-        let count = 0;
+            let totalPlayers = [];
+            for (const c of this.FlightsQL) {
+                for (let obj of c['MembersQL']) {
+                    totalPlayers.push(obj);
+                }
+            }
+            totalPlayers.sort(this.ComparatorHandicap);
+            console.log(totalPlayers);
+            let count = 0;
 
-        for (const c of totalPlayers) {
-            if (count < 10) {
-                let obj = {
-                    id: c.playerId,
-                    title:
-                        c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                    handicap: c.PlayerQL['handicap'],
-                    category: c.PlayerQL['playerCategory'],
-                    class: c.PlayerQL['playerCategory'],
-                };
-                this.topMembers.push(obj);
+            for (const c of totalPlayers) {
+                if (count < 10) {
+                    let obj = {
+                        id: c.playerId,
+                        title:
+                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                        handicap: c.PlayerQL['handicap'],
+                        category: c.PlayerQL['playerCategory'],
+                        class: c.PlayerQL['playerCategory'],
+                    };
+                    this.topMembers.push(obj);
+                }
+                count++;
             }
-            count++;
+            console.log(this.topMembers);
+            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
-        console.log(this.topMembers);
-        this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
     }
     calculateStatistics3() {
-        this.FlightsQL = [];
-        this.topMembers = [];
-        this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == 3;
-        });
-        if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(6, this.FlightsQL.length);
-        }
-        let totalPlayers = [];
-        for (const c of this.FlightsQL) {
-            for (let obj of c['MembersQL']) {
-                totalPlayers.push(obj);
+        try {
+            this.FlightsQL = [];
+            this.topMembers = [];
+            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
+                return a.flightRound == 3;
+            });
+            if (this.FlightsQL.length > 6) {
+                this.FlightsQL.splice(6, this.FlightsQL.length);
             }
-        }
-        totalPlayers.sort(this.ComparatorHandicap);
-        console.log(totalPlayers);
-        let count = 0;
+            let totalPlayers = [];
+            for (const c of this.FlightsQL) {
+                for (let obj of c['MembersQL']) {
+                    totalPlayers.push(obj);
+                }
+            }
+            totalPlayers.sort(this.ComparatorHandicap);
+            console.log(totalPlayers);
+            let count = 0;
 
-        for (const c of totalPlayers) {
-            if (count < 10) {
-                let obj = {
-                    id: c.playerId,
-                    title:
-                        c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                    handicap: c.PlayerQL['handicap'],
-                    category: c.PlayerQL['playerCategory'],
-                    class: c.PlayerQL['playerCategory'],
-                };
-                this.topMembers.push(obj);
+            for (const c of totalPlayers) {
+                if (count < 10) {
+                    let obj = {
+                        id: c.playerId,
+                        title:
+                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                        handicap: c.PlayerQL['handicap'],
+                        category: c.PlayerQL['playerCategory'],
+                        class: c.PlayerQL['playerCategory'],
+                    };
+                    this.topMembers.push(obj);
+                }
+                count++;
             }
-            count++;
+            console.log(this.topMembers);
+            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
-        console.log(this.topMembers);
-        this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
     }
     calculateStatistics4() {
-        this.FlightsQL = [];
-        this.topMembers = [];
-        this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == 4;
-        });
-        if (this.FlightsQL.length > 6) {
-            this.FlightsQL.splice(6, this.FlightsQL.length);
-        }
-        let totalPlayers = [];
-        for (const c of this.FlightsQL) {
-            for (let obj of c['MembersQL']) {
-                totalPlayers.push(obj);
+        try {
+            this.FlightsQL = [];
+            this.topMembers = [];
+            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
+                return a.flightRound == 4;
+            });
+            if (this.FlightsQL.length > 6) {
+                this.FlightsQL.splice(6, this.FlightsQL.length);
             }
-        }
-        totalPlayers.sort(this.ComparatorHandicap);
-        console.log(totalPlayers);
-        let count = 0;
+            let totalPlayers = [];
+            for (const c of this.FlightsQL) {
+                for (let obj of c['MembersQL']) {
+                    totalPlayers.push(obj);
+                }
+            }
+            totalPlayers.sort(this.ComparatorHandicap);
+            console.log(totalPlayers);
+            let count = 0;
 
-        for (const c of totalPlayers) {
-            if (count < 10) {
-                let obj = {
-                    id: c.playerId,
-                    title:
-                        c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                    handicap: c.PlayerQL['handicap'],
-                    category: c.PlayerQL['playerCategory'],
-                    class: c.PlayerQL['playerCategory'],
-                };
-                this.topMembers.push(obj);
+            for (const c of totalPlayers) {
+                if (count < 10) {
+                    let obj = {
+                        id: c.playerId,
+                        title:
+                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                        handicap: c.PlayerQL['handicap'],
+                        category: c.PlayerQL['playerCategory'],
+                        class: c.PlayerQL['playerCategory'],
+                    };
+                    this.topMembers.push(obj);
+                }
+                count++;
             }
-            count++;
+            console.log(this.topMembers);
+            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
-        console.log(this.topMembers);
-        this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
     }
     public onChangeGross(event) {
         console.log(event);
@@ -876,146 +910,223 @@ export class ViewTournamentComponent implements OnInit {
         this.showSummary = true;
     }
     tabClicked(tab: any) {
-        if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics1();
-            this.getRound1stats(1);
-            // this.getRound1stats(1);
-            // this.GrossData(this.tournamentCategories[0].category);
-            // this.NetData(this.tournamentCategories[0].category);
-        } else if (tab.index == 1 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics2();
-            this.getRound2stats(2);
-        } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics3();
-            this.getRound3stats(3);
-        } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics4();
-            this.getRound4stats(4);
-        } else if (tab.index == 4 && tab.tab['textLabel'] !== 'Summary') {
-            this.calculateStatistics4();
-            this.getRound4stats(4);
-        } else {
-            this.GrossData(
-                this.dataFullTournament['TournamentQL'][0].CategoriesQL.length > 0 ? this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
-                    .category : 'All'
-            );
-            this.NetData(
-                this.dataFullTournament['TournamentQL'][0].CategoriesQL.length > 0 ? this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
-                    .category : 'All'
-            );
+
+        try {
+            if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
+                this.calculateStatistics1();
+                this.getRound1stats(1);
+                // this.getRound1stats(1);
+                // this.GrossData(this.tournamentCategories[0].category);
+                // this.NetData(this.tournamentCategories[0].category);
+            } else if (tab.index == 1 && tab.tab['textLabel'] !== 'Summary') {
+                this.calculateStatistics2();
+                this.getRound2stats(2);
+            } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
+                this.calculateStatistics3();
+                this.getRound3stats(3);
+            } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
+                this.calculateStatistics4();
+                this.getRound4stats(4);
+            } else if (tab.index == 4 && tab.tab['textLabel'] !== 'Summary') {
+                this.calculateStatistics4();
+                this.getRound4stats(4);
+            } else {
+                this.GrossData(
+                    this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+                        .category
+                );
+                this.NetData(
+                    this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+                        .category
+                );
+            }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
     maintabClicked(tab: any) {
-        if (tab.index == 0) {
-            this.showMainTab1 = true;
-            this.showMainTab2 = false;
-            this.showMainTab3 = false;
-            this.showMainTab4 = false;
-            this.showMainTab5 = false;
-            this.calculateStatistics1();
-            this.getRound1stats(1);
-        } else if (tab.index == 1) {
-            this.showMainTab1 = false;
-            this.showMainTab2 = true;
-            this.showMainTab3 = false;
-            this.showMainTab4 = false;
-            this.showMainTab5 = false;
-        } else if (tab.index == 2) {
-            this.showMainTab1 = false;
-            this.showMainTab2 = false;
-            this.showMainTab3 = true;
-            this.showMainTab4 = false;
-            this.showMainTab5 = false;
-        } else if (tab.index == 3) {
-            this.showMainTab1 = false;
-            this.showMainTab2 = false;
-            this.showMainTab3 = false;
-            this.showMainTab4 = true;
-            this.showMainTab5 = false;
-        } else if (tab.index == 4) {
-            this.showMainTab1 = false;
-            this.showMainTab2 = false;
-            this.showMainTab3 = false;
-            this.showMainTab4 = false;
-            this.getTournamentMembers();
-            this.showMainTab5 = true;
+        try {
+            this.logger.log('Admin click on Main Tab in View Tournament Page', "info", tab.toString());
+            if (!this.showMatchPlay) {
+                if (tab.index == 0) {
+                    this.showMainTab1 = true;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    if (this.activeRound == 1) this.calculateStatistics1();
+                    this.getRound1stats(1);
+                    if (this.activeRound == 2) this.calculateStatistics2();
+                    this.getRound2stats(2);
+                    if (this.activeRound == 3) this.calculateStatistics3();
+                    this.getRound3stats(3);
+                    if (this.activeRound == 4) this.calculateStatistics4();
+                    this.getRound4stats(4);
+                } else if (tab.index == 1) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = true;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                } else if (tab.index == 2) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = true;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                } else if (tab.index == 3) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = true;
+                    this.showMainTab5 = false;
+                } else if (tab.index == 4) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.getTournamentMembers();
+                    this.showMainTab5 = true;
+                }
+            } else {
+                if (tab.index == 0) {
+                    this.showMainTab1 = true;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                    if (this.activeRound == 1) this.calculateStatistics1();
+                    this.getRound1stats(1);
+                    if (this.activeRound == 2) this.calculateStatistics2();
+                    this.getRound2stats(2);
+                    if (this.activeRound == 3) this.calculateStatistics3();
+                    this.getRound3stats(3);
+                    if (this.activeRound == 4) this.calculateStatistics4();
+                    this.getRound4stats(4);
+                } else if (tab.index == 1) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = true;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                } else if (tab.index == 2) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = true;
+                } else if (tab.index == 3) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = true;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                } else if (tab.index == 4) {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = true;
+                    this.showMainTab5 = false;
+                    this.showMainTab6 = false;
+                } else {
+                    this.showMainTab1 = false;
+                    this.showMainTab2 = false;
+                    this.showMainTab3 = false;
+                    this.showMainTab4 = false;
+                    this.getTournamentMembers();
+                    this.showMainTab5 = true;
+                    this.showMainTab6 = false;
+
+                }
+            }
+
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
 
     getRoundsstats() {
-        if (this.roundsStats) return;
+        try {
+            if (this.roundsStats) return;
 
-        let roundFlights = this.fullTournament.FlightsQL;
+            let roundFlights = this.fullTournament.FlightsQL;
 
-        let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
-        let finalScoreStats: ScoreStats = stats.getApplicationStats();
-        console.log(finalScoreStats);
+            let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
+            let finalScoreStats: ScoreStats = stats.getApplicationStats();
+            console.log(finalScoreStats);
 
-        this.avgScore['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
-        this.avgScore['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
-        this.avgScore['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
-        this.avgScore['shotsBirdiesPercent'] =
-            finalScoreStats.getShotsBirdiesPercent();
-        this.avgScore['shotsBogeysPercent'] =
-            finalScoreStats.getShotsBogeysPercent();
-        this.avgScore['shotsThreeOrHigherPercent'] =
-            finalScoreStats.getShotsThreeOrHigherPercent();
-        this.avgScore['shotsParsPercent'] =
-            finalScoreStats.getShotsParsPercent();
-        this.avgScore['shotsDoubleBogeysPercent'] =
-            finalScoreStats.getShotsDoubleBogeysPercent();
+            this.avgScore['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
+            this.avgScore['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
+            this.avgScore['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
+            this.avgScore['shotsBirdiesPercent'] =
+                finalScoreStats.getShotsBirdiesPercent();
+            this.avgScore['shotsBogeysPercent'] =
+                finalScoreStats.getShotsBogeysPercent();
+            this.avgScore['shotsThreeOrHigherPercent'] =
+                finalScoreStats.getShotsThreeOrHigherPercent();
+            this.avgScore['shotsParsPercent'] =
+                finalScoreStats.getShotsParsPercent();
+            this.avgScore['shotsDoubleBogeysPercent'] =
+                finalScoreStats.getShotsDoubleBogeysPercent();
 
-        this.chartavgScore.push(
-            Math.floor(Number(finalScoreStats.par3Stats.getAvgScores()))
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.par4Stats.getAvgScores())
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.par5Stats.getAvgScores())
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
-        this._series['0'] = [
-            {
-                data: this.chartavgScore,
-                name: 'Members',
-                type: 'line',
-            },
-            {
-                data: this.chartavgScore,
-                name: 'Rounds',
-                type: 'column',
-            },
-        ];
-        console.log(this._series);
-
-        if (finalScoreStats['grossTotal'] != 0) {
-            this.pieChartData1 = [
-                General.precisionRound(this.avgScore['par3Avg'], 2),
-                General.precisionRound(this.avgScore['par4Avg'], 2),
-                General.precisionRound(this.avgScore['par5Avg'], 2),
+            this.chartavgScore.push(
+                Math.floor(Number(finalScoreStats.par3Stats.getAvgScores()))
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.par4Stats.getAvgScores())
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.par5Stats.getAvgScores())
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.getShotsBirdiesPercent())
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.getShotsBogeysPercent())
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.getShotsParsPercent())
+            );
+            this.chartavgScore.push(
+                Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
+            );
+            this._series['0'] = [
+                {
+                    data: this.chartavgScore,
+                    name: 'Members',
+                    type: 'line',
+                },
+                {
+                    data: this.chartavgScore,
+                    name: 'Rounds',
+                    type: 'column',
+                },
             ];
-            this.roundsStats = true;
-        } else {
-            this.pieChartData1 = [0.01, 0.01, 0.01];
-            this.roundsStats = false;
-        }
+            console.log(this._series);
 
-        this.chart();
+            if (finalScoreStats['grossTotal'] != 0) {
+                this.pieChartData1 = [
+                    General.precisionRound(this.avgScore['par3Avg'], 2),
+                    General.precisionRound(this.avgScore['par4Avg'], 2),
+                    General.precisionRound(this.avgScore['par5Avg'], 2),
+                ];
+                this.roundsStats = true;
+            } else {
+                this.pieChartData1 = [0.01, 0.01, 0.01];
+                this.roundsStats = false;
+            }
+
+            this.chart();
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
     }
     getRound1stats(round: number) {
         // if (this.round1Stats) return;
@@ -1427,19 +1538,24 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     viewMarshalList() {
-        const dialogRef = this.dialog.open(DialogMarshalComponent, {
-            width: '700px',
-            data: { marshals: this.fullTournament.MarshalQL },
-        });
+        try {
+            this.logger.log('Admin click on marshals btn', "info");
+            const dialogRef = this.dialog.open(DialogMarshalComponent, {
+                width: '700px',
+                data: { marshals: this.fullTournament.MarshalQL },
+            });
 
-        dialogRef.afterClosed().subscribe((result) => {
-            //console.log(result);
-            if (result) {
-                //console.log(result.player);
-            } else {
-                //console.log("cancel delete action");
-            }
-        });
+            dialogRef.afterClosed().subscribe((result) => {
+                //console.log(result);
+                if (result) {
+                    //console.log(result.player);
+                } else {
+                    //console.log("cancel delete action");
+                }
+            });
+        } catch (error) {
+            this.logger.log('Getting Marshals Data Failed', "error", error.toString());
+        }
     }
 
     // async closeRound(round: number) {
@@ -1485,248 +1601,275 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     async closeRound() {
-        if (this.activeRound == this.noOfROund) {
-            const dialogRef = this.dialog.open(DialogOverviewComponent, {
-                width: '350px',
-                data: 'Do you want to close the last round?',
-            });
+        try {
+            this.logger.log('Admin Click on Close Round Tournament btn', "info", this.activeRound.toString());
+            if (this.activeRound == this.noOfROund) {
+                this.logger.log('Close Round Dialog Box Open', "info", this.noOfROund.toString());
+                const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                    width: '350px',
+                    data: 'Do you want to close the last round?',
+                });
 
-            dialogRef.afterClosed().subscribe(async (result) => {
-                if (result) {
-                    await this.facadeService.closeActiveRound(
-                        this.tournamentID,
-                        this.activeRound + 1,
-                        this.fullTournament.cutOffCriteria
-                    );
-                    window.location.reload();
-                } else {
-                    //console.log("cancel delete action");
-                }
-            });
-        } else {
-            let allowCat: boolean = false;
-            this.activeTournamentMembers = [];
-            let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
-            let startDate =
-                this.dataFullTournament['TournamentQL'][0].startDate;
-            startDate = new Date(startDate);
-            startDate.setDate(startDate.getDate() + this.activeRound);
-            console.log(startDate);
-
-            let newstartDate = startDate.getDate();
-
-            console.log(newstartDate);
-
-            for (let newObj of this.categories) {
-                let flightSettings: any = newObj.flightSettings;
-
-                if (
-                    Object.prototype.toString
-                        .call(flightSettings)
-                        .indexOf('Array') > -1 &&
-                    flightSettings.length > 0
-                ) {
-                    for (let obj of flightSettings) {
-                        let chngDate = obj.dates.replaceAll('-', '').toString();
-                        let newDate =
-                            chngDate.substring(4, 8) +
-                            '-' +
-                            chngDate.substring(2, 4) +
-                            '-' +
-                            +chngDate.substring(0, 2);
-                        // console.log(newDate);
-
-                        let flightDate = new Date(newDate).getDate();
-                        console.log(flightDate);
-                        if (flightDate == newstartDate) {
-                            allowCat = true;
-                            newObj['allowCat'] = true;
-                            break;
-                        }
-
-                        //console.log(this.calculateDiff(newstartDate,flightDate));
+                dialogRef.afterClosed().subscribe(async (result) => {
+                    if (result) {
+                        const resultString = JSON.stringify(result);
+                        this.logger.log('Result from Close Round Dialog Box', "info", resultString);
+                        await this.facadeService.closeActiveRound(
+                            this.tournamentID,
+                            this.activeRound + 1,
+                            this.fullTournament.cutOffCriteria
+                        );
+                        window.location.reload();
+                    } else {
+                        this.logger.log('Close Round Dialog Box Close Without Save', "info");
+                        //console.log("cancel delete action");
                     }
-                    if (!allowCat) {
-                        newObj['allowCat'] = false;
-                    }
-                    for (let obj of flights) {
-                        if (obj.flightRound == this.activeRound) {
-                            let check = obj.MembersQL.filter((a) => {
-                                return (
-                                    a.PlayerQL.playerCategory == newObj.category
-                                );
-                            });
-                            if (check.length > 0) {
-                                newObj['cut'] = true;
-                                check = [];
-                                break;
-                            } else {
-                                newObj['cut'] = false;
-                            }
-                        }
-                    }
-                } else if (
-                    Object.prototype.toString
-                        .call(flightSettings)
-                        .indexOf('Object') > -1
-                ) {
-                    for (let obj of flightSettings['playingDate']) {
-                        let chngDate = obj.dates.replaceAll('-', '').toString();
-                        let newDate =
-                            chngDate.substring(4, 8) +
-                            '-' +
-                            chngDate.substring(2, 4) +
-                            '-' +
-                            +chngDate.substring(0, 2);
+                });
+            } else {
+                this.logger.log('Close Round Dialog Box Open', "info", this.noOfROund.toString());
+                let allowCat: boolean = false;
+                this.activeTournamentMembers = [];
+                let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
+                let startDate =
+                    this.dataFullTournament['TournamentQL'][0].startDate;
+                startDate = new Date(startDate);
+                startDate.setDate(startDate.getDate() + this.activeRound);
+                console.log(startDate);
 
-                        let flightDate = new Date(newDate).getDate();
-                        console.log(flightDate);
-                        if (flightDate == newstartDate) {
-                            allowCat = true;
-                            newObj['allowCat'] = true;
-                            break;
-                        }
-                        //console.log(this.calculateDiff(newstartDate,flightDate));
-                    }
-                    if (!allowCat) {
-                        newObj['allowCat'] = false;
-                    }
-                    for (let obj of flights) {
-                        if (obj.flightRound == this.activeRound) {
-                            let check = obj.MembersQL.filter((a) => {
-                                return (
-                                    a.PlayerQL.playerCategory == newObj.category
-                                );
-                            });
-                            if (check.length > 0) {
-                                newObj['cut'] = true;
-                                check = [];
-                                break;
-                            } else {
-                                newObj['cut'] = false;
-                            }
-                        }
-                    }
-                } else {
-                    for (let obj of flights) {
-                        if (obj.flightRound == this.activeRound) {
-                            let check = obj.MembersQL.filter((a) => {
-                                return (
-                                    a.PlayerQL.playerCategory == newObj.category
-                                );
-                            });
-                            if (check.length > 0) {
-                                newObj['cut'] = true;
-                                check = [];
-                                break;
-                            } else {
-                                newObj['cut'] = false;
-                            }
-                        }
-                    }
-                    newObj['allowCat'] = true;
-                }
-            }
-            const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
-                width: '800px',
-                data: {
-                    round: this.activeRound + 1,
-                    categories: this.categories,
-                    tournament: this.tournamentID,
-                    startDate:
-                        this.dataFullTournament.TournamentQL[0].startDate,
-                },
-            });
-            dialogRef.afterClosed().subscribe(async (result) => {
-                let getResult: any = result;
-                var jsons = new Array();
-                let flag = true;
-                jsons = [];
-                console.log(getResult);
-                if (getResult && getResult.category) {
-                    console.log(getResult.category);
-                    for (let cats in getResult.category) {
-                        if (getResult.category[cats].copyFlights == 'No') {
-                            flag = false;
-                        }
+                let newstartDate = startDate.getDate();
 
-                        console.log(getResult.category[cats]);
-                        let copyflights: any = [];
+                console.log(newstartDate);
+                if (this.categories.length > 0) {
+                    for (let newObj of this.categories) {
+                        let flightSettings: any = newObj.flightSettings;
+
                         if (
-                            this.fullTournament.cutOffCriteria != null &&
-                            Object.keys(
-                                this.fullTournament.cutOffCriteria.cutOff[0]
-                            ).length > 0
+                            Object.prototype.toString
+                                .call(flightSettings)
+                                .indexOf('Array') > -1 &&
+                            flightSettings.length > 0
                         ) {
-                            for (let cut of this.fullTournament.cutOffCriteria[
-                                'cutOff'
-                            ]) {
-                                if (
-                                    cut.name == getResult.category[cats].name &&
-                                    getResult.category[cats].cuttScore == ''
-                                ) {
-                                    copyflights.push(cut);
+                            for (let obj of flightSettings) {
+                                let chngDate = obj.dates.replaceAll('-', '').toString();
+                                let newDate =
+                                    chngDate.substring(4, 8) +
+                                    '-' +
+                                    chngDate.substring(2, 4) +
+                                    '-' +
+                                    +chngDate.substring(0, 2);
+                                // console.log(newDate);
+
+                                let flightDate = new Date(newDate).getDate();
+                                console.log(flightDate);
+                                if (flightDate == newstartDate) {
+                                    allowCat = true;
+                                    newObj['allowCat'] = true;
+                                    break;
+                                }
+
+                                //console.log(this.calculateDiff(newstartDate,flightDate));
+                            }
+                            if (!allowCat) {
+                                newObj['allowCat'] = false;
+                            }
+                            for (let obj of flights) {
+                                if (obj.flightRound == this.activeRound) {
+                                    let check = obj.MembersQL.filter((a) => {
+                                        return (
+                                            a.PlayerQL.playerCategory == newObj.category
+                                        );
+                                    });
+                                    if (check.length > 0) {
+                                        newObj['cut'] = true;
+                                        check = [];
+                                        break;
+                                    } else {
+                                        newObj['cut'] = false;
+                                    }
                                 }
                             }
-                            console.log(copyflights);
-                        }
+                        } else if (
+                            Object.prototype.toString
+                                .call(flightSettings)
+                                .indexOf('Object') > -1
+                        ) {
+                            for (let obj of flightSettings['playingDate']) {
+                                let chngDate = obj.dates.replaceAll('-', '').toString();
+                                let newDate =
+                                    chngDate.substring(4, 8) +
+                                    '-' +
+                                    chngDate.substring(2, 4) +
+                                    '-' +
+                                    +chngDate.substring(0, 2);
 
-                        let cutOffCriteria: any = {
-                            round:
-                                copyflights.length > 0
-                                    ? copyflights[0].round
-                                    : this.activeRound,
-                            //copyFlights: (getResult.category[cats].copy == "1"),
-                            copymembers:
-                                copyflights.length > 0
-                                    ? copyflights[0].score
-                                    : null,
-                            copyflights: getResult.category[cats].copyFlights,
-                            name: getResult.category[cats].name,
-                            players: getResult.category[cats].players,
-                            time: getResult.category[cats].time,
-                            interval: getResult.category[cats].interval,
-                            tee: getResult.category[cats].tee,
-                            score:
-                                copyflights.length > 0
-                                    ? copyflights[0].score
-                                    : flag == false
-                                        ? getResult.category[cats].cuttScore
-                                        : 1000,
-                            type: getResult.category[cats].type,
-                            order: getResult.category[cats].order,
-                            playing: getResult.category[cats].playing,
-                            lastRoundPlayed:
-                                getResult.category[cats].lastRoundPlayed,
-                        };
-                        console.log(cutOffCriteria);
-                        await this.closeCurrentRound(
-                            cutOffCriteria,
-                            cutOffCriteria.name,
-                            cutOffCriteria.score,
-                            cutOffCriteria.copymembers
-                        );
-                        // this.dataFullTournament =
-                        //     await this.facadeService.tournamentDashBoard(
-                        //         this.tournamentID
-                        //     );
-                        jsons.push(cutOffCriteria);
+                                let flightDate = new Date(newDate).getDate();
+                                console.log(flightDate);
+                                if (flightDate == newstartDate) {
+                                    allowCat = true;
+                                    newObj['allowCat'] = true;
+                                    break;
+                                }
+                                //console.log(this.calculateDiff(newstartDate,flightDate));
+                            }
+                            if (!allowCat) {
+                                newObj['allowCat'] = false;
+                            }
+                            for (let obj of flights) {
+                                if (obj.flightRound == this.activeRound) {
+                                    let check = obj.MembersQL.filter((a) => {
+                                        return (
+                                            a.PlayerQL.playerCategory == newObj.category
+                                        );
+                                    });
+                                    if (check.length > 0) {
+                                        newObj['cut'] = true;
+                                        check = [];
+                                        break;
+                                    } else {
+                                        newObj['cut'] = false;
+                                    }
+                                }
+                            }
+                        } else {
+                            for (let obj of flights) {
+                                if (obj.flightRound == this.activeRound) {
+                                    let check = obj.MembersQL.filter((a) => {
+                                        return (
+                                            a.PlayerQL.playerCategory == newObj.category
+                                        );
+                                    });
+                                    if (check.length > 0) {
+                                        newObj['cut'] = true;
+                                        check = [];
+                                        break;
+                                    } else {
+                                        newObj['cut'] = false;
+                                    }
+                                }
+                            }
+                            newObj['allowCat'] = true;
+                        }
                     }
-                    let jObject = { cutOff: jsons };
-                    console.log(jObject);
-                    let a = JSON.stringify(jObject);
-                    var src = a.replace(/\\/g, '');
-                    console.log(src);
-                    await this.facadeService.closeActiveRound(
-                        this.tournamentID,
-                        this.activeRound + 1,
-                        jObject
-                    );
-                    window.location.reload();
-                } else {
-                    //console.log("cancel delete action");
                 }
-            });
+                const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
+                    width: '800px',
+                    data: {
+                        round: this.activeRound + 1,
+                        categories: this.categories,
+                        tournament: this.tournamentID,
+                        startDate:
+                            this.dataFullTournament.TournamentQL[0].startDate,
+                    },
+                });
+                dialogRef.afterClosed().subscribe(async (result) => {
+
+                    let getResult: any = result;
+                    var jsons = new Array();
+                    let flag = true;
+                    jsons = [];
+                    console.log(getResult);
+                    if (getResult && getResult.category && this.matchFormat == matchFormat.STROKE_PLAY) {
+                        console.log(getResult.category);
+                        for (let cats in getResult.category) {
+                            if (getResult.category[cats].copyFlights == 'No') {
+                                flag = false;
+                            }
+
+                            console.log(getResult.category[cats]);
+                            let copyflights: any = [];
+                            if (
+                                this.fullTournament.cutOffCriteria != null &&
+                                Object.keys(
+                                    this.fullTournament.cutOffCriteria.cutOff[0]
+                                ).length > 0
+                            ) {
+                                for (let cut of this.fullTournament.cutOffCriteria[
+                                    'cutOff'
+                                ]) {
+                                    if (
+                                        cut.name == getResult.category[cats].name &&
+                                        getResult.category[cats].cuttScore == ''
+                                    ) {
+                                        copyflights.push(cut);
+                                    }
+                                }
+                                console.log(copyflights);
+                            }
+
+                            let cutOffCriteria: any = {
+                                round:
+                                    copyflights.length > 0
+                                        ? copyflights[0].round
+                                        : this.activeRound,
+                                //copyFlights: (getResult.category[cats].copy == "1"),
+                                copymembers:
+                                    copyflights.length > 0
+                                        ? copyflights[0].score
+                                        : null,
+                                copyflights: getResult.category[cats].copyFlights,
+                                name: getResult.category[cats].name,
+                                players: getResult.category[cats].players,
+                                time: getResult.category[cats].time,
+                                interval: getResult.category[cats].interval,
+                                tee: getResult.category[cats].tee,
+                                score:
+                                    copyflights.length > 0
+                                        ? copyflights[0].score
+                                        : flag == false
+                                            ? getResult.category[cats].cuttScore
+                                            : 1000,
+                                type: getResult.category[cats].type,
+                                order: getResult.category[cats].order,
+                                playing: getResult.category[cats].playing,
+                                lastRoundPlayed:
+                                    getResult.category[cats].lastRoundPlayed,
+                            };
+                            console.log(cutOffCriteria);
+                            await this.closeCurrentRound(
+                                cutOffCriteria,
+                                cutOffCriteria.name,
+                                cutOffCriteria.score,
+                                cutOffCriteria.copymembers
+                            );
+                            // this.dataFullTournament =
+                            //     await this.facadeService.tournamentDashBoard(
+                            //         this.tournamentID
+                            //     );
+                            jsons.push(cutOffCriteria);
+                        }
+                        let jObject = { cutOff: jsons };
+                        console.log(jObject);
+                        let a = JSON.stringify(jObject);
+                        var src = a.replace(/\\/g, '');
+                        console.log(src);
+                        const resultString = JSON.stringify(result);
+                        this.logger.log('Result from Close Round Dialog Box', "info", resultString);
+                        let response = await this.facadeService.closeActiveRound(
+                            this.tournamentID,
+                            this.activeRound + 1,
+                            jObject
+                        );
+                        if (response) {
+                            window.location.reload();
+                        }
+                    } else {
+                        for (let cats in getResult.category) {
+                            await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+                        }
+                        let jObject = { cutOff: jsons };
+                        let response = await this.facadeService.closeActiveRound(
+                            this.tournamentID,
+                            this.activeRound + 1,
+                            jObject
+                        );
+                        if (response) {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            this.logger.log('Close Tournament Round Failed', "error", error.toString());
         }
     }
 
@@ -1745,102 +1888,107 @@ export class ViewTournamentComponent implements OnInit {
         categoryScore: number,
         copymembers: any
     ) {
-        let nextRoundPlayers: any[] = [];
-        // console.log(category);
-        // let categoryScore = cutOffCriteria.score.filter((a) => {
-        //   return a.name == category;
-        // });
-        let objLeader: Leader = new Leader(
-            this.fullTournament,
-            this.activeRound,
-            this.fullTournament,
-            categoryName
-        );
-        let result = objLeader.parseSubscriptionResponse();
-        console.log(result);
-        if (cutOffCriteria.copyflights == 'No') {
-            if (result.length == 0) {
-                result = this.dataFullTournament.TournamentQL[0].members.filter(
-                    (a) => {
-                        if (a.PlayerQL.playerCategory == categoryName)
-                            return nextRoundPlayers.push(a.PlayerQL);
-                    }
-                );
-                //for(let res in this.dataFullTournament.TournamentQL[0].members){
-                //if((this.dataFullTournament.TournamentQL[0].members[res].PlayerQL.playerCategory) == categoryName){
-                //nextRoundPlayers.push(this.dataFullTournament.TournamentQL[0].members[res].PlayerQL)
+        try {
+            this.logger.log('Cut calculation after Close Round.', "info", cutOffCriteria.toString());
+            let nextRoundPlayers: any[] = [];
+            // console.log(category);
+            // let categoryScore = cutOffCriteria.score.filter((a) => {
+            //   return a.name == category;
+            // });
+            let objLeader: Leader = new Leader(
+                this.fullTournament,
+                this.activeRound,
+                this.fullTournament,
+                categoryName
+            );
+            let result = objLeader.parseSubscriptionResponse();
+            console.log(result);
+            if (cutOffCriteria.copyflights == 'No') {
+                if (result.length == 0) {
+                    result = this.dataFullTournament.TournamentQL[0].members.filter(
+                        (a) => {
+                            if (a.PlayerQL.playerCategory == categoryName)
+                                return nextRoundPlayers.push(a.PlayerQL);
+                        }
+                    );
+                    //for(let res in this.dataFullTournament.TournamentQL[0].members){
+                    //if((this.dataFullTournament.TournamentQL[0].members[res].PlayerQL.playerCategory) == categoryName){
+                    //nextRoundPlayers.push(this.dataFullTournament.TournamentQL[0].members[res].PlayerQL)
 
-                //nextRoundPlayers = result.PlayerQL;
-                //}
-                //}
-                console.log(nextRoundPlayers);
-            } else {
-                if (cutOffCriteria.type == LeaderType.GROSS) {
-                    result = result.filter((a) => {
-                        return (
-                            a.AllGrossUnder <=
-                            (categoryScore
-                                ? categoryScore
-                                : a.AllGrossUnder) &&
-                            a['holes' + this.activeRound] ==
-                            this.noOfHolesInCourse
-                        );
-                    });
-                    console.log(result);
-                    cutOffCriteria.order == 'asc'
-                        ? (nextRoundPlayers = result.sort(
-                            this.ComparatorAllGross
-                        ))
-                        : (nextRoundPlayers = result.sort(
-                            this.ComparatorAllGrossDesc
-                        ));
-                } else if (cutOffCriteria.type == LeaderType.NEW) {
-                    result =
-                        this.dataFullTournament.TournamentQL[0].members.filter(
-                            (a) => {
-                                if (a.PlayerQL.playerCategory == categoryName)
-                                    return nextRoundPlayers.push(a.PlayerQL);
-                            }
-                        );
-                    this.makePlayerFlights(result, cutOffCriteria.players);
-                    //console.log(this.selectedMembers);
-                    this.saveCategoryFlights(cutOffCriteria, categoryName);
+                    //nextRoundPlayers = result.PlayerQL;
+                    //}
+                    //}
+                    console.log(nextRoundPlayers);
                 } else {
-                    result = result.filter((a) => {
-                        return (
-                            a.AllNetUnder <=
-                            (categoryScore
-                                ? categoryScore
-                                : a.AllNetUnder) &&
-                            a['holes' + this.activeRound] ==
-                            this.noOfHolesInCourse
-                        );
-                    });
-                    cutOffCriteria.order == 'asc'
-                        ? (nextRoundPlayers = result.sort(
-                            this.ComparatorAllNet
-                        ))
-                        : (nextRoundPlayers = result.sort(
-                            this.ComparatorAllNetDesc
-                        ));
+                    if (cutOffCriteria.type == LeaderType.GROSS) {
+                        result = result.filter((a) => {
+                            return (
+                                a.AllGrossUnder <=
+                                (categoryScore
+                                    ? categoryScore
+                                    : a.AllGrossUnder) &&
+                                a['holes' + this.activeRound] ==
+                                this.noOfHolesInCourse
+                            );
+                        });
+                        console.log(result);
+                        cutOffCriteria.order == 'asc'
+                            ? (nextRoundPlayers = result.sort(
+                                this.ComparatorAllGross
+                            ))
+                            : (nextRoundPlayers = result.sort(
+                                this.ComparatorAllGrossDesc
+                            ));
+                    } else if (cutOffCriteria.type == LeaderType.NEW) {
+                        result =
+                            this.dataFullTournament.TournamentQL[0].members.filter(
+                                (a) => {
+                                    if (a.PlayerQL.playerCategory == categoryName)
+                                        return nextRoundPlayers.push(a.PlayerQL);
+                                }
+                            );
+                        this.makePlayerFlights(result, cutOffCriteria.players);
+                        //console.log(this.selectedMembers);
+                        await this.saveCategoryFlights(cutOffCriteria, categoryName);
+                    } else {
+                        result = result.filter((a) => {
+                            return (
+                                a.AllNetUnder <=
+                                (categoryScore
+                                    ? categoryScore
+                                    : a.AllNetUnder) &&
+                                a['holes' + this.activeRound] ==
+                                this.noOfHolesInCourse
+                            );
+                        });
+                        cutOffCriteria.order == 'asc'
+                            ? (nextRoundPlayers = result.sort(
+                                this.ComparatorAllNet
+                            ))
+                            : (nextRoundPlayers = result.sort(
+                                this.ComparatorAllNetDesc
+                            ));
+                    }
                 }
-            }
-            //nextRoundPlayers = result.sort(this.ComparatorAllGross);
-            //for(let p of nextRoundPlayers) console.log(p.name + "" + p.playerId);
-            console.log(nextRoundPlayers);
-            if (copymembers == null) {
-                this.makePlayerFlights(
-                    nextRoundPlayers,
-                    cutOffCriteria.players
-                );
+                //nextRoundPlayers = result.sort(this.ComparatorAllGross);
+                //for(let p of nextRoundPlayers) console.log(p.name + "" + p.playerId);
+                console.log(nextRoundPlayers);
+                if (copymembers == null) {
+                    this.makePlayerFlights(
+                        nextRoundPlayers,
+                        cutOffCriteria.players
+                    );
+                    //console.log(this.selectedMembers);
+                    await this.saveCategoryFlights(cutOffCriteria, categoryName);
+                }
+            } else {
+                nextRoundPlayers = result;
+                this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
                 //console.log(this.selectedMembers);
-                this.saveCategoryFlights(cutOffCriteria, categoryName);
+                await this.saveCategoryFlights(cutOffCriteria, categoryName);
             }
-        } else {
-            nextRoundPlayers = result;
-            this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
-            //console.log(this.selectedMembers);
-            this.saveCategoryFlights(cutOffCriteria, categoryName);
+        } catch (error) {
+            this.logger.log('Cut calculation Failed after Close Round.', "info", cutOffCriteria.toString());
         }
         // for(let p of nextRoundPlayers) {
         //   let tm: TournamentMember = {
@@ -1854,114 +2002,181 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     async makePlayerFlights(nextRoundPlayers: any, playersPerFlight: number) {
-        let cnter = 0;
-        let outer = 0;
-        this.selectedMembers = [];
+        try {
 
-        //console.log(this.selectedMembers);
-        for (var index in nextRoundPlayers) {
-            //console.log(outer + "<--->" + cnter);
 
-            if (cnter == 0) this.selectedMembers[outer] = [];
+            let cnter = 0;
+            let outer = 0;
+            this.selectedMembers = [];
 
-            this.selectedMembers[outer][cnter] = nextRoundPlayers[index];
+            //console.log(this.selectedMembers);
+            for (var index in nextRoundPlayers) {
+                //console.log(outer + "<--->" + cnter);
 
-            if (cnter == playersPerFlight - 1) {
-                cnter = 0;
-                outer++;
-            } else {
-                cnter++;
+                if (cnter == 0) this.selectedMembers[outer] = [];
+
+                this.selectedMembers[outer][cnter] = nextRoundPlayers[index];
+
+                if (cnter == playersPerFlight - 1) {
+                    cnter = 0;
+                    outer++;
+                } else {
+                    cnter++;
+                }
             }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
 
     async saveCategoryFlights(criteria: any, categoryName: any) {
-        let tournamentFlights: Flight[] = [];
-        //let fcnter = 0;
-        console.log(criteria);
-        this.changer++;
+        try {
+            let tournamentFlights: Flight[] = [];
+            //let fcnter = 0;
+            //console.log(criteria);
+            this.changer++;
 
-        let tournamentFlightMembers: FlightMembers[];
-        let teeBox: number;
-        let teeTime: string = criteria.time;
-        for (var index in this.selectedMembers) {
-            tournamentFlightMembers = [];
-            for (var index2 in this.selectedMembers[index]) {
-                if (Number.isInteger(Number(index2))) {
-                    // console.log(this.selectedMembers[index][index2]["playerCategory"]);
-                    // console.log(this.selectedMembers[index][index2].playerCategory);
-                    console.log(categoryName);
-                    // console.log(this.selectedMembers[index][index2]["name"]);
+            let tournamentFlightMembers: FlightMembers[];
+            let teeBox: number;
+            let teeTime: string = criteria.time;
+            for (var index in this.selectedMembers) {
+                tournamentFlightMembers = [];
+                for (var index2 in this.selectedMembers[index]) {
+                    if (Number.isInteger(Number(index2))) {
+                        // console.log(this.selectedMembers[index][index2]["playerCategory"]);
+                        // console.log(this.selectedMembers[index][index2].playerCategory);
+                        //console.log(categoryName);
+                        // console.log(this.selectedMembers[index][index2]["name"]);
 
+                        let roundTeeId: any = General.getPlayersTe(categoryName);
+                        // console.log(roundTeeId.id);
+                        let FM: any = {
+                            playerId: this.selectedMembers[index][index2]['id']
+                                ? this.selectedMembers[index][index2]['id']
+                                : this.selectedMembers[index][index2]['playerId'],
+                            attendance: false,
+                            playingTee: roundTeeId.result,
+                            tee_id: roundTeeId.id,
+                        };
+
+                        tournamentFlightMembers.push(FM);
+                    }
+                }
+                if (tournamentFlightMembers.length > 0) {
+                    //console.log(tournamentFlightMembers);
+                    // console.log('Before Running' + this.runningFlights);
+                    this.runningFlights++;
+                    this.teetime++;
+                    //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
+                    //let startTime : string = (<HTMLInputElement>document.getElementById("flight_" + index + "_time")).value;
+                    let currentDate = new Date();
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    teeBox = this.getNextTeeBox(criteria.tee, this.teetime);
+                    teeTime = this.getNextFlightTime(
+                        teeTime,
+                        criteria.interval,
+                        criteria.tee,
+                        this.teetime,
+                        teeBox
+                    );
+                    // console.log(teeBox);
+                    // console.log(teeTime);
+                    // console.log(General.parseToDate(currentDate.toDateString()));
                     let roundTeeId: any = General.getPlayersTe(categoryName);
                     console.log(roundTeeId.id);
-                    let FM: any = {
-                        playerId: this.selectedMembers[index][index2]['id']
-                            ? this.selectedMembers[index][index2]['id']
-                            : this.selectedMembers[index][index2]['playerId'],
-                        attendance: false,
-                        playingTee: roundTeeId.result,
+                    let flight: any = {
+                        id: UniqueIdGenerator.generate(),
+                        tournamentId: this.tournamentID,
+                        courseId: this.fullTournament.courseId,
+                        adminId: this.loggedInUser.id,
+                        courseHoleSets: 0,
+                        flightNo: this.runningFlights,
+                        flightRound: this.activeRound + 1,
+                        startingHole: teeBox,
+                        tee: roundTeeId.result,
                         tee_id: roundTeeId.id,
+                        category: categoryName,
+                        date: General.parseToDate(currentDate.toDateString()),
+                        time: teeTime,
+                        ended: false,
+                        members: {
+                            data: tournamentFlightMembers,
+                        },
                     };
+                    //console.log(flight);
+                    tournamentFlights.push(flight);
+                    //break;
+                    //console.log('After loop' + this.runningFlights);
+                }
+            }
+            this.teetime = 0;
+            await this.facadeService.createNextRoundFlights(tournamentFlights);
+            //console.log(tournamentFlights);
+            // console.log('After Function' + this.runningFlights);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
+    }
+    async saveCategoryFlightsForMatchPlay(flights: any[]) {
+        try {
+            let tournamentFlights: Flight[] = [];
+            //let fcnter = 0;
+            //console.log(criteria);
+            this.changer++;
 
+            let tournamentFlightMembers: FlightMembers[];
+            let teeBox: number;
+            let teeTime: string = "08:00:00+00";
+            for (var index in flights) {
+                tournamentFlightMembers = [];
+                for (var index2 in flights[index]['MembersQL']) {
+                    let FM: any = {
+                        playerId: flights[index]['MembersQL'][index2]['playerId'],
+                        attendance: false,
+                        playingTee: 'AMATEURS',
+                        tee_id: 1,
+                    };
                     tournamentFlightMembers.push(FM);
                 }
-            }
-            if (tournamentFlightMembers.length > 0) {
-                //console.log(tournamentFlightMembers);
-                console.log('Before Running' + this.runningFlights);
-                this.runningFlights++;
-                this.teetime++;
-                //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
-                //let startTime : string = (<HTMLInputElement>document.getElementById("flight_" + index + "_time")).value;
-                let currentDate = new Date(this.fullTournament.startDate);
-                if (this.activeRound === 2) {
+                if (tournamentFlightMembers.length > 0) {
+
+                    this.runningFlights++;
+                    this.teetime++;
+                    let currentDate = new Date();
                     currentDate.setDate(currentDate.getDate() + 1);
-                } else if (this.activeRound === 3) {
-                    currentDate.setDate(currentDate.getDate() + 2);
-                } else if (this.activeRound === 4) {
-                    currentDate.setDate(currentDate.getDate() + 3);
+                    let flight: any = {
+                        id: UniqueIdGenerator.generate(),
+                        tournamentId: this.tournamentID,
+                        courseId: this.fullTournament.courseId,
+                        adminId: this.loggedInUser.id,
+                        courseHoleSets: 0,
+                        flightNo: this.runningFlights,
+                        flightRound: this.activeRound + 1,
+                        startingHole: teeBox,
+                        tee: 'AMATEURS',
+                        tee_id: 1,
+                        category: 'AMATEURS',
+                        date: General.parseToDate(currentDate.toDateString()),
+                        time: teeTime,
+                        ended: false,
+                        members: {
+                            data: tournamentFlightMembers,
+                        },
+                    };
+                    //console.log(flight);
+                    tournamentFlights.push(flight);
+                    //break;
+                    //console.log('After loop' + this.runningFlights);
                 }
-                teeBox = this.getNextTeeBox(criteria.tee, this.teetime);
-                teeTime = this.getNextFlightTime(
-                    teeTime,
-                    criteria.interval,
-                    criteria.tee,
-                    this.teetime,
-                    teeBox
-                );
-                console.log(General.parseToDate(currentDate.toDateString()));
-                let roundTeeId: any = General.getPlayersTe(categoryName);
-                console.log(roundTeeId.id);
-                let flight: any = {
-                    id: UniqueIdGenerator.generate(),
-                    tournamentId: this.tournamentID,
-                    courseId: this.fullTournament.courseId,
-                    adminId: this.loggedInUser.id,
-                    courseHoleSets: 0,
-                    flightNo: this.runningFlights,
-                    flightRound: this.activeRound + 1,
-                    startingHole: teeBox,
-                    tee: roundTeeId.result,
-                    tee_id: roundTeeId.id,
-                    category: categoryName,
-                    date: General.formatDate(currentDate),
-                    time: teeTime,
-                    ended: false,
-                    members: {
-                        data: tournamentFlightMembers,
-                    },
-                };
-                console.log(flight);
-                tournamentFlights.push(flight);
-                //break;
-                console.log('After loop' + this.runningFlights);
             }
+            this.teetime = 0;
+            await this.facadeService.createNextRoundFlights(tournamentFlights);
+            //console.log(tournamentFlights);
+            // console.log('After Function' + this.runningFlights);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+
         }
-        this.teetime = 0;
-        await this.facadeService.createNextRoundFlights(tournamentFlights);
-        console.log(tournamentFlights);
-        console.log('After Function' + this.runningFlights);
     }
     downloadResultSheetGross() {
         let doc = new jsPDF();
@@ -2287,29 +2502,37 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     undoRound() {
-        const dialogRef = this.dialog.open(DialogOverviewComponent, {
-            width: '350px',
-            data: 'Do you want to undo current round?',
-        });
+        try {
 
-        dialogRef.afterClosed().subscribe(async (result) => {
-            if (result) {
-                let jObject = { cutOff: [{}] };
-                console.log('====================================');
-                console.log(jObject);
-                console.log('====================================');
-                await this.facadeService.UndoTournamentRound(
-                    this.tournamentID,
-                    this.activeRound,
-                    this.activeRound - 1,
-                    jObject
-                );
+            this.logger.log('Admin click on undo round btn', "info", this.activeRound.toString());
+            this.logger.log('Round undo Dialog Box Open', "info", this.activeRound.toString());
+            const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                width: '350px',
+                data: 'Do you want to undo current round?',
+            });
 
-                window.location.reload();
-            } else {
-                //console.log("cancel delete action");
-            }
-        });
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    this.logger.log('Round undo sucessfully', "info", this.activeRound.toString());
+                    let jObject = null;
+                    console.log('====================================');
+                    console.log(jObject);
+                    console.log('====================================');
+                    await this.facadeService.UndoTournamentRound(
+                        this.tournamentID,
+                        this.activeRound,
+                        this.activeRound - 1,
+                        jObject
+                    );
+
+                    window.location.reload();
+                } else {
+                    //console.log("cancel delete action");
+                }
+            });
+        } catch (error) {
+            this.logger.log('Round undo Failed', "error", error.toString());
+        }
     }
 
     redirectToLeaderboard() {
@@ -3049,41 +3272,48 @@ export class ViewTournamentComponent implements OnInit {
         return total;
     }
     async getTournamentMembers() {
-        let dataFullTournaments: any;
-        if (this.dataFullTournament['TournamentQL'][0].leagueId == null) {
-            dataFullTournaments = await this.facadeService.getTournamentMembers(
-                this.tournamentID
-            );
-            console.log(dataFullTournaments);
-            this.flightNumber = this.fullTournament.FlightsQL.length + 1;
-            this.tournamentMember = dataFullTournaments.TournamentMemberQL;
-            this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
+        try {
+            this.logger.log('Getting Tournament Members', "info", this.tournamentID);
 
-            this.dataSource = new MatTableDataSource(this.tournamentMember);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-        } else {
-            dataFullTournaments =
-                await this.facadeService.getTournamentsFlights(
+            let dataFullTournaments: any;
+            if (this.dataFullTournament['TournamentQL'][0].leagueId == null) {
+                dataFullTournaments = await this.facadeService.getTournamentMembers(
                     this.tournamentID
                 );
-            console.log(dataFullTournaments);
-            if (dataFullTournaments) {
-                for (let obj of dataFullTournaments['TournamentQL'][0]
-                    .FlightManagerQLi) {
-                    for (const iterator of obj.MembersQL) {
-                        this.tournamentMember.push(iterator.PlayerQL);
-                        this.tournamentMembers.push(iterator.PlayerQL);
+                console.log(dataFullTournaments);
+                this.flightNumber = this.fullTournament.FlightsQL.length + 1;
+                this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+                this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
+                this.logger.log('Getting Tournament Members Succesfully', "info", this.tournamentID);
+                this.dataSource = new MatTableDataSource(this.tournamentMember);
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+            } else {
+                dataFullTournaments =
+                    await this.facadeService.getTournamentsFlights(
+                        this.tournamentID
+                    );
+                console.log(dataFullTournaments);
+                this.logger.log('Getting Tournament Members Succesfully', "info", this.tournamentID);
+                if (dataFullTournaments) {
+                    for (let obj of dataFullTournaments['TournamentQL'][0]
+                        .FlightManagerQLi) {
+                        for (const iterator of obj.MembersQL) {
+                            this.tournamentMember.push(iterator.PlayerQL);
+                            this.tournamentMembers.push(iterator.PlayerQL);
+                        }
                     }
                 }
-            }
-            this.flightNumber = this.fullTournament.FlightsQL.length + 1;
-            // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
-            this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
+                this.flightNumber = this.fullTournament.FlightsQL.length + 1;
+                // this.tournamentMember = dataFullTournaments.TournamentMemberQL;
+                this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
 
-            this.dataSource = new MatTableDataSource(this.tournamentMember);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
+                this.dataSource = new MatTableDataSource(this.tournamentMember);
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+            }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Members Data Failed', "error", error.toString());
         }
     }
 
@@ -3225,49 +3455,54 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     applyMembersFilter(filterValue: string) {
-        if (filterValue == '') {
-            this.tournamentMember = this.tournamentMembers;
-            return;
-        }
-        filterValue = filterValue.toLowerCase();
-        let players = [];
-        if (filterValue.length >= 3) {
-            for (let c of this.tournamentMembers) {
-                c['fullname'] =
-                    c.player['firstName'] + ' ' + c.player['lastName'];
-                if (c['fullname'].toLowerCase().includes(filterValue)) {
-                    players.push(c);
-                } else if (
-                    c.player['membershipNumber'] &&
-                    c.player['membershipNumber']
-                        .toLowerCase()
-                        .toString()
-                        .includes(filterValue)
-                ) {
-                    players.push(c);
-                } else if (
-                    c.player['playerCategory'] &&
-                    c.player['playerCategory']
-                        .toLowerCase()
-                        .toString()
-                        .includes(filterValue)
-                ) {
-                    players.push(c);
-                } else if (
-                    c.player['email'] &&
-                    c.player['email']
-                        .toLowerCase()
-                        .toString()
-                        .includes(filterValue)
-                ) {
-                    players.push(c);
-                }
+        try {
+            this.logger.log('Admin search in Tournament Members', "info", filterValue);
+            if (filterValue == '') {
+                this.tournamentMember = this.tournamentMembers;
+                return;
             }
-            console.log(players);
+            filterValue = filterValue.toLowerCase();
+            let players = [];
+            if (filterValue.length >= 3) {
+                for (let c of this.tournamentMembers) {
+                    c['fullname'] =
+                        c.player['firstName'] + ' ' + c.player['lastName'];
+                    if (c['fullname'].toLowerCase().includes(filterValue)) {
+                        players.push(c);
+                    } else if (
+                        c.player['membershipNumber'] &&
+                        c.player['membershipNumber']
+                            .toLowerCase()
+                            .toString()
+                            .includes(filterValue)
+                    ) {
+                        players.push(c);
+                    } else if (
+                        c.player['playerCategory'] &&
+                        c.player['playerCategory']
+                            .toLowerCase()
+                            .toString()
+                            .includes(filterValue)
+                    ) {
+                        players.push(c);
+                    } else if (
+                        c.player['email'] &&
+                        c.player['email']
+                            .toLowerCase()
+                            .toString()
+                            .includes(filterValue)
+                    ) {
+                        players.push(c);
+                    }
+                }
+                console.log(players);
 
-            this.tournamentMember = players;
-            //console.log(this.player);
-            // this.setDataSource(this.player);
+                this.tournamentMember = players;
+                //console.log(this.player);
+                // this.setDataSource(this.player);
+            }
+        } catch (error) {
+            this.logger.log('Search in Tournament Members Failed', "error", error.toString());
         }
     }
 
@@ -3374,34 +3609,44 @@ export class ViewTournamentComponent implements OnInit {
         this.mainSelected = ++this.mainSelected;
     }
     async playerList() {
-        let datas = await this.facadeService.getPlayersListForTournament(
-            this.loggedInUser.adminClubId
-        );
-        let subtournamentID =
-            this.dataFullTournament['SubTournamentQL'].length > 0
-                ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId
-                : undefined;
-        const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-            data: {
-                players: datas.player,
-                tournamentID: this.tournamentID,
-                subTournamentID: subtournamentID,
-            },
-        });
 
-        dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
-            if (result) {
-                //console.log("record deleted.");
+        try {
+            this.logger.log('Admin Click on Add New Member Btn on Members Tab', "info", this.tournamentID);
+
+
+            let datas = await this.facadeService.getPlayersListForTournament(
+                this.loggedInUser.adminClubId
+            );
+            let subtournamentID =
+                this.dataFullTournament['SubTournamentQL'].length > 0
+                    ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId
+                    : '';
+            const dialogRef = this.dialog.open(DialogPlayerListComponent, {
+                data: {
+                    players: datas.player,
+                    tournamentID: this.tournamentID,
+                    subTournamentID: subtournamentID,
+                },
+            });
+
+            dialogRef.afterClosed().subscribe((result) => {
                 console.log(result);
-                this.getTournamentMembers();
-                // this.clubMembers.push(result);
-                // console.log(this.clubMembers);
-                // this.syncClubMembers();
-            } else {
-                //console.log("cancel delete action");
-            }
-        });
+                const resultString = JSON.stringify(result);
+                this.logger.log('Result From Add New Member Btn on Members Tab', "info", resultString);
+                if (result) {
+                    //console.log("record deleted.");
+                    console.log(result);
+                    this.getTournamentMembers();
+                    // this.clubMembers.push(result);
+                    // console.log(this.clubMembers);
+                    // this.syncClubMembers();
+                } else {
+                    //console.log("cancel delete action");
+                }
+            });
+        } catch (error) {
+            this.logger.log('Getting Players To add on Tournament View Page Failed', "error", error.toString());
+        }
     }
     async closeDrawer() {
         //let obj =new FlightManagementComponent(this.route, this.router,this.snackBar,this.dialog,null,this.facadeService,this.changeDetection);

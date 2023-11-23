@@ -1,23 +1,13 @@
-<div
-    class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
->
+<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <!-- Edit mode -->
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Contact form -->
-        <mat-drawer
-            class="sm:w-96 dark:bg-gray-900"
-            [autoFocus]="false"
-            [mode]="drawerMode"
-            [opened]="true"
-            #drawer
-        >
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="true" #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
-                <div
-                    class="text-4xl font-extrabold tracking-tight leading-none"
-                >
-                    Settings
+                <div class="text-4xl font-extrabold tracking-tight leading-none">
+                    Player Add Form
                 </div>
                 <!-- Close button -->
                 <div class="lg:hidden">
@@ -28,18 +18,12 @@
             </div>
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container>
-                    <div
-                        class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50"
-                    >
-                        <mat-icon
-                            class="text-primary dark:text-primary-500"
-                            [svgIcon]="'heroicons_outline:user-circle'"
-                        ></mat-icon>
+                    <div class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50">
+                        <mat-icon class="text-primary dark:text-primary-500"
+                            [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
                         <div class="ml-3">
-                            <div
-                                class="font-medium leading-6 text-primary dark:text-primary-500"
-                            >
-                                Account
+                            <div class="font-medium leading-6 text-primary dark:text-primary-500">
+                                Player
                             </div>
                             <div class="mt-0.5 text-secondary">
                                 Manage your public profile and private
@@ -58,10 +42,8 @@
                 </button>
 
                 <!-- Panel title -->
-                <div
-                    class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none"
-                >
-                    Account
+                <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
+                    Player
                 </div>
             </div>
             <!-- <div class="w-full">
@@ -75,212 +57,111 @@
                 <div class="text-secondary">
                     Following information is publicly displayed, be careful!
                 </div>
-                <form
-                    [formGroup]="contactForm ? contactForm : []"
-                    autocomplete="off"
-                    novalidate
-                >
+                <form [formGroup]="contactForm ? contactForm : []" autocomplete="off" novalidate>
                     <!--First Name -->
                     <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>First Name</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="firstName"
-                                    [placeholder]="'FirstName'"
-                                />
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input matInput formControlName="firstName" [placeholder]="'FirstName'" />
                             </mat-form-field>
                         </div>
                         <!--Last Name -->
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Last Name</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:user-circle'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="lastName"
-                                    [placeholder]="'LastName'"
-                                />
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                <input matInput formControlName="lastName" [placeholder]="'LastName'" />
                             </mat-form-field>
                         </div>
 
                         <!-- Email -->
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Email</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:mail'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="email"
-                                    [placeholder]="'Email'"
-                                />
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                <input matInput formControlName="email" [placeholder]="'Email'" />
                             </mat-form-field>
                         </div>
 
                         <!-- Membership -->
-                        <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                        <div *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2" class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Membership No</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:color-swatch'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="membershipNo"
-                                    [placeholder]="'Membership No '"
-                                />
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:color-swatch'"></mat-icon>
+                                <input matInput formControlName="membershipNo" [placeholder]="'Membership No '" />
                             </mat-form-field>
                         </div>
                         <!-- Handicap -->
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <mat-label>Handicap Congu</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:tag'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="handicap"
-                                    [placeholder]="'Handicap'"
-                                    type="number"
-                                    step="0.1"
-                                    (change)="changeHandicap($event)"
-                                />
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Playing Handicap</mat-label>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:tag'"></mat-icon>
+                                <input matInput formControlName="handicap" [placeholder]="'Handicap'" type="number"
+                                    step="0.1" (change)="changeHandicap($event)" />
                             </mat-form-field>
                         </div>
-                        <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                        <!-- <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Handicap WHS</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:tag'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="handicapWhsIndex"
-                                    [placeholder]="'HandicapWhsIndex'"
-                                    type="number"
-                                    [readonly]="true"
-                                    step="0.1"
-                                    (change)="changeHandicapWHS($event)"
-                                />
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:tag'"></mat-icon>
+                                <input matInput formControlName="handicapWhsIndex" [placeholder]="'HandicapWhsIndex'"
+                                    type="number" [readonly]="true" step="0.1" (change)="changeHandicapWHS($event)" />
                             </mat-form-field>
-                        </div>
+                        </div> -->
                         <!-- Handicap WHS-->
-                        <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                        <div  *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2" class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Handicap Differential Change</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:tag'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    step="0.1"
-                                    formControlName="handicapWHS"
-                                    [placeholder]="'HandicapIndex'"
-                                    type="number"
-                                    (change)="changeHandicapWHSDiff($event)"
-                                />
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:tag'"></mat-icon>
+                                <input matInput step="0.1" formControlName="handicapWHS" [placeholder]="'HandicapIndex'"
+                                    type="number" (change)="changeHandicapWHSDiff($event)" />
                             </mat-form-field>
                         </div>
 
                         <!-- CLUB -->
-                        <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                        <div *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2"
+                            class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Club</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:stop'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    formControlName="club"
-                                    [placeholder]="'Club'"
-                                    [readonly]="hideClubs"
-                                    [matAutocomplete]="auto"
-                                />
-                                <mat-autocomplete
-                                    autoActiveFirstOption
-                                    #auto="matAutocomplete"
-                                    [displayWith]="displayFn"
-                                >
-                                    <mat-option
-                                        *ngFor="
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:stop'"></mat-icon>
+                                <input matInput formControlName="club" [placeholder]="'Club'" [readonly]="hideClubs"
+                                    [matAutocomplete]="auto" />
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    [displayWith]="displayFn">
+                                    <mat-option *ngFor="
                                             let option of filteredClubOptions
                                                 | async
-                                        "
-                                        [value]="option"
-                                    >
+                                        " [value]="option">
                                         {{ option.name }}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
                         </div>
-                        
+
 
                         <!-- Category -->
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Category</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:newspaper'"
-                                ></mat-icon>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:newspaper'"></mat-icon>
 
-                                <mat-select
-                                    formControlName="category"
-                                    placeholder="Player Category"
-                                    class="mr-1.5"
-                                >
-                                    <mat-option
-                                        *ngFor="let cat of playerCategories"
-                                        [value]="cat.name"
-                                    >
+                                <mat-select formControlName="category" placeholder="Player Category" class="mr-1.5">
+                                    <mat-option *ngFor="let cat of playerCategories" [value]="cat.name">
                                         <span class="flex items-center">
                                             <span class="ml-5">{{
                                                 cat.name
-                                            }}</span>
+                                                }}</span>
                                         </span>
                                     </mat-option>
                                 </mat-select>
@@ -292,38 +173,20 @@
                             <div class="space-y-4">
                                 <ng-container>
                                     <div class="flex">
-                                        <mat-form-field
-                                            class="fuse-mat-no-subscript flex-auto"
-                                        >
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                             <mat-label>Gender</mat-label>
-                                            <mat-icon
-                                                matPrefix
-                                                class="hidden sm:flex icon-size-5"
-                                                [svgIcon]="
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="
                                                     'heroicons_solid:map'
-                                                "
-                                            ></mat-icon>
-                                            <mat-select
-                                                formControlName="gender"
-                                                placeholder="Gender"
-                                                class="mr-1.5"
-                                            >
+                                                "></mat-icon>
+                                            <mat-select formControlName="gender" placeholder="Gender" class="mr-1.5">
                                                 <mat-option value="male">
-                                                    <span
-                                                        class="flex items-center"
-                                                    >
-                                                        <span class="ml-2"
-                                                            >Male</span
-                                                        >
+                                                    <span class="flex items-center">
+                                                        <span class="ml-2">Male</span>
                                                     </span>
                                                 </mat-option>
                                                 <mat-option value="female">
-                                                    <span
-                                                        class="flex items-center"
-                                                    >
-                                                        <span class="ml-2"
-                                                            >Female</span
-                                                        >
+                                                    <span class="flex items-center">
+                                                        <span class="ml-2">Female</span>
                                                     </span>
                                                 </mat-option>
                                             </mat-select>
@@ -333,45 +196,25 @@
                             </div>
                         </div>
                         <!-- Country -->
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-2" *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2">
                             <div class="space-y-4">
                                 <ng-container>
                                     <div class="flex">
-                                        <mat-form-field
-                                            class="fuse-mat-no-subscript flex-auto"
-                                        >
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                             <mat-label>Country</mat-label>
-                                            <mat-icon
-                                                matPrefix
-                                                class="hidden sm:flex icon-size-5"
-                                                [svgIcon]="
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="
                                                     'heroicons_solid:cloud'
-                                                "
-                                            ></mat-icon>
-                                            <mat-select
-                                                formControlName="country"
-                                                placeholder="Country"
-                                                class="mr-1.5"
-                                            >
+                                                "></mat-icon>
+                                            <mat-select formControlName="country" placeholder="Country" class="mr-1.5">
                                                 <mat-option value="Pakistan">
-                                                    <span
-                                                        class="flex items-center"
-                                                    >
-                                                        <span class="ml-2"
-                                                            >Pakistan</span
-                                                        >
+                                                    <span class="flex items-center">
+                                                        <span class="ml-2">Pakistan</span>
                                                     </span>
                                                 </mat-option>
-                                                <mat-option
-                                                    value="United Kingdom"
-                                                >
-                                                    <span
-                                                        class="flex items-center"
-                                                    >
-                                                        <span class="ml-2"
-                                                            >United
-                                                            Kingdom</span
-                                                        >
+                                                <mat-option value="United Kingdom">
+                                                    <span class="flex items-center">
+                                                        <span class="ml-2">United
+                                                            Kingdom</span>
                                                     </span>
                                                 </mat-option>
                                             </mat-select>
@@ -381,42 +224,24 @@
                             </div>
                         </div>
                         <!-- Status -->
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-2" *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2 ">
                             <div class="space-y-4">
                                 <ng-container>
                                     <div class="flex">
-                                        <mat-form-field
-                                            class="fuse-mat-no-subscript flex-auto"
-                                        >
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                             <mat-label>Status</mat-label>
-                                            <mat-icon
-                                                matPrefix
-                                                class="hidden sm:flex icon-size-5"
-                                                [svgIcon]="
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="
                                                     'heroicons_solid:status-online'
-                                                "
-                                            ></mat-icon>
-                                            <mat-select
-                                                formControlName="status"
-                                                placeholder="Status"
-                                                class="mr-1.5"
-                                            >
+                                                "></mat-icon>
+                                            <mat-select formControlName="status" placeholder="Status" class="mr-1.5">
                                                 <mat-option value="false">
-                                                    <span
-                                                        class="flex items-center"
-                                                    >
-                                                        <span class="ml-2"
-                                                            >Active</span
-                                                        >
+                                                    <span class="flex items-center">
+                                                        <span class="ml-2">Active</span>
                                                     </span>
                                                 </mat-option>
                                                 <mat-option value="true">
-                                                    <span
-                                                        class="flex items-center"
-                                                    >
-                                                        <span class="ml-2"
-                                                            >Disable</span
-                                                        >
+                                                    <span class="flex items-center">
+                                                        <span class="ml-2">Disable</span>
                                                     </span>
                                                 </mat-option>
                                             </mat-select>
@@ -427,26 +252,17 @@
                         </div>
 
                         <!-- Phone numbers -->
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-2" >
                             <div class="space-y-4">
                                 <ng-container>
                                     <div class="relative flex">
-                                        <mat-form-field
-                                            class="fuse-mat-no-subscript flex-auto"
-                                        >
+                                        <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                             <mat-label>Phone</mat-label>
-                                            <mat-icon
-                                                matPrefix
-                                                class="hidden sm:flex icon-size-5"
-                                                [svgIcon]="
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="
                                                     'heroicons_solid:phone'
-                                                "
-                                            ></mat-icon>
-                                            <input
-                                                matInput
-                                                formControlName="phoneNumbers"
-                                                [placeholder]="'Phone Number'"
-                                            />
+                                                "></mat-icon>
+                                            <input matInput formControlName="phoneNumbers"
+                                                [placeholder]="'Phone Number'" />
                                         </mat-form-field>
                                     </div>
                                 </ng-container>
@@ -462,52 +278,27 @@
                         </div>
 
                         <!-- Birthday -->
-                        <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                        <div class="sm:col-span-2" *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Birthday</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:cake'"
-                                ></mat-icon>
-                                <input
-                                    matInput
-                                    [matDatepicker]="birthdayDatepicker"
-                                    formControlName="dateOfBirth"
-                                    [placeholder]="'Enter Birthday'"
-                                />
-                                <mat-datepicker-toggle
-                                    matSuffix
-                                    [for]="birthdayDatepicker"
-                                >
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:cake'"></mat-icon>
+                                <input matInput [matDatepicker]="birthdayDatepicker" formControlName="dateOfBirth"
+                                    [placeholder]="'Enter Birthday'" />
+                                <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker">
                                 </mat-datepicker-toggle>
-                                <mat-datepicker
-                                    #birthdayDatepicker
-                                ></mat-datepicker>
+                                <mat-datepicker #birthdayDatepicker></mat-datepicker>
                             </mat-form-field>
                         </div>
 
                         <!-- Notes -->
                         <div class="sm:col-span-2  hidden" id="comment">
-                            <mat-form-field
-                                class="fuse-mat-textarea fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                                 <mat-label>Comments</mat-label>
-                                <mat-icon
-                                    matPrefix
-                                    class="hidden sm:flex icon-size-5"
-                                    [svgIcon]="'heroicons_solid:menu-alt-2'"
-                                ></mat-icon>
-                                <textarea
-                                    matInput
-                                    formControlName="notes"
-                                    [placeholder]="'Comments'"
-                                    [rows]="5"
-                                    [spellcheck]="false"
-                                    matTextareaAutosize
-                                ></textarea>
+                                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
+                                <textarea matInput formControlName="notes" [placeholder]="'Comments'" [rows]="5"
+                                    [spellcheck]="false" matTextareaAutosize></textarea>
                             </mat-form-field>
                         </div>
                     </div>
@@ -515,23 +306,12 @@
                     <!-- Actions -->
                     <div class="flex items-center justify-end">
                         <!-- Cancel -->
-                        <button
-                            class="ml-auto"
-                            mat-button
-                            [matTooltip]="'Cancel'"
-                            (click)="cancel()"
-                        >
+                        <button class="ml-auto" mat-button [matTooltip]="'Cancel'" (click)="cancel()">
                             Cancel
                         </button>
                         <!-- Save -->
-                        <button
-                            class="ml-2"
-                            mat-flat-button
-                            [color]="'primary'"
-                            [disabled]="contactForm.invalid"
-                            [matTooltip]="'Save'"
-                            (click)="updateContact()"
-                        >
+                        <button class="ml-2" mat-flat-button [color]="'primary'" [disabled]="contactForm.invalid"
+                            [matTooltip]="'Save'" (click)="updateContact()">
                             Save
                         </button>
                     </div>

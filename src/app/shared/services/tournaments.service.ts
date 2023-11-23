@@ -14,13 +14,14 @@ import {
 import * as Query from '../GraphQL/tournament.gql';
 import { resolve } from 'url';
 import { AnyNsRecord, AnyPtrRecord } from 'dns';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, from, switchMap, map } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TournamentsService {
-    constructor(private apollo: Apollo) {}
+    constructor(private apollo: Apollo, private storage: AngularFireStorage) { }
 
     public getTournamentsListForCompleted(endDate: Date): Promise<any> {
         return new Promise((resolve) => {
@@ -134,6 +135,26 @@ export class TournamentsService {
                     variables: {
                         endDate: endDate,
                         clubId: clubId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getTournamentsListByTourForCompleted(
+        tourId: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTournamentsListByTourForCompleted,
+                    variables: {
+                        tourId: tourId,
                     },
                 })
                 .subscribe(({ data }) => {
@@ -834,6 +855,27 @@ export class TournamentsService {
                 });
         });
     }
+    public getTourGuide(tourId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTourGuides,
+                    variables: {
+                        tourId: tourId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data.tournament_by_pk);
+                    console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        //console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public LeaderboardSubscriptions(
         tournamentId: string,
@@ -1027,7 +1069,36 @@ export class TournamentsService {
     //     });
     //   });
     // }
+    public addTour(tour: any, file: File): Observable<string> {
+        const fileName = 'tour/' + tour.id + '.png';
+        const ref = this.storage.ref(fileName);
+        const task = ref.put(file);
 
+        return from(task).pipe(
+            switchMap((snapshot: any) => {
+                return ref.getDownloadURL();
+            }),
+            switchMap((downloadUrl: string) => {
+                // Update the picture URL in the account object
+                tour.logo = downloadUrl;
+
+                // Perform the mutation using Apollo client
+                return this.apollo
+                    .mutate<any>({
+                        mutation: Query.insertTourQL,
+                        variables: {
+                            tour: tour
+                        },
+                    })
+                    .pipe(
+                        map((response: any) => {
+                            // Return the download URL
+                            return downloadUrl;
+                        })
+                    );
+            })
+        );
+    }
     public addTournament(tmnt: any): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -1067,10 +1138,13 @@ export class TournamentsService {
                                 sponsorLogo: tmnt.sponsorLogo,
                                 mobileLogoUrl: tmnt.mobileLogoUrl,
                                 webLogoUrl: tmnt.webLogoUrl,
+                                noofMarshals: tmnt.noofMarshals,
+                                marshalStart: tmnt.marshalStart,
                                 flightsCategory: tmnt.flightsCategory,
                                 subTournament: tmnt.subTournament,
                                 multiFormat: tmnt.multiFormat,
                                 createdAt: tmnt.createdAt,
+                                tourId: tmnt.tourId,
                                 categories: {
                                     data: tmnt.categories,
                                 },
@@ -1170,6 +1244,34 @@ export class TournamentsService {
                                     },
                                 },
                             ],
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could delete add due to ' + error);
+                    }
+                );
+        });
+    }
+
+    deleteTourGuide(
+        id: string
+    ): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteTourGuide,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: id,
+                            },
                         },
                     },
                 })
@@ -1348,6 +1450,54 @@ export class TournamentsService {
                     mutation: Query.insertTournamentMemberQL,
                     variables: {
                         tournamentMembers: tournamentMembers,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+    public insertTourGuide(
+        tourGuide: any[]
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertTourGuideQL,
+                    variables: {
+                        tourGuide: tourGuide,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+    public insertTournamentTeam(
+        teamsToSave, teamMembersToSave, tournamentId
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertTournamentTeamQL,
+                    variables: {
+                        teamsToSave: teamsToSave,
+                        teamMembersToSave: teamMembersToSave,
+                        tournamentId: tournamentId,
                     },
                 })
                 .subscribe(

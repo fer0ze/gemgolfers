@@ -25,7 +25,57 @@ import {
 } from '../fragments/player.fragment';
 
 export const LeaderboardSubscription = gql`
-    subscription LeaderboardSimpleSubscription($tournamentPrefix: String!) {
+    query LeaderboardSimpleSubscription($tournamentPrefix: String!) {
+        LeaderBoardQL: leaderboard_score(
+            where: {
+                _or: [
+                    { prefix: { _eq: $tournamentPrefix } }
+                    { tournamentId: { _eq: $tournamentPrefix } }
+                ]
+            }
+        ) {
+            playerId
+            handicap
+            underGross
+            underGross1
+            underGross2
+            underGross3
+            underGross4
+            playingRound
+            name
+            scoreR1
+            scoreR2
+            scoreR3
+            scoreR4
+            holesPlayedR1
+            holesPlayedR2
+            holesPlayedR3
+            holesPlayedR4
+            status
+            category
+            netScoreR1
+            netScoreR2
+            netScoreR3
+            netScoreR4
+            underNet
+            underNet1
+            underNet2
+            underNet3
+            underNet4
+            holeScoreLast9
+            holeScoreLast6
+            holeScoreLast3
+            holeScoreLast1
+            pointsRound1
+            pointsRound2
+            pointsRound3
+            pointsRound4
+            activeRound
+            completed1
+            completed2
+            completed3
+            completed4
+        }
         TournamentQL: tournament(
             where: {
                 _or: [
@@ -34,6 +84,10 @@ export const LeaderboardSubscription = gql`
                 ]
             }
         ) {
+            id
+            courseId
+            courseHoleSets
+            courseHoleSetsInverted
             cutOffCriteria
             activeRound
             handicapAllocations
@@ -41,60 +95,50 @@ export const LeaderboardSubscription = gql`
             webLogoUrl
             title
             matchFormat
-            tee_id
-            FlightsQL: flights {
-                id
-                courseId
-                courseHoleSets
-                flightRound
-                categoryRound
-                flightNo
-                name {
-                    name
-                }
-                MembersQL: members {
-                    playerId
-                    PlayerQL: player {
-                        id
-                        playerCategory
-                        handicap
-                        firstName
-                        lastName
-                    }
-                    ScoresQL: scores {
-                        playerId
-                        playerHandicap
-                        grossScore
-                        hole {
-                            holeNo
-                            index
-                            par
-                        }
-                    }
-                }
-                CourseQL: course {
-                    id
-                    noOfHoles
-                }
-            }
             CategoriesQL: categories {
                 ...TournamentMemberCategoryQL
             }
-            MemberStatusesQL: member_statuses {
-                ...TournamentMemberStatusQL
-            }
-            AdminQL: admin {
-                membership {
-                    club {
-                        logo
+            TeamQL: teams {
+                id
+                tournamentId
+                name
+                color
+                OpponentsQL: opponentsTeam1 {
+                    id
+                    team1Id
+                    team2Id
+                    team1MemberId
+                    team2MemberId
+                    tournamentId
+                    playerTeam1 {
+                        firstName
+                        lastName
+                        handicap
+                    }
+                    playerTeam2 {
+                        firstName
+                        lastName
+                        handicap
                     }
                 }
             }
+            TeamResultQL: team_match_result_singles {
+                tournamentId
+                teamOpponentId
+                finalResult
+                upScore
+                remainingHoles
+            }
+            TeamResultDoublesQL: team_match_result_doubles {
+                tournamentId
+                finalResult
+                upScore
+                remainingHoles
+                round
+            }
         }
     }
-
     ${TournamentMemberCategoryQL}
-    ${TournamentMemberStatusQL}
 `;
 
 export const tournamentDashBoard = gql`
@@ -225,6 +269,16 @@ export const LeaderboardSubscriptions = gql`
         }
     }
     ${TournamentMemberCategoryQL}
+`;
+export const getTourGuides = gql`
+    query getGuides($tourId:String!) {
+        tour_guide(where: { tourId: { _eq: $tourId } } ,order_by: { date: asc }) {
+            id
+            tourId
+            date
+            details
+        }
+    }
 `;
 export const getLeagues = gql`
     query getLeagues {
@@ -457,6 +511,31 @@ export const GetTournamnetListForCompleted = gql`
             HandicapCalculated: player_handicaps(limit: 1) {
                 playerId
                 tournamentId
+            }
+        }
+    }
+`;
+export const getTournamentsListByTourForCompleted = gql`
+    query PostsGetQuery($tourId: String!) {
+        CompletedRecently: tour(
+            where: { id: { _eq: $tourId } }
+        ) {
+            id
+            tournaments{
+                id
+                title
+                startDate
+                endDate
+                matchFormat
+                noOfRounds
+                admin {
+                    firstName
+                    lastName
+                }
+                HandicapCalculated: player_handicaps(limit: 1) {
+                    playerId
+                    tournamentId
+                }
             }
         }
     }
@@ -748,6 +827,20 @@ export const GetTournamentByID = gql`
                 category
                 flightSettings
             }
+            teams {
+                id
+                adminId
+                tournamentId
+                name
+                color
+            }
+            opponents {
+                id
+                team1Id
+                team2Id
+                team1MemberId
+                team2MemberId
+            }
         }
     }
     ${TournamentQL}
@@ -817,6 +910,8 @@ export const UpdateMutation = gql`
                     scoreManagement
                     startDate
                     endDate
+                    marshalStart
+                    noofMarshals
                 ]
             }
         ) {
@@ -1011,6 +1106,13 @@ export const DeleteTournamentMember = gql`
         }
     }
 `;
+export const DeleteTourGuide = gql`
+    mutation DeleteTournamentMember($where: tour_guide_bool_exp!) {
+        delete_tour_guide(where: $where) {
+            affected_rows
+        }
+    }
+`;
 
 export const markActiveTournamentMemberQL = gql`
     mutation markActiveTournamentMemberQL(
@@ -1050,6 +1152,52 @@ export const insertTournamentMemberQL = gql`
         }
     }
 `;
+export const insertTourGuideQL = gql`
+    mutation insertTournamentMemberQL(
+        $tourGuide: [tour_guide_insert_input!]!
+    ) {
+        insert_tour_guide(
+            objects: $tourGuide
+            on_conflict: {
+                constraint: tour_guide_pkey
+                update_columns: [details]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
+export const insertTournamentTeamQL = gql`
+    mutation insertTournamentTeamQL(
+        $teamsToSave: [tournament_team_insert_input!]!
+        $teamMembersToSave: [tournament_team_opponent_insert_input!]!
+        $tournamentId: String!
+    ) {
+        delete_tournament_team_opponent(
+            where: { tournamentId: { _eq: $tournamentId } }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+        insert_tournament_team(
+            objects: $teamsToSave
+            on_conflict: {
+                constraint: tournament_team_pkey
+                update_columns: [name, color]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+        insert_tournament_team_opponent(
+            objects: $teamMembersToSave
+            on_conflict: {
+                constraint: tournament_team_opponent_pkey
+                update_columns: [team1MemberId, team2MemberId, flightId]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
 export const insertTournamentMemberStatusQL = gql`
     mutation insertTournamentMemberStatusQL(
         $tournamentMembers: [tournament_member_status_insert_input!]!
@@ -1074,6 +1222,16 @@ export const insertClubMemberQL = gql`
                 constraint: club_member_pkey
                 update_columns: [playerId]
             }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
+export const insertTourQL = gql`
+    mutation insertTourQL($tour: [tour_insert_input!]!) {
+        insert_tour(
+            objects: $tour
+            on_conflict: { constraint: tour_pkey, update_columns: [name] }
         ) {
             AffectedRowsQL: affected_rows
         }
@@ -1929,6 +2087,82 @@ export const getallDashboard = gql`
                 player {
                     playerCategory
                 }
+            }
+        }
+    }
+`;
+export const getTourDashboard = gql`
+    query getTourDashboard(
+        $adminId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        tour(
+            where: { adminId: { _eq: $adminId } }
+            order_by: [{ dateCreated: desc }]
+        ) {
+            id
+            name
+            tournaments {
+                id
+                leagueId
+                title
+                matchFormat
+                noOfRounds
+                startDate
+                admin {
+                    firstName
+                    lastName
+                }
+            }
+            members {
+                playerId
+                player {
+                    id
+                    playerCategory
+                }
+            }
+        }
+        TournamentsQLs: tournament(
+            where: {
+                adminId: { _eq: $adminId }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            startDate
+            MembersQL: members {
+                playerId
+                player {
+                    id
+                    playerCategory
+                }
+            }
+        }
+    }
+`;
+export const getTours = gql`
+    query getTourDashboard($adminId: String!) {
+        tour(
+            where: { adminId: { _eq: $adminId } }
+            order_by: [{ dateCreated: desc }]
+        ) {
+            id
+            name
+            logo
+            dateCreated
+            startDate
+            endDate
+            tournaments {
+                id
+                leagueId
+                title
+            }
+            members {
+                playerId
             }
         }
     }

@@ -103,27 +103,27 @@
                         {{ hole?.par }}
                     </th>
                     <th *ngIf="item.courseHoles9.length > 0">
-                        {{ item.par9 }}
+                        {{ item?.par9 }}
                     </th>
                     <th *ngFor="let hole of item.courseHoles18">
                         {{ hole?.par }}
                     </th>
                     <th *ngIf="item.courseHoles18.length > 0">
-                        {{ item.par18 }}
+                        {{ item?.par18 }}
                     </th>
                     <th *ngFor="let hole of item.courseHoles27">
                         {{ hole?.par }}
                     </th>
                     <th *ngIf="item.courseHoles27.length > 0">
-                        {{ item.par27 }}
+                        {{ item?.par27 }}
                     </th>
                     <th *ngFor="let hole of item.courseHoles36">
                         {{ hole?.par }}
                     </th>
                     <th *ngIf="item.courseHoles36.length > 0">
-                        {{ item.par36 }}
+                        {{ item?.par36 }}
                     </th>
-                    <th>{{ item.parTotal }}</th>
+                    <th>{{ item?.parTotal }}</th>
                 </tr>
                 <tr *ngFor="let item of scoreHeader" class="subhead">
                     <th>Index</th>
@@ -170,30 +170,32 @@
                         </span>
                     </td>
                     <td style="background-color: #e8e8e7" *ngIf="item.Hole9Scores.length > 0">
-                        <span>{{ item.hole9Total }}</span>
+                        <span>{{ item?.hole9Total }}</span>
                     </td>
-                    <td *ngFor="let score of item.Hole18Scores; let j = index" [ngClass]="{
+                    <ng-container *ngIf="item.Hole18Scores.length > 0">
+                        <td *ngFor="let score of item.Hole18Scores; let j = index" [ngClass]="{
                             eagle: (score - scoreHeader[0].courseHoles18[j]['par'])==-2,
                             birdy: (score - scoreHeader[0].courseHoles18[j]['par'])==-1,
                             bogey : (score - scoreHeader[0].courseHoles18[j]['par'])==1,
                             doublebogey: (score - scoreHeader[0].courseHoles18[j]['par'])==2 
                         }">
-                        <span>
-                            {{ score }}
-                        </span>
-                    </td>
-                    <td style="background-color: #e8e8e7" *ngIf="item.Hole18Scores.length > 0">
-                        <span class="class_name_round">{{
-                            item.hole18Total
-                            }}</span>
-                    </td>
+                            <span>
+                                {{ score }}
+                            </span>
+                        </td>
+                        <td style="background-color: #e8e8e7" *ngIf="item.Hole18Scores.length > 0">
+                            <span class="class_name_round">{{
+                                item?.hole18Total
+                                }}</span>
+                        </td>
+                    </ng-container>
                     <td *ngFor="let score of item.Hole27Scores; let k = index" [ngClass]="{
                             scorebodyred: item.playerId == data.removed[k + 18]
                         }">
                         {{ score }}
                     </td>
                     <td *ngIf="item.Hole27Scores.length > 0">
-                        <span>{{ item.hole27Total }}</span>
+                        <span>{{ item?.hole27Total }}</span>
                     </td>
                     <td *ngFor="let score of item.Hole36Scores; let l = index" [ngClass]="{
                             scorebodyred: item.playerId == data.removed[l + 27]
@@ -201,7 +203,8 @@
                         {{ score }}
                     </td>
                     <td style="background-color: #e8e8e7" *ngIf="item.Hole36Scores.length > 0">
-                        <span>{{ item.hole36Total }}</span>
+                        <span>{{ item?.hole36Total }}</span>
+
                     </td>
                     <td style="background-color: #e8e8e7">
                         <span class="class_name_round">{{

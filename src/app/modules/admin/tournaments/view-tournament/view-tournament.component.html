@@ -5,8 +5,19 @@
             <div *ngIf="!isLoading" class="flex flex-col flex-auto min-w-0">
                 <div class="bg-card">
                     <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+
+                        <a class="inline-flex items-center leading-6 mt-4 text-primary hover:underline"
+                            [routerLink]="['/tournaments']">
+                            <span class="inline-flex items-center">
+                                <mat-icon class="icon-size-5 text-current"
+                                    [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                                <span class="ml-1.5 font-medium leading-5">Back to Tournaments</span>
+                            </span>
+                        </a>
                         <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
                             <div class="flex flex-auto items-center min-w-0">
+
+
                                 <div class="flex-0 w-24 rounded-full overflow-hidden">
                                     <img class="w-full h-full object-cover" src="../../../../../assets/images/logo/{{
                                             clubLogo
@@ -350,7 +361,8 @@
                             <mat-tab-group [selectedIndex]="mainSelected" (selectedTabChange)="maintabClicked($event)"
                                 mat-stretch-tabs="false" mat-align-tabs="start">
                                 <mat-tab label="Overview"></mat-tab>
-                                <mat-tab class="pl-5" label="Flights"></mat-tab>
+                                <mat-tab class="pl-5" label="Groups"></mat-tab>
+                                <mat-tab *ngIf="showMatchPlay" label="Teams"></mat-tab>
                                 <mat-tab label="Scores"></mat-tab>
                                 <mat-tab label="Leaderboard"></mat-tab>
                                 <mat-tab label="Participants"></mat-tab>
@@ -546,7 +558,9 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                                                    Flights
+
+                                                    Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -563,7 +577,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
-                                                                Flight No:{{
+
+                                                                Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -626,7 +642,9 @@
                                                         'heroicons_outline:document-search'
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
-                                                    No Flights Added!
+
+                                                    No Groups Added!
+
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -1019,7 +1037,9 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                                                    Flights
+
+                                                    Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -1036,7 +1056,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
-                                                                Flight No:{{
+
+                                                                Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -1092,7 +1114,9 @@
                                                         'heroicons_outline:document-search'
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
-                                                    No Flights Added!
+
+                                                    No Groups Added!
+
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -1482,7 +1506,9 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                                                    Flights
+
+                                                    Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -1499,7 +1525,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
-                                                                Flight No:{{
+
+                                                                Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -1555,7 +1583,8 @@
                                                         'heroicons_outline:document-search'
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
-                                                    No Flights Added!
+                                                    No Groups Added!
+
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -1947,7 +1976,8 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                                                    Flights
+                                                    Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -1964,7 +1994,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
-                                                                Flight No:{{
+
+                                                                Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -2020,7 +2052,7 @@
                                                         'heroicons_outline:document-search'
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
-                                                    No Flights Added!
+                                                    No Groups Added!
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -2164,6 +2196,9 @@
                             <mat-tab [disabled]="activeRound < noOfROunds" label="Summary">
 
 
+                                <mat-icon aria-hidden="false" color="warn" (click)="downloadResultSheet()"
+                                    aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
+
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0">
                                     <div
@@ -2187,7 +2222,9 @@
                                                 <ng-template mat-tab-label>{{
                                                     m.category
                                                     }}</ng-template>
-                                                <table *ngIf="noOfRounds>1" mat-table [dataSource]="
+
+                                                <table mat-table [dataSource]="
+
                                                         dataSourceTotalGross
                                                     " matSort>
                                                     <!-- Serial Column -->
@@ -2302,6 +2339,7 @@
                                                             let row;
                                                             columns: displayedColumnsTotalGross
                                                         "></tr>
+
                                                 </table>
                                                 <table *ngIf="noOfRounds==1" mat-table [dataSource]="
                                                     dataSourceTotalGross
@@ -2411,7 +2449,9 @@
                                                 <ng-template mat-tab-label>{{
                                                     m.category
                                                     }}</ng-template>
+
                                                 <table *ngIf="noOfRounds>1" mat-table [dataSource]="
+
                                                         dataSourceTotalNET
                                                     " matSort>
                                                     <!-- Serial Column -->
@@ -2526,6 +2566,7 @@
                                                             let row;
                                                             columns: displayedColumnsTotalNET
                                                         "></tr>
+
                                                 </table>
                                                 <table *ngIf="noOfRounds==1" mat-table [dataSource]="
                                                         dataSourceTotalNET
@@ -2621,8 +2662,15 @@
                     </div>
                 </div>
                 <div *ngIf="this.showMainTab2" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+
                     <div class="w-full max-w-screen-xl mx-auto">
                         <app-flight-management [tournamentID]="tournamentID"></app-flight-management>
+                    </div>
+                </div>
+                <div *ngIf="this.showMainTab6" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                    <div class="w-full max-w-screen-xl mx-auto">
+                        <app-team-management [tournamentID]="tournamentID"></app-team-management>
+
                     </div>
                 </div>
                 <div *ngIf="this.showMainTab3" class="flex-auto border-t -mt-px pt-4 sm:pt-6">

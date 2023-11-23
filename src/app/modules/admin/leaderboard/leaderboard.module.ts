@@ -28,9 +28,14 @@ import { LeaderboardRoutingModule } from './leaderboard-routing.module';
 import { LeaderboardComponent } from './leaderboard.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Leader } from 'app/shared/classes/leader';
+import { StrokePlayComponent } from '../mainleaderboard/strokePlay/strokePlay.component';
+import { StableFordComponent } from '../mainleaderboard/stableFord/stableFord.component';
+import { MatchPlayComponent } from '../mainleaderboard/matchPlay/matchPlay.component';
+import { ScrambleComponent } from '../mainleaderboard/texasScramble/texasScramble.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [LeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent,ScrambleComponent],
   imports: [
     CommonModule,
     LeaderboardRoutingModule,
@@ -52,7 +57,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatToolbarModule,
     MatExpansionModule,
     MatDialogModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false})
-  ]
+  ],
 })
 export class LeaderboardModule { }

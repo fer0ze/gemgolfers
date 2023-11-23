@@ -262,6 +262,13 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.MergeProfilesModule),
             },
             {
+                path: 'tours',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/tour/tour.module'
+                    ).then((m) => m.TourModule),
+            },
+            {
                 path: 'reports/dailyPlayer',
                 data: {
                     expectedRole: 8,

@@ -1,0 +1,133 @@
+<div class="flex flex-auto px-6 sm:px-10">
+    <div class="flex flex-col flex-auto w-full max-w-7xl sm:max-w-5xl mx-auto">
+        <div class="mt-3 flex flex-col sm:flex-row items-center justify-end sm:mt-0 sm:ml-2">
+            <mat-form-field class="fuse-mat-no-subscript pb-2 w-full sm:w-36 mx-2">
+                <mat-select (selectionChange)="selectionChanged($event)" value="1">
+                    <mat-option value="1">GROSS</mat-option>
+                    <mat-option value="2">NET</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+
+
+
+
+        <div class="flex flex-col sm:flex-row items-center justify-center mb-1">
+            <div id="leaderboard" class="mt-2 w-full">
+                <ul class="responsive-table" *ngIf="isGross">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">TEAM</div>
+                        <div class="col col-3">GROSS</div>
+                        <div class="col col-4 THRU par ">TO PAR</div>
+                        <div class="col col-5 THRU">THRU</div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of LeaderboardPlayers">
+                        <div class="col col-1">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                <span *ngIf="item.handicap > 0">
+                                    HC:{{ item.handicap }}
+                                </span>
+                                <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
+                                    (click)="
+                                viewPlayerScore(
+                                    item.name,
+                                    item.courseId,
+                                    item.holeSets,
+                                    item.playerId,
+                                    item.holeSetsInverted,
+                                    item.type
+                                )
+                            ">
+                                    view score
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-3">
+                            {{ item.scoreR1}}
+                        </div>
+                        <div class="col col-4" *ngIf="item.underGross
+                        >= 0">
+
+                            {{ item.underGross
+                            }}
+                        </div>
+                        <div class="col col-4" *ngIf="item.underGross
+                        < 0" style="color: red">
+
+                            {{ item.underGross
+                            }}
+                        </div>
+                        <div class="col col-5" *ngIf="item.holesPlayedR1 == 18">
+                            F
+                         </div>
+                         <div class="col col-5" *ngIf="item.holesPlayedR1 !== 18">
+                             {{ item.holesPlayedR1
+                             }}
+                         </div>
+                    </li>
+                </ul>
+
+                <ul class="responsive-table" *ngIf="isNet">
+                    <li class="table-header">
+                        <div class="col col-1">POS.</div>
+                        <div class="col col-2">TEAM</div>
+                        <div class="col col-3">NET</div>
+                        <div class="col col-4 THRU par ">TO PAR</div>
+                        <div class="col col-5 THRU">THRU</div>
+                    </li>
+                    <li class="table-row" *ngFor="let item of LeaderboardPlayers">
+                        <div class="col col-1">
+                            {{ item.position }}
+                        </div>
+                        <div class="col col-2">
+                            {{ item.name }}
+                            <div class="text-xs flex items-center">
+                                <span *ngIf="item.handicap > 0">
+                                    HC:{{ item.handicap }}
+                                </span>
+                                <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
+                                    (click)="
+                                viewPlayerScore(
+                                    item.name,
+                                    item.courseId,
+                                    item.holeSets,
+                                    item.playerId,
+                                    item.holeSetsInverted,
+                                    item.type
+                                )
+                            ">
+                                    view score
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-3">
+                            {{ item.netScoreR1
+                            }}
+                        </div>
+                        <div class="col col-4" *ngIf="item.underNet >= 0">
+
+                            {{ item.underNet }}
+                        </div>
+                        <div class="col col-4" *ngIf="item.underNet < 0" style="color: red">
+
+                            {{ item.underNet }}
+                        </div>
+                        <div class="col col-5" *ngIf="item.holesPlayedR1 == 18">
+                           F
+                        </div>
+                        <div class="col col-5" *ngIf="item.holesPlayedR1 !== 18">
+                            {{ item.holesPlayedR1
+                            }}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

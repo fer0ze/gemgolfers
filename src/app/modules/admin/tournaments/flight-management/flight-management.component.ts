@@ -63,6 +63,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog-add-member.component';
 import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-flight-management',
@@ -141,6 +142,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     selectPlayer: any;
     constructor(
         private _localStorage: LocalStorageService,
+        private logger: LogsService,
         private route?: ActivatedRoute,
         private router?: Router,
         public snackBar?: MatSnackBar,
@@ -180,6 +182,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let dataFullTournament = await this.facadeService.getTournamentsFlights(
             this.tournamentID
         );
+        this.logger.log('Admin comes to View Flights on Tournament Page', "info", this.tournamentID.toString());
+        this.logger.log('Getting View Flights on Tournament Page', "info", this.tournamentID.toString());
 
         this.tournamentInfo = dataFullTournament.TournamentQL;
         this.activeRound = this.tournamentInfo[0].activeRound;
@@ -212,7 +216,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         if (
             this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
-            matchFormat.BESTBALL
+
+            matchFormat.TWO_Ball_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
+            matchFormat.THREE_BALL_SCRAMBLE 
+
         ) {
             // this.flightRound = this.tournamentInfo[0].noOfRounds;
             // else this.flightRound = this.tournamentInfo[0].activeRound;
@@ -844,72 +851,77 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         return item.id;
     }
     getSelectedPlayers() {
-        this.selectedMembers = [];
-        this.changeDetection.detectChanges();
-        if (this.tournamentInfo[0].FlightManagerQLi.length > 0) {
-            if (this.flightRound == 0) {
-                this.roundFlights = this.tournamentInfo[0].FlightManagerQLi;
-            } else {
-                this.roundFlights =
-                    this.tournamentInfo[0].FlightManagerQLi.filter((a) => {
-                        return a.flightRound == this.flightRound;
-                    });
-            }
+        try {
 
-            let outer = 0;
-
-            for (let index in this.roundFlights) {
-                console.log(this.roundFlights);
-
-                //console.log(outer + "<--->" + cnter);
-
-                let cnter = 0;
-                this.selectedMembers[outer] = [];
-
-                this.selectedMembers[outer]['id'] = this.roundFlights[index].id;
-                if (this.showTeams) {
-                    this.selectedMembers[this.selectedMembers.length - 1][
-                        'firstName'
-                    ] = this.roundFlights[index]['FlightName'].name;
-                }
-                this.selectedMembers[outer]['tournamentId'] =
-                    this.roundFlights[index].tournamentId;
-                this.selectedMembers[outer]['time'] =
-                    this.roundFlights[index].time;
-                this.selectedMembers[outer]['startingHole'] =
-                    this.roundFlights[index].startingHole;
-                this.selectedMembers[outer]['tee'] =
-                    this.roundFlights[index].tee;
-                this.selectedMembers[outer]['tee_id'] =
-                    this.roundFlights[index].tee_id;
-                this.selectedMembers[outer]['flightNo'] =
-                    this.roundFlights[index].flightNo;
-                this.selectedMembers[outer]['categoryRound'] =
-                    this.roundFlights[index].categoryRound;
-
-                if (this.roundFlights[index].MembersQL.length > 0)
-                    this.selectedMembers[outer][cnter] =
-                        this.roundFlights[index].MembersQL;
-
-                for (let member of this.roundFlights[index].MembersQL) {
-                    this.selectedMembers[outer][cnter] = <Player>(
-                        member.PlayerQL
-                    );
-                    this.selectedMembers[outer][cnter]['attendance'] =
-                        member.attendance;
-                    this.selectedMembers[outer][cnter]['playingTee'] =
-                        member.playingTee;
-                    this.selectedMembers[outer][cnter]['tee_id'] =
-                        member.tee_id;
-                    cnter++;
+            this.selectedMembers = [];
+            this.changeDetection.detectChanges();
+            if (this.tournamentInfo[0].FlightManagerQLi.length > 0) {
+                if (this.flightRound == 0) {
+                    this.roundFlights = this.tournamentInfo[0].FlightManagerQLi;
+                } else {
+                    this.roundFlights =
+                        this.tournamentInfo[0].FlightManagerQLi.filter((a) => {
+                            return a.flightRound == this.flightRound;
+                        });
                 }
 
-                outer++;
+                let outer = 0;
+
+                for (let index in this.roundFlights) {
+                    console.log(this.roundFlights);
+
+                    //console.log(outer + "<--->" + cnter);
+
+                    let cnter = 0;
+                    this.selectedMembers[outer] = [];
+
+                    this.selectedMembers[outer]['id'] = this.roundFlights[index].id;
+                    if (this.showTeams) {
+                        this.selectedMembers[this.selectedMembers.length - 1][
+                            'firstName'
+                        ] = this.roundFlights[index]['FlightName'].name;
+                    }
+                    this.selectedMembers[outer]['tournamentId'] =
+                        this.roundFlights[index].tournamentId;
+                    this.selectedMembers[outer]['time'] =
+                        this.roundFlights[index].time;
+                    this.selectedMembers[outer]['startingHole'] =
+                        this.roundFlights[index].startingHole;
+                    this.selectedMembers[outer]['tee'] =
+                        this.roundFlights[index].tee;
+                    this.selectedMembers[outer]['tee_id'] =
+                        this.roundFlights[index].tee_id;
+                    this.selectedMembers[outer]['flightNo'] =
+                        this.roundFlights[index].flightNo;
+                    this.selectedMembers[outer]['categoryRound'] =
+                        this.roundFlights[index].categoryRound;
+
+                    if (this.roundFlights[index].MembersQL.length > 0)
+                        this.selectedMembers[outer][cnter] =
+                            this.roundFlights[index].MembersQL;
+
+                    for (let member of this.roundFlights[index].MembersQL) {
+                        this.selectedMembers[outer][cnter] = <Player>(
+                            member.PlayerQL
+                        );
+                        this.selectedMembers[outer][cnter]['attendance'] =
+                            member.attendance;
+                        this.selectedMembers[outer][cnter]['playingTee'] =
+                            member.playingTee;
+                        this.selectedMembers[outer][cnter]['tee_id'] =
+                            member.tee_id;
+                        cnter++;
+                    }
+
+                    outer++;
+                }
             }
+
+            console.log(this.selectedMembers);
+            //console.log(this.groups);
+        } catch (error) {
+            this.logger.log('Making Tournament Flights Data Failed', "error", error.toString());
         }
-
-        console.log(this.selectedMembers);
-        //console.log(this.groups);
     }
 
     OnChange($event, i: number, j: number) {
@@ -920,378 +932,385 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async saveFlights() {
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let tournamentFlights: Flight[] = [];
-        let flightName: any[] = [];
-        let flightsToRemove: string[] = [];
-        let flightMembersToRemove: string[] = [];
-        let membersFromFlightToRemove: string[] = [];
-        let flightMembersToSave: any[] = [];
-        let tournamentFlightMembers: FlightMembers[];
-        let fcnter = 0;
-        let runningFlightcounter = 0;
-        this.copyScoreInfo = [];
 
-        //console.log(this.selectedMembers);
-        //console.log(this.roundFlights);
+        try {
 
-        for (let index in this.selectedMembers) {
-            tournamentFlightMembers = [];
+            this.logger.log('Saving Tournaments Flights Data', "info");
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            let tournamentFlights: Flight[] = [];
+            let flightName: any[] = [];
+            let flightsToRemove: string[] = [];
+            let flightMembersToRemove: string[] = [];
+            let membersFromFlightToRemove: string[] = [];
+            let flightMembersToSave: any[] = [];
+            let tournamentFlightMembers: FlightMembers[];
+            let fcnter = 0;
+            let runningFlightcounter = 0;
+            this.copyScoreInfo = [];
 
-            for (let index2 in this.selectedMembers[index]) {
-                if (Number.isInteger(Number(index2))) {
-                    if (!this.playerTee) {
-                        let roundTeeId: any = General.getPlayersTe(
-                            this.selectedMembers[index][index2].playerCategory
-                                ? this.selectedMembers[index][index2]
-                                    .playerCategory
-                                : 'AMATEURS'
-                        );
-                        let FM: any = {
-                            playerId: this.selectedMembers[index][index2].id,
-                            flightId: this.selectedMembers[index]['id'],
-                            attendance: this.selectedMembers[index][index2][
-                                'attendance'
-                            ]
-                                ? this.selectedMembers[index][index2][
-                                'attendance'
+            //console.log(this.selectedMembers);
+            //console.log(this.roundFlights);
+
+            for (let index in this.selectedMembers) {
+                tournamentFlightMembers = [];
+
+                for (let index2 in this.selectedMembers[index]) {
+                    if (Number.isInteger(Number(index2))) {
+                        if (!this.playerTee) {
+                            let roundTeeId: any = General.getPlayersTe(
+                                this.selectedMembers[index][index2].playerCategory
+                                    ? this.selectedMembers[index][index2]
+                                        .playerCategory
+                                    : 'AMATEURS'
+                            );
+                            let FM: any = {
+                                playerId: this.selectedMembers[index][index2].id,
+                                flightId: this.selectedMembers[index]['id'],
+                                attendance: this.selectedMembers[index][index2][
+                                    'attendance'
                                 ]
-                                : false,
-                            playingTee: roundTeeId.result
-                                ? roundTeeId.result
-                                : 'AMATEURS',
-                            tee_id: roundTeeId.id,
-                        };
-                        tournamentFlightMembers.push(FM);
-                        flightMembersToSave.push(FM);
-                    } else if (this.selectedMembers[index][index2].id) {
-                        let FM: any = {
-                            playerId: this.selectedMembers[index][index2].id,
-                            flightId: this.selectedMembers[index]['id'],
-                            attendance: this.selectedMembers[index][index2][
-                                'attendance'
-                            ]
-                                ? this.selectedMembers[index][index2][
-                                'attendance'
+                                    ? this.selectedMembers[index][index2][
+                                    'attendance'
+                                    ]
+                                    : false,
+                                playingTee: roundTeeId.result
+                                    ? roundTeeId.result
+                                    : 'AMATEURS',
+                                tee_id: roundTeeId.id,
+                            };
+                            tournamentFlightMembers.push(FM);
+                            flightMembersToSave.push(FM);
+                        } else if (this.selectedMembers[index][index2].id) {
+                            let FM: any = {
+                                playerId: this.selectedMembers[index][index2].id,
+                                flightId: this.selectedMembers[index]['id'],
+                                attendance: this.selectedMembers[index][index2][
+                                    'attendance'
                                 ]
-                                : false,
-                            playingTee: this.selectedMembers[index][index2]
-                                .playingTee
-                                ? this.selectedMembers[index][index2].playingTee
-                                : 'AMATEURS',
-                            tee_id: this.selectedMembers[index][index2].tee_id,
-                        };
-                        tournamentFlightMembers.push(FM);
-                        flightMembersToSave.push(FM);
+                                    ? this.selectedMembers[index][index2][
+                                    'attendance'
+                                    ]
+                                    : false,
+                                playingTee: this.selectedMembers[index][index2]
+                                    .playingTee
+                                    ? this.selectedMembers[index][index2].playingTee
+                                    : 'AMATEURS',
+                                tee_id: this.selectedMembers[index][index2].tee_id,
+                            };
+                            tournamentFlightMembers.push(FM);
+                            flightMembersToSave.push(FM);
+                        }
+
                     }
                 }
-            }
 
-            //console.log(this.selectedMembers[index].length);
-            fcnter++;
-            if (this.selectedMembers[index].length > 0) {
-                runningFlightcounter++;
-                // console.log(tournamentFlightMembers);
+                //console.log(this.selectedMembers[index].length);
+                fcnter++;
+                if (this.selectedMembers[index].length > 0) {
+                    runningFlightcounter++;
+                    // console.log(tournamentFlightMembers);
 
-                let startingHole = parseFloat(
-                    (<HTMLInputElement>(
-                        document.getElementById('flight_' + index + '_hole')
-                    )).value
-                );
-                let startTime: string = (<HTMLInputElement>(
-                    document.getElementById('flight_' + index + '_time')
-                )).value;
-                let flightNumber = parseFloat(
-                    (<HTMLInputElement>(
-                        document.getElementById('flight_' + index + '_number')
-                    )).value
-                );
-                // let categoryFlight = parseFloat(
-                //     (<HTMLInputElement>(
-                //         document.getElementById('flight_' + index + '_catnumber')
-                //     )).value
-                // );
-
-                if (this.showTeams) {
-                    this.teamName = (<HTMLInputElement>(
-                        document.getElementById('flight_' + index + '_name')
+                    let startingHole = parseFloat(
+                        (<HTMLInputElement>(
+                            document.getElementById('flight_' + index + '_hole')
+                        )).value
+                    );
+                    let startTime: string = (<HTMLInputElement>(
+                        document.getElementById('flight_' + index + '_time')
                     )).value;
-                }
-                console.log(this.teamName);
 
+                    let flightNumber = parseFloat(
+                        (<HTMLInputElement>(
+                            document.getElementById('flight_' + index + '_number')
+                        )).value
 
-                //let stTime: Time;
-                //stTime.hours = 9;
-                //stTime.minutes = 0;
-
-                let roundFlightData = this.roundFlights.filter((a) => {
-                    return (
-                        a.flightRound == this.flightRound &&
-                        a.id == this.selectedMembers[index]['id']
                     );
-                });
+                    // let categoryFlight = parseFloat(
+                    //     (<HTMLInputElement>(
+                    //         document.getElementById('flight_' + index + '_catnumber')
+                    //     )).value
+                    // );
 
-                console.log(roundFlightData);
-                console.log(this.selectedMembers[index]);
+                    if (this.showTeams) {
+                        this.teamName = (<HTMLInputElement>(
+                            document.getElementById('flight_' + index + '_name')
+                        )).value;
+                    }
+                    console.log(this.teamName);
+     
 
-                let currentFlightId: string;
-                let currentDate = new Date(this.tournamentInfo[0].startDate);
-                if (this.activeRound === 2) {
-                    currentDate.setDate(currentDate.getDate() + 1);
-                } else if (this.activeRound === 3) {
-                    currentDate.setDate(currentDate.getDate() + 2);
-                } else if (this.activeRound === 4) {
-                    currentDate.setDate(currentDate.getDate() + 3);
-                }
 
-                if (roundFlightData && roundFlightData.length > 0)
-                    currentFlightId =
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].id
+                    //let stTime: Time;
+                    //stTime.hours = 9;
+                    //stTime.minutes = 0;
+
+
+                    let roundFlightData = this.roundFlights.filter((a) => {
+                        return (
+                            a.flightRound == this.flightRound &&
+                            a.id == this.selectedMembers[index]['id']
+                        );
+                    });
+
+
+                    console.log(roundFlightData);
+                    console.log(this.selectedMembers[index]);
+
+                    let currentFlightId: string;
+
+                    if (roundFlightData && roundFlightData.length > 0)
+                        currentFlightId =
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].id
+                                : UniqueIdGenerator.generate();
+                    else if (this.selectedMembers[index]['id'])
+                        currentFlightId = this.selectedMembers[index]['id']
+                            ? this.selectedMembers[index]['id']
                             : UniqueIdGenerator.generate();
-                else if (this.selectedMembers[index]['id'])
-                    currentFlightId = this.selectedMembers[index]['id']
-                        ? this.selectedMembers[index]['id']
-                        : UniqueIdGenerator.generate();
 
-                let flight: any = {
-                    id: currentFlightId,
-                    tournamentId: this.tournamentID,
-                    courseId:
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].courseId
-                            : this.tournamentInfo[0].courseId,
-                    adminId:
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].adminId
-                            : this.tournamentInfo[0].adminId,
-                    courseHoleSets:
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].courseHoleSets
-                            : this.selectedMembers[index]['courseHoleSets'],
-                    flightNo: flightNumber,
-                    categoryRound: 1,
-                    flightRound: this.flightRound,
-                    startingHole: startingHole,
-                    tee:
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].tee
-                            : 'AMATEURS',
-                    tee_id:
-                        roundFlightData.length > 0
-                            ? roundFlightData[0].tee_id
-                            : '1',
-                    date: General.formatDate(currentDate),
-                    time: startTime,
-                    ended: false,
-                };
-                if (this.showTeams) {
-                    let flightNames: any = {
-                        flightId: currentFlightId,
-                        name: this.teamName,
+                    let flight: any = {
+                        id: currentFlightId,
+                        tournamentId: this.tournamentID,
+                        courseId:
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].courseId
+                                : this.tournamentInfo[0].courseId,
+                        adminId:
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].adminId
+                                : this.tournamentInfo[0].adminId,
+                        courseHoleSets:
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].courseHoleSets
+                                : 0,
+                        flightNo: flightNumber,
+                        categoryRound: 1,
+                        flightRound: this.flightRound,
+                        startingHole: startingHole,
+                        tee:
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].tee
+                                : 'AMATEURS',
+                        tee_id:
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].tee_id
+                                : '1',
+                        date:
+                            roundFlightData.length > 0
+                                ? roundFlightData[0].date
+                                : this.tournamentInfo[0].startDate,
+                        time: startTime,
+                        ended: false,
                     };
+                    if (this.showTeams) {
+                        let flightNames: any = {
+                            flightId: currentFlightId,
+                            name: this.teamName,
+                        };
 
-                    flightName.push(flightNames);
-                }
-                console.log(flight);
-                tournamentFlights.push(flight);
-
-                console.log(tournamentFlights);
-
-                //break;
-                console.log(roundFlightData.length);
-
-                let oldMembers: any;
-
-                if (roundFlightData && roundFlightData.length > 0) {
-                    if (roundFlightData[0].MembersQL) {
-                        oldMembers = roundFlightData[0].MembersQL;
-                    } else {
-                        oldMembers = roundFlightData[0];
+                        flightName.push(flightNames);
                     }
-                } else oldMembers = [];
+                    console.log(flight);
+                    tournamentFlights.push(flight);
 
-                console.log(oldMembers);
-                //   for (let ids of oldMembers) {
-                //   let FM: any = {
-                //     playerId: ids.playerId,
-                //     flightId: currentFlightId,
-                //     attendance: false,
-                //     playingTee: ids.playingTee,
-                //     tee_id: ids.tee_id,
-                //   };
-                //   flightMembersToSave.push(FM);
-                // }
-                console.log(tournamentFlightMembers);
+                    console.log(tournamentFlights);
 
-                console.log(flightMembersToSave);
+                    //break;
+                    console.log(roundFlightData.length);
 
-                let removed = oldMembers.filter(
-                    (n) =>
-                        !tournamentFlightMembers.some(
-                            (n2) => n.playerId == n2.playerId
-                        )
-                );
-                console.log(removed);
+                    let oldMembers: any;
 
-                for (let ids of removed) {
-                    flightMembersToRemove.push(ids.playerId);
-                    membersFromFlightToRemove.push(currentFlightId);
+                    if (roundFlightData && roundFlightData.length > 0) {
+                        if (roundFlightData[0].MembersQL) {
+                            oldMembers = roundFlightData[0].MembersQL;
+                        } else {
+                            oldMembers = roundFlightData[0];
+                        }
+                    } else oldMembers = [];
 
-                    let newFlight: any = this.selectedMembers.filter((n) =>
-                        n.some((n2) => n2.id == ids.playerId)
+                    console.log(oldMembers);
+                    //   for (let ids of oldMembers) {
+                    //   let FM: any = {
+                    //     playerId: ids.playerId,
+                    //     flightId: currentFlightId,
+                    //     attendance: false,
+                    //     playingTee: ids.playingTee,
+                    //     tee_id: ids.tee_id,
+                    //   };
+                    //   flightMembersToSave.push(FM);
+                    // }
+                    console.log(tournamentFlightMembers);
+
+                    console.log(flightMembersToSave);
+
+                    let removed = oldMembers.filter(
+                        (n) =>
+                            !tournamentFlightMembers.some(
+                                (n2) => n.playerId == n2.playerId
+                            )
                     );
+                    console.log(removed);
 
-                    console.log(newFlight);
-                    console.log(newFlight.length);
-
-                    //if(newFlight.length > 0) {
-                    let copy: any = {
-                        playerId: ids.playerId,
-                        fromFlight: currentFlightId,
-                        toFlight:
-                            newFlight.length > 0
-                                ? newFlight[0].id
-                                : currentFlightId,
-                    };
-
-                    this.copyScoreInfo.push(copy);
-                    //}
-                }
-
-                // let added = tournamentFlightMembers.filter(
-                //   (n) => !oldMembers.some((n2) => n.playerId == n2.playerId)
-                // );
-                // console.log(added);
-
-                // if (added.length > 0) {
-                //   for (let ids of added) {
-                //     let FM: any = {
-                //       playerId: ids.playerId,
-                //       flightId: currentFlightId,
-                //       attendance: false,
-                //       playingTee: ids.playingTee,
-                //       tee_id: ids.tee_id,
-                //     };
-
-                //     flightMembersToSave.push(FM);
-                //     console.log(flightMembersToSave);
-                //  }
-                //}
-                //break;
-            } else {
-                //console.log("deleting");
-                //console.log(this.roundFlights);
-                let roundFlightData = this.roundFlights.filter((a) => {
-                    return (
-                        a.flightRound == this.flightRound &&
-                        a.id == this.selectedMembers[index]['id']
-                    );
-                });
-                //console.log(roundFlightData);
-                if (roundFlightData.length > 0) {
-                    let oldMembers: any = roundFlightData[0].MembersQL;
-                    // console.log(oldMembers);
-
-                    for (let ids of oldMembers) {
+                    for (let ids of removed) {
                         flightMembersToRemove.push(ids.playerId);
-                        membersFromFlightToRemove.push(roundFlightData[0].id);
+                        membersFromFlightToRemove.push(currentFlightId);
+
+                        let newFlight: any = this.selectedMembers.filter((n) =>
+                            n.some((n2) => n2.id == ids.playerId)
+                        );
+
+                        console.log(newFlight);
+                        console.log(newFlight.length);
+
+                        //if(newFlight.length > 0) {
+                        let copy: any = {
+                            playerId: ids.playerId,
+                            fromFlight: currentFlightId,
+                            toFlight:
+                                newFlight.length > 0
+                                    ? newFlight[0].id
+                                    : currentFlightId,
+                        };
+
+                        this.copyScoreInfo.push(copy);
+                        //}
                     }
 
-                    //for(let ids of oldMembers) {
-                    //flightMembersToRemove.push(ids.playerId);
+                    // let added = tournamentFlightMembers.filter(
+                    //   (n) => !oldMembers.some((n2) => n.playerId == n2.playerId)
+                    // );
+                    // console.log(added);
+
+                    // if (added.length > 0) {
+                    //   for (let ids of added) {
+                    //     let FM: any = {
+                    //       playerId: ids.playerId,
+                    //       flightId: currentFlightId,
+                    //       attendance: false,
+                    //       playingTee: ids.playingTee,
+                    //       tee_id: ids.tee_id,
+                    //     };
+
+                    //     flightMembersToSave.push(FM);
+                    //     console.log(flightMembersToSave);
+                    //  }
                     //}
+                    //break;
+                } else {
+                    //console.log("deleting");
+                    //console.log(this.roundFlights);
+                    let roundFlightData = this.roundFlights.filter((a) => {
+                        return (
+                            a.flightRound == this.flightRound &&
+                            a.id == this.selectedMembers[index]['id']
+                        );
+                    });
+                    //console.log(roundFlightData);
+                    if (roundFlightData.length > 0) {
+                        let oldMembers: any = roundFlightData[0].MembersQL;
+                        // console.log(oldMembers);
 
-                    flightsToRemove.push(roundFlightData[0].id);
+                        for (let ids of oldMembers) {
+                            flightMembersToRemove.push(ids.playerId);
+                            membersFromFlightToRemove.push(roundFlightData[0].id);
+                        }
+
+                        //for(let ids of oldMembers) {
+                        //flightMembersToRemove.push(ids.playerId);
+                        //}
+
+                        flightsToRemove.push(roundFlightData[0].id);
+                    }
+                    //fcnter--;
                 }
-                //fcnter--;
             }
-        }
 
-        console.log(this.tournamentInfo[0].id);
-        console.log(flightsToRemove);
-        console.log(flightName);
+            console.log(this.tournamentInfo[0].id);
+            console.log(flightsToRemove);
+            console.log(flightName);
 
-        console.log(flightMembersToRemove);
-        console.log(tournamentFlights);
-        console.log(flightMembersToSave);
-        console.log(membersFromFlightToRemove);
-        console.log(this.copyScoreInfo);
-        let save: boolean;
-        if (this.showTeams == true) {
-            console.log(true);
+            console.log(flightMembersToRemove);
+            console.log(tournamentFlights);
+            console.log(flightMembersToSave);
+            console.log(membersFromFlightToRemove);
+            console.log(this.copyScoreInfo);
+            let save: boolean;
+            if (this.showTeams == true) {
+                console.log(true);
 
-            save = <boolean>(
-                await this.facadeService.SaveTournamentFlightforTaxes(
-                    this.tournamentInfo[0].id,
-                    flightName,
-                    tournamentFlights,
-                    flightMembersToSave
+                save = <boolean>(
+                    await this.facadeService.SaveTournamentFlightforTaxes(
+                        this.tournamentInfo[0].id,
+                        flightName,
+                        tournamentFlights,
+                        flightMembersToSave
+                    )
+                );
+            } else {
+                console.log(false);
+
+                save = <boolean>(
+                    await this.facadeService.SaveTournamentFlight(
+                        this.tournamentInfo[0].id,
+                        tournamentFlights,
+                        flightMembersToSave
+                    )
+                );
+            }
+            this.newFlights = [];
+            this.addFlightNum = 0;
+            this.importedFlightsNum = 0;
+            this.importedFlights = false;
+
+            for (let copy of this.copyScoreInfo) {
+                await this.facadeService.copyPlayerScore(
+                    copy.playerId,
+                    copy.fromFlight,
+                    copy.toFlight
+                );
+            }
+
+            let update = <boolean>(
+                await this.facadeService.DeleteFlightsAndMembers(
+                    flightsToRemove,
+                    membersFromFlightToRemove,
+                    flightMembersToRemove
                 )
             );
-        } else {
-            console.log(false);
+            console.log(save);
+            console.log(update);
 
-            save = <boolean>(
-                await this.facadeService.SaveTournamentFlight(
-                    this.tournamentInfo[0].id,
-                    tournamentFlights,
-                    flightMembersToSave
-                )
-            );
-        }
-        this.newFlights = [];
-        this.addFlightNum = 0;
-        this.importedFlightsNum = 0;
-        this.importedFlights = false;
-
-        for (let copy of this.copyScoreInfo) {
-            await this.facadeService.copyPlayerScore(
-                copy.playerId,
-                copy.fromFlight,
-                copy.toFlight
-            );
-        }
-
-        let update = <boolean>(
-            await this.facadeService.DeleteFlightsAndMembers(
-                flightsToRemove,
-                membersFromFlightToRemove,
-                flightMembersToRemove
-            )
-        );
-        console.log(save);
-        console.log(update);
-
-        if (save && update) {
-            this.snackBar.open(
-                'Flights have been saved and updated successfully.',
-                'x',
-                {
+            if (save && update) {
+                this.snackBar.open(
+                    'Flights have been saved and updated successfully.',
+                    'x',
+                    {
+                        duration: 5000,
+                    }
+                );
+            } else if (save && !update) {
+                this.snackBar.open('Something Went Wrong.', 'x', {
                     duration: 5000,
+                });
+            } else {
+                this.snackBar.open('Something Went Wrong.', 'x', {
+                    duration: 5000,
+                });
+            }
+
+            let dataFullTournament = await this.facadeService.getTournamentsFlights(
+                this.tournamentID
+            );
+            this.tournamentInfo = dataFullTournament.TournamentQL;
+
+            this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
+                (a) => {
+                    return a.flightRound == this.flightRound;
                 }
             );
-        } else if (save && !update) {
-            this.snackBar.open('Something Went Wrong.', 'x', {
-                duration: 5000,
-            });
-        } else {
-            this.snackBar.open('Something Went Wrong.', 'x', {
-                duration: 5000,
-            });
+        } catch (error) {
+            this.logger.log('Saving Tournaments Data Failed', "error", error.toString());
         }
-
-        let dataFullTournament = await this.facadeService.getTournamentsFlights(
-            this.tournamentID
-        );
-        this.tournamentInfo = dataFullTournament.TournamentQL;
-
-        this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
-            (a) => {
-                return a.flightRound == this.flightRound;
-            }
-        );
-
         //console.log(tournamentFlights);
     }
     async saveTournamentMembers() {
@@ -1646,41 +1665,49 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
     editFlight(id, index) {
         console.log(index);
+        try {
 
-        let TM = [];
-        for (let obj of this.tournamentMember) {
-            TM.push(obj.player);
-        }
 
-        const dialogRef = this.dialog.open(DialogAddMemberComponent, {
-            data: {
-                id: id,
-                members: TM,
-            },
-        });
 
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result.length > 0) {
-                for (let obj of result) {
-                    this.exist = this.selectedMembers.find((item) =>
-                        item.some((f) => f.id == obj.id)
-                    );
-                    if (this.exist) {
-                        this.snackBar.open(
-                            'Player already exist in the list.',
-                            'x',
-                            {
-                                duration: 5000,
-                            }
+            this.logger.log('Add New member to flight', "info", id);
+
+            let TM = [];
+            for (let obj of this.tournamentMember) {
+                TM.push(obj.player);
+            }
+
+            const dialogRef = this.dialog.open(DialogAddMemberComponent, {
+                data: {
+                    id: id,
+                    members: TM,
+                },
+            });
+
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result.length > 0) {
+                    for (let obj of result) {
+                        this.exist = this.selectedMembers.find((item) =>
+                            item.some((f) => f.id == obj.id)
                         );
+                        if (this.exist) {
+                            this.snackBar.open(
+                                'Player already exist in the list.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
 
-                        return;
-                    } else {
-                        this.selectedMembers[index].push(obj);
+                            return;
+                        } else {
+                            this.selectedMembers[index].push(obj);
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            this.logger.log('Getting Tournaments DataAdd New member to flight Failed', "error", error.toString());
+        }
     }
     addFlight(index: any) {
         //const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
@@ -1689,6 +1716,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         // this._viewTournamentComponent.getTournamentMembers();
         // this._viewTournamentComponent.createFlight(index);
         // this._viewTournamentComponent.matDrawer.open();
+        this.logger.log('Add New Flight', "info");
         this.selectedMembers[this.selectedMembers.length] = [];
         this.selectedMembers[this.selectedMembers.length - 1]['id'] =
             UniqueIdGenerator.generate();

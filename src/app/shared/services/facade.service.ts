@@ -32,7 +32,7 @@ import { TournamentOpponentQL } from "../fragments/tournament.fragment";
   providedIn: "root",
 })
 export class FacadeService {
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector) { }
 
   private _clubService: ClubsService;
 
@@ -155,8 +155,8 @@ export class FacadeService {
   saveTeeColor(tee: any[]) {
     return this.courseService.saveTeeColor(tee);
   }
-  deleteTeeColor(courseID:any,tee: any[]) {
-    return this.courseService.deleteTeeColor(courseID,tee);
+  deleteTeeColor(courseID: any, tee: any[]) {
+    return this.courseService.deleteTeeColor(courseID, tee);
   }
 
   saveCourseHoles(holes: any[], holeSets: any[]) {
@@ -203,6 +203,9 @@ export class FacadeService {
   getPlayersListByClub(id: string) {
     return this.playerService.getPlayersListByClub(id);
   }
+  getPlayersListByTour(id: string) {
+    return this.playerService.getPlayersListByTour(id);
+  }
   getPlayersListForTournament(id: string) {
     return this.playerService.getPlayersListForTournament(id);
   }
@@ -222,8 +225,8 @@ export class FacadeService {
     return this.playerService.getallPlayersforGGid();
   }
 
-  mergePlayers(oldPlayerId:string,newPlayerId:string){
-    return this.playerService.mergeProfiles(oldPlayerId,newPlayerId)
+  mergePlayers(oldPlayerId: string, newPlayerId: string) {
+    return this.playerService.mergeProfiles(oldPlayerId, newPlayerId)
   }
 
   getPlayerHandicapListByPlayer(
@@ -288,6 +291,9 @@ export class FacadeService {
   AddPlayer(club: Player) {
     return this.playerService.AddPlayer(club);
   }
+  AddTourPlayer(club: Player, tourMember: any) {
+    return this.playerService.AddTourPlayer(club, tourMember);
+  }
 
   AddHandicapRemarks(handicap_change_log: handicap_change_log) {
     return this.playerService.AddHandicapRemarks(handicap_change_log);
@@ -300,8 +306,8 @@ export class FacadeService {
   updatePlayer(club: Player) {
     return this.playerService.updatePlayer(club);
   }
-  updateConguHandicap(id:string,newHandicap:any,tournamentId:any) {
-    return this.playerService.updateConguHandicap(id,newHandicap,tournamentId);
+  updateConguHandicap(id: string, newHandicap: any, tournamentId: any) {
+    return this.playerService.updateConguHandicap(id, newHandicap, tournamentId);
   }
   getTotalFlightPlayed(club: any, fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayed(club, fromDate, toDate);
@@ -310,11 +316,11 @@ export class FacadeService {
   getTotalFlightsPlayedByPlayer(id: string) {
     return this.playerService.getTotalFlightsPlayedByPlayer(id);
   }
-  getTotalFlightPlayedAdmin( fromDate: string, toDate: string) {
-    return this.playerService.getTotalFlightPlayedAdmin( fromDate, toDate);
+  getTotalFlightPlayedAdmin(fromDate: string, toDate: string) {
+    return this.playerService.getTotalFlightPlayedAdmin(fromDate, toDate);
   }
-  getFlightPlayedAdmin(courseId:string, Date: string) {
-    return this.playerService.getFlightPlayedAdmin( courseId,Date);
+  getFlightPlayedAdmin(courseId: string, Date: string) {
+    return this.playerService.getFlightPlayedAdmin(courseId, Date);
   }
 
   deletePlayer(clubId: string, playerId: string) {
@@ -369,7 +375,7 @@ export class FacadeService {
       toDate
     );
   }
- 
+
   playerUpdatedHandicapWHSReport(
     clubId: string,
     fromDate: string,
@@ -382,12 +388,12 @@ export class FacadeService {
     );
   }
   playerUpdatedHandicapWHSReportAdmin(
-   
+
     fromDate: string,
     toDate: string
   ) {
     return this.playerService.playerUpdatedHandicapWHSReportAdmin(
-      
+
       fromDate,
       toDate
     );
@@ -435,7 +441,7 @@ export class FacadeService {
   getLeagues() {
     return this.tournamentService.getLeagues();
   }
-  getLeaguesByClub(id:string) {
+  getLeaguesByClub(id: string) {
     return this.tournamentService.getLeaguesByClub(id);
   }
 
@@ -457,6 +463,11 @@ export class FacadeService {
     return this.tournamentService.getTournamentsListByClubForCompleted(
       endDate,
       clubId
+    );
+  }
+  getTournamentsListByTourForCompleted(tourId: string) {
+    return this.tournamentService.getTournamentsListByTourForCompleted(
+      tourId
     );
   }
 
@@ -501,14 +512,14 @@ export class FacadeService {
   getClubDashboardStatsForAdmin(todayDate: string) {
     return this.tournamentService.getClubDashboardStatsForAdmin(todayDate);
   }
-  
-  getTournamentCountsByClub(clubId:string){
+
+  getTournamentCountsByClub(clubId: string) {
     return this.tournamentService.getTournamentCountsByClub(clubId);
   }
-  getTournamentCountsByClubAll(){
+  getTournamentCountsByClubAll() {
     return this.tournamentService.getTournamentCountsByClubAll();
   }
-  
+
   LeaderboardOneTimeDataQuery(tournamentId: string, playerId: string) {
     return this.tournamentService.LeaderboardOneTimeDataQuery(
       tournamentId,
@@ -533,6 +544,9 @@ export class FacadeService {
   tournamentDashBoard(id: string) {
     return this.tournamentService.tournamentDashBoard(id);
   }
+  getTourGuide(id: string) {
+    return this.tournamentService.getTourGuide(id);
+  }
 
   LeaderboardSubscriptions(id: string, cat: any) {
     return this.tournamentService.LeaderboardSubscriptions(id, cat);
@@ -544,11 +558,16 @@ export class FacadeService {
       playerId
     );
   }
+  deleteTourGuide(id: string) {
+    return this.tournamentService.deleteTourGuide(
+      id
+    );
+  }
 
   tournamentScoreLoader(id: string) {
     return this.tournamentService.tournamentScoreLoader(id);
   }
-  
+
 
   savePlayerHandicaps(
     handicap: PlayerHanidcap[],
@@ -568,6 +587,9 @@ export class FacadeService {
 
   addTournament(tournament: any) {
     return this.tournamentService.addTournament(tournament);
+  }
+  addTour(tour: any, file: any) {
+    return this.tournamentService.addTour(tour, file);
   }
   addSubTournament(obj: any) {
     return this.tournamentService.addSubTournament(obj);
@@ -635,6 +657,12 @@ export class FacadeService {
   insertTournamentMember(tournamentMembers: TournamentMember[]) {
     return this.tournamentService.insertTournamentMember(tournamentMembers);
   }
+  insertTourGuide(tourGuide:any[]) {
+    return this.tournamentService.insertTourGuide(tourGuide);
+  }
+  insertTournamentTeam(teamsToSave, teamMembersToSave, tournamentId) {
+    return this.tournamentService.insertTournamentTeam(teamsToSave, teamMembersToSave, tournamentId);
+  }
   insertTournamentMemberStatus(tournamentMemberStatus) {
     return this.tournamentService.insertTournamentMemberStatus(tournamentMemberStatus);
   }
@@ -642,12 +670,10 @@ export class FacadeService {
   // insertClubMember(clubId: string, playerId: string) {
   //   return this.tournamentService.insertClubMember(clubId, playerId);
   // }
-  getLeageLeaderBoards(id:string)
-  {
+  getLeageLeaderBoards(id: string) {
     return this.tournamentService.getLeageLeaderBoards(id);
   }
-  getLeagueName(id:string)
-  {
+  getLeagueName(id: string) {
     return this.tournamentService.getLeagueName(id);
   }
   setScoreUpdateTime(tournamentId: string, date: string) {
@@ -754,17 +780,17 @@ export class FacadeService {
     );
   }
   SaveRoundFlight(
-   
+
     flightsToSave: any,
 
   ) {
     return this.flightsService.SaveRoundFlight(
-    
+
       flightsToSave
     );
   }
   saveFlightMembers(
-    flightId:string,
+    flightId: string,
     flightMembersToSave: any
   ) {
     return this.flightsService.saveFlightMembers(
@@ -774,9 +800,10 @@ export class FacadeService {
   }
   updateflightMember(
     playerId: string,
+    handicapAllocation,
   ) {
     return this.flightsService.updateflightMember(
-      playerId
+      playerId, handicapAllocation
     );
   }
   createNextRoundFlights(flights: Flight[]) {
@@ -813,12 +840,15 @@ export class FacadeService {
     return this.flightsService.moveFlightsPlayer(flightMembersToSave);
   }
 
-  DeleteFlightMembers(flightid:any,flightMembersToRemove: any) {
-    return this.flightsService.DeleteFlightMembers(flightid,flightMembersToRemove);
+  DeleteFlightMembers(flightid: any, flightMembersToRemove: any) {
+    return this.flightsService.DeleteFlightMembers(flightid, flightMembersToRemove);
   }
 
-  getTournamentsFlights( tournamentId: string) {
-    return this.flightsService.getTournamentsFlights( tournamentId);
+  getTournamentsFlights(tournamentId: string) {
+    return this.flightsService.getTournamentsFlights(tournamentId);
+  }
+  getTournamentsTeams(tournamentId: string) {
+    return this.flightsService.getTournamentsTeams(tournamentId);
   }
 
   markPlayerAttendance(flightId: string, playerId: string, status: boolean) {
@@ -840,17 +870,17 @@ export class FacadeService {
   singleRoundFlightQuery(flightId: string) {
     return this.flightsService.singleRoundFlightQuery(flightId);
   }
-  deletePlayerHandiCal(tournamnetId: string,PlayersIds:any[]) {
-    return this.flightsService.deletePlayerHandiCal(tournamnetId,PlayersIds);
+  deletePlayerHandiCal(tournamnetId: string, PlayersIds: any[]) {
+    return this.flightsService.deletePlayerHandiCal(tournamnetId, PlayersIds);
   }
-  undoFlightHandicap(flightId: string,playerId:string) {
-    return this.flightsService.undoFlightHandicap(flightId,playerId);
+  undoFlightHandicap(flightId: string, playerId: string) {
+    return this.flightsService.undoFlightHandicap(flightId, playerId);
   }
-  undoHandicapPlayer(flightId: string,playerId:string) {
-    return this.flightsService.undoHandicapPlayer(flightId,playerId);
+  undoHandicapPlayer(flightId: string, playerId: string) {
+    return this.flightsService.undoHandicapPlayer(flightId, playerId);
   }
-  markPlayerPanelty(tournamentId:string,flightId: string,playerId:string) {
-    return this.flightsService.markPlayerPanelty(tournamentId,flightId,playerId);
+  markPlayerPanelty(tournamentId: string, flightId: string, playerId: string) {
+    return this.flightsService.markPlayerPanelty(tournamentId, flightId, playerId);
   }
   private _teeTimeService: TeeTimeService;
 
@@ -884,7 +914,7 @@ export class FacadeService {
   }
   getDailyRoundsSingleAdmin(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleAdmin(
-      
+
       fromDate,
       toDate
     );
@@ -898,7 +928,7 @@ export class FacadeService {
   }
   getDailyCardSingleAdmin(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyCardSingleAdmin(
-      
+
       fromDate,
       toDate
     );
@@ -910,9 +940,9 @@ export class FacadeService {
       toDate
     );
   }
-  getDailyRoundsStatAdmin( fromDate: string, toDate: string) {
+  getDailyRoundsStatAdmin(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsStatAdmin(
-     
+
       fromDate,
       toDate
     );
@@ -924,7 +954,7 @@ export class FacadeService {
       toDate
     );
   }
-  getAll(id:string,clubId: string, fromDate: string, toDate: string) {
+  getAll(id: string, clubId: string, fromDate: string, toDate: string) {
     return this.tournamentService.getAll(
       id,
       clubId,
@@ -932,15 +962,15 @@ export class FacadeService {
       toDate
     );
   }
-  getAllAdmin( fromDate: string, toDate: string) {
+  getAllAdmin(fromDate: string, toDate: string) {
     return this.tournamentService.getAllAdmin(
       fromDate,
       toDate
     );
   }
-  getDailyRoundsSingleDashboardAll( fromDate: string, toDate: string) {
+  getDailyRoundsSingleDashboardAll(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleDashboardAll(
-      
+
       fromDate,
       toDate
     );
@@ -948,8 +978,8 @@ export class FacadeService {
   getSingleDailyRound(clubId: string, Date: string) {
     return this.tournamentService.getSingleDailyRound(clubId, Date);
   }
-  getSingleDailyRoundAdmin( Date: string) {
-    return this.tournamentService.getSingleDailyRoundAdmin( Date);
+  getSingleDailyRoundAdmin(Date: string) {
+    return this.tournamentService.getSingleDailyRoundAdmin(Date);
   }
   getRoundScore(Id: any) {
     return this.tournamentService.getRoundScore(Id);
@@ -998,6 +1028,9 @@ export class FacadeService {
 
   getTorunamentScoreQuery(tournamentId: string) {
     return this.playerHandicapWhsService.getTorunamentScoreQuery(tournamentId);
+  }
+  getTorunamentScoreViewQuery(tournamentId: string) {
+    return this.playerHandicapWhsService.getTorunamentScoreViewQuery(tournamentId);
   }
 
   getPlayersHandicapWhsHistory(playerIds: string[], playingDate: Date) {

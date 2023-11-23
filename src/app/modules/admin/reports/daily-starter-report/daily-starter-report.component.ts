@@ -24,6 +24,7 @@ import { DatePipe, JsonPipe } from '@angular/common';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 // import { DialogPlayerListComponent } from "../../material-components/dialog-player-list/dialog-player-list.component";
 
 @Component({
@@ -93,50 +94,58 @@ export class DailyStarterReportComponent implements OnInit {
         private route: ActivatedRoute,
         private _formBuilder: FormBuilder,
         public dialog: MatDialog,
-        private _localStorage: LocalStorageService
-    ) {}
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
+    ) { }
 
     ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.Players = [];
+        try {
+            this.logger.log('Admin Come to Daily Starter Report', "info");
+            this.logger.log('Getting Daily Starter Report Data', "info", "Today");
 
-        this.route.paramMap.subscribe((params) => {
-            this.filterCategory = params.get('category');
-        });
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.Players = [];
 
-        this.isLoading = true;
-        this.showResult = false;
-        this.showtable = false;
+            this.route.paramMap.subscribe((params) => {
+                this.filterCategory = params.get('category');
+            });
 
-        //  this.scheduleForm = this.fb.group({
+            this.isLoading = true;
+            this.showResult = false;
+            this.showtable = false;
 
-        //   BookingDate: ['', [Validators.required]]
-        // });
+            //  this.scheduleForm = this.fb.group({
 
-        this.scheduleForm = this.fb.group({
-            startDate: ['', [Validators.required]],
-            endDate: ['', [Validators.required]],
-        });
+            //   BookingDate: ['', [Validators.required]]
+            // });
 
-        console.log(this.scheduleForm);
+            this.scheduleForm = this.fb.group({
+                startDate: ['', [Validators.required]],
+                endDate: ['', [Validators.required]],
+            });
 
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            console.log(this.scheduleForm);
 
-        this.weeklyRounds = [];
-        of(this.weeklyRounds)
-            .pipe()
-            .subscribe(
-                async (data) => {
-                    var currentDate = new Date();
-                    currentDate.setDate(currentDate.getDate() - 1);
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
-                    //var nxtDate = new Date();
-                    //nxtDate.setDate(nxtDate.getDate() + 7);
+            this.weeklyRounds = [];
+            of(this.weeklyRounds)
+                .pipe()
+                .subscribe(
+                    async (data) => {
+                        var currentDate = new Date();
+                        currentDate.setDate(currentDate.getDate() - 1);
 
-                    this.getDailyRounds(currentDate, currentDate);
-                },
-                (error) => (this.isLoading = false)
-            );
+                        //var nxtDate = new Date();
+                        //nxtDate.setDate(nxtDate.getDate() + 7);
+
+                        this.getDailyRounds(currentDate, currentDate);
+                    },
+                    (error) => (this.isLoading = false)
+                );
+        } catch (error) {
+            this.logger.log('Getting Daily Starter Data Failed', "error", error.toString());
+        }
     }
 
     applyFilter(filterValue: string) {
@@ -193,35 +202,35 @@ export class DailyStarterReportComponent implements OnInit {
                     membersCount:
                         dataPlayers.TournamentsQL[i].FlightsQL.length > 0
                             ? dataPlayers.TournamentsQL[i].FlightsQL[0]
-                                  .MembersQL.length
+                                .MembersQL.length
                             : 0,
                     noOfFlights: dataPlayers.TournamentsQL[i].FlightsQL.length,
                     allPlayers:
                         dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
+                            dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                                .length > 0
                             ? dataPlayers.TournamentsQL[i].FlightsQL[0]
-                                  .MembersQL
+                                .MembersQL
                             : [],
                     submittedCards:
                         dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
+                            dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                                .length > 0
                             ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return a.ScoresQL.length > 0;
-                              })
+                                i
+                            ].FlightsQL[0].MembersQL.filter((a) => {
+                                return a.ScoresQL.length > 0;
+                            })
                             : [],
                     nonSubmittedCards:
                         dataPlayers.TournamentsQL[i].FlightsQL.length > 0 &&
-                        dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
-                            .length > 0
+                            dataPlayers.TournamentsQL[i].FlightsQL[0].MembersQL
+                                .length > 0
                             ? dataPlayers.TournamentsQL[
-                                  i
-                              ].FlightsQL[0].MembersQL.filter((a) => {
-                                  return a.ScoresQL.length == 0;
-                              })
+                                i
+                            ].FlightsQL[0].MembersQL.filter((a) => {
+                                return a.ScoresQL.length == 0;
+                            })
                             : [],
                 };
                 this.dailyStats.push(dailyStat);
@@ -435,6 +444,7 @@ export class DailyStarterReportComponent implements OnInit {
         // }
     }
     public downloadAsPDF() {
+        this.logger.log('Admin Click Download Pdf Daily Starter Report', "info");
         let doc = new jsPDF();
         let res = doc.autoTableHtmlToJson(document.getElementById('pdfTable'));
         let columns = [
@@ -484,6 +494,7 @@ export class DailyStarterReportComponent implements OnInit {
         return new Date(date.setDate(date.getDate() - 1));
     }
     Dailysetup(selectedValue) {
+        this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
         console.log(selectedValue);
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
@@ -538,6 +549,8 @@ export class DailyStarterReportComponent implements OnInit {
     }
 
     onDatePick() {
+        const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
+        this.logger.log('Getting Daily starter Data By date', "info",combinedData);
         console.log(this.scheduleForm.value.startDate);
         console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
@@ -557,9 +570,10 @@ export class DailyStarterReportComponent implements OnInit {
         }
     }
 
-    playerList(players, key,date) {
+    playerList(players, key, date) {
+        this.logger.log('Getting Daily Starter Report Player Wise', "info", date);
         const dialogRef = this.dialog.open(DialogUncompletedComponent, {
-            data: { players: players, key: key,date:date },
+            data: { players: players, key: key, date: date },
         });
     }
 }

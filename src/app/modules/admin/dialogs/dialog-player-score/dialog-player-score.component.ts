@@ -159,9 +159,9 @@ export class DialogPlayerScoreComponent implements OnInit {
             // console.log(this.scoreHeader);
             // console.log(this.scoreHeader[0].courseHoles9[0]['par']);
             if (this.data.type == 'Gross') {
-                this.grossScoreCard();
+                this.grossScoreCard(scoreHeader);
             } else {
-                this.netScoreCard();
+                this.netScoreCard(scoreHeader);
             }
         }
     }
@@ -262,7 +262,7 @@ export class DialogPlayerScoreComponent implements OnInit {
         //console.log(holes);
     }
 
-    grossScoreCard() {
+    grossScoreCard(scoreHeader) {
         for (let score of this.data.allGross) {
             console.log(score);
 
@@ -276,16 +276,21 @@ export class DialogPlayerScoreComponent implements OnInit {
             let gross36Total = 0;
 
             //if(this.courseHoleSet == 0 || this.courseHoleSet == 3 || this.courseHoleSet == 9) {
-            for (let i = 0; i < 9; i++) {
-                playerHole9Score[i] = score.holeScores[i];
-                gross9Total += playerHole9Score[i];
+            if (scoreHeader.courseHoles9.length > 0) {
+                for (let i = 0; i < 9; i++) {
+                    playerHole9Score[i] = score.holeScores[i];
+                    gross9Total += playerHole9Score[i];
+                }
+
             }
             //}
 
             //if(this.courseHoleSet == 3 || this.courseHoleSet == 0) {
-            for (let i = 9; i < 18; i++) {
-                playerHole18Score[i - 9] = score.holeScores[i];
-                gross18Total += playerHole18Score[i - 9];
+            if (scoreHeader.courseHoles18.length > 0) {
+                for (let i = 9; i < 18; i++) {
+                    playerHole18Score[i - 9] = score.holeScores[i];
+                    gross18Total += playerHole18Score[i - 9];
+                }
             }
             //}
             if (this.data.players) {
@@ -353,7 +358,7 @@ export class DialogPlayerScoreComponent implements OnInit {
         }
     }
 
-    netScoreCard() {
+    netScoreCard(scoreHeader) {
         for (let score of this.data.allNet) {
             let playerHole9Score: any = [];
             let playerHole18Score: any[] = [];
@@ -365,15 +370,19 @@ export class DialogPlayerScoreComponent implements OnInit {
             let net36Total = 0;
 
             if (this.data.allNet.length > 0) {
-                for (let i = 0; i < 9; i++) {
-                    playerHole9Score[i] = score.holeScores[i];
-                    net9Total += playerHole9Score[i];
+
+                if (scoreHeader.courseHoles9.length > 0) {
+                    for (let i = 0; i < 9; i++) {
+                        playerHole9Score[i] = score.holeScores[i];
+                        net9Total += playerHole9Score[i];
+                    }
                 }
 
-
-                for (let i = 9; i < 18; i++) {
-                    playerHole18Score[i - 9] = score.holeScores[i];
-                    net18Total += playerHole18Score[i - 9];
+                if (scoreHeader.courseHoles18.length > 0) {
+                    for (let i = 9; i < 18; i++) {
+                        playerHole18Score[i - 9] = score.holeScores[i];
+                        net18Total += playerHole18Score[i - 9];
+                    }
                 }
 
                 // if (this.courseData['noOfHoles'] > 18) {

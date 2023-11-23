@@ -23,6 +23,9 @@ import { trigger } from '@angular/animations';
 import { Player } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
 
 @Component({
     selector: 'project',
@@ -71,8 +74,9 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private _projectService: ProjectService,
         private _router: Router,
+        public dialog: MatDialog,
         private _facadeService: FacadeService,
-        private _datePipe: DatePipe, private _localStorage: LocalStorageService
+        private _datePipe: DatePipe, private _localStorage: LocalStorageService, private logger: LogsService
     ) { }
 
     // -----------------------------------------------------------------------------------------------------
@@ -84,177 +88,323 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     ngOnInit(): void {
         // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let clubInfo: any =
-            this.loggedInuser.membership.length > 0
-                ? this.loggedInuser.membership[0].club
-                : null;
+        try {
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            let clubInfo: any =
+                this.loggedInuser.membership.length > 0
+                    ? this.loggedInuser.membership[0].club
+                    : null;
 
-        this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-        let currentDate = new Date();
-        let lastWeekSunday = this.lastWeekSunday();
-        let lastWeekMonday = this.lastWeekMonday();
-        let tournamentCounts;
-        let flightCounts;
-        let playerCounts;
-        let dataPlayers: any;
-        let players: any;
-        let getall: any;
+            this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+            let currentDate = new Date();
+            let lastWeekSunday = this.lastWeekSunday();
+            let lastWeekMonday = this.lastWeekMonday();
+            let tournamentCounts;
+            let flightCounts;
+            let playerCounts;
+            let dataPlayers: any;
+            let players: any;
+            let getall: any;
 
-        //this.showdata = Promise.resolve(true);
-        this.loading = false;
-        this._projectService.data$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((res) => {
-                let getall = res.data;
+            //this.showdata = Promise.resolve(true);
+            this.loading = false;
+            this._projectService.data$
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((res) => {
+                    let getall = res.data;
+                    console.log(getall);
 
-                this.tournamentCounts = getall.TournamentQL.length;
-                if (this.tournamentCounts > 6) {
-                    this.tournaments = getall.TournamentQL.splice(0, 6);
-                } else {
-                    this.tournaments = getall.TournamentQL;
-                }
+                    if (this.loggedInuser.userRole == 2 || this.loggedInuser.userRole == 1) {
 
-                console.log(this.tournamentCounts);
+                        this.tournamentCounts = getall.TournamentQL.length;
+                        if (this.tournamentCounts > 6) {
+                            this.tournaments = getall.TournamentQL.splice(0, 6);
+                        } else {
+                            this.tournaments = getall.TournamentQL;
+                        }
 
-                this.flightCounts = getall.Count.aggregate.count;
-                console.log(this.flightCounts);
+                        console.log(this.tournamentCounts);
 
-                this.playerCounts = getall.AggregateQL.aggregate.totalCount;
-                console.log(this.playerCounts);
-                console.log('a');
+                        this.flightCounts = getall.Count.aggregate.count;
+                        console.log(this.flightCounts);
 
-                console.log(res.data);
+                        this.playerCounts = getall.AggregateQL.aggregate.totalCount;
+                        console.log(this.playerCounts);
+                        console.log('a');
 
-                let myData: any[] = [];
-                let prevDate = null;
-                let memCounter = 0;
-                let totalFlights = 0;
+                        console.log(res.data);
 
-                let data = getall.TournamentsQLs.sort(this.ComparatorDate);
-                //let data = dataPlayers.TournamentsQL;
-                let i = 0;
-                let distinctMembers = new Set();
-                let distinctCategory = new Set();
-                const categoryCounts = {
-                    'Amateurs': 0,
-                    'Senior Amateurs': 0,
-                    'Ladies': 0,
-                    'Veterans': 0, // Add all possible categories
-                    'others': 0, // Add all possible categories
-                }
-                this._labels = [];
-                for (let stats of data) {
-                    if (stats.ended) {
-                        this.flightCountsCal++;
-                    }
-                    if (stats.date == prevDate) {
-                        memCounter =
-                            memCounter + (stats ? stats.MembersQL.length : 0);
-                        totalFlights = totalFlights + 1;
-                        for (let member of stats.MembersQL) {
+                        let myData: any[] = [];
+                        let prevDate = null;
+                        let memCounter = 0;
+                        let totalFlights = 0;
 
-                            if (!distinctMembers.has(member.playerId)) {
-                                distinctMembers.add(member.playerId);
-                                if (categoryCounts[member.player.playerCategory] !== undefined) {
-                                    categoryCounts[member.player.playerCategory]++;
-                                } else {
-                                    categoryCounts['others']++;
+                        let data = getall.TournamentsQLs.sort(this.ComparatorDate);
+                        //let data = dataPlayers.TournamentsQL;
+                        let i = 0;
+                        let distinctMembers = new Set();
+                        let distinctCategory = new Set();
+                        const categoryCounts = {
+                            'Amateurs': 0,
+                            'Senior Amateurs': 0,
+                            'Ladies': 0,
+                            'Veterans': 0, // Add all possible categories
+                            'others': 0, // Add all possible categories
+                        }
+                        this._labels = [];
+                        for (let stats of data) {
+                            if (stats.ended) {
+                                this.flightCountsCal++;
+                            }
+                            if (stats.date == prevDate) {
+                                memCounter =
+                                    memCounter + (stats ? stats.MembersQL.length : 0);
+                                totalFlights = totalFlights + 1;
+                                for (let member of stats.MembersQL) {
+
+                                    if (!distinctMembers.has(member.playerId)) {
+                                        distinctMembers.add(member.playerId);
+                                        if (categoryCounts[member.player.playerCategory] !== undefined) {
+                                            categoryCounts[member.player.playerCategory]++;
+                                        } else {
+                                            categoryCounts['others']++;
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        myData[myData.length - 1].membersCount = memCounter;
-                        myData[myData.length - 1].totalFlights = totalFlights;
-                        prevDate = stats.date;
-                    } else {
-                        memCounter = 0;
-                        totalFlights = 0;
-                        memCounter =
-                            memCounter + (stats ? stats.MembersQL.length : 0);
-                        totalFlights = totalFlights + 1;
-                        for (let member of stats.MembersQL) {
-                            distinctMembers.add(member.playerId);
-                            if (categoryCounts[member.player.playerCategory] !== undefined) {
-                                categoryCounts[member.player.playerCategory]++;
+                                myData[myData.length - 1].membersCount = memCounter;
+                                myData[myData.length - 1].totalFlights = totalFlights;
+                                prevDate = stats.date;
                             } else {
-                                categoryCounts['others']++;
+                                memCounter = 0;
+                                totalFlights = 0;
+                                memCounter =
+                                    memCounter + (stats ? stats.MembersQL.length : 0);
+                                totalFlights = totalFlights + 1;
+                                for (let member of stats.MembersQL) {
+                                    distinctMembers.add(member.playerId);
+                                    if (categoryCounts[member.player.playerCategory] !== undefined) {
+                                        categoryCounts[member.player.playerCategory]++;
+                                    } else {
+                                        categoryCounts['others']++;
+                                    }
+                                }
+                                let obj = {
+                                    date: stats.date,
+                                    membersCount: memCounter,
+                                    totalFlights: totalFlights,
+                                };
+
+                                myData.push(obj);
+                                prevDate = stats.date;
                             }
                         }
-                        let obj = {
-                            date: stats.date,
-                            membersCount: memCounter,
-                            totalFlights: totalFlights,
-                        };
+                        // console.log(distinctMembers.size);
+                        // console.log(distinctCategory);
+                        // console.log(categoryCounts);
 
-                        myData.push(obj);
-                        prevDate = stats.date;
+                        // console.log(myData);
+                        this.membersCountsCal = distinctMembers.size;
+                        let dataMembers: any[] = [];
+                        let dataFlight: any[] = [];
+                        for (let obj of myData) {
+                            this._labels.push(General.getdate(obj.date));
+                            dataMembers.push(obj.membersCount);
+                            dataFlight.push(obj.totalFlights);
+                        }
+                        this._series = [
+                            {
+                                data: dataMembers,
+                                name: 'Members',
+                                type: 'line',
+                            },
+                            {
+                                data: dataFlight,
+                                name: 'Rounds',
+                                type: 'column',
+                            },
+                        ];
+
+                        // this.flightCountsNotCal =
+                        //     getall.TournamentsQLs.length - this.flightCountsCal;
+                        // console.log(this._overview);
+
+                        this._overview = {
+                            newIssues: getall.TournamentsQLs.length,
+                            closedIssues: this.membersCountsCal,
+                            fixed: categoryCounts.Amateurs,
+                            wontfix: categoryCounts['Senior Amateurs'],
+                            reopened: categoryCounts.Ladies,
+                            needstriage: categoryCounts.Veterans,
+                        }
+                        // console.log(players);
+                        if (this.loggedInuser.userRole == 1) {
+                            this._seriesPlayers['all'] = [
+                                getall.Amateurs.aggregate['count'],
+
+                                getall.Senior_Amateurs.aggregate['count'],
+
+                                getall.Veterans.aggregate['count'],
+
+                                getall.Ladies.aggregate['count'],
+                            ];
+                        } else {
+                            this._seriesPlayers['all'] = [
+                                getall.club[0].Amateurs.aggregate['count'],
+
+                                getall.club[0].Senior_Amateurs.aggregate['count'],
+
+                                getall.club[0].Veterans.aggregate['count'],
+
+                                getall.club[0].Ladies.aggregate['count'],
+                            ];
+                        }
+                    } else if (this.loggedInuser.userRole == 4 && getall.tour.length > 0) {
+
+                        // this.tournamentCounts = getall.TournamentsQLs.length;
+                        const membersCatCounts = {
+                            'Amateurs': 0,
+                            'Senior Amateurs': 0,
+                            'Ladies': 0,
+                            'Veterans': 0, // Add all possible categories
+                            'others': 0, // Add all possible categories
+                        }
+                        this.tournamentCounts = 0;
+                        let latestTournament = [];
+                        for (let tour of getall.tour) {
+                            this.tournamentCounts += tour.tournaments.length;
+                            for (let tournament of tour.tournaments) {
+                                latestTournament.push(tournament);
+                            }
+                            this.playerCounts += tour.members.length;
+                            for (let member of tour.members) {
+
+                                if (member.player && member.player.playerCategory) {
+                                    // Increment the count for the corresponding player category
+                                    membersCatCounts[member.player.playerCategory]++;
+                                }
+
+                            }
+
+                        }
+                        if (this.tournamentCounts > 6) {
+                            this.tournaments = latestTournament.splice(0, 6);
+                        } else {
+                            this.tournaments = latestTournament;
+                        }
+                        this.flightCounts = getall.tour.length;
+                        let myData: any[] = [];
+                        let prevDate = null;
+                        let memCounter = 0;
+                        let totalFlights = 0;
+
+                        let data = getall.TournamentsQLs.sort(this.ComparatorDate);
+                        //let data = dataPlayers.TournamentsQL;
+                        let i = 0;
+                        let distinctMembers = new Set();
+                        let distinctCategory = new Set();
+                        const categoryCounts = {
+                            'Amateurs': 0,
+                            'Senior Amateurs': 0,
+                            'Ladies': 0,
+                            'Veterans': 0, // Add all possible categories
+                            'others': 0, // Add all possible categories
+                        }
+                        this._labels = [];
+                        for (let stats of data) {
+                            if (stats.startDate == prevDate) {
+                                memCounter =
+                                    memCounter + (stats ? stats.MembersQL.length : 0);
+                                totalFlights = totalFlights + 1;
+                                for (let member of stats.MembersQL) {
+
+                                    if (!distinctMembers.has(member.playerId)) {
+                                        distinctMembers.add(member.playerId);
+                                        if (categoryCounts[member.player.playerCategory] !== undefined) {
+                                            categoryCounts[member.player.playerCategory]++;
+                                        } else {
+                                            categoryCounts['others']++;
+                                        }
+                                    }
+                                }
+                                myData[myData.length - 1].membersCount = memCounter;
+                                myData[myData.length - 1].totalFlights = totalFlights;
+                                prevDate = stats.v;
+                            } else {
+                                memCounter = 0;
+                                totalFlights = 0;
+                                memCounter =
+                                    memCounter + (stats ? stats.MembersQL.length : 0);
+                                totalFlights = totalFlights + 1;
+                                for (let member of stats.MembersQL) {
+                                    distinctMembers.add(member.playerId);
+                                    if (categoryCounts[member.player.playerCategory] !== undefined) {
+                                        categoryCounts[member.player.playerCategory]++;
+                                    } else {
+                                        categoryCounts['others']++;
+                                    }
+                                }
+                                let obj = {
+                                    date: stats.startDate,
+                                    membersCount: memCounter,
+                                    totalFlights: totalFlights,
+                                };
+
+                                myData.push(obj);
+                                prevDate = stats.startDate;
+                            }
+                        }
+                        // console.log(distinctMembers.size);
+                        // console.log(distinctCategory);
+                        // console.log(categoryCounts);
+
+                        // console.log(myData);
+                        this.membersCountsCal = distinctMembers.size;
+                        let dataMembers: any[] = [];
+                        let dataFlight: any[] = [];
+                        for (let obj of myData) {
+                            this._labels.push(General.getdate(obj.date));
+                            dataMembers.push(obj.membersCount);
+                            dataFlight.push(obj.totalFlights);
+                        }
+                        this._series = [
+                            {
+                                data: dataMembers,
+                                name: 'Members',
+                                type: 'line',
+                            },
+                            {
+                                data: dataFlight,
+                                name: 'Rounds',
+                                type: 'column',
+                            },
+                        ];
+
+                        this._overview = {
+                            newIssues: getall.TournamentsQLs.length,
+                            closedIssues: this.membersCountsCal,
+                            fixed: categoryCounts.Amateurs,
+                            wontfix: categoryCounts['Senior Amateurs'],
+                            reopened: categoryCounts.Ladies,
+                            needstriage: categoryCounts.Veterans,
+                        }
+                        // console.log(players);
+                        this._seriesPlayers['all'] = [
+                            membersCatCounts.Amateurs,
+                            membersCatCounts['Senior Amateurs'],
+                            membersCatCounts.Veterans,
+                            membersCatCounts.Ladies,
+                            membersCatCounts.others,
+
+                        ];
                     }
-                }
-                console.log(distinctMembers.size);
-                console.log(distinctCategory);
-                console.log(categoryCounts);
-               
-                console.log(myData);
-                this.membersCountsCal = distinctMembers.size;
-                let dataMembers: any[] = [];
-                let dataFlight: any[] = [];
-                for (let obj of myData) {
-                    this._labels.push(General.getdate(obj.date));
-                    dataMembers.push(obj.membersCount);
-                    dataFlight.push(obj.totalFlights);
-                }
-                this._series = [
-                    {
-                        data: dataMembers,
-                        name: 'Members',
-                        type: 'line',
-                    },
-                    {
-                        data: dataFlight,
-                        name: 'Rounds',
-                        type: 'column',
-                    },
-                ];
 
-                // this.flightCountsNotCal =
-                //     getall.TournamentsQLs.length - this.flightCountsCal;
-                console.log(this._overview);
-
-                (this._overview = {
-                    newIssues: getall.TournamentsQLs.length,
-                    closedIssues: this.membersCountsCal,
-                    fixed: categoryCounts.Amateurs,
-                    wontfix: categoryCounts['Senior Amateurs'],
-                    reopened: categoryCounts.Ladies,
-                    needstriage: categoryCounts.Veterans,
-                }),
-                    console.log(players);
-                if (this.loggedInuser.userRole == 1) {
-                    this._seriesPlayers['all'] = [
-                        getall.Amateurs.aggregate['count'],
-
-                        getall.Senior_Amateurs.aggregate['count'],
-
-                        getall.Veterans.aggregate['count'],
-
-                        getall.Ladies.aggregate['count'],
-                    ];
-                } else {
-                    this._seriesPlayers['all'] = [
-                        getall.club[0].Amateurs.aggregate['count'],
-
-                        getall.club[0].Senior_Amateurs.aggregate['count'],
-
-                        getall.club[0].Veterans.aggregate['count'],
-
-                        getall.club[0].Ladies.aggregate['count'],
-                    ];
-                }
-
-                // Prepare the chart data
-                this._prepareChartData();
-                this.loading = true;
-            });
+                    // Prepare the chart data
+                    this._prepareChartData();
+                    this.loading = true;
+                });
+        } catch (error) {
+            this.logger.log('Getting Dashboard Data Failed', "error", error.toString());
+        }
     }
 
     /**
@@ -633,4 +783,30 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
         //     },
         // };
     }
+    async addnewTour() {
+        const dialogRef = this.dialog.open(DialogAddTourMainComponent);
+        dialogRef.afterClosed().subscribe(async (result) => {
+          console.log(result);
+          if (result) {
+            let tour = {
+              id: UniqueIdGenerator.generate(),
+              adminId: this.loggedInuser.id,
+              name: result.title,
+              logo: null,
+              dateCreated:new Date().toISOString(),
+              startDate:result.startDate,
+              endDate:result.endDate,
+            }
+            this._facadeService.addTour(tour, result.file).subscribe((result) => {
+              console.log(result);
+              if (result) {
+                
+              }
+            })
+    
+          }
+    
+        })
+    
+      }
 }

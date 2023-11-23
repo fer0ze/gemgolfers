@@ -33,6 +33,7 @@ import { ApexOptions } from 'ng-apexcharts';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-view-player',
@@ -141,8 +142,8 @@ export class ViewPlayerComponent implements OnInit {
         public dialog: MatDialog,
         public facadeService: FacadeService,
         private handicapService: HandicapService,
-        private datepipe: DatePipe, private _localStorage: LocalStorageService
-    ) {}
+        private datepipe: DatePipe, private _localStorage: LocalStorageService, private logger: LogsService
+    ) { }
 
     // bar chart
     // public barChartOptions: any = {
@@ -203,494 +204,500 @@ export class ViewPlayerComponent implements OnInit {
     // public lineChartType: string;
 
     async ngOnInit() {
-        //console.log(this.route.snapshot.paramMap.get("id"));
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        try {
+            this.logger.log('Getting Players Profile Data', "info");
+            //console.log(this.route.snapshot.paramMap.get("id"));
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
-        this.route.paramMap.subscribe((params) => {
-            this.playerID = params.get('id');
+            this.route.paramMap.subscribe((params) => {
+                this.playerID = params.get('id');
 
-            if (this.loggedInuser) {
-                let clubInfo: any =
+                if (this.loggedInuser) {
+                    let clubInfo: any =
+                        this.loggedInuser.membership.length > 0
+                            ? this.loggedInuser.membership[0].club
+                            : null;
+
+                    console.log(clubInfo);
+
+                    this.clubTitle = clubInfo ? clubInfo.name : '';
+                }
+            });
+
+            if (this.playerID) {
+                //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
+                //console.log(this.currentPlayer);
+                let club: any =
                     this.loggedInuser.membership.length > 0
                         ? this.loggedInuser.membership[0].club
                         : null;
 
-                console.log(clubInfo);
+                let courseID =
+                    club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
+                let courseRating: any = {
+                    courseId: courseID,
+                    courseHoleSets: 3,
+                };
+                this.playerWHS = await this.facadeService.getPlayerWHS(
+                    this.playerID
+                );
 
-                this.clubTitle = clubInfo ? clubInfo.name : '';
-            }
-        });
+                this.playerWHSHistory = this.playerWHS['HandicapHistoryWhsQL'];
+                console.log(this.playerWHSHistory);
 
-        if (this.playerID) {
-            //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
-            //console.log(this.currentPlayer);
-            let club: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
+                this.usedForHandicap =
+                    this.playerWHSHistory &&
+                        this.playerWHSHistory.length > 0 &&
+                        this.playerWHSHistory[0]
+                        ? this.playerWHSHistory[0].used_handicaps
+                        : [];
 
-            let courseID =
-                club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
-            let courseRating: any = {
-                courseId: courseID,
-                courseHoleSets: 3,
-            };
-            this.playerWHS = await this.facadeService.getPlayerWHS(
-                this.playerID
-            );
+                this.playerHandicapWhsList = this.playerWHSHistory;
+                this.topDiff20 =
+                    this.playerHandicapWhsList.length > 0
+                        ? this.playerHandicapWhsList[0].handicapDifferential
+                        : null;
+                console.log('Lowest Handicap=' + this.topDiff20);
 
-            this.playerWHSHistory = this.playerWHS['HandicapHistoryWhsQL'];
-            console.log(this.playerWHSHistory);
+                // this.topDiff = this.playerHandicapWhsList.sort(
+                //     this.ComparatorHandicapDifferentialAsc
+                // );
 
-            this.usedForHandicap =
-                this.playerWHSHistory &&
-                this.playerWHSHistory.length > 0 &&
-                this.playerWHSHistory[0]
-                    ? this.playerWHSHistory[0].used_handicaps
-                    : [];
+                this.handicapsAvailable = this.playerHandicapWhsList.length;
 
-            this.playerHandicapWhsList = this.playerWHSHistory;
-            this.topDiff20 =
-                this.playerHandicapWhsList.length > 0
-                    ? this.playerHandicapWhsList[0].handicapDifferential
-                    : null;
-            console.log('Lowest Handicap=' + this.topDiff20);
-
-            // this.topDiff = this.playerHandicapWhsList.sort(
-            //     this.ComparatorHandicapDifferentialAsc
-            // );
-
-            this.handicapsAvailable = this.playerHandicapWhsList.length;
-
-            switch (this.handicapsAvailable) {
-                case 20:
-                    this.handicapsToUse = 8;
-                    break;
-                case 19:
-                    this.handicapsToUse = 7;
-                    break;
-                case 18:
-                case 17:
-                    this.handicapsToUse = 6;
-                    break;
-                case 16:
-                case 15:
-                    this.handicapsToUse = 5;
-                    break;
-                case 14:
-                case 13:
-                case 12:
-                    this.handicapsToUse = 4;
-                    break;
-                case 11:
-                case 10:
-                case 9:
-                    this.handicapsToUse = 3;
-                    break;
-                case 8:
-                case 7:
-                case 6:
-                    this.handicapsToUse = 2;
-                    break;
-                case 5:
-                case 4:
-                case 3:
-                    this.handicapsToUse = 1;
-                    break;
-                default:
-                    this.handicapsToUse = 0;
-                    break;
-            }
-            // this.topDiff =
-            //     this.topDiff.length > this.handicapsToUse
-            //         ? this.topDiff[this.handicapsToUse].handicapDifferential
-            //         : 0;
-            //console.log("TopDiffer" + this.topDiff);
-            //console.log("Available Handicaps" + this.playerHandicapWhsList);
-            //console.log("Available Handicaps" + this.handicapsAvailable);
-            //console.log("Available Handicaps" + this.handicapsToUse);
-            const slicedWhs = this.playerWHSHistory;
-            console.log(slicedWhs);
-            // for (let whsItem in slicedWhs) {
-            //     if (slicedWhs[+whsItem].combined_handicap) {
-            //         slicedWhs.splice(
-            //             +whsItem + 1,
-            //             0,
-            //             slicedWhs[whsItem].combined_handicap
-            //         );
-            //         slicedWhs[+whsItem].combined_handicap = null;
-            //         slicedWhs[+whsItem].noBorder = true;
-            //         slicedWhs[+whsItem].highlight = true;
-            //         slicedWhs[+whsItem + 1].highlight = true;
-            //     }
-
-            //     // if(slicedWhs[+whsItem].is_combined)
-            //     //   slicedWhs.splice(+whsItem, 1);
-            // }
-            for (let whsItem of slicedWhs) {
-                if (whsItem.combined_handicap) {
-                    const index = slicedWhs.indexOf(whsItem);
-                    slicedWhs.splice(index + 1, 0, whsItem.combined_handicap);
-                    whsItem.combined_handicap = null;
-                    whsItem.noBorder = true;
-                    whsItem.highlight = true;
-                    slicedWhs[index].highlight = true;
-                    slicedWhs[index + 1].highlight = true;
+                switch (this.handicapsAvailable) {
+                    case 20:
+                        this.handicapsToUse = 8;
+                        break;
+                    case 19:
+                        this.handicapsToUse = 7;
+                        break;
+                    case 18:
+                    case 17:
+                        this.handicapsToUse = 6;
+                        break;
+                    case 16:
+                    case 15:
+                        this.handicapsToUse = 5;
+                        break;
+                    case 14:
+                    case 13:
+                    case 12:
+                        this.handicapsToUse = 4;
+                        break;
+                    case 11:
+                    case 10:
+                    case 9:
+                        this.handicapsToUse = 3;
+                        break;
+                    case 8:
+                    case 7:
+                    case 6:
+                        this.handicapsToUse = 2;
+                        break;
+                    case 5:
+                    case 4:
+                    case 3:
+                        this.handicapsToUse = 1;
+                        break;
+                    default:
+                        this.handicapsToUse = 0;
+                        break;
                 }
-            }
+                // this.topDiff =
+                //     this.topDiff.length > this.handicapsToUse
+                //         ? this.topDiff[this.handicapsToUse].handicapDifferential
+                //         : 0;
+                //console.log("TopDiffer" + this.topDiff);
+                //console.log("Available Handicaps" + this.playerHandicapWhsList);
+                //console.log("Available Handicaps" + this.handicapsAvailable);
+                //console.log("Available Handicaps" + this.handicapsToUse);
+                const slicedWhs = this.playerWHSHistory;
+                console.log(slicedWhs);
+                // for (let whsItem in slicedWhs) {
+                //     if (slicedWhs[+whsItem].combined_handicap) {
+                //         slicedWhs.splice(
+                //             +whsItem + 1,
+                //             0,
+                //             slicedWhs[whsItem].combined_handicap
+                //         );
+                //         slicedWhs[+whsItem].combined_handicap = null;
+                //         slicedWhs[+whsItem].noBorder = true;
+                //         slicedWhs[+whsItem].highlight = true;
+                //         slicedWhs[+whsItem + 1].highlight = true;
+                //     }
 
-            this.personLeads = slicedWhs.filter(function (a) {
-                return !a.is_combined;
-            }, 0);
-            // this.personLeads = slicedWhs
-            this.WHSSource = new MatTableDataSource(this.personLeads);
-
-            this.WHSSource.paginator = this.paginatorWHSHistory;
-            this.WHSSource.sort = this.bsort;
-
-            let playerscore: any =
-                await this.facadeService.getPlayerFlightScores(this.playerID);
-            console.log(playerscore);
-            this.currentPlayer = playerscore.PlayerQL;
-            this.totalRounds = playerscore.Aggegate.aggregate.totalCount;
-            let memberQLs: any = playerscore.MemberQL;
-            this.memberQLs = playerscore.MemberQL;
-            this.playerWHSRound = await this.facadeService.getPlayerWHSRound(
-                courseRating
-            );
-            // console.log(this.playerWHS);
-            console.log(this.playerWHSRound);
-            let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
-            let rating = this.playerWHSRound['course_rating'];
-            for (let item of rating) {
-                let slopeRating = item['slopeRating'];
-                let courseRating = item['courseRating'];
-                let coursePar = item['coursePar'];
-                if (item['tee'] == 'WHITE') {
-                    this.whiteTeeHI =
-                        (handicapIndex * (slopeRating / 113.0) +
-                            (courseRating - coursePar)) *
-                        0.95;
-                    this.whiteTeeHI =Math.abs(Math.round(this.whiteTeeHI));
-                } else if (item['tee'] == 'BLACK') {
-                    this.blackTeeHI =
-                        (handicapIndex * (slopeRating / 113.0) +
-                            (courseRating - coursePar)) *
-                        0.95;
-                    this.blackTeeHI = Math.abs(Math.round(this.blackTeeHI));
-                } else if (item['tee'] == 'BLUE') {
-                    this.blueTeeHI =
-                        (handicapIndex * (slopeRating / 113.0) +
-                            (courseRating - coursePar)) *
-                        0.95;
-                    this.blueTeeHI = Math.abs(Math.round(this.blueTeeHI));
-                } else if (item['tee'] == 'RED') {
-                    this.redTeeHI =
-                        (handicapIndex * (slopeRating / 113.0) +
-                            (courseRating - coursePar)) *
-                        0.95;
-                    this.redTeeHI = Math.abs(Math.round(this.redTeeHI));
-                }else if (item['tee'] == 'Black') {
-                    this.balckVetTeeHI =
-                        (handicapIndex * (slopeRating / 113.0) +
-                            (courseRating - coursePar)) *
-                        0.95;
-                    this.balckVetTeeHI = Math.abs(Math.round(this.balckVetTeeHI));
+                //     // if(slicedWhs[+whsItem].is_combined)
+                //     //   slicedWhs.splice(+whsItem, 1);
+                // }
+                for (let whsItem of slicedWhs) {
+                    if (whsItem.combined_handicap) {
+                        const index = slicedWhs.indexOf(whsItem);
+                        slicedWhs.splice(index + 1, 0, whsItem.combined_handicap);
+                        whsItem.combined_handicap = null;
+                        whsItem.noBorder = true;
+                        whsItem.highlight = true;
+                        slicedWhs[index].highlight = true;
+                        slicedWhs[index + 1].highlight = true;
+                    }
                 }
-            }
-            // console.log(this.redTeeHI);
-            // console.log(this.balckVetTeeHI);
-            // console.log(this.blackTeeHI);
-            // console.log(this.whiteTeeHI);
-            // console.log(this.blueTeeHI);
 
-            //this.barChartDataGross = [];
-            //this.barChartDataNet = [];
-            this.playerHandiData = playerscore['HandicapQL'];
-            const slicedCongu = this.playerHandiData.slice(0, 20);
+                this.personLeads = slicedWhs.filter(function (a) {
+                    return !a.is_combined;
+                }, 0);
+                // this.personLeads = slicedWhs
+                this.WHSSource = new MatTableDataSource(this.personLeads);
 
-            this.dataSource = new MatTableDataSource(slicedCongu);
-            this.dataSource.paginator = this.paginatorConguHistory;
-            this.dataSource.sort = this.asort;
-            let newScores: any[] = [];
-            let newScore: any[] = [];
-            for (let memberQL of memberQLs) {
-                let flightQL: any = memberQL.FlightQL;
+                this.WHSSource.paginator = this.paginatorWHSHistory;
+                this.WHSSource.sort = this.bsort;
 
-                let scoresQLs: any = flightQL.ScoresQL;
-                if (scoresQLs.length == 0) {
-                    // Do not add flights without score
-                    continue;
+                let playerscore: any =
+                    await this.facadeService.getPlayerFlightScores(this.playerID);
+                console.log(playerscore);
+                this.currentPlayer = playerscore.PlayerQL;
+                this.totalRounds = playerscore.Aggegate.aggregate.totalCount;
+                let memberQLs: any = playerscore.MemberQL;
+                this.memberQLs = playerscore.MemberQL;
+                this.playerWHSRound = await this.facadeService.getPlayerWHSRound(
+                    courseRating
+                );
+                // console.log(this.playerWHS);
+                console.log(this.playerWHSRound);
+                let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
+                let rating = this.playerWHSRound['course_rating'];
+                for (let item of rating) {
+                    let slopeRating = item['slopeRating'];
+                    let courseRating = item['courseRating'];
+                    let coursePar = item['coursePar'];
+                    if (item['tee'] == 'WHITE') {
+                        this.whiteTeeHI =
+                            (handicapIndex * (slopeRating / 113.0) +
+                                (courseRating - coursePar)) *
+                            0.95;
+                        this.whiteTeeHI = Math.abs(Math.round(this.whiteTeeHI));
+                    } else if (item['tee'] == 'BLACK') {
+                        this.blackTeeHI =
+                            (handicapIndex * (slopeRating / 113.0) +
+                                (courseRating - coursePar)) *
+                            0.95;
+                        this.blackTeeHI = Math.abs(Math.round(this.blackTeeHI));
+                    } else if (item['tee'] == 'BLUE') {
+                        this.blueTeeHI =
+                            (handicapIndex * (slopeRating / 113.0) +
+                                (courseRating - coursePar)) *
+                            0.95;
+                        this.blueTeeHI = Math.abs(Math.round(this.blueTeeHI));
+                    } else if (item['tee'] == 'RED') {
+                        this.redTeeHI =
+                            (handicapIndex * (slopeRating / 113.0) +
+                                (courseRating - coursePar)) *
+                            0.95;
+                        this.redTeeHI = Math.abs(Math.round(this.redTeeHI));
+                    } else if (item['tee'] == 'Black') {
+                        this.balckVetTeeHI =
+                            (handicapIndex * (slopeRating / 113.0) +
+                                (courseRating - coursePar)) *
+                            0.95;
+                        this.balckVetTeeHI = Math.abs(Math.round(this.balckVetTeeHI));
+                    }
                 }
-                //console.log(scoresQLs);
+                // console.log(this.redTeeHI);
+                // console.log(this.balckVetTeeHI);
+                // console.log(this.blackTeeHI);
+                // console.log(this.whiteTeeHI);
+                // console.log(this.blueTeeHI);
 
-                let scores: any[] = [];
+                //this.barChartDataGross = [];
+                //this.barChartDataNet = [];
+                this.playerHandiData = playerscore['HandicapQL'];
+                const slicedCongu = this.playerHandiData.slice(0, 20);
 
-                let grossScore: number = 0;
-                let netScore: number = 0;
-                let dates: string[] = [];
-                for (let scoreQL of scoresQLs) {
-                    //ScoreQL scoreQL = scoresQL.getFragments().getScoreQL();
-                    if (scoreQL.grossScore <= 0) {
+                this.dataSource = new MatTableDataSource(slicedCongu);
+                this.dataSource.paginator = this.paginatorConguHistory;
+                this.dataSource.sort = this.asort;
+                let newScores: any[] = [];
+                let newScore: any[] = [];
+                for (let memberQL of memberQLs) {
+                    let flightQL: any = memberQL.FlightQL;
+
+                    let scoresQLs: any = flightQL.ScoresQL;
+                    if (scoresQLs.length == 0) {
+                        // Do not add flights without score
+                        continue;
+                    }
+                    //console.log(scoresQLs);
+
+                    let scores: any[] = [];
+
+                    let grossScore: number = 0;
+                    let netScore: number = 0;
+                    let dates: string[] = [];
+                    for (let scoreQL of scoresQLs) {
+                        //ScoreQL scoreQL = scoresQL.getFragments().getScoreQL();
+                        if (scoreQL.grossScore <= 0) {
+                            continue;
+                        }
+
+                        let objScore: Score = new Score(
+                            scoreQL.playerId,
+                            scoreQL.playerHandicap,
+                            scoreQL.hole.index,
+                            scoreQL.hole.par,
+                            scoreQL.grossScore
+                        );
+                        //console.log(objScore)
+                        grossScore += objScore.getGrossScore();
+                        netScore += objScore.getNetScore(handicapAllocation.AS_IS);
+
+                        //let score: Score;
+                        //let detailQL: any = scoreQL.detailQL;
+                        //if (detailQL != null) {
+                        //score = QLModelMapper.scoreQlToModel(scoreQL, detailQL.getFragments().getScoreDetailQL());
+                        //} else {
+                        //score = QLModelMapper.scoreQlToModel(scoreQL);
+                        //}
+                        //scores.add(score);
+                        scores.push(scoreQL);
+                    }
+                    //console.log(dates);
+                    //console.log(scores);
+                    //console.log(this.barChartData);
+                    //console.log(flightQL);
+
+                    // this.dataSource.sort = this.sort;
+
+                    if (this.barChartLabels.length <= 10) {
+                        this.barChartLabels.push(flightQL.date);
+                        this.barChartDataGross.push(grossScore);
+                        this.barChartDataNet.push(netScore);
+                    }
+
+                    let recentScores = {
+                        date: flightQL.date,
+                        gross: grossScore,
+                        net: netScore,
+                    };
+                    if (newScores.length <= 20) {
+                        newScores.push(recentScores);
+                    }
+                    //this._labels.push(flightQL.date);
+
+                    newScore.push(recentScores);
+
+                    //console.log(newScores);
+
+                    //console.log(this.barChartLabels);
+                    //console.log(this.barChartDataGross);
+                    //console.log(this.barChartDataNet);
+                    //console.log(this.barChartData);
+                    this.ConguScoreLength = newScores.length;
+                    this.CONGUgrossSource = new MatTableDataSource(newScores);
+                    this.CONGUgrossSource.paginator =
+                        this.paginatorScoreConguHistory;
+                    this.CONGUgrossSource.sort = this.csort;
+                    // this.dataSource.sort = this.sort;
+
+                    this.CONGUnetSource = new MatTableDataSource(newScores);
+                    this.CONGUnetSource.paginator = this.paginatorScoreWHSHistory;
+                    this.CONGUnetSource.sort = this.dsort;
+
+                    if (scores.length == 0) {
+                        // Do not add flights without score
                         continue;
                     }
 
-                    let objScore: Score = new Score(
-                        scoreQL.playerId,
-                        scoreQL.playerHandicap,
-                        scoreQL.hole.index,
-                        scoreQL.hole.par,
-                        scoreQL.grossScore
+                    let flight: Flight = flightQL;
+
+                    let courseQL = flightQL.CourseQL;
+                    let course = courseQL;
+
+                    this.playerFlightScores.push(
+                        new FlightScores(flight, scores, course)
                     );
-                    //console.log(objScore)
-                    grossScore += objScore.getGrossScore();
-                    netScore += objScore.getNetScore(handicapAllocation.AS_IS);
-
-                    //let score: Score;
-                    //let detailQL: any = scoreQL.detailQL;
-                    //if (detailQL != null) {
-                    //score = QLModelMapper.scoreQlToModel(scoreQL, detailQL.getFragments().getScoreDetailQL());
-                    //} else {
-                    //score = QLModelMapper.scoreQlToModel(scoreQL);
-                    //}
-                    //scores.add(score);
-                    scores.push(scoreQL);
-                }
-                //console.log(dates);
-                //console.log(scores);
-                //console.log(this.barChartData);
-                //console.log(flightQL);
-
-                // this.dataSource.sort = this.sort;
-
-                if (this.barChartLabels.length <= 10) {
-                    this.barChartLabels.push(flightQL.date);
-                    this.barChartDataGross.push(grossScore);
-                    this.barChartDataNet.push(netScore);
                 }
 
-                let recentScores = {
-                    date: flightQL.date,
-                    gross: grossScore,
-                    net: netScore,
-                };
-                if (newScores.length <= 20) {
-                    newScores.push(recentScores);
+                let dataMembersG: any[] = [];
+                let dataMembersN: any[] = [];
+                for (let obj of newScores) {
+                    dataMembersG.push({
+                        x: new Date(obj.date),
+                        y: obj.gross,
+                    });
+                    dataMembersN.push({
+                        x: new Date(obj.date),
+                        y: obj.net,
+                    });
                 }
-                //this._labels.push(flightQL.date);
-
-                newScore.push(recentScores);
-
-                //console.log(newScores);
-
-                //console.log(this.barChartLabels);
-                //console.log(this.barChartDataGross);
-                //console.log(this.barChartDataNet);
-                //console.log(this.barChartData);
-                this.ConguScoreLength = newScores.length;
-                this.CONGUgrossSource = new MatTableDataSource(newScores);
-                this.CONGUgrossSource.paginator =
-                    this.paginatorScoreConguHistory;
-                this.CONGUgrossSource.sort = this.csort;
-                // this.dataSource.sort = this.sort;
-
-                this.CONGUnetSource = new MatTableDataSource(newScores);
-                this.CONGUnetSource.paginator = this.paginatorScoreWHSHistory;
-                this.CONGUnetSource.sort = this.dsort;
-
-                if (scores.length == 0) {
-                    // Do not add flights without score
-                    continue;
-                }
-
-                let flight: Flight = flightQL;
-
-                let courseQL = flightQL.CourseQL;
-                let course = courseQL;
-
-                this.playerFlightScores.push(
-                    new FlightScores(flight, scores, course)
-                );
-            }
-
-            let dataMembersG: any[] = [];
-            let dataMembersN: any[] = [];
-            for (let obj of newScores) {
-                dataMembersG.push({
-                    x: new Date(obj.date),
-                    y: obj.gross,
+                this._series.push({
+                    name: 'Gross',
+                    data: dataMembersG,
                 });
-                dataMembersN.push({
-                    x: new Date(obj.date),
-                    y: obj.net,
+                this._series.push({
+                    name: 'Net',
+                    data: dataMembersN,
                 });
-            }
-            this._series.push({
-                name: 'Gross',
-                data: dataMembersG,
-            });
-            this._series.push({
-                name: 'Net',
-                data: dataMembersN,
-            });
-            console.log(this._series);
-            console.log(this._labels);
+                console.log(this._series);
+                console.log(this._labels);
 
-            //console.log(this.playerFlightScores);
-            let finalScoreStats: ScoreStats = new ScoreStats();
-            for (let stats of this.playerFlightScores) {
-                finalScoreStats.addScoreStats(stats.scoreStats);
-            }
-            //console.log(finalScoreStats);
-
-            // this.par3Avg = finalScoreStats.par3Stats.getAvgScores();
-            // this.par4Avg = finalScoreStats.par4Stats.getAvgScores();
-            // this.par5Avg = finalScoreStats.par5Stats.getAvgScores();
-
-            this.shotsBirdiesPercent = finalScoreStats.getShotsBirdiesPercent();
-            this.shotsBogeysPercent = finalScoreStats.getShotsBogeysPercent();
-            this.shotsThreeOrHigherPercent =
-                //     finalScoreStats.getShotsThreeOrHigherPercent();
-                this.shotsParsPercent = finalScoreStats.getShotsParsPercent();
-            // this.shotsDoubleBogeysPercent =
-            //     finalScoreStats.getShotsDoubleBogeysPercent();
-
-            // this.barChartType = 'bar';
-            // this.barChartLegend = true;
-
-            // this.lineChartLegend = true;
-            // this.lineChartType = 'line';
-
-            this.isLoading = false;
-            let flag: boolean = false;
-
-            for (let handicap of playerscore.HandicapQL) {
-                if (!flag) {
-                    this.handicapHistory.push(handicap.oldHandicap);
-                    this.handicapHistoryDate.push('Initial');
-
-                    flag = true;
+                //console.log(this.playerFlightScores);
+                let finalScoreStats: ScoreStats = new ScoreStats();
+                for (let stats of this.playerFlightScores) {
+                    finalScoreStats.addScoreStats(stats.scoreStats);
                 }
-                this.handicapHistory.push(handicap.handicap);
-                this.handicapHistoryDate.push(
-                    General.parseToDate(handicap.updatedAt).toDateString()
-                );
-            }
+                //console.log(finalScoreStats);
 
-            // console.log(finalScoreStats);
+                // this.par3Avg = finalScoreStats.par3Stats.getAvgScores();
+                // this.par4Avg = finalScoreStats.par4Stats.getAvgScores();
+                // this.par5Avg = finalScoreStats.par5Stats.getAvgScores();
 
-            // console.log(finalScoreStats.par3Stats.getAvgScores());
-            // console.log(finalScoreStats.par4Stats.getAvgScores());
-            // console.log(finalScoreStats.par5Stats.getAvgScores());
-            // console.log(finalScoreStats.getShotsBirdiesPercent());
-            // console.log(finalScoreStats.getShotsBogeysPercent());
-            // console.log(finalScoreStats.getShotsThreeOrHigherPercent());
-            // console.log(finalScoreStats.getShotsParsPercent());
-            // console.log(finalScoreStats.getShotsDoubleBogeysPercent());
+                this.shotsBirdiesPercent = finalScoreStats.getShotsBirdiesPercent();
+                this.shotsBogeysPercent = finalScoreStats.getShotsBogeysPercent();
+                this.shotsThreeOrHigherPercent =
+                    //     finalScoreStats.getShotsThreeOrHigherPercent();
+                    this.shotsParsPercent = finalScoreStats.getShotsParsPercent();
+                // this.shotsDoubleBogeysPercent =
+                //     finalScoreStats.getShotsDoubleBogeysPercent();
 
-            //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
-            this.chartVisitors = {
-                chart: {
-                    animations: {
-                        speed: 400,
-                        animateGradually: {
+                // this.barChartType = 'bar';
+                // this.barChartLegend = true;
+
+                // this.lineChartLegend = true;
+                // this.lineChartType = 'line';
+
+                this.isLoading = false;
+                let flag: boolean = false;
+
+                for (let handicap of playerscore.HandicapQL) {
+                    if (!flag) {
+                        this.handicapHistory.push(handicap.oldHandicap);
+                        this.handicapHistoryDate.push('Initial');
+
+                        flag = true;
+                    }
+                    this.handicapHistory.push(handicap.handicap);
+                    this.handicapHistoryDate.push(
+                        General.parseToDate(handicap.updatedAt).toDateString()
+                    );
+                }
+
+                // console.log(finalScoreStats);
+
+                // console.log(finalScoreStats.par3Stats.getAvgScores());
+                // console.log(finalScoreStats.par4Stats.getAvgScores());
+                // console.log(finalScoreStats.par5Stats.getAvgScores());
+                // console.log(finalScoreStats.getShotsBirdiesPercent());
+                // console.log(finalScoreStats.getShotsBogeysPercent());
+                // console.log(finalScoreStats.getShotsThreeOrHigherPercent());
+                // console.log(finalScoreStats.getShotsParsPercent());
+                // console.log(finalScoreStats.getShotsDoubleBogeysPercent());
+
+                //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
+                this.chartVisitors = {
+                    chart: {
+                        animations: {
+                            speed: 400,
+                            animateGradually: {
+                                enabled: false,
+                            },
+                        },
+                        fontFamily: 'inherit',
+                        foreColor: 'inherit',
+                        width: '100%',
+                        height: '100%',
+                        type: 'area',
+                        toolbar: {
+                            show: false,
+                        },
+                        zoom: {
                             enabled: false,
                         },
                     },
-                    fontFamily: 'inherit',
-                    foreColor: 'inherit',
-                    width: '100%',
-                    height: '100%',
-                    type: 'area',
-                    toolbar: {
-                        show: false,
-                    },
-                    zoom: {
+                    colors: ['#818CF8', '#38BDF8'],
+                    dataLabels: {
                         enabled: false,
                     },
-                },
-                colors: ['#818CF8', '#38BDF8'],
-                dataLabels: {
-                    enabled: false,
-                },
-                fill: {
-                    colors: ['#312E81'],
-                },
+                    fill: {
+                        colors: ['#312E81'],
+                    },
 
-                series: this._series,
-                stroke: {
-                    width: 2,
-                },
-                grid: {
-                    show: true,
-                    borderColor: '#334155',
-                    padding: {
-                        top: 10,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
+                    series: this._series,
+                    stroke: {
+                        width: 2,
                     },
-                    position: 'back',
-                    xaxis: {
-                        lines: {
-                            show: true,
+                    grid: {
+                        show: true,
+                        borderColor: '#334155',
+                        padding: {
+                            top: 10,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                        },
+                        position: 'back',
+                        xaxis: {
+                            lines: {
+                                show: true,
+                            },
                         },
                     },
-                },
-                tooltip: {
-                    followCursor: true,
-                    theme: 'dark',
-                    x: {
-                        format: 'MMM dd, yyyy',
-                    },
-                    y: {
-                        formatter: (value: number): string => `${value}`,
-                    },
-                },
-                xaxis: {
-                    axisBorder: {
-                        show: false,
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    crosshairs: {
-                        stroke: {
-                            color: '#475569',
-                            dashArray: 0,
-                            width: 2,
-                        },
-                    },
-                    labels: {
-                        offsetY: 0,
-                        style: {
-                            colors: '#CBD5E1',
-                        },
-                    },
-                    tickAmount: 20,
                     tooltip: {
-                        enabled: false,
+                        followCursor: true,
+                        theme: 'dark',
+                        x: {
+                            format: 'MMM dd, yyyy',
+                        },
+                        y: {
+                            formatter: (value: number): string => `${value}`,
+                        },
                     },
-                    type: 'datetime',
-                },
-                yaxis: {
-                    axisTicks: {
-                        show: false,
+                    xaxis: {
+                        axisBorder: {
+                            show: false,
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        crosshairs: {
+                            stroke: {
+                                color: '#475569',
+                                dashArray: 0,
+                                width: 2,
+                            },
+                        },
+                        labels: {
+                            offsetY: 0,
+                            style: {
+                                colors: '#CBD5E1',
+                            },
+                        },
+                        tickAmount: 20,
+                        tooltip: {
+                            enabled: false,
+                        },
+                        type: 'datetime',
                     },
-                    axisBorder: {
-                        show: false,
-                    },
-                    min: (min): number => min - 5,
-                    max: (max): number => max + 20,
-                    tickAmount: 5,
+                    yaxis: {
+                        axisTicks: {
+                            show: false,
+                        },
+                        axisBorder: {
+                            show: false,
+                        },
+                        min: (min): number => min - 5,
+                        max: (max): number => max + 20,
+                        tickAmount: 5,
 
-                    show: false,
-                },
-            };
-        } else {
-            this.location.back();
+                        show: false,
+                    },
+                };
+                this.logger.log('Getting Players Profile Data Successfully', "info");
+            } else {
+                this.location.back();
+            }
+            this.showdata = Promise.resolve(true);
+        } catch (error) {
+            this.logger.log('Getting Players Data Failed', "error", error.toString());
         }
-        this.showdata = Promise.resolve(true);
     }
 
     // events
@@ -735,7 +742,7 @@ export class ViewPlayerComponent implements OnInit {
         //   console.log(id);
         // }
     }
-    onPageFired(event) {}
+    onPageFired(event) { }
     deletePlayer(playerId: string): void {
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
@@ -774,7 +781,7 @@ export class ViewPlayerComponent implements OnInit {
             return handicap.FlightQL.tournamentId == id;
         });
         return used
-            ? General.getPlayersTeesColour(used.playingTee!=null?used.playingTee: used.FlightQL.tee)
+            ? General.getPlayersTeesColour(used.playingTee != null ? used.playingTee : used.FlightQL.tee)
             : General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
     }
     isPanelty(flight) {
@@ -915,9 +922,9 @@ export class ViewPlayerComponent implements OnInit {
         doc.setFontSize(17);
         doc.text(
             'WHS-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
-                ' ' +
-                this.currentPlayer[0].lastName,
+            this.currentPlayer[0].firstName +
+            ' ' +
+            this.currentPlayer[0].lastName,
             14,
             15
         );
@@ -1007,9 +1014,9 @@ export class ViewPlayerComponent implements OnInit {
         doc.setFontSize(17);
         doc.text(
             'CONGU-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
-                ' ' +
-                this.currentPlayer[0].lastName,
+            this.currentPlayer[0].firstName +
+            ' ' +
+            this.currentPlayer[0].lastName,
             14,
             15
         );

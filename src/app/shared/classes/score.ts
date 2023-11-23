@@ -167,6 +167,9 @@ export class Score {
       case TexasScrampleTeamSize.THREE:
         handicap = combinedHandicap / 8;
         break;
+      case TexasScrampleTeamSize.TWO:
+        handicap = combinedHandicap / 6;
+        break;
     }
 
     return Math.round(handicap);
@@ -183,6 +186,9 @@ export class Score {
         break;
       case TexasScrampleTeamSize.THREE:
         handicap = combinedHandicap / 8;
+        break;
+      case TexasScrampleTeamSize.TWO:
+        handicap = combinedHandicap / 6;
         break;
     }
     switch (handicapAlc) {

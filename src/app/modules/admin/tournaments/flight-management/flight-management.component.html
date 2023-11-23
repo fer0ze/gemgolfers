@@ -4,12 +4,23 @@
             (selectedTabChange)="changeRound($event)">
             <mat-tab label="Day 1" *ngIf="noOfRounds >= 1">
                 <div class="flex justify-end mx-32">
-                    <button *ngIf="selectedMembers.length == 0" class="mx-2" mat-raised-button color="accent"
-                        (click)="createAutoFlights()">
-                        Create Auto-Flights
+
+                    <button
+                        *ngIf="selectedMembers.length == 0"
+                        class="mx-2"
+                        mat-raised-button
+                        color="accent"
+                        (click)="createAutoFlights()"
+                    >
+                        Create Auto-Groups
                     </button>
-                    <button mat-raised-button color="primary" (click)="addFlight(1)">
-                        Add New Flight
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="addFlight(1)"
+                    >
+                        Add New Group
+
                     </button>
                 </div>
                 <ng-container>
@@ -29,14 +40,24 @@
                                     <div
                                         class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
                                         <ng-container>
-                                            <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                [floatLabel]="'always'">
-                                                <span *ngIf="!this.showTeams"
-                                                    class="text-base font-black text-gray-400 min-w-max">Flight
-                                                    No:</span>
-                                                <span *ngIf="this.showTeams"
-                                                    class="text-base font-black text-gray-400 min-w-max">Team No:</span>
-                                                <input value="{{
+
+                                            <mat-form-field
+                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                [floatLabel]="'always'"
+                                            >
+                                                <span
+                                                    *ngIf="!this.showTeams"
+                                                    class="text-base font-black text-gray-400 min-w-max"
+                                                    >Group No:</span
+                                                >
+                                                <span
+                                                    *ngIf="this.showTeams"
+                                                    class="text-base font-black text-gray-400 min-w-max"
+                                                    >Team No:</span
+                                                >
+                                                <input
+                                                    value="{{
+
                                                         items['flightNo']
                                                     }}" matInput id="flight_{{ j }}_number" #query />
                                             </mat-form-field>
@@ -247,13 +268,27 @@
                         <span *ngIf="this.showTeams"
                             >Team: {{ i + 1 }}</span
                         > -->
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <span
+                                        *ngIf="!this.showTeams"
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Group No:</span
+                                    >
+                                    <span
+                                        *ngIf="this.showTeams"
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Team No:</span
+                                    >
+                                    <input
+                                        value="{{ items['flightNo'] }}"
+                                        id="flight_{{ j }}_number"
+                                        matInput
+                                        #query
+                                    />
 
-                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
-                                    <span *ngIf="!this.showTeams"
-                                        class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
-                                    <span *ngIf="this.showTeams"
-                                        class="text-base font-black text-gray-400 min-w-max">Team No:</span>
-                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
                                 </mat-form-field>
                                 <mat-form-field *ngIf="this.showTeams" class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'">
@@ -455,9 +490,22 @@
                             >Team: {{ i + 1 }}</span
                         > -->
 
-                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
-                                    <span class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
-                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
+
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Group No:</span
+                                    >
+                                    <input
+                                        value="{{ items['flightNo'] }}"
+                                        id="flight_{{ j }}_number"
+                                        matInput
+                                        #query
+                                    />
+
                                 </mat-form-field>
 
                                 <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2">
@@ -654,9 +702,22 @@
                             >Team: {{ i + 1 }}</span
                         > -->
 
-                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
-                                    <span class="text-base font-black text-gray-400 min-w-max">Flight No:</span>
-                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
+
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'"
+                                >
+                                    <span
+                                        class="text-base font-black text-gray-400 min-w-max"
+                                        >Group No:</span
+                                    >
+                                    <input
+                                        value="{{ items['flightNo'] }}"
+                                        id="flight_{{ j }}_number"
+                                        matInput
+                                        #query
+                                    />
+
                                 </mat-form-field>
 
                                 <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2">

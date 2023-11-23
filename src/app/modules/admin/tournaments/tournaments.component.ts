@@ -21,10 +21,12 @@ import {
 import { FacadeService } from 'app/shared/services/facade.service';
 // import { DialogOverviewComponent } from "../material-components/dialog-overview/dialog-overview.component";
 
-import { of } from 'rxjs';
+import { Subject, of, takeUntil } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
 import { DialogHanidcapListComponent } from '../dialogs/dialog-hanidcap-list/dialog-hanidcap-list.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
+import { TourService } from '../tour/tour.service';
 
 @Component({
     selector: 'app-tournaments',
@@ -56,7 +58,7 @@ export class TournamentsComponent implements OnInit {
     file: File;
     dataSourceSchedule: MatTableDataSource<Tournament>;
     displayedColumnsSchedule = ['id', 'tournamentTitle', 'course', 'date'];
-
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     dataSourceIncomplete: MatTableDataSource<Tournament>;
     displayedColumnsIncomplete = ['id', 'title', 'date', 'noOfRounds'];
     playersData: any;
@@ -84,79 +86,104 @@ export class TournamentsComponent implements OnInit {
     categories: any[] = [];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-
+    tourId: string = '';
     constructor(
         private location: Router,
-        public snackBar: MatSnackBar,
+        public snackBar: MatSnackBar, private _tourService: TourService,
         public dialog: MatDialog,
         private facadeService: FacadeService,
-        private _localStorage: LocalStorageService
-    ) {}
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
+    ) { }
 
     ngAfterViewInit(): void {
         //this.dataSource.sort = this.sort;
     }
 
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let array = {
-            id: 0,
-            title: 'Completed',
-        };
-        let arraya = {
-            id: 1,
-            title: 'Live',
-        };
-        // let arrayb = {
-        //     id: 2,
-        //     title: 'Incomplete',
-        // };
-        let arrayc = {
-            id: 2,
-            title: 'Upcoming',
-        };
-        this.categories.push(array);
-        this.categories.push(arraya);
-        //this.categories.push(arrayb);
-        this.categories.push(arrayc);
-        console.log(this.categories);
+        try {
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            let array = {
+                id: 0,
+                title: 'Completed',
+            };
+            let arraya = {
+                id: 1,
+                title: 'Live',
+            };
+            // let arrayb = {
+            //     id: 2,
+            //     title: 'Incomplete',
+            // };
+            let arrayc = {
+                id: 2,
+                title: 'Upcoming',
+            };
+            this.categories.push(array);
+            this.categories.push(arraya);
+            //this.categories.push(arrayb);
+            this.categories.push(arrayc);
+            console.log(this.categories);
 
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            this.logger.log('Admin comes to Tournament Page', "info");
+            this.logger.log('Getting Tournaments Data', "info");
+            if (this.loggedInuser.userRole == 1) {
+                let dataTournamentsForCompleted =
+                    await this.facadeService.getTournamentsListForCompleted(
+                        todayDate
+                    );
+                this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                console.log(this.Tournaments);
+                this.copiedcompletedTournaments = this.Tournaments;
+                this.dataSource = new MatTableDataSource(this.Tournaments);
+                //console.log("change source");
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.isLoading = false;
+            } else if (this.loggedInuser.userRole == 2) {
+                let dataTournamentsForCompleted =
+                    await this.facadeService.getTournamentsListByClubForCompleted(
+                        todayDate,
+                        this.loggedInuser.adminClubId
+                    );
 
-        if (this.loggedInuser.userRole == 1) {
-            let dataTournamentsForCompleted =
-                await this.facadeService.getTournamentsListForCompleted(
-                    todayDate
-                );
-            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
-            console.log(this.Tournaments);
-            this.copiedcompletedTournaments = this.Tournaments;
-            this.dataSource = new MatTableDataSource(this.Tournaments);
-            //console.log("change source");
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-            this.isLoading = false;
-        } else if (this.loggedInuser.userRole >= 2) {
-            let dataTournamentsForCompleted =
-                await this.facadeService.getTournamentsListByClubForCompleted(
-                    todayDate,
-                    this.loggedInuser.adminClubId
-                );
+                this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                this.copiedcompletedTournaments = this.Tournaments;
+                this.isIncompletedLoading = false;
+                this.isLoading = false;
+                console.log(this.Tournaments);
+                this.dataSource = new MatTableDataSource(this.Tournaments);
 
-            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
-            this.copiedcompletedTournaments = this.Tournaments;
-            this.isIncompletedLoading = false;
-            this.isLoading = false;
-            console.log(this.Tournaments);
-            this.dataSource = new MatTableDataSource(this.Tournaments);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            } else if (this.loggedInuser.userRole == 4) {
+                this.tourId = this._localStorage.get(Constants.TOUR_ID);
+                if (this.tourId) {
+                    let dataTournamentsForCompleted =
+                        await this.facadeService.getTournamentsListByTourForCompleted(
+                            this.tourId
+                        );
 
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
+                    this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
+                    this.copiedcompletedTournaments = this.Tournaments;
+                    this.isIncompletedLoading = false;
+                    this.isLoading = false;
+                    console.log(this.Tournaments);
+                    this.dataSource = new MatTableDataSource(this.Tournaments);
+
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }
+
+            }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
     /**
@@ -170,40 +197,46 @@ export class TournamentsComponent implements OnInit {
     }
     filterByCategory($event) {
         console.log($event);
-        if (this.loggedInuser.userRole === 2) {
-            if ($event.value == 1) {
-                this.selected = 1;
-                this.getTournamentLive();
-            } else if ($event.value == 2) {
-                this.selected = 2;
-                this.getTournamentSchedule();
-            } else if ($event.value == 3) {
-                this.selected = 3;
-                this.getTournamentIncompelete();
+        try {
+
+
+            if (this.loggedInuser.userRole === 2) {
+                if ($event.value == 1) {
+                    this.selected = 1;
+                    this.getTournamentLive();
+                } else if ($event.value == 2) {
+                    this.selected = 2;
+                    this.getTournamentSchedule();
+                } else if ($event.value == 3) {
+                    this.selected = 3;
+                    this.getTournamentIncompelete();
+                } else {
+                    this.selected = 0;
+                    this.getTournamentCompeleted();
+                }
             } else {
-                this.selected = 0;
-                this.getTournamentCompeleted();
+                if ($event.value == 1) {
+                    this.selected = 1;
+                    this.getTournamentLiveForAdmin();
+                } else if ($event.value == 2) {
+                    this.selected = 2;
+                    this.getTournamentScheduleForAdmin();
+                } else if ($event.value == 3) {
+                    this.selected = 3;
+                    this.getTournamentIncompeleteForAdmin();
+                } else {
+                    this.selected = 0;
+                    this.getTournamentCompeletedForAdmin();
+                }
             }
-        } else {
-            if ($event.value == 1) {
-                this.selected = 1;
-                this.getTournamentLiveForAdmin();
-            } else if ($event.value == 2) {
-                this.selected = 2;
-                this.getTournamentScheduleForAdmin();
-            } else if ($event.value == 3) {
-                this.selected = 3;
-                this.getTournamentIncompeleteForAdmin();
-            } else {
-                this.selected = 0;
-                this.getTournamentCompeletedForAdmin();
-            }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
     filterByQuery(query) {
         console.log(query);
         console.log(this.copiedcompletedTournaments);
-        
+
         if (query.length > 3) {
             this.Tournaments = this.Tournaments.filter((obj) => {
                 return obj.title
@@ -220,6 +253,9 @@ export class TournamentsComponent implements OnInit {
         } else if (query == '' && this.selected == 3) {
             this.Tournaments = this.copiedTournamentsIncomplete;
         }
+    }
+    addNewRound() {
+        this.location.navigate(['/tournaments/add']);
     }
     tabClicked(tab: any) {
         console.log(tab);
@@ -254,162 +290,208 @@ export class TournamentsComponent implements OnInit {
         }
     }
     async getTournamentCompeleted() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsForCompleted =
-            await this.facadeService.getTournamentsListByClubForCompleted(
-                todayDate,
-                this.loggedInuser.adminClubId
-            );
-        //console.log(dataTournaments);
-        this.isIncompletedLoading = false;
-        this.isLoadingUpComing = false;
-        this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
-        this.copiedcompletedTournaments = this.Tournaments;
-        this.dataSource = new MatTableDataSource(this.Tournaments);
-        this.isLoading = false;
-        // Assign the data to the data source for the table to render
-        this.dataSource = new MatTableDataSource(this.Tournaments);
-        //console.log("change source");
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsForCompleted =
+                await this.facadeService.getTournamentsListByClubForCompleted(
+                    todayDate,
+                    this.loggedInuser.adminClubId
+                );
+            //console.log(dataTournaments);
+            this.isIncompletedLoading = false;
+            this.isLoadingUpComing = false;
+            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+            this.copiedcompletedTournaments = this.Tournaments;
+            this.dataSource = new MatTableDataSource(this.Tournaments);
+            this.isLoading = false;
+            // Assign the data to the data source for the table to render
+            this.dataSource = new MatTableDataSource(this.Tournaments);
+            //console.log("change source");
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
         //console.log(this.Tournaments);
     }
 
     async getTournamentLive() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            this.logger.log('Getting Live Tournaments Data', "info");
+            this.logger.log('Getting Live Tournaments Sucessfully', "info");
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsLive =
-            await this.facadeService.getTournamentsListByClubForLive(
-                todayDate,
-                this.loggedInuser.adminClubId
-            );
-        console.log(dataTournamentsLive);
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsLive =
+                await this.facadeService.getTournamentsListByClubForLive(
+                    todayDate,
+                    this.loggedInuser.adminClubId
+                );
+            console.log(dataTournamentsLive);
 
-        this.Tournaments = dataTournamentsLive.ActiveTournaments;
-        this.copiedTournamentsUpComing = this.Tournaments;
+            this.Tournaments = dataTournamentsLive.ActiveTournaments;
+            this.copiedTournamentsUpComing = this.Tournaments;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
     }
     async getTournamentSchedule() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            this.logger.log('Getting Schedule Tournaments Data', "info");
+            this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
+            let today: Date = new Date();
+            let dd = String(today.getDate() + 1).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsLive =
-            await this.facadeService.getTournamentsListByClubForSchedule(
-                todayDate,
-                this.loggedInuser.adminClubId
-            );
-        console.log(dataTournamentsLive);
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsLive =
+                await this.facadeService.getTournamentsListByClubForSchedule(
+                    todayDate,
+                    this.loggedInuser.adminClubId
+                );
+            console.log(dataTournamentsLive);
 
-        this.Tournaments = dataTournamentsLive.Scheduled;
-        this.copiedTournamentsSchedule = this.Tournaments;
+            this.Tournaments = dataTournamentsLive.Scheduled;
+            this.copiedTournamentsSchedule = this.Tournaments;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
 
         //console.log("change source");
     }
 
     async getTournamentIncompelete() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsLive =
-            await this.facadeService.getTournamentsListByClubForIncompelete(
-                todayDate,
-                this.loggedInuser.adminClubId
-            );
-        this.Tournaments = dataTournamentsLive.Incomplete;
-        this.copiedTournamentsIncomplete = this.Tournaments;
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsLive =
+                await this.facadeService.getTournamentsListByClubForIncompelete(
+                    todayDate,
+                    this.loggedInuser.adminClubId
+                );
+            this.Tournaments = dataTournamentsLive.Incomplete;
+            this.copiedTournamentsIncomplete = this.Tournaments;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
 
         //console.log("change source");
     }
 
     async getTournamentCompeletedForAdmin() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            this.logger.log('Getting Compeleted Tournaments Data', "info");
+            this.logger.log('Getting Compeleted Tournaments Sucessfully', "info");
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsForCompleted =
-            await this.facadeService.getTournamentsListForCompleted(todayDate);
-        //console.log(dataTournaments);
-        this.isIncompletedLoading = false;
-        this.isLoadingUpComing = false;
-        this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
-        this.copiedcompletedTournaments = this.Tournaments;
-        this.dataSource = new MatTableDataSource(this.Tournaments);
-        this.isLoading = false;
-        // Assign the data to the data source for the table to render
-        this.dataSource = new MatTableDataSource(this.Tournaments);
-        //console.log("change source");
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsForCompleted =
+                await this.facadeService.getTournamentsListForCompleted(todayDate);
+            //console.log(dataTournaments);
+            this.isIncompletedLoading = false;
+            this.isLoadingUpComing = false;
+            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+            this.copiedcompletedTournaments = this.Tournaments;
+            this.dataSource = new MatTableDataSource(this.Tournaments);
+            this.isLoading = false;
+            // Assign the data to the data source for the table to render
+            this.dataSource = new MatTableDataSource(this.Tournaments);
+            //console.log("change source");
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
         //console.log(this.Tournaments);
     }
 
     async getTournamentLiveForAdmin() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            this.logger.log('Getting Live Tournaments Data', "info");
+            this.logger.log('Getting Live Tournaments Sucessfully', "info");
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsForLive =
-            await this.facadeService.getTournamentsListForLiveByAdmin(
-                todayDate
-            );
-        console.log(dataTournamentsForLive);
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsForLive =
+                await this.facadeService.getTournamentsListForLiveByAdmin(
+                    todayDate
+                );
+            console.log(dataTournamentsForLive);
 
-        this.Tournaments = dataTournamentsForLive.ActiveTournaments;
-        this.copiedTournamentsUpComing = this.Tournaments;
+            this.Tournaments = dataTournamentsForLive.ActiveTournaments;
+            this.copiedTournamentsUpComing = this.Tournaments;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
     }
 
     async getTournamentScheduleForAdmin() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            this.logger.log('Getting Schedule Tournaments Data', "info");
+            this.logger.log('Getting Schedule Tournaments Sucessfully', "info");
+            let today: Date = new Date();
+            let dd = String(today.getDate() + 1).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsForSchedule =
-            await this.facadeService.getTournamentsListForSheduleByAdmin(
-                todayDate
-            );
-        console.log(dataTournamentsForSchedule);
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsForSchedule =
+                await this.facadeService.getTournamentsListForSheduleByAdmin(
+                    todayDate
+                );
+            console.log(dataTournamentsForSchedule);
 
-        this.Tournaments;
-        dataTournamentsForSchedule.Scheduled;
-        this.copiedTournamentsSchedule = this.Tournaments;
+            this.Tournaments;
+            dataTournamentsForSchedule.Scheduled;
+            this.copiedTournamentsSchedule = this.Tournaments;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
     }
 
     async getTournamentIncompeleteForAdmin() {
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
+        try {
+            this.logger.log('Getting Incompelete Tournaments Data', "info");
+            this.logger.log('Getting Incompelete Tournaments Sucessfully', "info");
+            let today: Date = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        let dataTournamentsForIncomplete =
-            await this.facadeService.getTournamentsListForIncompleteByAdmin(
-                todayDate
-            );
-        this.Tournaments = dataTournamentsForIncomplete.Scheduled;
-        this.copiedTournamentsIncomplete = this.Tournaments;
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            let dataTournamentsForIncomplete =
+                await this.facadeService.getTournamentsListForIncompleteByAdmin(
+                    todayDate
+                );
+            this.Tournaments = dataTournamentsForIncomplete.Scheduled;
+            this.copiedTournamentsIncomplete = this.Tournaments;
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
     }
 
     applyFilter(filterValue: string) {
+        this.logger.log('Admin Search in Tournamnet Page', "info", filterValue);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
         this.dataSource.filter = filterValue;
@@ -431,6 +513,7 @@ export class TournamentsComponent implements OnInit {
 
     redirectToDetails = (id: string) => {
         //console.log(id);
+        this.logger.log('Admin Click on View in Tournamnet Page', "info", id);
         this.location.navigate(['tournaments/view/' + id]);
     };
 

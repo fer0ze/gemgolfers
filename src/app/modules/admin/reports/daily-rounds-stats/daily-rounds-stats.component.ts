@@ -23,6 +23,7 @@ import { DatePipe } from '@angular/common';
 import { ApexOptions } from 'ng-apexcharts';
 import { ceil } from 'lodash';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-daily-rounds-stats',
@@ -171,7 +172,8 @@ export class DailyRoundsStatsComponent implements OnInit {
         private route: ActivatedRoute,
         private apollo: Apollo,
         private _localStorage: LocalStorageService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private logger: LogsService
     ) { }
 
     public barChartOptions: any = {
@@ -304,40 +306,47 @@ export class DailyRoundsStatsComponent implements OnInit {
     ];
 
     ngOnInit() {
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        this.Players = [];
+        try {
+            this.logger.log('Admin Come to Daily Round Report Page', "info");
+            this.logger.log('Getting Daily Round Report Data', "info", "Last Seven Days");
 
-        this.route.paramMap.subscribe((params) => {
-            this.filterCategory = params.get('category');
-        });
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.Players = [];
 
-        this.isLoading = true;
-        this.showResult = false;
-        this.showtable = false;
+            this.route.paramMap.subscribe((params) => {
+                this.filterCategory = params.get('category');
+            });
 
-        this.scheduleForm = this.fb.group({
-            BookingDate: ['', [Validators.required]],
-        });
+            this.isLoading = true;
+            this.showResult = false;
+            this.showtable = false;
 
-        console.log(this.scheduleForm);
+            this.scheduleForm = this.fb.group({
+                BookingDate: ['', [Validators.required]],
+            });
 
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            console.log(this.scheduleForm);
 
-        this.weeklyRounds = [];
-        of(this.weeklyRounds)
-            .pipe()
-            .subscribe(
-                async (data) => {
-                    var currentDate = new Date();
-                    currentDate.setDate(currentDate.getDate());
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
-                    var nxtDate = new Date();
-                    nxtDate.setDate(nxtDate.getDate() + 7);
+            this.weeklyRounds = [];
+            of(this.weeklyRounds)
+                .pipe()
+                .subscribe(
+                    async (data) => {
+                        var currentDate = new Date();
+                        currentDate.setDate(currentDate.getDate());
 
-                    this.getDailyRounds(currentDate, this.endOfWeek());
-                },
-                (error) => (this.isLoading = false)
-            );
+                        var nxtDate = new Date();
+                        nxtDate.setDate(nxtDate.getDate() + 7);
+
+                        this.getDailyRounds(currentDate, this.endOfWeek());
+                    },
+                    (error) => (this.isLoading = false)
+                );
+        } catch (error) {
+
+        }
     }
 
     applyFilter(filterValue: string) {
@@ -518,7 +527,7 @@ export class DailyRoundsStatsComponent implements OnInit {
                     professionals: professionals,
                     veterans: veterans,
                     nulls: nulls,
-                   
+
                 };
                 let obj4 = {
                     date: timestamp,
@@ -997,6 +1006,7 @@ export class DailyRoundsStatsComponent implements OnInit {
     }
 
     Dailysetup(selectedValue) {
+        this.logger.log('Getting Daily Round Report Data by Dropdown', "info", selectedValue.value);
         console.log(selectedValue);
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;

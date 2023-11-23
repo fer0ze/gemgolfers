@@ -17,6 +17,7 @@ import { General } from '../../../shared/classes/general';
 
 import { of } from 'rxjs';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-daily-rounds',
@@ -59,83 +60,98 @@ export class DailyRoundsComponent implements OnInit {
         private route: ActivatedRoute,
         private _formBuilder: FormBuilder,
         public dialog: MatDialog,
-        private _localStorage: LocalStorageService
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
     ) {
         this.showtable = false;
     }
 
     async ngOnInit() {
-        this.isLoading = true;
-        this.filters = this._formBuilder.group({
-            name: [null, Validators.compose([Validators.required])],
-        });
-        this.scheduleForm = this.fb.group({
-            startDate: ['', [Validators.required]],
-            endDate: ['', [Validators.required]],
-        });
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        try {
+            this.logger.log('Admin Come to Daily Round Page', "info");
+            this.logger.log('Getting Daily Round Data', "info", "Today");
+            this.isLoading = true;
+            this.filters = this._formBuilder.group({
+                name: [null, Validators.compose([Validators.required])],
+            });
+            this.scheduleForm = this.fb.group({
+                startDate: ['', [Validators.required]],
+                endDate: ['', [Validators.required]],
+            });
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
-        this.dailyRounds = [];
-        // this.route.paramMap.subscribe((params) => {
-        //   this.routeDate = params.get("id");
-        // });
+            this.dailyRounds = [];
+            // this.route.paramMap.subscribe((params) => {
+            //   this.routeDate = params.get("id");
+            // });
 
-        var currentDate = new Date();
-        // if (this.routeDate) currentDate = General.parseToDate(this.routeDate);
-        // else
+            var currentDate = new Date();
+            // if (this.routeDate) currentDate = General.parseToDate(this.routeDate);
+            // else
 
-        currentDate.setDate(currentDate.getDate());
+            currentDate.setDate(currentDate.getDate());
 
-        this.getDailyRounds(currentDate, currentDate);
+            this.getDailyRounds(currentDate, currentDate);
 
-        //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
+            //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
+        } catch (error) {
+            this.logger.log('Getting Daily Round Data Failed', "error", error.toString());
+        }
+
     }
 
     async getDailyRounds(fromDate: Date, toDate: Date) {
-        this.dailyStats = [];
-        this.showtable = false;
-        let dataPlayers: any;
-        this.isLoading = true;
-        if (this.loggedInuser.userRole == 1) {
-            dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
-                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
-                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
-            );
-        } else {
-            dataPlayers = await this.facadeService.getDailyRoundsSingle(
-                this.loggedInuser.id,
-                this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
-                this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
-            );
-        }
-        console.log(dataPlayers);
-        const totalsMap = new Map(); // Map to store totals by date
-
-        // Iterate through the data and calculate totals
-        for (const entry of dataPlayers.FlightsQL) {
-            const date = entry.date;
-
-            if (totalsMap.has(date)) {
-                // If date exists in the map, update the totals
-                totalsMap.get(date).membersCount += entry.MembersQL.length;
-                totalsMap.get(date).totalFlights++;
+        try {
+            this.dailyStats = [];
+            this.showtable = false;
+            let dataPlayers: any;
+            this.isLoading = true;
+            if (this.loggedInuser.userRole == 1) {
+                dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
+                    this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+                    this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+                );
             } else {
-                // If date does not exist in the map, create a new entry
-                totalsMap.set(date, {
-                    date: date,
-                    membersCount: entry.MembersQL.length,
-                    totalFlights: 1,
-                });
+                dataPlayers = await this.facadeService.getDailyRoundsSingle(
+                    this.loggedInuser.id,
+                    this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
+                    this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
+                );
             }
+            console.log(dataPlayers);
+            const totalsMap = new Map(); // Map to store totals by date
+
+            // Iterate through the data and calculate totals
+            for (const entry of dataPlayers.FlightsQL) {
+                const date = entry.date;
+
+                if (totalsMap.has(date)) {
+                    // If date exists in the map, update the totals
+                    totalsMap.get(date).membersCount += entry.MembersQL.length;
+                    totalsMap.get(date).totalFlights++;
+                } else {
+                    // If date does not exist in the map, create a new entry
+                    totalsMap.set(date, {
+                        date: date,
+                        membersCount: entry.MembersQL.length,
+                        totalFlights: 1,
+                    });
+                }
+            }
+
+            // Convert the map values to an array
+            const totalsArray = Array.from(totalsMap.values());
+
+            console.log(totalsArray);
+            this.dataSource = new MatTableDataSource(totalsArray);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.logger.log('Getting Daily Round Data Successfull', "info");
+        } catch (error) {
+            this.logger.log('Getting Daily Round Data Failed', "error", error.toString());
+
         }
 
-        // Convert the map values to an array
-        const totalsArray = Array.from(totalsMap.values());
-
-        console.log(totalsArray);
-        this.dataSource = new MatTableDataSource(totalsArray);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
     }
 
     redirectToPlayersScore = (id: string) => {
@@ -152,12 +168,16 @@ export class DailyRoundsComponent implements OnInit {
         return 0;
     }
     redirectToView = (date: string) => {
+        this.logger.log('Admin Click on view Daily Round By Date', "info", date);
         this.router.navigate(['/dailyRounds/view-daily-rounds/' + date]);
     };
     newRound() {
+        this.logger.log('Admin Click on add Daily Round Button', "info");
         this.router.navigate(['/dailyRounds/add-daily-rounds']);
     }
     onDatePick() {
+        const result = this.scheduleForm.value.startDate + ',' + this.scheduleForm.value.endDate;
+        this.logger.log('Getting Daily Round Data By Dates', "info", result.toString());
         console.log(this.scheduleForm.value.startDate);
         console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
@@ -181,6 +201,7 @@ export class DailyRoundsComponent implements OnInit {
 
     Dailysetup(selectedValue) {
         //console.log(selectedValue)
+        this.logger.log('Getting Daily Round Data By Dropdown', "info", selectedValue.value.toString());
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
             let currentDate = new Date();

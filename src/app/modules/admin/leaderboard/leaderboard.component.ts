@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, Input } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation, ViewChild, Input, ChangeDetectorRef, OnChanges, SimpleChanges } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MatPaginator } from '@angular/material/paginator';
@@ -31,7 +31,7 @@ import { Apollo } from "apollo-angular";
 import * as Query from "app/shared/GraphQL/tournament.gql";
 import { async } from "@angular/core/testing";
 import { DialogPlayerScoreComponent } from "../dialogs/dialog-player-score/dialog-player-score.component";
-
+import { LeaderboardSubscription } from 'app/shared/GraphQL/tournament.gql';
 @Component({
   selector: "app-leaderboard",
   templateUrl: "./leaderboard.component.html",
@@ -40,7 +40,7 @@ import { DialogPlayerScoreComponent } from "../dialogs/dialog-player-score/dialo
 export class LeaderboardComponent implements OnInit {
 
   @Input()
-	tournamentID: string;
+  tournamentID: string;
   // private tournamentID: string;
   Leaderboard: any;
   clubLogo: any;
@@ -116,8 +116,8 @@ export class LeaderboardComponent implements OnInit {
     private location: Location,
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    public facadeService: FacadeService
-  ) {}
+    public facadeService: FacadeService, private cdr: ChangeDetectorRef
+  ) { }
 
   async ngOnInit() {
     this.getOnLoadData();
@@ -225,15 +225,32 @@ export class LeaderboardComponent implements OnInit {
 
               this.selectedSubTournament = this.tournamentID;
 
-              this.parseSubscriptionResponse(this.Leaderboard);
-
-              this.updateCategoryNames();
-              //resolve(data);
-              this.isLoading = true;
-            }
-          });
+    this.apollo
+      .watchQuery({
+        query: LeaderboardSubscription,
+        variables: {
+          tournamentPrefix: this.tournamentID,
+        },
+      })
+      .valueChanges.subscribe(({ data }) => {
+        if (!data) {
+          //console.log(data);
+        } else {
+          console.log(data);
+          this.Leaderboard = data;
+          this.matchFormat = this.Leaderboard.TournamentQL[0].matchFormat;
+          console.log(this.matchFormat);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
       });
+
   }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   console.log(changes);
+  //   //this.data = changes.data.currentValue;
+  //   this.ngOnInit();
+  // }
   private parseSubscriptionResponse(data: any): boolean {
     if (data == null) {
       return false;
@@ -347,7 +364,7 @@ export class LeaderboardComponent implements OnInit {
       if (this.Leaderboard.cutOffCriteria != null) {
         if ("cutOff" in this.Leaderboard.cutOffCriteria) {
           if (
-            this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
+            this.Leaderboard.cutOffCriteria.cutOff.length > 0 && this.cutOffLine.score > 0 &&
             this.cutOffLine.type == "GROSS" &&
             this.cutOffLine.copymembers == null
           ) {
@@ -359,7 +376,7 @@ export class LeaderboardComponent implements OnInit {
 
                 if (
                   this.allMatchResults[leader].AllGrossUnder >
-                    this.cuttOffScore &&
+                  this.cuttOffScore &&
                   this.cuttOffScore > 0 &&
                   this.allMatchResults[leader].PlayingRound != this.activeRound
                 ) {
@@ -371,7 +388,7 @@ export class LeaderboardComponent implements OnInit {
                 } else {
                   if (
                     this.activeRound -
-                      this.allMatchResults[leader].PlayingRound >
+                    this.allMatchResults[leader].PlayingRound >
                     1
                   ) {
                     remove = this.allMatchResults[leader];
@@ -401,7 +418,7 @@ export class LeaderboardComponent implements OnInit {
               }
             }
           } else if (
-            this.Leaderboard.cutOffCriteria.cutOff.length>0 &&  this.cutOffLine.score > 0 &&
+            this.Leaderboard.cutOffCriteria.cutOff.length > 0 && this.cutOffLine.score > 0 &&
             this.cutOffLine.type == "NET" &&
             this.cutOffLine.copymembers == null
           ) {
@@ -410,7 +427,7 @@ export class LeaderboardComponent implements OnInit {
                 let remove: any;
                 if (
                   this.allMatchResults[leader].AllNetUnder >
-                    this.cuttOffScore &&
+                  this.cuttOffScore &&
                   this.cuttOffScore > 0 &&
                   this.allMatchResults[leader].PlayingRound != this.activeRound
                 ) {
@@ -448,7 +465,7 @@ export class LeaderboardComponent implements OnInit {
                 this.net.push(this.allMatchResults[leader]);
               }
             }
-          } else if ( this.cutOffList["cutOff"].length >0 && this.cutOffLine.copymembers > 0) {
+          } else if (this.cutOffList["cutOff"].length > 0 && this.cutOffLine.copymembers > 0) {
             for (let leader in this.allMatchResults) {
               let remove: any;
               if (this.checkRoundCut(this.allMatchResults[leader]) == true) {
@@ -865,7 +882,7 @@ export class LeaderboardComponent implements OnInit {
           tied: false,
           courseId: flightData.courseId,
           holeSets: flightData.courseHoleSets,
-          holeSetsInverted:flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted:false,
+          holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
           playerId: playerId,
           name: name,
           picture: picture,
@@ -888,7 +905,7 @@ export class LeaderboardComponent implements OnInit {
         };
 
         this.grossLeaders.push(LeaderGross);
-        console.log("Gross:"+this.grossLeaders);
+        console.log("Gross:" + this.grossLeaders);
 
         this.grossAllLeaders.push(LeaderGross);
         //console.log(this.grossAllLeaders);
@@ -899,7 +916,7 @@ export class LeaderboardComponent implements OnInit {
           playerId: playerId,
           courseId: flightData.courseId,
           holeSets: flightData.courseHoleSets,
-          holeSetsInverted:flightData.courseHoleSetsInverted?flightData.courseHoleSetsInverted:false,
+          holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
           name: name,
           picture: picture,
           handicap: handicap,
@@ -1741,7 +1758,7 @@ export class LeaderboardComponent implements OnInit {
       if (item.tab.textLabel.search('#') == -1) {
         originalCategory = item.tab.textLabel;
       } else {
-          let splitted = item.tab.textLabel.split('#', 3);
+        let splitted = item.tab.textLabel.split('#', 3);
         originalCategory = splitted[0];
         this.categoryLimit = splitted[1];
       }
@@ -1763,7 +1780,7 @@ export class LeaderboardComponent implements OnInit {
       if (item.tab.textLabel.search('#') == -1) {
         originalCategory = item.tab.textLabel;
       } else {
-          let splitted = item.tab.textLabel.split('#', 3);
+        let splitted = item.tab.textLabel.split('#', 3);
         originalCategory = splitted[0];
         this.categoryLimit = splitted[1];
       }
@@ -1999,7 +2016,7 @@ export class LeaderboardComponent implements OnInit {
     courseId: string,
     courseHoleSets: string,
     playerId: string,
-    holeSetsInverted:string,
+    holeSetsInverted: string,
     scoreType: string
   ) {
     let playerGrossScore: any;
@@ -2055,7 +2072,7 @@ export class LeaderboardComponent implements OnInit {
           course: courseId,
           players: playerPerTeam[0]["MembersQL"],
           holeSets: courseHoleSets,
-          courseHoleSetsInverted:holeSetsInverted,
+          courseHoleSetsInverted: holeSetsInverted,
           allGross: playerGrossScore,
           allNet: playerNetScore,
           round: this.flightRound,
@@ -2070,7 +2087,7 @@ export class LeaderboardComponent implements OnInit {
           course: courseId,
           holeSets: courseHoleSets,
           allGross: playerGrossScore,
-          courseHoleSetsInverted:holeSetsInverted,
+          courseHoleSetsInverted: holeSetsInverted,
           allNet: playerNetScore,
           round: this.flightRound,
           type: scoreType,
@@ -2192,8 +2209,8 @@ export class LeaderboardComponent implements OnInit {
           //console.log(hole);
 
           if (hole) {
-            playerHole18ScoreGross[i ] = hole.grossScore;
-            playerHole18ScoreNet[i ] = hole.netScore;
+            playerHole18ScoreGross[i] = hole.grossScore;
+            playerHole18ScoreNet[i] = hole.netScore;
           } else {
             playerHole18ScoreGross[i] = 0;
             playerHole18ScoreNet[i] = 0;
@@ -2235,7 +2252,7 @@ export class LeaderboardComponent implements OnInit {
         playerId: flightData.id,
         name: name,
         holeSets: flightData.courseHoleSets,
-        holeSetsInverted:flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted:false,
+        holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
         picture: "",
         handicap: scoreHandicap,
         score: grossTotal,
@@ -2273,7 +2290,7 @@ export class LeaderboardComponent implements OnInit {
         holeSets: flightData.courseHoleSets,
         name: name,
         picture: "",
-        holeSetsInverted:flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted:false,
+        holeSetsInverted: flightData.courseHoleSetsInverted ? flightData.courseHoleSetsInverted : false,
         handicap: scoreHandicap,
         score: netTotal,
         type: LeaderType.NET,
@@ -2779,7 +2796,7 @@ export class LeaderboardComponent implements OnInit {
       ////console.log(bestThreeUnder);
       ////console.log(bestThreeUnder.reduce((a, b) => a + b));
 
-      // const result = roles.filter(role => role.groups.find(group => user.groups.includes(group.id)));
+      // const result = roles.filter(role => role.flights.find(group => user.flights.includes(group.id)));
       // //console.log(result);
 
       ////console.log(bestThree);
@@ -3378,7 +3395,7 @@ export class LeaderboardComponent implements OnInit {
     ) {
       return (
         playerHandicap <
-          this.selectedCategory.handicapLimits.middleLimitStart ||
+        this.selectedCategory.handicapLimits.middleLimitStart ||
         playerHandicap > this.selectedCategory.handicapLimits.middleLimitEnd
       );
     } else {
@@ -3395,11 +3412,11 @@ export class LeaderboardComponent implements OnInit {
     return (
       categoryData.handicapLimits.lowerLimitStart >= 0 &&
       categoryData.handicapLimits.lowerLimitEnd >
-        categoryData.handicapLimits.lowerLimitStart &&
+      categoryData.handicapLimits.lowerLimitStart &&
       categoryData.handicapLimits.upperLimitStart >
-        categoryData.handicapLimits.lowerLimitEnd &&
+      categoryData.handicapLimits.lowerLimitEnd &&
       categoryData.handicapLimits.upperLimitEnd >
-        categoryData.handicapLimits.upperLimitStart
+      categoryData.handicapLimits.upperLimitStart
     );
   }
 
@@ -3408,7 +3425,7 @@ export class LeaderboardComponent implements OnInit {
     return (
       categoryData.handicapLimits.middleLimitStart >= 0 &&
       categoryData.handicapLimits.middleLimitEnd >
-        categoryData.handicapLimits.middleLimitStart
+      categoryData.handicapLimits.middleLimitStart
     );
   }
 

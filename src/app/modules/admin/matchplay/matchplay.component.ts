@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { of } from 'rxjs';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-matchplay',
@@ -70,88 +71,98 @@ export class MatchplayComponent implements OnInit {
         private _formBuilder: FormBuilder,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
-        private facadeService: FacadeService
-    ) {}
+        private facadeService: FacadeService,
+        private logger: LogsService
+    ) { }
 
     ngOnInit() {
-        this.filters = this._formBuilder.group({
-            name: [null, Validators.compose([Validators.required])],
-        });
+        try {
+            this.logger.log('Admin comes to Tournament Score Page', "info");
+            this.logger.log('Getting Tournament Score Data', "info", this.tournamentID);
 
-        this.route.paramMap.subscribe((params) => {
-            //this.tournamentID = params.get("id");
-        });
+            this.filters = this._formBuilder.group({
+                name: [null, Validators.compose([Validators.required])],
+            });
 
-        of(this.matchPlayData)
-            .pipe()
-            .subscribe(
-                async (data) => {
-                    let dataLeaderboard =
-                        await this.facadeService.MatchPlayDataQuery(
-                            '-L6WPki8tSDZ1IAAoRXZ',
-                            this.tournamentID
-                        );
-                    let selectedCourseHoleSet =
-                        await this.facadeService.getCourseHoleSetsForCourse(
-                            this.courseID
-                        );
-                    this.courseHoleSetNames =
-                        selectedCourseHoleSet['course_hole_sets'];
-                    this.matchPlayData = dataLeaderboard.TournamentQL;
-                    this.isLoading = false;
-                    //console.log('Match play data');
-                    console.log(this.matchPlayData);
-                    if (
-                        this.matchPlayData['matchFormat'] ==
-                        matchFormat.TEXAS_SCRAMBLE || this.matchPlayData['matchFormat'] ==
-                        matchFormat.BESTBALL
-                    ) {
-                        this.showTaxes = true;
-                    }
+            this.route.paramMap.subscribe((params) => {
+                //this.tournamentID = params.get("id");
+            });
 
-                    let tournamentData: any = this.matchPlayData;
+            of(this.matchPlayData)
+                .pipe()
+                .subscribe(
+                    async (data) => {
+                        let dataLeaderboard =
+                            await this.facadeService.MatchPlayDataQuery(
+                                '-L6WPki8tSDZ1IAAoRXZ',
+                                this.tournamentID
+                            );
+                        let selectedCourseHoleSet =
+                            await this.facadeService.getCourseHoleSetsForCourse(
+                                this.courseID
+                            );
+                        this.courseHoleSetNames =
+                            selectedCourseHoleSet['course_hole_sets'];
+                        this.matchPlayData = dataLeaderboard.TournamentQL;
+                        this.isLoading = false;
+                        //console.log('Match play data');
+                        console.log(this.matchPlayData);
+                        if (
+                            this.matchPlayData['matchFormat'] ==
+                            matchFormat.TEXAS_SCRAMBLE || this.matchPlayData['matchFormat'] ==
+                            matchFormat.BESTBALL || this.matchPlayData['matchFormat'] ==
+                            matchFormat.TWO_Ball_SCRAMBLE || this.matchPlayData['matchFormat'] ==
+                            matchFormat.THREE_BALL_SCRAMBLE 
+                        ) {
+                            this.showTaxes = true;
+                        }
 
-                    this.activeRound = tournamentData.activeRound;
-                    this.totalRounds = tournamentData.noOfRounds;
-                    this.selectedIndex = this.activeRound - 1;
+                        let tournamentData: any = this.matchPlayData;
 
-                    this.noOfRounds = tournamentData.noOfRounds;
-                    if (this.activeRound > this.noOfRounds) {
-                        if (this.noOfRounds == 1) this.showRound1 = true;
-                        else if (this.noOfRounds == 2) this.showRound2 = true;
-                        else if (this.noOfRounds == 3) this.showRound3 = true;
-                        else if (this.noOfRounds == 4) this.showRound4 = true;
-                        else this.showRound4 = true;
-                    } else {
-                        if (this.activeRound == 1) this.showRound1 = true;
-                        else if (this.activeRound == 2) this.showRound2 = true;
-                        else if (this.activeRound == 3) this.showRound3 = true;
-                        else if (this.activeRound == 4) this.showRound4 = true;
-                        else this.showRound4 = true;
-                    }
+                        this.activeRound = tournamentData.activeRound;
+                        this.totalRounds = tournamentData.noOfRounds;
+                        this.selectedIndex = this.activeRound - 1;
 
-                    this.subTournaments = tournamentData.SubTournamentsQL;
+                        this.noOfRounds = tournamentData.noOfRounds;
+                        if (this.activeRound > this.noOfRounds) {
+                            if (this.noOfRounds == 1) this.showRound1 = true;
+                            else if (this.noOfRounds == 2) this.showRound2 = true;
+                            else if (this.noOfRounds == 3) this.showRound3 = true;
+                            else if (this.noOfRounds == 4) this.showRound4 = true;
+                            else this.showRound4 = true;
+                        } else {
+                            if (this.activeRound == 1) this.showRound1 = true;
+                            else if (this.activeRound == 2) this.showRound2 = true;
+                            else if (this.activeRound == 3) this.showRound3 = true;
+                            else if (this.activeRound == 4) this.showRound4 = true;
+                            else this.showRound4 = true;
+                        }
 
-                    if (tournamentData.activeRound > tournamentData.noOfRounds)
-                        this.flightRound = tournamentData.noOfRounds;
-                    else this.flightRound = tournamentData.activeRound;
+                        this.subTournaments = tournamentData.SubTournamentsQL;
 
-                    // for (
-                    //     let round = 1;
-                    //     round <= tournamentData.noOfRounds;
-                    //     round++
-                    // ) {
-                    //     let r: any = {
-                    //         Text: 'Round ' + round,
-                    //         Value: round,
-                    //     };
-                    //     this.tRounds.push(r);
-                    // }
+                        if (tournamentData.activeRound > tournamentData.noOfRounds)
+                            this.flightRound = tournamentData.noOfRounds;
+                        else this.flightRound = tournamentData.activeRound;
 
-                    this.parseSubscriptionResponse();
-                },
-                (error) => (this.isLoading = false)
-            );
+                        // for (
+                        //     let round = 1;
+                        //     round <= tournamentData.noOfRounds;
+                        //     round++
+                        // ) {
+                        //     let r: any = {
+                        //         Text: 'Round ' + round,
+                        //         Value: round,
+                        //     };
+                        //     this.tRounds.push(r);
+                        // }
+
+                        this.parseSubscriptionResponse();
+                    },
+                    (error) => (this.isLoading = false)
+                );
+        } catch (error) {
+            this.logger.log('Getting Tournament Score Data Failed', "error", error.toString());
+        }
     }
 
     changeFlight(item) {
@@ -217,147 +228,153 @@ export class MatchplayComponent implements OnInit {
     }
 
     private parseSubscriptionResponse(): boolean {
-        if (this.matchPlayData == null) {
-            return false;
-        }
+        try {
 
-        let tournamentData: any = this.matchPlayData;
 
-        if (tournamentData.noOfRounds > 0) {
-            if (this.ddSelectedFlight != '0') {
-                this.roundFlights = tournamentData.FlightsQL.filter((a) => {
-                    return (
-                        a.flightRound == this.flightRound &&
-                        a.id == this.ddSelectedFlight
-                    );
-                });
-            } else {
-                this.roundFlights = tournamentData.FlightsQL.filter((a) => {
-                    return a.flightRound == this.flightRound;
-                });
-
-                if (this.selectedCourse != '') {
-                    this.roundFlights = this.roundFlights.filter((a) => {
-                        return a.courseId == this.selectedCourse;
-                    });
-                }
-
-                this.currentRoundFlights = [];
-                for (let flight of this.roundFlights) {
-                    //console.log(flight);
-                    if (!this.showTaxes) {
-                        let r: any = {
-                            Text: 'Flight ' + flight.flightNo,
-                            Value: flight.id,
-                        };
-                        this.currentRoundFlights.push(r);
-                    } else {
-                        let r: any = {
-                            Text: 'Team ' + flight.flightNo,
-                            Value: flight.id,
-                        };
-                        this.currentRoundFlights.push(r);
-                    }
-                }
-                //console.log(this.currentRoundFlights);
+            if (this.matchPlayData == null) {
+                return false;
             }
-            //console.log(this.roundFlights);
-            console.log(this.filterPlayer);
-            if (!this.showTaxes && this.filterPlayer != '') {
-                var filteredArray: any = this.roundFlights
-                    .filter((element) =>
-                        element.MembersQL.some(
-                            (MembersQL) =>
-                                MembersQL.PlayerQL.firstName
-                                    .toLowerCase()
-                                    .includes(
-                                        this.filterPlayer.toLowerCase()
-                                    ) ||
-                                MembersQL.PlayerQL.lastName
-                                    .toLowerCase()
-                                    .includes(this.filterPlayer.toLowerCase())
-                        )
-                    )
-                    .map((element) => {
-                        let n = Object.assign({}, element, {
-                            MembersQL: element.MembersQL.filter(
-                                (subElement) =>
-                                    subElement.PlayerQL.firstName
+
+            let tournamentData: any = this.matchPlayData;
+
+            if (tournamentData.noOfRounds > 0) {
+                if (this.ddSelectedFlight != '0') {
+                    this.roundFlights = tournamentData.FlightsQL.filter((a) => {
+                        return (
+                            a.flightRound == this.flightRound &&
+                            a.id == this.ddSelectedFlight
+                        );
+                    });
+                } else {
+                    this.roundFlights = tournamentData.FlightsQL.filter((a) => {
+                        return a.flightRound == this.flightRound;
+                    });
+
+                    if (this.selectedCourse != '') {
+                        this.roundFlights = this.roundFlights.filter((a) => {
+                            return a.courseId == this.selectedCourse;
+                        });
+                    }
+
+                    this.currentRoundFlights = [];
+                    for (let flight of this.roundFlights) {
+                        //console.log(flight);
+                        if (!this.showTaxes) {
+                            let r: any = {
+                                Text: 'Flight ' + flight.flightNo,
+                                Value: flight.id,
+                            };
+                            this.currentRoundFlights.push(r);
+                        } else {
+                            let r: any = {
+                                Text: 'Team ' + flight.flightNo,
+                                Value: flight.id,
+                            };
+                            this.currentRoundFlights.push(r);
+                        }
+                    }
+                    //console.log(this.currentRoundFlights);
+                }
+                //console.log(this.roundFlights);
+                console.log(this.filterPlayer);
+                if (!this.showTaxes && this.filterPlayer != '') {
+                    var filteredArray: any = this.roundFlights
+                        .filter((element) =>
+                            element.MembersQL.some(
+                                (MembersQL) =>
+                                    MembersQL.PlayerQL.firstName
                                         .toLowerCase()
                                         .includes(
                                             this.filterPlayer.toLowerCase()
                                         ) ||
-                                    subElement.PlayerQL.lastName
+                                    MembersQL.PlayerQL.lastName
                                         .toLowerCase()
-                                        .includes(
-                                            this.filterPlayer.toLowerCase()
-                                        )
-                            ),
+                                        .includes(this.filterPlayer.toLowerCase())
+                            )
+                        )
+                        .map((element) => {
+                            let n = Object.assign({}, element, {
+                                MembersQL: element.MembersQL.filter(
+                                    (subElement) =>
+                                        subElement.PlayerQL.firstName
+                                            .toLowerCase()
+                                            .includes(
+                                                this.filterPlayer.toLowerCase()
+                                            ) ||
+                                        subElement.PlayerQL.lastName
+                                            .toLowerCase()
+                                            .includes(
+                                                this.filterPlayer.toLowerCase()
+                                            )
+                                ),
+                            });
+                            return n;
                         });
-                        return n;
-                    });
 
-                // let filteredArray = this.roundFlights
-                // .filter((element) =>
-                //   element.MembersQL.some((subElement) => subElement.PlayerQL.firstName === this.filterPlayer))
-                // .map(element => {
-                //   let newElt = Object.assign({}, element); // copies element
-                //   return newElt.MembersQL.filter(subElement => subElement.PlayerQL.firstName === this.filterPlayer);
-                // });
+                    // let filteredArray = this.roundFlights
+                    // .filter((element) =>
+                    //   element.MembersQL.some((subElement) => subElement.PlayerQL.firstName === this.filterPlayer))
+                    // .map(element => {
+                    //   let newElt = Object.assign({}, element); // copies element
+                    //   return newElt.MembersQL.filter(subElement => subElement.PlayerQL.firstName === this.filterPlayer);
+                    // });
 
-                //console.log(filteredArray);
-            } else if (this.filterPlayer != '') {
-                if (!this.selectedTeamName) {
-                    var filteredArray: any = this.roundFlights;
-                } else {
-                    var filteredArray: any = this.roundFlights.filter(
-                        (element) => {
-                            if (
-                                element.FlightName.name
-                                    .toLowerCase()
-                                    .includes(this.filterPlayer.toLowerCase())
-                            ) {
-                                return element;
-                            } else {
-                                return '';
+                    //console.log(filteredArray);
+                } else if (this.filterPlayer != '') {
+                    if (!this.selectedTeamName) {
+                        var filteredArray: any = this.roundFlights;
+                    } else {
+                        var filteredArray: any = this.roundFlights.filter(
+                            (element) => {
+                                if (
+                                    element.FlightName.name
+                                        .toLowerCase()
+                                        .includes(this.filterPlayer.toLowerCase())
+                                ) {
+                                    return element;
+                                } else {
+                                    return '';
+                                }
                             }
-                        }
-                    );
+                        );
+                    }
+
+                    // .filter((element) =>
+                    //   element.FlightName.some(
+                    //     (member) =>
+                    //     member.name
+                    //         .toLowerCase()
+                    //         .includes(this.filterPlayer.toLowerCase()) ||
+                    //         member.name
+                    //         .toLowerCase().includes(this.filterPlayer.toLowerCase())
+                    //   )
+                    // )
+                    // .map((element) => {
+                    //   let n = Object.assign({}, element, {
+                    //     MembersQL: element.MembersQL.filter(
+                    //       (subElement) =>
+                    //         subElement.PlayerQL.firstName
+                    //           .toLowerCase()
+                    //           .includes(this.filterPlayer.toLowerCase()) ||
+                    //         subElement.PlayerQL.lastName
+                    //           .toLowerCase()
+                    //           .includes(this.filterPlayer.toLowerCase())
+                    //     ),
+                    //   });
+                    //   return n;
+                    // });
                 }
 
-                // .filter((element) =>
-                //   element.FlightName.some(
-                //     (member) =>
-                //     member.name
-                //         .toLowerCase()
-                //         .includes(this.filterPlayer.toLowerCase()) ||
-                //         member.name
-                //         .toLowerCase().includes(this.filterPlayer.toLowerCase())
-                //   )
-                // )
-                // .map((element) => {
-                //   let n = Object.assign({}, element, {
-                //     MembersQL: element.MembersQL.filter(
-                //       (subElement) =>
-                //         subElement.PlayerQL.firstName
-                //           .toLowerCase()
-                //           .includes(this.filterPlayer.toLowerCase()) ||
-                //         subElement.PlayerQL.lastName
-                //           .toLowerCase()
-                //           .includes(this.filterPlayer.toLowerCase())
-                //     ),
-                //   });
-                //   return n;
-                // });
+                //console.log(this.roundFlights);
+                if (filteredArray) {
+                    this.setupMatchplayData(filteredArray, 2, true);
+                } else if (this.roundFlights.length > 0) {
+                    //console.log("not null");
+                    this.setupMatchplayData(this.roundFlights, 2, true);
+                }
             }
-
-            //console.log(this.roundFlights);
-            if (filteredArray) {
-                this.setupMatchplayData(filteredArray, 2, true);
-            } else if (this.roundFlights.length > 0) {
-                //console.log("not null");
-                this.setupMatchplayData(this.roundFlights, 2, true);
-            }
+        } catch (error) {
+            this.logger.log('Getting Tournaments Score Data Failed', "error", error.toString());
         }
     }
     private async setupMatchplayData(
@@ -365,66 +382,175 @@ export class MatchplayComponent implements OnInit {
         round: number,
         flag: boolean
     ) {
-        let findex = 0;
-        for (let flightData of flightsQLs) {
-            //console.log(flightData);
-            //console.log("Flight ID: " + flightData.id);
-            let membersQLs: any = flightData.MembersQL;
-            let singleFlight: any[] = [];
-            let courseHoleSetTitle;
-            let flightHeader = await this.setupMatchplayHeader(
-                flightData.tee_id,
-                this.matchPlayData['CourseQL'],
-                flightData.courseHoleSets !== 0 ? flightData.courseHoleSets : 3,
-                flightData.courseHoleSetsInverted
-            );
+        try {
 
-            //console.log(par9);
-            //console.log(par18);
-            //console.log(flightData);
-            if (!this.showTaxes) {
-                for (let membersQL of membersQLs) {
-                    let player: Player = membersQL.PlayerQL;
-                    let playerScore: any[] = membersQL.ScoresQL;
 
-                    let playerId: String = player.id;
+            let findex = 0;
+            for (let flightData of flightsQLs) {
+                //console.log(flightData);
+                //console.log("Flight ID: " + flightData.id);
+                let membersQLs: any = flightData.MembersQL;
+                let singleFlight: any[] = [];
+                let courseHoleSetTitle;
+                let flightHeader = await this.setupMatchplayHeader(
+                    flightData.tee_id,
+                    this.matchPlayData['CourseQL'],
+                    flightData.courseHoleSets !== 0 ? flightData.courseHoleSets : 3,
+                    flightData.courseHoleSetsInverted
+                );
 
-                    if (player == null) {
-                        continue;
-                    }
+                //console.log(par9);
+                //console.log(par18);
+                //console.log(flightData);
+                if (!this.showTaxes) {
+                    for (let membersQL of membersQLs) {
+                        let player: Player = membersQL.PlayerQL;
+                        let playerScore: any[] = membersQL.ScoresQL;
 
-                    let playerHole9Score: any = [];
-                    let playerHole18Score: any[] = [];
-                    let gross9Total = 0;
-                    let gross18Total = 0;
-                    let holePlayed: number = 0;
+                        let playerId: String = player.id;
 
-                    for (let i = 0; i < 9; i++) {
-                        let courseHole = flightHeader.courseHoles9.filter(
-                            (el) => {
-                                return el.holeNo == i + 1;
-                            }
-                        );
+                        if (player == null) {
+                            continue;
+                        }
 
-                        // console.log(courseHole);
+                        let playerHole9Score: any = [];
+                        let playerHole18Score: any[] = [];
+                        let gross9Total = 0;
+                        let gross18Total = 0;
+                        let holePlayed: number = 0;
 
-                        let hole = playerScore.find((a) => {
-                            return (
-                                a.holeId ==
-                                (courseHole.length > 0 ? courseHole[0].id : '')
+                        for (let i = 0; i < 9; i++) {
+                            let courseHole = flightHeader.courseHoles9.filter(
+                                (el) => {
+                                    return el.holeNo == i + 1;
+                                }
                             );
-                        });
-                        // console.log(hole);
 
-                        if (hole) {
-                            playerHole9Score[i] = hole.grossScore;
-                            gross9Total += hole.grossScore;
-                            holePlayed++;
-                        } else playerHole9Score[i] = '';
+                            // console.log(courseHole);
+
+                            let hole = playerScore.find((a) => {
+                                return (
+                                    a.holeId ==
+                                    (courseHole.length > 0 ? courseHole[0].id : '')
+                                );
+                            });
+                            // console.log(hole);
+
+                            if (hole) {
+                                playerHole9Score[i] = hole.grossScore;
+                                gross9Total += hole.grossScore;
+                                holePlayed++;
+                            } else playerHole9Score[i] = '';
+                        }
+
+                        for (let i = 0; i < 9; i++) {
+                            if (flightHeader.courseHoles18.length > 0) {
+                                let courseHole = flightHeader.courseHoles18.filter(
+                                    (el) => {
+                                        return el.holeNo == i + 9 + 1;
+                                    }
+                                );
+
+                                // console.log(i + 9 + 1);
+                                // console.log(courseHole);
+
+                                let hole = playerScore.find((a) => {
+                                    // console.log(a.holeId + "<---->" + courseHole[0].id);
+                                    // console.log(courseHole.length > 0 ? courseHole[0].id : "");
+                                    return (
+                                        a.holeId ==
+                                        (courseHole.length > 0
+                                            ? courseHole[0].id
+                                            : '')
+                                    );
+                                });
+
+                                //console.log(hole);
+
+                                if (hole) {
+                                    playerHole18Score[i] = hole.grossScore;
+                                    gross18Total += hole.grossScore;
+                                    holePlayed++;
+                                } else playerHole18Score[i] = '';
+                            }
+                        }
+
+                        let grossTotal: number = gross9Total + gross18Total;
+
+                        //console.log(playerHole9Score);
+                        //console.log(playerHole18Score);
+
+                        if (this.courseHoleSetNames) {
+                            courseHoleSetTitle = this.courseHoleSetNames.find(
+                                (a) => {
+                                    return (
+                                        a.holeSets == flightData.courseHoleSets &&
+                                        a.inverted ==
+                                        flightData.courseHoleSetsInverted
+                                    );
+                                }
+                            );
+                        }
+                        let LeaderGross: any = {
+                            flightId: flightData.id,
+                            courseId: this.matchPlayData['CourseQL'].id,
+                            playerId: player.id,
+                            name: player.firstName + ' ' + player.lastName,
+                            picture: player.picture,
+                            handicap: player.handicap,
+                            Hole9Scores: playerHole9Score,
+                            Hole18Scores: playerHole18Score,
+                            gross9Total: gross9Total,
+                            gross18Total: gross18Total,
+                            grossTotal: grossTotal,
+                            holesPlayed: holePlayed,
+                        };
+
+                        singleFlight.push(LeaderGross);
                     }
+                } else {
+                    for (let membersQL of membersQLs) {
+                        let player: Player = membersQL.PlayerQL;
 
-                    for (let i = 0; i < 9; i++) {
-                        if (flightHeader.courseHoles18.length > 0) {
+                        let playerScore: any[] = membersQL.ScoresQL;
+
+                        let playerId: String = player.id;
+
+                        if (player == null) {
+                            continue;
+                        }
+
+                        let playerHole9Score: any = [];
+                        let playerHole18Score: any[] = [];
+                        let gross9Total = 0;
+                        let gross18Total = 0;
+                        let holePlayed: number = 0;
+
+                        for (let i = 0; i < 9; i++) {
+                            let courseHole = flightHeader.courseHoles9.filter(
+                                (el) => {
+                                    return el.holeNo == i + 1;
+                                }
+                            );
+
+                            //console.log(courseHole);
+
+                            let hole = playerScore.find((a) => {
+                                return (
+                                    a.holeId ==
+                                    (courseHole.length > 0 ? courseHole[0].id : '')
+                                );
+                            });
+                            //console.log(hole);
+
+                            if (hole) {
+                                playerHole9Score[i] = hole.grossScore;
+                                gross9Total += hole.grossScore;
+                                holePlayed++;
+                            } else playerHole9Score[i] = '';
+                        }
+
+                        for (let i = 0; i < 9; i++) {
                             let courseHole = flightHeader.courseHoles18.filter(
                                 (el) => {
                                     return el.holeNo == i + 9 + 1;
@@ -435,13 +561,13 @@ export class MatchplayComponent implements OnInit {
                             // console.log(courseHole);
 
                             let hole = playerScore.find((a) => {
-                                // console.log(a.holeId + "<---->" + courseHole[0].id);
-                                // console.log(courseHole.length > 0 ? courseHole[0].id : "");
+                                // console.log(a.holeId + '<---->' + courseHole[0].id);
+                                // console.log(
+                                //     courseHole.length > 0 ? courseHole[0].id : ''
+                                // );
                                 return (
                                     a.holeId ==
-                                    (courseHole.length > 0
-                                        ? courseHole[0].id
-                                        : '')
+                                    (courseHole.length > 0 ? courseHole[0].id : '')
                                 );
                             });
 
@@ -453,182 +579,80 @@ export class MatchplayComponent implements OnInit {
                                 holePlayed++;
                             } else playerHole18Score[i] = '';
                         }
-                    }
 
-                    let grossTotal: number = gross9Total + gross18Total;
+                        let grossTotal: number = gross9Total + gross18Total;
 
-                    //console.log(playerHole9Score);
-                    //console.log(playerHole18Score);
+                        //console.log(playerHole9Score);
+                        //console.log(playerHole18Score);
 
-                    if (this.courseHoleSetNames) {
-                        courseHoleSetTitle = this.courseHoleSetNames.find(
-                            (a) => {
-                                return (
-                                    a.holeSets == flightData.courseHoleSets &&
-                                    a.inverted ==
+                        if (this.courseHoleSetNames) {
+                            courseHoleSetTitle = this.courseHoleSetNames.find(
+                                (a) => {
+                                    return (
+                                        a.holeSets == flightData.courseHoleSets &&
+                                        a.inverted ==
                                         flightData.courseHoleSetsInverted
-                                );
-                            }
-                        );
-                    }
-                    let LeaderGross: any = {
-                        flightId: flightData.id,
-                        courseId: this.matchPlayData['CourseQL'].id,
-                        playerId: player.id,
-                        name: player.firstName + ' ' + player.lastName,
-                        picture: player.picture,
-                        handicap: player.handicap,
-                        Hole9Scores: playerHole9Score,
-                        Hole18Scores: playerHole18Score,
-                        gross9Total: gross9Total,
-                        gross18Total: gross18Total,
-                        grossTotal: grossTotal,
-                        holesPlayed: holePlayed,
-                    };
-
-                    singleFlight.push(LeaderGross);
-                }
-            } else {
-                for (let membersQL of membersQLs) {
-                    let player: Player = membersQL.PlayerQL;
-
-                    let playerScore: any[] = membersQL.ScoresQL;
-
-                    let playerId: String = player.id;
-
-                    if (player == null) {
-                        continue;
-                    }
-
-                    let playerHole9Score: any = [];
-                    let playerHole18Score: any[] = [];
-                    let gross9Total = 0;
-                    let gross18Total = 0;
-                    let holePlayed: number = 0;
-
-                    for (let i = 0; i < 9; i++) {
-                        let courseHole = flightHeader.courseHoles9.filter(
-                            (el) => {
-                                return el.holeNo == i + 1;
-                            }
-                        );
-
-                        //console.log(courseHole);
-
-                        let hole = playerScore.find((a) => {
-                            return (
-                                a.holeId ==
-                                (courseHole.length > 0 ? courseHole[0].id : '')
+                                    );
+                                }
                             );
-                        });
-                        //console.log(hole);
+                        }
 
-                        if (hole) {
-                            playerHole9Score[i] = hole.grossScore;
-                            gross9Total += hole.grossScore;
-                            holePlayed++;
-                        } else playerHole9Score[i] = '';
+                        let LeaderGross: any = {
+                            teamName: flightData['FlightName'].name,
+                            flightId: flightData.id,
+                            courseId: this.matchPlayData['CourseQL'].id,
+                            playerId: player.id,
+                            name: player.firstName + ' ' + player.lastName,
+                            picture: player.picture,
+                            handicap: player.handicap,
+                            Hole9Scores: playerHole9Score,
+                            Hole18Scores: playerHole18Score,
+                            gross9Total: gross9Total,
+                            gross18Total: gross18Total,
+                            grossTotal: grossTotal,
+                            holesPlayed: holePlayed,
+                        };
+
+                        singleFlight.push(LeaderGross);
                     }
-
-                    for (let i = 0; i < 9; i++) {
-                        let courseHole = flightHeader.courseHoles18.filter(
-                            (el) => {
-                                return el.holeNo == i + 9 + 1;
-                            }
-                        );
-
-                        // console.log(i + 9 + 1);
-                        // console.log(courseHole);
-
-                        let hole = playerScore.find((a) => {
-                            // console.log(a.holeId + '<---->' + courseHole[0].id);
-                            // console.log(
-                            //     courseHole.length > 0 ? courseHole[0].id : ''
-                            // );
-                            return (
-                                a.holeId ==
-                                (courseHole.length > 0 ? courseHole[0].id : '')
-                            );
-                        });
-
-                        //console.log(hole);
-
-                        if (hole) {
-                            playerHole18Score[i] = hole.grossScore;
-                            gross18Total += hole.grossScore;
-                            holePlayed++;
-                        } else playerHole18Score[i] = '';
-                    }
-
-                    let grossTotal: number = gross9Total + gross18Total;
-
-                    //console.log(playerHole9Score);
-                    //console.log(playerHole18Score);
-
-                    if (this.courseHoleSetNames) {
-                        courseHoleSetTitle = this.courseHoleSetNames.find(
-                            (a) => {
-                                return (
-                                    a.holeSets == flightData.courseHoleSets &&
-                                    a.inverted ==
-                                        flightData.courseHoleSetsInverted
-                                );
-                            }
-                        );
-                    }
-
-                    let LeaderGross: any = {
-                        teamName: flightData['FlightName'].name,
-                        flightId: flightData.id,
-                        courseId: this.matchPlayData['CourseQL'].id,
-                        playerId: player.id,
-                        name: player.firstName + ' ' + player.lastName,
-                        picture: player.picture,
-                        handicap: player.handicap,
-                        Hole9Scores: playerHole9Score,
-                        Hole18Scores: playerHole18Score,
-                        gross9Total: gross9Total,
-                        gross18Total: gross18Total,
-                        grossTotal: grossTotal,
-                        holesPlayed: holePlayed,
-                    };
-
-                    singleFlight.push(LeaderGross);
                 }
+
+                this.flightPlayers.push(singleFlight);
+                this.flightPlayers[findex]['header'] = flightHeader;
+                (this.flightPlayers[findex]['FlightName'] = this.showTaxes
+                    ? flightData['FlightName'].name
+                    : ''),
+                    (this.flightPlayers[findex]['flightId'] = flightData.id);
+                this.flightPlayers[findex]['courseHoleSetTitle'] =
+                    courseHoleSetTitle ? courseHoleSetTitle.displayName : '';
+                this.flightPlayers[findex]['courseHoleSetKey'] = courseHoleSetTitle
+                    ? flightData.courseHoleSets +
+                    '_' +
+                    flightData.courseHoleSetsInverted
+                    : '';
+                this.flightPlayers[findex]['courseTee'] = courseHoleSetTitle
+                    ? flightData.tee
+                    : '';
+                this.flightPlayers[findex]['Hole9Scores'] =
+                    this.flightPlayers[findex][0].Hole9Scores;
+                this.flightPlayers[findex]['Hole18Scores'] =
+                    this.flightPlayers[findex][0].Hole18Scores;
+                this.flightPlayers[findex]['gross9Total'] =
+                    this.flightPlayers[findex][0].gross9Total;
+                this.flightPlayers[findex]['gross18Total'] =
+                    this.flightPlayers[findex][0].gross18Total;
+                this.flightPlayers[findex]['grossTotal'] =
+                    this.flightPlayers[findex][0].grossTotal;
+                console.log(this.flightPlayers);
+
+                findex++;
             }
-
-            this.flightPlayers.push(singleFlight);
-            this.flightPlayers[findex]['header'] = flightHeader;
-            (this.flightPlayers[findex]['FlightName'] = this.showTaxes
-                ? flightData['FlightName'].name
-                : ''),
-                (this.flightPlayers[findex]['flightId'] = flightData.id);
-            this.flightPlayers[findex]['courseHoleSetTitle'] =
-                courseHoleSetTitle ? courseHoleSetTitle.displayName : '';
-            this.flightPlayers[findex]['courseHoleSetKey'] = courseHoleSetTitle
-                ? flightData.courseHoleSets +
-                  '_' +
-                  flightData.courseHoleSetsInverted
-                : '';
-            this.flightPlayers[findex]['courseTee'] = courseHoleSetTitle
-                ? flightData.tee
-                : '';
-            this.flightPlayers[findex]['Hole9Scores'] =
-                this.flightPlayers[findex][0].Hole9Scores;
-            this.flightPlayers[findex]['Hole18Scores'] =
-                this.flightPlayers[findex][0].Hole18Scores;
-            this.flightPlayers[findex]['gross9Total'] =
-                this.flightPlayers[findex][0].gross9Total;
-            this.flightPlayers[findex]['gross18Total'] =
-                this.flightPlayers[findex][0].gross18Total;
-            this.flightPlayers[findex]['grossTotal'] =
-                this.flightPlayers[findex][0].grossTotal;
             console.log(this.flightPlayers);
-
-            findex++;
+            this.logger.log('Getting Tournament Score Data Successfully.', "info",);
+            this.active = true;
+        } catch (error) {
+            this.logger.log('Getting Tournament Score Data Failed', "error", error.toString());
         }
-        console.log(this.flightPlayers);
-        this.active = true;
     }
     private async setupMatchplayHeader(
         tee_id: string,
@@ -639,117 +663,123 @@ export class MatchplayComponent implements OnInit {
         // let dataLeaderboard = await this.facadeService.getCourseInformation(
         //     courseId
         // );
-        this.isLoading = false;
-        if (course.length <= 0) return;
+        try {
 
-        let flightHeader: any[] = [];
-        this.isLoading = false;
-        this.courseHoleSet = holeSets;
 
-        //if(this.courseHoleSet == 3) this.courseHoleSet = 12;
+            this.isLoading = false;
+            if (course.length <= 0) return;
 
-        let courseHoles9: Hole[] = [];
-        let courseHoles18: Hole[] = [];
-        let courseHoles27: Hole[] = [];
-        let courseHoles36: Hole[] = [];
+            let flightHeader: any[] = [];
+            this.isLoading = false;
+            this.courseHoleSet = holeSets;
 
-        let yardage9: number[] = [];
-        let yardage18: number[] = [];
-        let yardage27: number[] = [];
-        let yardage36: number[] = [];
+            //if(this.courseHoleSet == 3) this.courseHoleSet = 12;
 
-        let yardage9Total: number = 0;
-        let yardage18Total: number = 0;
-        let yardage27Total: number = 0;
-        let yardage36Total: number = 0;
+            let courseHoles9: Hole[] = [];
+            let courseHoles18: Hole[] = [];
+            let courseHoles27: Hole[] = [];
+            let courseHoles36: Hole[] = [];
 
-        let par9: number = 0;
-        let par18: number = 0;
-        let par27: number = 0;
-        let par36: number = 0;
+            let yardage9: number[] = [];
+            let yardage18: number[] = [];
+            let yardage27: number[] = [];
+            let yardage36: number[] = [];
 
-        let courseQLs: any = course;
-        let holesQLs: any = course.HolesQL;
+            let yardage9Total: number = 0;
+            let yardage18Total: number = 0;
+            let yardage27Total: number = 0;
+            let yardage36Total: number = 0;
 
-        var isPresent = this.coursesList.some(function (el) {
-            return el.id === course.id;
-        });
+            let par9: number = 0;
+            let par18: number = 0;
+            let par27: number = 0;
+            let par36: number = 0;
 
-        if (!isPresent) {
-            let courseInfo: any = {
-                id: course.id,
-                name: course.name,
-            };
-            this.coursesList.push(courseInfo);
-        }
+            let courseQLs: any = course;
+            let holesQLs: any = course.HolesQL;
 
-        //console.log(this.coursesList);
+            var isPresent = this.coursesList.some(function (el) {
+                return el.id === course.id;
+            });
 
-        holesQLs = holesQLs.sort(this.Comparator);
-
-        //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
-        //console.log(holesQLs);
-        // let courseID: any = this.matchPlayData['courseId'];
-
-        // this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
-        holesQLs = this.getHolesSets(
-            tee_id,
-            holeSets,
-            holesQLs,
-            courseHoleSetsInverted,
-            this.courseHoleSetNames
-        );
-        for (let holeQL of holesQLs) {
-            //let teeDistance = JSON.parse(holeQL.teeDistances);
-            let teeDistance = holeQL.teeDistances;
-
-            if (holeQL.holeNo < 10) {
-                yardage9Total += parseInt(teeDistance);
-                par9 += holeQL.par;
-                yardage9.push(parseInt(teeDistance));
-
-                courseHoles9.push(holeQL);
-            } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
-                yardage18.push(parseInt(teeDistance));
-                yardage18Total += parseInt(teeDistance);
-                par18 += holeQL.par;
-
-                courseHoles18.push(holeQL);
-            } else {
+            if (!isPresent) {
+                let courseInfo: any = {
+                    id: course.id,
+                    name: course.name,
+                };
+                this.coursesList.push(courseInfo);
             }
+
+            //console.log(this.coursesList);
+
+            holesQLs = holesQLs.sort(this.Comparator);
+
+            //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
+            //console.log(holesQLs);
+            // let courseID: any = this.matchPlayData['courseId'];
+
+            // this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
+            holesQLs = this.getHolesSets(
+                tee_id,
+                holeSets,
+                holesQLs,
+                courseHoleSetsInverted,
+                this.courseHoleSetNames
+            );
+            for (let holeQL of holesQLs) {
+                //let teeDistance = JSON.parse(holeQL.teeDistances);
+                let teeDistance = holeQL.teeDistances;
+
+                if (holeQL.holeNo < 10) {
+                    yardage9Total += parseInt(teeDistance);
+                    par9 += holeQL.par;
+                    yardage9.push(parseInt(teeDistance));
+
+                    courseHoles9.push(holeQL);
+                } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
+                    yardage18.push(parseInt(teeDistance));
+                    yardage18Total += parseInt(teeDistance);
+                    par18 += holeQL.par;
+
+                    courseHoles18.push(holeQL);
+                } else {
+                }
+            }
+
+            let parTotal: number =
+                Number(par9) + Number(par18) + Number(par27) + Number(par36);
+            let yardageTotal: number =
+                Number(yardage9Total) +
+                Number(yardage18Total) +
+                Number(yardage27Total) +
+                Number(yardage36Total);
+
+            let scoreHeader: any = {
+                courseHoles9: courseHoles9,
+                courseHoles18: courseHoles18,
+                courseHoles27: courseHoles27,
+                courseHoles36: courseHoles36,
+                yardage9: yardage9,
+                yardage18: yardage18,
+                yardage27: yardage27,
+                yardage36: yardage36,
+                yardage9Total: yardage9Total,
+                yardage18Total: yardage18Total,
+                yardage27Total: yardage27Total,
+                yardage36Total: yardage36Total,
+                par9: par9,
+                par18: par18,
+                par27: par27,
+                par36: par36,
+                parTotal: parTotal,
+                yardageTotal: yardageTotal,
+            };
+            //console.log(scoreHeader);
+            flightHeader.push(scoreHeader);
+            return scoreHeader;
+        } catch (error) {
+            this.logger.log('Getting Tournament Score Data Failed', "error", error.toString());
         }
-
-        let parTotal: number =
-            Number(par9) + Number(par18) + Number(par27) + Number(par36);
-        let yardageTotal: number =
-            Number(yardage9Total) +
-            Number(yardage18Total) +
-            Number(yardage27Total) +
-            Number(yardage36Total);
-
-        let scoreHeader: any = {
-            courseHoles9: courseHoles9,
-            courseHoles18: courseHoles18,
-            courseHoles27: courseHoles27,
-            courseHoles36: courseHoles36,
-            yardage9: yardage9,
-            yardage18: yardage18,
-            yardage27: yardage27,
-            yardage36: yardage36,
-            yardage9Total: yardage9Total,
-            yardage18Total: yardage18Total,
-            yardage27Total: yardage27Total,
-            yardage36Total: yardage36Total,
-            par9: par9,
-            par18: par18,
-            par27: par27,
-            par36: par36,
-            parTotal: parTotal,
-            yardageTotal: yardageTotal,
-        };
-        //console.log(scoreHeader);
-        flightHeader.push(scoreHeader);
-        return scoreHeader;
         //console.log(this.scoreHeader);
     }
 
@@ -867,625 +897,638 @@ export class MatchplayComponent implements OnInit {
     async saveFlightScore(flightId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
         //console.log(flightId);
-        let selectedFlight: any = this.flightPlayers.find((a) => {
-            return a.flightId == flightId;
-        });
+        try {
+            this.logger.log('Tournament Group Score Save btn Clicked', "info", flightId);
 
-        console.log(selectedFlight);
-
-        let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-
-        //let tournamentData: any = this.matchPlayData;
-        //let courseQLs: any = tournamentData.CourseQL;
-        //let holesQLs: any = courseQLs.HolesQL;
-        let playerScores: Score[] = [];
-
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-
-        let courseQLs = null;
-        let courseHoleQLs = null;
-        if (selectedFlight.length > 0)
-            courseQLs = await this.facadeService.getCourseInformation(
-                selectedFlight[0].courseId
-            );
-
-        if (courseQLs && courseQLs.course && courseQLs.course.length > 0)
-            courseHoleQLs = courseQLs.course[0].HolesQL;
-
-        let allSubTournamentMember = this.getSubTournamentPlayers();
-
-        if (!this.showTaxes) {
-            for (let player of selectedFlight) {
-                let totalPlayed = 0;
-                let playerScoresIds: string[] = [];
-                let playerScoreEqual: string[] = [];
-                let playerScoreEagle: string[] = [];
-                let playerScoreBirdy: string[] = [];
-                let playerScoreBoogey: string[] = [];
-                let playerScoreDBoogey: string[] = [];
-                let playerEmptyScoresIds: string[] = [];
-                let player1DigitIds: string[] = [];
-                let player2DigitIds: string[] = [];
-
-                for (let hole of courseHoleQLs) {
-                    //console.log(hole.id);
-                    let holeObj = <HTMLInputElement>(
-                        document.getElementById(hole.id + '&' + player.playerId)
-                    );
-                    if (holeObj) {
-                        let grossScore = parseFloat(
-                            (<HTMLInputElement>(
-                                document.getElementById(
-                                    hole.id + '&' + player.playerId
-                                )
-                            )).value
-                        );
-
-                        console.log(grossScore);
-                        if (grossScore) {
-                            let playerScore: Score = {
-                                playerId: player.playerId,
-                                flightId: player.flightId,
-                                holeId: hole.id,
-                                playerHandicap: this.precisionRound(
-                                    player.handicap,
-                                    0
-                                ),
-                                grossScore: grossScore,
-                                updatedAt: General.parseToDate(
-                                    todayDate.toDateString()
-                                ),
-                                updaterId: this.loggedInuser.id,
-                                updaterName:
-                                    this.loggedInuser.firstName +
-                                    ' ' +
-                                    this.loggedInuser.lastName,
-                                detailId: null,
-                            };
-                            console.log(playerScore);
-
-                            playerScores.push(playerScore);
-
-                            let subTournamentMember =
-                                allSubTournamentMember.filter(
-                                    (x) => x.playerId == player.playerId
-                                );
-
-                            if (subTournamentMember.length > 0) {
-                                for (let subScore of subTournamentMember) {
-                                    let subFlightScore = Object.assign(
-                                        {},
-                                        playerScore
-                                    );
-                                    subFlightScore.flightId = subScore.flightId;
-                                    console.log(
-                                        subFlightScore.flightId +
-                                            ' ### ' +
-                                            playerScore.flightId
-                                    );
-                                    playerScores.push(subFlightScore);
-                                }
-                            }
-
-                            // playerScoresIds.push(
-                            //     hole.id + '&' + player.playerId
-                            // );
-                            if (grossScore - hole.par == -2) {
-                                playerScoreEagle.push(
-                                    hole.id + '&' + player.playerId
-                                );
-                            }
-                            if (grossScore - hole.par == -1) {
-                                playerScoreBirdy.push(
-                                    hole.id + '&' + player.playerId
-                                );
-                            }
-                            if (grossScore - hole.par == 1) {
-                                playerScoreBoogey.push(
-                                    hole.id + '&' + player.playerId
-                                );
-                            }
-                            if (grossScore - hole.par == 2) {
-                                playerScoreDBoogey.push(
-                                    hole.id + '&' + player.playerId
-                                );
-                            }
-                            if (grossScore - hole.par == 0) {
-                                playerScoreEqual.push(
-                                    hole.id + '&' + player.playerId
-                                );
-                            }
-                            playerScoresIds.push(
-                                hole.id + '&' + player.playerId
-                            );
-
-                            if (grossScore > 9)
-                                player2DigitIds.push(
-                                    hole.id + '&' + player.playerId
-                                );
-                            else
-                                player1DigitIds.push(
-                                    hole.id + '&' + player.playerId
-                                );
-
-                            totalPlayed++;
-                        } else
-                            playerEmptyScoresIds.push(
-                                hole.id + '&' + player.playerId
-                            );
-                    }
-                }
-                console.log(playerScores);
-                console.log(playerScoresIds);
-                console.log(playerEmptyScoresIds);
-
-                if (totalPlayed > 0) {
-                    if (playerEmptyScoresIds.length > 0) {
-                        for (let id of playerEmptyScoresIds) {
-                            var element = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            element.classList.add('empty');
-                        }
-                    }
-                    if (playerScoresIds.length > 0) {
-                        for (let id of playerScoresIds) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.remove('empty');
-                        }
-                    }
-                    if (player2DigitIds.length > 0) {
-                        for (let id of player2DigitIds) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('warn');
-                        }
-                    }
-                    if (player1DigitIds.length > 0) {
-                        for (let id of player1DigitIds) {
-                            document
-                                .getElementById(id)
-                                .classList.remove('warn');
-                        }
-                    }
-                    // if (playerScoreEagle.length > 0) {
-                    //     for (let id of playerScoreEagle) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('eagle');
-                    //     }
-                    // }
-                    // if (playerScoreBirdy.length > 0) {
-                    //     for (let id of playerScoreBirdy) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('birdy');
-                    //     }
-                    // }
-                    // if (playerScoreBoogey.length > 0) {
-                    //     for (let id of playerScoreBoogey) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('bogey');
-                    //     }
-                    // }
-                    // if (playerScoreDBoogey.length > 0) {
-                    //     for (let id of playerScoreDBoogey) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('doublebogey');
-                    //     }
-                    // }
-                    // if (playerScoreEqual.length > 0) {
-                    //     for (let id of playerScoreEqual) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.remove('eagle');
-                    //         a.classList.remove('birdy');
-                    //         a.classList.remove('bogey');
-                    //         a.classList.remove('doublebogey');
-                    //     }
-                    // }
-                }
-            }
-        } else {
-            for (let player of selectedFlight) {
-                let totalPlayed = 0;
-                let playerScoresIds: string[] = [];
-                let playerEmptyScoresIds: string[] = [];
-                let player1DigitIds: string[] = [];
-                let player2DigitIds: string[] = [];
-
-                let playerScoreEqual: string[] = [];
-                let playerScoreEagle: string[] = [];
-                let playerScoreBirdy: string[] = [];
-                let playerScoreBoogey: string[] = [];
-                let playerScoreDBoogey: string[] = [];
-
-                for (let hole of courseHoleQLs) {
-                    //console.log(hole.id);
-                    let holeObj = <HTMLInputElement>(
-                        document.getElementById(hole.id + '&' + flightId)
-                    );
-                    if (holeObj) {
-                        let grossScore = parseFloat(
-                            (<HTMLInputElement>(
-                                document.getElementById(
-                                    hole.id + '&' + flightId
-                                )
-                            )).value
-                        );
-
-                        console.log(grossScore);
-                        if (grossScore) {
-                            let playerScore: Score = {
-                                playerId: player.playerId,
-                                flightId: player.flightId,
-                                holeId: hole.id,
-                                playerHandicap: this.precisionRound(
-                                    player.handicap,
-                                    0
-                                ),
-                                grossScore: grossScore,
-                                updatedAt: General.parseToDate(
-                                    todayDate.toDateString()
-                                ),
-                                updaterId: this.loggedInuser.id,
-                                updaterName:
-                                    this.loggedInuser.firstName +
-                                    ' ' +
-                                    this.loggedInuser.lastName,
-                                detailId: null,
-                            };
-                            console.log(playerScore);
-
-                            playerScores.push(playerScore);
-
-                            let subTournamentMember =
-                                allSubTournamentMember.filter(
-                                    (x) => x.playerId == player.playerId
-                                );
-
-                            if (subTournamentMember.length > 0) {
-                                for (let subScore of subTournamentMember) {
-                                    let subFlightScore = Object.assign(
-                                        {},
-                                        playerScore
-                                    );
-                                    subFlightScore.flightId = subScore.flightId;
-                                    console.log(
-                                        subFlightScore.flightId +
-                                            ' ### ' +
-                                            playerScore.flightId
-                                    );
-                                    playerScores.push(subFlightScore);
-                                }
-                            }
-                            if (grossScore - hole.par == -2) {
-                                playerScoreEagle.push(
-                                    hole.id + '&' + flightId
-                                );
-                            }
-                            if (grossScore - hole.par == -1) {
-                                playerScoreBirdy.push(
-                                    hole.id + '&' + flightId
-                                );
-                            }
-                            if (grossScore - hole.par == 1) {
-                                playerScoreBoogey.push(
-                                    hole.id + '&' + flightId
-                                );
-                            }
-                            if (grossScore - hole.par == 2) {
-                                playerScoreDBoogey.push(
-                                    hole.id + '&' + flightId
-                                );
-                            }
-                            if (grossScore - hole.par == 0) {
-                                playerScoreEqual.push(
-                                    hole.id + '&' + flightId
-                                );
-                            }
-                            playerScoresIds.push(hole.id + '&' + flightId);
-
-                            if (grossScore > 9)
-                                player2DigitIds.push(hole.id + '&' + flightId);
-                            else player1DigitIds.push(hole.id + '&' + flightId);
-
-                            totalPlayed++;
-                        } else
-                            playerEmptyScoresIds.push(hole.id + '&' + flightId);
-                    }
-                }
-                console.log(playerScores);
-                console.log(playerScoresIds);
-                console.log(playerEmptyScoresIds);
-
-                if (totalPlayed > 0) {
-                    if (playerEmptyScoresIds.length > 0) {
-                        for (let id of playerEmptyScoresIds) {
-                            var element = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            element.classList.add('empty');
-                        }
-                    }
-                    if (playerScoresIds.length > 0) {
-                        for (let id of playerScoresIds) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.remove('empty');
-                        }
-                    }
-                    if (player2DigitIds.length > 0) {
-                        for (let id of player2DigitIds) {
-                            var a = document.getElementById(id)
-                                .parentNode as HTMLElement;
-                            a.classList.add('warn');
-                        }
-                    }
-                    if (player1DigitIds.length > 0) {
-                        for (let id of player1DigitIds) {
-                            document
-                                .getElementById(id)
-                                .classList.remove('warn');
-                        }
-                    }
-                    // if (playerScoreEagle.length > 0) {
-                    //     for (let id of playerScoreEagle) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('eagle');
-                    //     }
-                    // }
-                    // if (playerScoreBirdy.length > 0) {
-                    //     for (let id of playerScoreBirdy) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('birdy');
-                    //     }
-                    // }
-                    // if (playerScoreBoogey.length > 0) {
-                    //     for (let id of playerScoreBoogey) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('bogey');
-                    //     }
-                    // }
-                    // if (playerScoreDBoogey.length > 0) {
-                    //     for (let id of playerScoreDBoogey) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.add('doublebogey');
-                    //     }
-                    // }
-                    // if (playerScoreEqual.length > 0) {
-                    //     for (let id of playerScoreEqual) {
-                    //         var a = document.getElementById(id)
-                    //             .parentNode as HTMLElement;
-                    //         a.classList.remove('eagle');
-                    //         a.classList.remove('birdy');
-                    //         a.classList.remove('bogey');
-                    //         a.classList.remove('doublebogey');
-                    //     }
-                    // }
-                }
-            }
-        }
-
-        let result = <any>(
-            await this.facadeService.SaveScoresMutation(playerScores)
-        );
-
-        if (result) {
-            for(let obj of playerScores)
-            {
-                document.getElementById('savePlayer_'+ obj.playerId).classList.add('active')
-            }
-            this.snackBar.open('Score has been submitted.', 'x', {
-                duration: 5000,
+            let selectedFlight: any = this.flightPlayers.find((a) => {
+                return a.flightId == flightId;
             });
 
-            let todayString: Date = new Date();
-            let timeupdated: any = await this.facadeService.setScoreUpdateTime(
-                this.tournamentID,
-               todayString.toISOString().slice(0, -5) + "Z"
+            console.log(selectedFlight);
+
+            let today: Date = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+
+            //let tournamentData: any = this.matchPlayData;
+            //let courseQLs: any = tournamentData.CourseQL;
+            //let holesQLs: any = courseQLs.HolesQL;
+            let playerScores: Score[] = [];
+
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
+            let courseQLs = null;
+            let courseHoleQLs = null;
+            if (selectedFlight.length > 0)
+                courseQLs = await this.facadeService.getCourseInformation(
+                    selectedFlight[0].courseId
+                );
+
+            if (courseQLs && courseQLs.course && courseQLs.course.length > 0)
+                courseHoleQLs = courseQLs.course[0].HolesQL;
+
+            let allSubTournamentMember = this.getSubTournamentPlayers();
+
+            if (!this.showTaxes) {
+                for (let player of selectedFlight) {
+                    let totalPlayed = 0;
+                    let playerScoresIds: string[] = [];
+                    let playerScoreEqual: string[] = [];
+                    let playerScoreEagle: string[] = [];
+                    let playerScoreBirdy: string[] = [];
+                    let playerScoreBoogey: string[] = [];
+                    let playerScoreDBoogey: string[] = [];
+                    let playerEmptyScoresIds: string[] = [];
+                    let player1DigitIds: string[] = [];
+                    let player2DigitIds: string[] = [];
+
+                    for (let hole of courseHoleQLs) {
+                        //console.log(hole.id);
+                        let holeObj = <HTMLInputElement>(
+                            document.getElementById(hole.id + '&' + player.playerId)
+                        );
+                        if (holeObj) {
+                            let grossScore = parseFloat(
+                                (<HTMLInputElement>(
+                                    document.getElementById(
+                                        hole.id + '&' + player.playerId
+                                    )
+                                )).value
+                            );
+
+                            console.log(grossScore);
+                            if (grossScore) {
+                                let playerScore: Score = {
+                                    playerId: player.playerId,
+                                    flightId: player.flightId,
+                                    holeId: hole.id,
+                                    playerHandicap: this.precisionRound(
+                                        player.handicap,
+                                        0
+                                    ),
+                                    grossScore: grossScore,
+                                    updatedAt: General.parseToDate(
+                                        todayDate.toDateString()
+                                    ),
+                                    updaterId: this.loggedInuser.id,
+                                    updaterName:
+                                        this.loggedInuser.firstName +
+                                        ' ' +
+                                        this.loggedInuser.lastName,
+                                    detailId: null,
+                                };
+                                console.log(playerScore);
+
+                                playerScores.push(playerScore);
+
+                                let subTournamentMember =
+                                    allSubTournamentMember.filter(
+                                        (x) => x.playerId == player.playerId
+                                    );
+
+                                if (subTournamentMember.length > 0) {
+                                    for (let subScore of subTournamentMember) {
+                                        let subFlightScore = Object.assign(
+                                            {},
+                                            playerScore
+                                        );
+                                        subFlightScore.flightId = subScore.flightId;
+                                        console.log(
+                                            subFlightScore.flightId +
+                                            ' ### ' +
+                                            playerScore.flightId
+                                        );
+                                        playerScores.push(subFlightScore);
+                                    }
+                                }
+
+                                // playerScoresIds.push(
+                                //     hole.id + '&' + player.playerId
+                                // );
+                                if (grossScore - hole.par == -2) {
+                                    playerScoreEagle.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+                                }
+                                if (grossScore - hole.par == -1) {
+                                    playerScoreBirdy.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+                                }
+                                if (grossScore - hole.par == 1) {
+                                    playerScoreBoogey.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+                                }
+                                if (grossScore - hole.par == 2) {
+                                    playerScoreDBoogey.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+                                }
+                                if (grossScore - hole.par == 0) {
+                                    playerScoreEqual.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+                                }
+                                playerScoresIds.push(
+                                    hole.id + '&' + player.playerId
+                                );
+
+                                if (grossScore > 9)
+                                    player2DigitIds.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+                                else
+                                    player1DigitIds.push(
+                                        hole.id + '&' + player.playerId
+                                    );
+
+                                totalPlayed++;
+                            } else
+                                playerEmptyScoresIds.push(
+                                    hole.id + '&' + player.playerId
+                                );
+                        }
+                    }
+                    console.log(playerScores);
+                    console.log(playerScoresIds);
+                    console.log(playerEmptyScoresIds);
+
+                    if (totalPlayed > 0) {
+                        if (playerEmptyScoresIds.length > 0) {
+                            for (let id of playerEmptyScoresIds) {
+                                var element = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                element.classList.add('empty');
+                            }
+                        }
+                        if (playerScoresIds.length > 0) {
+                            for (let id of playerScoresIds) {
+                                var a = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                a.classList.remove('empty');
+                            }
+                        }
+                        if (player2DigitIds.length > 0) {
+                            for (let id of player2DigitIds) {
+                                var a = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                a.classList.add('warn');
+                            }
+                        }
+                        if (player1DigitIds.length > 0) {
+                            for (let id of player1DigitIds) {
+                                document
+                                    .getElementById(id)
+                                    .classList.remove('warn');
+                            }
+                        }
+                        // if (playerScoreEagle.length > 0) {
+                        //     for (let id of playerScoreEagle) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('eagle');
+                        //     }
+                        // }
+                        // if (playerScoreBirdy.length > 0) {
+                        //     for (let id of playerScoreBirdy) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('birdy');
+                        //     }
+                        // }
+                        // if (playerScoreBoogey.length > 0) {
+                        //     for (let id of playerScoreBoogey) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('bogey');
+                        //     }
+                        // }
+                        // if (playerScoreDBoogey.length > 0) {
+                        //     for (let id of playerScoreDBoogey) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('doublebogey');
+                        //     }
+                        // }
+                        // if (playerScoreEqual.length > 0) {
+                        //     for (let id of playerScoreEqual) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.remove('eagle');
+                        //         a.classList.remove('birdy');
+                        //         a.classList.remove('bogey');
+                        //         a.classList.remove('doublebogey');
+                        //     }
+                        // }
+                    }
+                }
+            } else {
+                for (let player of selectedFlight) {
+                    let totalPlayed = 0;
+                    let playerScoresIds: string[] = [];
+                    let playerEmptyScoresIds: string[] = [];
+                    let player1DigitIds: string[] = [];
+                    let player2DigitIds: string[] = [];
+
+                    let playerScoreEqual: string[] = [];
+                    let playerScoreEagle: string[] = [];
+                    let playerScoreBirdy: string[] = [];
+                    let playerScoreBoogey: string[] = [];
+                    let playerScoreDBoogey: string[] = [];
+
+                    for (let hole of courseHoleQLs) {
+                        //console.log(hole.id);
+                        let holeObj = <HTMLInputElement>(
+                            document.getElementById(hole.id + '&' + flightId)
+                        );
+                        if (holeObj) {
+                            let grossScore = parseFloat(
+                                (<HTMLInputElement>(
+                                    document.getElementById(
+                                        hole.id + '&' + flightId
+                                    )
+                                )).value
+                            );
+
+                            console.log(grossScore);
+                            if (grossScore) {
+                                let playerScore: Score = {
+                                    playerId: player.playerId,
+                                    flightId: player.flightId,
+                                    holeId: hole.id,
+                                    playerHandicap: this.precisionRound(
+                                        player.handicap,
+                                        0
+                                    ),
+                                    grossScore: grossScore,
+                                    updatedAt: General.parseToDate(
+                                        todayDate.toDateString()
+                                    ),
+                                    updaterId: this.loggedInuser.id,
+                                    updaterName:
+                                        this.loggedInuser.firstName +
+                                        ' ' +
+                                        this.loggedInuser.lastName,
+                                    detailId: null,
+                                };
+                                console.log(playerScore);
+
+                                playerScores.push(playerScore);
+
+                                let subTournamentMember =
+                                    allSubTournamentMember.filter(
+                                        (x) => x.playerId == player.playerId
+                                    );
+
+                                if (subTournamentMember.length > 0) {
+                                    for (let subScore of subTournamentMember) {
+                                        let subFlightScore = Object.assign(
+                                            {},
+                                            playerScore
+                                        );
+                                        subFlightScore.flightId = subScore.flightId;
+                                        console.log(
+                                            subFlightScore.flightId +
+                                            ' ### ' +
+                                            playerScore.flightId
+                                        );
+                                        playerScores.push(subFlightScore);
+                                    }
+                                }
+                                if (grossScore - hole.par == -2) {
+                                    playerScoreEagle.push(
+                                        hole.id + '&' + flightId
+                                    );
+                                }
+                                if (grossScore - hole.par == -1) {
+                                    playerScoreBirdy.push(
+                                        hole.id + '&' + flightId
+                                    );
+                                }
+                                if (grossScore - hole.par == 1) {
+                                    playerScoreBoogey.push(
+                                        hole.id + '&' + flightId
+                                    );
+                                }
+                                if (grossScore - hole.par == 2) {
+                                    playerScoreDBoogey.push(
+                                        hole.id + '&' + flightId
+                                    );
+                                }
+                                if (grossScore - hole.par == 0) {
+                                    playerScoreEqual.push(
+                                        hole.id + '&' + flightId
+                                    );
+                                }
+                                playerScoresIds.push(hole.id + '&' + flightId);
+
+                                if (grossScore > 9)
+                                    player2DigitIds.push(hole.id + '&' + flightId);
+                                else player1DigitIds.push(hole.id + '&' + flightId);
+
+                                totalPlayed++;
+                            } else
+                                playerEmptyScoresIds.push(hole.id + '&' + flightId);
+                        }
+                    }
+                    console.log(playerScores);
+                    console.log(playerScoresIds);
+                    console.log(playerEmptyScoresIds);
+
+                    if (totalPlayed > 0) {
+                        if (playerEmptyScoresIds.length > 0) {
+                            for (let id of playerEmptyScoresIds) {
+                                var element = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                element.classList.add('empty');
+                            }
+                        }
+                        if (playerScoresIds.length > 0) {
+                            for (let id of playerScoresIds) {
+                                var a = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                a.classList.remove('empty');
+                            }
+                        }
+                        if (player2DigitIds.length > 0) {
+                            for (let id of player2DigitIds) {
+                                var a = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                a.classList.add('warn');
+                            }
+                        }
+                        if (player1DigitIds.length > 0) {
+                            for (let id of player1DigitIds) {
+                                document
+                                    .getElementById(id)
+                                    .classList.remove('warn');
+                            }
+                        }
+                        // if (playerScoreEagle.length > 0) {
+                        //     for (let id of playerScoreEagle) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('eagle');
+                        //     }
+                        // }
+                        // if (playerScoreBirdy.length > 0) {
+                        //     for (let id of playerScoreBirdy) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('birdy');
+                        //     }
+                        // }
+                        // if (playerScoreBoogey.length > 0) {
+                        //     for (let id of playerScoreBoogey) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('bogey');
+                        //     }
+                        // }
+                        // if (playerScoreDBoogey.length > 0) {
+                        //     for (let id of playerScoreDBoogey) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.add('doublebogey');
+                        //     }
+                        // }
+                        // if (playerScoreEqual.length > 0) {
+                        //     for (let id of playerScoreEqual) {
+                        //         var a = document.getElementById(id)
+                        //             .parentNode as HTMLElement;
+                        //         a.classList.remove('eagle');
+                        //         a.classList.remove('birdy');
+                        //         a.classList.remove('bogey');
+                        //         a.classList.remove('doublebogey');
+                        //     }
+                        // }
+                    }
+                }
+            }
+
+            let result = <any>(
+                await this.facadeService.SaveScoresMutation(playerScores)
             );
 
-            if (timeupdated) return;
+            if (result) {
+                if(!this.showTaxes){
+                    for (let obj of playerScores) {
+                        document.getElementById('savePlayer_' + obj.playerId).classList.add('active')
+                    }
+                }
+                this.snackBar.open('Score has been submitted.', 'x', {
+                    duration: 5000,
+                });
+
+                let todayString: Date = new Date();
+                let timeupdated: any = await this.facadeService.setScoreUpdateTime(
+                    this.tournamentID,
+                    todayString.toISOString().slice(0, -5) + "Z"
+                );
+                this.logger.log('Tournament Score Data Saved', "info");
+
+                if (timeupdated) return;
+            }
+        } catch (error) {
+            this.logger.log('Saving Tournament Score Data Failed', "error", error.toString());
         }
     }
 
     async savePlayerScore(flightId: string, playerId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
         //console.log(this.flightPlayers);
+        try {
+            const combinedData = `flightId=${flightId}, playerId=${playerId}`;
+            this.logger.log('Tournament Group Player Score Save btn Clicked', "info", combinedData);
+            let selectedFlight: any = this.flightPlayers.find((a) => {
+                return a.flightId == flightId;
+            });
 
-        let selectedFlight: any = this.flightPlayers.find((a) => {
-            return a.flightId == flightId;
-        });
+            //console.log(selectedFlight);
+            //return false;
 
-        //console.log(selectedFlight);
-        //return false;
+            let today: Date = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
 
-        let today: Date = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+            let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
 
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+            //let tournamentData: any = this.matchPlayData;
+            //let courseQLs: any = tournamentData.CourseQL;
+            //let holesQLs: any = courseQLs.HolesQL;
+            let playerScores: Score[] = [];
 
-        //let tournamentData: any = this.matchPlayData;
-        //let courseQLs: any = tournamentData.CourseQL;
-        //let holesQLs: any = courseQLs.HolesQL;
-        let playerScores: Score[] = [];
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            let courseQLs = null;
+            let courseHoleQLs = null;
+            if (selectedFlight.length > 0)
+                courseQLs = await this.facadeService.getCourseInformation(
+                    selectedFlight[0].courseId
+                );
 
-        let courseQLs = null;
-        let courseHoleQLs = null;
-        if (selectedFlight.length > 0)
-            courseQLs = await this.facadeService.getCourseInformation(
-                selectedFlight[0].courseId
-            );
+            if (courseQLs && courseQLs.course && courseQLs.course.length > 0)
+                courseHoleQLs = courseQLs.course[0].HolesQL;
 
-        if (courseQLs && courseQLs.course && courseQLs.course.length > 0)
-            courseHoleQLs = courseQLs.course[0].HolesQL;
+            let allSubTournamentMember = this.getSubTournamentPlayers();
 
-        let allSubTournamentMember = this.getSubTournamentPlayers();
+            for (let player of selectedFlight) {
+                //console.log(player.playerId);
 
-        for (let player of selectedFlight) {
-            //console.log(player.playerId);
+                if (player.playerId == playerId) {
+                    for (let hole of courseHoleQLs) {
+                        let holeObj = <HTMLInputElement>(
+                            document.getElementById(hole.id + '&' + player.playerId)
+                        );
+                        console.log(holeObj);
+                        if (holeObj) {
+                            let grossScore = holeObj
+                                ? parseFloat(
+                                    (<HTMLInputElement>(
+                                        document.getElementById(
+                                            hole.id + '&' + player.playerId
+                                        )
+                                    )).value
+                                )
+                                : 0;
 
-            if (player.playerId == playerId) {
-                for (let hole of courseHoleQLs) {
-                    let holeObj = <HTMLInputElement>(
-                        document.getElementById(hole.id + '&' + player.playerId)
-                    );
-                    console.log(holeObj);
-                    if (holeObj) {
-                        let grossScore = holeObj
-                            ? parseFloat(
-                                  (<HTMLInputElement>(
-                                      document.getElementById(
-                                          hole.id + '&' + player.playerId
-                                      )
-                                  )).value
-                              )
-                            : 0;
+                            if (!grossScore) {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.add('empty');
+                            } else {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.remove('empty');
+                            }
 
-                        if (!grossScore) {
-                            var element = document.getElementById(
-                                hole.id + '&' + player.playerId
-                            ).parentNode as HTMLElement;
-                            element.classList.add('empty');
-                        } else {
-                            var element = document.getElementById(
-                                hole.id + '&' + player.playerId
-                            ).parentNode as HTMLElement;
-                            element.classList.remove('empty');
-                        }
+                            if (grossScore && grossScore > 9) {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.add('warn');
+                            } else {
+                                var element = document.getElementById(
+                                    hole.id + '&' + player.playerId
+                                ).parentNode as HTMLElement;
+                                element.classList.remove('warn');
+                            }
 
-                        if (grossScore && grossScore > 9) {
-                            var element = document.getElementById(
-                                hole.id + '&' + player.playerId
-                            ).parentNode as HTMLElement;
-                            element.classList.add('warn');
-                        } else {
-                            var element = document.getElementById(
-                                hole.id + '&' + player.playerId
-                            ).parentNode as HTMLElement;
-                            element.classList.remove('warn');
-                        }
+                            //console.log(grossScore);
+                            if (grossScore) {
+                                let playerScore: Score = {
+                                    playerId: player.playerId,
+                                    flightId: player.flightId,
+                                    holeId: hole.id,
+                                    playerHandicap: this.precisionRound(
+                                        player.handicap,
+                                        0
+                                    ),
+                                    grossScore: grossScore,
+                                    updatedAt: General.parseToDate(
+                                        todayDate.toDateString()
+                                    ),
+                                    updaterId: this.loggedInuser.id,
+                                    updaterName:
+                                        this.loggedInuser.firstName +
+                                        ' ' +
+                                        this.loggedInuser.lastName,
+                                    detailId: null,
+                                };
+                                playerScores.push(playerScore);
 
-                        //console.log(grossScore);
-                        if (grossScore) {
-                            let playerScore: Score = {
-                                playerId: player.playerId,
-                                flightId: player.flightId,
-                                holeId: hole.id,
-                                playerHandicap: this.precisionRound(
-                                    player.handicap,
-                                    0
-                                ),
-                                grossScore: grossScore,
-                                updatedAt: General.parseToDate(
-                                    todayDate.toDateString()
-                                ),
-                                updaterId: this.loggedInuser.id,
-                                updaterName:
-                                    this.loggedInuser.firstName +
-                                    ' ' +
-                                    this.loggedInuser.lastName,
-                                detailId: null,
-                            };
-                            playerScores.push(playerScore);
-
-                            let subTournamentMember =
-                                allSubTournamentMember.filter(
-                                    (x) => x.playerId == player.playerId
-                                );
-
-                            if (subTournamentMember.length > 0) {
-                                for (let subScore of subTournamentMember) {
-                                    let subFlightScore = Object.assign(
-                                        {},
-                                        playerScore
+                                let subTournamentMember =
+                                    allSubTournamentMember.filter(
+                                        (x) => x.playerId == player.playerId
                                     );
-                                    subFlightScore.flightId = subScore.flightId;
-                                    console.log(
-                                        subFlightScore.flightId +
+
+                                if (subTournamentMember.length > 0) {
+                                    for (let subScore of subTournamentMember) {
+                                        let subFlightScore = Object.assign(
+                                            {},
+                                            playerScore
+                                        );
+                                        subFlightScore.flightId = subScore.flightId;
+                                        console.log(
+                                            subFlightScore.flightId +
                                             ' ### ' +
                                             playerScore.flightId
-                                    );
-                                    playerScores.push(subFlightScore);
+                                        );
+                                        playerScores.push(subFlightScore);
+                                    }
                                 }
+                                // if (grossScore - hole.par == -2) {
+                                //     var element = document.getElementById(
+                                //         hole.id + '&' + player.playerId
+                                //     ).parentNode as HTMLElement;
+                                //     element.classList.add('eagle');
+                                // }
+                                // if (grossScore - hole.par == -1) {
+                                //     var element = document.getElementById(
+                                //         hole.id + '&' + player.playerId
+                                //     ).parentNode as HTMLElement;
+                                //     element.classList.add('birdy');
+                                // }
+                                // if (grossScore - hole.par == 1) {
+                                //     var element = document.getElementById(
+                                //         hole.id + '&' + player.playerId
+                                //     ).parentNode as HTMLElement;
+                                //     element.classList.add('bogey');
+                                // }
+                                // if (grossScore - hole.par == 2) {
+                                //     var element = document.getElementById(
+                                //         hole.id + '&' + player.playerId
+                                //     ).parentNode as HTMLElement;
+                                //     element.classList.add('doublebogey');
+                                // }
+                                // if (grossScore - hole.par == 0) {
+                                //     var a = document.getElementById(
+                                //         hole.id + '&' + player.playerId
+                                //     ).parentNode as HTMLElement;
+                                //     a.classList.remove('eagle');
+                                //     a.classList.remove('birdy');
+                                //     a.classList.remove('bogey');
+                                //     a.classList.remove('doublebogey');
+                                // }
                             }
-                            // if (grossScore - hole.par == -2) {
-                            //     var element = document.getElementById(
-                            //         hole.id + '&' + player.playerId
-                            //     ).parentNode as HTMLElement;
-                            //     element.classList.add('eagle');
-                            // }
-                            // if (grossScore - hole.par == -1) {
-                            //     var element = document.getElementById(
-                            //         hole.id + '&' + player.playerId
-                            //     ).parentNode as HTMLElement;
-                            //     element.classList.add('birdy');
-                            // }
-                            // if (grossScore - hole.par == 1) {
-                            //     var element = document.getElementById(
-                            //         hole.id + '&' + player.playerId
-                            //     ).parentNode as HTMLElement;
-                            //     element.classList.add('bogey');
-                            // }
-                            // if (grossScore - hole.par == 2) {
-                            //     var element = document.getElementById(
-                            //         hole.id + '&' + player.playerId
-                            //     ).parentNode as HTMLElement;
-                            //     element.classList.add('doublebogey');
-                            // }
-                            // if (grossScore - hole.par == 0) {
-                            //     var a = document.getElementById(
-                            //         hole.id + '&' + player.playerId
-                            //     ).parentNode as HTMLElement;
-                            //     a.classList.remove('eagle');
-                            //     a.classList.remove('birdy');
-                            //     a.classList.remove('bogey');
-                            //     a.classList.remove('doublebogey');
-                            // }
                         }
                     }
                 }
             }
-        }
-        console.log(playerScores);
-        //console.log(playerScores.length);
+            console.log(playerScores);
+            //console.log(playerScores.length);
 
-        let result: any;
+            let result: any;
 
-        if (playerScores.length > 0) {
-            result = <any>(
-                await this.facadeService.SaveScoresMutation(playerScores)
-            );
-        }
+            if (playerScores.length > 0) {
+                result = <any>(
+                    await this.facadeService.SaveScoresMutation(playerScores)
+                );
+            }
 
-        if (result) {
-            document.getElementById('savePlayer_'+ playerId).classList.add('active')
-            this.snackBar.open('Score has been submitted.', 'x', {
-                duration: 5000,
-            });
+            if (result) {
+                document.getElementById('savePlayer_' + playerId).classList.add('active')
+                this.snackBar.open('Score has been submitted.', 'x', {
+                    duration: 5000,
+                });
 
-            let todayString: Date = new Date();
-            let timeupdated: any = await this.facadeService.setScoreUpdateTime(
-                this.tournamentID,
-                todayString.toISOString().slice(0, -5) + "Z"
-            );
+                let todayString: Date = new Date();
+                let timeupdated: any = await this.facadeService.setScoreUpdateTime(
+                    this.tournamentID,
+                    todayString.toISOString().slice(0, -5) + "Z"
+                );
 
-            if (timeupdated) return;
+                if (timeupdated) return;
+            }
+        } catch (error) {
+            this.logger.log('Saving Tournament Score Data Failed', "error", error.toString());
         }
     }
     keytab(e) {
@@ -1578,12 +1621,12 @@ export class MatchplayComponent implements OnInit {
                         document.getElementById(hole.id + '&' + playerId)
                     )).value != ''
                         ? parseFloat(
-                              (<HTMLInputElement>(
-                                  document.getElementById(
-                                      hole.id + '&' + playerId
-                                  )
-                              )).value
-                          )
+                            (<HTMLInputElement>(
+                                document.getElementById(
+                                    hole.id + '&' + playerId
+                                )
+                            )).value
+                        )
                         : 0;
         }
 
@@ -1640,12 +1683,12 @@ export class MatchplayComponent implements OnInit {
                         document.getElementById(hole.id + '&' + playerId)
                     )).value != ''
                         ? parseFloat(
-                              (<HTMLInputElement>(
-                                  document.getElementById(
-                                      hole.id + '&' + playerId
-                                  )
-                              )).value
-                          )
+                            (<HTMLInputElement>(
+                                document.getElementById(
+                                    hole.id + '&' + playerId
+                                )
+                            )).value
+                        )
                         : 0;
         }
         // var hole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_10_" + playerId)).value);

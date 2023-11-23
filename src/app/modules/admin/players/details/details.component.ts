@@ -56,6 +56,7 @@ import { FuseConfirmationSuccessService } from '@fuse/services/confirmation/conf
 import { Club } from 'app/shared/models/club.model';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'contacts-details',
@@ -106,7 +107,8 @@ export class ContactsDetailsComponent implements OnInit {
         private datepipe: DatePipe,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private _localStorage: LocalStorageService
+        private _localStorage: LocalStorageService,
+        private logger: LogsService
     ) { }
 
     // -----------------------------------------------------------------------------------------------------
@@ -117,71 +119,89 @@ export class ContactsDetailsComponent implements OnInit {
      * On init
      */
     async ngOnInit() {
-        this._activatedRoute.paramMap.subscribe(async (params) => {
-            this.playerID = params.get('id');
-        });
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let dataClubs: any;
-        if (this.loggedInuser) {
-            let clubInfo: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
+        try {
 
-            this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
-            this.clubTitle = clubInfo ? clubInfo.name : '';
-        }
-        this.contactForm = new FormGroup({
-            firstName: new FormControl('', [Validators.required]),
-            lastName: new FormControl('', [Validators.required]),
-            gender: new FormControl('male'),
-            email: new FormControl(''),
-            phoneNumbers: new FormControl('', [Validators.required]),
-            dateOfBirth: new FormControl(''),
-            category: new FormControl('', [Validators.required]),
-            handicap: new FormControl('0', [Validators.required]),
-            handicapWhsIndex: new FormControl('0'),
-            handicapWHS: new FormControl('0', [Validators.required]),
-            club: new FormControl(
-                this.loggedInuser.userRole > 1 ? this.clubTitle : '',
-                [Validators.required]
-            ),
-            country: new FormControl('Pakistan'),
-            isClubAdmin: new FormControl('3'),
-            membershipNo: new FormControl(''),
-            status: new FormControl('false', [Validators.required]),
-            notes: new FormControl(''),
-        });
-        this.playerCategories = this._facadeService.getPlayerCategories();
-        if (this.loggedInuser.userRole > 1) {
-            dataClubs = await this._facadeService.getClubByID(
-                this.loggedInuser.adminClubId
-            );
-        } else {
-            dataClubs = await this._facadeService.getClubList();
-        }
-        this.golfClubs = dataClubs.club;
-        console.log(this.playerCategories);
-        if (this.playerID) {
-            await this.fetchData();
-        }
-        this.filteredClubOptions = this.contactForm
-            .get('club')!
-            .valueChanges.pipe(
-                startWith(''),
-                map((value) =>
-                    typeof value === 'string' ? value : value ? value.name : ''
+
+            this._activatedRoute.paramMap.subscribe(async (params) => {
+                this.playerID = params.get('id');
+            });
+            this.logger.log('Admin comes to Player Edit Page', "info", this.playerID);
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            let dataClubs: any;
+            if (this.loggedInuser <= 2) {
+                let clubInfo: any =
+                    this.loggedInuser.membership.length > 0
+                        ? this.loggedInuser.membership[0].club
+                        : null;
+
+                this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
+                this.clubTitle = clubInfo ? clubInfo.name : '';
+            }
+            this.contactForm = new FormGroup({
+                firstName: new FormControl('', [Validators.required]),
+                lastName: new FormControl('', [Validators.required]),
+                gender: new FormControl('male'),
+                email: new FormControl('', [Validators.required]),
+                phoneNumbers: new FormControl(''),
+                dateOfBirth: new FormControl(''),
+                category: new FormControl('Amateurs', [Validators.required]),
+                handicap: new FormControl('0', [Validators.required]),
+                handicapWhsIndex: new FormControl('0'),
+                handicapWHS: new FormControl('0', [Validators.required]),
+                club: new FormControl(
+                    this.loggedInuser.userRole > 1 ? this.clubTitle : '',
+                    [Validators.required]
                 ),
-                map((name) => (name ? this._filter(name) : this.golfClubs))
-            );
-        console.log(this.filteredClubOptions);
+                country: new FormControl('Pakistan'),
+                isClubAdmin: new FormControl('3'),
+                membershipNo: new FormControl(''),
+                status: new FormControl('false', [Validators.required]),
+                notes: new FormControl(''),
+            });
+            this.playerCategories = this._facadeService.getPlayerCategories();
+            if (this.loggedInuser.userRole == 2) {
+                dataClubs = await this._facadeService.getClubByID(
+                    this.loggedInuser.adminClubId
+                );
+                this.golfClubs = dataClubs.club;
+                this.filteredClubOptions = this.contactForm
+                    .get('club')!
+                    .valueChanges.pipe(
+                        startWith(''),
+                        map((value) =>
+                            typeof value === 'string' ? value : value ? value.name : ''
+                        ),
+                        map((name) => (name ? this._filter(name) : this.golfClubs))
+                    );
+                console.log(this.filteredClubOptions);
+            } else if (this.loggedInuser.userRole == 1) {
+                dataClubs = await this._facadeService.getClubList();
+                this.golfClubs = dataClubs.club;
+                this.filteredClubOptions = this.contactForm
+                    .get('club')!
+                    .valueChanges.pipe(
+                        startWith(''),
+                        map((value) =>
+                            typeof value === 'string' ? value : value ? value.name : ''
+                        ),
+                        map((name) => (name ? this._filter(name) : this.golfClubs))
+                    );
+                console.log(this.filteredClubOptions);
+            }
+            if (this.playerID) {
+                await this.fetchData();
+            }
 
-        if (this.loggedInuser.userRole > 1) {
-            this.contactForm.get('club').clearValidators();
-            //this.contactForm.get('club').updateValueAndValidity();
+
+            if (this.loggedInuser.userRole > 1) {
+                this.contactForm.get('club').clearValidators();
+                //this.contactForm.get('club').updateValueAndValidity();
+            }
+
+
+        } catch (error) {
+            this.logger.log('Getting Players Profile Edit Data Failed', "error", error.toString());
         }
-
-        console.log(this.contact);
     }
     private _filter(value: string): Club[] {
         if (value) {
@@ -263,267 +283,291 @@ export class ContactsDetailsComponent implements OnInit {
     async updateContact() {
         // console.log(this.handicapIndex);
         // console.log(this.contactForm.get('handicapWHS').value);
-        if (this.handicapIndex != this.contactForm.get('handicapWHS').value) {
-            this.changeWHSHandicap();
-        }
-        let newFlag = true;
-        let checkEmail: any = [];
-        let checkPhone: any = [];
-        let emailPlayerId: string = '';
-        let phonePlayerId: string = '';
+        try {
+            if (this.handicapIndex != this.contactForm.get('handicapWHS').value) {
+                this.changeWHSHandicap();
+            }
+            let newFlag = true;
+            let checkEmail: any = [];
+            let checkPhone: any = [];
+            let emailPlayerId: string = '';
+            let phonePlayerId: string = '';
 
-        let Hdate = new Date();
+            let Hdate = new Date();
 
-        let latest_date: any = this.datepipe.transform(
-            Hdate,
-            'yyyy-MM-ddThh:mm:ss.SSSSSS+00:00'
-        );
-        // Get the contact object
+            let latest_date: any = this.datepipe.transform(
+                Hdate,
+                'yyyy-MM-ddThh:mm:ss.SSSSSS+00:00'
+            );
+            // Get the contact object
 
-        const contact = this.contactForm.getRawValue();
-        if (this.contactForm.valid) {
-            if (contact.email)
-                checkEmail = <Player>(
-                    await this._facadeService.getPlayerByEmail(contact.email)
-                );
+            const contact = this.contactForm.getRawValue();
+            if (this.contactForm.valid) {
+                if (contact.email)
+                    checkEmail = <Player>(
+                        await this._facadeService.getPlayerByEmail(contact.email)
+                    );
 
-            if (contact.phoneNumbers)
-                checkPhone = <Player>(
-                    await this._facadeService.getPlayerByPhone(
-                        contact.phoneNumbers
-                    )
-                );
+                if (contact.phoneNumbers)
+                    checkPhone = <Player>(
+                        await this._facadeService.getPlayerByPhone(
+                            contact.phoneNumbers
+                        )
+                    );
 
-            console.log(checkEmail);
-            if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
+                console.log(checkEmail);
+                if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
 
-            if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
+                if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
 
-            if (
-                checkEmail.length > 0 &&
-                emailPlayerId !== '' &&
-                emailPlayerId !== this.playerID
-            ) {
-                const confirmation = this._fuseConfirmationService.open({
-                    title: 'Duplicate Email',
-                    message: 'Email alreday exist!',
-                    actions: {
-                        confirm: {
-                            label: 'Close',
+                if (
+                    checkEmail.length > 0 &&
+                    emailPlayerId !== '' &&
+                    emailPlayerId !== this.playerID
+                ) {
+                    const confirmation = this._fuseConfirmationService.open({
+                        title: 'Duplicate Email',
+                        message: 'Email alreday exist!',
+                        actions: {
+                            confirm: {
+                                label: 'Close',
+                            },
                         },
-                    },
-                });
+                    });
 
-                return;
-            } else if (
-                checkPhone.length > 0 &&
-                phonePlayerId !== '' &&
-                phonePlayerId !== this.playerID
-            ) {
-                const confirmation = this._fuseConfirmationService.open({
-                    title: 'Duplicate Number',
-                    message: 'Number alreday exist!',
-                    actions: {
-                        confirm: {
-                            label: 'Close',
+                    return;
+                } else if (
+                    checkPhone.length > 0 &&
+                    phonePlayerId !== '' &&
+                    phonePlayerId !== this.playerID
+                ) {
+                    const confirmation = this._fuseConfirmationService.open({
+                        title: 'Duplicate Number',
+                        message: 'Number alreday exist!',
+                        actions: {
+                            confirm: {
+                                label: 'Close',
+                            },
                         },
-                    },
-                });
+                    });
 
-                return;
-            } else if (
-                (checkEmail.length > 0 && this.playerID) ||
-                (checkPhone.length > 0 && this.playerID)
-            ) {
-                newFlag = false;
+                    return;
+                } else if (
+                    (checkEmail.length > 0 && this.playerID) ||
+                    (checkPhone.length > 0 && this.playerID)
+                ) {
+                    newFlag = false;
+                } else {
+                }
+            }
+            let clubMember: ClubMembership[] = [];
+            let UniqueId: string = '';
+            let GEMId: string = '';
+            let players: any[] = await this._facadeService.getallPlayersforGGid();
+            var sortarray = players['player'];
+            //      sortarray.sort(this.Comparator);
+            console.log(sortarray);
+
+            this.playerID
+                ? (UniqueId = this.playerID)
+                : (UniqueId = UniqueIdGenerator.generate());
+            this.playerID
+                ? (GEMId = this.currentPlayer.player[0].gemId)
+                : (GEMId = generateGemId.generate(sortarray[0].gemId));
+            console.log(GEMId);
+
+            //console.log(playerFormValue.playerClubMember);
+            if (this.loggedInuser.userRole < 3) {
+                let member: any = {
+                    clubId:
+                        typeof contact.club === 'string'
+                            ? this.loggedInuser.adminClubId
+                            : contact.club
+                                ? contact.club.id
+                                : '',
+                    suspended: this.contactForm.get('status').value,
+                };
+                console.log(member);
+                clubMember.push(member);
+            }
+            const player: Player = {
+                id: UniqueId,
+                adminClubId: null,
+                firebaseUid: this.playerID
+                    ? this.currentPlayer.player[0].firebaseUid
+                    : null,
+                fcmToken: this.playerID
+                    ? this.currentPlayer.player[0].fcmToken
+                    : null,
+                gemId: GEMId,
+                firstName: contact.firstName,
+                lastName: contact.lastName,
+                gender: contact.gender,
+                dob: General.parseToDate(contact.dateOfBirth),
+                picture: null,
+                email: contact.email,
+                phone: contact.phoneNumbers,
+                playerCategory: contact.category,
+                handicapWhsIndex: contact.handicapWhsIndex,
+                handicap: contact.handicap,
+                online: false,
+                countryCode: contact.country,
+                extraData: contact.notes,
+                userRole: 3,
+                membership: clubMember,
+                membershipNumber: contact.membershipNo,
+            };
+            console.log(contact);
+
+            if (!this.editMode) {
+                if (this.loggedInuser.userRole < 3) {
+                    const isSuccess = <boolean>(
+                        await this._facadeService.AddPlayer(player)
+                    );
+                    if (isSuccess) {
+                        this.save = true;
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 1000,
+                        });
+                        this.reset();
+                        this._router.navigate(['/players']);
+                    }
+                } else {
+                    let tourMember = {
+                        tourId: this._localStorage.get(Constants.TOUR_ID),
+                        playerId: UniqueId,
+                    }
+                    const isSuccess = <boolean>(
+                        await this._facadeService.AddTourPlayer(player, tourMember)
+                    );
+                    if (isSuccess) {
+                        this.save = true;
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 1000,
+                        });
+                        this.reset();
+                        this._router.navigate(['/players']);
+                    }
+                }
             } else {
-            }
-        }
-        let clubMember: ClubMembership[] = [];
-        let UniqueId: string = '';
-        let GEMId: string = '';
-        let players: any[] = await this._facadeService.getallPlayersforGGid();
-        var sortarray = players['player'];
-        sortarray.sort(this.Comparator);
-        console.log(sortarray);
-
-        this.playerID
-            ? (UniqueId = this.playerID)
-            : (UniqueId = UniqueIdGenerator.generate());
-        this.playerID
-            ? (GEMId = this.currentPlayer.player[0].gemId)
-            : (GEMId = generateGemId.generate(sortarray[0].gemId));
-        console.log(GEMId);
-
-        //console.log(playerFormValue.playerClubMember);
-        let member: any = {
-            clubId:
-                typeof contact.club === 'string'
-                    ? this.loggedInuser.adminClubId
-                    : contact.club
-                        ? contact.club.id
-                        : '',
-            suspended: this.contactForm.get('status').value,
-        };
-        console.log(member);
-        clubMember.push(member);
-        const player: Player = {
-            id: UniqueId,
-            adminClubId: null,
-            firebaseUid: this.playerID
-                ? this.currentPlayer.player[0].firebaseUid
-                : null,
-            fcmToken: this.playerID
-                ? this.currentPlayer.player[0].fcmToken
-                : null,
-            gemId: GEMId,
-            firstName: contact.firstName,
-            lastName: contact.lastName,
-            gender: contact.gender,
-            dob: General.parseToDate(contact.dateOfBirth),
-            picture: null,
-            email: contact.email,
-            phone: contact.phoneNumbers,
-            playerCategory: contact.category,
-            handicapWhsIndex: contact.handicapWhsIndex,
-            handicap: contact.handicap,
-            online: false,
-            countryCode: contact.country,
-            extraData: contact.notes,
-            userRole: 3,
-            membership: clubMember,
-            membershipNumber: contact.membershipNo,
-        };
-        console.log(contact);
-
-        if (!this.editMode) {
-            const isSuccess = <boolean>(
-                await this._facadeService.AddPlayer(player)
-            );
-            if (isSuccess) {
-                this.save = true;
-                this.snackBar.open('Player has been created.', 'x', {
-                    duration: 1000,
-                });
-                this.reset();
-                this._router.navigate(['/players']);
-            }
-        } else {
-            const isSuccess = <boolean>(
-                await this._facadeService.updatePlayer(player)
-            );
-
-            if (this.currentPlayer.player[0].handicap !== contact.handicap) {
-                console.log(this.tournamentId);
-
-                const handicap_change_log: handicap_change_log = {
-                    id: UniqueIdGenerator.generate(),
-                    playerId: this.currentPlayer.player[0].id
-                        ? this.currentPlayer.player[0].id
-                        : null,
-                    newHandicap: contact.handicap ? contact.handicap : 0,
-                    oldHandicap: this.currentPlayer.player[0].handicap
-                        ? this.currentPlayer.player[0].handicap
-                        : 0,
-                    whs: false,
-                    dateTime: latest_date,
-                    remarks: this.contactForm.get('notes').value,
-                    tournamentId: null,
-                    updaterId: this.loggedInuser.id,
-                };
-
-                console.log(handicap_change_log);
-                //this.handicapLog = handicap_change_log;
-
-                const remarksAdded = <boolean>(
-                    await this._facadeService.AddHandicapRemarks(
-                        handicap_change_log
-                    )
+                const isSuccess = <boolean>(
+                    await this._facadeService.updatePlayer(player)
                 );
-                let response = await this._facadeService.updateConguHandicap(
-                    this.playerID,
-                    contact.handicap ? contact.handicap : 0,
-                    this.tournamentId
-                );
-                console.log(remarksAdded);
-            } else if (
-                this.currentPlayer.player[0].handicapWhsIndex !==
-                contact.handicapWhsIndex
-            ) {
-                const handicap_change_log: handicap_change_log = {
-                    id: UniqueIdGenerator.generate(),
-                    playerId: this.currentPlayer.player[0].id
-                        ? this.currentPlayer.player[0].id
-                        : null,
-                    newHandicap: contact.handicapWhsIndex
-                        ? contact.handicapWhsIndex
-                        : 0,
-                    oldHandicap: this.currentPlayer.player[0].handicapWhsIndex
-                        ? this.currentPlayer.player[0].handicapWhsIndex
-                        : 0,
-                    whs: false,
-                    dateTime: latest_date,
-                    remarks: this.contactForm.get('notes').value,
-                    tournamentId: null,
-                    updaterId: this.loggedInuser.id,
-                };
 
-                console.log(handicap_change_log);
-                //this.handicapLog = handicap_change_log;
+                if (this.currentPlayer.player[0].handicap !== contact.handicap) {
+                    console.log(this.tournamentId);
 
-                const remarksAdded = <boolean>(
-                    await this._facadeService.AddHandicapRemarks(
-                        handicap_change_log
-                    )
-                );
-                console.log(remarksAdded);
+                    const handicap_change_log: handicap_change_log = {
+                        id: UniqueIdGenerator.generate(),
+                        playerId: this.currentPlayer.player[0].id
+                            ? this.currentPlayer.player[0].id
+                            : null,
+                        newHandicap: contact.handicap ? contact.handicap : 0,
+                        oldHandicap: this.currentPlayer.player[0].handicap
+                            ? this.currentPlayer.player[0].handicap
+                            : 0,
+                        whs: false,
+                        dateTime: latest_date,
+                        remarks: this.contactForm.get('notes').value,
+                        tournamentId: null,
+                        updaterId: this.loggedInuser.id,
+                    };
+
+                    console.log(handicap_change_log);
+                    //this.handicapLog = handicap_change_log;
+
+                    const remarksAdded = <boolean>(
+                        await this._facadeService.AddHandicapRemarks(
+                            handicap_change_log
+                        )
+                    );
+                    let response = await this._facadeService.updateConguHandicap(
+                        this.playerID,
+                        contact.handicap ? contact.handicap : 0,
+                        this.tournamentId
+                    );
+                    console.log(remarksAdded);
+                } else if (
+                    this.currentPlayer.player[0].handicapWhsIndex !==
+                    contact.handicapWhsIndex
+                ) {
+                    const handicap_change_log: handicap_change_log = {
+                        id: UniqueIdGenerator.generate(),
+                        playerId: this.currentPlayer.player[0].id
+                            ? this.currentPlayer.player[0].id
+                            : null,
+                        newHandicap: contact.handicapWhsIndex
+                            ? contact.handicapWhsIndex
+                            : 0,
+                        oldHandicap: this.currentPlayer.player[0].handicapWhsIndex
+                            ? this.currentPlayer.player[0].handicapWhsIndex
+                            : 0,
+                        whs: false,
+                        dateTime: latest_date,
+                        remarks: this.contactForm.get('notes').value,
+                        tournamentId: null,
+                        updaterId: this.loggedInuser.id,
+                    };
+
+                    console.log(handicap_change_log);
+                    //this.handicapLog = handicap_change_log;
+
+                    const remarksAdded = <boolean>(
+                        await this._facadeService.AddHandicapRemarks(
+                            handicap_change_log
+                        )
+                    );
+                    console.log(remarksAdded);
+                }
+
+                if (
+                    this.handicapIndex != this.contactForm.get('handicapWHS').value
+                ) {
+                    const handicap_change_log: handicap_change_log = {
+                        id: UniqueIdGenerator.generate(),
+                        playerId: this.currentPlayer.player[0].id
+                            ? this.currentPlayer.player[0].id
+                            : null,
+                        newHandicap: contact.handicap ? contact.handicap : 0,
+                        oldHandicap: this.currentPlayer.player[0].handicap
+                            ? this.currentPlayer.player[0].handicap
+                            : 0,
+                        whs: false,
+                        dateTime: latest_date,
+                        remarks: this.contactForm.get('notes').value,
+                        tournamentId: null,
+                        updaterId: this.loggedInuser.id,
+                    };
+
+                    console.log(handicap_change_log);
+                    //this.handicapLog = handicap_change_log;
+
+                    const remarksAdded = <boolean>(
+                        await this._facadeService.AddHandicapRemarks(
+                            handicap_change_log
+                        )
+                    );
+                    console.log(remarksAdded);
+                }
+
+                //console.log(isSuccess);
+                if (isSuccess) {
+                    this.save = true;
+                    this.snackBar.open('Player has been updated.', 'x', {
+                        duration: 1000,
+                    });
+                    //this._router.navigate(['/players']);
+                }
             }
-
-            if (
-                this.handicapIndex != this.contactForm.get('handicapWHS').value
-            ) {
-                const handicap_change_log: handicap_change_log = {
-                    id: UniqueIdGenerator.generate(),
-                    playerId: this.currentPlayer.player[0].id
-                        ? this.currentPlayer.player[0].id
-                        : null,
-                    newHandicap: contact.handicap ? contact.handicap : 0,
-                    oldHandicap: this.currentPlayer.player[0].handicap
-                        ? this.currentPlayer.player[0].handicap
-                        : 0,
-                    whs: false,
-                    dateTime: latest_date,
-                    remarks: this.contactForm.get('notes').value,
-                    tournamentId: null,
-                    updaterId: this.loggedInuser.id,
-                };
-
-                console.log(handicap_change_log);
-                //this.handicapLog = handicap_change_log;
-
-                const remarksAdded = <boolean>(
-                    await this._facadeService.AddHandicapRemarks(
-                        handicap_change_log
-                    )
-                );
-                console.log(remarksAdded);
-            }
-
-            //console.log(isSuccess);
-            if (isSuccess) {
-                this.save = true;
-                this.snackBar.open('Player has been updated.', 'x', {
-                    duration: 1000,
-                });
-                //this._router.navigate(['/players']);
-            }
+        } catch (error) {
+            this.logger.log('Updating Players Profile Data Failed', "error", error.toString());
         }
     }
 
     public Comparator(a, b) {
         console.log(a);
         console.log(b);
-        
+
         try {
             if (a['gemId']?.trim() !== '' && b['gemId']?.trim() !== '') {
                 let gemIDA = parseInt(a['gemId'].slice(2));
@@ -647,6 +691,7 @@ export class ContactsDetailsComponent implements OnInit {
                 );
 
             console.log(this.currentPlayer);
+            this.logger.log('Getting Player Edit Profile Data Successfull', "info", this.currentPlayer.toString());
             this.tournamentId =
                 this.currentPlayer.player[0].handicap_history !== undefined &&
                     this.currentPlayer.player[0].handicap_history.length > 0

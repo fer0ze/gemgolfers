@@ -3,31 +3,31 @@
 
   .register-form {
 
-    ::ng-deep .mat-horizontal-stepper-wrapper{
+    ::ng-deep .mat-horizontal-stepper-wrapper {
       display: flex;
       flex-direction: row !important;
     }
-   
+
     ::ng-deep .mat-horizontal-stepper-header-container {
-      background-color: #aad8ff;
+      background-color: #05467e;
       // border-radius: 5px;
       // margin-bottom: 40px;
-      width: 16rem;
-       display: block !important;
-       min-height: 100vh;
       // flex-direction: column;
       // align-items: baseline;
 
     }
-    ::ng-deep .mat-horizontal-content-container{
+
+    ::ng-deep .mat-horizontal-content-container {
       overflow: hidden;
       background: #f2f9ff;
       padding: 0 24px 24px 24px;
       width: 86%;
     }
+
     ::ng-deep .mat-stepper-horizontal-line {
       border-top-width: 0px !important;
     }
+
     ::ng-deep .mat-tab-group {
       flex-direction: row;
     }
@@ -103,15 +103,7 @@
 
   }
 
-  .catCount {
-    background: #f66d00;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 5px;
-    color: #fff;
-    font-size: 14px;
-    display: inline-flex;
-  }
+
 
   .mat-form-field {
     // min-width: 325px;
@@ -165,7 +157,7 @@
 
     .flightHeader {
       padding: 10px;
-     
+
       background-color: #047b9c;
       border-radius: 4px;
 
@@ -178,31 +170,12 @@
       input {
         width: 100px;
         margin: 0 10px;
-       color: black;
+        color: black;
         border-radius: 5px;
       }
     }
   }
 
-  .moveableFlights {
-    padding: 7px 10px;
-    border: solid 1px #ccc;
-    color: rgba(0, 0, 0, 0.87);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    cursor: move;
-
-    margin: 5px 0px 5px 0px;
-    border-radius: 4px;
-
-    .mat-icon.remove {
-      cursor: pointer;
-    }
-
-  }
 
   .cdk-drag-preview {
     box-sizing: border-box;
@@ -224,9 +197,7 @@
     border: none;
   }
 
-  .moveableList.cdk-drop-list-dragging .moveableFlights:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
+
 
   .actionPane {
     margin: 0 0 10px 0;
@@ -246,6 +217,56 @@
     padding: 10px;
     color: #fff;
   }
+}
+
+.moveableList.cdk-drop-list-dragging .moveableFlights:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.moveableFlights {
+   
+  color: rgb(68 68 68 / 87%);
+  display: flex;
+  flex-direction: row;
+  margin-top: 7px;
+  padding-right: 16px;
+  padding-left: 14px;
+  padding-right: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: #bfdbfe;
+  border-radius: 6px;
+
+  .mat-icon.remove {
+    cursor: pointer;
+  }
+  
+}
+
+.color {
+  ::ng-deep .mat-form-field-infix {
+    max-height: 18px;
+    margin-top: 13px;
+  }
+}
+
+.catCount {
+  background: #f66d00;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px;
+  color: #fff;
+  font-size: 14px;
+  display: inline-flex;
+}
+
+.mat-table {
+  width: 100% !important;
+}
+
+mat-stepper {
+  border-radius: 10px;
 }
 
 .separators {
@@ -307,9 +328,11 @@
   font-size: 30%;
 
 }
-.float-right{
+
+.float-right {
   float: right;
 }
+
 matStepLabel {
   justify-content: center;
   font-family: 'Times New Roman', Times, serif;
@@ -363,34 +386,56 @@ matStepLabel {
 .row-change.mat-tab-group {
   flex-direction: column !important;
 }
+#manageFlights {
+  margin:0 auto;
+  
+  .flightHeader {
+    padding:10px;
+    color:#fff;
+    
+    .mat-icon.remove {
+      color: #fff;
+      cursor: pointer;
+      text-align: right;
+    }
 
+    input {
+      width: 100px;
+      margin: 0 10px;
+     color: black;
+      border-radius: 5px;
+    }
+  }
+}
 .row-change {
 
-  ::ng-deep .mat-horizontal-stepper-wrapper{
+  ::ng-deep .mat-horizontal-stepper-wrapper {
     display: flex;
     flex-direction: row !important;
   }
- 
+
   ::ng-deep .mat-horizontal-stepper-header-container {
     background-color: #aad8ff;
     // border-radius: 5px;
     // margin-bottom: 40px;
     width: 16rem;
-     display: block !important;
+    display: block !important;
     // flex-direction: column;
     // align-items: baseline;
 
   }
-  ::ng-deep .mat-horizontal-content-container{
+
+  ::ng-deep .mat-horizontal-content-container {
     overflow: hidden;
     background: #f2f9ff;
     padding: 0 24px 24px 24px;
     width: 86%;
   }
+
   ::ng-deep .mat-stepper-horizontal-line {
     border-top-width: 0px !important;
   }
-  
+
 
   ::ng-deep .mat-tab-header {
     border-bottom: none;

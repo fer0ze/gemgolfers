@@ -90,6 +90,7 @@ export const TournamentQL = gql`
         matchFormat
         tee
         playingOnWhs
+        scoreManagement
         scoreUpdateTime
         leaderUpdateTime
         startDate
@@ -107,6 +108,8 @@ export const TournamentQL = gql`
         cutOffCriteria
         prefix
         multiFormat
+        marshalsStartWith
+        noOfMarshals
         subTournament
         courseHoleSetsInverted
         CourseQL: course {

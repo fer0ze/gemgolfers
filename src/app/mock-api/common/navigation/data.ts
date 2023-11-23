@@ -176,6 +176,106 @@ export const defaultNavigation: FuseNavigationItem[] = [
         ],
     }
 ];
+export const tourNavigation: FuseNavigationItem[] = [
+    {
+        id: 'dashboards',
+        title: 'DashBoards',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'dashboards.dasboard',
+                title: 'Home',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/dashboard'
+            },
+        ],
+    },
+    {
+        id: 'tour',
+        title: 'Tour',
+        type: 'group',
+        icon: 'heroicons_outline:view-boards',
+        children: [
+            // {
+            //     id: 'tour.newTour',
+            //     title: 'New Tour',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/tours/add',
+            // },
+            {
+                id: 'tour.viewtours',
+                title: 'All Tours',
+                type: 'basic',
+                icon: 'heroicons_outline:view-list',
+                link: '/tours',
+            },
+        ],
+    },
+    // {
+    //     id: 'tournaments',
+    //     title: 'Tournament',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:home',
+    //     children: [
+    //         {
+    //             id: 'tournaments.newTournament',
+    //             title: 'New Tournament',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:academic-cap',
+    //             link: '/tournaments/add',
+    //         },
+    //         {
+    //             id: 'tournaments.viewtournaments',
+    //             title: 'All Tournaments',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:view-list',
+    //             link: '/tournaments',
+    //         },
+    //     ],
+    // },
+    // },
+    // {
+    //     id: 'leagues',
+    //     title: 'League',
+
+    //     type: 'group',
+    //     icon: 'heroicons_outline:view-boards',
+    //     children: [
+    //         {
+    //             id: 'leagues.newleagues',
+    //             title: 'New League',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:academic-cap',
+    //             link: '/leagues/new',
+    //         },
+    //         {
+    //             id: 'leagues.viewleagues',
+    //             title: 'All Leagues',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:view-boards',
+    //             link: '/leagues/view',
+    //         },
+    //     ],
+    // },
+    // {
+    //     id: 'players',
+    //     title: 'Members',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:menu-alt-2',
+    //     children: [
+    //         {
+    //             id: 'players.viewplayers',
+    //             title: 'All Members',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:user-group',
+    //             link: '/players',
+    //         },
+    //     ],
+    // },
+];
 export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
     {
         id: 'dashboards',

@@ -10,6 +10,7 @@ import {
     horizontalNavigation,
     defaultNavigationSuperAdmin,
     sectaryNavigation,
+    tourNavigation,
 } from 'app/mock-api/common/navigation/data';
 import { Constants } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
@@ -19,6 +20,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 })
 export class NavigationMockApi {
     private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
+    private readonly _tourNavigation: FuseNavigationItem[] = tourNavigation;
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
     private readonly _userNavigation: FuseNavigationItem[] = userNavigation;
     private readonly _defaultNavigationSuperAdmin: FuseNavigationItem[] = defaultNavigationSuperAdmin;
@@ -106,7 +108,8 @@ export class NavigationMockApi {
                         secetary   : cloneDeep(this._sectaryNavigation),
                         defaultAdmimn   : cloneDeep(this._defaultNavigationSuperAdmin),
                         futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation)
+                        horizontal: cloneDeep(this._horizontalNavigation),
+                        tour:cloneDeep(this._tourNavigation)
                     }
                 ];
            

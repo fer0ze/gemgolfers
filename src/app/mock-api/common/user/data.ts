@@ -4,5 +4,6 @@ export const user = {
     name  : 'Abdullah Ejaz',
     email : 'abrajpoot59@gmail.com',
     avatar: 'assets/images/logo/white.png',
-    status: 'online'
+    status: 'online',
+    role: 3,
 };

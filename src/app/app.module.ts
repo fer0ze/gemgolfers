@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
@@ -20,8 +20,7 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
-
-
+import { GlobalErrorHandler } from './errorhandler.module';
 
 @NgModule({
     declarations: [AppComponent],
@@ -51,5 +50,9 @@ import { environment } from 'environments/environment';
         GraphQLModule,
     ],
     bootstrap: [AppComponent],
+    // providers: [{
+    //     provide: ErrorHandler,
+    //     useClass: GlobalErrorHandler,
+    // }]
 })
-export class AppModule {}
+export class AppModule { }

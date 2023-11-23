@@ -108,7 +108,7 @@ export class AttendanceComponent implements OnInit {
     var doc = new jsPDF()
 
     doc.setFontSize(18);
-    doc.text('Tournament Flights', 15, 15);
+    doc.text('Tournament flights', 15, 15);
     doc.setFontSize(11);
     doc.setTextColor(100);
 
@@ -177,7 +177,7 @@ export class AttendanceComponent implements OnInit {
 //     console.log(this.selectedMembers);
 //   }
 
-  // returns all form groups under flights
+  // returns all form flights under flights
   get contactFormGroup() {
     return this.formGroup.get('flights') as FormArray;
   }
@@ -441,7 +441,7 @@ export class AttendanceComponent implements OnInit {
     });
     */
     //console.log(this.selectedMembers);
-    //console.log(this.groups);
+    //console.log(this.flights);
   }
 
   OnChange($event, i: number, j: number) {
@@ -619,7 +619,7 @@ export class AttendanceComponent implements OnInit {
 
     // this.getSelectedPlayers();
 
-    // this.snackBar.open("Flights have been saved successfully.", "x", {
+    // this.snackBar.open("flights have been saved successfully.", "x", {
     //   duration: 5000,
     // });
 
@@ -639,7 +639,7 @@ export class AttendanceComponent implements OnInit {
     // });
     this.isPorcessing = false;
 
-    this.snackBar.open("Flights have been saved successfully.", "x", {
+    this.snackBar.open("flights have been saved successfully.", "x", {
       duration: 5000,
     });
 
@@ -834,7 +834,7 @@ export class AttendanceComponent implements OnInit {
     //   return a.flightRound == this.flightRound;
     // });
 
-    // this.snackBar.open("Flights have been saved successfully.", "x", {
+    // this.snackBar.open("flights have been saved successfully.", "x", {
     //   duration: 5000,
     // });
 
@@ -853,7 +853,7 @@ export class AttendanceComponent implements OnInit {
       return a.flightRound == this.flightRound;
     });
 
-    this.snackBar.open("Flights have been saved successfully.", "x", {
+    this.snackBar.open("flights have been saved successfully.", "x", {
       duration: 5000,
     });
 

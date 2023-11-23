@@ -41,6 +41,7 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { HandicapsComponent } from '../WHS/handicaps.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { LogsService } from 'app/shared/services/logs.service';
 @Component({
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
@@ -103,17 +104,24 @@ export class PlayerHandicapComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _handicapComponent: HandicapsComponent,
         private _facadeService: FacadeService,
-        private _router: Router, private _localStorage: LocalStorageService
+        private _router: Router, private _localStorage: LocalStorageService, private logger: LogsService,
     ) { }
 
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        try {
 
-        this._activatedRoute.paramMap.subscribe((params) => {
-            this.showTable = Promise.resolve(false);
-            this.playerID = params.get('id');
-            this.fecthData();
-        });
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
+            this._activatedRoute.paramMap.subscribe((params) => {
+                this.showTable = Promise.resolve(false);
+                this.playerID = params.get('id');
+                this.logger.log('Player WHS Handicap Sidebar Open', "info", this.playerID);
+                this.fecthData();
+            });
+        } catch (error) {
+            this.logger.log('Getting Player Wise WHS Handicap Data Failed', "error", error.toString());
+
+        }
     }
 
     async fecthData() {
@@ -300,7 +308,7 @@ export class PlayerHandicapComponent implements OnInit {
                             (courseRating - coursePar)) *
                         0.95;
                     this.redTeeHI = Math.round(this.redTeeHI);
-                }else if (item['tee'] == 'Black') {
+                } else if (item['tee'] == 'Black') {
                     this.balckVetTeeHI =
                         (handicapIndex * (slopeRating / 113.0) +
                             (courseRating - coursePar)) *
@@ -357,6 +365,8 @@ export class PlayerHandicapComponent implements OnInit {
         return used;
     }
     cancel() {
+        this.logger.log('BackDrop click on Player WHS Handicap', "info");
+
         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
 
@@ -375,122 +385,126 @@ export class PlayerHandicapComponent implements OnInit {
     }
 
     public downloadAsPDFWHS() {
-        var doc = new jsPDF();
-        var col = [
-            'Sr.',
-            'Mem.No',
-            'Date',
-            'Score',
-            'Adj.Score',
-            'h/diff',
-            'h/index',
-            'tee'
-        ];
-        var rows = [];
-        var rows = [];
-        doc.setFontSize(17);
-        doc.text(
-            'WHS-Handicap Change-Log of ' +
-            this.currentPlayer[0].firstName +
-            ' ' +
-            this.currentPlayer[0].lastName,
-            14,
-            15
-        );
-        doc.setFontSize(18);
-        // doc.setTextColor(100);
-
-        let count = 0;
-        this.personLeads.forEach((element) => {
-            count++;
-            // let flag = true;
-            // if (element.combined_handicap_id) {
-
-            //   for (let index in this.personLeads) {
-            //     if (this.personLeads[index].Handicap_id==element.combined_handicap_id) {
-            //       this.personLeads[index].noBorder=false;
-            //       element.noBorder=false;
-            //       break;
-            //     }
-            //   }
-
-            // }
-            let tee = this.playingTee(element.tournamentId);
-            let panelty: boolean = false;
-            let used: boolean = this.usedForHandicap.some((handicap) => {
-                return (
-                    handicap.used_handicap_id == element.Handicap_id ||
-                    handicap.combine_handicap_id == element.Handicap_id
-                );
-            });
-            // if (
-            //     element.tournamentQL.flights &&
-            //     element.tournamentQL.flights[0] != undefined
-            // ) {
-            //     panelty = element.tournamentQL.flights[0].members.some(
-            //         (element) => {
-            //             return (
-            //                 element.playerId == this.playerID &&
-            //                 element.panelty == true
-            //             );
-            //         }
-            //     );
-            // }
-
-            var temp = [
-                count,
-                this.currentPlayer[0].membershipNumber,
-                formatDate(
-                    element.playedAt,
-                    'mediumDate',
-                    'en-US'
-                ),
-                element.score,
-                element.adjustedScore,
-                Math.round(element.handicapDifferential * 10) / 10,
-                Math.round(element.handicapIndex * 10) / 10,
-                tee,
-                element.highlight,
-                used,
-                element.panelty,
-
+        try {
+            var doc = new jsPDF();
+            var col = [
+                'Sr.',
+                'Mem.No',
+                'Date',
+                'Score',
+                'Adj.Score',
+                'h/diff',
+                'h/index',
+                'tee'
             ];
-            rows.push(temp);
-        });
-        // From HTML
-        let a = 1;
-        doc.autoTable(col, rows, {
-            startY: 25,
-            theme: 'grid',
-            didParseCell: function (data) {
-                if (data.row.raw[8] == true) {
-                    data.cell.styles.fillColor = [195, 249, 230];
-                }
-                if (data.row.raw[10] == true) {
-                    data.cell.styles.textColor = [255, 9, 9];
-                }
-                a++;
-                if (data.row.raw[9] == true && a == 5) {
-                    data.cell.styles.fillColor = [249, 187, 147];
-                    //console.log(1);
-                    //a=false;
-                }
-                if (data.row.index == 1) {
-                    //console.log('assssssssssss');
-                }
-                console.log(data.row.index);
+            var rows = [];
+            var rows = [];
+            doc.setFontSize(17);
+            doc.text(
+                'WHS-Handicap Change-Log of ' +
+                this.currentPlayer[0].firstName +
+                ' ' +
+                this.currentPlayer[0].lastName,
+                14,
+                15
+            );
+            doc.setFontSize(18);
+            // doc.setTextColor(100);
 
-                //console.log(a);
-            },
-        });
-        // doc.autoTable({
-        //   html: "#pdfTable",
-        //   startY: 25,
-        //   theme: "grid",
-        // });
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
+            let count = 0;
+            this.personLeads.forEach((element) => {
+                count++;
+                // let flag = true;
+                // if (element.combined_handicap_id) {
 
+                //   for (let index in this.personLeads) {
+                //     if (this.personLeads[index].Handicap_id==element.combined_handicap_id) {
+                //       this.personLeads[index].noBorder=false;
+                //       element.noBorder=false;
+                //       break;
+                //     }
+                //   }
+
+                // }
+                let tee = this.playingTee(element.tournamentId);
+                let panelty: boolean = false;
+                let used: boolean = this.usedForHandicap.some((handicap) => {
+                    return (
+                        handicap.used_handicap_id == element.Handicap_id ||
+                        handicap.combine_handicap_id == element.Handicap_id
+                    );
+                });
+                // if (
+                //     element.tournamentQL.flights &&
+                //     element.tournamentQL.flights[0] != undefined
+                // ) {
+                //     panelty = element.tournamentQL.flights[0].members.some(
+                //         (element) => {
+                //             return (
+                //                 element.playerId == this.playerID &&
+                //                 element.panelty == true
+                //             );
+                //         }
+                //     );
+                // }
+
+                var temp = [
+                    count,
+                    this.currentPlayer[0].membershipNumber,
+                    formatDate(
+                        element.playedAt,
+                        'mediumDate',
+                        'en-US'
+                    ),
+                    element.score,
+                    element.adjustedScore,
+                    Math.round(element.handicapDifferential * 10) / 10,
+                    Math.round(element.handicapIndex * 10) / 10,
+                    tee,
+                    element.highlight,
+                    used,
+                    element.panelty,
+
+                ];
+                rows.push(temp);
+            });
+            // From HTML
+            let a = 1;
+            doc.autoTable(col, rows, {
+                startY: 25,
+                theme: 'grid',
+                didParseCell: function (data) {
+                    if (data.row.raw[8] == true) {
+                        data.cell.styles.fillColor = [195, 249, 230];
+                    }
+                    if (data.row.raw[10] == true) {
+                        data.cell.styles.textColor = [255, 9, 9];
+                    }
+                    a++;
+                    if (data.row.raw[9] == true && a == 5) {
+                        data.cell.styles.fillColor = [249, 187, 147];
+                        //console.log(1);
+                        //a=false;
+                    }
+                    if (data.row.index == 1) {
+                        //console.log('assssssssssss');
+                    }
+                    console.log(data.row.index);
+
+                    //console.log(a);
+                },
+            });
+            // doc.autoTable({
+            //   html: "#pdfTable",
+            //   startY: 25,
+            //   theme: "grid",
+            // });
+            // Open PDF document in new tab
+            doc.output('dataurlnewwindow');
+        } catch (error) {
+            this.logger.log('Download Player Handicap WHS Failed', "error", error.toString());
+
+        }
         // Download PDF document
         //doc.save('flights.pdf');
     }

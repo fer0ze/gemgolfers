@@ -107,6 +107,28 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListByTour(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.GetPlayersByTour,
+                    variables: {
+                        where: {
+                            tourId: {
+                                _eq: id,
+                            }
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getPlayersListForTournament(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -400,7 +422,7 @@ export class PlayersService {
                 .subscribe({
                     query: Query.playerUpdatedHandicapReport,
                     variables: {
-                        clubId:clubId,
+                        clubId: clubId,
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -423,7 +445,7 @@ export class PlayersService {
                 .subscribe({
                     query: Query.playerUpdatedHandicapReportAdmin,
                     variables: {
-        
+
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -860,6 +882,49 @@ export class PlayersService {
                                 },
                             },
                         ],
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+    public AddTourPlayer(player: Player,tourMember:any): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.AddTourMemberMutation,
+                    variables: {
+                        objects: [
+                            {
+                                id: player.id,
+                                adminClubId: null,
+                                firebaseUid: player.firebaseUid,
+                                fcmToken: player.fcmToken,
+                                gemId: player.gemId,
+                                firstName: player.firstName,
+                                lastName: player.lastName,
+                                gender: player.gender,
+                                dob: player.dob,
+                                picture: player.picture,
+                                email: player.email,
+                                phone: player.phone,
+                                playerCategory: player.playerCategory,
+                                handicap: player.handicap,
+                                online: player.online,
+                                extraData: player.extraData,
+                                countryCode: player.countryCode,
+                                userRole: player.userRole,
+                                membershipNumber: player.membershipNumber,
+                            },
+                        ],
+                        tourMember:tourMember,
                     },
                 })
                 .subscribe(
