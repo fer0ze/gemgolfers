@@ -108,9 +108,9 @@ export class AddDailyRoundComponent implements OnInit {
             });
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.tournamentID = UniqueIdGenerator.generate();
-        this.route.paramMap.subscribe((params) => {
-            this.playerID = params.get('id');
-        });
+            this.route.paramMap.subscribe((params) => {
+                this.playerID = params.get('id');
+            });
 
 
 
@@ -428,156 +428,38 @@ export class AddDailyRoundComponent implements OnInit {
                             }
                         );
 
-                founded = this.tournamentMembers.filter((a) => {
-                    return a.id == player[0].id;
-                });
-                console.log(founded);
-
-                if (founded.length == 0) {
-                    if (this.flightMembers.length > 4) {
-                        this.snackBar.open(
-                            "Maximum 5 players are allowed per flight.",
-                            "x",
-                            {
-                                duration: 5000,
-                            }
-                        );
-
-                        return false;
-                    }
-
-                    let member: any = {
-                        playerId: player[0].id,
-
-                        attendance: true,
-                    };
-
-                    this.flightMembers.push(member);
-                    let playerTee = player[0].playerCategory;
-                    if (playerTee == 'Senior Amateurs') {
-                        playerTee = 'Seniors';
-                    }
-
-                    founded = this.tournamentMembers.filter((a) => {
-                        return a.id == player[0].id;
-                    });
-                    console.log(founded);
-
-                    if (founded.length == 0) {
-                        // if (this.flightMembers.length > 3) {
-                        //   this.snackBar.open(
-                        //     "Maximum 4 players are allowed per flight.",
-                        //     "x",
-                        //     {
-                        //       duration: 5000,
-                        //     }
-                        //   );
-
-                        //   return false;
-                        // }
-
-                        let member: any = {
-                            playerId: player[0].id,
-
-                            attendance: true,
-                        };
-
-                        this.flightMembers.push(member);
-                        let playerTee = player[0].playerCategory;
-                        if (playerTee == 'Senior Amateurs') {
-                            playerTee = 'Seniors';
-                        }
-                        player[0]['playingTee'] = playerTee.toUpperCase();
-                        let selectedData = {
-                            value: player[0]['playingTee'],
-                            text: player[0]['playingTee'],
-                        };
-                        this.playerTees.set(player[0].id, selectedData);
-                        this.tournamentMembers.push(player[0]);
-
-                        this.syncTournamentMembers();
-                        this.snackBar.open(
-                            'Player has been added in the list.',
-                            'x',
-                            {
-                                duration: 5000,
-                            }
-                        );
-                    } else {
-                        this.snackBar.open(
-                            'Player already exist in the list.',
-                            'x',
-                            {
-                                duration: 5000,
-                            }
-                        );
-                    }
-                } else {
-                    if (player.length == 0) return;
-
-                    const dialogRef = this.dialog.open(
-                        DialogAddExisitingPlayerComponent,
-                        {
-                            width: '80%',
-                            data: { players: player },
-                        }
-                    );
-
-                    dialogRef.afterClosed().subscribe(async (result) => {
-                        console.log(result);
-                        if (result) {
-                            //console.log("record deleted.");
-                            console.log(result);
-                            console.log(
-                                this.datepipe.transform(
-                                    date.toString(),
-                                    'yyyy-MM-dd'
-                                )
-                            );
-                        if (founded && founded.length > 0) {
-                            this.snackBar.open(
-                                'Player already played in a round today.',
-                                'x',
-                                {
-                                    duration: 5000,
-                                }
-                            );
-
-                            return;
-                        }
-
                         founded = this.tournamentMembers.filter((a) => {
-                            return a.id == result.player.id;
+                            return a.id == player[0].id;
                         });
                         console.log(founded);
 
                         if (founded.length == 0) {
                             if (this.flightMembers.length > 4) {
-                              this.snackBar.open(
-                                "Maximum 5 players are allowed per flight.",
-                                "x",
-                                {
-                                  duration: 5000,
-                                }
-                              );
+                                this.snackBar.open(
+                                    "Maximum 5 players are allowed per flight.",
+                                    "x",
+                                    {
+                                        duration: 5000,
+                                    }
+                                );
 
-                              return false;
+                                return false;
                             }
 
                             let member: any = {
-                                playerId: result.player.id,
-                                attendance: false,
+                                playerId: player[0].id,
+
+                                attendance: true,
                             };
 
-                            console.log(this.flightMembers);
-                            console.log(this.tournamentMembers);
-                            let playerTee = result.player.playerCategory;
+                            this.flightMembers.push(member);
+                            let playerTee = player[0].playerCategory;
                             if (playerTee == 'Senior Amateurs') {
                                 playerTee = 'Seniors';
                             }
 
                             founded = this.tournamentMembers.filter((a) => {
-                                return a.id == result.player.id;
+                                return a.id == player[0].id;
                             });
                             console.log(founded);
 
@@ -595,67 +477,24 @@ export class AddDailyRoundComponent implements OnInit {
                                 // }
 
                                 let member: any = {
-                                    playerId: result.player.id,
-                                    attendance: false,
+                                    playerId: player[0].id,
+
+                                    attendance: true,
                                 };
 
-                                console.log(this.flightMembers);
-                                console.log(this.tournamentMembers);
-                                let playerTee = result.player.playerCategory;
+                                this.flightMembers.push(member);
+                                let playerTee = player[0].playerCategory;
                                 if (playerTee == 'Senior Amateurs') {
                                     playerTee = 'Seniors';
                                 }
-                                playerTee = playerTee.toUpperCase();
+                                player[0]['playingTee'] = playerTee.toUpperCase();
                                 let selectedData = {
-                                    value: playerTee,
-                                    text: playerTee,
+                                    value: player[0]['playingTee'],
+                                    text: player[0]['playingTee'],
                                 };
-                                this.playerTees.set(result.player.id, selectedData);
+                                this.playerTees.set(player[0].id, selectedData);
+                                this.tournamentMembers.push(player[0]);
 
-                                let obj: Player = {
-                                    id: result.player.id,
-                                    adminClubId: result.player.adminClubId,
-                                    firebaseUid: result.player.firebaseUid,
-                                    fcmToken: result.player.fcmToken,
-                                    gemId: result.player.gemId,
-                                    firstName: result.player.firstName,
-                                    lastName: result.player.lastName,
-                                    gender: result.player.gender,
-                                    dob: result.player.dob,
-                                    picture: result.player.picture,
-                                    email: result.player.email,
-                                    phone: result.player.phone,
-                                    playerCategory: result.player.playerCategory,
-                                    handicap: result.player.handicap,
-                                    online: false,
-                                    countryCode: result.player.countryCode,
-                                    extraData: result.player.extraData,
-                                    userRole:
-                                        result.player.isClubAdmin == true ? 2 : 3,
-                                    membership: result.player.membership,
-                                    membershipNumber:
-                                        result.player.membershipNumber,
-                                    playingTee: playerTee,
-                                };
-
-                                console.log(obj);
-                                console.log(this.tournamentMembers);
-
-                                this.tournamentMembers.push(obj);
-                                this.flightMembers.push(member);
-
-                                console.log(this.tournamentMembers);
-                                console.log(this.flightMembers);
-                                // if(this.tournamentMembers.length==2 && this.last==true)
-                                // {
-                                //   this.tournamentMembers.splice(0,1);
-                                //   console.log(this.tournamentMembers);
-                                //   console.log(this.flightMembers);
-                                //   //this.flightMembers.splice(0,1);
-
-                                // }
-
-                                console.log(this.tournamentMembers);
                                 this.syncTournamentMembers();
                                 this.snackBar.open(
                                     'Player has been added in the list.',
@@ -674,15 +513,185 @@ export class AddDailyRoundComponent implements OnInit {
                                 );
                             }
                         } else {
-                            //console.log("cancel delete action");
+                            if (player.length == 0) return;
+
+                            const dialogRef = this.dialog.open(
+                                DialogAddExisitingPlayerComponent,
+                                {
+                                    width: '80%',
+                                    data: { players: player },
+                                }
+                            );
+
+                            dialogRef.afterClosed().subscribe(async (result) => {
+                                console.log(result);
+                                if (result) {
+                                    //console.log("record deleted.");
+                                    console.log(result);
+                                    console.log(
+                                        this.datepipe.transform(
+                                            date.toString(),
+                                            'yyyy-MM-dd'
+                                        )
+                                    );
+                                    if (founded && founded.length > 0) {
+                                        this.snackBar.open(
+                                            'Player already played in a round today.',
+                                            'x',
+                                            {
+                                                duration: 5000,
+                                            }
+                                        );
+
+                                        return;
+                                    }
+
+                                    founded = this.tournamentMembers.filter((a) => {
+                                        return a.id == result.player.id;
+                                    });
+                                    console.log(founded);
+
+                                    if (founded.length == 0) {
+                                        if (this.flightMembers.length > 4) {
+                                            this.snackBar.open(
+                                                "Maximum 5 players are allowed per flight.",
+                                                "x",
+                                                {
+                                                    duration: 5000,
+                                                }
+                                            );
+
+                                            return false;
+                                        }
+
+                                        let member: any = {
+                                            playerId: result.player.id,
+                                            attendance: false,
+                                        };
+
+                                        console.log(this.flightMembers);
+                                        console.log(this.tournamentMembers);
+                                        let playerTee = result.player.playerCategory;
+                                        if (playerTee == 'Senior Amateurs') {
+                                            playerTee = 'Seniors';
+                                        }
+
+                                        founded = this.tournamentMembers.filter((a) => {
+                                            return a.id == result.player.id;
+                                        });
+                                        console.log(founded);
+
+                                        if (founded.length == 0) {
+                                            // if (this.flightMembers.length > 3) {
+                                            //   this.snackBar.open(
+                                            //     "Maximum 4 players are allowed per flight.",
+                                            //     "x",
+                                            //     {
+                                            //       duration: 5000,
+                                            //     }
+                                            //   );
+
+                                            //   return false;
+                                            // }
+
+                                            let member: any = {
+                                                playerId: result.player.id,
+                                                attendance: false,
+                                            };
+
+                                            console.log(this.flightMembers);
+                                            console.log(this.tournamentMembers);
+                                            let playerTee = result.player.playerCategory;
+                                            if (playerTee == 'Senior Amateurs') {
+                                                playerTee = 'Seniors';
+                                            }
+                                            playerTee = playerTee.toUpperCase();
+                                            let selectedData = {
+                                                value: playerTee,
+                                                text: playerTee,
+                                            };
+                                            this.playerTees.set(result.player.id, selectedData);
+
+                                            let obj: Player = {
+                                                id: result.player.id,
+                                                adminClubId: result.player.adminClubId,
+                                                firebaseUid: result.player.firebaseUid,
+                                                fcmToken: result.player.fcmToken,
+                                                gemId: result.player.gemId,
+                                                firstName: result.player.firstName,
+                                                lastName: result.player.lastName,
+                                                gender: result.player.gender,
+                                                dob: result.player.dob,
+                                                picture: result.player.picture,
+                                                email: result.player.email,
+                                                phone: result.player.phone,
+                                                playerCategory: result.player.playerCategory,
+                                                handicap: result.player.handicap,
+                                                online: false,
+                                                countryCode: result.player.countryCode,
+                                                extraData: result.player.extraData,
+                                                userRole:
+                                                    result.player.isClubAdmin == true ? 2 : 3,
+                                                membership: result.player.membership,
+                                                membershipNumber:
+                                                    result.player.membershipNumber,
+                                                playingTee: playerTee,
+                                            };
+
+                                            console.log(obj);
+                                            console.log(this.tournamentMembers);
+
+                                            this.tournamentMembers.push(obj);
+                                            this.flightMembers.push(member);
+
+                                            console.log(this.tournamentMembers);
+                                            console.log(this.flightMembers);
+                                            // if(this.tournamentMembers.length==2 && this.last==true)
+                                            // {
+                                            //   this.tournamentMembers.splice(0,1);
+                                            //   console.log(this.tournamentMembers);
+                                            //   console.log(this.flightMembers);
+                                            //   //this.flightMembers.splice(0,1);
+
+                                            // }
+
+                                            console.log(this.tournamentMembers);
+                                            this.syncTournamentMembers();
+                                            this.snackBar.open(
+                                                'Player has been added in the list.',
+                                                'x',
+                                                {
+                                                    duration: 5000,
+                                                }
+                                            );
+                                        } else {
+                                            this.snackBar.open(
+                                                'Player already exist in the list.',
+                                                'x',
+                                                {
+                                                    duration: 5000,
+                                                }
+                                            );
+                                        }
+                                    } else {
+                                        //console.log("cancel delete action");
+                                    }
+                                }
+                            });
+
                         }
-                    });
+                    }
                 }
+
+
+
             }
         } catch (error) {
             this.logger.log('Searching In players on Add Daily Round Failed', "error", error.toString());
         }
     }
+
+
 
     syncTournamentMembers() {
         of(this.tournamentMembers)
@@ -710,7 +719,7 @@ export class AddDailyRoundComponent implements OnInit {
     }
 
     removePlayer(playerId: string) {
-        this.logger.log('Player remove from Add Daily Round', "info",playerId);
+        this.logger.log('Player remove from Add Daily Round', "info", playerId);
 
         console.log(playerId);
         console.log(this.tournamentMembers);
