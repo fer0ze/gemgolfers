@@ -119,6 +119,7 @@ export class MainLeaderboardComponent implements OnInit {
         public facadeService: FacadeService,
         private _leaderBoardService: LeaderboardService,
         private cdr:ChangeDetectorRef
+
     ) { }
 
     async ngOnInit() {
@@ -211,6 +212,7 @@ export class MainLeaderboardComponent implements OnInit {
         //     }
         // }
 
+
         // this.activeRound = this.Leaderboard.activeRound;
         // this.totalRounds = this.Leaderboard.noOfRounds;
         // this.matchFormat = this.Leaderboard.matchFormat;
@@ -254,6 +256,7 @@ export class MainLeaderboardComponent implements OnInit {
         //         this.tRounds.push(r);
         //     }
         // }
+
 
         // this.selectedSubTournament = this.tournamentID;
 
@@ -408,8 +411,10 @@ export class MainLeaderboardComponent implements OnInit {
                                     // this.roundCheck(
                                     //     this.allMatchResults[leader]
                                     // );
+
                                     const matchResult =
                                         this.allMatchResults[leader];
+
                                     grossAllArray.push({ ...matchResult });
                                     this.allllll.push({ ...matchResult });
                                     netAllArray.push({ ...matchResult });
@@ -749,7 +754,7 @@ export class MainLeaderboardComponent implements OnInit {
                     );
                 }
 
-                if (this.selectedCategoryValue != '') {
+                if (this.selectedCategoryValue != '' && this.selectedCategoryValue != 'All') {
                     let handicapLimits: any =
                         this.selectedCategory.handicapLimits;
 
@@ -914,7 +919,9 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
+
                     playerStatus: this.getStatus(playerStatus),
+
                 };
 
                 this.grossLeaders.push(LeaderGross);
@@ -965,7 +972,9 @@ export class MainLeaderboardComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
+
                     playerStatus: this.getStatus(playerStatus),
+
                 };
 
                 this.netLeaders.push(LeaderNet);
@@ -985,7 +994,9 @@ export class MainLeaderboardComponent implements OnInit {
         if (playerStatus !== undefined) {
             return playerStatus.status;
         } else {
+
             return 'ac';
+
         }
     }
 
@@ -1408,7 +1419,9 @@ export class MainLeaderboardComponent implements OnInit {
                     return compare;
                 }
             }
+
         }
+
 
         //if (a["position"] < b["position"]) return -1;
         //if (a["position"] > b["position"]) return 1;
@@ -3520,6 +3533,7 @@ export class MainLeaderboardComponent implements OnInit {
         return arr;
     }
 
+
     // isPlayerCategoryToSkip(
     //     playerCategory: string,
     //     playerHandicap: number
@@ -3568,6 +3582,7 @@ export class MainLeaderboardComponent implements OnInit {
     //         );
     //     }
     // }
+
 
 
 

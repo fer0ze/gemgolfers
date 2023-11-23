@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
-export const TournamentQL = gql`
-fragment TournamentQL on tournament {
+export const TeamTournamentQL = gql`
+fragment TeamTournamentQL on tournament {
     id
     leagueId
     tourId
@@ -35,7 +35,7 @@ fragment TournamentQL on tournament {
 }`;
 
 export const PlayerQL = gql`
-fragment PlayerQL on player {
+fragment TeamPlayerQL on player {
   id
   adminClubId
   firebaseUid
@@ -61,7 +61,7 @@ fragment PlayerQL on player {
 }`;
 
 export const FlightsQL = gql`
-fragment FlightQL on flight {
+fragment TeamFlightQL on flight {
     id
     tournamentId
     courseId
@@ -151,4 +151,4 @@ query PostsGetQuery($tournamentId: String!, $playerId: String!) {
             ...TournamentTeamQL
         }
     }
-}${TournamentQL}${FlightsQL}${ScoreQL}${FlightManagerTeamQL}${TournamentTeamQL}`;
+}${TeamTournamentQL}${FlightsQL}${ScoreQL}${FlightManagerTeamQL}${TournamentTeamQL}`;

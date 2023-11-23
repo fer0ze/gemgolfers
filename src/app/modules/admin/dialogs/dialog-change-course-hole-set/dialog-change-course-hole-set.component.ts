@@ -97,7 +97,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         private location: Location,
         public snackBar: MatSnackBar, private _localStorage: LocalStorageService,
         public facadeService: FacadeService
-    ) {}
+    ) { }
 
     async ngOnInit() {
         console.log(this.data);
@@ -112,7 +112,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         this.route.paramMap.subscribe((params) => {
             this.routeDate = params.get('id');
         });
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         if (this.loggedInuser) {
             let clubInfo: any =
@@ -149,8 +149,8 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         this.starterForm = new FormGroup({
             holeSets: new FormControl(
                 this.data.currentHoleSet +
-                    '_' +
-                    this.data.courseHoleSetsInverted,
+                '_' +
+                this.data.courseHoleSetsInverted,
                 [Validators.required]
             ),
             members: new FormControl(this.data.members, [Validators.required]),
@@ -235,7 +235,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
             if (!player || player.length == 0) {
                 player = <Player>(
-                    await this.facadeService.getPlayerByMembershipNumberClubwise(this.clubID['id'],query, query)
+                    await this.facadeService.getPlayerByMembershipNumberClubwise(this.clubID['id'], query, query)
                 );
             }
 
@@ -250,6 +250,17 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 console.log(founded);
 
                 if (founded.length == 0) {
+                    if (this.starterForm.value.members.length > 4) {
+                        this.snackBar.open(
+                            "Maximum 5 players are allowed per flight.",
+                            "x",
+                            {
+                                duration: 5000,
+                            }
+                        );
+
+                        return;
+                    }
                     let todayRoundCheck =
                         await this.facadeService.getPlayerTodayRound(
                             player[0].id,
@@ -315,6 +326,17 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
                         console.log(this.data.date);
                         if (founded.length == 0) {
+                            if (this.starterForm.value.members.length > 4) {
+                                this.snackBar.open(
+                                    "Maximum 5 players are allowed per flight.",
+                                    "x",
+                                    {
+                                        duration: 5000,
+                                    }
+                                );
+
+                                return false;
+                            }
                             console.log(this.data.date);
                             let todayRoundCheck =
                                 await this.facadeService.getPlayerTodayRound(
@@ -369,8 +391,8 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                     console.log(this.starterForm.value.members);
                     this.starterForm.value.members.forEach(
                         (obj, i) =>
-                            (obj['fullName'] =
-                                obj.firstName + ' ' + obj.lastName)
+                        (obj['fullName'] =
+                            obj.firstName + ' ' + obj.lastName)
                     );
                     this.membersSource = new MatTableDataSource(
                         this.starterForm.value.members

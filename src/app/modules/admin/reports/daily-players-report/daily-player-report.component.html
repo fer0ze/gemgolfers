@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div class="sm:col-span-6 flex flex-col flex-auto p-6 m-8 bg-card shadow rounded-2xl overflow-hidden">
+    <div class="sm:col-span-6 flex flex-col flex-auto p-6 mx-8 overflow-hidden">
         <div class="flex flex-col sm:flex-row items-center justify-between">
             <div class="flex flex-row md:flex-col lg:flex-col sm:inline-flex items-center">
                 <span class="text-3xl font-semibold tracking-tight leading-8 pl-4 sm:py-2">
@@ -99,68 +99,43 @@
             </div>
         </div>
         <div *ngIf="isPlayer; else noContacts" class="flex flex-col flex-auto mt-2 overflow-x-auto">
-            <table id="a" mat-table [dataSource]="dataSource" matSort>
-
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>Sr.</th>
-                    <td mat-cell *matCellDef="let row; let i = index">
-                        {{ i + 1 }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="memebrshipNo">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        MembershipNo
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                        {{ row.memebrshipNo }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Name
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                        {{ row.name }}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="category">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Category
-                    </th>
-                    <td mat-cell *matCellDef="let row">{{ row.category }}</td>
-                </ng-container>
-                <ng-container matColumnDef="holeSet">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Hole Set
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                        {{ row.holeSet }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="tee">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Tee
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                        {{ row.tee }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="time">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Time
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                        {{ row.time }}
-                    </td>
-                </ng-container>
-
-
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumnsCongu"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumnsCongu"></tr>
-            </table>
-            <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+            <ng-container *ngIf="this.flights.length; else noCourses">
+                <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-8 mt-8 sm:mt-10">
+                    <ng-container *ngFor="let flight of flights; trackBy: trackByFn">
+                        <!-- Course -->
+                        <div class="flex flex-col h-86 shadow rounded-2xl overflow-hidden bg-card">
+                            <div class="flex flex-col p-6">
+                                <!-- Course title & description -->
+                                <div>
+                                    <mat-form-field class="w-72">
+                                        <mat-label>Course Hole Set</mat-label>
+                                        <mat-select placeholder="Course Hole Set" (selectionChange)="
+                                                changeHoleSet($event, flight.flightId, true)
+                                            " [(value)]="flight.courseHoleSetKey" [disabled]="true">
+                                            <mat-option *ngFor="let course of courseHoleSetNames" [value]="
+                                                    course.holeSets + '_' + course.inverted
+                                                ">{{ course.displayName }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="mt-1 text-lg font-medium">
+                                    {{ flight.time }}
+                                </div>
+                                <div class="w-12 h-1 my-2 border-t-2"></div>
+                                <!-- Course time -->
+                              
+                                <div *ngFor="let player of flight.members" class="flex items-center mt-2 leading-10 text-xl text-secondary">
+                                    <mat-icon class="icon-size-5 text-hint"
+                                        [svgIcon]="'heroicons_solid:user-group'"></mat-icon>
+                                    <div class="ml-1.5">
+                                        {{ player.PlayerQL.fullName}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
         </div>
         <ng-template #noContacts>
             <div class="flex flex-auto flex-col items-center justify-center dark:bg-transparent">

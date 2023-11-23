@@ -18,7 +18,9 @@
                     Leaderboard
                 </div>
             </div>
+
             <div class="col-span-1 logo-3 w-56 ml-44 h-25 flex items-center justify-center overflow-hidden">
+
                 <img class="object-cover" src="assets/images/logo/{{ clubLogo }}" alt="Club-Logo" />
             </div>
 
@@ -38,6 +40,7 @@
             </div>
         </div>
     </div>
+
     <div *ngIf="!isLoading" class="mt-8">
         <ng-container [ngSwitch]="matchFormat">
             <ng-container *ngSwitchCase="'STROKE_PLAY'">
@@ -62,6 +65,8 @@
                 <app-scramble [data]="Leaderboard"></app-scramble>
             </ng-container>
         </ng-container>
+
+   
     </div>
 
     <div class="outer-spinner" *ngIf="isLoading">

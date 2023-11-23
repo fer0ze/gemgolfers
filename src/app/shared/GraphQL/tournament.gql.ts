@@ -1747,6 +1747,16 @@ export const RoundScoreQLA = gql`
         }
     }
 `;
+export const getPlayerScorebyIDQLA = gql`
+    query ClubSingleRoundFlightsQuery($id: String!) {
+        score(where: {_and: [{playerId: {_eq: $id}},{updatedAt: {_gte: "2023-09-10T00:00:00Z", _lt: "2023-09-11T00:00:00Z"}},,{hole: {courseId: {_eq: "-Nd_BBNwmiEvFbyR-Qtz"}}}]}) {
+            hole {
+              holeNo
+            }
+            grossScore
+          }
+    }
+`;
 export const updateTournamentFlightSettings = gql`
     mutation updateTournamentFlightSettings(
         $where: tournament_member_category_bool_exp!

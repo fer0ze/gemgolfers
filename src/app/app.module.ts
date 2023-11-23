@@ -22,8 +22,6 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
 import { GlobalErrorHandler } from './errorhandler.module';
 
-
-
 @NgModule({
     declarations: [AppComponent],
     imports: [

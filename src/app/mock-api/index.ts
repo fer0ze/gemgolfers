@@ -24,6 +24,10 @@ export const mockApiServices = [
     // NotesMockApi,
     // NotificationsMockApi,
     ProjectMockApi,
+    // NotesMockApi,
+    // NotificationsMockApi,
+    // ProjectMockApi,
+
     // SearchMockApi,
     // ScrumboardMockApi,
     // ShortcutsMockApi,

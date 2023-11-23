@@ -106,9 +106,13 @@ export class AddDailyRoundComponent implements OnInit {
             this.route.paramMap.subscribe((params) => {
                 this.playerID = params.get('id');
             });
-
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.tournamentID = UniqueIdGenerator.generate();
+        this.route.paramMap.subscribe((params) => {
+            this.playerID = params.get('id');
+        });
+
+
 
             if (this.loggedInuser) {
                 let clubInfo: any =
@@ -424,7 +428,34 @@ export class AddDailyRoundComponent implements OnInit {
                             }
                         );
 
-                        return;
+                founded = this.tournamentMembers.filter((a) => {
+                    return a.id == player[0].id;
+                });
+                console.log(founded);
+
+                if (founded.length == 0) {
+                    if (this.flightMembers.length > 4) {
+                        this.snackBar.open(
+                            "Maximum 5 players are allowed per flight.",
+                            "x",
+                            {
+                                duration: 5000,
+                            }
+                        );
+
+                        return false;
+                    }
+
+                    let member: any = {
+                        playerId: player[0].id,
+
+                        attendance: true,
+                    };
+
+                    this.flightMembers.push(member);
+                    let playerTee = player[0].playerCategory;
+                    if (playerTee == 'Senior Amateurs') {
+                        playerTee = 'Seniors';
                     }
 
                     founded = this.tournamentMembers.filter((a) => {
@@ -503,26 +534,46 @@ export class AddDailyRoundComponent implements OnInit {
                                     'yyyy-MM-dd'
                                 )
                             );
+                        if (founded && founded.length > 0) {
+                            this.snackBar.open(
+                                'Player already played in a round today.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
 
-                            let founded =
-                                await this.facadeService.getPlayerTodayRound(
-                                    result.player.id,
-                                    this.datepipe.transform(
-                                        date.toString(),
-                                        'yyyy-MM-dd'
-                                    )
-                                );
+                            return;
+                        }
 
-                            if (founded && founded.length > 0) {
-                                this.snackBar.open(
-                                    'Player already played in a round today.',
-                                    'x',
-                                    {
-                                        duration: 5000,
-                                    }
-                                );
+                        founded = this.tournamentMembers.filter((a) => {
+                            return a.id == result.player.id;
+                        });
+                        console.log(founded);
 
-                                return;
+                        if (founded.length == 0) {
+                            if (this.flightMembers.length > 4) {
+                              this.snackBar.open(
+                                "Maximum 5 players are allowed per flight.",
+                                "x",
+                                {
+                                  duration: 5000,
+                                }
+                              );
+
+                              return false;
+                            }
+
+                            let member: any = {
+                                playerId: result.player.id,
+                                attendance: false,
+                            };
+
+                            console.log(this.flightMembers);
+                            console.log(this.tournamentMembers);
+                            let playerTee = result.player.playerCategory;
+                            if (playerTee == 'Senior Amateurs') {
+                                playerTee = 'Seniors';
                             }
 
                             founded = this.tournamentMembers.filter((a) => {

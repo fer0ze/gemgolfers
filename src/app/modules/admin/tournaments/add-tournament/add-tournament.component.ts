@@ -302,6 +302,7 @@ export class AddTournamentComponent implements OnInit {
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
+
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
@@ -331,8 +332,8 @@ export class AddTournamentComponent implements OnInit {
                         this.loggedInuser.userRole > 1
                             ? this.loggedInuser.membership.length > 0
                                 ? this.loggedInuser.membership[0].club.name
-                                : ''
-                            : '',
+                                : this.loggedInuser.adminClubId
+                            : this.loggedInuser.adminClubId,
                         [Validators.required, RequireMatch],
                     ],
                     courseInfo: this._formBuilder.array([
@@ -397,7 +398,7 @@ export class AddTournamentComponent implements OnInit {
         let playerCategoryList = this.facadeService.getPlayerCategories();
         console.log(playerCategoryList);
 
-        this._courseHoles = this.facadeService.getCourseHoles('');
+        //this._courseHoles = this.facadeService.getCourseHoles('');
 
         let today: Date = new Date();
         let dd = String(today.getDate()).padStart(2, '0');
@@ -447,12 +448,12 @@ export class AddTournamentComponent implements OnInit {
                     teamMatch: this.currentTournament.teamMatch == true ? '2' : '1',
                     courseHoleSet:
                         this.currentTournament.courseHoleSets +
+
                         '_' +
                         this.currentTournament.courseHoleSetsInverted,
                     scoreManagement: this.currentTournament.scoreManagement,
                     marshalStart: this.currentTournament.marshalsStartWith,
                     noofMarshals: this.currentTournament.noOfMarshals,
-
                 });
                 if (this.currentTournament.scoreManagement != Constants.SM_ONLY_PLAYERS) {
                     this.isMarshals = true;
@@ -511,10 +512,12 @@ export class AddTournamentComponent implements OnInit {
                     }
                 }
 
-                let selectedClubId: string =
-                    this.loggedInuser.userRole > 1
-                        ? this.loggedInuser.adminClubId
-                        : this.currentTournament.clubId;
+                let selectedClubId: string;
+                if (this.loggedInuser.userRole > 1 && this.loggedInuser.adminClubId) {
+                    selectedClubId = this.loggedInuser.adminClubId
+                } else if (this.loggedInuser.userRole == 1 && this.loggedInuser.adminClubId) {
+                    selectedClubId = this.loggedInuser.adminClubId
+                }
                 this.clubMembers = [];
                 console.log(selectedClubId);
                 let clubMembersData: any =
@@ -595,12 +598,14 @@ export class AddTournamentComponent implements OnInit {
                                 this.dates.push(objA);
                             }
                         }
+
                         // let obj = {
                         //     id: 1,
                         //     name: p.name,
                         //     // playingDates: result[i]['dates'],
                         // };
                         // this.dates.push(obj);
+
                     }
 
                     let checkBoxCat: any = {
@@ -1808,6 +1813,10 @@ export class AddTournamentComponent implements OnInit {
             let tee = this.getNextFlighttee(k, index, category, flightData);
             if (tee == 10) makeInterval = true;
             else makeInterval = false;
+        } else if (FilteredFlight[0].startingHole == '1') {
+            let tee = this.getNextFlighttee(k, index, category, flightData);
+            if (tee == 1) makeInterval = true;
+            else makeInterval = false;
         }
         //console.log("2020-01-01 " + ((index == 0)? this.formArray.get([1]).value.flightStartTime : this.preFlightTime) + "");
         let dateNow: Date = new Date(
@@ -2303,8 +2312,10 @@ export class AddTournamentComponent implements OnInit {
                 this.currentTournament = tournament;
                 console.log(result);
                 if (result) {
+
                     // this.valid2.reset();
                     this.setState(this.valid2, false);
+
                     if (
                         this.showSubtournament == true
                     ) {
@@ -2753,8 +2764,10 @@ export class AddTournamentComponent implements OnInit {
                                     this.addFlightField(
                                         this.formArray
                                             .get([0])
+
                                             .get('clubctgies').value[i]
                                     );
+
                                 }
                             }
                         }

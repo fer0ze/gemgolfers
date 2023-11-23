@@ -473,10 +473,11 @@ export const getFlightPlayedAdmin = gql`
                 flightId
                 playingTee
                 playerId
-                player {
+                PlayerQL: player {
                     id
                     firstName
                     lastName
+                    fullName
                     membershipNumber
                     playerCategory
                 }

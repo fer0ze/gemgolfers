@@ -1,32 +1,18 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
   production: false,
   debugging: false,
-  apiUrl: 'https://upright-shark-94.hasura.app/v1/graphql',
-  wsUrl: 'wss://upright-shark-94.hasura.app/v1/graphql',
-  apiKey: 'G618jQ1cFvfNs8ehXwdCy1cZpIHK4RHyl7rsP3hTQLo4VCdrj6yXSd5xB67SPT14',
-  logName: 'Gemgolfers-WebApp-Dev',
-  defaultRole: 'admin',
   encryptSecretKey: 'prod-gemgolfers',
+  apiUrl:'https://gemgolfers-hasura.herokuapp.com/v1/graphql',
+  wsUrl:'wss://gemgolfers-hasura.herokuapp.com/v1/graphql',
+  apiKey: 'fercjqjjpgcngydvqoze',
+  logName: 'Gemgolfers-WebApp-Prod',
+  defaultRole: 'admin',
   firebase: {
-    apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
-    authDomain: "gemtour-4c90a.firebaseapp.com",
-    databaseURL: "https://gemtour-4c90a.firebaseio.com",
-    projectId: "gemtour-4c90a",
-    storageBucket: "gemtour-4c90a.appspot.com",
-    messagingSenderId: "335312640323"
-  },
-  api: "http://localhost:18000",
+      apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
+      authDomain: "gemtour-4c90a.firebaseapp.com",
+      databaseURL: "https://gemtour-4c90a.firebaseio.com",
+      projectId: "gemtour-4c90a",
+      storageBucket: "gemtour-4c90a.appspot.com",
+      messagingSenderId: "335312640323"
+    }
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

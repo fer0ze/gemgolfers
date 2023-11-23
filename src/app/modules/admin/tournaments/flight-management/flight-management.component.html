@@ -1,13 +1,10 @@
-<mat-drawer-container class="flex-auto h-full dark:bg-transparent"
-    ><div>
-        <mat-tab-group
-            class="sm:px-2"
-            [animationDuration]="'0'"
-            [selectedIndex]="selectedIndex"
-            (selectedTabChange)="changeRound($event)"
-        >
+<mat-drawer-container class="flex-auto h-full dark:bg-transparent">
+    <div>
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [selectedIndex]="selectedIndex"
+            (selectedTabChange)="changeRound($event)">
             <mat-tab label="Day 1" *ngIf="noOfRounds >= 1">
                 <div class="flex justify-end mx-32">
+
                     <button
                         *ngIf="selectedMembers.length == 0"
                         class="mx-2"
@@ -23,33 +20,27 @@
                         (click)="addFlight(1)"
                     >
                         Add New Group
+
                     </button>
                 </div>
                 <ng-container>
                     <div *ngIf="selectedMembers.length > 0">
-                        <div
-                            cdkDropListGroup
-                            id="manageFlights"
-                            class="mx-32 m-4"
-                        >
+                        <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
                             <ng-container>
-                                <div
-                                    class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
+                                <div class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                                     style="
                                         box-shadow: 5px 3px 18px 2px
                                             rgb(0 0 3 / 21%);
-                                    "
-                                    *ngFor="
+                                    " *ngFor="
                                         let items of selectedMembers;
                                         let i = index;
                                         let j = index;
                                         trackBy: trackByFn
-                                    "
-                                >
+                                    ">
                                     <div
-                                        class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
-                                    >
+                                        class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
                                         <ng-container>
+
                                             <mat-form-field
                                                 class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                                 [floatLabel]="'always'"
@@ -66,31 +57,18 @@
                                                 >
                                                 <input
                                                     value="{{
+
                                                         items['flightNo']
-                                                    }}"
-                                                    matInput
-                                                    id="flight_{{ j }}_number"
-                                                    #query
-                                                />
+                                                    }}" matInput id="flight_{{ j }}_number" #query />
                                             </mat-form-field>
                                         </ng-container>
                                         <ng-container>
-                                            <mat-form-field
-                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                *ngIf="this.showTeams"
-                                            >
-                                                <span
-                                                    class="text-base font-black text-gray-400 min-w-max"
-                                                    >Name:</span
-                                                >
-                                                <input
-                                                    matInput
-                                                    value="{{
+                                            <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                *ngIf="this.showTeams">
+                                                <span class="text-base font-black text-gray-400 min-w-max">Name:</span>
+                                                <input matInput value="{{
                                                         items['firstName']
-                                                    }}"
-                                                    id="flight_{{ j }}_name"
-                                                    #query
-                                                />
+                                                    }}" id="flight_{{ j }}_name" #query />
                                             </mat-form-field>
                                         </ng-container>
                                         <!-- <ng-container>
@@ -112,256 +90,142 @@
                                             </mat-form-field>
                                         </ng-container> -->
                                         <ng-container>
-                                            <mat-form-field
-                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
-                                            >
-                                                <mat-select
-                                                    class="w-100"
-                                                    id="flight_{{ j }}_tee"
-                                                    value="{{ items['tee'] }}"
-                                                    (selectionChange)="
+                                            <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2">
+                                                <mat-select class="w-100" id="flight_{{ j }}_tee"
+                                                    value="{{ items['tee'] }}" (selectionChange)="
                                                         selectedTee(
                                                             $event,
                                                             items.id
                                                         )
-                                                    "
-                                                >
+                                                    ">
                                                     <ng-container>
-                                                        <mat-option
-                                                            value="AMATEURS"
-                                                            >Amateurs</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="LADIES"
-                                                            >Ladies</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="SENIORS"
-                                                            >Seniors</mat-option
-                                                        >
-                                                        <mat-option
-                                                            value="PROFESSIONALS"
-                                                            >Professionals</mat-option
-                                                        >
+                                                        <mat-option value="AMATEURS">Amateurs</mat-option>
+                                                        <mat-option value="LADIES">Ladies</mat-option>
+                                                        <mat-option value="SENIORS">Seniors</mat-option>
+                                                        <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                                     </ng-container>
                                                 </mat-select>
                                             </mat-form-field>
                                         </ng-container>
                                         <ng-container>
-                                            <mat-form-field
-                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                [floatLabel]="'always'"
-                                            >
-                                                <span
-                                                    class="text-base font-black text-gray-400 min-w-max"
-                                                    >Tee:</span
-                                                >
-                                                <input
-                                                    id="flight_{{ j }}_hole"
-                                                    value="{{
+                                            <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                [floatLabel]="'always'">
+                                                <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                                <input id="flight_{{ j }}_hole" value="{{
                                                         items['startingHole']
-                                                    }}"
-                                                    matInput
-                                                    #query
-                                                />
+                                                    }}" matInput #query />
                                             </mat-form-field>
                                         </ng-container>
                                         <ng-container>
-                                            <mat-form-field
-                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                [floatLabel]="'always'"
-                                            >
-                                                <mat-icon
-                                                    matPrefix
-                                                    class="icon-size-5"
-                                                    [svgIcon]="
+                                            <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                [floatLabel]="'always'">
+                                                <mat-icon matPrefix class="icon-size-5" [svgIcon]="
                                                         'heroicons_solid:clock'
-                                                    "
-                                                ></mat-icon>
-                                                <input
-                                                    type="time"
-                                                    id="flight_{{ j }}_time"
-                                                    atp-time-picker
-                                                    value="{{
-                                                        getNextFlightTime(items)
-                                                    }}"
-                                                    matInput
-                                                    #query
-                                                />
+                                                    "></mat-icon>
+                                                <input type="time" id="flight_{{ j }}_time" atp-time-picker value="{{
+                                                        getNextFlightTime(i,j,items)
+                                                    }}" matInput #query />
                                             </mat-form-field>
                                         </ng-container>
                                         <div class="flex">
-                                            <button
-                                                mat-raised-button
-                                                color="primary"
-                                                color="primary"
-                                                (click)="
+                                            <button mat-raised-button color="primary" color="primary" (click)="
                                                     editFlight(items.id, i)
-                                                "
-                                            >
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="
+                                                ">
+                                                <mat-icon class="icon-size-5" [svgIcon]="
                                                         'heroicons_solid:pencil-alt'
-                                                    "
-                                                ></mat-icon>
-                                                <span class="ml-2"
-                                                    >Add New Member</span
-                                                >
+                                                    "></mat-icon>
+                                                <span class="ml-2">Add New Member</span>
                                             </button>
-                                            <span
-                                                class="flex items-center -mr-6 cursor-pointer"
-                                                *ngIf="items.length == 0"
-                                            >
-                                                <mat-icon
-                                                    aria-hidden="false"
-                                                    aria-label="Dragable"
-                                                    color="warn"
+                                            <span class="flex items-center -mr-6 cursor-pointer"
+                                                *ngIf="items.length == 0">
+                                                <mat-icon aria-hidden="false" aria-label="Dragable" color="warn"
                                                     (click)="
                                                         deleteEmptyFlight(
                                                             items.id,
                                                             i
                                                         )
-                                                    "
-                                                    >delete_forever</mat-icon
-                                                >
+                                                    ">delete_forever</mat-icon>
                                             </span>
                                         </div>
                                     </div>
-                                    <div
-                                        cdkDropList
-                                        [cdkDropListData]="items"
-                                        (cdkDropListDropped)="drop($event)"
-                                        class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card"
-                                    >
+                                    <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"
+                                        class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
                                         <div class="moveableList">
-                                            <div
-                                                class="moveableFlights"
-                                                *ngFor="
+                                            <div class="moveableFlights" *ngFor="
                                                     let item of items;
                                                     let j = index
-                                                "
-                                                cdkDrag
-                                                [cdkDragData]="item"
-                                            >
-                                                <table
-                                                    class="overflow-y-visible"
-                                                    width="100%"
-                                                >
+                                                " cdkDrag [cdkDragData]="item">
+                                                <table class="overflow-y-visible" width="100%">
                                                     <tr>
                                                         <td width="20%">
-                                                            <span
-                                                                class="font-medium text-base"
-                                                                >{{
-                                                                    item[
-                                                                        "firstName"
-                                                                    ]
-                                                                }}</span
-                                                            >
+                                                            <span class="font-medium text-base">{{
+                                                                item[
+                                                                "firstName"
+                                                                ]
+                                                                }}</span>
                                                         </td>
                                                         <td width="20%">
-                                                            <span
-                                                                class="font-medium text-base"
-                                                                >{{
-                                                                    item[
-                                                                        "lastName"
-                                                                    ]
-                                                                }}</span
-                                                            >
+                                                            <span class="font-medium text-base">{{
+                                                                item[
+                                                                "lastName"
+                                                                ]
+                                                                }}</span>
                                                         </td>
                                                         <td width="10%">
-                                                            <span
-                                                                class="font-medium text-base"
-                                                                >{{
-                                                                    item[
-                                                                        "handicap"
-                                                                    ]
-                                                                }}</span
-                                                            >
+                                                            <span class="font-medium text-base">{{
+                                                                item[
+                                                                "handicap"
+                                                                ]
+                                                                }}</span>
                                                         </td>
                                                         <td width="20%">
-                                                            <span
-                                                                class="font-medium text-base"
-                                                                >{{
-                                                                    item[
-                                                                        "playerCategory"
-                                                                    ]
-                                                                }}</span
-                                                            >
+                                                            <span class="font-medium text-base">{{
+                                                                item[
+                                                                "playerCategory"
+                                                                ]
+                                                                }}</span>
                                                         </td>
                                                         <td width="20%">
-                                                            <mat-form-field
-                                                                class="fuse-mat-no-subscript py-1"
-                                                            >
-                                                                <mat-select
-                                                                    placeholder="Flight Tee"
-                                                                    type="text"
-                                                                    value="{{
+                                                            <mat-form-field class="fuse-mat-no-subscript py-1">
+                                                                <mat-select placeholder="Flight Tee" type="text" value="{{
                                                                         item[
                                                                             'playingTee'
                                                                         ]
-                                                                    }}"
-                                                                    (selectionChange)="
+                                                                    }}" (selectionChange)="
                                                                         selectedPlayerTee(
                                                                             $event,
                                                                             item.id
                                                                         )
-                                                                    "
-                                                                    style="
+                                                                    " style="
                                                                         width: 100%;
                                                                         color: white;
-                                                                    "
-                                                                >
+                                                                    ">
+                                                                    <mat-option value="AMATEURS">Amateurs</mat-option>
+                                                                    <mat-option value="LADIES">Ladies</mat-option>
+                                                                    <mat-option value="SENIORS">Seniors</mat-option>
                                                                     <mat-option
-                                                                        value="AMATEURS"
-                                                                        >Amateurs</mat-option
-                                                                    >
-                                                                    <mat-option
-                                                                        value="LADIES"
-                                                                        >Ladies</mat-option
-                                                                    >
-                                                                    <mat-option
-                                                                        value="SENIORS"
-                                                                        >Seniors</mat-option
-                                                                    >
-                                                                    <mat-option
-                                                                        value="PROFESSIONALS"
-                                                                        >Professionals</mat-option
-                                                                    >
+                                                                        value="PROFESSIONALS">Professionals</mat-option>
                                                                 </mat-select>
                                                             </mat-form-field>
                                                         </td>
-                                                        <td
-                                                            width="10%"
-                                                            style="
+                                                        <td width="10%" style="
                                                                 text-align: right;
-                                                            "
-                                                        >
+                                                            ">
                                                             <span>
-                                                                <mat-icon
-                                                                    aria-hidden="false"
-                                                                    aria-label="Dragable"
-                                                                    class="remove primary-foreground"
-                                                                    (click)="
+                                                                <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                                    class="remove primary-foreground" (click)="
                                                                         removePlayer(
                                                                             i,
                                                                             j
                                                                         )
-                                                                    "
-                                                                    >delete_forever</mat-icon
-                                                                >
-                                                                <mat-icon
-                                                                    aria-hidden="false"
-                                                                    aria-label="Dragable"
-                                                                    class="remove primary-foreground"
-                                                                    (click)="
+                                                                    ">delete_forever</mat-icon>
+                                                                <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                                    class="remove primary-foreground" (click)="
                                                                         movePlayer(
                                                                             i,
                                                                             j
                                                                         )
-                                                                    "
-                                                                    >edit</mat-icon
-                                                                >
+                                                                    ">edit</mat-icon>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -373,54 +237,37 @@
                             </ng-container>
                         </div>
                         <div class="flex justify-center my-3">
-                            <button
-                                mat-raised-button
-                                color="primary"
-                                (click)="saveFlights()"
-                            >
+                            <button mat-raised-button color="primary" (click)="saveFlights()">
                                 Save Changes
                             </button>
                         </div>
                     </div>
                 </ng-container>
             </mat-tab>
-            <mat-tab
-                *ngIf="noOfRounds > 1"
-                label="Day 2"
-                [disabled]="activeRound < 2"
-            >
+            <mat-tab *ngIf="noOfRounds > 1" label="Day 2" [disabled]="activeRound < 2">
                 <div class="flex justify-end mx-32">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="addFlight(2)"
-                    >
+                    <button mat-raised-button color="primary" (click)="addFlight(2)">
                         Add New Flight
                     </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
-                        <div
-                            *ngFor="
+                        <div *ngFor="
                                 let items of selectedMembers;
                                 let i = index;
                                 let j = index
-                            "
-                            class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
+                            " class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
-                            "
-                        >
+                            ">
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
-                            >
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
                         >
                         <span *ngIf="this.showTeams"
                             >Team: {{ i + 1 }}</span
                         > -->
-
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
                                     [floatLabel]="'always'"
@@ -441,114 +288,51 @@
                                         matInput
                                         #query
                                     />
+
                                 </mat-form-field>
-                                <mat-form-field
-                                    *ngIf="this.showTeams"
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Name:</span
-                                    >
-                                    <input
-                                        type="text"
-                                        placeholder="Team Name"
-                                        id="flight_{{ j }}_name"
-                                        value="{{ items['firstName'] }}"
-                                        #query
-                                        matInput
-                                    />
+                                <mat-form-field *ngIf="this.showTeams" class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                    [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Name:</span>
+                                    <input type="text" placeholder="Team Name" id="flight_{{ j }}_name"
+                                        value="{{ items['firstName'] }}" #query matInput />
                                 </mat-form-field>
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
-                                >
-                                    <mat-select
-                                        class="w-100"
-                                        id="flight_{{ j }}_tee"
-                                        value="{{ items['tee'] }}"
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2">
+                                    <mat-select class="w-100" id="flight_{{ j }}_tee" value="{{ items['tee'] }}"
                                         (selectionChange)="
                                             selectedTee($event, items.id)
-                                        "
-                                    >
+                                        ">
                                         <ng-container>
-                                            <mat-option value="AMATEURS"
-                                                >Amateurs</mat-option
-                                            >
-                                            <mat-option value="LADIES"
-                                                >Ladies</mat-option
-                                            >
-                                            <mat-option value="SENIORS"
-                                                >Seniors</mat-option
-                                            >
-                                            <mat-option value="PROFESSIONALS"
-                                                >Professionals</mat-option
-                                            >
+                                            <mat-option value="AMATEURS">Amateurs</mat-option>
+                                            <mat-option value="LADIES">Ladies</mat-option>
+                                            <mat-option value="SENIORS">Seniors</mat-option>
+                                            <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                         </ng-container>
                                     </mat-select>
                                 </mat-form-field>
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Tee:</span
-                                    >
-                                    <input
-                                        id="flight_{{ j }}_hole"
-                                        value="{{ items['startingHole'] }}"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                    <input id="flight_{{ j }}_hole" value="{{ items['startingHole'] }}" matInput
+                                        #query />
                                 </mat-form-field>
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:clock'"
-                                    ></mat-icon>
-                                    <input
-                                        type="time"
-                                        id="flight_{{ j }}_time"
-                                        atp-time-picker
-                                        value="{{ getNextFlightTime(items) }}"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <mat-icon matPrefix class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                    <input type="time" id="flight_{{ j }}_time" atp-time-picker
+                                        value="{{ getNextFlightTime(items) }}" matInput #query />
                                 </mat-form-field>
                                 <div class="flex">
-                                    <button
-                                        mat-raised-button
-                                        color="primary"
-                                        color="primary"
-                                        (click)="editFlight(items.id, i)"
-                                    >
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="
+                                    <button mat-raised-button color="primary" color="primary"
+                                        (click)="editFlight(items.id, i)">
+                                        <mat-icon class="icon-size-5" [svgIcon]="
                                                 'heroicons_solid:add-member'
-                                            "
-                                        ></mat-icon>
+                                            "></mat-icon>
                                         <span class="ml-2">Add New Member</span>
                                     </button>
-                                    <span
-                                        class="flex items-center px-1 cursor-pointer"
-                                        *ngIf="items.length == 0"
-                                    >
-                                        <mat-icon
-                                            aria-hidden="false"
-                                            aria-label="Dragable"
-                                            color="warn"
-                                            (click)="
+                                    <span class="flex items-center px-1 cursor-pointer" *ngIf="items.length == 0">
+                                        <mat-icon aria-hidden="false" aria-label="Dragable" color="warn" (click)="
                                                 deleteEmptyFlight(items.id, i)
-                                            "
-                                            >delete_forever</mat-icon
-                                        >
+                                            ">delete_forever</mat-icon>
                                     </span>
                                 </div>
                                 <!-- <span
@@ -600,116 +384,71 @@
                         </span> -->
                                 <!-- <button mat-raised-button (click)="saveFlight(i)">Save</button> -->
                             </div>
-                            <div
-                                cdkDropList
-                                [cdkDropListData]="items"
-                                (cdkDropListDropped)="drop($event)"
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card"
-                            >
+                            <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
                                 <div class="moveableList">
-                                    <div
-                                        class="moveableFlights"
-                                        *ngFor="
+                                    <div class="moveableFlights" *ngFor="
                                             let item of items;
                                             let j = index
-                                        "
-                                        cdkDrag
-                                        [cdkDragData]="item"
-                                    >
+                                        " cdkDrag [cdkDragData]="item">
                                         <!-- <span><mat-checkbox id="player_{{item.id}}" (change)="OnChange($event, i, j)" [checked]="item['attendance']"></mat-checkbox></span> -->
-                                        <table
-                                            class="overflow-y-visible"
-                                            width="100%"
-                                        >
+                                        <table class="overflow-y-visible" width="100%">
                                             <tr>
                                                 <td width="13%">
                                                     <span class="font-medium">{{
                                                         item["firstName"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="13%">
                                                     <span class="font-medium">{{
                                                         item["lastName"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="10%">
                                                     <span class="font-medium">{{
                                                         item["handicap"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="25%">
                                                     <span class="font-medium">{{
                                                         item["playerCategory"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="23%">
-                                                    <mat-form-field
-                                                        class="fuse-mat-no-subscript py-1"
-                                                    >
-                                                        <mat-select
-                                                            placeholder="Flight Tee"
-                                                            type="text"
-                                                            value="{{
+                                                    <mat-form-field class="fuse-mat-no-subscript py-1">
+                                                        <mat-select placeholder="Flight Tee" type="text" value="{{
                                                                 item[
                                                                     'playingTee'
                                                                 ]
-                                                            }}"
-                                                            (selectionChange)="
+                                                            }}" (selectionChange)="
                                                                 selectedPlayerTee(
                                                                     $event,
                                                                     item.id
                                                                 )
-                                                            "
-                                                            style="
+                                                            " style="
                                                                 width: 100%;
                                                                 color: white;
-                                                            "
-                                                        >
-                                                            <mat-option
-                                                                value="AMATEURS"
-                                                                >Amateurs</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="LADIES"
-                                                                >Ladies</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="SENIORS"
-                                                                >Seniors</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="PROFESSIONALS"
-                                                                >Professionals</mat-option
-                                                            >
+                                                            ">
+                                                            <mat-option value="AMATEURS">Amateurs</mat-option>
+                                                            <mat-option value="LADIES">Ladies</mat-option>
+                                                            <mat-option value="SENIORS">Seniors</mat-option>
+                                                            <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
                                                 </td>
-                                                <td
-                                                    width="16%"
-                                                    style="text-align: right"
-                                                >
+                                                <td width="16%" style="text-align: right">
                                                     <span>
-                                                        <mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                        <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 removePlayer(
                                                                     i,
                                                                     j
                                                                 )
-                                                            "
-                                                            >delete_forever</mat-icon
-                                                        >
-                                                        <mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                            ">delete_forever</mat-icon>
+                                                        <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 movePlayer(i, j)
-                                                            "
-                                                            >edit</mat-icon
-                                                        >
+                                                            ">edit</mat-icon>
                                                     </span>
                                                 </td>
                                             </tr>
@@ -720,52 +459,37 @@
                         </div>
                     </div>
                     <div class="flex justify-center my-3">
-                        <button
-                            mat-raised-button
-                            color="primary"
-                            (click)="saveFlights()"
-                        >
+                        <button mat-raised-button color="primary" (click)="saveFlights()">
                             Save Changes
                         </button>
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab
-                *ngIf="noOfRounds > 2"
-                label="Day 3"
-                [disabled]="activeRound < 3"
-            >
+            <mat-tab *ngIf="noOfRounds > 2" label="Day 3" [disabled]="activeRound < 3">
                 <div class="flex justify-end mx-32">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="addFlight(3)"
-                    >
+                    <button mat-raised-button color="primary" (click)="addFlight(3)">
                         Add New Flight
                     </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
-                        <div
-                            *ngFor="
+                        <div *ngFor="
                                 let items of selectedMembers;
                                 let i = index;
                                 let j = index
-                            "
-                            class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
+                            " class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
-                            "
-                        >
+                            ">
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
-                            >
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
                         >
                         <span *ngIf="this.showTeams"
                             >Team: {{ i + 1 }}</span
                         > -->
+
 
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
@@ -781,98 +505,45 @@
                                         matInput
                                         #query
                                     />
+
                                 </mat-form-field>
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
-                                >
-                                    <mat-select
-                                        class="w-100"
-                                        id="flight_{{ j }}_tee"
-                                        value="{{ items['tee'] }}"
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2">
+                                    <mat-select class="w-100" id="flight_{{ j }}_tee" value="{{ items['tee'] }}"
                                         (selectionChange)="
                                             selectedTee($event, items.id)
-                                        "
-                                    >
+                                        ">
                                         <ng-container>
-                                            <mat-option value="AMATEURS"
-                                                >Amateurs</mat-option
-                                            >
-                                            <mat-option value="LADIES"
-                                                >Ladies</mat-option
-                                            >
-                                            <mat-option value="SENIORS"
-                                                >Seniors</mat-option
-                                            >
-                                            <mat-option value="PROFESSIONALS"
-                                                >Professionals</mat-option
-                                            >
+                                            <mat-option value="AMATEURS">Amateurs</mat-option>
+                                            <mat-option value="LADIES">Ladies</mat-option>
+                                            <mat-option value="SENIORS">Seniors</mat-option>
+                                            <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                         </ng-container>
                                     </mat-select>
                                 </mat-form-field>
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Tee:</span
-                                    >
-                                    <input
-                                        id="flight_{{ j }}_hole"
-                                        value="{{ items['startingHole'] }}"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                    <input id="flight_{{ j }}_hole" value="{{ items['startingHole'] }}" matInput
+                                        #query />
                                 </mat-form-field>
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:clock'"
-                                    ></mat-icon>
-                                    <input
-                                        type="time"
-                                        id="flight_{{ j }}_time"
-                                        atp-time-picker
-                                        value="{{ getNextFlightTime(items) }}"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <mat-icon matPrefix class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                    <input type="time" id="flight_{{ j }}_time" atp-time-picker
+                                        value="{{ getNextFlightTime(items) }}" matInput #query />
                                 </mat-form-field>
                                 <div class="flex">
-                                    <button
-                                        mat-raised-button
-                                        color="primary"
-                                        color="primary"
-                                        (click)="editFlight(items.id, i)"
-                                    >
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="
+                                    <button mat-raised-button color="primary" color="primary"
+                                        (click)="editFlight(items.id, i)">
+                                        <mat-icon class="icon-size-5" [svgIcon]="
                                                 'heroicons_solid:add-member'
-                                            "
-                                        ></mat-icon>
-                                        <span class="ml-2 text-gay-900"
-                                            >Add New Member</span
-                                        >
+                                            "></mat-icon>
+                                        <span class="ml-2 text-gay-900">Add New Member</span>
                                     </button>
-                                    <span
-                                        class="flex items-center px-1 cursor-pointer"
-                                        *ngIf="items.length == 0"
-                                    >
-                                        <mat-icon
-                                            aria-hidden="false"
-                                            aria-label="Dragable"
-                                            color="warn"
-                                            (click)="
+                                    <span class="flex items-center px-1 cursor-pointer" *ngIf="items.length == 0">
+                                        <mat-icon aria-hidden="false" aria-label="Dragable" color="warn" (click)="
                                                 deleteEmptyFlight(items.id, i)
-                                            "
-                                            >delete_forever</mat-icon
-                                        >
+                                            ">delete_forever</mat-icon>
                                     </span>
                                 </div>
 
@@ -925,116 +596,71 @@
                         </span> -->
                                 <!-- <button mat-raised-button (click)="saveFlight(i)">Save</button> -->
                             </div>
-                            <div
-                                cdkDropList
-                                [cdkDropListData]="items"
-                                (cdkDropListDropped)="drop($event)"
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card"
-                            >
+                            <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
                                 <div class="moveableList">
-                                    <div
-                                        class="moveableFlights"
-                                        *ngFor="
+                                    <div class="moveableFlights" *ngFor="
                                             let item of items;
                                             let j = index
-                                        "
-                                        cdkDrag
-                                        [cdkDragData]="item"
-                                    >
+                                        " cdkDrag [cdkDragData]="item">
                                         <!-- <span><mat-checkbox id="player_{{item.id}}" (change)="OnChange($event, i, j)" [checked]="item['attendance']"></mat-checkbox></span> -->
-                                        <table
-                                            class="overflow-y-visible"
-                                            width="100%"
-                                        >
+                                        <table class="overflow-y-visible" width="100%">
                                             <tr>
                                                 <td width="13%">
                                                     <span class="font-medium">{{
                                                         item["firstName"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="13%">
                                                     <span class="font-medium">{{
                                                         item["lastName"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="10%">
                                                     <span class="font-medium">{{
                                                         item["handicap"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="25%">
                                                     <span class="font-medium">{{
                                                         item["playerCategory"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="23%">
-                                                    <mat-form-field
-                                                        class="fuse-mat-no-subscript py-1"
-                                                    >
-                                                        <mat-select
-                                                            placeholder="Flight Tee"
-                                                            type="text"
-                                                            value="{{
+                                                    <mat-form-field class="fuse-mat-no-subscript py-1">
+                                                        <mat-select placeholder="Flight Tee" type="text" value="{{
                                                                 item[
                                                                     'playingTee'
                                                                 ]
-                                                            }}"
-                                                            (selectionChange)="
+                                                            }}" (selectionChange)="
                                                                 selectedPlayerTee(
                                                                     $event,
                                                                     item.id
                                                                 )
-                                                            "
-                                                            style="
+                                                            " style="
                                                                 width: 100%;
                                                                 color: white;
-                                                            "
-                                                        >
-                                                            <mat-option
-                                                                value="AMATEURS"
-                                                                >Amateurs</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="LADIES"
-                                                                >Ladies</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="SENIORS"
-                                                                >Seniors</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="PROFESSIONALS"
-                                                                >Professionals</mat-option
-                                                            >
+                                                            ">
+                                                            <mat-option value="AMATEURS">Amateurs</mat-option>
+                                                            <mat-option value="LADIES">Ladies</mat-option>
+                                                            <mat-option value="SENIORS">Seniors</mat-option>
+                                                            <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
                                                 </td>
-                                                <td
-                                                    width="16%"
-                                                    style="text-align: right"
-                                                >
+                                                <td width="16%" style="text-align: right">
                                                     <span>
-                                                        <mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                        <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 removePlayer(
                                                                     i,
                                                                     j
                                                                 )
-                                                            "
-                                                            >delete_forever</mat-icon
-                                                        >
-                                                        <mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                            ">delete_forever</mat-icon>
+                                                        <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 movePlayer(i, j)
-                                                            "
-                                                            >edit</mat-icon
-                                                        >
+                                                            ">edit</mat-icon>
                                                     </span>
                                                 </td>
                                             </tr>
@@ -1045,52 +671,37 @@
                         </div>
                     </div>
                     <div class="flex justify-center my-3">
-                        <button
-                            mat-raised-button
-                            color="primary"
-                            (click)="saveFlights()"
-                        >
+                        <button mat-raised-button color="primary" (click)="saveFlights()">
                             Save Changes
                         </button>
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab
-                *ngIf="noOfRounds > 3"
-                label="Day 4"
-                [disabled]="activeRound < 4"
-            >
+            <mat-tab *ngIf="noOfRounds > 3" label="Day 4" [disabled]="activeRound < 4">
                 <div class="flex justify-end mx-32">
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="addFlight(4)"
-                    >
+                    <button mat-raised-button color="primary" (click)="addFlight(4)">
                         Add New Flight
                     </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
-                        <div
-                            *ngFor="
+                        <div *ngFor="
                                 let items of selectedMembers;
                                 let i = index;
                                 let j = index
-                            "
-                            class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
+                            " class="grid grid-cols-5 sm:grid-cols-2 mb-10 md:grid-cols-5 w-full min-w-0 rounded-2xl"
                             style="
                                 box-shadow: 5px 3px 18px 2px rgb(0 0 3 / 21%);
-                            "
-                        >
+                            ">
                             <div
-                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6"
-                            >
+                                class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
                                 <!-- <span class="fuse-mat-no-subscript  sm:w-36" *ngIf="!this.showTeams"
                             >Flight: {{ i + 1 }}</span
                         >
                         <span *ngIf="this.showTeams"
                             >Team: {{ i + 1 }}</span
                         > -->
+
 
                                 <mat-form-field
                                     class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
@@ -1106,96 +717,45 @@
                                         matInput
                                         #query
                                     />
+
                                 </mat-form-field>
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2"
-                                >
-                                    <mat-select
-                                        class="w-100"
-                                        id="flight_{{ j }}_tee"
-                                        value="{{ items['tee'] }}"
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0 mb-2">
+                                    <mat-select class="w-100" id="flight_{{ j }}_tee" value="{{ items['tee'] }}"
                                         (selectionChange)="
                                             selectedTee($event, items.id)
-                                        "
-                                    >
+                                        ">
                                         <ng-container>
-                                            <mat-option value="AMATEURS"
-                                                >Amateurs</mat-option
-                                            >
-                                            <mat-option value="LADIES"
-                                                >Ladies</mat-option
-                                            >
-                                            <mat-option value="SENIORS"
-                                                >Seniors</mat-option
-                                            >
-                                            <mat-option value="PROFESSIONALS"
-                                                >Professionals</mat-option
-                                            >
+                                            <mat-option value="AMATEURS">Amateurs</mat-option>
+                                            <mat-option value="LADIES">Ladies</mat-option>
+                                            <mat-option value="SENIORS">Seniors</mat-option>
+                                            <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                         </ng-container>
                                     </mat-select>
                                 </mat-form-field>
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Tee:</span
-                                    >
-                                    <input
-                                        id="flight_{{ j }}_hole"
-                                        value="{{ items['startingHole'] }}"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Tee:</span>
+                                    <input id="flight_{{ j }}_hole" value="{{ items['startingHole'] }}" matInput
+                                        #query />
                                 </mat-form-field>
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <mat-icon
-                                        matPrefix
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:clock'"
-                                    ></mat-icon>
-                                    <input
-                                        type="time"
-                                        id="flight_{{ j }}_time"
-                                        atp-time-picker
-                                        value="{{ getNextFlightTime(items) }}"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <mat-icon matPrefix class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                    <input type="time" id="flight_{{ j }}_time" atp-time-picker
+                                        value="{{ getNextFlightTime(items) }}" matInput #query />
                                 </mat-form-field>
                                 <div class="flex">
-                                    <button
-                                        mat-raised-button
-                                        color="primary"
-                                        color="primary"
-                                        (click)="editFlight(items.id, i)"
-                                    >
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="
+                                    <button mat-raised-button color="primary" color="primary"
+                                        (click)="editFlight(items.id, i)">
+                                        <mat-icon class="icon-size-5" [svgIcon]="
                                                 'heroicons_solid:add-member'
-                                            "
-                                        ></mat-icon>
+                                            "></mat-icon>
                                         <span class="ml-2">Add New Member</span>
                                     </button>
-                                    <span
-                                        class="flex items-center px-1 cursor-pointer"
-                                        *ngIf="items.length == 0"
-                                    >
-                                        <mat-icon
-                                            aria-hidden="false"
-                                            aria-label="Dragable"
-                                            color="warn"
-                                            (click)="
+                                    <span class="flex items-center px-1 cursor-pointer" *ngIf="items.length == 0">
+                                        <mat-icon aria-hidden="false" aria-label="Dragable" color="warn" (click)="
                                                 deleteEmptyFlight(items.id, i)
-                                            "
-                                            >delete_forever</mat-icon
-                                        >
+                                            ">delete_forever</mat-icon>
                                     </span>
                                 </div>
 
@@ -1248,116 +808,71 @@
                         </span> -->
                                 <!-- <button mat-raised-button (click)="saveFlight(i)">Save</button> -->
                             </div>
-                            <div
-                                cdkDropList
-                                [cdkDropListData]="items"
-                                (cdkDropListDropped)="drop($event)"
-                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card"
-                            >
+                            <div cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"
+                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
                                 <div class="moveableList">
-                                    <div
-                                        class="moveableFlights"
-                                        *ngFor="
+                                    <div class="moveableFlights" *ngFor="
                                             let item of items;
                                             let j = index
-                                        "
-                                        cdkDrag
-                                        [cdkDragData]="item"
-                                    >
+                                        " cdkDrag [cdkDragData]="item">
                                         <!-- <span><mat-checkbox id="player_{{item.id}}" (change)="OnChange($event, i, j)" [checked]="item['attendance']"></mat-checkbox></span> -->
-                                        <table
-                                            class="overflow-y-visible"
-                                            width="100%"
-                                        >
+                                        <table class="overflow-y-visible" width="100%">
                                             <tr>
                                                 <td width="15%">
                                                     <span class="font-medium">{{
                                                         item["firstName"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="15%">
                                                     <span class="font-medium">{{
                                                         item["lastName"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="10%">
                                                     <span class="font-medium">{{
                                                         item["handicap"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="20%">
                                                     <span class="font-medium">{{
                                                         item["playerCategory"]
-                                                    }}</span>
+                                                        }}</span>
                                                 </td>
                                                 <td width="20%">
-                                                    <mat-form-field
-                                                        class="fuse-mat-no-subscript py-1"
-                                                    >
-                                                        <mat-select
-                                                            placeholder="Flight Tee"
-                                                            type="text"
-                                                            value="{{
+                                                    <mat-form-field class="fuse-mat-no-subscript py-1">
+                                                        <mat-select placeholder="Flight Tee" type="text" value="{{
                                                                 item[
                                                                     'playingTee'
                                                                 ]
-                                                            }}"
-                                                            (selectionChange)="
+                                                            }}" (selectionChange)="
                                                                 selectedPlayerTee(
                                                                     $event,
                                                                     item.id
                                                                 )
-                                                            "
-                                                            style="
+                                                            " style="
                                                                 width: 100%;
                                                                 color: white;
-                                                            "
-                                                        >
-                                                            <mat-option
-                                                                value="AMATEURS"
-                                                                >Amateurs</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="LADIES"
-                                                                >Ladies</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="SENIORS"
-                                                                >Seniors</mat-option
-                                                            >
-                                                            <mat-option
-                                                                value="PROFESSIONALS"
-                                                                >Professionals</mat-option
-                                                            >
+                                                            ">
+                                                            <mat-option value="AMATEURS">Amateurs</mat-option>
+                                                            <mat-option value="LADIES">Ladies</mat-option>
+                                                            <mat-option value="SENIORS">Seniors</mat-option>
+                                                            <mat-option value="PROFESSIONALS">Professionals</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
                                                 </td>
-                                                <td
-                                                    width="10%"
-                                                    style="text-align: right"
-                                                >
+                                                <td width="10%" style="text-align: right">
                                                     <span>
-                                                        <mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                        <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 removePlayer(
                                                                     i,
                                                                     j
                                                                 )
-                                                            "
-                                                            >delete_forever</mat-icon
-                                                        >
-                                                        <mat-icon
-                                                            aria-hidden="false"
-                                                            aria-label="Dragable"
-                                                            class="remove primary-foreground"
-                                                            (click)="
+                                                            ">delete_forever</mat-icon>
+                                                        <mat-icon aria-hidden="false" aria-label="Dragable"
+                                                            class="remove primary-foreground" (click)="
                                                                 movePlayer(i, j)
-                                                            "
-                                                            >edit</mat-icon
-                                                        >
+                                                            ">edit</mat-icon>
                                                     </span>
                                                 </td>
                                             </tr>
@@ -1368,11 +883,7 @@
                         </div>
                     </div>
                     <div class="flex justify-center my-3">
-                        <button
-                            mat-raised-button
-                            color="primary"
-                            (click)="saveFlights()"
-                        >
+                        <button mat-raised-button color="primary" (click)="saveFlights()">
                             Save Changes
                         </button>
                     </div>

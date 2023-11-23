@@ -158,7 +158,7 @@ export class GolfReportComponent implements OnInit {
                 handicap: obj.handicap,
                 totalROunds: obj.AggregateQL
                     ? obj.AggregateQL['aggregate'].count
-                    : 0,
+                    : 1,
             };
             this.dailyStats.push(newobj);
         }

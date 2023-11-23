@@ -8,6 +8,7 @@ import {
     ChangeDetectorRef,
     ElementRef,
 } from '@angular/core';
+import * as XLSX from 'xlsx';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -103,6 +104,7 @@ export class PlayersComponent implements OnInit {
         } catch (error) {
             this.logger.log('Getting Players Data Failed', "error", error.toString());
         }
+
 
     }
 
@@ -503,7 +505,7 @@ export class PlayersComponent implements OnInit {
 
             this.savePlayers = [];
             this.duplicatePlayers = [];
-            let clubMember: ClubMembership[] = [];
+            let clubMember: any[] = [];
             // for (let p of this.playersData) {
             //     let exist: any = [];
             //     if (p.membershipNumber) {
@@ -529,15 +531,148 @@ export class PlayersComponent implements OnInit {
             // }
             // console.log(this.duplicatePlayers);
             // console.log(this.savePlayers);
+            let data: any[][] = [];
             for (let p of this.playersData) {
-                let id = p.id;
-                let handicapAllocation = p.handicapAllocation !== "" ? p.handicapAllocation : null;
-                let update = await this._facadeService.updateflightMember(id, handicapAllocation);
-                if (update) {
-                    console.log('Done');
+
+                // let update = await this._facadeService.updateflightMember(p.id);
+                // if (update) {
+                //     console.log('Done');
+                // }
+                //await this.delay(500);
+                // let member: any = {
+                //     tournamentId: '-NddQacHUwjnptTHOeSP',
+                //     playerId: p.id,
+                //     status: true,
+                // };
+                // clubMember.push(member)
+
+                let result = <any>(await this._facadeService.getPlayerScorebyID(p.playerId))
+                console.log(result);
+                let holeAverages: { holeNo: number; avgScore: number }[] = [];
+                // Get the unique hole numbers
+                let holeNumbers: number[] = Array.from(new Set(result['score'].map(score => score.hole.holeNo)));
+
+                // Calculate average score for each hole number
+                for (let holeNo of holeNumbers) {
+                    // Filter scores for the current hole number
+                    let holeScores = result['score'].filter(score => score.hole.holeNo === holeNo);
+
+                    if (holeScores.length > 0) {
+                        // Calculate the average score for the current hole number
+                        let totalScore = holeScores.reduce((sum, score) => sum + score.grossScore, 0);
+                        let avgScore = totalScore / holeScores.length;
+
+                        // Push the hole number and its average score to the holeAverages array
+                        holeAverages.push({ holeNo: holeNo, avgScore: avgScore });
+                    }
+
                 }
-                await this.delay(500);
+
+                console.log(holeAverages);
+                data[p.player] = holeAverages;
+
+                // let sum = 0;
+
+                // for (let scr of result['score']) {
+                //     sum += scr.grossScore;
+                // }
+                // let avgScr = sum / result['score'].length;
+                // clubMember.push(avgScr);
             }
+            // let holeAverages: { [holeNo: number]: number } = {};
+
+            // // Loop through each player's scores
+            // for (let playerId in data) {
+            //     let playerData = data[playerId];
+
+            //     // Calculate the total score for each hole across all players
+            //     playerData.forEach(score => {
+            //         if (holeAverages[score.holeNo] === undefined) {
+            //             holeAverages[score.holeNo] = score.avgScore;
+            //         } else {
+            //             holeAverages[score.holeNo] += score.avgScore;
+            //         }
+            //     });
+            // }
+
+            // // Calculate the average score for each hole across all players
+            // for (let holeNo in holeAverages) {
+            //     holeAverages[holeNo] /= Object.keys(data).length;
+            // }
+
+            console.log(data);
+            const flatData = [];
+            // for (const playerName in selectedMember) {
+            //     if (selectedMember.hasOwnProperty(playerName)) {
+            //         const playerData = selectedMember[playerName];
+            //         playerData.forEach(item => {
+            //             flatData.push({ Name: playerName,HoleNo: item.holeNo, GrossScore: item.avgScore });
+            //         });
+            //     }
+            // }
+            // for (const name in selectedMember) {
+            //     if (selectedMember.hasOwnProperty(name)) {
+            //         const personData = selectedMember[name];
+            //         const worksheet = XLSX.utils.json_to_sheet(personData);
+
+            //         // Add the worksheet to the workbook with the person's name as the sheet name
+            //         XLSX.utils.book_append_sheet(workbook, worksheet, name);
+            //     }
+            // }
+
+            // const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+            // const wb: XLSX.WorkBook = XLSX.utils.book_new();
+            // const header = ['Player'];
+            // for (let holeNo = 1; holeNo <= 18; holeNo++) {
+            //     header.push(`Hole ${holeNo}`);
+            // }
+            // XLSX.utils.sheet_add_json(ws, [header]);
+            let array = [];
+            for (const playerName in data) {
+                const playerData = data[playerName];
+                const playerRow = [playerName];
+                // for (let holeNo = 1; holeNo <= 18; holeNo++) {
+                //     const holeData = playerData.find(item => item.holeNo === holeNo);
+                //     playerRow.push(holeData.avgScore);
+                // }
+                // XLSX.utils.sheet_add_json(ws, [playerRow]);
+                let obj = {
+                    'Name': playerName,
+                    'HoleNo1':  data[playerName][0] ?Math.round(data[playerName][0]['avgScore']) : '-' ,
+                    'HoleNo2':  data[playerName][1] ?Math.round(data[playerName][1]['avgScore']) : '-' ,
+                    'HoleNo3':  data[playerName][2] ?Math.round(data[playerName][2]['avgScore']) : '-' ,
+                    'HoleNo4':  data[playerName][3] ?Math.round(data[playerName][3]['avgScore']) : '-' ,
+                    'HoleNo5':  data[playerName][4] ?Math.round(data[playerName][4]['avgScore']) : '-' ,
+                    'HoleNo6':  data[playerName][5] ?Math.round(data[playerName][5]['avgScore']) : '-' ,
+                    'HoleNo7':  data[playerName][6] ?Math.round(data[playerName][6]['avgScore']) : '-' ,
+                    'HoleNo8':  data[playerName][7] ?Math.round(data[playerName][7]['avgScore']) : '-' ,
+                    'HoleNo9':  data[playerName][8] ?Math.round(data[playerName][8]['avgScore']) : '-' ,
+                    'HoleNo10': data[playerName][9] ?Math.round(data[playerName][9]['avgScore']) : '-' ,
+                    'HoleNo11': data[playerName][10] ?Math.round(data[playerName][10]['avgScore']): '-' ,
+                    'HoleNo12': data[playerName][11] ?Math.round(data[playerName][11]['avgScore']): '-' ,
+                    'HoleNo13': data[playerName][12] ?Math.round(data[playerName][12]['avgScore']): '-' ,
+                    'HoleNo14': data[playerName][13] ?Math.round(data[playerName][13]['avgScore']): '-' ,
+                    'HoleNo15': data[playerName][14] ?Math.round(data[playerName][14]['avgScore']): '-' ,
+                    'HoleNo16': data[playerName][15] ?Math.round(data[playerName][15]['avgScore']): '-' ,
+                    'HoleNo17': data[playerName][16] ?Math.round(data[playerName][16]['avgScore']): '-' ,
+                    'HoleNo18': data[playerName][17] ?Math.round(data[playerName][17]['avgScore']): '-' ,
+                }
+                array.push(obj)
+
+            }
+            console.log(array);
+            
+            const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(array);
+            const wb: XLSX.WorkBook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+            // Export the Excel file
+            XLSX.writeFile(wb, 'Score.xlsx');
+            //XLSX.writeFile(wb, { bookType: 'xlsx', type: 'blob' });
+            // Append the worksheet to the workbook
+            // XLSX.utils.book_append_sheet(wb, ws, 'Scores');
+            // Generate the Excel blob
+            // XLSX.writeFile(workbook, 'Actify_Report.xlsx');
             // console.log(this.duplicatePlayers);
 
             // for (let p of this.playersData) {

@@ -5,6 +5,7 @@
             <div *ngIf="!isLoading" class="flex flex-col flex-auto min-w-0">
                 <div class="bg-card">
                     <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+
                         <a class="inline-flex items-center leading-6 mt-4 text-primary hover:underline"
                             [routerLink]="['/tournaments']">
                             <span class="inline-flex items-center">
@@ -15,6 +16,7 @@
                         </a>
                         <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
                             <div class="flex flex-auto items-center min-w-0">
+
 
                                 <div class="flex-0 w-24 rounded-full overflow-hidden">
                                     <img class="w-full h-full object-cover" src="../../../../../assets/images/logo/{{
@@ -363,7 +365,7 @@
                                 <mat-tab *ngIf="showMatchPlay" label="Teams"></mat-tab>
                                 <mat-tab label="Scores"></mat-tab>
                                 <mat-tab label="Leaderboard"></mat-tab>
-                                <mat-tab label="Members"></mat-tab>
+                                <mat-tab label="Participants"></mat-tab>
                             </mat-tab-group>
                         </div>
                     </div>
@@ -556,7 +558,9 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
+
                                                     Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -573,7 +577,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
+
                                                                 Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -636,7 +642,9 @@
                                                         'heroicons_outline:document-search'
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+
                                                     No Groups Added!
+
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -1029,7 +1037,9 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
+
                                                     Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -1046,7 +1056,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
+
                                                                 Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -1102,7 +1114,9 @@
                                                         'heroicons_outline:document-search'
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+
                                                     No Groups Added!
+
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -1492,7 +1506,9 @@
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
+
                                                     Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -1509,7 +1525,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
+
                                                                 Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -1566,6 +1584,7 @@
                                                     "></mat-icon>
                                                 <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
                                                     No Groups Added!
+
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -1958,6 +1977,7 @@
                                             <div class="flex flex-col sm:flex-row items-start justify-between">
                                                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
                                                     Groups
+
                                                 </div>
                                                 <div class="mt-3 sm:mt-0 sm:ml-2">
                                                     <mat-button-toggle-group value="today"
@@ -1974,7 +1994,9 @@
                                                     <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                                         <div class="flex flex-col">
                                                             <div class="font-medium">
+
                                                                 Group No:{{
+
                                                                 flight.flightNo
                                                                 }}
                                                             </div>
@@ -2173,8 +2195,10 @@
 
                             <mat-tab [disabled]="activeRound < noOfROunds" label="Summary">
 
+
                                 <mat-icon aria-hidden="false" color="warn" (click)="downloadResultSheet()"
                                     aria-label="Dragable" class="remove">picture_as_pdf</mat-icon>
+
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0">
                                     <div
@@ -2183,6 +2207,9 @@
                                             <div class="text-lg font-medium tracking-tight leading-6 truncate">
                                                 Top Gross
                                             </div>
+                                            <mat-icon aria-hidden="false" color="warn"
+                                                (click)="downloadResultSheetGross()" aria-label="Dragable"
+                                                class="remove">picture_as_pdf</mat-icon>
                                         </div>
                                         <mat-tab-group mat-align-tabs="center" (selectedTabChange)="
                                                 onChangeGross($event)
@@ -2195,7 +2222,9 @@
                                                 <ng-template mat-tab-label>{{
                                                     m.category
                                                     }}</ng-template>
+
                                                 <table mat-table [dataSource]="
+
                                                         dataSourceTotalGross
                                                     " matSort>
                                                     <!-- Serial Column -->
@@ -2310,6 +2339,89 @@
                                                             let row;
                                                             columns: displayedColumnsTotalGross
                                                         "></tr>
+
+                                                </table>
+                                                <table *ngIf="noOfRounds==1" mat-table [dataSource]="
+                                                    dataSourceTotalGross
+                                                " matSort>
+                                                    <!-- Serial Column -->
+                                                    <ng-container matColumnDef="pos">
+                                                        <th mat-header-cell *matHeaderCellDef>
+                                                            Position
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                            let row;
+                                                            let i = index
+                                                        ">
+                                                            {{ row.position }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Name Column -->
+                                                    <ng-container matColumnDef="name">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Name
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                            let row
+                                                        ">
+                                                            {{ row.name }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Phone Column -->
+                                                    <ng-container matColumnDef="gross">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Gross
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                            let row
+                                                        ">
+                                                            {{
+                                                            row.TotalGross1 !=
+                                                            ""
+                                                            ? row.TotalGross1
+                                                            : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="toPar">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            To Par
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                            let row
+                                                        ">
+                                                            {{
+                                                            row.TotalGrossUnder1 !=
+                                                            ""
+                                                            ? row.TotalGrossUnder1
+                                                            : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="thru">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Thru
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                            let row
+                                                        ">
+                                                            {{
+                                                            row.holes1 !=
+                                                            ""
+                                                            ? row.holes1
+                                                            : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+                                                    <tr mat-header-row *matHeaderRowDef="
+                                                        displayedColumnsR1Gross
+                                                    "></tr>
+                                                    <tr mat-row *matRowDef="
+                                                        let row;
+                                                        columns: displayedColumnsR1Gross
+                                                    "></tr>
                                                 </table>
                                             </mat-tab>
                                         </mat-tab-group>
@@ -2321,6 +2433,9 @@
                                             <div class="text-lg font-medium tracking-tight leading-6 truncate">
                                                 Top Net
                                             </div>
+                                            <mat-icon aria-hidden="false" color="warn"
+                                                (click)="downloadResultSheetNet()" aria-label="Dragable"
+                                                class="remove">picture_as_pdf</mat-icon>
                                         </div>
 
                                         <mat-tab-group mat-align-tabs="center" (selectedTabChange)="
@@ -2334,7 +2449,9 @@
                                                 <ng-template mat-tab-label>{{
                                                     m.category
                                                     }}</ng-template>
-                                                <table mat-table [dataSource]="
+
+                                                <table *ngIf="noOfRounds>1" mat-table [dataSource]="
+
                                                         dataSourceTotalNET
                                                     " matSort>
                                                     <!-- Serial Column -->
@@ -2449,6 +2566,92 @@
                                                             let row;
                                                             columns: displayedColumnsTotalNET
                                                         "></tr>
+
+                                                </table>
+                                                <table *ngIf="noOfRounds==1" mat-table [dataSource]="
+                                                        dataSourceTotalNET
+                                                    " matSort>
+                                                    <!-- Serial Column -->
+                                                    <ng-container matColumnDef="pos">
+                                                        <th mat-header-cell *matHeaderCellDef>
+                                                            Position
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let row;
+                                                                let i = index
+                                                            ">
+                                                            {{ row.position }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Name Column -->
+                                                    <ng-container matColumnDef="name">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Name
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let row
+                                                            ">
+                                                            {{ row.name }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <!-- Phone Column -->
+                                                    <ng-container matColumnDef="net">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Net
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let row
+                                                            ">
+                                                            {{
+                                                            row.TotalNet1 !=
+                                                            ""
+                                                            ? row.TotalNet1
+                                                            : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="toPar">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            To Par
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let row
+                                                            ">
+                                                            {{
+                                                            row.TotalNetUnder1 !=
+                                                            ""
+                                                            ? row.TotalNetUnder1
+                                                            : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="thru">
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Thru
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let row
+                                                            ">
+                                                            {{
+                                                            row.holes1 !=
+                                                            ""
+                                                            ? row.holes1
+                                                            : "-"
+                                                            }}
+                                                        </td>
+                                                    </ng-container>
+
+                                                   
+
+                                                    <tr mat-header-row *matHeaderRowDef="
+                                                            displayedColumnsR1NET
+                                                        "></tr>
+                                                    <tr mat-row *matRowDef="
+                                                            let row;
+                                                            columns: displayedColumnsR1NET
+                                                        "></tr>
                                                 </table>
                                             </mat-tab>
                                         </mat-tab-group>
@@ -2459,6 +2662,7 @@
                     </div>
                 </div>
                 <div *ngIf="this.showMainTab2" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+
                     <div class="w-full max-w-screen-xl mx-auto">
                         <app-flight-management [tournamentID]="tournamentID"></app-flight-management>
                     </div>
@@ -2466,6 +2670,7 @@
                 <div *ngIf="this.showMainTab6" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
                     <div class="w-full max-w-screen-xl mx-auto">
                         <app-team-management [tournamentID]="tournamentID"></app-team-management>
+
                     </div>
                 </div>
                 <div *ngIf="this.showMainTab3" class="flex-auto border-t -mt-px pt-4 sm:pt-6">

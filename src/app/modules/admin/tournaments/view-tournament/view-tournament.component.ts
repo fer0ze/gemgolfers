@@ -208,13 +208,13 @@ export class ViewTournamentComponent implements OnInit {
         },
     ];
     dataSourceR1NET: MatTableDataSource<any>;
-    displayedColumnsR1NET = ['pos', 'name', 'gross', 'toPar', 'thru'];
+    displayedColumnsR1NET = ['pos', 'name', 'net', 'toPar', 'thru'];
     dataSourceR2NET: MatTableDataSource<any>;
-    displayedColumnsR2NET = ['pos', 'name', 'gross', 'toPar', 'thru'];
+    displayedColumnsR2NET = ['pos', 'name', 'net', 'toPar', 'thru'];
     dataSourceR3NET: MatTableDataSource<any>;
-    displayedColumnsR3NET = ['pos', 'name', 'gross', 'toPar', 'thru'];
+    displayedColumnsR3NET = ['pos', 'name', 'net', 'toPar', 'thru'];
     dataSourceR4NET: MatTableDataSource<any>;
-    displayedColumnsR4NET = ['pos', 'name', 'gross', 'toPar', 'thru'];
+    displayedColumnsR4NET = ['pos', 'name', 'net', 'toPar', 'thru'];
 
     dataSourceTotalGross: MatTableDataSource<any>;
     displayedColumnsTotalGross = [
@@ -316,6 +316,7 @@ export class ViewTournamentComponent implements OnInit {
                     this.url = 'golfcourse.jpg';
                 }
 
+
                 if (this.dataFullTournament.TournamentQL.length == 0) {
                     alert('no record found.');
                     this.isLoading = false;
@@ -340,6 +341,7 @@ export class ViewTournamentComponent implements OnInit {
                 ) {
                     this.showMatchPlay = true;
                 }
+
 
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
@@ -908,6 +910,7 @@ export class ViewTournamentComponent implements OnInit {
         this.showSummary = true;
     }
     tabClicked(tab: any) {
+
         try {
             if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
                 this.calculateStatistics1();
@@ -2172,11 +2175,12 @@ export class ViewTournamentComponent implements OnInit {
             // console.log('After Function' + this.runningFlights);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+
         }
     }
-    downloadResultSheet() {
+    downloadResultSheetGross() {
         let doc = new jsPDF();
-        let col = General.createClm(this.noOfRounds);
+        let col = General.createClmGross(this.noOfRounds);
 
         doc.setFontSize(22);
         doc.setFillColor(0, 0, 0);
@@ -2197,7 +2201,7 @@ export class ViewTournamentComponent implements OnInit {
             // );
             doc.setFontSize(18);
             doc.setTextColor(99, 29, 5);
-            doc.text('\n' + element.category, 13, 25);
+          //  doc.text('\n' + element.category, 13, 25);
             doc.setFontSize(15);
             let count = 0;
             let grossAllArray: any[] = [];
@@ -2205,59 +2209,168 @@ export class ViewTournamentComponent implements OnInit {
             for (let leader in this.allMatchResults) {
                 grossAllArray.push(this.allMatchResults[leader]);
             }
-            grossAllArray.sort(this.ComparatorAllGrossSheet);
+            grossAllArray.sort(this.ComparatorAllGross);
             this.sortAllGrossLeadersTie(grossAllArray);
             console.log(grossAllArray);
 
             for (let leader in grossAllArray) {
                 count++;
-                let temp = [
-                    grossAllArray[leader].position,
-                    grossAllArray[leader].name,
-                    grossAllArray[leader].handicap,
-                    grossAllArray[leader].clubName,
-                    grossAllArray[leader].TotalGross4 != '' &&
-                        grossAllArray[leader].TotalGross4 != undefined
-                        ? grossAllArray[leader].TotalGross4
-                        : '-',
-                    grossAllArray[leader].TotalNet4 != '' &&
-                        grossAllArray[leader].TotalNet4 != undefined
-                        ? grossAllArray[leader].TotalNet4
-                        : '-',
-                    grossAllArray[leader].TotalGross3 != '' &&
-                        grossAllArray[leader].TotalGross3 != undefined
-                        ? grossAllArray[leader].TotalGross3
-                        : '-',
-                    grossAllArray[leader].TotalNet3 != '' &&
-                        grossAllArray[leader].TotalNet3 != undefined
-                        ? grossAllArray[leader].TotalNet3
-                        : '-',
-                    grossAllArray[leader].TotalGross2 != '' &&
-                        grossAllArray[leader].TotalGross2 != undefined
-                        ? grossAllArray[leader].TotalGross2
-                        : '-',
-                    grossAllArray[leader].TotalNet2 != '' &&
-                        grossAllArray[leader].TotalNet2 != undefined
-                        ? grossAllArray[leader].TotalNet2
-                        : '-',
-                    grossAllArray[leader].TotalGross1 != '' &&
-                        grossAllArray[leader].TotalGross1 != undefined
-                        ? grossAllArray[leader].TotalGross1
-                        : '-',
-                    grossAllArray[leader].TotalNet1 != '' &&
-                        grossAllArray[leader].TotalNet1 != undefined
-                        ? grossAllArray[leader].TotalNet1
-                        : '-',
-                    grossAllArray[leader].AllGrossPoints != '' &&
-                        grossAllArray[leader].AllGrossPoints != undefined
-                        ? grossAllArray[leader].AllGrossPoints
-                        : '-',
-                    grossAllArray[leader].AllNetPoints != '' &&
-                        grossAllArray[leader].AllNetPoints != undefined
-                        ? grossAllArray[leader].AllNetPoints
-                        : '-',
-                ];
-                rows.push(temp);
+                if (this.noOfRounds > 1) {
+                    let temp = [
+                        grossAllArray[leader].position,
+                        grossAllArray[leader].name,
+                        grossAllArray[leader].handicap,
+                        grossAllArray[leader].clubName,
+                        grossAllArray[leader].TotalGross4 != '' &&
+                            grossAllArray[leader].TotalGross4 != undefined
+                            ? grossAllArray[leader].TotalGross4
+                            : '-',
+
+                        grossAllArray[leader].TotalGross3 != '' &&
+                            grossAllArray[leader].TotalGross3 != undefined
+                            ? grossAllArray[leader].TotalGross3
+                            : '-',
+
+                        grossAllArray[leader].TotalGross2 != '' &&
+                            grossAllArray[leader].TotalGross2 != undefined
+                            ? grossAllArray[leader].TotalGross2
+                            : '-',
+
+                        grossAllArray[leader].TotalGross1 != '' &&
+                            grossAllArray[leader].TotalGross1 != undefined
+                            ? grossAllArray[leader].TotalGross1
+                            : '-',
+
+                        grossAllArray[leader].AllGrossPoints != '' &&
+                            grossAllArray[leader].AllGrossPoints != undefined
+                            ? grossAllArray[leader].AllGrossPoints
+                            : '-',
+                    ];
+                    rows.push(temp);
+                } else {
+                    let temp = [
+                        grossAllArray[leader].position,
+                        grossAllArray[leader].name,
+                        grossAllArray[leader].handicap,
+                        grossAllArray[leader].clubName,
+                        grossAllArray[leader].TotalGross1 != '' &&
+                            grossAllArray[leader].TotalGross1 != undefined
+                            ? grossAllArray[leader].TotalGross1
+                            : '-',
+
+                        grossAllArray[leader].TotalGrossUnder1 != '' &&
+                            grossAllArray[leader].TotalGrossUnder1 != undefined
+                            ? grossAllArray[leader].TotalGrossUnder1
+                            : '-',
+
+                    ];
+                    rows.push(temp);
+                }
+               
+            }
+
+            // From HTML
+            // console.log(rows);
+            // this.sortAllGrossLeadersTie(rows);
+            // console.log(rows);
+            doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
+            doc.addPage();
+
+            // Open PDF document in new tab
+        });
+
+        doc.output('dataurlnewwindow');
+        // Download PDF document
+        //doc.save('flights.pdf');
+    }
+    downloadResultSheetNet() {
+        let doc = new jsPDF();
+        let col = General.createClmNet(this.noOfRounds);
+
+        doc.setFontSize(22);
+        doc.setFillColor(0, 0, 0);
+        doc.rect(10, 5, 190, 20, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.text(this.fullTournament.title, 13, 12, 'justify');
+        doc.text('\nScore Sheet', 13, 12, 'justify');
+
+        this.tournamentCategories.forEach((element) => {
+            this.getSummaryData(element.category);
+            let rows = [];
+            //this.getSummaryData('Result');
+            // doc.text("W.E.F:", 143, 15);
+            // doc.text(
+            // this.datepipe.transform(this.currentDate.toString(), "MMM d, y"),
+            // 160,
+            // 15
+            // );
+            doc.setFontSize(18);
+            doc.setTextColor(99, 29, 5);
+         //   doc.text('\n' + element.category, 13, 25);
+            doc.setFontSize(15);
+            let count = 0;
+            let grossAllArray: any[] = [];
+
+            for (let leader in this.allMatchResults) {
+                grossAllArray.push(this.allMatchResults[leader]);
+            }
+            grossAllArray.sort(this.ComparatorAllNet);
+            this.sortAllNetLeadersTie(grossAllArray);
+            console.log(grossAllArray);
+            for (let leader in grossAllArray) {
+                count++;
+                if (this.noOfRounds > 1) {
+                    let temp = [
+                        grossAllArray[leader].position,
+                        grossAllArray[leader].name,
+                        grossAllArray[leader].handicap,
+                        grossAllArray[leader].clubName,
+                        grossAllArray[leader].TotalNet4 != '' &&
+                            grossAllArray[leader].TotalNet4 != undefined
+                            ? grossAllArray[leader].TotalNet4
+                            : '-',
+
+                        grossAllArray[leader].TotalNet3 != '' &&
+                            grossAllArray[leader].TotalNet3 != undefined
+                            ? grossAllArray[leader].TotalNet3
+                            : '-',
+
+                        grossAllArray[leader].TotalNet2 != '' &&
+                            grossAllArray[leader].TotalNet2 != undefined
+                            ? grossAllArray[leader].TotalNet2
+                            : '-',
+
+                        grossAllArray[leader].TotalNet1 != '' &&
+                            grossAllArray[leader].TotalNet1 != undefined
+                            ? grossAllArray[leader].TotalNet1
+                            : '-',
+
+                        grossAllArray[leader].AllNetPoints != '' &&
+                            grossAllArray[leader].AllNetPoints != undefined
+                            ? grossAllArray[leader].AllNetPoints
+                            : '-',
+                    ];
+                    rows.push(temp);
+                } else {
+                    let temp = [
+                        grossAllArray[leader].position,
+                        grossAllArray[leader].name,
+                        grossAllArray[leader].handicap,
+                        grossAllArray[leader].clubName,
+                        grossAllArray[leader].TotalNet1 != '' &&
+                            grossAllArray[leader].TotalNet1 != undefined
+                            ? grossAllArray[leader].TotalNet1
+                            : '-',
+
+                        grossAllArray[leader].TotalNetUnder1 != '' &&
+                        grossAllArray[leader].TotalNetUnder1 != undefined
+                            ? grossAllArray[leader].TotalNetUnder1
+                            : '-',
+
+                    ];
+                    rows.push(temp);
+                }
+               
             }
 
             // From HTML
@@ -2598,7 +2711,7 @@ export class ViewTournamentComponent implements OnInit {
         for (let leader in this.allMatchResults) {
             grossAllArray.push(this.allMatchResults[leader]);
         }
-        grossAllArray.sort(this.ComparatorAllGrossSheet);
+        grossAllArray.sort(this.ComparatorAllGross);
         this.sortAllGrossLeadersTie(grossAllArray);
 
         this.dataSourceTotalGross = new MatTableDataSource(grossAllArray);
@@ -2617,7 +2730,7 @@ export class ViewTournamentComponent implements OnInit {
                 let playerId: String = membersQL.playerId;
 
                 let player: Player = membersQL.PlayerQL;
-                if (category != 'Result') {
+                if (category !== 'All') {
                     if (player.playerCategory !== category) continue;
                 }
 
@@ -2771,7 +2884,11 @@ export class ViewTournamentComponent implements OnInit {
                         1,
                         playerHole18ScoreGross
                     ),
-                    playerStatus: playerStatus ? playerStatus.status : 'ac',
+                    playerStatus: playerStatus
+                        ? playerStatus.status
+                        : scores.length <= 0
+                            ? "mc"
+                            : "ac"
                 };
 
                 // this.grossLeaders.push(LeaderGross);
@@ -2824,7 +2941,11 @@ export class ViewTournamentComponent implements OnInit {
                         1,
                         playerHole18ScoreNet
                     ),
-                    playerStatus: playerStatus ? playerStatus.status : 'ac',
+                    playerStatus: playerStatus
+                        ? playerStatus.status
+                        : scores.length <= 0
+                            ? "mc"
+                            : "ac"
                 };
 
                 // this.netLeaders.push(LeaderNet);
@@ -2840,6 +2961,7 @@ export class ViewTournamentComponent implements OnInit {
         }
     }
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
+        leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
         //Collections.sort(grossLeaders);
         console.log(leaderGrossList);
 
@@ -2880,40 +3002,7 @@ export class ViewTournamentComponent implements OnInit {
 
             tied = leaderCurrent.AllGrossUnder == leaderPrevious.AllGrossUnder;
 
-            // if (tied && firstCompleted && secondCompleted) {
-            //     let noOfHoles = 9;
-            //     while (tied && noOfHoles > 0) {
-            //         //tied = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores) == this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
-            //         //currentHoleScore = this.getLastHolesTotal(noOfHoles, leaderCurrent.holeScores);
-            //         //previousHoleScore = this.getLastHolesTotal(noOfHoles, leaderPrevious.holeScores);
 
-            //         if (noOfHoles == 9)
-            //             tied =
-            //                 leaderCurrent.holeScoreLast9 ==
-            //                 leaderPrevious.holeScoreLast9;
-            //         else if (noOfHoles == 6)
-            //             tied =
-            //                 leaderCurrent.holeScoreLast6 ==
-            //                 leaderPrevious.holeScoreLast6;
-            //         else if (noOfHoles == 3)
-            //             tied =
-            //                 leaderCurrent.holeScoreLast3 ==
-            //                 leaderPrevious.holeScoreLast3;
-            //         else if (noOfHoles < 3)
-            //             tied =
-            //                 leaderCurrent.holeScoreLast1 ==
-            //                 leaderPrevious.holeScoreLast1;
-
-            //         //tied = currentHoleScore == previousHoleScore;
-
-            //         if (noOfHoles > 3) {
-            //             noOfHoles -= 3;
-            //         } else {
-            //             noOfHoles -= 2;
-            //         }
-            //     }
-            // }
-            ////console.log("tied-> " + tied);
             if (tied) {
                 //leaderCurrent["tied"]= true;
                 //leaderPrevious["tied"]= true;
@@ -2933,14 +3022,184 @@ export class ViewTournamentComponent implements OnInit {
 
         return leaderGrossList;
     }
+    ComparatorAllGrossPosition(a, b) {
+        let compare: number;
+
+        compare = Number(a.status) - Number(b.status);
+        if (compare != 0) {
+            return compare;
+        }
+        if (a.playerStatus < b.playerStatus) {
+            return -1;
+        }
+        if (a.playerStatus > b.playerStatus) {
+            return 1;
+        }
+
+        // if (a.holes1 < b.holes1) {
+        //     return 1;
+        // }
+
+        // if (a.holes1 < b.holes1) {
+        //     return 1;
+        // }
+        let selfHoles: number = 0;
+        let leaderHoles: number = 0;
+        let completed: boolean = false;
+        let checkRoundPlayed =
+            a.activeRound > a.totalRounds ? a.totalRounds : a.activeRound;
+
+        if (checkRoundPlayed == 1) {
+            selfHoles = a.holes1;
+            leaderHoles = b.holes1;
+
+            completed = a.completed1 && b.completed1;
+        } else if (checkRoundPlayed == 2) {
+            selfHoles = a.holes2;
+            leaderHoles = b.holes2;
+
+            completed = a.completed2 && b.completed2;
+        } else if (checkRoundPlayed == 3) {
+            selfHoles = a.holes3;
+            leaderHoles = b.holes3;
+
+            completed = a.completed3 && b.completed3;
+        } else if (checkRoundPlayed == 4) {
+            selfHoles = a.holes4;
+            leaderHoles = b.holes4;
+
+            completed = a.completed4 && b.completed4;
+        }
+
+        if (selfHoles != 0 && leaderHoles != 0) {
+            compare = a.AllGrossUnder - b.AllGrossUnder;
+
+            if (compare != 0) {
+                return compare;
+            }
+            if (completed) {
+                let noOfHoles: number = 9;
+                while (noOfHoles > 0) {
+                    if (noOfHoles == 9)
+                        compare = a.holeScoreLast9 - b.holeScoreLast9;
+                    else if (noOfHoles == 6)
+                        compare = a.holeScoreLast6 - b.holeScoreLast6;
+                    else if (noOfHoles == 3)
+                        compare = a.holeScoreLast3 - b.holeScoreLast3;
+                    else if (noOfHoles < 3)
+                        compare = a.holeScoreLast1 - b.holeScoreLast1;
+
+                    if (compare != 0) {
+                        return compare;
+                    }
+                    if (noOfHoles > 3) {
+                        noOfHoles -= 3;
+                    } else {
+                        noOfHoles -= 2;
+                    }
+                }
+                compare = leaderHoles - selfHoles;
+                if (compare != 0) {
+                    return compare;
+                }
+            }
+
+        }
+
+
+        //if (a["position"] < b["position"]) return -1;
+        //if (a["position"] > b["position"]) return 1;
+
+        return 0;
+    }
+
+    ComparatorAllNetPosition(a, b) {
+        let compare: number;
+
+        compare = Number(a.status) - Number(b.status);
+        if (compare != 0) {
+            return compare;
+        }
+        if (a.playerStatus < b.playerStatus) {
+            return -1;
+        }
+        if (a.playerStatus > b.playerStatus) {
+            return 1;
+        }
+
+        let selfHoles: number = 0;
+        let leaderHoles: number = 0;
+        let completed: boolean = false;
+        let checkRoundPlayed =
+            a.activeRound > a.totalRounds ? a.totalRounds : a.activeRound;
+
+        if (checkRoundPlayed == 1) {
+            selfHoles = a.holes1;
+            leaderHoles = b.holes1;
+            completed = a.completed1 && b.completed1;
+        } else if (checkRoundPlayed == 2) {
+            selfHoles = a.holes2;
+            leaderHoles = b.holes2;
+            completed = a.completed2 && b.completed2;
+        } else if (checkRoundPlayed == 3) {
+            selfHoles = a.holes3;
+            leaderHoles = b.holes3;
+            completed = a.completed3 && b.completed3;
+        } else if (checkRoundPlayed == 4) {
+            selfHoles = a.holes4;
+            leaderHoles = b.holes4;
+            completed = a.completed4 && b.completed4;
+        }
+
+        if (selfHoles != 0 && leaderHoles != 0) {
+            compare = a.AllNetUnder - b.AllNetUnder;
+
+            if (compare != 0) {
+                return compare;
+            }
+            if (completed) {
+                let noOfHoles: number = 9;
+                while (noOfHoles > 0) {
+                    if (noOfHoles == 9)
+                        compare = a.holeScoreLast9 - b.holeScoreLast9;
+                    else if (noOfHoles == 6)
+                        compare = a.holeScoreLast6 - b.holeScoreLast6;
+                    else if (noOfHoles == 3)
+                        compare = a.holeScoreLast3 - b.holeScoreLast3;
+                    else if (noOfHoles < 3)
+                        compare = a.holeScoreLast1 - b.holeScoreLast1;
+
+                    if (compare != 0) {
+                        return compare;
+                    }
+                    if (noOfHoles > 3) {
+                        noOfHoles -= 3;
+                    } else {
+                        noOfHoles -= 2;
+                    }
+                }
+                compare = leaderHoles - selfHoles;
+                if (compare != 0) {
+                    return compare;
+                }
+            }
+        }
+
+
+        //if (a["position"] < b["position"]) return -1;
+        //if (a["position"] > b["position"]) return 1;
+
+        return 0;
+    }
     async NetData(category: any) {
         this.getSummaryData(category);
-        this.allMatchResults.sort(this.ComparatorAllNet);
+
         let netAllArray: any[] = [];
         for (let leader in this.allMatchResults) {
             netAllArray.push(this.allMatchResults[leader]);
         }
-        this.sortAllGrossLeadersTie(netAllArray);
+        netAllArray.sort(this.ComparatorAllNet);
+        this.sortAllNetLeadersTie(netAllArray);
         this.dataSourceTotalNET = new MatTableDataSource(netAllArray);
         this.dataSourceTotalNET.paginator = this.paginator;
         this.dataSourceTotalNET.sort = this.sort;
@@ -3350,8 +3609,10 @@ export class ViewTournamentComponent implements OnInit {
         this.mainSelected = ++this.mainSelected;
     }
     async playerList() {
+
         try {
             this.logger.log('Admin Click on Add New Member Btn on Members Tab', "info", this.tournamentID);
+
 
             let datas = await this.facadeService.getPlayersListForTournament(
                 this.loggedInUser.adminClubId
@@ -3446,6 +3707,69 @@ export class ViewTournamentComponent implements OnInit {
         console.log(this.flight);
 
         // console.log(this.flightid);
+    }
+    private sortAllNetLeadersTie(leaderList: any[]) {
+        //Collections.sort(grossLeaders);
+
+        leaderList = leaderList.sort(this.ComparatorAllNetPosition);
+        ////console.log(leaderList);
+        //return false;
+
+        let pos: number = 1;
+        let tied: boolean;
+
+        if (leaderList.length > 0) leaderList[0]['position'] = pos;
+        ////console.log(leaderList);
+        for (let i = 1; i < leaderList.length; i++) {
+            let leaderCurrent = leaderList[i];
+            let leaderPrevious = leaderList[i - 1];
+            let firstCompleted = false;
+            let secondCompleted = false;
+
+            let checkRoundPlayed =
+                leaderCurrent.activeRound > leaderCurrent.totalRounds
+                    ? leaderCurrent.totalRounds
+                    : leaderCurrent.activeRound;
+
+            if (checkRoundPlayed == 1) {
+                firstCompleted = leaderCurrent.completed1;
+                secondCompleted = leaderPrevious.completed1;
+            } else if (checkRoundPlayed == 2) {
+                firstCompleted = leaderCurrent.completed2;
+                secondCompleted = leaderPrevious.completed2;
+            } else if (checkRoundPlayed == 3) {
+                firstCompleted = leaderCurrent.completed3;
+                secondCompleted = leaderPrevious.completed3;
+            } else if (checkRoundPlayed == 4) {
+                firstCompleted = leaderCurrent.completed4;
+                secondCompleted = leaderPrevious.completed4;
+            }
+
+            if (leaderCurrent.AllNetUnder != undefined) {
+                tied = leaderCurrent.AllNetUnder == leaderPrevious.AllNetUnder;
+            } else {
+                tied = leaderCurrent.under == leaderPrevious.under;
+            }
+
+            if (tied) {
+                //leaderCurrent["tied"]= true;
+                //leaderPrevious["tied"]= true;
+                leaderList[i]['tied'] = true;
+                leaderList[i - 1]['tied'] = true;
+                leaderList[i]['position'] = 'T' + pos;
+                leaderList[i - 1]['position'] = 'T' + pos;
+            } else {
+                pos = i + 1;
+                leaderList[i]['position'] = pos;
+            }
+            ////console.log(pos);
+
+            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+        }
+        //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
+        ////console.log("return");
+        console.log(leaderList);
+        return leaderList;
     }
     async getnewFlightId(id: string) {
         this.newFlightID = id;

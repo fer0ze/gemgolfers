@@ -6,7 +6,8 @@ import { Constants } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { Player } from 'app/shared/models/player.model';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 @Component({
     selector: 'app-dialog-player-score',
     templateUrl: './dialog-player-score.component.html',
@@ -569,5 +570,28 @@ export class DialogPlayerScoreComponent implements OnInit {
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes28to36) != 0
         );
+    }
+    public downloadAsPDF() {
+        var doc = new jsPDF()
+
+        doc.setFontSize(18);
+        doc.text("Score Details", 15, 15);
+
+        doc.setTextColor(100);
+
+        // From HTML
+        doc.autoTable({
+            html: '#pdfTable',
+            startY: 25,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: [1, 1] },
+            useCss: false,
+        });
+
+        // Open PDF document in new tab
+        doc.output('dataurlnewwindow');
+
+        // Download PDF document  
+        //doc.save('flights.pdf');
     }
 }

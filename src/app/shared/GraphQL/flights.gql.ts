@@ -635,13 +635,21 @@ export const undoHandicapPlayerQL = gql`
     }
 `;
 export const updateflightMemberQL = gql`
-    mutation UpdateFlightMember($where: tournament_bool_exp!,$set: tournament_set_input!) {
-        update_tournament(where: $where, _set: $set) {
-            affected_rows
-            returning {
-                id
-            }
-        } 
+
+    mutation UpdateFlightMember($playerId: String!,$tournamentId: String!) {
+        flightEndedQlA: update_flight_member(
+            where: { playerId: { _eq: $playerId } }
+            _set: { tee_id: 3, playingTee: "SENIORS" }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+        WHSQL: update_player_handicap_whs(
+            where: { playerId: { _eq: $playerId } }
+            _set: { tee: "SENIORS" }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+
     }
 `;
 export const markPlayerPaneltyQL = gql`

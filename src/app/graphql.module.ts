@@ -30,41 +30,6 @@ export class GraphQLModule {
             .set('X-Hasura-Allowed-Roles', [environment.defaultRole]);
         const http = httpLink.create({ uri, headers: authHeader });
 
-        // create Apollo
-        // const subscriptionLink = new WebSocketLink({
-        //     uri: wssuri,
-        //     options: {
-        //         reconnect: true,
-        //         connectionParams: {
-        //             headers: {
-        //                 Authorization: `Bearer ${localStorage.getItem(
-        //                     'authToken'
-        //                 )}`,
-        //                 'X-Hasura-Admin-Secret':
-        //                 environment.apiKey,
-        //                 'X-Hasura-Role': environment.defaultRole,
-        //                 'X-Hasura-Allowed-Roles': [environment.defaultRole],
-        //             },
-        //         },
-        //     },
-        // });
-        // interface Definintion {
-        //     kind: string;
-        //     operation?: string;
-        // }
-        // const link = split(
-        //     ({ query }) => {
-        //         const { kind, operation }: Definintion =
-        //             getMainDefinition(query);
-        //         return (
-        //             kind === 'OperationDefinition' &&
-        //             operation === 'subscription'
-        //         );
-        //     },
-        //     subscriptionLink, 
-        //     http 
-        // );
-
         apollo.create({
             link: http,
             cache: new InMemoryCache(),

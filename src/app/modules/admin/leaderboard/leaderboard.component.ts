@@ -140,6 +140,90 @@ export class LeaderboardComponent implements OnInit {
 
     ////console.log(this.loggedInUser);
 
+    of(this.Leaderboard)
+      .pipe()
+      .subscribe(async (data) => {
+        this.apollo
+          .subscribe({
+            query: Query.LeaderboardSubscription,
+            variables: {
+              tournamentPrefix: this.tournamentID,
+            },
+          })
+          .subscribe(({ data }) => {
+            if (!data) {
+              //console.log(data);
+            } else {
+              let dataLeaderboard: any = data;
+              //console.log(data);
+              //console.log(dataLeaderboard);
+
+              this.allMatchResults = [];
+              this.allLeadersGross = [];
+              this.allLeadersCutOffGross = [];
+              this.allLeadersNet = [];
+              this.grossLeaders = [];
+              this.netLeaders = [];
+              this.grossAllLeaders = [];
+              this.netAllLeaders = [];
+
+              this.tRounds = [];
+              this.teamMatch = false;
+              
+
+              this.Leaderboard = dataLeaderboard.TournamentQL[0];
+              ////console.log(this.Leaderboard);
+              if (this.Leaderboard.cutOffCriteria != null) {
+                if ("cutOff" in this.Leaderboard.cutOffCriteria) {
+                  if (this.Leaderboard.cutOffCriteria) {
+                    if (Object.keys(this.Leaderboard.cutOffCriteria).length)
+                      this.cutOffList = this.Leaderboard.cutOffCriteria;
+                    // //console.log(this.cutOffList);
+                    // //console.log(this.cutOffList.cutOff);
+
+                    //console.log(this.cutOffList["cutOff"]);
+                  }
+                }
+              }
+
+              
+              this.activeRound = this.Leaderboard.activeRound;
+              this.totalRounds = this.Leaderboard.noOfRounds;
+              this.matchFormat = this.Leaderboard.matchFormat;
+              this.teamMatch = this.Leaderboard.teamMatch;
+              if (this.matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+                this.showTaxes = true;
+              }
+
+              if (this.Leaderboard.webLogoUrl)
+                this.webLogoUrl = this.Leaderboard.webLogoUrl;
+              this.Leaderboard.CategoriesQL.sort(this.sortCategory);
+              if (this.Leaderboard.CategoriesQL.length > 0) {
+                this.selectedCategory = this.Leaderboard.CategoriesQL[0];
+
+                if (!this.selectedCategoryValue)
+                  this.selectedCategoryValue = this.selectedCategory.category;
+              }
+
+             
+
+              //console.log(this.Leaderboard);
+
+              if (this.tRounds.length >= 0) {
+                for (
+                  let round = 1;
+                  round <= this.Leaderboard.noOfRounds;
+                  round++
+                ) {
+                  let r: any = {
+                    Text: "Round " + round,
+                    Value: round,
+                  };
+                  this.tRounds.push(r);
+                }
+              }
+
+              this.selectedSubTournament = this.tournamentID;
 
     this.apollo
       .watchQuery({

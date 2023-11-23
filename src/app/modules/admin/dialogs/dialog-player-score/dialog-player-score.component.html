@@ -43,7 +43,11 @@
         <div>
             <h1 class="text-2xl font-extrabold">{{ data.name }}({{data.type}} Score)</h1>
         </div>
-        <table *ngIf="!this.isTaxesScoreBor" class="mat-elevation-z8">
+        <div style="text-align: right; padding-top: 10px; color: red; cursor: pointer">
+            <mat-icon aria-hidden="false" aria-label="Dragable" class="remove"
+                (click)="downloadAsPDF()">picture_as_pdf</mat-icon>
+        </div>
+        <table *ngIf="!this.isTaxesScoreBor" id="pdfTable" class="mat-elevation-z8">
             <thead>
                 <tr *ngFor="let item of scoreHeader" class="topheader">
                     <th></th>
@@ -200,6 +204,7 @@
                     </td>
                     <td style="background-color: #e8e8e7" *ngIf="item.Hole36Scores.length > 0">
                         <span>{{ item?.hole36Total }}</span>
+
                     </td>
                     <td style="background-color: #e8e8e7">
                         <span class="class_name_round">{{

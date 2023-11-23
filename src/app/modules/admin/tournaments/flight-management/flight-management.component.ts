@@ -216,8 +216,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         if (
             this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
+
             matchFormat.TWO_Ball_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.THREE_BALL_SCRAMBLE 
+
         ) {
             // this.flightRound = this.tournamentInfo[0].noOfRounds;
             // else this.flightRound = this.tournamentInfo[0].activeRound;
@@ -358,6 +360,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
                 let outer = 0;
                 let category = '';
+                let indexA = 0;
+                this.teetime = 0;
                 for (let obj of result.category) {
                     let selMembers: Player[][] = [];
                     let cnter = 0;
@@ -401,24 +405,30 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         }
                         category = obj.name;
                         let tempSelMembers: any[] = [];
-
-                        for (const index in this.selectedMembers) {
-                            this.teetime++;
-                            teeBox = this.getNextTeeBox(obj.tee, this.teetime);
-                            tempSelMembers = [];
-                            tempSelMembers = this.selectedMembers;
-                            tempSelMembers[index]['tee'] = flightTee;
-                            tempSelMembers[index]['id'] =
-                                UniqueIdGenerator.generate();
-                            tempSelMembers[index]['tournamentId'] =
-                                this.tournamentID;
-                            tempSelMembers[index]['startingHole'] = teeBox;
-                            tempSelMembers[index]['flightNo'] = this.teetime;
-                            tempSelMembers[index]['categoryRound'] = 1;
-                            tempSelMembers[index]['tee_id'] = 1;
-                            tempSelMembers[index]['name'] = 'Team' + index;
-                            tempSelMembers[index]['time'] = obj.time;
-                            this.selectedMembers = tempSelMembers;
+                        // let index = 0;
+                        
+                        for (let index in this.selectedMembers) {
+                            if (indexA < this.selectedMembers.length) {
+                                this.teetime++;
+                                teeBox = this.getNextTeeBox(obj.tee, this.teetime);
+                                tempSelMembers = [];
+                                tempSelMembers = this.selectedMembers;
+                                tempSelMembers[indexA]['tee'] = flightTee;
+                                tempSelMembers[indexA]['id'] =
+                                    UniqueIdGenerator.generate();
+                                tempSelMembers[indexA]['tournamentId'] =
+                                    this.tournamentID;
+                                tempSelMembers[indexA]['startingHole'] = teeBox;
+                                tempSelMembers[indexA]['flightNo'] = this.teetime;
+                                tempSelMembers[indexA]['categoryRound'] = 1;
+                                tempSelMembers[indexA]['courseHoleSets'] = this.tournamentInfo[0].courseHoleSets;
+                                tempSelMembers[indexA]['tee_id'] = 1;
+                                tempSelMembers[indexA]['name'] = 'Team' + indexA;
+                                tempSelMembers[indexA]['time'] = obj.time;
+                                tempSelMembers[indexA]['flightsInterval'] = obj.interval;
+                                indexA++;
+                                this.selectedMembers = tempSelMembers;
+                            }
                         }
                         console.log(this.selectedMembers);
                     }
@@ -689,27 +699,75 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         }
     }
 
-    getNextFlightTime(items: any) {
+    getNextFlightTime(k: number, index: number, items) {
         let flightTime: string = '00:00';
+        let makeInterval: boolean = true;
 
         try {
-            if (items.time) {
-                let dateNow: Date = new Date(
-                    Constants.DEFAULT_DATE + ' ' + items.time.substr(0, 5)
-                );
+            if (items.startingHole == '1_10') {
+                let tee = this.getNextFlighttee(k, index, items);
 
-                let h = dateNow.getHours();
-                let m = dateNow.getMinutes();
-
-                flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
+                if (tee == 1) makeInterval = true;
+                else makeInterval = false;
+            } else if (items.startingHole == '10') {
+                let tee = this.getNextFlighttee(k, index, items);
+                if (tee == 10) makeInterval = true;
+                else makeInterval = false;
+            } else if (items.startingHole == '1') {
+                let tee = this.getNextFlighttee(k, index, items);
+                if (tee == 1) makeInterval = true;
+                else makeInterval = false;
             }
+            let dateNow: Date = new Date(
+                Constants.DEFAULT_DATE +
+                ' ' +
+                (index == 0
+                    ? items.time : items.time) +
+                ''
+            );
+            makeInterval
+                ? dateNow.setMinutes(
+                    dateNow.getMinutes() +
+                    (items.flightsInterval && index > 0
+                        ? parseInt(items.flightsInterval)
+                        : 0)
+                )
+                : '';
+            //console.log(dateNow);
+
+            let h = dateNow.getHours();
+            let m = dateNow.getMinutes();
+
+            let preFlightTime =
+                ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
+            return preFlightTime;
         } catch {
-            flightTime = '00:00';
+            return '00:00';
         }
 
-        return flightTime;
+
     }
 
+    getNextFlighttee(k: number, index: number, items) {
+        let startingHoleOption: any;
+        startingHoleOption = items.startingHole;
+
+        if (startingHoleOption == '1') {
+            // items.tee = 1;
+            return 1;
+        } else if (startingHoleOption == '10') {
+            // items.tee = 10;
+            return 10;
+        } else if (startingHoleOption == '1_10') {
+            if (index == 0 || index % 2 == 0) {
+                // items.tee = 1;
+                return 1;
+            } else {
+                // items.tee = 10;
+                return 10;
+            }
+        }
+    }
     changeRound(item) {
         //console.log("Selected value: " + item.value);
         if (isNumber(item.index)) {
@@ -874,6 +932,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async saveFlights() {
+
         try {
 
             this.logger.log('Saving Tournaments Flights Data', "info");
@@ -941,6 +1000,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             tournamentFlightMembers.push(FM);
                             flightMembersToSave.push(FM);
                         }
+
                     }
                 }
 
@@ -958,10 +1018,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     let startTime: string = (<HTMLInputElement>(
                         document.getElementById('flight_' + index + '_time')
                     )).value;
+
                     let flightNumber = parseFloat(
                         (<HTMLInputElement>(
                             document.getElementById('flight_' + index + '_number')
                         )).value
+
                     );
                     // let categoryFlight = parseFloat(
                     //     (<HTMLInputElement>(
@@ -975,11 +1037,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         )).value;
                     }
                     console.log(this.teamName);
+     
 
 
                     //let stTime: Time;
                     //stTime.hours = 9;
                     //stTime.minutes = 0;
+
 
                     let roundFlightData = this.roundFlights.filter((a) => {
                         return (
@@ -987,6 +1051,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             a.id == this.selectedMembers[index]['id']
                         );
                     });
+
 
                     console.log(roundFlightData);
                     console.log(this.selectedMembers[index]);

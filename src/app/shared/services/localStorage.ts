@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Crypto } from 'app/shared/classes/crypto';
 
 @Injectable({
@@ -7,7 +8,7 @@ import { Crypto } from 'app/shared/classes/crypto';
 
 export class LocalStorageService {
 
-    constructor() { }
+    constructor(private router: Router) { }
 
     public set(key: string, value: object) {
         localStorage.setItem(key, Crypto.encryptData(value));
@@ -17,7 +18,15 @@ export class LocalStorageService {
     }
 
     get(key: string): any {
-        return Crypto.decryptData(localStorage.getItem(key));
+        let user = Crypto.decryptData(localStorage.getItem(key));
+
+        if (!user) {
+            this.router.navigate(['/sign-out']);
+
+            return null;
+        }
+
+        return user;
     }
 
     remove(key: string) {
