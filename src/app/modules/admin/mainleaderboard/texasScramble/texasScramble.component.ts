@@ -384,7 +384,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
         let scoresArray: any[] = [];
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
-        let scoreResult = ScoreLoader.getTexasScrambleScore(playerId);
+        let scoreResult = ScoreLoader.getShamblesScore(playerId);
         console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
@@ -395,7 +395,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
                         ? this.Leaderboard.tee_id
                         : 1,
                 course: this.Leaderboard.courseId,
-                players: scoreResult.grossScore[0].players,
+                players: [],
                 holeSets: this.Leaderboard.courseHoleSets ? this.Leaderboard.courseHoleSets : 3,
                 allGross: scoreResult.grossScore,
                 courseHoleSetsInverted: this.Leaderboard.courseHoleSetsInverted,

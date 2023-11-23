@@ -108,6 +108,14 @@ export const getTorunamentScoreViewQueryQL = gql`
                 tournamentId
         
             }
+            PairsQL:pairs{
+                id
+                flightId
+                tournamentId
+                pairName
+                member1Id
+                member2Id
+            }
         }
     }
 
