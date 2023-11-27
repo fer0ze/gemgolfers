@@ -2365,7 +2365,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                         }
                                     );
 
-                                    await new Promise((f) => setTimeout(f, 5000));
+                                    // await new Promise((f) => setTimeout(f, 5000));
                                 }
                             }
                             //window.location.reload();
@@ -2446,7 +2446,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     // console.log(ourFlight)
 
                     let updatedFlight =
-                        await this.facadeService.singleRoundFlightsQuery(flightId);
+                        await this.facadeService.updatedFlightsQuery(flightId);
                     console.log(updatedFlight);
 
                     // let getCurrentFlight = currentFlight;

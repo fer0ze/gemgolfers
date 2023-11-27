@@ -547,9 +547,52 @@ export const singleRoundFlightsQueryQL = gql`
                 attendance
                 guest
                 playingTee
+                PlayerQL: player {
+                    id
+                    adminClubId
+                    firstName
+                    lastName
+                    fullName
+                    email
+                    phone
+                    playerCategory
+                    handicap
+                    membershipNumber
+                    homeClubId
+                    handicapWhsIndex
+                }
+            }
+        }
+    }
+    ${FlightsQL}
+`;
+export const updatedFlightsQueryQueryQL = gql`
+    query ClubSingleRoundFlightsQuery($where: flight_bool_exp!) {
+        FlightsQL: flight(
+            where: $where
+            order_by: [{ flightRound: asc }, { flightNo: asc }]
+        ) {
+            ...FlightQL
+            MembersQL: members {
+                flightId
+                playerId
+                attendance
+                guest
+                playingTee
 
                 PlayerQL: player {
-                    ...PlayerQL
+                    id
+                    adminClubId
+                    firstName
+                    lastName
+                    fullName
+                    email
+                    phone
+                    playerCategory
+                    handicap
+                    membershipNumber
+                    homeClubId
+                    handicapWhsIndex
                 }
                 ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
                     ...ScoreQL
@@ -569,15 +612,13 @@ export const singleRoundFlightsQueryQL = gql`
             }
         }
     }
-    ${PlayerQL}
-    ${FlightsQL}
     ${ScoreQL}
     ${ScoreDetailQL}
+    ${FlightsQL}
     ${CourseQL}
     ${HoleQL}
     ${CourseHoleSetsQL}
 `;
-
 export const singleRoundFlightQueryQL = gql`
     mutation ClubSingleRoundFlightQuery($flightId: String!) {
         flightEndedQl: update_flight(

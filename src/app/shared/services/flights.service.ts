@@ -601,6 +601,28 @@ export class FlightsService {
                 });
         });
     }
+    public updatedFlightsQuery(flightId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.updatedFlightsQueryQueryQL,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: flightId,
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public singleRoundFlightQuery(flightId: string): Promise<any> {
         return new Promise((resolve) => {

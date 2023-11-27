@@ -866,6 +866,9 @@ export class FacadeService {
   singleRoundFlightsQuery(flightId: string) {
     return this.flightsService.singleRoundFlightsQuery(flightId);
   }
+  updatedFlightsQuery(flightId: string) {
+    return this.flightsService.updatedFlightsQuery(flightId);
+  }
 
   singleRoundFlightQuery(flightId: string) {
     return this.flightsService.singleRoundFlightQuery(flightId);
