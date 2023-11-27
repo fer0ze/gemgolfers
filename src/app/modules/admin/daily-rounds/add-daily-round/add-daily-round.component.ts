@@ -390,46 +390,145 @@ export class AddDailyRoundComponent implements OnInit {
     }
 
     async searchPlayer(query) {
-        try {
-            this.logger.log('Admin Click on search player on Add Daily Round', "info", query);
-            let player;
-            console.log(this.starterForm.value);
+        let player;
+        console.log(this.starterForm.value);
 
-            if (query) {
-                player = <Player[]>(
-                    await this.facadeService.getPlayerByMembershipNumber(query)
+        if (query) {
+            player = <Player[]>(
+                await this.facadeService.getPlayerByMembershipNumber(query)
+            );
+
+            console.log(this.clubID['id']);
+            let date = this.starterForm.value.roundDate;
+            if (!player || player.length == 0) {
+                player = <Player>(
+                    await this.facadeService.getPlayerByMembershipNumberClubwise(
+                        this.clubID['id'],
+                        query,
+                        query
+                    )
+                );
+            }
+            console.log(this.datepipe.transform(date.toString(), 'yyyy-MM-dd'));
+
+            if (player.length == 1) {
+                let founded = await this.facadeService.getPlayerTodayRound(
+                    player[0].id,
+                    this.datepipe.transform(date.toString(), 'yyyy-MM-dd')
                 );
 
-                console.log(this.clubID['id']);
-                let date = this.starterForm.value.roundDate;
-                if (!player || player.length == 0) {
-                    player = <Player>(
-                        await this.facadeService.getPlayerByMembershipNumberClubwise(
-                            this.clubID['id'],
-                            query,
-                            query
-                        )
+                if (founded && founded.length > 0) {
+                    this.snackBar.open(
+                        'Player already played in a round today.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
                     );
+
+                    return;
                 }
-                console.log(this.datepipe.transform(date.toString(), 'yyyy-MM-dd'));
 
-                if (player.length == 1) {
-                    let founded = await this.facadeService.getPlayerTodayRound(
-                        player[0].id,
-                        this.datepipe.transform(date.toString(), 'yyyy-MM-dd')
-                    );
+                founded = this.tournamentMembers.filter((a) => {
+                    return a.id == player[0].id;
+                });
+                console.log(founded);
 
-                    if (founded && founded.length > 0) {
+                if (founded.length == 0) {
+                    if (this.flightMembers.length > 4) {
                         this.snackBar.open(
-                            'Player already played in a round today.',
-                            'x',
+                            "Maximum 5 players are allowed per flight.",
+                            "x",
                             {
                                 duration: 5000,
                             }
                         );
 
+                        return false;
+                    }
+
+                    let member: any = {
+                        playerId: player[0].id,
+
+                        attendance: true,
+                    };
+
+                    this.flightMembers.push(member);
+                    let playerTee = player[0].playerCategory;
+                    if (playerTee == 'Senior Amateurs') {
+                        playerTee = 'Seniors';
+                    }
+                    player[0]['playingTee'] = playerTee.toUpperCase();
+                    let selectedData = {
+                        value: player[0]['playingTee'],
+                        text: player[0]['playingTee'],
+                    };
+                    this.playerTees.set(player[0].id, selectedData);
+                    this.tournamentMembers.push(player[0]);
+
+                    this.syncTournamentMembers();
+                    this.snackBar.open(
+                        'Player has been added in the list.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
+                } else {
+                    this.snackBar.open(
+                        'Player already exist in the list.',
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
+                }
+            } else {
+                if (player.length == 0) return;
+
+                const dialogRef = this.dialog.open(
+                    DialogAddExisitingPlayerComponent,
+                    {
+                        width: '80%',
+                        data: { players: player },
+                    }
+                );
+
+                dialogRef.afterClosed().subscribe(async (result) => {
+                    console.log(result);
+                    if (result) {
+                        //console.log("record deleted.");
+                        console.log(result);
+                        console.log(
+                            this.datepipe.transform(
+                                date.toString(),
+                                'yyyy-MM-dd'
+                            )
+                        );
+
+                        let founded =
+                            await this.facadeService.getPlayerTodayRound(
+                                result.player.id,
+                                this.datepipe.transform(
+                                    date.toString(),
+                                    'yyyy-MM-dd'
+                                )
+                            );
+
+                        if (founded && founded.length > 0) {
+                            this.snackBar.open(
+                                'Player already played in a round today.',
+                                'x',
+                                {
+                                    duration: 5000,
+                                }
+                            );
+
+                            return;
+                        }
+
                         founded = this.tournamentMembers.filter((a) => {
-                            return a.id == player[0].id;
+                            return a.id == result.player.id;
                         });
                         console.log(founded);
 
@@ -447,247 +546,89 @@ export class AddDailyRoundComponent implements OnInit {
                             }
 
                             let member: any = {
-                                playerId: player[0].id,
-
-                                attendance: true,
+                                playerId: result.player.id,
+                                attendance: false,
                             };
 
-                            this.flightMembers.push(member);
-                            let playerTee = player[0].playerCategory;
+                            console.log(this.flightMembers);
+                            console.log(this.tournamentMembers);
+                            let playerTee = result.player.playerCategory;
                             if (playerTee == 'Senior Amateurs') {
                                 playerTee = 'Seniors';
                             }
+                            playerTee = playerTee.toUpperCase();
+                            let selectedData = {
+                                value: playerTee,
+                                text: playerTee,
+                            };
+                            this.playerTees.set(result.player.id, selectedData);
 
-                            founded = this.tournamentMembers.filter((a) => {
-                                return a.id == player[0].id;
-                            });
-                            console.log(founded);
+                            let obj: Player = {
+                                id: result.player.id,
+                                adminClubId: result.player.adminClubId,
+                                firebaseUid: result.player.firebaseUid,
+                                fcmToken: result.player.fcmToken,
+                                gemId: result.player.gemId,
+                                firstName: result.player.firstName,
+                                lastName: result.player.lastName,
+                                gender: result.player.gender,
+                                dob: result.player.dob,
+                                picture: result.player.picture,
+                                email: result.player.email,
+                                phone: result.player.phone,
+                                playerCategory: result.player.playerCategory,
+                                handicap: result.player.handicap,
+                                online: false,
+                                countryCode: result.player.countryCode,
+                                extraData: result.player.extraData,
+                                userRole:
+                                    result.player.isClubAdmin == true ? 2 : 3,
+                                membership: result.player.membership,
+                                membershipNumber:
+                                    result.player.membershipNumber,
+                                playingTee: playerTee,
+                            };
 
-                            if (founded.length == 0) {
-                                // if (this.flightMembers.length > 3) {
-                                //   this.snackBar.open(
-                                //     "Maximum 4 players are allowed per flight.",
-                                //     "x",
-                                //     {
-                                //       duration: 5000,
-                                //     }
-                                //   );
+                            console.log(obj);
+                            console.log(this.tournamentMembers);
 
-                                //   return false;
-                                // }
+                            this.tournamentMembers.push(obj);
+                            this.flightMembers.push(member);
 
-                                let member: any = {
-                                    playerId: player[0].id,
+                            console.log(this.tournamentMembers);
+                            console.log(this.flightMembers);
+                            // if(this.tournamentMembers.length==2 && this.last==true)
+                            // {
+                            //   this.tournamentMembers.splice(0,1);
+                            //   console.log(this.tournamentMembers);
+                            //   console.log(this.flightMembers);
+                            //   //this.flightMembers.splice(0,1);
 
-                                    attendance: true,
-                                };
+                            // }
 
-                                this.flightMembers.push(member);
-                                let playerTee = player[0].playerCategory;
-                                if (playerTee == 'Senior Amateurs') {
-                                    playerTee = 'Seniors';
-                                }
-                                player[0]['playingTee'] = playerTee.toUpperCase();
-                                let selectedData = {
-                                    value: player[0]['playingTee'],
-                                    text: player[0]['playingTee'],
-                                };
-                                this.playerTees.set(player[0].id, selectedData);
-                                this.tournamentMembers.push(player[0]);
-
-                                this.syncTournamentMembers();
-                                this.snackBar.open(
-                                    'Player has been added in the list.',
-                                    'x',
-                                    {
-                                        duration: 5000,
-                                    }
-                                );
-                            } else {
-                                this.snackBar.open(
-                                    'Player already exist in the list.',
-                                    'x',
-                                    {
-                                        duration: 5000,
-                                    }
-                                );
-                            }
-                        } else {
-                            if (player.length == 0) return;
-
-                            const dialogRef = this.dialog.open(
-                                DialogAddExisitingPlayerComponent,
+                            console.log(this.tournamentMembers);
+                            this.syncTournamentMembers();
+                            this.snackBar.open(
+                                'Player has been added in the list.',
+                                'x',
                                 {
-                                    width: '80%',
-                                    data: { players: player },
+                                    duration: 5000,
                                 }
                             );
-
-                            dialogRef.afterClosed().subscribe(async (result) => {
-                                console.log(result);
-                                if (result) {
-                                    //console.log("record deleted.");
-                                    console.log(result);
-                                    console.log(
-                                        this.datepipe.transform(
-                                            date.toString(),
-                                            'yyyy-MM-dd'
-                                        )
-                                    );
-                                    if (founded && founded.length > 0) {
-                                        this.snackBar.open(
-                                            'Player already played in a round today.',
-                                            'x',
-                                            {
-                                                duration: 5000,
-                                            }
-                                        );
-
-                                        return;
-                                    }
-
-                                    founded = this.tournamentMembers.filter((a) => {
-                                        return a.id == result.player.id;
-                                    });
-                                    console.log(founded);
-
-                                    if (founded.length == 0) {
-                                        if (this.flightMembers.length > 4) {
-                                            this.snackBar.open(
-                                                "Maximum 5 players are allowed per flight.",
-                                                "x",
-                                                {
-                                                    duration: 5000,
-                                                }
-                                            );
-
-                                            return false;
-                                        }
-
-                                        let member: any = {
-                                            playerId: result.player.id,
-                                            attendance: false,
-                                        };
-
-                                        console.log(this.flightMembers);
-                                        console.log(this.tournamentMembers);
-                                        let playerTee = result.player.playerCategory;
-                                        if (playerTee == 'Senior Amateurs') {
-                                            playerTee = 'Seniors';
-                                        }
-
-                                        founded = this.tournamentMembers.filter((a) => {
-                                            return a.id == result.player.id;
-                                        });
-                                        console.log(founded);
-
-                                        if (founded.length == 0) {
-                                            // if (this.flightMembers.length > 3) {
-                                            //   this.snackBar.open(
-                                            //     "Maximum 4 players are allowed per flight.",
-                                            //     "x",
-                                            //     {
-                                            //       duration: 5000,
-                                            //     }
-                                            //   );
-
-                                            //   return false;
-                                            // }
-
-                                            let member: any = {
-                                                playerId: result.player.id,
-                                                attendance: false,
-                                            };
-
-                                            console.log(this.flightMembers);
-                                            console.log(this.tournamentMembers);
-                                            let playerTee = result.player.playerCategory;
-                                            if (playerTee == 'Senior Amateurs') {
-                                                playerTee = 'Seniors';
-                                            }
-                                            playerTee = playerTee.toUpperCase();
-                                            let selectedData = {
-                                                value: playerTee,
-                                                text: playerTee,
-                                            };
-                                            this.playerTees.set(result.player.id, selectedData);
-
-                                            let obj: Player = {
-                                                id: result.player.id,
-                                                adminClubId: result.player.adminClubId,
-                                                firebaseUid: result.player.firebaseUid,
-                                                fcmToken: result.player.fcmToken,
-                                                gemId: result.player.gemId,
-                                                firstName: result.player.firstName,
-                                                lastName: result.player.lastName,
-                                                gender: result.player.gender,
-                                                dob: result.player.dob,
-                                                picture: result.player.picture,
-                                                email: result.player.email,
-                                                phone: result.player.phone,
-                                                playerCategory: result.player.playerCategory,
-                                                handicap: result.player.handicap,
-                                                online: false,
-                                                countryCode: result.player.countryCode,
-                                                extraData: result.player.extraData,
-                                                userRole:
-                                                    result.player.isClubAdmin == true ? 2 : 3,
-                                                membership: result.player.membership,
-                                                membershipNumber:
-                                                    result.player.membershipNumber,
-                                                playingTee: playerTee,
-                                            };
-
-                                            console.log(obj);
-                                            console.log(this.tournamentMembers);
-
-                                            this.tournamentMembers.push(obj);
-                                            this.flightMembers.push(member);
-
-                                            console.log(this.tournamentMembers);
-                                            console.log(this.flightMembers);
-                                            // if(this.tournamentMembers.length==2 && this.last==true)
-                                            // {
-                                            //   this.tournamentMembers.splice(0,1);
-                                            //   console.log(this.tournamentMembers);
-                                            //   console.log(this.flightMembers);
-                                            //   //this.flightMembers.splice(0,1);
-
-                                            // }
-
-                                            console.log(this.tournamentMembers);
-                                            this.syncTournamentMembers();
-                                            this.snackBar.open(
-                                                'Player has been added in the list.',
-                                                'x',
-                                                {
-                                                    duration: 5000,
-                                                }
-                                            );
-                                        } else {
-                                            this.snackBar.open(
-                                                'Player already exist in the list.',
-                                                'x',
-                                                {
-                                                    duration: 5000,
-                                                }
-                                            );
-                                        }
-                                    } else {
-                                        //console.log("cancel delete action");
-                                    }
+                        } else {
+                            this.snackBar.open(
+                                'Player already exist in the list.',
+                                'x',
+                                {
+                                    duration: 5000,
                                 }
-                            });
-
+                            );
                         }
+                    } else {
+                        //console.log("cancel delete action");
                     }
-                }
-
-
-
+                });
             }
-        } catch (error) {
-            this.logger.log('Searching In players on Add Daily Round Failed', "error", error.toString());
         }
     }
 
