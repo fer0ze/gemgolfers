@@ -128,7 +128,7 @@ export class ContactsDetailsComponent implements OnInit {
             this.logger.log('Admin comes to Player Edit Page', "info", this.playerID);
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             let dataClubs: any;
-            if (this.loggedInuser <= 2) {
+            if (this.loggedInuser.userRole <= 2) {
                 let clubInfo: any =
                     this.loggedInuser.membership.length > 0
                         ? this.loggedInuser.membership[0].club

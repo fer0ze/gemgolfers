@@ -2356,7 +2356,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 //this.facadeService.updateDailyRoundCourseHoleset(this.tournamentID, flightScores, newScores);
 
                                 if (result) {
-                                     this.logger.log('Hole Set Change on Daily Round Page Sucessfully', "info");
+                                    this.logger.log('Hole Set Change on Daily Round Page Sucessfully', "info");
                                     this.snackBar.open(
                                         'Flight has been updated.',
                                         'x',
