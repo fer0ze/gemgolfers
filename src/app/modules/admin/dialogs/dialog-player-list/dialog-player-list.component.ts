@@ -146,7 +146,7 @@ export class DialogPlayerListComponent implements OnInit {
                     playerId: selectionArray[index].id,
                     status: true,
                 };
-                if (this.data.subTournamentID !== undefined ) {
+                if (this.data.subTournamentID !== undefined && this.data.subTournamentID !== "") {
                     let member: any = {
                         tournamentId: this.data.subTournamentID,
                         playerId: selectionArray[index].id,
