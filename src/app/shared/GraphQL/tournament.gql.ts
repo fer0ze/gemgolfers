@@ -2091,6 +2091,33 @@ export const getallDashboard = gql`
         }
     }
 `;
+export const getPlayer = gql`
+  query geteverything(
+    $fromDate: timestamptz!
+    $toDate: timestamptz!
+  ) { 
+    player(
+      where: {
+        _and: [
+          { createdAt: { _lte: $toDate } }
+          { createdAt: { _gt: $fromDate } }
+        ]
+    }
+    order_by: { createdAt: desc }
+    ) {
+      id
+      createdAt
+      firstName
+      lastName
+      playerCategory
+      handicap
+      handicapWhsIndex
+      phone
+      email
+    }
+  }
+`;
+
 export const getTourDashboard = gql`
     query getTourDashboard(
         $adminId: String!

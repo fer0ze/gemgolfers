@@ -78,7 +78,7 @@ export class DialogUncompletedComponent implements OnInit {
             doc.text("Round's Non-Submitted Cards Detail:", 54, 23);
         }else if(this.data.key=='all'){      
             doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
-            doc.text("Round's All Players Detail:", 68, 23);
+            doc.text("All Players Detail:", 68, 23);
         }else{
             doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
             doc.text("Round's Submitted Cards Detail:",62, 23);

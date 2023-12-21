@@ -78,7 +78,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
         ],
     },
-   
+
     {
         id: 'dailyRounds',
         title: 'DailyRound',
@@ -106,7 +106,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:menu-alt-4',
                 link: '/teetimes',
             },
-            
+
             {
                 id: 'dailyRounds.schedule',
                 title: 'Schedule',
@@ -307,7 +307,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:academic-cap',
                 link: '/tournaments/add',
             },
-            
+
             {
                 id: 'tournaments.viewtournaments',
                 title: 'All Tournaments',
@@ -325,29 +325,29 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
         ],
     },
     // },
-    // {
-    //     id: 'leagues',
-    //     title: 'League',
+    {
+        id: 'leagues',
+        title: 'League',
 
-    //     type: 'group',
-    //     icon: 'heroicons_outline:view-boards',
-    //     children: [
-    //         {
-    //             id: 'leagues.newleagues',
-    //             title: 'New League',
-    //             type: 'basic',
-    //             icon: 'heroicons_outline:academic-cap',
-    //             link: '/leagues/new',
-    //         },
-    //         {
-    //             id: 'leagues.viewleagues',
-    //             title: 'All Leagues',
-    //             type: 'basic',
-    //             icon: 'heroicons_outline:view-boards',
-    //             link: '/leagues/view',
-    //         },
-    //     ],
-    // },
+        type: 'group',
+        icon: 'heroicons_outline:view-boards',
+        children: [
+            // {
+            //     id: 'leagues.newleagues',
+            //     title: 'New League',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/leagues/new',
+            // },
+            {
+                id: 'leagues.viewleagues',
+                title: 'All Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:view-boards',
+                link: '/leagues',
+            },
+        ],
+    },
     {
         id: 'players',
         title: 'Players',
@@ -363,7 +363,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
             },
         ],
     },
-   
+
     {
         id: 'dailyRounds',
         title: 'DailyRound',
@@ -390,7 +390,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:menu-alt-4',
                 link: '/teetimes',
-            },  
+            },
             {
                 id: 'dailyRounds.schedule',
                 title: 'Schedule',
@@ -451,18 +451,18 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 link: '/reports/dailycard',
             },
             {
-                id: 'reports.Players',
-                title: 'Players',
-                type: 'basic',
-                icon: 'heroicons_outline:speakerphone',
-                link: '/reports/players',
-            },
-            {
                 id: 'reports.signUpPlayers',
                 title: 'SignUp-Players',
                 type: 'basic',
                 icon: 'heroicons_outline:beaker',
                 link: '/reports/signUpPlayers',
+            },
+            {
+                id: 'reports.Players',
+                title: 'Players',
+                type: 'basic',
+                icon: 'heroicons_outline:speakerphone',
+                link: '/reports/players',
             },
         ],
     },

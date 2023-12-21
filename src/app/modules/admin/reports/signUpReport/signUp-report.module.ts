@@ -25,10 +25,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { SignUpFormComponent } from '../../tournaments/Sign-Up-Form/sign-up-form/sign-up-form.component';
 import { SignUpReportComponent } from './signUp-report.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Resolver } from './signUp-resolver.component';
+import { MatDialogModule } from '@angular/material/dialog';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
         component: SignUpReportComponent,
+        resolve: {
+            data: Resolver,
+        }
     },
 ];
 
@@ -48,7 +53,7 @@ const ClubReportRoutes: Route[] = [
         MatNativeDateModule,
         MatSelectModule,
         MatSnackBarModule,
-        MatPaginatorModule,
+        MatPaginatorModule,MatDialogModule,
         MatSidenavModule,
         MatOptionModule,
         MatSortModule,
@@ -63,4 +68,4 @@ const ClubReportRoutes: Route[] = [
     ],
     providers: [DatePipe],
 })
-export class SignUpReportModule {}
+export class SignUpReportModule { }

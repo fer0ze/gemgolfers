@@ -34,21 +34,13 @@ export class PlayersService {
                 });
         });
     }
-    public getPlayersListReport(): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.getPlayersListReport,
-                })
-                .subscribe(({ data }) => {
-                    console.log(data);
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        resolve(data);
-                    }
-                });
-        });
+    public getPlayersListReport(): Observable<any> {
+        return this.apollo
+            .subscribe({
+                query: Query.getPlayersListReport,
+            })
+            .pipe(map((item) => item.data))
+
     }
     public getPlayersListByAdminCONGU(): Promise<any> {
         return new Promise((resolve) => {
@@ -895,7 +887,7 @@ export class PlayersService {
                 );
         });
     }
-    public AddTourPlayer(player: Player,tourMember:any): Promise<boolean> {
+    public AddTourPlayer(player: Player, tourMember: any): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
@@ -924,7 +916,7 @@ export class PlayersService {
                                 membershipNumber: player.membershipNumber,
                             },
                         ],
-                        tourMember:tourMember,
+                        tourMember: tourMember,
                     },
                 })
                 .subscribe(

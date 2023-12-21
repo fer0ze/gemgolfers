@@ -38,6 +38,7 @@ export const getPlayersListReport = gql`
             order_by: { createdAt: desc }
         ) {
             id
+            fullName
             firstName
             lastName
             email

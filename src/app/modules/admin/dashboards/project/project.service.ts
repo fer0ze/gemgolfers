@@ -99,6 +99,39 @@ export class ProjectService {
             throw error;
         }
     }
+    getPlayerData(
+        fromDate?: any,
+        toDate?: any
+    ): Observable<any> {
+        try {
+            return this.apollo
+                .subscribe<any>({
+                    query: Query.getPlayer,
+                    variables: {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .pipe(
+                    tap((response: any) => {
+                        this.logger.log(
+                            'Getting Player Data Successfull',
+                            'info'
+                        );
+                        this._data.next(response);
+                    })
+                );
+        } catch (error) {
+            // Handle the error here or re-throw it if necessary
+            console.error('An error occurred:', error);
+            this.logger.log(
+                'Getting Player Data Failed',
+                'error',
+                error.toString()
+            );
+            throw error;
+        }
+    }
 
     getTourData(id: String, fromDate?: any, toDate?: any): Observable<any> {
         return this.apollo

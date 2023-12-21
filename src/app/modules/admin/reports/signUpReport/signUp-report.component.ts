@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
@@ -8,7 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
-import { of } from 'rxjs';
+import { Subject, of, takeUntil } from 'rxjs';
 import {
     animate,
     state,
@@ -16,6 +16,11 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
+import { Resolver } from './signUp-resolver.component';
+import { SignUpService } from './signUp-service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
+import { ProjectService } from '../../dashboards/project/project.service';
 @Component({
     selector: 'app-signUp-report',
     templateUrl: './signUp-report.component.html',
@@ -31,7 +36,7 @@ import {
         ]),
     ],
 })
-export class SignUpReportComponent implements OnInit {
+export class SignUpReportComponent implements OnInit, AfterViewInit {
     chartVisitors: ApexOptions;
     showdata: Promise<boolean>;
     chartConversions: ApexOptions;
@@ -86,78 +91,85 @@ export class SignUpReportComponent implements OnInit {
     flightCount: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     constructor(
         private datePipe: DatePipe,
         private _changeDetectorRef: ChangeDetectorRef,
         private location: Router,
         private facadeService: FacadeService,
         private route: ActivatedRoute,
-        private apollo: Apollo
-    ) {}
+        private apollo: Apollo,
+        private _data: SignUpService, private _projectService: ProjectService,
+        public dialog: MatDialog,
+    ) { }
 
     ngOnInit(): void {
         this.fecthData();
-        this.showdata = Promise.resolve(true);
+    }
+    ngAfterViewInit(): void {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     }
 
-    async fecthData() {
-        this.showdata = Promise.resolve(false);
+    fecthData() {
+        this._data.data$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((data: any) => {
+                this.data = data;
+                console.log(data);
+                let d = new Date();
+                d.setDate(1);
+                for (let i = 0; i <= 18; i++) {
+                    // console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
+                    this.labelsE.push(
+                        this.monthName[d.getMonth()] + ' ' + d.getFullYear()
+                    );
+                    d.setMonth(d.getMonth() - 1);
+                }
+                console.log(this.labelsE);
 
-        let data = await this.facadeService.getPlayersListReport();
-        this.data = data;
-        console.log(data);
-        let d = new Date();
-        d.setDate(1);
-        for (let i = 0; i <= 18; i++) {
-            console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
-            this.labelsE.push(
-                this.monthName[d.getMonth()] + ' ' + d.getFullYear()
-            );
-            d.setMonth(d.getMonth() - 1);
-        }
-        console.log(this.labelsE);
+                this.sorts();
+                // this.series[0] = [
+                //     {
+                //         data: this.dataMembers,
+                //         name: 'New Users',
+                //     },
+                // ];
+                this.seriesA = [
+                    {
+                        data: this.dataMembersA,
+                        name: 'Users',
+                    },
+                ];
+                this.seriesB = [
+                    {
+                        data: this.dataMembersB,
+                        name: 'Users',
+                    },
+                ];
+                this.seriesC = [
+                    {
+                        data: this.dataMembersC,
+                        name: 'Users',
+                    },
+                ];
+                this.seriesD = [this.male, this.female];
 
-        this.sorts();
-        this.series[0] = [
-            {
-                data: this.dataMembers,
-                name: 'New Users',
-            },
-        ];
-        this.seriesA = [
-            {
-                data: this.dataMembersA,
-                name: 'Users',
-            },
-        ];
-        this.seriesB = [
-            {
-                data: this.dataMembersB,
-                name: 'Users',
-            },
-        ];
-        this.seriesC = [
-            {
-                data: this.dataMembersC,
-                name: 'Users',
-            },
-        ];
-        this.seriesD = [this.male, this.female];
+                this._seriesE[0] = [
+                    {
+                        data: this.dataMembersE,
+                        name: 'Players',
+                        type: 'line',
+                    },
+                    {
+                        data: this.dataMembersE,
+                        name: 'Players',
+                        type: 'column',
+                    },
+                ];
 
-        this._seriesE[0] = [
-            {
-                data: this.dataMembersE,
-                name: 'Players',
-                type: 'line',
-            },
-            {
-                data: this.dataMembersE,
-                name: 'Players',
-                type: 'column',
-            },
-        ];
-
-        this._prepareChartData();
+                this._prepareChartData();
+            })
     }
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -173,78 +185,78 @@ export class SignUpReportComponent implements OnInit {
         let flightCounter = 0;
         let prevDate = null;
         let prevPlayerDate = null;
-        let count=0;
+        let count = 0;
         let match = [];
         console.log(match);
+        let flag: boolean = true;
 
         for (let item of this.data.player) {
-            let SplitDate = item.createdAt.split('T');
-            if (SplitDate[0] == prevPlayerDate) {
-                playerCounter++;
-                prevPlayerDate = SplitDate[0];
-                this.dataMembers[this.dataMembers.length - 1]['y'] =
-                    playerCounter;
-            } else {
-                playerCounter = 0;
-                playerCounter++;
-                prevPlayerDate = SplitDate[0];
-                let dateObj = {
-                    x: new Date(item.createdAt),
-                    y: playerCounter,
+            if (item.createdAt != null) {
+                let SplitDate = item.createdAt?.split('T');
+                if (SplitDate[0] == prevPlayerDate) {
+                    playerCounter++;
+                    prevPlayerDate = SplitDate[0];
+                    this.dataMembers[this.dataMembers.length - 1]['y'] = playerCounter;
+                } else {
+                    playerCounter = 0;
+                    playerCounter++;
+                    prevPlayerDate = SplitDate[0];
+                    let dateObj = {
+                        x: new Date(item.createdAt),
+                        y: playerCounter,
+                    };
+                    this.dataMembers.push(dateObj);
+                }
+
+                if (item.gender == 'male') {
+                    this.male++;
+                }
+                if (item.gender == 'female') {
+                    this.female++;
+                }
+                let obj = {
+                    id: item.id,
+                    count: ++count,
+                    name: item.fullName,
+                    date: item.createdAt?.substring(0, 10),
+                    email: item.email,
+                    phone: item.phone,
+                    flights: 0,
                 };
-                this.dataMembers.push(dateObj);
+                let date = new Date(item?.createdAt).toLocaleString('default', {
+                    month: 'long',
+                    year: 'numeric',
+                });
+                if (flag) {
+                    let countA = this.labelsE.find((a) => {
+                        return a == date;
+                    });
+                    console.log(countA);
+                    if (countA !== undefined && prevDate == countA) {
+                        memCounter++;
+                        prevDate = countA;
+                        this.dataMembersE[this.dataMembersE.length - 1] = memCounter;
+                    } else if (countA !== undefined) {
+                        memCounter = 0;
+                        memCounter++;
+                        prevDate = countA;
+                        this.dataMembersE.push(memCounter);
+                    } else if (countA == undefined) {
+                        flag = false;
+                    }
+                } else {
+                    break;
+                }
+                rows.push(obj);
             }
-            // if (item.email!="" || item.phone!="") {
-            //     this.clubPlayers++;
-            // } else {
-            //     this.mobilePlayers++;
-            // }
-            if (item.gender == 'male') {
-                this.male++;
-            }
-            if (item.gender == 'female') {
-                this.female++;
-            }
-            let obj = {
-                id: item.id,
-                count:++count,
-                name: item.firstName + ' ' + item.lastName,
-                date: item.createdAt.substring(0, 10),
-                email: item.email,
-                phone: item.phone,
-                flights: 0,
-            };
-            let date = new Date(item.createdAt).toLocaleString('default', {
-                month: 'long',
-                year: 'numeric',
-            });
-            //console.log(date);
-
-            let countA = this.labelsE.find((a) => {
-                return a == date;
-            });
-            // if (countA == undefined) {
-            //     this.showdata = Promise.resolve(false);
-            // }
-            console.log(countA);
-            if (countA !== undefined && prevDate == countA) {
-                memCounter++;
-                prevDate = countA;
-                this.dataMembersE[this.dataMembersE.length - 1] = memCounter;
-            } else if (countA !== undefined) {
-                memCounter = 0;
-                memCounter++;
-                prevDate = countA;
-                this.dataMembersE.push(memCounter);
-            }
-
-            rows.push(obj);
         }
         this.clubPlayers = (5000 * 100) / this.data.player.length;
         this.mobilePlayers = (4000 * 100) / this.data.player.length;
         this.dataSource = new MatTableDataSource(rows);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        console.log(this.dataMembers);
+
         for (let items of this.dataMembers) {
             if (items.x.toString().includes('Apr')) {
                 if (this.dataMembersA.length < 3 && items.y > 0) {
@@ -274,120 +286,130 @@ export class SignUpReportComponent implements OnInit {
         // If the product is already selected...
         if (this.selectedPlayer != null && this.selectedPlayer == productId) {
             // Close the details
-            document.getElementById(productId).classList.add('warn');
+            //document.getElementById(productId).classList.add('warn');
+            const selectedPlayerElement = document.getElementById(productId);
+            if (selectedPlayerElement) {
+                selectedPlayerElement.classList.add('warn');
+            }
             this.selectedPlayer = null;
             return;
         } else if (
             this.selectedPlayer != null &&
             this.selectedPlayer != productId
         ) {
-            document.getElementById(this.selectedPlayer).classList.add('warn');
+            const selectedPlayerElement = document.getElementById(this.selectedPlayer);
+            if (selectedPlayerElement) {
+                selectedPlayerElement.classList.add('warn');
+            }
         }
         let count = await this.facadeService.getTotalFlightsPlayedByPlayer(
             productId
         );
         this.flightCount = count['flight_member'].length;
-        document.getElementById(productId).classList.remove('warn');
+        const selectedPlayerElement = document.getElementById(productId);
+        if (selectedPlayerElement) {
+            selectedPlayerElement.classList.remove('warn');
+        }
         this.selectedPlayer = productId;
     }
     private _prepareChartData(): void {
         // Visitors
-        this.chartVisitors = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                width: '100%',
-                height: '100%',
-                type: 'area',
-                toolbar: {
-                    show: false,
-                },
-                zoom: {
-                    enabled: false,
-                },
-            },
-            colors: ['#818CF8'],
-            dataLabels: {
-                enabled: false,
-            },
-            fill: {
-                colors: ['#312E81'],
-            },
-            grid: {
-                show: true,
-                borderColor: '#334155',
-                padding: {
-                    top: 10,
-                    bottom: -40,
-                    left: 0,
-                    right: 0,
-                },
-                position: 'back',
-                xaxis: {
-                    lines: {
-                        show: true,
-                    },
-                },
-            },
-            series: this.series,
-            stroke: {
-                width: 2,
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark',
-                x: {
-                    format: 'MMM dd, yyyy',
-                },
-                y: {
-                    formatter: (value: number): string => `${value}`,
-                },
-            },
-            xaxis: {
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
-                crosshairs: {
-                    stroke: {
-                        color: '#475569',
-                        dashArray: 0,
-                        width: 2,
-                    },
-                },
-                labels: {
-                    offsetY: -20,
-                    style: {
-                        colors: '#CBD5E1',
-                    },
-                },
-                tickAmount: 20,
-                tooltip: {
-                    enabled: false,
-                },
-                type: 'datetime',
-            },
-            yaxis: {
-                axisTicks: {
-                    show: false,
-                },
-                axisBorder: {
-                    show: false,
-                },
-                min: (min): number => min - 1000,
-                max: (max): number => max + 300,
-                tickAmount: 5,
-                show: false,
-            },
-        };
+        // this.chartVisitors = {
+        //     chart: {
+        //         animations: {
+        //             speed: 400,
+        //             animateGradually: {
+        //                 enabled: false,
+        //             },
+        //         },
+        //         fontFamily: 'inherit',
+        //         foreColor: 'inherit',
+        //         width: '100%',
+        //         height: '100%',
+        //         type: 'area',
+        //         toolbar: {
+        //             show: false,
+        //         },
+        //         zoom: {
+        //             enabled: false,
+        //         },
+        //     },
+        //     colors: ['#818CF8'],
+        //     dataLabels: {
+        //         enabled: false,
+        //     },
+        //     fill: {
+        //         colors: ['#312E81'],
+        //     },
+        //     grid: {
+        //         show: true,
+        //         borderColor: '#334155',
+        //         padding: {
+        //             top: 10,
+        //             bottom: -40,
+        //             left: 0,
+        //             right: 0,
+        //         },
+        //         position: 'back',
+        //         xaxis: {
+        //             lines: {
+        //                 show: true,
+        //             },
+        //         },
+        //     },
+        //     series: this.series,
+        //     stroke: {
+        //         width: 2,
+        //     },
+        //     tooltip: {
+        //         followCursor: true,
+        //         theme: 'dark',
+        //         x: {
+        //             format: 'MMM dd, yyyy',
+        //         },
+        //         y: {
+        //             formatter: (value: number): string => `${value}`,
+        //         },
+        //     },
+        //     xaxis: {
+        //         axisBorder: {
+        //             show: false,
+        //         },
+        //         axisTicks: {
+        //             show: false,
+        //         },
+        //         crosshairs: {
+        //             stroke: {
+        //                 color: '#475569',
+        //                 dashArray: 0,
+        //                 width: 2,
+        //             },
+        //         },
+        //         labels: {
+        //             offsetY: -20,
+        //             style: {
+        //                 colors: '#CBD5E1',
+        //             },
+        //         },
+        //         tickAmount: 20,
+        //         tooltip: {
+        //             enabled: false,
+        //         },
+        //         type: 'datetime',
+        //     },
+        //     yaxis: {
+        //         axisTicks: {
+        //             show: false,
+        //         },
+        //         axisBorder: {
+        //             show: false,
+        //         },
+        //         min: (min): number => min - 1000,
+        //         max: (max): number => max + 300,
+        //         tickAmount: 5,
+        //         show: false,
+        //     },
+        // };
 
         // Conversions
         this.chartConversions = {
@@ -516,6 +538,21 @@ export class SignUpReportComponent implements OnInit {
                 zoom: {
                     enabled: false,
                 },
+                events: {
+                    dataPointSelection: (e, chart, options) => {
+
+                        console.log(options);
+                        console.log(this.labelsE[options.dataPointIndex]);
+                        const { startDate, endDate } = this.getMonthDates(this.labelsE[options.dataPointIndex]);
+                        this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
+                            subscribe((res) => {
+                                console.log(res);
+                                const dialogRef = this.dialog.open(DialogUncompletedComponent, {
+                                    data: { players: res.data?.player, key: 'all', date: startDate },
+                                });
+                            })
+                    },
+                },
             },
             colors: ['#64748B', '#94A3B8'],
             dataLabels: {
@@ -535,7 +572,9 @@ export class SignUpReportComponent implements OnInit {
             plotOptions: {
                 bar: {
                     columnWidth: '50%',
+
                 },
+
             },
             series: this._seriesE,
             states: {
@@ -746,6 +785,31 @@ export class SignUpReportComponent implements OnInit {
                                                 </div>`,
             },
         };
-        this.showdata = Promise.resolve(true);
+
+
+    }
+
+    getMonthDates(monthYearText) {
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        const [month, year] = monthYearText.split(" ");
+        const monthIndex = months.indexOf(month);
+
+        if (monthIndex === -1 || !year) {
+            // Handle invalid input
+            console.error("Invalid input format");
+            return null;
+        }
+
+        const startDate = new Date(year, monthIndex, 1);
+        const endDate = new Date(year, monthIndex + 1, 0);
+
+        const formattedStartDate = startDate.toISOString().split("T")[0];
+        const formattedEndDate = endDate.toISOString().split("T")[0];
+
+        return { startDate: formattedStartDate, endDate: formattedEndDate };
     }
 }
