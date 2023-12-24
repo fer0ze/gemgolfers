@@ -24,7 +24,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
-import { LeaderboardRoutingModule } from './leaderboard-routing.module';
+//import { LeaderboardRoutingModule } from './leaderboard-routing.module';
 import { LeaderboardComponent } from './leaderboard.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ import { ScrambleComponent } from '../mainleaderboard/texasScramble/texasScrambl
   declarations: [LeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent,ScrambleComponent],
   imports: [
     CommonModule,
-    LeaderboardRoutingModule,
+   // LeaderboardRoutingModule,
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
