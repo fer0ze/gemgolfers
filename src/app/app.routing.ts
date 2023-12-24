@@ -94,9 +94,7 @@ export const appRoutes: Route[] = [
     // Landing routes
     {
         path: '',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
-        component: LayoutComponent,
+        component:EmptyLayoutComponent,
         data: {
             layout: 'empty'
         },
