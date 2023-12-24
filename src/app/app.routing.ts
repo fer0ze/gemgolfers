@@ -4,6 +4,7 @@ import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
 import { EmptyLayoutComponent } from './layout/layouts/empty/empty.component';
+import { LayoutLeaderComponent } from './layout-Leader/layout-leader.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -11,12 +12,49 @@ import { EmptyLayoutComponent } from './layout/layouts/empty/empty.component';
 export const appRoutes: Route[] = [
     // Redirect empty path to '/example'
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+
+    // Landing routes
+    {
+        path: 'leaderboard',
+        loadChildren: () =>
+            import(
+                'app/modules/admin/mainleaderboard/mainleaderboard.module'
+            ).then((m) => m.MainLeaderboardModule),
+        component: LayoutLeaderComponent,
+        data: {
+            layout: 'empty',
+        },
+    },
+    {
+        path: 'leagueTable',
+        loadChildren: () =>
+            import(
+                'app/modules/admin/leagueLeaderBoard/league-leaderboard.module'
+            ).then((m) => m.LeagueLeaderboardModule),
+        component: LayoutLeaderComponent,
+        data: {
+            layout: 'empty',
+        },
+    },
+    {
+        path: 'signUpForm',
+        loadChildren: () =>
+            import(
+                'app/modules/admin/tournaments/Sign-Up-Form/sign-up-form/sign-up-form.module'
+            ).then((m) => m.SignUpFormModule),
+        component: LayoutComponent,
+        data: {
+            layout: 'empty',
+        },
+    },
+
     // Redirect signed in user to the '/example'
     //
     // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
     { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'dashboard' },
+
     // Auth routes for guests
     {
         path: '',
@@ -91,31 +129,8 @@ export const appRoutes: Route[] = [
             },
         ],
     },
-    // Landing routes
-    {
-        path: '',
-        component:EmptyLayoutComponent,
-        data: {
-            layout: 'empty'
-        },
-        children: [
-            { path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule) },
-            { path: 'leaderboard',loadChildren: () => import( 'app/modules/admin/mainleaderboard/mainleaderboard.module').then((m) => m.MainLeaderboardModule)},
-            {
-                path: 'leagueTable',
-                loadChildren: () =>
-                    import(
-                        'app/modules/admin/leagueLeaderBoard/league-leaderboard.module'
-                    ).then((m) => m.LeagueLeaderboardModule)
-            }, {
-                path: 'signUpForm',
-                loadChildren: () =>
-                    import(
-                        'app/modules/admin/tournaments/Sign-Up-Form/sign-up-form/sign-up-form.module'
-                    ).then((m) => m.SignUpFormModule)
-            }
-        ]
-    },
+
+    // Admin routes
     {
         path: '',
         canActivate: [AuthGuard],
@@ -123,9 +138,6 @@ export const appRoutes: Route[] = [
         component: LayoutComponent,
         resolve: {
             initialData: InitialDataResolver,
-        },
-        data: {
-            expectedRole: 2,
         },
         children: [
             {
@@ -233,13 +245,13 @@ export const appRoutes: Route[] = [
                         'app/modules/admin/tournaments/tournaments.module'
                     ).then((m) => m.TournamentsModule),
             },
-          //  {
-              //  path: 'leagues',
-              //  loadChildren: () =>
-                   // import('app/modules/admin/leagues/leagues.module').then(
-                       // (m) => m.LeaguesModule
-                   // ),
-           // },
+            {
+                path: 'leagues',
+                loadChildren: () =>
+                    import('app/modules/admin/leagues/leagues.module').then(
+                        (m) => m.LeaguesModule
+                    ),
+            },
             {
                 path: 'tournaments/schedule',
                 loadChildren: () =>
@@ -260,23 +272,6 @@ export const appRoutes: Route[] = [
                     import(
                         'app/modules/admin/mergeProfile/merge-profiles/merge-profiles.module'
                     ).then((m) => m.MergeProfilesModule),
-            },
-            {
-                path: 'tours',
-                loadChildren: () =>
-                    import(
-                        'app/modules/admin/tour/tour.module'
-                    ).then((m) => m.TourModule),
-            },
-            {
-                path: 'reports/dailyPlayer',
-                data: {
-                    expectedRole: 8,
-                },
-                loadChildren: () =>
-                    import(
-                        'app/modules/admin/reports/daily-players-report/daily-player-report.module'
-                    ).then((m) => m.DailyPlayerReportModule),
             },
             //{path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
         ],
