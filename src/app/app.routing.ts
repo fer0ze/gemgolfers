@@ -233,13 +233,13 @@ export const appRoutes: Route[] = [
                         'app/modules/admin/tournaments/tournaments.module'
                     ).then((m) => m.TournamentsModule),
             },
-            {
-                path: 'leagues',
-                loadChildren: () =>
-                    import('app/modules/admin/leagues/leagues.module').then(
-                        (m) => m.LeaguesModule
-                    ),
-            },
+          //  {
+              //  path: 'leagues',
+              //  loadChildren: () =>
+                   // import('app/modules/admin/leagues/leagues.module').then(
+                       // (m) => m.LeaguesModule
+                   // ),
+           // },
             {
                 path: 'tournaments/schedule',
                 loadChildren: () =>
