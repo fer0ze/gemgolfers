@@ -62,14 +62,14 @@ export class NavigationMockApi {
                     });
                 });
                 // Fill compact navigation children using the default navigation
-                // this._defaultNavigationSuperAdmin.forEach((compactNavItem) => {
-                //     this._defaultNavigation.forEach((defaultNavItem) => {
-                //         if ( defaultNavItem.id === compactNavItem.id )
-                //         {
-                //             compactNavItem.children = cloneDeep(defaultNavItem.children);
-                //         }
-                //     });
-                // });
+                this._defaultNavigationSuperAdmin.forEach((compactNavItem) => {
+                    this._defaultNavigation.forEach((defaultNavItem) => {
+                        if ( defaultNavItem.id === compactNavItem.id )
+                       {
+                           compactNavItem.children = cloneDeep(defaultNavItem.children);
+                      }
+                   });
+                 });
                 this._sectaryNavigation.forEach((compactNavItem) => {
                     this._defaultNavigation.forEach((defaultNavItem) => {
                         if ( defaultNavItem.id === compactNavItem.id )
