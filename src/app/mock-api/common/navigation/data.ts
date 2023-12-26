@@ -315,23 +315,23 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:view-list',
                 link: '/tournaments',
             },
-          //  {
-          //      id: 'tournaments.leagues',
-           //     title: 'All Leagues',
-          //      type: 'basic',
-          //      icon: 'heroicons_outline:shield-check',
-          //      link: '/leagues',
-         //   },
+            {
+                id: 'tournaments.leagues',
+                title: 'All Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:shield-check',
+                link: '/leagues',
+            },
         ],
     },
     // },
-   // {
-     //   id: 'leagues',
-    //    title: 'League',
+    {
+        id: 'leagues',
+        title: 'League',
 
-     //   type: 'group',
-    //    icon: 'heroicons_outline:view-boards',
-    //    children: [
+        type: 'group',
+        icon: 'heroicons_outline:view-boards',
+        children: [
             // {
             //     id: 'leagues.newleagues',
             //     title: 'New League',
@@ -339,15 +339,15 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
             //     icon: 'heroicons_outline:academic-cap',
             //     link: '/leagues/new',
             // },
-         //   {
-          //      id: 'leagues.viewleagues',
-          //      title: 'All Leagues',
-          //      type: 'basic',
-           //     icon: 'heroicons_outline:view-boards',
-            //    link: '/leagues',
-          //  },
-    //    ],
-  //  },
+            {
+                id: 'leagues.viewleagues',
+                title: 'All Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:view-boards',
+                link: '/leagues',
+            },
+        ],
+    },
     {
         id: 'players',
         title: 'Players',

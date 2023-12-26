@@ -10,7 +10,6 @@ import { CoreModule } from 'app/core/core.module';
 import { appConfig } from 'app/core/config/app.config';
 import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
-import { LayoutLeaderModule } from 'app/layout-Leader/layout-leader.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,16 +21,13 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
 import { GlobalErrorHandler } from './errorhandler.module';
-const routerConfig: ExtraOptions = {
-    preloadingStrategy: PreloadAllModules,
-    scrollPositionRestoration: 'enabled',
-};
+
 @NgModule({
     declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule.forRoot(appRoutes,routerConfig),
+        RouterModule.forRoot(appRoutes),
 
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
@@ -45,7 +41,6 @@ const routerConfig: ExtraOptions = {
         CoreModule,
         // Layout module of your application
         LayoutModule,
-        LayoutLeaderModule,
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),

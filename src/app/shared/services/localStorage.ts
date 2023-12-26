@@ -18,15 +18,7 @@ export class LocalStorageService {
     }
 
     get(key: string): any {
-        let user = Crypto.decryptData(localStorage.getItem(key));
-
-        if (!user) {
-            this.router.navigate(['/sign-out']);
-
-            return null;
-        }
-
-        return user;
+        return Crypto.decryptData(localStorage.getItem(key));
     }
 
     remove(key: string) {
