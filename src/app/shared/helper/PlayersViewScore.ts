@@ -47,7 +47,10 @@ export class PlayersScoreLoader {
             } else if (tournamentQL.matchFormat === matchFormat.MATCH_PLAY) {
                 let calResult = this.matchPlayCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.TEXAS_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_Ball_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
+            } else if (tournamentQL.matchFormat === matchFormat.TEXAS_SCRAMBLE) {
+                let calResult = this.texasscrambleCalculation(tournamentQL);
+
+            } else if (tournamentQL.matchFormat === matchFormat.FOUR_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_Ball_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
                 let calResult = this.scrambleCalculation(tournamentQL);
 
             } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES) {
@@ -85,13 +88,14 @@ export class PlayersScoreLoader {
         let playerGrossScore: any[] = [];
         let playerNetScore: any[] = [];
 
-        playerGrossScore = this.grossscores.filter((g) => {
-            return g.name == playerId;
-        });
+        playerGrossScore = this.grossscores.filter(team => {
+            return team.players.some(player => player.playerId === playerId)
+        })
 
-        playerNetScore = this.netscores.filter((g) => {
-            return g.name == playerId;
-        });
+
+        playerNetScore = this.netscores.filter(team => {
+            return team.players.some(player => player.playerId === playerId)
+        })
 
         return {
             grossScore: playerGrossScore,
@@ -586,6 +590,182 @@ export class PlayersScoreLoader {
                 combinedHandicap += combinedHandicaps;
                 scores = member['ScoresQL'];
             });
+
+            let flightIds: String[] = [];
+            let cntr: number = 0;
+
+            if (scores.length <= 0) continue;
+            //console.log(scores);
+
+            for (let score of scores) {
+                let objScore: Score = new Score(
+                    score.playerId,
+                    score.playerHandicap,
+                    score.HoleIPQL.index,
+                    score.HoleIPQL.par,
+                    score.grossScore
+                );
+                let gross: number = score.grossScore;
+
+                if (gross <= 0) {
+                    continue;
+                }
+
+                grossTotal += gross;
+                let currentNet: number = objScore.getScrambleNetScore(
+                    membersQLs.length,
+                    Math.round(combinedHandicap)
+                );
+                scores[cntr]['netScore'] = currentNet;
+
+                grossUnderTotal += objScore.getGrossUnder();
+                //netUnderTotal = netUnderTotal + objScore.getNetUnder(handicapAllocation);
+                handicap += objScore.getPlayerHandicap(handicapAllocation);
+                holesPlayed++;
+
+                if (!flightIds.includes(score.flightId)) {
+                    flightIds.push(score.flightId);
+                }
+                cntr++;
+            }
+
+            let playerHole18ScoreGross: any[] = [];
+            let playerHole18ScoreNet: any[] = [];
+            if (flightData.courseHoleSets == 12) {
+                for (let i = 0; i < CourseQL.noOfHoles; i++) {
+                    let hole = scores.find((a) => {
+                        return a.HoleIPQL.holeNo == i + 1;
+                    });
+                    //console.log(hole);
+
+                    if (hole) {
+                        playerHole18ScoreGross[i] = hole.grossScore;
+                        playerHole18ScoreNet[i] = hole.netScore;
+                    } else {
+                        playerHole18ScoreGross[i] = 0;
+                        playerHole18ScoreNet[i] = 0;
+                    }
+                }
+            } else {
+                for (let i = 0; i < 18; i++) {
+                    let hole = scores.find((a) => {
+                        return a.HoleIPQL.holeNo == i + 1;
+                    });
+                    //console.log(hole);
+
+                    if (hole) {
+                        playerHole18ScoreGross[i] = hole.grossScore;
+                        playerHole18ScoreNet[i] = hole.netScore;
+                    } else {
+                        playerHole18ScoreGross[i] = 0;
+                        playerHole18ScoreNet[i] = 0;
+                    }
+                }
+            }
+
+            ////console.log(scoreHandicap + " " + grossTotal);
+            netTotal = grossTotal - Math.round(combinedHandicap);;
+
+            //console.log(netTotal);
+            netUnderTotal = grossUnderTotal - Math.round(combinedHandicap);;
+
+            let name: string = flightData.name['name'];
+            handicap = Math.round(combinedHandicap);;
+            let completed: boolean =
+                holesPlayed > 0 &&
+                holesPlayed >= 18 * flightIds.length;
+
+            let LeaderGross: any = {
+                playerId: flightData.id,
+                name: name,
+                picture: '',
+                handicap: scoreHandicap,
+                score: grossTotal,
+                type: LeaderType.GROSS,
+                status: status ? 1 : 0,
+                extraData: '',
+                under: grossUnderTotal,
+                points: '',
+                holes: holesPlayed,
+                completed: completed,
+                players: membersQLs,
+                holeScores: playerHole18ScoreGross,
+
+            };
+
+            if (handicapAllocation == HandicapAllocation.ONE_TENTH) {
+                netTotal = Math.round(netTotal);
+                netUnderTotal = Math.round(netUnderTotal);
+            } else if (handicapAllocation == HandicapAllocation.ONE_TENTH_DEC) {
+                netTotal = netTotal.toFixed(1);
+                netUnderTotal = netUnderTotal.toFixed(1);
+            } else {
+                netTotal = netTotal;
+            }
+            let LeaderNet: any = {
+
+                playerId: flightData.id,
+                name: name,
+                picture: '',
+                handicap: scoreHandicap,
+                score: netTotal,
+                type: LeaderType.NET,
+                status: status ? 1 : 0,
+                extraData: '',
+                under: netUnderTotal,
+                points: '',
+                holes: holesPlayed,
+                completed: completed,
+                players: membersQLs,
+                holeScores: playerHole18ScoreNet,
+
+            };
+
+            this.grossscores.push(LeaderGross);
+            this.netscores.push(LeaderNet);
+        }
+    }
+    public texasscrambleCalculation(tournamentQL) {
+        let flightsQLs = tournamentQL.FlightsQL;
+        let handicapAllocation: string = this.getHandicapAllocation(
+            tournamentQL.handicapAllocations
+        );
+        let CourseQL = tournamentQL.CourseQL;
+
+        //console.log(flightsQLs);
+        for (let flightData of flightsQLs) {
+            //console.log(flightData);
+
+            let membersQLs: any = flightData.MembersQL;
+            let grossTotal: number = 0;
+            let netTotal: any = 0;
+            let grossUnderTotal: number = 0;
+            let netUnderTotal: any = 0;
+            let playerCategory: string = '';
+            let handicap: number = 0;
+            let combinedHandicap: number = 0;
+            let scoreHandicap: number = 0;
+            let holesPlayed: number = 0;
+            let scores: any[];
+
+            for (let membersQL of membersQLs) {
+                let player = membersQL.PlayerQL;
+
+                if (player == null) {
+                    continue;
+                }
+                if (membersQL['ScoresQL'].length > 0) {
+                    combinedHandicap += membersQL['ScoresQL'][0].playerHandicap
+                        ? membersQL['ScoresQL'][0].playerHandicap
+                        : 0;
+                } else {
+                    combinedHandicap += 0;
+                }
+                // //console.log("combined-> " + combinedHandicap);
+                // playerCategory = player.playerCategory;
+
+                scores = membersQL['ScoresQL'];
+            }
 
             let flightIds: String[] = [];
             let cntr: number = 0;
@@ -1139,7 +1319,7 @@ export class PlayersScoreLoader {
                 ////console.log(membersQL);
                 let playerId: String = membersQL.playerId;
                 //let playerQL:Player = membersQL.PlayerQL;
-                if (playerId != this.playerId &&  playerId != teamMemberId) {
+                if (playerId != this.playerId && playerId != teamMemberId) {
                     continue;
                 }
                 //this.players.push(playerQL);

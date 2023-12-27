@@ -8,6 +8,7 @@ import { Score } from 'app/shared/classes/score';
 import { LeaderTypeValue } from 'app/shared/classes/leader';
 import { PlayersScoreLoader } from 'app/shared/helper/PlayersViewScore';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { matchFormat } from 'app/shared/models/tournament.model';
 
 
 
@@ -33,7 +34,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
     ) { }
     ngOnInit(): void {
         console.log('a');
-        
+
         console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
         this.activeRound = this.Leaderboard.activeRound
@@ -382,9 +383,17 @@ export class ScrambleComponent implements OnInit, OnChanges {
         let removed: string[] = [];
         let scores: any[];
         let scoresArray: any[] = [];
+        let scoreResult;
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
-        let scoreResult = ScoreLoader.getShamblesScore(playerId);
+        if (this.Leaderboard.matchFormat == matchFormat.TEXAS_SCRAMBLE ||
+            this.Leaderboard.matchFormat == matchFormat.TWO_Ball_SCRAMBLE ||
+            this.Leaderboard.matchFormat == matchFormat.THREE_BALL_SCRAMBLE ||
+            this.Leaderboard.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
+            scoreResult = ScoreLoader.getTexasScrambleScore(playerId);
+        } else if (this.Leaderboard.matchFormat == matchFormat.SHAMBLES) {
+            scoreResult = ScoreLoader.getShamblesScore(playerId);
+        }
         console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
@@ -395,7 +404,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
                         ? this.Leaderboard.tee_id
                         : 1,
                 course: this.Leaderboard.courseId,
-                players: [],
+                players: scoreResult.grossScore[0].players,
                 holeSets: this.Leaderboard.courseHoleSets ? this.Leaderboard.courseHoleSets : 3,
                 allGross: scoreResult.grossScore,
                 courseHoleSetsInverted: this.Leaderboard.courseHoleSetsInverted,

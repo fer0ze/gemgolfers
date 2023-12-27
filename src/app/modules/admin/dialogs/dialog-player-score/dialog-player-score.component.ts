@@ -263,6 +263,7 @@ export class DialogPlayerScoreComponent implements OnInit {
     }
 
     grossScoreCard(scoreHeader) {
+        this.players=[];
         for (let score of this.data.allGross) {
             console.log(score);
 
@@ -293,20 +294,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                 }
             }
             //}
-            if (this.data.players) {
-                if (this.data.players.length > 0) {
-                    for (let player of this.data.players) {
-                        let obj = {
-                            firstName: player['PlayerQL'].firstName,
-                            lastName: player['PlayerQL'].lastName,
-                            handicap: player['ScoresQL'][0].playerHandicap
-                                ? player['ScoresQL'][0].playerHandicap
-                                : 0,
-                        };
-                        this.players.push(obj);
-                    }
-                }
-            }
+            
 
             // if(this.courseHoleSet == 12) {
             //   for(let i=18; i<27; i++) {
@@ -356,9 +344,25 @@ export class DialogPlayerScoreComponent implements OnInit {
             this.allScores.push(LeaderGross);
             console.log(this.allScores);
         }
+
+        if (this.data.players) {
+            if (this.data.players.length > 0) {
+                for (let player of this.data.players) {
+                    let obj = {
+                        firstName: player['PlayerQL'].firstName,
+                        lastName: player['PlayerQL'].lastName,
+                        handicap: player['ScoresQL'][0].playerHandicap
+                            ? player['ScoresQL'][0].playerHandicap
+                            : 0,
+                    };
+                    this.players.push(obj);
+                }
+            }
+        }
     }
 
     netScoreCard(scoreHeader) {
+        this.players=[];
         for (let score of this.data.allNet) {
             let playerHole9Score: any = [];
             let playerHole18Score: any[] = [];
@@ -398,16 +402,6 @@ export class DialogPlayerScoreComponent implements OnInit {
                 //         net36Total += playerHole36Score[i - 27];
                 //     }
                 // }
-                if (this.data.players.length > 0) {
-                    for (let player of this.data.players) {
-                        let obj = {
-                            firstname: player['PlayerQL'].firstName,
-                            lastName: player['PlayerQL'].lastName,
-                            handicap: player['PlayerQL'].handicap,
-                        };
-                        this.players.push(obj);
-                    }
-                }
                 //this.playerName = score.name;
                 this.playerName =
                     this.data.team && score.teamName
@@ -433,6 +427,20 @@ export class DialogPlayerScoreComponent implements OnInit {
             };
 
             this.allScores.push(LeaderNet);
+        }
+        if (this.data.players) {
+            if (this.data.players.length > 0) {
+                for (let player of this.data.players) {
+                    let obj = {
+                        firstName: player['PlayerQL'].firstName,
+                        lastName: player['PlayerQL'].lastName,
+                        handicap: player['ScoresQL'][0].playerHandicap
+                            ? player['ScoresQL'][0].playerHandicap
+                            : 0,
+                    };
+                    this.players.push(obj);
+                }
+            }
         }
     }
 

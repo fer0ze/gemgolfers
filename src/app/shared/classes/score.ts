@@ -115,7 +115,22 @@ export class Score {
 
     return this.grossScore - timesGreater;
   }
+  public getScrambleNetScore(
+    team,
+    combinedHandicap,
+  ) {
+    if (this.grossScore <= 0) {
+      return 0;
+    }
+    let timesGreater = Math.trunc(combinedHandicap / 18);
+    let mod = Math.trunc(combinedHandicap % 18);
 
+    if (mod >= this.holeIndex) {
+      timesGreater += 1;
+    }
+
+    return this.grossScore - timesGreater;
+  }
   public getGrossScore(): number {
     return this.grossScore;
   }
@@ -214,5 +229,5 @@ export class Score {
   public toFixed(num, fixed) {
     var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
     return num.toString().match(re)[0];
-}
+  }
 }
