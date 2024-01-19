@@ -102,34 +102,34 @@ export class ViewCourseComponent implements OnInit {
                 icon: 'heroicons_outline:user-circle',
                 title: 'Tees',
                 description:
-                    'Manage your public profile and private information',
+                    'Manage your course tees, their names and colors',
             },
             {
                 id: 'b',
                 icon: 'heroicons_outline:lock-closed',
                 title: 'Holes',
                 description:
-                    'Manage your password and 2-step verification preferences',
+                    'Manage your course holes , par and index',
             },
             {
                 id: 'c',
                 icon: 'heroicons_outline:credit-card',
                 title: 'Hole-Set',
                 description:
-                    'Manage your subscription plan, payment method and billing information',
+                    'Manage your course hole-sets by combining hole-sets',
             },
             {
                 id: 'd',
                 icon: 'heroicons_outline:bell',
                 title: 'Course Rating',
-                description: "Manage when you'll be notified on which channels",
+                description: "Manage your course ratings and slope ratings",
             },
             {
                 id: 'e',
                 icon: 'heroicons_outline:user-group',
                 title: 'Tee Meta',
                 description:
-                    'Manage your existing team and change roles/permissions',
+                    'Manage your course lat, long and dist',
             },
         ];
 
