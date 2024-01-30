@@ -90,7 +90,7 @@ export class ViewCourseComponent implements OnInit {
     }[];
     constructor(
         // private datePipe: DatePipe,
-        // private router: Router,
+        private router: Router,
         private _localStorage: LocalStorageService,
         private route: ActivatedRoute,
         // private location: Location,
@@ -134,13 +134,7 @@ export class ViewCourseComponent implements OnInit {
                     'Create you courses by adding them',
             },
 
-            // {
-            //     id: '5',
-            //     icon: 'heroicons_outline:user-group',
-            //     title: 'Tee Meta',
-            //     description:
-            //         'Manage your course lat, long and dist',
-            // },
+
         ];
 
         if (this.courseID) {
@@ -160,7 +154,7 @@ export class ViewCourseComponent implements OnInit {
 
             this.url = 'golfcourse.jpg';
             // this.setHoles(this.NoOfHoles);
-            this.panels = (General.getGolfCourseFeatures(this.NoOfHoles));
+            this.panels = (General.getGolfCourseFeatures(this.loggedInuser.userRole));
             console.log(this.panels);
 
 
@@ -893,11 +887,12 @@ event   */
             this.snackBar.open('Course Holes are Saves!', 'x', {
                 duration: 2000,
             });
-            if (this.NoOfHoles <= 18) {
-                this.goToPanel('4')
-            } else {
-                this.goToPanel('3')
-            }
+            this.goToPanel('3')
+            // if (this.NoOfHoles <= 18) {
+            //     this.goToPanel('4')
+            // } else {
+            //     this.goToPanel('3')
+            // }
         } else {
             this.snackBar.open('Course Holes has not Saved!', 'x', {
                 duration: 5000,
@@ -943,8 +938,11 @@ event   */
                     this.Hole.push(holes);
                 }
             }
+            if (this.Hole.length == 0) {
+                this.initializeHoleSet();
+            }
         } else {
-            for (let index = 0; index < 2; index++) {
+            for (let index = 0; index < 1; index++) {
                 this.Hole[this.Hole.length] = [];
                 this.Hole[this.Hole.length - 1]['id'] =
                     UniqueIdGenerator.generate();
@@ -966,6 +964,14 @@ event   */
         this.Hole[this.Hole.length - 1]['displayName'] = '';
         this.Hole[this.Hole.length - 1]['frontId'] = '';
         this.Hole[this.Hole.length - 1]['backId'] = '';
+        console.log(this.Hole);
+    }
+    initializeHoleSet() {
+        this.Hole[this.Hole.length] = [];
+        this.Hole[this.Hole.length - 1]['id'] = UniqueIdGenerator.generate();
+        this.Hole[this.Hole.length - 1]['displayName'] = 'Front-9 - Back-9';
+        this.Hole[this.Hole.length - 1]['frontId'] = 1;
+        this.Hole[this.Hole.length - 1]['backId'] = 2;
         console.log(this.Hole);
     }
     /**
@@ -1033,13 +1039,8 @@ event   */
             this.snackBar.open('Course HoleSets has been Saved!', 'x', {
                 duration: 5000,
             });
-            if (state) {
-                control.setErrors({ required: true });
-            } else {
-                control.reset();
-                control1.reset();
-                control2.reset();
-            }
+            // 
+            this.goToPanel('4');
         } else {
             this.snackBar.open('Course HolesSet has not Saved!', 'x', {
                 duration: 5000,
@@ -1179,6 +1180,11 @@ event   */
         this.coursRating[this.coursRating.length - 1]['gender_id'] = '';
         console.log(this.coursRating);
     }
+
+    deleteRating(id) {
+        this.coursRating = this.coursRating.filter((rating) => rating.id !== id);
+    }
+
     public slopeRating(val, teeID) {
         let index = 0;
         for (let obj of this.coursRating) {
@@ -1331,6 +1337,11 @@ event   */
             this.snackBar.open('Course-Rating has been Saved!', 'x', {
                 duration: 5000,
             });
+            if (this.loggedInuser.userRole == 1) {
+                this.goToPanel('5')
+            } else {
+                this.router.navigateByUrl('/courses');
+            }
         } else {
             this.snackBar.open('Course-Rating has not Saved!', 'x', {
                 duration: 5000,

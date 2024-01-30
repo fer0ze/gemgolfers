@@ -1086,6 +1086,14 @@
                                                     <mat-option value="COMMON">Male</mat-option>
                                                 </mat-select></span>
                                         </td>
+                                        <td style="padding-left: 1px">
+                                            <span>
+                                                <button (click)="deleteRating(rating.id)" id="delete_btn" mat-icon-button
+                                                    color="warn">
+                                                    <mat-icon class="mat-18">delete</mat-icon>
+                                                </button>
+                                            </span>
+                                        </td>
                                     </tr>
                                 </table>
                                 <div class="flex items-center justify-end">

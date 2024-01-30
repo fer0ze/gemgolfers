@@ -286,11 +286,17 @@ export class General {
                 icon: 'heroicons_outline:bell',
                 title: 'Course Rating',
                 description: 'Manage your course ratings and slope ratings',
-            }
+            },
+            {
+                id: '5',
+                icon: 'heroicons_outline:user-group',
+                title: 'Tee Meta',
+                description: 'Manage your course lat, long and dist',
+            },
         ];
 
-        if (number <= 18) {
-            return features.filter(feature => feature.id !== '3');
+        if (number != 1) {
+            return features.filter(feature => feature.id !== '5');
         }
 
         return features;

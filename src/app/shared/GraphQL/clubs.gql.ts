@@ -283,12 +283,13 @@ export const AddTeeTimeQL = gql`
 `;
 export const Getfeedbacks = gql`
   query PostsGetQuery {
-    feedback {
+    feedback(order_by:{dateTime:desc}) {
       id
       type
       name
       contact
       message
+      dateTime
     }
   }
 `;

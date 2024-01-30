@@ -18,7 +18,7 @@ export class FeedbackComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   feedback: any[] = [];
-  displayedColumns = ["id", "name", "type", "contact", "details"];
+  displayedColumns = ["id", "name", "type", "contact","createdAt", "details"];
   courseData: any;
   constructor(private facadeService: FacadeService, public dialog: MatDialog) {}
 

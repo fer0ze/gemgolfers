@@ -113,6 +113,13 @@ export const appRoutes: Route[] = [
                     import(
                         'app/modules/admin/tournaments/Sign-Up-Form/sign-up-form/sign-up-form.module'
                     ).then((m) => m.SignUpFormModule)
+            },
+            {
+                path: 'submitCourse',
+                loadChildren: () =>
+                    import(
+                        'app/modules/auth/sign-in-course/sign-in.module'
+                    ).then((m) => m.AuthSignInCourseModule)
             }
         ]
     },
