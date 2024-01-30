@@ -9,7 +9,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-import { Constants } from 'app/shared/classes/general';
+import { Constants, General } from 'app/shared/classes/general';
 
 
 @Injectable({
@@ -46,14 +46,40 @@ export class AuthMockApi {
         // -----------------------------------------------------------------------------------------------------
         // @ Forgot password - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/forgot-password', 1000)
-            .reply(() =>
-                [
-                    200,
-                    true
-                ]
-            );
+        this._fuseMockApiService.onPost('api/auth/forgot-password', 1000).reply(({ request }): [number, any] | Observable<any> => {
+            return new Observable((observer) => {
+                (async () => {
+                    try {
+                        const email = request.body;
+
+                        // Now, initiate the password reset process in Firebase
+                        try {
+                            await this.afAuth.sendPasswordResetEmail(email);
+
+                            // Password reset email sent successfully
+                            console.log('Password reset email sent successfully');
+
+                            observer.next([200, true]);
+                            observer.complete();
+                        } catch (error) {
+                            // Handle any errors that occur during the password reset process
+                            console.error('Error sending password reset email:', error);
+
+                            observer.next([500, false]);
+                            observer.complete();
+                        }
+                    } catch (error) {
+                        // Invalid credentials or other error occurred
+                        // Handle other cases as needed
+                        console.error('Error:', error);
+
+                        // Invalid credentials
+                        observer.next([404, false]);
+                        observer.complete();
+                    }
+                })();
+            });
+        });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Reset password - POST
@@ -164,16 +190,55 @@ export class AuthMockApi {
         // -----------------------------------------------------------------------------------------------------
         // @ Sign up - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/sign-up', 1500)
-            .reply(() =>
+        this._fuseMockApiService.onPost('api/auth/sign-up', 1000).reply(({ request }): [number, any] | Observable<any> => {
 
-                // Simply return true
-                [
-                    200,
-                    true
-                ]
-            );
+            return new Observable((observer) => {
+                (async () => {
+                    try {
+                        const { email, password } = request.body;
+
+                        // Now, initiate the password reset process in Firebase
+                        try {
+                            let res = await this.afAuth.createUserWithEmailAndPassword(email, password);
+                            if (res) {
+                                let user = General.createUser(request.body,res?.user?.uid);
+                                this._facadeService.AddPlayer(user).then((res) => {
+                                    if (res) {
+                                        observer.next([200, true]);
+                                        observer.complete();
+                                    } else {
+                                        observer.next([404, false]);
+                                        observer.complete();
+                                    }
+                                })
+                            } else {
+                                observer.next([404, false]);
+                                observer.complete();
+                            }
+                            // Password reset email sent successfully
+                           // console.log('Password reset email sent successfully');
+
+                            // observer.next([200, true]);
+                            // observer.complete();
+                        } catch (error) {
+                            // Handle any errors that occur during the password reset process
+                            console.error(error);
+
+                            observer.next([500, false]);
+                            observer.complete();
+                        }
+                    } catch (error) {
+                        // Invalid credentials or other error occurred
+                        // Handle other cases as needed
+                        console.error('Error:', error);
+
+                        // Invalid credentials
+                        observer.next([404, false]);
+                        observer.complete();
+                    }
+                })();
+            });
+        });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Unlock session - POST

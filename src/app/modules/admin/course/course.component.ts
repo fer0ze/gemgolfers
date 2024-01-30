@@ -19,6 +19,7 @@ import { of } from "rxjs";
 import { read, utils } from "xlsx";
 import { LogsService } from "app/shared/services/logs.service";
 import { Course } from "app/shared/models/course.model";
+import { LocalStorageService } from "app/shared/services/localStorage";
 
 @Component({
   selector: 'app-course',
@@ -26,8 +27,8 @@ import { Course } from "app/shared/models/course.model";
   styleUrls: ['./course.component.scss']
 })
 export class CourseComponent implements OnInit {
-  
-  dataSource:MatTableDataSource<Course>
+
+  dataSource: MatTableDataSource<Course>
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   Courses: Course[] = [];
@@ -42,7 +43,8 @@ export class CourseComponent implements OnInit {
     "update",
     "delete",
   ];
-  courseData:any;
+  courseData: any;
+  public loggedInuser: any;
   constructor(
     private location: Router,
     private route: ActivatedRoute,
@@ -50,26 +52,32 @@ export class CourseComponent implements OnInit {
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
     private facadeService: FacadeService,
-    private logger: LogsService
+    private logger: LogsService,
+    private _localStorage: LocalStorageService
 
   ) { }
 
   async ngOnInit() {
-  
-   
-  let dataCourses = await this.facadeService.getCoursesList();
-    this.Courses = dataCourses.course;
+
+    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+    let dataCourses: any;
+    if (this.loggedInuser.userRole === 1) {
+      dataCourses = await this.facadeService.getCoursesList();
+    } else {
+      dataCourses = await this.facadeService.getCoursesListbyID(this.loggedInuser.id);
+    }
+    this.Courses = dataCourses?.course;
     console.log(this.Courses)
-    this.dataSource=new MatTableDataSource(this.Courses);
+    this.dataSource = new MatTableDataSource(this.Courses);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  } 
+  }
 
 
   redirectToUpdate = (id: string) => {
     this.location.navigate(["/course/update/" + id]);
   };
-  
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches

@@ -25,6 +25,37 @@ export const GetCourses = gql`
     }
   }
 `;
+export const getCoursesListbyID = gql`
+query PostsGetQuery($where: course_bool_exp!) {
+  course(where: $where) {
+    id
+    clubId
+    name
+    noOfHoles
+    par
+    courseRating
+    slopeRating
+    teeDistanceUnit
+    mapSupported
+    country
+    countryGeonameId
+    city
+    cityGeonameId
+    nameForHoles1to9
+    nameForHoles10to18
+    nameForHoles19to27
+    nameForHoles28to36
+    holes {
+      id
+      teeDistances
+      par
+      index
+      courseId
+      holeNo
+    }
+  }
+}
+`;
 
 export const GetCourseByID = gql`
   query PostsGetQuery($where: course_bool_exp!) {
@@ -97,7 +128,8 @@ export const UpdateMutation = gql`
           slopeRating
           country
           city
-        ]
+        createdBy
+              ]
       }
     ) {
       AffectedRowsQLi: affected_rows

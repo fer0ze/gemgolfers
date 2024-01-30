@@ -90,7 +90,7 @@ export class ProjectResolver implements Resolve<any> {
                     )
                 );
             } else {
-                this._router.navigateByUrl('/sign-out').catch((error) => {
+                this._router.navigateByUrl('/courses').catch((error) => {
                     console.error('Navigation error:', error);
                 });
             }

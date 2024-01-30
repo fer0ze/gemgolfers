@@ -550,11 +550,11 @@ export const compactNavigation: FuseNavigationItem[] = [
 
 export const userNavigation: FuseNavigationItem[] = [
     {
-        id: 'dashboard',
-        title: 'DashBoard',
+        id: 'courses',
+        title: 'Courses',
         type: 'basic',
         icon: 'heroicons_outline:chart-pie',
-        link: '/leaguesDashboard',
+        link: '/courses',
     },
 ]
 export const sectaryNavigation: FuseNavigationItem[] = [

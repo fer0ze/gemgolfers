@@ -10,13 +10,37 @@ import { map } from "rxjs/operators";
   providedIn: "root",
 })
 export class CoursesService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   public getCoursesList(): Promise<any> {
     return new Promise((resolve) => {
       this.apollo
         .subscribe({
           query: Query.GetCourses,
+        })
+        .subscribe(({ data }) => {
+          if (data == null) {
+            resolve(null);
+          } else {
+            //console.log(data.course);
+            resolve(data);
+          }
+        });
+    });
+  }
+
+  public getCoursesListbyID(id: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .subscribe({
+          variables: {
+            where: {
+              createdBy: {
+                _eq: id,
+              },
+            },
+          },
+          query: Query.getCoursesListbyID,
         })
         .subscribe(({ data }) => {
           if (data == null) {
@@ -271,6 +295,7 @@ export class CoursesService {
                 teeDistanceUnit: course.teeDistanceUnit,
                 countryGeonameId: 565656,
                 cityGeonameId: 787878,
+                createdBy: course.createdBy,
               },
             ],
           },
@@ -331,7 +356,7 @@ export class CoursesService {
         );
     });
   }
-  public deleteTeeColor(courseID,tee: any[]): Promise<boolean> {
+  public deleteTeeColor(courseID, tee: any[]): Promise<boolean> {
     console.log(tee);
 
     return new Promise((resolve) => {

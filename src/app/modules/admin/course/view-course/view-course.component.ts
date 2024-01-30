@@ -1,15 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { async } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Country } from 'app/shared/classes/country';
-import { General, UniqueIdGenerator } from 'app/shared/classes/general';
+import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/general';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-view-course',
@@ -17,20 +18,17 @@ import { FacadeService } from 'app/shared/services/facade.service';
     styleUrls: ['./view-course.component.scss'],
 })
 export class ViewCourseComponent implements OnInit {
+
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
+
     panels: any[] = [];
-    selectedPanel :string= 'a';
-    valid1 = new FormControl('');
-    valid2 = new FormControl('');
-    valid3 = new FormControl('');
-    valid4 = new FormControl('');
-    valid5 = new FormControl('');
+    selectedPanel: string = '0';
     courseID: any;
     courseData: any;
     courseTitle: any;
-    listCountries: any[] = [];
+
     countryName: any;
     cityName: any;
     NoOfHoles: any;
@@ -76,66 +74,74 @@ export class ViewCourseComponent implements OnInit {
     deleteTsee: any[];
     teeRemove: any[] = [];
     holes: any;
+    nineHoleTotalPar: number = 0;
+    eighteenHoleTotalPar: number = 0;
+    twentysevenHoleTotalPar: number = 0;
+    thirtySixHoleTotalPar: number = 0;
+    loggedInuser: any;
+    public courseForm: FormGroup;
+    listCity = [];
+    listCountries: {
+        id: string; //------------------------------------Sorting the Array according to the No of hole----------------------------------------------------//
+        cities: string[];
+    } | {
+        id: string; //------------------------------------Sorting the Array according to the No of hole----------------------------------------------------//
+        cities: string[];
+    }[];
     constructor(
         // private datePipe: DatePipe,
         // private router: Router,
-
+        private _localStorage: LocalStorageService,
         private route: ActivatedRoute,
         // private location: Location,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public facadeService: FacadeService // private storage: AngularFireStorage
     ) {
-        this.setState(this.valid1, true);
-        this.setState(this.valid2, true);
-        this.setState(this.valid3, true);
-        this.setState(this.valid4, true);
-        this.setState(this.valid5, true);
+
     }
 
     async ngOnInit() {
-        console.log(this.selectedPanel);
-        
+        this.listCountries = Country.getCity('DEFAULT');
+        console.log(this.listCountries);
+        this.route.paramMap.subscribe((params) => {
+            this.courseID = params.get("id");
+        });
+        console.log(this.courseID);
+        this.courseForm = new FormGroup({
+            courseName: new FormControl("", [
+                Validators.required,
+                Validators.maxLength(60),
+            ]),
+            country: new FormControl("", [
+                Validators.required,
+                Validators.maxLength(30),
+            ]),
+            city: new FormControl("", [
+                Validators.required,
+                Validators.maxLength(30),
+            ]),
+            noOfHoles: new FormControl("", [Validators.required]),
+        });
+
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.panels = [
             {
-                id: 'a',
-                icon: 'heroicons_outline:user-circle',
-                title: 'Tees',
+                id: '0',
+                icon: 'heroicons_outline:star',
+                title: 'Add Course',
                 description:
-                    'Manage your course tees, their names and colors',
+                    'Create you courses by adding them',
             },
-            {
-                id: 'b',
-                icon: 'heroicons_outline:lock-closed',
-                title: 'Holes',
-                description:
-                    'Manage your course holes , par and index',
-            },
-            {
-                id: 'c',
-                icon: 'heroicons_outline:credit-card',
-                title: 'Hole-Set',
-                description:
-                    'Manage your course hole-sets by combining hole-sets',
-            },
-            {
-                id: 'd',
-                icon: 'heroicons_outline:bell',
-                title: 'Course Rating',
-                description: "Manage your course ratings and slope ratings",
-            },
-            {
-                id: 'e',
-                icon: 'heroicons_outline:user-group',
-                title: 'Tee Meta',
-                description:
-                    'Manage your course lat, long and dist',
-            },
-        ];
 
-        this.route.paramMap.subscribe((params) => {
-            this.courseID = params.get('id');
-        });
+            // {
+            //     id: '5',
+            //     icon: 'heroicons_outline:user-group',
+            //     title: 'Tee Meta',
+            //     description:
+            //         'Manage your course lat, long and dist',
+            // },
+        ];
 
         if (this.courseID) {
             this.courseData = await this.facadeService.getCourseByID(
@@ -146,80 +152,153 @@ export class ViewCourseComponent implements OnInit {
             this.countryName = this.courseData['course'][0].country;
             this.cityName = this.courseData['course'][0].city;
             this.NoOfHoles = this.courseData['course'][0].noOfHoles;
+            this.courseForm.get('courseName').setValue(this.courseTitle);
+            this.courseForm.get('country').setValue(this.countryName);
+            this.countrySelected(this.countryName);
+            this.courseForm.get('city').setValue(this.cityName);
+            this.courseForm.get('noOfHoles').setValue(this.NoOfHoles.toString());
+
             this.url = 'golfcourse.jpg';
             // this.setHoles(this.NoOfHoles);
+            this.panels = (General.getGolfCourseFeatures(this.NoOfHoles));
+            console.log(this.panels);
 
-            let tee = await this.facadeService.getTeesOfCourse(this.courseID);
-            console.log(tee);
 
-            if (tee['course_tees'].length > 0) {
-                for (let obj of tee['course_tees']) {
-                    let tee = {
-                        id: UniqueIdGenerator.generate(),
-                        name_by_club: obj.name_by_club,
-                        color: obj.color,
-                        tee_id: obj['tee_name'].key,
-                    };
-                    this.Tee.push(tee);
-                }
-                this.setState(this.valid1, false);
-                this.setState(this.valid2, false);
-                this.setState(this.valid3, false);
-                this.setState(this.valid4, false);
-                this.setState(this.valid5, false);
-                this.tees = [];
-                this.tees =
-                    await this.facadeService.getCourseInformationForForm(
-                        this.courseID
-                    );
-                this.showTees = [];
-                let item = this.tees['course'][0]['TeesQL'];
-                for (let obj of item) {
-                    item = {
-                        name: obj.name_by_club,
-                        id: obj.tee_id,
-                    };
-                    this.showTees.push(item);
-                }
-            } else {
-                this.addIntialsTees();
-            }
-            this.isLoading=true;
         } else {
-            alert('Course Does Not Exist.');
+
         }
     }
+    ////*******************************************************************COURSE CREATE**************************************************************************************** */
+    countrySelected(event) {
+        let obj = Country.getCity(event);
+        for (let objs of obj["cities"]) {
+            this.listCity = objs.split("|");
+
+        }
+        this.courseForm.get('city').setValue(this.listCity[1]);
+        console.log(this.listCity);
+
+    }
+
+
+    public createCourse = async (playerFormValue: any) => {
+        let course = {
+            id: UniqueIdGenerator.generate(),
+            clubId: this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null,
+            name: playerFormValue.courseName,
+            country: playerFormValue.country,
+            noOfHoles: playerFormValue.noOfHoles,
+            teeDistanceUnit: "YARDS",
+            par: "72",
+            city: playerFormValue.city,
+            createdBy: this.loggedInuser?.id,
+        };
+        if (this.courseID) {
+            let courses = {
+                id: this.courseID,
+                clubId: this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null,
+                name: playerFormValue.courseName,
+                country: playerFormValue.country,
+                noOfHoles: playerFormValue.noOfHoles,
+                teeDistanceUnit: "YARDS",
+                par: '72',
+                countryGeonameId: 565656,
+                cityGeonameId: 787878,
+                city: playerFormValue.city,
+                createdBy: this.loggedInuser?.id,
+            };
+
+            const isSuccess = <boolean>(
+                await this.facadeService.updateCourse(courses, []));
+            if (isSuccess) {
+                this.snackBar.open("Course has been Updated.", "x", {
+                    duration: 5000,
+                });
+                this.goToPanel('1');
+            } else {
+                this.snackBar.open("Course Not Updated!", "x", {
+                    duration: 5000,
+                });
+            }
+        } else {
+            const isSuccess = <boolean>await this.facadeService.AddCourse(course);
+            if (isSuccess) {
+                this.courseID = course.id;
+                this.snackBar.open("Course has been created.", "x", {
+                    duration: 5000,
+                });
+                this.panels = (General.getGolfCourseFeatures(course.noOfHoles));
+                // if (course.noOfHoles <= 18) {
+                //     this.panels = this.panels.filter(panel => panel.id !== '3');
+                // }
+                //this.addIntialsTees();
+                this.NoOfHoles = course.noOfHoles;
+                this.goToPanel('1');
+                // this.router.navigate(["/courses/view/" + this.courseID]);
+            } else {
+                this.snackBar.open("Error! Please try again later.", "x", {
+                    duration: 5000,
+                });
+            }
+        }
+        // }
+    };
     ////*******************************************************************TEE COLOR SAVE**************************************************************************************** */
 
-    /**
-   * tabClicked
-event   */
-    public onStepChange(event) {
-        console.log(event);
-        if (event.selectedIndex == 1) {
-            this.setHoles(this.NoOfHoles);
-        } else if (event.selectedIndex == 2) {
-            this.getCourseHoleSets();
-            // this.setCoursRating();
-            // this.getTeeMeta();
-            // this.showTees = [];
-        } else if (event.selectedIndex == 3) {
-            this.setCoursRating();
-        } else if (event.selectedIndex == 4) {
-            this.getTeeMeta();
-        }
+    get courseName() {
+        return this.courseForm.get("courseName");
+    }
+    get country() {
+        return this.courseForm.get("country");
+    }
+    get city() {
+        return this.courseForm.get("city");
     }
     /**
      * addIntialsTees
      */
-    public addIntialsTees() {
-        for (let index = 0; index <= 3; index++) {
-            this.Tee[this.Tee.length] = [];
-            this.Tee[this.Tee.length - 1]['id'] = UniqueIdGenerator.generate();
-            this.Tee[this.Tee.length - 1]['tee_id'] = '';
-            this.Tee[this.Tee.length - 1]['name_by_club'] = '';
-            this.Tee[this.Tee.length - 1]['color'] = '';
+    async addIntialsTees() {
+        let tee = await this.facadeService.getTeesOfCourse(this.courseID);
+        console.log(tee);
+
+        if (tee['course_tees'].length > 0) {
+            for (let obj of tee['course_tees']) {
+                let tee = {
+                    id: UniqueIdGenerator.generate(),
+                    name_by_club: obj.name_by_club,
+                    color: obj.color,
+                    tee_id: obj['tee_name'].key,
+                };
+                this.Tee.push(tee);
+            }
+            console.log(this.Tee);
+
+            this.tees = [];
+            this.tees =
+                await this.facadeService.getCourseInformationForForm(
+                    this.courseID
+                );
+            this.showTees = [];
+            let item = this.tees['course'][0]['TeesQL'];
+            for (let obj of item) {
+                item = {
+                    name: obj.name_by_club,
+                    id: obj.tee_id,
+                };
+                this.showTees.push(item);
+            }
+        } else {
+            for (let index = 0; index <= 4; index++) {
+                let tee: any = General.getCourseTee(index);
+                this.Tee[this.Tee.length] = [];
+                this.Tee[this.Tee.length - 1]['id'] = UniqueIdGenerator.generate();
+                this.Tee[this.Tee.length - 1]['tee_id'] = tee.tee_id;
+                this.Tee[this.Tee.length - 1]['name_by_club'] = tee.name;
+                this.Tee[this.Tee.length - 1]['color'] = tee.color;
+            }
+
         }
+
     }
     /**
      * onTeeAddChange
@@ -339,11 +418,12 @@ event   */
             this.snackBar.open('Tees Color has been Saved!', 'x', {
                 duration: 5000,
             });
-            if (state) {
-                control.setErrors({ required: true });
-            } else {
-                control.reset();
-            }
+            this.goToPanel('2');
+            // if (state) {
+            //     control.setErrors({ required: true });
+            // } else {
+            //     control.reset();
+            // }
         } else {
             this.snackBar.open('Tees Color has not Saved!', 'x', {
                 duration: 5000,
@@ -362,6 +442,7 @@ event   */
             let holeCount = holes['HolesQL'][0].holes;
             if (this.NoOfHoles > 8) {
                 this.holeSetfor9 = [];
+                this.setName9 = holes['HolesQL'][0].displayName
                 for (let index = 0; index <= 8; index++) {
                     let hole: any = {
                         displayName: holes['HolesQL'][0].displayName,
@@ -371,11 +452,12 @@ event   */
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
                     };
-
+                    this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
                 }
             }
             if (this.NoOfHoles > 9) {
+                this.setName18 = holes['HolesQL'][1].displayName
                 let holeCount = holes['HolesQL'][1].holes;
                 this.showholeSetfor18 = true;
                 this.holeSetfor18 = [];
@@ -388,11 +470,13 @@ event   */
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
                     };
+                    this.eighteenHoleTotalPar += parseInt(hole.par);
 
                     this.holeSetfor18.push(hole);
                 }
             }
             if (this.NoOfHoles > 18) {
+                this.setName27 = holes['HolesQL'][2].displayName
                 let holeCount = holes['HolesQL'][2].holes;
                 this.showholeSetfor27 = true;
                 this.holeSetfor27 = [];
@@ -405,11 +489,12 @@ event   */
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
                     };
-
+                    this.twentysevenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor27.push(hole);
                 }
             }
             if (this.NoOfHoles > 27) {
+                this.setName36 = holes['HolesQL'][3].displayName
                 let holeCount = holes['HolesQL'][3].holes;
                 this.showholeSetfor36 = true;
                 this.holeSetfor36 = [];
@@ -422,6 +507,7 @@ event   */
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
                     };
+                    this.thirtySixHoleTotalPar += parseInt(hole.par);
 
                     this.holeSetfor36.push(hole);
                 }
@@ -433,13 +519,14 @@ event   */
                     let hole: any = {
                         id: UniqueIdGenerator.generate(),
                         holeNo: index,
-                        displayName: null,
+                        displayName: 'Front-9',
                         par: null,
                         index: null,
                     };
 
                     this.holeSetfor9.push(hole);
                 }
+                this.setName9 = 'Front-9';
             }
             if (Number > 9) {
                 this.showholeSetfor18 = true;
@@ -448,13 +535,14 @@ event   */
                     let hole: any = {
                         id: UniqueIdGenerator.generate(),
                         holeNo: index,
-                        displayName: null,
+                        displayName: 'Back-9',
                         par: null,
                         index: null,
                     };
 
                     this.holeSetfor18.push(hole);
                 }
+                this.setName18 = 'Back-9';
             }
             if (Number > 18) {
                 this.showholeSetfor27 = true;
@@ -498,6 +586,7 @@ event   */
             for (let obj of this.holeSetfor9) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor9[index]['par'] = par;
+                    this.nineHoleTotalPar += parseInt(par);
                     break;
                 }
                 index++;
@@ -506,6 +595,7 @@ event   */
             for (let obj of this.holeSetfor18) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor18[index]['par'] = par;
+                    this.eighteenHoleTotalPar += parseInt(par);
                     break;
                 }
                 index++;
@@ -514,6 +604,7 @@ event   */
             for (let obj of this.holeSetfor27) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor27[index]['par'] = par;
+                    this.twentysevenHoleTotalPar += parseInt(par);
                     break;
                 }
                 index++;
@@ -522,6 +613,7 @@ event   */
             for (let obj of this.holeSetfor36) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor36[index]['par'] = par;
+                    this.thirtySixHoleTotalPar += parseInt(par);
                     break;
                 }
                 index++;
@@ -645,6 +737,10 @@ event   */
             });
             console.log(this.holeSetfor9);
         }
+    }
+    selectionChangeDistance(event) {
+        console.log(event);
+
     }
     /**
      * tableNameInput
@@ -797,10 +893,10 @@ event   */
             this.snackBar.open('Course Holes are Saves!', 'x', {
                 duration: 2000,
             });
-            if (state) {
-                control.setErrors({ required: true });
+            if (this.NoOfHoles <= 18) {
+                this.goToPanel('4')
             } else {
-                control.reset();
+                this.goToPanel('3')
             }
         } else {
             this.snackBar.open('Course Holes has not Saved!', 'x', {
@@ -1166,33 +1262,15 @@ event   */
         let rating = await this.facadeService.getCourseRating(this.courseID);
         console.log(rating);
         console.log(this.tees);
-
         this.coursRating = [];
-        if (rating && rating['course_rating'].length > 0) {
-            for (let obj of rating['course_rating']) {
-                let tee = {
-                    id: UniqueIdGenerator.generate(),
-                    courseHoleSets: obj.courseHoleSets,
-                    tee: obj.tee,
-                    tee_id: obj.tee_id,
-                    slopeRating: obj.slopeRating,
-                    courseRating: obj.courseRating,
-                    coursePar: obj.coursePar,
-                    gender_id: obj.gender_id,
-                };
-                this.coursRating.push(tee);
-            }
-        }
-        console.log(this.coursRating);
-
         this.showTees = [];
         let tee = this.tees['course'][0]['TeesQL'];
         for (let obj of tee) {
-            tee = {
+            let teeObj = {
                 name: obj.name_by_club,
                 id: obj.tee_id,
             };
-            this.showTees.push(tee);
+            this.showTees.push(teeObj);
         }
         console.log(this.showTees);
 
@@ -1206,6 +1284,26 @@ event   */
             this.holeSetforSelect.push(hole);
         }
         console.log(this.holeSetforSelect);
+        if (rating && rating['course_rating'].length > 0) {
+            for (let obj of rating['course_rating']) {
+                let teeObj = {
+                    id: UniqueIdGenerator.generate(),
+                    courseHoleSets: obj.courseHoleSets,
+                    tee: obj.tee,
+                    tee_id: obj.tee_id,
+                    slopeRating: obj.slopeRating,
+                    courseRating: obj.courseRating,
+                    coursePar: obj.coursePar,
+                    gender_id: obj.gender_id,
+                };
+                this.coursRating.push(teeObj);
+            }
+        } else {
+            this.coursRating = this.populateRatings(tee, HolesSet)
+        }
+        console.log(this.coursRating);
+
+
     }
 
     async savecoureRating() {
@@ -1240,6 +1338,27 @@ event   */
         }
     }
 
+    populateRatings(tees, holeSets) {
+        let finalArray = [];
+        for (const tee of tees) {
+            for (const holeSet of holeSets) {
+                let mergedObj = {
+                    id: UniqueIdGenerator.generate(),
+                    courseHoleSets: holeSet.holeSets,
+                    tee: tee.name_by_club,
+                    tee_id: tee.tee_id,
+                    slopeRating: 0,
+                    courseRating: 0,
+                    coursePar: 0,
+                    gender_id: 'COMMON  ',
+                };
+                finalArray.push(mergedObj);
+            }
+        }
+
+        return finalArray;
+    }
+
     ///*******************************************************************TEE HOLES-Rating SAVE**************************************************************************************** */
     async getFormData(stepper: MatStepper, action: string) {
         if (action === 'next') stepper.next();
@@ -1267,40 +1386,45 @@ event   */
         return item.id || index;
     }
 
-     /**
-     * Get the details of the panel
-     *
-     * @param id
-     */
-     getPanelInfo(id: string): any
-     {
-        
-         return this.panels.find(panel => panel.id === id);
-     }
+    /**
+    * Get the details of the panel
+    *
+    * @param id
+    */
+    getPanelInfo(id: string): any {
 
-      /**
-     * Navigate to the panel
-     *
-     * @param panel
-     */
-    goToPanel(panel: string): void
-    {
+        return this.panels.find(panel => panel.id === id);
+    }
+
+    /**
+   * Navigate to the panel
+   *
+   * @param panel
+   */
+    goToPanel(panel: string): void {
+        this.nineHoleTotalPar = 0
+        this.eighteenHoleTotalPar = 0
+        this.twentysevenHoleTotalPar = 0
+        this.thirtySixHoleTotalPar = 0
         this.selectedPanel = panel;
-        if (panel == 'b') {
+        if (panel == '1') {
+            this.Tee = [];
+            this.addIntialsTees();
+        } else if (panel == '2') {
             this.setHoles(this.NoOfHoles);
-        } else if (panel == 'c') {
+        } else if (panel == '3') {
             //this.setCoursRating();
             this.getCourseHoleSets();
             // this.getTeeMeta();
             // this.showTees = [];
-        } else if (panel == 'd') {
+        } else if (panel == '4') {
+            this.getCourseHoleSets();
             this.setCoursRating();
-        } else if (panel =='e') {
+        } else if (panel == '5') {
             this.getTeeMeta();
         }
         // Close the drawer on 'over' mode
-        if ( this.drawerMode === 'over' )
-        {
+        if (this.drawerMode === 'over') {
             this.drawer.close();
         }
     }

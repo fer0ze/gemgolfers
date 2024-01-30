@@ -12,9 +12,9 @@ const routes:Routes=[
 
     {
         path: 'add',
-        component: AddCourseComponent 
+        component: ViewCourseComponent, 
     },{
-        path: 'view/:id',
+        path: 'add/:id',
         component: ViewCourseComponent 
     },
     {

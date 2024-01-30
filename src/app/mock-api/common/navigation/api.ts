@@ -109,7 +109,8 @@ export class NavigationMockApi {
                         defaultAdmimn   : cloneDeep(this._defaultNavigationSuperAdmin),
                         futuristic: cloneDeep(this._futuristicNavigation),
                         horizontal: cloneDeep(this._horizontalNavigation),
-                        tour:cloneDeep(this._tourNavigation)
+                        tour:cloneDeep(this._tourNavigation),
+                        courses:cloneDeep(this._userNavigation),
                     }
                 ];
            

@@ -45,7 +45,7 @@
                 </button>
             </div>
         </div>
-        <div class="overflow-x-auto bg-card">
+        <div *ngIf="this.Courses.length; else noCourses" class="overflow-x-auto bg-card">
             <table
                 class="w-full bg-transparent"
                 mat-table
@@ -173,7 +173,7 @@
                         <span class="pr-6 font-medium whitespace-nowrap">
                             <a
                                 [routerLinkActive]="'active'"
-                                [routerLink]="['/courses/view/' + element.id]"
+                                [routerLink]="['/courses/add/' + element.id]"
                             >
                                 <button mat-icon-button color="accent">
                                     <mat-icon
@@ -218,5 +218,14 @@
                 [pageSizeOptions]="[10, 20, 50, 100]"
             ></mat-paginator>
         </div>
+
+        <ng-template #noCourses>
+            <div class="flex mt-8 flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+                <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:document-search'"></mat-icon>
+                <div class="mt-6 text-2xl text-center font-semibold tracking-tight text-secondary">
+                    Sorry, no course found! Click the add button to create a new one.
+                </div>
+            </div>
+        </ng-template>
     </div>
 </div>

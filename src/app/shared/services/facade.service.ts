@@ -102,6 +102,9 @@ export class FacadeService {
   getCoursesList() {
     return this.courseService.getCoursesList();
   }
+  getCoursesListbyID(id) {
+    return this.courseService.getCoursesListbyID(id);
+  }
 
   getCourseByID(id: string) {
     return this.courseService.getCourseByID(id);

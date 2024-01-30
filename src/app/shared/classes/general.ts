@@ -114,6 +114,7 @@ export class General {
         // }
     }
 
+
     public static getPlayersTees(teeName: String) {
         const Course_Tee = [
             { id: 1, name: 'AMATEURS' },
@@ -241,18 +242,59 @@ export class General {
         return Course_Tee.find((element) => element.name == tee);
     }
 
-    public static getCourseTee(teeId: number) {
+    public static getCourseTee(Id: number) {
         const Course_Tee = [
-            { id: 1, name: 'Amateurs' },
-            { id: 2, name: 'Ladies' },
-            { id: 3, name: 'Seniors' },
-            { id: 4, name: 'Professionals' },
-            { id: 5, name: 'Veterans' },
+            { id: 0, name: 'Professionals', tee_id: 'PROFESSIONALS', color: '#000000' },
+            { id: 1, name: 'Ladies', tee_id: 'LADIES', color: '#FF0000' },
+            { id: 2, name: 'Seniors', tee_id: 'SENIORS', color: '#FFFFFF' },
+            { id: 3, name: 'Amateurs', tee_id: 'AMATEURS', color: '#0000FF' },
+            { id: 4, name: 'Veterans', tee_id: 'VETERANS', color: '#FFFF00' },
         ];
 
-        return Course_Tee.find((element) => element.id == teeId);
+        return Course_Tee.find((element) => element.id == Id);
     }
 
+    public static getGolfCourseFeatures(number) {
+        const features = [
+            {
+                id: '0',
+                icon: 'heroicons_outline:star',
+                title: 'Add Course',
+                description:
+                    'Create you courses by adding them',
+            },
+            {
+                id: '1',
+                icon: 'heroicons_outline:user-circle',
+                title: 'Tees',
+                description: 'Manage your course tees, their names and colors',
+            },
+            {
+                id: '2',
+                icon: 'heroicons_outline:lock-closed',
+                title: 'Holes',
+                description: 'Manage your course holes, par, and index',
+            },
+            {
+                id: '3',
+                icon: 'heroicons_outline:credit-card',
+                title: 'Hole-Set',
+                description: 'Manage your course hole-sets by combining hole-sets',
+            },
+            {
+                id: '4',
+                icon: 'heroicons_outline:bell',
+                title: 'Course Rating',
+                description: 'Manage your course ratings and slope ratings',
+            }
+        ];
+
+        if (number <= 18) {
+            return features.filter(feature => feature.id !== '3');
+        }
+
+        return features;
+    }
     public static checkPlayerExcelMembership(player) {
         if ('Membership Number' in player) {
             return 'Membership Number';
@@ -526,6 +568,30 @@ export class General {
     }
     public static getClubName(clubName) {
         if (clubName) return clubName.match(/\b([A-Z])/g).join('');
+    }
+    public static createUser(signUpPerson, uui) {
+        return {
+            id: UniqueIdGenerator.generate(),
+            adminClubId: null,
+            firebaseUid: uui,
+            fcmToken: null,
+            gemId: 'gg' + Math.random(),
+            firstName: signUpPerson.firstName,
+            lastName: signUpPerson.lastName,
+            gender: null,
+            dob: null,
+            picture: null,
+            email: signUpPerson.email ? signUpPerson.email : null,
+            phone: null,
+            playerCategory: null,
+            handicap: 0,
+            online: false,
+            countryCode: null,
+            extraData: null,
+            membershipNumber: null,
+            userRole: 3,
+            membership: [],
+        };
     }
 }
 

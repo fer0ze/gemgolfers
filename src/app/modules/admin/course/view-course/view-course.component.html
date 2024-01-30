@@ -1,21 +1,12 @@
-<div
-    class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
->
+<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Drawer -->
-        <mat-drawer
-            class="sm:w-96 dark:bg-gray-900"
-            [autoFocus]="false"
-            [mode]="drawerMode"
-            [opened]="drawerOpened"
-            #drawer
-        >
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
+            #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
-                <div
-                    class="text-4xl font-extrabold tracking-tight leading-none"
-                >
+                <div class="text-4xl font-extrabold tracking-tight leading-none">
                     Course Details
                 </div>
                 <!-- Close button -->
@@ -28,35 +19,25 @@
             <!-- Panel links -->
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container *ngFor="let panel of panels; trackBy: trackByFn">
-                    <div
-                        class="flex px-8 py-5 cursor-pointer"
-                        [ngClass]="{
+                    <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{
                             'hover:bg-gray-100 dark:hover:bg-hover':
                                 !selectedPanel || selectedPanel !== panel.id,
                             'bg-primary-50 dark:bg-hover':
                                 selectedPanel && selectedPanel === panel.id
-                        }"
-                        (click)="goToPanel(panel.id)"
-                    >
-                        <mat-icon
-                            [ngClass]="{
+                        }" (click)="goToPanel(panel.id)">
+                        <mat-icon [ngClass]="{
                                 'text-hint':
                                     !selectedPanel ||
                                     selectedPanel !== panel.id,
                                 'text-primary dark:text-primary-500':
                                     selectedPanel && selectedPanel === panel.id
-                            }"
-                            [svgIcon]="panel.icon"
-                        ></mat-icon>
+                            }" [svgIcon]="panel.icon"></mat-icon>
                         <div class="ml-3">
-                            <div
-                                class="font-medium leading-6"
-                                [ngClass]="{
+                            <div class="font-medium leading-6" [ngClass]="{
                                     'text-primary dark:text-primary-500':
                                         selectedPanel &&
                                         selectedPanel === panel.id
-                                }"
-                            >
+                                }">
                                 {{ panel.title }}
                             </div>
                             <div class="mt-0.5 text-secondary">
@@ -72,197 +53,206 @@
                 <!-- Panel header -->
                 <div class="flex items-center">
                     <!-- Drawer toggle -->
-                    <button
-                        class="lg:hidden -ml-2"
-                        mat-icon-button
-                        (click)="drawer.toggle()"
-                    >
-                        <mat-icon
-                            [svgIcon]="'heroicons_outline:menu'"
-                        ></mat-icon>
+                    <button class="lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
+                        <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
                     </button>
 
                     <!-- Panel title -->
-                    <div
-                        class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none"
-                    >
+                    <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
                         {{ getPanelInfo(selectedPanel).title }}
                     </div>
                 </div>
 
                 <!-- Load settings panel -->
-                <div class="mt-8 max-w-4xl">
+                <div class="mt-8 flex overflow-x-auto overflow-y-auto max-w-4xl">
                     <ng-container [ngSwitch]="selectedPanel">
                         <!-- Account -->
-                        <ng-container *ngSwitchCase="'a'">
-                            <div class="table-Tee" style="display: grid">
-                                <div class="center">
-                                    <button
-                                        mat-raised-button
-                                        (click)="addNewTee()"
-                                        color="primary"
-                                    >
+                        <ng-container *ngSwitchCase="'0'">
+                            <div class="w-full max-w-3xl">
+                                <div class="text-xl mt-8">New Course</div>
+                                <div class="text-secondary">
+                                    Following information is mandatory, be careful!
+                                </div>
+                                <form [formGroup]="courseForm" autocomplete="off" novalidate>
+                                    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+                                        <div class="sm:col-span-2">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                <mat-label>Course Name</mat-label>
+                                                <input matInput type="text" placeholder="Course Name"
+                                                    formControlName="courseName" />
+                                                <mat-icon class="primary-foreground" matSuffix></mat-icon>
+                                                <mat-error>Course Name is required</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                <mat-label>Country</mat-label>
+                                                <mat-select (selectionChange)="
+                                                        countrySelected($event.value)
+                                                    " placeholder="County Name" formControlName="country">
+                                                    <mat-option *ngFor="let country of listCountries"
+                                                        [value]="country.id">{{ country.id }}</mat-option>
+                                                </mat-select>
+
+                                                <mat-error *ngIf="country.invalid">Country Name is required</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                <mat-label>City</mat-label>
+                                                <mat-select placeholder="City Name" formControlName="city">
+                                                    <mat-option *ngFor="let city of listCity" [value]="city">{{ city
+                                                        }}</mat-option>
+                                                </mat-select>
+
+                                                <mat-error *ngIf="city.invalid">City Name is required</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                                <mat-label>Holes</mat-label>
+                                                <mat-select placeholder="NoOfHoles" formControlName="noOfHoles">
+                                                    <mat-option value="9">9</mat-option>
+                                                    <mat-option value="18">18</mat-option>
+                                                    <mat-option value="27">27</mat-option>
+                                                    <mat-option value="36">36</mat-option>
+                                                </mat-select>
+
+                                                <mat-error>Hole No is required</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="my-4 border-t"></div>
+                                    <div class="flex items-center justify-end">
+                                        <button type="button" mat-raised-button color="accent" (click)="onCancel()">
+                                            Cancel
+                                        </button>
+                                        <button class="ml-2" type="button" mat-raised-button color="primary"
+                                            [disabled]="!courseForm.valid" (click)="createCourse(courseForm.value)">
+                                            Save
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'1'">
+                            <div class="table-Tee flex flex-col">
+                                <div class="center mb-4">
+                                    <button mat-raised-button (click)="addNewTee()" color="primary">
                                         Add New Tee
                                     </button>
                                 </div>
                                 <table>
-                                    <tr
-                                        class="topheader"
-                                        style="
+                                    <tr class="topheader" style="
                                             background-color: #176478;
                                             color: white;
-                                        "
-                                    >
+                                        ">
                                         <th style="width: 245px">TEES</th>
                                         <th style="width: 245px">Tee Name</th>
                                         <th style="width: 245px">Tee Color</th>
                                         <!-- <th>Save</th> -->
                                     </tr>
-                                    <tr
-                                        *ngFor="let tee of Tee; let i = index"
-                                        class="topheader"
-                                    >
+                                    <tr *ngFor="let tee of Tee; let i = index" class="topheader">
                                         <td>
-                                            <mat-form-field
-                                                class="fuse-mat-dense fuse-mat-no-subscript w-60"
-                                            >
-                                                <mat-select
-                                                    [panelClass]="
+                                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-60">
+                                                <mat-select [panelClass]="
                                                         'w-72 min-w-72 max-w-72 h-auto max-h-none'
-                                                    "
-                                                    placeholder="Select Tee"
-                                                    (selectionChange)="
+                                                    " placeholder="Select Tee" (selectionChange)="
                                                         teeChange(
                                                             $event,
                                                             tee.id
                                                         )
-                                                    "
-                                                    value="{{ tee.tee_id }}"
-                                                    type="text"
-                                                >
-                                                    <mat-option value="AMATEURS"
-                                                        >Amateurs</mat-option
-                                                    >
-                                                    <mat-option value="LADIES"
-                                                        >Ladies</mat-option
-                                                    >
-                                                    <mat-option value="SENIORS"
-                                                        >Seniors</mat-option
-                                                    >
-                                                    <mat-option
-                                                        value="PROFESSIONALS"
-                                                        >Professionals</mat-option
-                                                    >
-                                                    <mat-option value="VETERANS"
-                                                        >Veterans</mat-option
-                                                    >
+                                                    " value="{{ tee.tee_id }}" type="text">
+                                                    <mat-option value="AMATEURS">Amateurs</mat-option>
+                                                    <mat-option value="LADIES">Ladies</mat-option>
+                                                    <mat-option value="SENIORS">Seniors</mat-option>
+                                                    <mat-option value="PROFESSIONALS">Professionals</mat-option>
+                                                    <mat-option value="VETERANS">Veterans</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </td>
                                         <td>
-                                            <input
-                                                (input)="
+                                            <input (input)="
                                                     onTeeName(
                                                         $event.target.value,
                                                         tee.id
                                                     )
-                                                "
-                                                class="holeInputs"
-                                                type="text"
-                                                value="{{ tee.name_by_club }}"
-                                                matInput
-                                                placeholder="Enter Name"
-                                            />
+                                                " class="holeInputs" type="text" value="{{ tee.name_by_club }}"
+                                                matInput placeholder="Enter Name" />
                                         </td>
-                                        <td
-                                            style="
+                                        <td style="
                                                 text-align: center; /* width: 243px; */
-                                            "
-                                        >
-                                            <span
-                                                ><input
-                                                    (input)="
+                                            ">
+                                            <span><input (input)="
                                                         onTeeColor(
                                                             $event.target.value,
                                                             tee.id
                                                         )
-                                                    "
-                                                    type="color"
-                                                    value="{{ tee.color }}"
-                                                    placeholder="Enter Color"
-                                            /></span>
+                                                    " type="color" value="{{ tee.color }}"
+                                                    placeholder="Enter Color" /></span>
                                         </td>
                                         <td style="padding-left: 1px">
                                             <span>
-                                                <button
-                                                    (click)="deleteTee(tee.id)"
-                                                    id="delete_btn"
-                                                    mat-icon-button
-                                                    color="warn"
-                                                >
-                                                    <mat-icon class="mat-18"
-                                                        >delete</mat-icon
-                                                    >
+                                                <button (click)="deleteTee(tee.id)" id="delete_btn" mat-icon-button
+                                                    color="warn">
+                                                    <mat-icon class="mat-18">delete</mat-icon>
                                                 </button>
                                             </span>
                                         </td>
                                     </tr>
                                 </table>
+                                <div class="flex items-center mt-8 justify-end">
+                                    <mat-card-actions>
+                                        <button mat-flat-button (click)="saveTees(valid1, false)" [color]="'primary'"
+                                            class="ml-2" matStepperNext>
+                                            Save
+                                        </button>
+                                    </mat-card-actions>
+                                </div>
                             </div>
-                            <div class="my-4 border-t"></div>
-                            <div class="flex items-center justify-end">
-                                <mat-card-actions>
-                                    <button
-                                        mat-flat-button
-                                        (click)="saveTees(valid1, false)"
-                                        [color]="'primary'"
-                                        class="ml-2"
-                                        matStepperNext
-                                    >
-                                        Save
-                                    </button>
-                                </mat-card-actions>
-                            </div>
+
                         </ng-container>
                         <!-- Security -->
-                        <ng-container *ngSwitchCase="'b'">
-                            <div class="center">
-                                <mat-radio-group
+                        <ng-container *ngSwitchCase="'2'">
+                            <div class="flex flex-col">
+                                <div class="center">
+                                    <mat-radio-group fxLayoutAlign="start center"
+                                        (change)="selectionChange($event.value)" [value]="0">
+                                        <mat-radio-button style="padding: 18px" value="0" [checked]="true">Index For
+                                            Genders
+                                            Same</mat-radio-button>
+                                        <mat-radio-button value="1">Index For Genders
+                                            Different</mat-radio-button>
+                                    </mat-radio-group>
+                                    <!-- <mat-radio-group
                                     fxLayoutAlign="start center"
-                                    (change)="selectionChange($event.value)"
+                                    (change)="selectionChangeDistance($event.value)"
+                                    
                                 >
                                     <mat-radio-button
                                         style="padding: 18px"
-                                        checked
-                                        value="0"
-                                        >Index For Genders
-                                        Same</mat-radio-button
+                                        value="2"
+                                        [checked]="true"
+                                        >Distance in Yards</mat-radio-button
                                     >
-                                    <mat-radio-button value="1"
-                                        >Index For Genders
-                                        Different</mat-radio-button
+                                    <mat-radio-button value="3"
+                                        >Distance in Meters</mat-radio-button
                                     >
-                                </mat-radio-group>
-                            </div>
-                            <div style="display: grid; flex-wrap: wrap">
-                                <div class="table-Tee" style="display: grid">
-                                    <div class="center">
-                                        <table>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
+                                </mat-radio-group> -->
+                                </div>
+                                <div style="display: grid; flex-wrap: wrap">
+                                    <div class="table-Tee" style="display: grid">
+                                        <div class="center">
+                                            <table>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
                                                         holeSetfor9.length >= 1
-                                                    "
-                                                    class="tabelinput bg-card"
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        value="{{
+                                                    " class="tabelinput bg-card">
+                                                        <input type="text" value="{{
                                                             holeSetfor9[0][
                                                                 'displayName'
                                                             ]
-                                                        }}"
-                                                        (input)="
+                                                        }}" (input)="
                                                             tableNameInput(
                                                                 $event.target
                                                                     .value,
@@ -270,22 +260,20 @@
                                                                     'holeNo'
                                                                 ]
                                                             )
-                                                        "
-                                                        placeholder="Enter Name for hole-Set(9)"
-                                                    />
-                                                </th>
-                                                <th
-                                                    class="holeNum"
-                                                    *ngFor="
+                                                        " placeholder="Enter Name for hole-Set(9)" />
+                                                    </th>
+                                                    <th class="holeNum" *ngFor="
                                                         let hole of holeSetfor9;
                                                         let i = index
-                                                    "
-                                                >
-                                                    {{ hole.holeNo }}
-                                                </th>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th class="holehr">Par</th>
+                                                    ">
+                                                        {{ hole.holeNo }}
+                                                    </th>
+                                                    <th class="holeNum">
+                                                        Total
+                                                    </th>
+                                                </tr>
+                                                <!-- <tr class="topheader">
+                                                <th class="holehr">Distance</th>
                                                 <td
                                                     *ngFor="
                                                         let hole of holeSetfor9;
@@ -324,117 +312,118 @@
                                                             }"
                                                     /></span>
                                                 </td>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
-                                                        !showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index
-                                                </th>
-                                                <th
-                                                    *ngIf="
-                                                        showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index For Men
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                            </tr> -->
+                                                <tr class="topheader">
+                                                    <th class="holehr">Par</th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor9;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
+                                                                onParInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            " value="{{
+                                                                hole['par']
+                                                            }}" type="text" (onchange)="
+                                                                onParInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            " [ngClass]="{
+                                                                empty:
+                                                                    hole.par ==
+                                                                    '',
+                                                                warn:
+                                                                    hole.par > 9
+                                                            }" /></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="font-bold text-secondary">
+                                                            <input class="holeInput" type="text" readonly
+                                                                [(ngModel)]="nineHoleTotalPar" />
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
+                                                        !showholeindexforWomen
+                                                    " class="holehr">
+                                                        Index
+                                                    </th>
+                                                    <th *ngIf="
+                                                        showholeindexforWomen
+                                                    " class="holehr">
+                                                        Index For Men
+                                                    </th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor9;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            value="{{
+                                                            " value="{{
                                                                 hole['index']
-                                                            }}"
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            }}" type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                *ngIf="showholeindexforWomen"
-                                                class="topheader"
-                                            >
-                                                <th class="holehr">
-                                                    Index For Women
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="showholeindexforWomen" class="topheader">
+                                                    <th class="holehr">
+                                                        Index For Women
+                                                    </th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor9;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInputForWomen(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            " type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                                <div
-                                    *ngIf="showholeSetfor18"
-                                    class="table-Tee"
-                                    style="display: grid"
-                                >
-                                    <div class="center">
-                                        <table>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
+                                    <div *ngIf="showholeSetfor18" class="table-Tee" style="display: grid">
+                                        <div class="center">
+                                            <table>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
                                                         holeSetfor18.length >= 1
-                                                    "
-                                                    class="tabelinput bg-card"
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        value="{{
+                                                    " class="tabelinput bg-card">
+                                                        <input type="text" value="{{
                                                             holeSetfor18[0][
                                                                 'displayName'
                                                             ]
-                                                        }}"
-                                                        (input)="
+                                                        }}" (input)="
                                                             tableNameInput(
                                                                 $event.target
                                                                     .value,
@@ -442,22 +431,20 @@
                                                                     'holeNo'
                                                                 ]
                                                             )
-                                                        "
-                                                        placeholder="Enter Name for hole-Set(9)"
-                                                    />
-                                                </th>
-                                                <th
-                                                    class="holeNum"
-                                                    *ngFor="
+                                                        " placeholder="Enter Name for hole-Set(9)" />
+                                                    </th>
+                                                    <th class="holeNum" *ngFor="
                                                         let hole of holeSetfor18;
                                                         let i = index
-                                                    "
-                                                >
-                                                    {{ hole.holeNo }}
-                                                </th>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th class="holehr">Par</th>
+                                                    ">
+                                                        {{ hole.holeNo }}
+                                                    </th>
+                                                    <th class="holeNum">
+                                                        Total
+                                                    </th>
+                                                </tr>
+                                                <!-- <tr class="topheader">
+                                                <th class="holehr">Distance</th>
                                                 <td
                                                     *ngFor="
                                                         let hole of holeSetfor18;
@@ -496,117 +483,119 @@
                                                             }"
                                                     /></span>
                                                 </td>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
-                                                        !showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index
-                                                </th>
-                                                <th
-                                                    *ngIf="
-                                                        showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index For Men
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                            </tr> -->
+                                                <tr class="topheader">
+                                                    <th class="holehr">Par</th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor18;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
+                                                                onParInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            " value="{{
+                                                                hole['par']
+                                                            }}" type="text" (onchange)="
+                                                                onParInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            " [ngClass]="{
+                                                                empty:
+                                                                    hole.par ==
+                                                                    '',
+                                                                warn:
+                                                                    hole.par > 9
+                                                            }" /></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="font-bold text-secondary">
+                                                            <input class="holeInput" type="text" readonly
+                                                                [(ngModel)]="eighteenHoleTotalPar" />
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="topheader">
+                                                    <th *ngIf="
+                                                        !showholeindexforWomen
+                                                    " class="holehr">
+                                                        Index
+                                                    </th>
+                                                    <th *ngIf="
+                                                        showholeindexforWomen
+                                                    " class="holehr">
+                                                        Index For Men
+                                                    </th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor18;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            value="{{
+                                                            " value="{{
                                                                 hole['index']
-                                                            }}"
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            }}" type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                *ngIf="showholeindexforWomen"
-                                                class="topheader"
-                                            >
-                                                <th class="holehr">
-                                                    Index For Women
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="showholeindexforWomen" class="topheader">
+                                                    <th class="holehr">
+                                                        Index For Women
+                                                    </th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor18;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInputForWomen(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            " type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                                <div
-                                    *ngIf="showholeSetfor27"
-                                    class="table-Tee"
-                                    style="display: grid"
-                                >
-                                    <div class="center">
-                                        <table>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
+                                    <div *ngIf="showholeSetfor27" class="table-Tee" style="display: grid">
+                                        <div class="center">
+                                            <table>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
                                                         holeSetfor27.length >= 1
-                                                    "
-                                                    class="tabelinput bg-card"
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        value="{{
+                                                    " class="tabelinput bg-card">
+                                                        <input type="text" value="{{
                                                             holeSetfor27[0][
                                                                 'displayName'
                                                             ]
-                                                        }}"
-                                                        (input)="
+                                                        }}" (input)="
                                                             tableNameInput(
                                                                 $event.target
                                                                     .value,
@@ -614,171 +603,129 @@
                                                                     'holeNo'
                                                                 ]
                                                             )
-                                                        "
-                                                        placeholder="Enter Name for hole-Set(9)"
-                                                    />
-                                                </th>
-                                                <th
-                                                    class="holeNum"
-                                                    *ngFor="
+                                                        " placeholder="Enter Name for hole-Set(9)" />
+                                                    </th>
+                                                    <th class="holeNum" *ngFor="
                                                         let hole of holeSetfor27;
                                                         let i = index
-                                                    "
-                                                >
-                                                    {{ hole.holeNo }}
-                                                </th>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th class="holehr">Par</th>
-                                                <td
-                                                    *ngFor="
+                                                    ">
+                                                        {{ hole.holeNo }}
+                                                    </th>
+                                                    <th class="holeNum">
+                                                        Total
+                                                    </th>
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Par</th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor27;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onParInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            value="{{
+                                                            " value="{{
                                                                 hole['par']
-                                                            }}"
-                                                            type="text"
-                                                            (onchange)="
+                                                            }}" type="text" (onchange)="
                                                                 onParInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            [ngClass]="{
+                                                            " [ngClass]="{
                                                                 empty:
                                                                     hole.par ==
                                                                     '',
                                                                 warn:
                                                                     hole.par > 9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
+                                                            }" /></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="font-bold text-secondary">
+                                                            <input class="holeInput" type="text" readonly
+                                                                [(ngModel)]="twentysevenHoleTotalPar" />
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
                                                         !showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index
-                                                </th>
-                                                <th
-                                                    *ngIf="
+                                                    " class="holehr">
+                                                        Index
+                                                    </th>
+                                                    <th *ngIf="
                                                         showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index For Men
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                                    " class="holehr">
+                                                        Index For Men
+                                                    </th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor27;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            value="{{
+                                                            " value="{{
                                                                 hole['index']
-                                                            }}"
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            }}" type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                *ngIf="showholeindexforWomen"
-                                                class="topheader"
-                                            >
-                                                <th class="holehr">
-                                                    Index For Women
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="showholeindexforWomen" class="topheader">
+                                                    <th class="holehr">
+                                                        Index For Women
+                                                    </th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor27;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInputForWomen(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            " type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                                <div
-                                    *ngIf="showholeSetfor36"
-                                    class="table-Tee"
-                                    style="display: grid"
-                                >
-                                    <div class="center">
-                                        <table>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
+                                    <div *ngIf="showholeSetfor36" class="table-Tee" style="display: grid">
+                                        <div class="center">
+                                            <table>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
                                                         holeSetfor36.length >= 1
-                                                    "
-                                                    class="tabelinput bg-card"
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        value="{{
+                                                    " class="tabelinput bg-card">
+                                                        <input type="text" value="{{
                                                             holeSetfor36[0][
                                                                 'displayName'
                                                             ]
-                                                        }}"
-                                                        (input)="
+                                                        }}" (input)="
                                                             tableNameInput(
                                                                 $event.target
                                                                     .value,
@@ -786,185 +733,141 @@
                                                                     'holeNo'
                                                                 ]
                                                             )
-                                                        "
-                                                        placeholder="Enter Name for hole-Set(9)"
-                                                    />
-                                                </th>
-                                                <th
-                                                    class="holeNum"
-                                                    *ngFor="
+                                                        " placeholder="Enter Name for hole-Set(9)" />
+                                                    </th>
+                                                    <th class="holeNum" *ngFor="
                                                         let hole of holeSetfor36;
                                                         let i = index
-                                                    "
-                                                >
-                                                    {{ hole.holeNo }}
-                                                </th>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th class="holehr">Par</th>
-                                                <td
-                                                    *ngFor="
+                                                    ">
+                                                        {{ hole.holeNo }}
+                                                    </th>
+                                                    <th class="holeNum">
+                                                        Total
+                                                    </th>
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Par</th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor36;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onParInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            type="text"
-                                                            (onchange)="
+                                                            " type="text" (onchange)="
                                                                 onParInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            value="{{
+                                                            " value="{{
                                                                 hole['par']
-                                                            }}"
-                                                            [ngClass]="{
+                                                            }}" [ngClass]="{
                                                                 empty:
                                                                     hole.par ==
                                                                     '',
                                                                 warn:
                                                                     hole.par > 9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                            <tr class="topheader">
-                                                <th
-                                                    *ngIf="
+                                                            }" /></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="font-bold text-secondary">
+                                                            <input class="holeInput" type="text" readonly
+                                                                [(ngModel)]="thirtySixHoleTotalPar" />
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th *ngIf="
                                                         !showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index
-                                                </th>
-                                                <th
-                                                    *ngIf="
+                                                    " class="holehr">
+                                                        Index
+                                                    </th>
+                                                    <th *ngIf="
                                                         showholeindexforWomen
-                                                    "
-                                                    class="holehr"
-                                                >
-                                                    Index For Men
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                                    " class="holehr">
+                                                        Index For Men
+                                                    </th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor36;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            value="{{
+                                                            " value="{{
                                                                 hole['index']
-                                                            }}"
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            }}" type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                *ngIf="showholeindexforWomen"
-                                                class="topheader"
-                                            >
-                                                <th class="holehr">
-                                                    Index For Women
-                                                </th>
-                                                <td
-                                                    *ngFor="
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="showholeindexforWomen" class="topheader">
+                                                    <th class="holehr">
+                                                        Index For Women
+                                                    </th>
+                                                    <td *ngFor="
                                                         let hole of holeSetfor36;
                                                         let i = index
-                                                    "
-                                                >
-                                                    <span
-                                                        ><input
-                                                            class="holeInput"
-                                                            (input)="
+                                                    ">
+                                                        <span><input class="holeInput" (input)="
                                                                 onIndexInputForWomen(
                                                                     $event
                                                                         .target
                                                                         .value,
                                                                     hole.holeNo
                                                                 )
-                                                            "
-                                                            type="text"
-                                                            [ngClass]="{
+                                                            " type="text" [ngClass]="{
                                                                 empty:
                                                                     hole.index ==
                                                                     '',
                                                                 warn:
                                                                     hole.index >
                                                                     9
-                                                            }"
-                                                    /></span>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                            }" /></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="my-4 border-t"></div>
-                            <div class="flex items-center justify-end">
-                                <mat-card-actions>
-                                    <button
-                                        mat-flat-button
-                                        (click)="saveHoles(valid2, false)"
-                                        [color]="'primary'"
-                                        class="ml-2"
-                                        matStepperNext
-                                    >
-                                        Save
-                                    </button>
-                                </mat-card-actions>
+                                <div class="flex items-center justify-end">
+                                    <mat-card-actions>
+                                        <button mat-flat-button (click)="saveHoles(valid2, false)" [color]="'primary'"
+                                            class="ml-2" matStepperNext>
+                                            Save
+                                        </button>
+                                    </mat-card-actions>
+                                </div>
                             </div>
                         </ng-container>
                         <!-- Plan & Billing -->
-                        <ng-container *ngSwitchCase="'c'">
-                            <div class="table-Tee" style="display: grid">
+                        <ng-container *ngSwitchCase="'3'">
+                            <div class="table-Tee flex flex-col">
                                 <div class="center">
-                                    <button
-                                        mat-raised-button
-                                        (click)="addNewHoleSet()"
-                                        color="primary"
-                                    >
+                                    <button mat-raised-button (click)="addNewHoleSet()" color="primary">
                                         Add New HoleSet
                                     </button>
                                 </div>
                                 <table>
-                                    <tr
-                                        class="topheader"
-                                        style="
+                                    <tr class="topheader" style="
                                             background-color: #176478;
                                             color: white;
-                                        "
-                                    >
+                                        ">
                                         <th style="width: 245px">
                                             Display Name
                                         </th>
@@ -972,160 +875,105 @@
                                         <th style="width: 245px">BackID</th>
                                         <!-- <th>Save</th> -->
                                     </tr>
-                                    <tr
-                                        *ngFor="
-                                            let holesSet of Hole;
-                                            let i = index
-                                        "
-                                        class="topheader bg-card"
-                                    >
-                                        <th
-                                            style="
+                                    <tr *ngFor=" let holesSet of Hole;let i = index" class="topheader">
+                                        <td style="
                                                 padding: 1px !important;
                                                 text-align: center;
                                                 width: 243px;
-                                            "
-                                        >
+                                            ">
                                             <span>
-                                                <input
-                                                    (input)="
+                                                <input (input)="
                                                         onDisplayNameChange(
                                                             $event.target.value,
                                                             holesSet.id
                                                         )
-                                                    "
-                                                    value="{{
+                                                    " value="{{
                                                         holesSet['displayName']
-                                                    }}"
-                                                    type="text"
-                                                    placeholder="Enter Name"
-                                                />
+                                                    }}" type="text" placeholder="Enter Name" />
                                             </span>
-                                        </th>
-                                        <td
-                                            style="
-                                                padding: 1px !important;
-                                                text-align: center;
-                                                width: 243px;
-                                            "
-                                        >
-                                            <span
-                                                ><mat-select
-                                                    (selectionChange)="
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-60">
+                                                <mat-select (selectionChange)="
                                                         onfrontID(
                                                             $event,
                                                             holesSet.id
                                                         )
-                                                    "
-                                                    [(value)]="holesSet.frontId"
-                                                    type="text"
-                                                    placeholder="Select Hole-Sets"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    " [(value)]="holesSet.frontId" type="text"
+                                                    placeholder="Select Hole-Sets">
+                                                    <mat-option *ngFor="
                                                             let tee of holeSetforSelect;
                                                             let i = index
-                                                        "
-                                                        [value]="tee.id"
-                                                        >{{
-                                                            tee.displayName
-                                                        }}</mat-option
-                                                    >
+                                                        " [value]="tee.id">{{
+                                                        tee.displayName
+                                                        }}</mat-option>
                                                 </mat-select>
-                                            </span>
+                                            </mat-form-field>
                                         </td>
-                                        <td
-                                            style="
-                                                text-align: center;
-                                                width: 243px;
-                                            "
-                                        >
-                                            <span
-                                                ><mat-select
+                                        <td>
+                                            <mat-form-field
+                                                class="fuse-mat-dense fuse-mat-no-subscript w-60"><mat-select
                                                     (selectionChange)="
                                                         onbackID(
                                                             $event,
                                                             holesSet.id
                                                         )
-                                                    "
-                                                    [(value)]="holesSet.backId"
-                                                    type="text"
-                                                    placeholder="Select Hole-Sets"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    " [(value)]="holesSet.backId" type="text"
+                                                    placeholder="Select Hole-Sets">
+                                                    <mat-option *ngFor="
                                                             let tee of holeSetforSelect;
                                                             let i = index
-                                                        "
-                                                        [value]="tee.id"
-                                                        >{{
-                                                            tee.displayName
-                                                        }}</mat-option
-                                                    >
-                                                </mat-select></span
-                                            >
+                                                        " [value]="tee.id">{{
+                                                        tee.displayName
+                                                        }}</mat-option>
+                                                </mat-select></mat-form-field>
                                         </td>
                                     </tr>
                                 </table>
+                                <div class="flex items-center justify-end">
+                                    <mat-card-actions>
+                                        <button mat-raised-button (click)="
+                                                saveHoleSets(
+                                                    valid3,
+                                                    valid4,
+                                                    valid5,
+                                                    false
+                                                )
+                                            " color="primary">
+                                            Save
+                                        </button>
+                                    </mat-card-actions>
+                                </div>
                             </div>
-                            <div class="my-4 border-t"></div>
-                            <div class="flex items-center justify-end">
-                                <mat-card-actions>
-                                    <button
-                                        mat-raised-button
-                                        (click)="
-                                            saveHoleSets(
-                                                valid3,
-                                                valid4,
-                                                valid5,
-                                                false
-                                            )
-                                        "
-                                        color="primary"
-                                    >
-                                        Save
-                                    </button>
-                                </mat-card-actions>
-                            </div>
+                           
+                            
                         </ng-container>
                         <!-- Notifications -->
-                        <ng-container *ngSwitchCase="'d'">
-                            <div class="table-Tee" style="display: grid">
+                        <ng-container *ngSwitchCase="'4'">
+                            <div class="table-Tee flex flex-col">
                                 <div class="center">
-                                    <button
-                                        mat-raised-button
-                                        (click)="addNewCourseRating()"
-                                        color="primary"
-                                    >
+                                    <button mat-raised-button (click)="addNewCourseRating()" color="primary">
                                         Add Course-Rating
                                     </button>
                                 </div>
                                 <table>
-                                    <tr
-                                        class="topheader"
-                                        style="
+                                    <tr class="topheader mt-4" style="
                                             background-color: #176478;
                                             color: white;
-                                        "
-                                    >
+                                        ">
                                         <th style="width: 240px">TEES</th>
                                         <th style="width: 240px">Hole-Sets</th>
                                         <th style="width: 140px; padding: 4px">
-                                            <div
-                                                style="
+                                            <div style="
                                                     display: flex;
                                                     justify-content: center;
-                                                    margin-right: -11px;
-                                                "
-                                            >
+                                                   
+                                                ">
                                                 <span class="dist">
-                                                    <div
-                                                        class="numberCircle"
-                                                        style="
+                                                    <div class="numberCircle" style="
                                                             margin-left: -9px !important;
                                                             /* margin-right: 7px; */
-                                                        "
-                                                    >
+                                                        ">
                                                         <div class="divce">
                                                             C.R
                                                         </div>
@@ -1140,226 +988,143 @@
                                                 </span>
                                                 <span class="dist">
                                                     <div class="numberCircleb">
-                                                        <div
-                                                            class="divce"
-                                                            style="
+                                                        <div class="divce" style="
                                                                 margin-left: -3px !important;
-                                                            "
-                                                        >
+                                                            ">
                                                             Par
                                                         </div>
                                                     </div>
                                                 </span>
                                             </div>
                                         </th>
-                                        <th style="width: 230px">Genders</th>
+                                        <th *ngIf="this.showholeindexforWomen">Genders</th>
                                         <!-- <th>Save</th> -->
                                     </tr>
-                                    <tr
-                                        *ngFor="
-                                            let rating of coursRating;
-                                            let i = index
-                                        "
-                                        class="topheader"
-                                    >
-                                        <th
-                                            style="
-                                                text-align: center;
-                                                width: 243px;
-                                            "
-                                        >
-                                            <span
-                                                ><mat-select
-                                                    placeholder="Select Tee"
-                                                    (selectionChange)="
+                                    <tr *ngFor="let rating of coursRating; let i = index" class="topheader">
+                                        <td>
+                                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-60">
+                                                <mat-select placeholder="Select Tee" (selectionChange)="
                                                         teechange(
                                                             $event,
                                                             rating.id
                                                         )
-                                                    "
-                                                    [(value)]="rating.tee_id"
-                                                    type="text"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    " [(value)]="rating.tee_id" type="text">
+                                                    <mat-option *ngFor="
                                                             let tee of showTees;
                                                             let i = index
-                                                        "
-                                                        [value]="tee.id"
-                                                        >{{
-                                                            tee.name
-                                                        }}</mat-option
-                                                    >
-                                                </mat-select></span
-                                            >
-                                        </th>
-                                        <td
-                                            style="
-                                                text-align: center;
-                                                width: 243px;
-                                            "
-                                        >
-                                            <span
-                                                ><mat-select
-                                                    placeholder="Select Hole-Sets"
-                                                    (selectionChange)="
+                                                        " [value]="tee.id">{{
+                                                        tee.name
+                                                        }}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-60">
+                                                <mat-select placeholder="Select Hole-Sets" (selectionChange)="
                                                         courseHoleSets(
                                                             $event,
                                                             rating
                                                         )
-                                                    "
-                                                    [(value)]="
+                                                    " [(value)]="
                                                         rating.courseHoleSets
-                                                    "
-                                                    type="text"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    " type="text">
+                                                    <mat-option *ngFor="
                                                             let tees of holeSetforSelect;
                                                             let i = index
-                                                        "
-                                                        [value]="tees.id"
-                                                        >{{
-                                                            tees.displayName
-                                                        }}</mat-option
-                                                    >
-                                                </mat-select></span
-                                            >
+                                                        " [value]="tees.id">{{
+                                                        tees.displayName
+                                                        }}</mat-option>
+                                                </mat-select></mat-form-field>
                                         </td>
-                                        <td
-                                            style="
+                                        <td style="
                                                 text-align: center; /* width: 243px; */
-                                            "
-                                        >
-                                            <span
-                                                ><input
-                                                    class="holeInput"
-                                                    (input)="
+                                            ">
+                                            <div class="flex"> <span class="px-2"><input class="holeInput" (input)="
                                                         courseRating(
                                                             $event.target.value,
                                                             rating.id
                                                         )
-                                                    "
-                                                    type="text"
-                                                    value="{{
+                                                    " type="text" value="{{
                                                         rating.courseRating
-                                                    }}"
-                                            /></span>
-                                            <span>
-                                                <input
-                                                    class="holeInput"
-                                                    (input)="
+                                                    }}" /></span>
+                                                <span class="px-2">
+                                                    <input class="holeInput" (input)="
                                                         slopeRating(
                                                             $event.target.value,
                                                             rating.id
                                                         )
-                                                    "
-                                                    type="text"
-                                                    value="{{
+                                                    " type="text" value="{{
                                                         rating.slopeRating
-                                                    }}"
-                                            /></span>
-                                            <span>
-                                                <input
-                                                    class="holeInput"
-                                                    (input)="
+                                                    }}" /></span>
+                                                <span class="px-2">
+                                                    <input class="holeInput" (input)="
                                                         coursePar(
                                                             $event.target.value,
                                                             rating.id
                                                         )
-                                                    "
-                                                    type="text"
-                                                    value="{{
+                                                    " type="text" value="{{
                                                         rating.coursePar
-                                                    }}"
-                                            /></span>
+                                                    }}" /></span>
+                                            </div>
+
                                         </td>
-                                        <td
-                                            style="
+                                        <td *ngIf="this.showholeindexforWomen" style="
                                                 text-align: center;
                                                 width: 243px;
-                                            "
-                                        >
+                                            ">
                                             <span>
-                                                <mat-select
-                                                    placeholder="Select Gender For Rating"
-                                                    (selectionChange)="
+                                                <mat-select placeholder="Select Gender For Rating" (selectionChange)="
                                                         gender_id(
                                                             $event,
                                                             rating.id
                                                         )
-                                                    "
-                                                    value="{{
+                                                    " value="{{
                                                         rating.gender_id
-                                                    }}"
-                                                    type="text"
-                                                >
-                                                    <mat-option value="COMMON"
-                                                        >Both</mat-option
-                                                    >
-                                                    <mat-option value="WOMEN"
-                                                        >Female</mat-option
-                                                    >
-                                                    <mat-option value="COMMON"
-                                                        >Male</mat-option
-                                                    >
-                                                </mat-select></span
-                                            >
+                                                    }}" type="text">
+                                                    <mat-option value="COMMON">Both</mat-option>
+                                                    <mat-option value="WOMEN">Female</mat-option>
+                                                    <mat-option value="COMMON">Male</mat-option>
+                                                </mat-select></span>
                                         </td>
                                     </tr>
                                 </table>
+                                <div class="flex items-center justify-end">
+                                    <mat-card-actions>
+                                        <button mat-raised-button (click)="savecoureRating()" color="primary">
+                                            Save
+                                        </button>
+                                    </mat-card-actions>
+                                </div>
                             </div>
-                            <div class="my-4 border-t"></div>
-                            <div class="flex items-center justify-end">
-                                <mat-card-actions>
-                                    <button
-                                        mat-raised-button
-                                        (click)="savecoureRating()"
-                                        color="primary"
-                                    >
-                                        Save
-                                    </button>
-                                </mat-card-actions>
-                            </div>
+
+
                         </ng-container>
                         <!-- Team -->
-                        <ng-container *ngSwitchCase="'e'">
-                            <div class="table-Tee" style="display: grid">
+                        <ng-container *ngSwitchCase="'5'">
+                            <div class="table-Tee flex flex-col">
                                 <div class="center">
-                                    <button
-                                        mat-raised-button
-                                        (click)="addNewTeeMeta()"
-                                        color="primary"
-                                    >
+                                    <button mat-raised-button (click)="addNewTeeMeta()" color="primary">
                                         Add Tee-Meta
                                     </button>
                                 </div>
                                 <table>
-                                    <tr
-                                        class="topheader"
-                                        style="
+                                    <tr class="topheader" style="
                                             background-color: #176478;
                                             color: white;
-                                        "
-                                    >
+                                        ">
                                         <th style="width: 240px">TEES</th>
                                         <th style="width: 240px">Hole No</th>
                                         <th style="width: 240px; padding: 4px">
-                                            <div
-                                                style="
+                                            <div style="
                                                     display: flex;
                                                     justify-content: center;
                                                     margin-right: -11px;
-                                                "
-                                            >
+                                                ">
                                                 <span class="dist">
-                                                    <div
-                                                        class="numberCircle"
-                                                        style="
+                                                    <div class="numberCircle" style="
                                                             margin-left: -9px !important;
                                                             /* margin-right: 7px; */
-                                                        "
-                                                    >
+                                                        ">
                                                         <div class="divce">
                                                             Dist
                                                         </div>
@@ -1383,118 +1148,71 @@
                                         </th>
                                         <!-- <th>Save</th> -->
                                     </tr>
-                                    <tr
-                                        *ngFor="
+                                    <tr *ngFor="
                                             let meta of holeMeta;
                                             let i = index
-                                        "
-                                        class="topheader"
-                                    >
-                                        <th
-                                            style="
+                                        " class="topheader">
+                                        <th style="
                                                 text-align: center;
                                                 width: 243px;
-                                            "
-                                        >
-                                            <span
-                                                ><mat-select
-                                                    placeholder="Select Tee"
-                                                    (selectionChange)="
+                                            ">
+                                            <span><mat-select placeholder="Select Tee" (selectionChange)="
                                                         teechangeforMeta(
                                                             $event,
                                                             meta.id
                                                         )
-                                                    "
-                                                    [(value)]="meta.tee_id"
-                                                    type="text"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    " [(value)]="meta.tee_id" type="text">
+                                                    <mat-option *ngFor="
                                                             let tee of showTees;
                                                             let i = index
-                                                        "
-                                                        [value]="tee.id"
-                                                        >{{
-                                                            tee.name
-                                                        }}</mat-option
-                                                    >
-                                                </mat-select></span
-                                            >
+                                                        " [value]="tee.id">{{
+                                                        tee.name
+                                                        }}</mat-option>
+                                                </mat-select></span>
                                         </th>
-                                        <td
-                                            style="
+                                        <td style="
                                                 text-align: center;
                                                 width: 243px;
-                                            "
-                                        >
-                                            <span
-                                                ><mat-select
-                                                    placeholder="Select Hole No "
-                                                    (selectionChange)="
+                                            ">
+                                            <span><mat-select placeholder="Select Hole No " (selectionChange)="
                                                         HolechangeForMeta(
                                                             $event,
                                                             meta
                                                         )
-                                                    "
-                                                    [(value)]="meta.hole_id"
-                                                    type="text"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="
+                                                    " [(value)]="meta.hole_id" type="text">
+                                                    <mat-option *ngFor="
                                                             let tees of holes;
                                                             let i = index
-                                                        "
-                                                        [value]="tees.id"
-                                                        >{{
-                                                            tees.holeNo
-                                                        }}</mat-option
-                                                    >
-                                                </mat-select></span
-                                            >
+                                                        " [value]="tees.id">{{
+                                                        tees.holeNo
+                                                        }}</mat-option>
+                                                </mat-select></span>
                                         </td>
-                                        <td
-                                            style="
+                                        <td style="
                                                 text-align: center; /* width: 243px; */
-                                            "
-                                        >
-                                            <span
-                                                ><input
-                                                    class="holeInput"
-                                                    (input)="
+                                            ">
+                                            <span><input class="holeInput" (input)="
                                                         distanceChange(
                                                             $event.target.value,
                                                             meta.id
                                                         )
-                                                    "
-                                                    type="text"
-                                                    value="{{
+                                                    " type="text" value="{{
                                                         meta.tee_distances
-                                                    }}"
-                                            /></span>
+                                                    }}" /></span>
                                             <span>
-                                                <input
-                                                    class="holeInput"
-                                                    (input)="
+                                                <input class="holeInput" (input)="
                                                         LatChange(
                                                             $event.target.value,
                                                             meta.id
                                                         )
-                                                    "
-                                                    type="text"
-                                                    value="{{ meta.tee_lat }}"
-                                            /></span>
+                                                    " type="text" value="{{ meta.tee_lat }}" /></span>
                                             <span>
-                                                <input
-                                                    class="holeInput"
-                                                    (input)="
+                                                <input class="holeInput" (input)="
                                                         LongChange(
                                                             $event.target.value,
                                                             meta.id
                                                         )
-                                                    "
-                                                    type="text"
-                                                    value="{{ meta.tee_long }}"
-                                            /></span>
+                                                    " type="text" value="{{ meta.tee_long }}" /></span>
                                         </td>
                                     </tr>
                                 </table>
@@ -1502,11 +1220,7 @@
                                 <!-- Actions -->
                                 <div class="flex items-center justify-end">
                                     <mat-card-actions>
-                                        <button
-                                            mat-raised-button
-                                            (click)="saveTeeMeta()"
-                                            color="primary"
-                                        >
+                                        <button mat-raised-button (click)="saveTeeMeta()" color="primary">
                                             Save
                                         </button>
                                     </mat-card-actions>

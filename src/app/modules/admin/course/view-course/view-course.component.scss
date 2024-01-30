@@ -96,7 +96,7 @@ background-color: #185105;
     height: 57px;
     padding: 0 24px;
     cursor: pointer;
-    box-sizing: border-box;
+    
     opacity: 6.6;
     min-width: 135px;
     text-align: center;
@@ -127,7 +127,7 @@ background-color: #185105;
 }
 
 *, :after, :before {
-    box-sizing: border-box;
+    
 }
 
 div {
@@ -140,7 +140,7 @@ div {
     padding: 20px;
 }
 *, :after, :before {
-    box-sizing: border-box;
+    
 }
 div {
     display: block;
@@ -178,7 +178,7 @@ body, html {
     max-width: 100%;
 }
 *, :after, :before {
-    box-sizing: border-box;
+    
 }
 .row {
     margin-bottom: 0!important;
@@ -198,7 +198,7 @@ body, html {
 }
 form{
         /* flex-flow: column wrap; */
-        box-sizing: border-box;
+        
         /* display: flex; */
         /* display: grid; */
         max-width: 100%;
@@ -297,7 +297,7 @@ body {
     padding-left: 15px;
 }
 *, :after, :before {
-    box-sizing: border-box;
+    
 }
 div {
     display: block;
@@ -321,7 +321,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: .5rem;
 }
 *, :after, :before {
-    box-sizing: border-box;
+    
 }
 .mat-tab-group{
     display: flex;
@@ -339,7 +339,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 48px;
     padding: 0 24px;
     cursor: pointer;
-    box-sizing: border-box;
+    
     opacity: .6;
     min-width: 100px;
     text-align: center;
@@ -356,7 +356,7 @@ h1, h2, h3, h4, h5, h6 {
     // display: flex;
     // justify-content: space-around;
     // align-content: stretch;
-    box-sizing: border-box;
+    
 }
 
 div {
@@ -457,7 +457,8 @@ div {
     color: white;
 }
 .dist{
-    margin: 4px;
+  margin-left: 15px;
+  margin-right: 12px;
 }
 .distClor{
     background-color: #185105;
@@ -745,7 +746,7 @@ div {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        box-sizing: border-box;
+        
         cursor: move;
         background: white;
         margin: 5px 0px 5px 0px;
@@ -758,7 +759,7 @@ div {
       }
       
       .cdk-drag-preview {
-        box-sizing: border-box;
+        
         border-radius: 4px;
         box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
                     0 8px 10px 1px rgba(0, 0, 0, 0.14),
