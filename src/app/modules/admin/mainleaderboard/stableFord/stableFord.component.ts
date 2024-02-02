@@ -35,13 +35,13 @@ export class StableFordComponent implements OnInit, OnChanges {
     showBestBall: boolean = false;
     isCuttOffRequired: boolean = false;
     allRoundGrossScore: boolean = false;
-    allRoundNetScore: boolean;
+    allRoundNetScore: boolean = true;
     allRoundCutOff: boolean = false;
     searchName: boolean = false;
     allRoundCutOffNet: boolean = false;
 
     isGross: boolean = false;
-    isNet: boolean = true;
+    isNet: boolean = false;
 
     selectedCategoryValue: string = '';
     eventCategories: string[] = [];
@@ -87,7 +87,7 @@ export class StableFordComponent implements OnInit, OnChanges {
             if (leaders.length > 0) {
                 this.LeaderboardPlayers = leaders;
                 console.log(this.LeaderboardPlayers);
-                if (this.Leaderboard.cutOffCriteria !== null) {
+                if (this.Leaderboard.cutOffCriteria != null && this.Leaderboard.cutOffCriteria.cutOff && this.Leaderboard.cutOffCriteria.cutOff.length > 0) {
                     this.cutLeaders(this.Leaderboard.cutOffCriteria, this.LeaderboardPlayers)
                 }
                 if (this.allLeadersCutOffNet.length > 0) {
@@ -131,7 +131,7 @@ export class StableFordComponent implements OnInit, OnChanges {
         if (leaders.length > 0) {
             this.LeaderboardPlayers = leaders.filter(obj => {
                 const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
-                return obj.category === this.selectedCategoryValue && obj[propertyName] > 0;
+                return obj[propertyName] > 0;
             });
         }
 
@@ -189,66 +189,21 @@ export class StableFordComponent implements OnInit, OnChanges {
 
         return style;
     }
+    getTotal(item) {
+        return item.pointsRound1 + item.pointsRound2 + item.pointsRound3 + item.pointsRound4;
+    }
     changeRound(item) {
         this.flightRound = item.value;
         if (item.value == '0') {
-            if (this.lastActiveTab == 1) {
-                this.isGross = false;
-                this.isNet = false;
-                this.allRoundGrossScore = true;
-                this.allRoundCutOff = true;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else if (this.lastActiveTab == 2) {
-                this.isNet = false;
-                this.isGross = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = true;
-                this.allRoundCutOffNet = true;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else {
-                this.isGross = false;
-                this.isNet = false;
-                this.allRoundGrossScore = true;
-                this.allRoundCutOff = true;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            }
+            this.isNet = false;
+            this.allRoundCutOff = true;
+            this.allRoundNetScore = true;
+            this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
         } else {
-            if (this.lastActiveTab == 1) {
-                this.isGross = true;
-                this.isNet = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else if (this.lastActiveTab == 2) {
-                this.isNet = true;
-                this.isGross = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else {
-                this.isGross = true;
-                this.isNet = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            }
+            this.isNet = true;
+            this.allRoundCutOff = false;
+            this.allRoundNetScore = false;
+            this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
         }
     }
     selectionChanged(item) {
@@ -386,14 +341,16 @@ export class StableFordComponent implements OnInit, OnChanges {
         });
     }
     ComparatorAllNet(a, b) {
-        if (a['pointsRound1'] < b['pointsRound1']) return -1;
-        if (a['pointsRound1'] > b['pointsRound1']) return 1;
+        let totalA=a.pointsRound1 + a.pointsRound2 + a.pointsRound3 + a.pointsRound4;
+        let totalB=b.pointsRound1 + b.pointsRound2 + b.pointsRound3 + b.pointsRound4;
+        if (totalA < totalB) return 1;
+        if (totalA > totalB) return -1;
         return 0;
     }
     ComparatorScoreN(a, b, flightRound) {
 
-        if (a[`underNet${flightRound}`] < b[`underNet${flightRound}`]) return -1;
-        if (a[`underNet${flightRound}`] > b[`underNet${flightRound}`]) return 1;
+        if (a[`pointsRound${flightRound}`] < b[`pointsRound${flightRound}`]) return 1;
+        if (a[`pointsRound${flightRound}`] > b[`pointsRound${flightRound}`]) return -1;
         return 0;
     }
     public getLastHolesTotal(noOfHoles: number, holeScores: any[]): number {
@@ -427,7 +384,7 @@ export class StableFordComponent implements OnInit, OnChanges {
             let currentHoleScore: number = 0;
             let previousHoleScore: number = 0;
 
-            tied = leaderCurrent[`underNet${round}`] == leaderPrevious[`underNet${round}`];
+            tied = leaderCurrent[`pointsRound${round}`] == leaderPrevious[`pointsRound${round}`];
             ////console.log(tied);
             if (tied && leaderCurrent.completed && leaderPrevious.completed) {
                 let noOfHoles = 9;
@@ -554,7 +511,8 @@ export class StableFordComponent implements OnInit, OnChanges {
                 firstCompleted = leaderCurrent.completed4;
                 secondCompleted = leaderPrevious.completed4;
             }
-            tied = leaderCurrent.pointsRound1 == leaderPrevious.pointsRound1;
+
+            tied = (leaderCurrent.pointsRound1+leaderCurrent.pointsRound2+leaderCurrent.pointsRound3+leaderCurrent.pointsRound4)== (leaderPrevious.pointsRound1+leaderPrevious.pointsRound2+leaderPrevious.pointsRound3+leaderPrevious.pointsRound4);
 
             if (tied) {
                 //leaderCurrent["tied"]= true;

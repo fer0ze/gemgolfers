@@ -33,13 +33,13 @@ export class StableFordMiniComponent implements OnInit, OnChanges {
     showBestBall: boolean = false;
     isCuttOffRequired: boolean = false;
     allRoundGrossScore: boolean = false;
-    allRoundNetScore: boolean;
+    allRoundNetScore: boolean = true;
     allRoundCutOff: boolean = false;
     searchName: boolean = false;
     allRoundCutOffNet: boolean = false;
 
     isGross: boolean = false;
-    isNet: boolean = true;
+    isNet: boolean = false;
 
     selectedCategoryValue: string = '';
     eventCategories: string[] = [];
@@ -188,6 +188,8 @@ export class StableFordMiniComponent implements OnInit, OnChanges {
         return style;
     }
     changeRound(item) {
+        console.log(item);
+        
         this.flightRound = item.value;
         if (item.value == '0') {
             if (this.lastActiveTab == 1) {

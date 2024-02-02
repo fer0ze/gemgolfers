@@ -482,9 +482,14 @@ export class AddTournamentComponent implements OnInit {
                 if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
                     this.showMatchPlay = true;
                     this.showCat = false;
-                } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.THREE_BALL_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.TWO_Ball_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.SHAMBLES || this.currentTournament.matchFormat==matchFormat.FOUR_BALL_SCRAMBLE) {
+                } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.THREE_BALL_SCRAMBLE
+                    || this.currentTournament.matchFormat == matchFormat.TWO_Ball_SCRAMBLE ||
+                    this.currentTournament.matchFormat == matchFormat.SHAMBLES ||
+                    this.currentTournament.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                     this.showCat = false;
                     this.showTexas = true;
+                } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD) {
+                    this.showCat = false;
                 }
 
                 //this.stepIndex = 1;
@@ -727,7 +732,7 @@ export class AddTournamentComponent implements OnInit {
 
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE) {
                 playersperFlight = '3'
-            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES ||this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE ) {
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                 playersperFlight = '4'
             }
             return this._formBuilder.group({
@@ -1583,7 +1588,7 @@ export class AddTournamentComponent implements OnInit {
         //Pdate=Pdate.replace('-');
 
         if (
-            this.formArray.get([0]).value.courseInfo[0].matchFormat == 'STROKE_PLAY' || this.formArray.get([0]).value.courseInfo[0].matchFormat == 'STABLEFORD'
+            this.formArray.get([0]).value.courseInfo[0].matchFormat == 'STROKE_PLAY'
         ) {
             FilteredPL = this.tournamentMembers.filter((a) => {
                 return a.playerCategory == PLcategory;
@@ -2216,6 +2221,8 @@ export class AddTournamentComponent implements OnInit {
             ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
             : (courseHoleSetsData = []);
 
+        console.log(this.formArray);
+
         let tournament = {
             id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
             clubId:
@@ -2234,7 +2241,7 @@ export class AddTournamentComponent implements OnInit {
                 courseHoleSetsData.length > 0
                     ? Number(courseHoleSetsData[0])
                     : 0,
-            teamMatch: this.formArray.get([0]).value.courseInfo[0].teamMatch == '1' ? false : true,
+            teamMatch: this.formArray.get([0]).value.teamMatch == '1' ? false : true,
             pairsMatch: false,
             interLeague: false,
             playingOnWhs: false,
@@ -3238,7 +3245,7 @@ export class AddTournamentComponent implements OnInit {
             let counter: number = 0;
 
             tournamentFlightMembers = [];
-            tournamentPairs=[];
+            tournamentPairs = [];
             const FilteredFlight = this.formArray
                 .get([1])
                 .get('category')
@@ -3251,9 +3258,9 @@ export class AddTournamentComponent implements OnInit {
 
             for (let index2 in this.selectedMembers[index]) {
                 if (index2 != 'title') {
-                   
+
                     for (var index3 in this.selectedMembers[index][index2]) {
-                        tournamentPairs=[];
+                        tournamentPairs = [];
                         for (var index4 in this.selectedMembers[index][index2][index3]) {
                             if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES) {
                                 if (Number.isInteger(Number(index4))) {
@@ -3590,7 +3597,7 @@ export class AddTournamentComponent implements OnInit {
         // }
 
         let result = <any>(
-           await  this.facadeService.createNextRoundFlights(tournamentFlights)
+            await this.facadeService.createNextRoundFlights(tournamentFlights)
         );
         if (this.showTexas == true) {
             await this.facadeService.addFlightName(flightName);

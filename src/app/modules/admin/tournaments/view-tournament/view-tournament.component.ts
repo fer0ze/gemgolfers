@@ -505,6 +505,7 @@ export class ViewTournamentComponent implements OnInit {
                 let indeca = 0;
                 if (this.fullTournament.FlightsQL.length > 0) {
                     for (let c of this.fullTournament.FlightsQL) {
+                        indeca = 0;
                         for (let index = 0; index < c.MembersQL.length; index++) {
                             if (c.MembersQL.length > indeca) {
                                 this.membersData.push(

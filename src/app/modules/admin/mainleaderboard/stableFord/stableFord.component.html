@@ -22,7 +22,7 @@
                             <li class="table-header">
                                 <div class="col col-1">POS.</div>
                                 <div class="col col-2">PLAYER</div>
-                                <div class="col col-3">NET</div>
+                                <div class="col col-3">TOTAL</div>
                                 <div class="col col-4">R1</div>
                                 <div class="col col-5" *ngIf="activeRound >= 2">
                                     R2
@@ -62,17 +62,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col col-3">
-                                    <strong *ngIf="item.underNet > 0">+</strong><strong *ngIf="item.underNet < 0"
-                                        style="color: red">{{ item.underNet
-                                        }}</strong><strong *ngIf="item.underNet > 0">{{
-                                        item.underNet
-                                        }}</strong><strong *ngIf="item.underNet == 0">E</strong>
-                                </div>
+                                <div class="col col-3">{{getTotal(item)}}</div>
                                 <div class="col col-4">
                                     {{
-                                    item.underNet1 !== undefined
-                                    ? item.underNet1
+                                    item.pointsRound1 !== undefined
+                                    ? item.pointsRound1
                                     : "-"
                                     }}
                                 </div>
@@ -84,8 +78,8 @@
                                 <div class="col col-5" *ngIf="
                                                     activeRound >= 2 && totalRounds >= 2
                                                 ">
-                                    {{ item.underNet2 !== undefined
-                                    ? item.underNet2
+                                    {{ item.pointsRound2 !== undefined
+                                    ? item.pointsRound2
                                     : "-"}}
                                 </div>
                                 <div class="col col-5" *ngIf="
@@ -100,8 +94,8 @@
                                 <div class="col col-5" *ngIf="
                                                     activeRound >= 3 && totalRounds >= 3
                                                 ">
-                                    {{ item.underNet3 !== undefined
-                                    ? item.underNet3
+                                    {{ item.pointsRound3 !== undefined
+                                    ? item.pointsRound3
                                     : "-"}}
                                 </div>
                                 <div class="col col-5" *ngIf="
@@ -117,8 +111,8 @@
                                 <div class="col col-5" *ngIf="
                                                     activeRound >= 4 && totalRounds == 4
                                                 ">
-                                    {{ item.underNet4!== undefined
-                                    ? item.underNet4
+                                    {{ item.pointsRound4!== undefined
+                                    ? item.pointsRound4
                                     : "-" }}
                                 </div>
                                 <div class="col col-5" *ngIf="
@@ -167,15 +161,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col col-3">
-                                    <strong *ngIf="item.underNet > 0">+</strong><strong *ngIf="item.underNet < 0"
-                                        style="color: red">{{ item.underNet
-                                        }}</strong><strong *ngIf="item.underNet > 0">{{
-                                        item.underNet
-                                        }}</strong><strong *ngIf="item.underNet == 0">E</strong>
-                                </div>
+                                <div class="col col-3">{{getTotal(item)}}</div>
                                 <div class="col col-4">
-                                    {{ item.TotalNet1 }}
+                                    {{
+                                        item.pointsRound1 !== undefined
+                                        ? item.pointsRound1
+                                        : "-"
+                                        }}
                                 </div>
                                 <div class="col col-5" *ngIf="activeRound == 1">
                                     <strong *ngIf="item.holesPlayedR1 == 18">F</strong><strong *ngIf="item.holesPlayedR1 < 18">{{
@@ -185,7 +177,9 @@
                                 <div class="col col-5" *ngIf="
                                                     activeRound >= 2 && totalRounds >= 2
                                                 ">
-                                    {{ item.TotalNet2 }}
+                                                {{ item.pointsRound2 !== undefined
+                                                    ? item.pointsRound2
+                                                    : "-"}}
                                 </div>
                                 <div class="col col-5" *ngIf="activeRound == 2">
                                     <strong *ngIf="item.holesPlayedR2 == 18">F</strong><strong *ngIf="item.holesPlayedR2 < 18">{{
@@ -195,7 +189,9 @@
                                 <div class="col col-5" *ngIf="
                                                     activeRound >= 3 && totalRounds >= 3
                                                 ">
-                                    {{ item.TotalNet3 }}
+                                                {{ item.pointsRound3 !== undefined
+                                                    ? item.pointsRound3
+                                                    : "-"}}
                                 </div>
                                 <div class="col col-5" *ngIf="activeRound == 3">
                                     <strong *ngIf="item.holesPlayedR3 == 18">F</strong>
@@ -206,7 +202,9 @@
                                 <div class="col col-5" *ngIf="
                                                     activeRound >= 4 && totalRounds == 4
                                                 ">
-                                    {{ item.TotalNet4 }}
+                                                {{ item.pointsRound4!== undefined
+                                                    ? item.pointsRound4
+                                                    : "-" }}
                                 </div>
                                 <div class="col col-5" *ngIf="activeRound >= 4">
                                     <strong *ngIf="item.holesPlayedR3 == 18">F</strong><strong *ngIf="item.holesPlayedR3 < 18">{{
