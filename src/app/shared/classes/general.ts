@@ -386,6 +386,12 @@ export class General {
         return ID;
     }
 
+    public static generateRandomColor() {
+        // Generate a random hexadecimal color code
+        const color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        return color;
+    }
+
     public static getStatus(status: string) {
         if (status === MemberStatus.DISQUALIFY) {
             return 2;

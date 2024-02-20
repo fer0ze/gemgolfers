@@ -27,6 +27,7 @@ import { Score } from "../../shared/models/score.model";
 import { Flight, FlightMembers } from "../models/flight.model";
 import { TeeTime } from "../models/teetime.model";
 import { TournamentOpponentQL } from "../fragments/tournament.fragment";
+import { Team } from "../models/team.model";
 
 @Injectable({
   providedIn: "root",
@@ -660,11 +661,11 @@ export class FacadeService {
   insertTournamentMember(tournamentMembers: TournamentMember[]) {
     return this.tournamentService.insertTournamentMember(tournamentMembers);
   }
-  insertTourGuide(tourGuide:any[]) {
+  insertTourGuide(tourGuide: any[]) {
     return this.tournamentService.insertTourGuide(tourGuide);
   }
-  insertTournamentTeam(teamsToSave, teamMembersToSave, tournamentId) {
-    return this.tournamentService.insertTournamentTeam(teamsToSave, teamMembersToSave, tournamentId);
+  insertTournamentTeam(teamsToSave: Team[], tournamentId) {
+    return this.tournamentService.insertTournamentTeam(teamsToSave, tournamentId);
   }
   insertTournamentMemberStatus(tournamentMemberStatus) {
     return this.tournamentService.insertTournamentMemberStatus(tournamentMemberStatus);

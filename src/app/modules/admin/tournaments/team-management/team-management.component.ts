@@ -306,7 +306,7 @@ export class TeamManagementComponent implements OnInit {
         console.log(teamsToSave);
         console.log(this.teamMembersToSave);
         let result = <any>(
-            await this.facadeService.insertTournamentTeam(teamsToSave, this.teamMembersToSave,this.tournamentID)
+            await this.facadeService.insertTournamentTeam(teamsToSave,this.tournamentID)
         );
 
         if (result) {

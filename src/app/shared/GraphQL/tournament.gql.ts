@@ -1170,14 +1170,8 @@ export const insertTourGuideQL = gql`
 export const insertTournamentTeamQL = gql`
     mutation insertTournamentTeamQL(
         $teamsToSave: [tournament_team_insert_input!]!
-        $teamMembersToSave: [tournament_team_opponent_insert_input!]!
-        $tournamentId: String!
+       
     ) {
-        delete_tournament_team_opponent(
-            where: { tournamentId: { _eq: $tournamentId } }
-        ) {
-            AffectedRowsQL: affected_rows
-        }
         insert_tournament_team(
             objects: $teamsToSave
             on_conflict: {
@@ -1187,15 +1181,7 @@ export const insertTournamentTeamQL = gql`
         ) {
             AffectedRowsQL: affected_rows
         }
-        insert_tournament_team_opponent(
-            objects: $teamMembersToSave
-            on_conflict: {
-                constraint: tournament_team_opponent_pkey
-                update_columns: [team1MemberId, team2MemberId, flightId]
-            }
-        ) {
-            AffectedRowsQL: affected_rows
-        }
+        
     }
 `;
 export const insertTournamentMemberStatusQL = gql`

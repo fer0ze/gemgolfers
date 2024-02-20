@@ -16,6 +16,7 @@ import { resolve } from 'url';
 import { AnyNsRecord, AnyPtrRecord } from 'dns';
 import { Observable, tap, from, switchMap, map } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { Team } from '../models/team.model';
 
 @Injectable({
     providedIn: 'root',
@@ -1488,16 +1489,16 @@ export class TournamentsService {
         });
     }
     public insertTournamentTeam(
-        teamsToSave, teamMembersToSave, tournamentId
+        teamsToSave: Team[], tournamentId
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.insertTournamentTeamQL,
                     variables: {
+
                         teamsToSave: teamsToSave,
-                        teamMembersToSave: teamMembersToSave,
-                        tournamentId: tournamentId,
+
                     },
                 })
                 .subscribe(
@@ -1506,8 +1507,8 @@ export class TournamentsService {
                         resolve(true);
                     },
                     (error) => {
+                        console.log('Could not add due to ' + error);
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
                     }
                 );
         });

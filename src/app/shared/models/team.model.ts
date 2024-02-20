@@ -6,8 +6,13 @@ export interface Team {
     adminId: string;
     name: string;
     color: string;
+    membersQL: TeamMembers[];
 }
 
+export interface TeamMembers {
+    teamId: string;
+    playerId: string;
+}
 export interface TeamMatchResult {
 
     matchTitle: string;
