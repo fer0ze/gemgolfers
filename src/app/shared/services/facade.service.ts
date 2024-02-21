@@ -664,8 +664,8 @@ export class FacadeService {
   insertTourGuide(tourGuide: any[]) {
     return this.tournamentService.insertTourGuide(tourGuide);
   }
-  insertTournamentTeam(teamsToSave: Team[], tournamentId) {
-    return this.tournamentService.insertTournamentTeam(teamsToSave, tournamentId);
+  insertTournamentTeam(teamsToSave: Team[], tournamentId,teamsMembersToRemove:any[]=[]) {
+    return this.tournamentService.insertTournamentTeam(teamsToSave, tournamentId,teamsMembersToRemove);
   }
   insertTournamentMemberStatus(tournamentMemberStatus) {
     return this.tournamentService.insertTournamentMemberStatus(tournamentMemberStatus);

@@ -1489,7 +1489,7 @@ export class TournamentsService {
         });
     }
     public insertTournamentTeam(
-        teamsToSave: Team[], tournamentId
+        teamsToSave: Team[], tournamentId, teamsMembersToRemove: any[] = []
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -1498,6 +1498,7 @@ export class TournamentsService {
                     variables: {
 
                         teamsToSave: teamsToSave,
+                        teamsMembersToRemove: teamsMembersToRemove,
 
                     },
                 })

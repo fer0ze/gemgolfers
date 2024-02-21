@@ -198,16 +198,16 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             for (let i = leaders.length - 1; i >= 0; i--) {
                 const item = leaders[i];
                 if (
-                    cutObj[0].type == 'GROSS' && item.underGross > cutObj[0].score &&
-                    cutObj[0].score > 0 &&
-                    item.PlayingRound != this.activeRound
+                    cutObj[0].type == 'GROSS' && item.underGross > this.cuttOffScore &&
+                    this.cuttOffScore > 0 &&
+                    item.playingRound != this.activeRound
                 ) {
                     leaders.splice(i, 1);
                     this.allLeadersCutOffGross.push(item);
                     this.allLeadersCutOffNet.push(item);
-                } else if (cutObj[0].type == 'NET' && item.underNet > cutObj[0].score &&
-                    cutObj[0].score > 0 &&
-                    item.PlayingRound != this.activeRound) {
+                } else if (cutObj[0].type == 'NET' && item.underNet > this.cuttOffScore &&
+                    this.cuttOffScore > 0 &&
+                    item.playingRound != this.activeRound) {
                     leaders.splice(i, 1);
                     this.allLeadersCutOffGross.push(item);
                     this.allLeadersCutOffNet.push(item);

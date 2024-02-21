@@ -833,6 +833,18 @@ export const GetTournamentByID = gql`
                 tournamentId
                 name
                 color
+                membersQL{
+                    teamId
+                    playerId
+                   player{
+                    id
+                    firstName
+                    lastName
+                    handicap
+                    playerCategory
+                    membershipNumber
+                   }
+                }
             }
             opponents {
                 id
@@ -910,8 +922,8 @@ export const UpdateMutation = gql`
                     scoreManagement
                     startDate
                     endDate
-                    marshalStart
-                    noofMarshals
+                    marshalsStartWith
+                    noOfMarshals
                 ]
             }
         ) {
@@ -1170,8 +1182,20 @@ export const insertTourGuideQL = gql`
 export const insertTournamentTeamQL = gql`
     mutation insertTournamentTeamQL(
         $teamsToSave: [tournament_team_insert_input!]!
-       
+        $teamsMembersToRemove: [String!]!
     ) {
+
+        delete_team_member(
+            where: {
+                teamId:{
+                    _in:$teamsMembersToRemove
+                }
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+
+
         insert_tournament_team(
             objects: $teamsToSave
             on_conflict: {

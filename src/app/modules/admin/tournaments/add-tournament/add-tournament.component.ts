@@ -137,6 +137,7 @@ export class AddTournamentComponent implements OnInit {
     showTexas: boolean = false;
     showMatchPlay: boolean = false;
     showShambles: boolean = false;
+    showBest: boolean = false;
     clubTitle: string;
     sDate: Date;
     tournamentID: string;
@@ -463,15 +464,35 @@ export class AddTournamentComponent implements OnInit {
 
                 }
                 if (this.currentTournament.teamMatch) {
-                    this.index = this.currentTournament.teams.length;
-                    this.selectedTeams1[0] = [];
-                    this.selectedTeams2[0] = [];
-                    this.selectedTeams1[this.selectedTeams1.length - 1]['id'] = this.currentTournament.teams[0].id;
-                    this.selectedTeams1[this.selectedTeams1.length - 1]['name'] = this.currentTournament.teams[0].name;
-                    this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = this.currentTournament.teams[0].color;
-                    this.selectedTeams2[this.selectedTeams2.length - 1]['id'] = this.currentTournament.teams[1].id;
-                    this.selectedTeams2[this.selectedTeams2.length - 1]['name'] = this.currentTournament.teams[1].name;
-                    this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = this.currentTournament.teams[1].color;
+                    this.currentTournament.teams.forEach((team) => {
+                        const newTeam = {
+                            id: team.id,
+                            name: team.name,
+                            color: team.color,
+                            members: [] // Initialize an empty array for members
+                        };
+
+                        // Loop through each member in membersQL
+                        team.membersQL.forEach((memberQL) => {
+                            const playerQL = memberQL.player; // Get the player object from membersQL
+
+                            // Extract relevant properties from the player object
+                            const player = {
+                                id: playerQL.id,
+                                firstName: playerQL.firstName,
+                                lastName: playerQL.lastName,
+                                handicap: playerQL.handicap,
+                                playerCategory: playerQL.playerCategory,
+                                membershipNumber: playerQL.membershipNumber,
+                            };
+
+                            // Push the player into the new team's members array
+                            newTeam.members.push(player);
+                        });
+
+                        // Push the new team into this.selectedTeams
+                        this.selectedTeams.push(newTeam);
+                    })
 
                     this.matchFormats = [
                         "MATCH_PLAY",
@@ -484,9 +505,7 @@ export class AddTournamentComponent implements OnInit {
                         "BEST_TWO",
                     ]
                 }
-                if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY ||
-                    this.currentTournament.matchFormat == matchFormat.BEST_THREE ||
-                    this.currentTournament.matchFormat == matchFormat.BEST_TWO) {
+                if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
                     this.showMatchPlay = true;
                     this.showCat = false;
                 } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.THREE_BALL_SCRAMBLE
@@ -496,6 +515,10 @@ export class AddTournamentComponent implements OnInit {
                     this.showCat = false;
                     this.showTexas = true;
                 } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD) {
+                    this.showCat = false;
+                } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE ||
+                    this.currentTournament.matchFormat == matchFormat.BEST_TWO) {
+                    this.showBest = true;
                     this.showCat = false;
                 }
 
@@ -1499,7 +1522,7 @@ export class AddTournamentComponent implements OnInit {
         // }
         this.flightArrangementSetup();
         this.selectedMembers = [];
-
+        this.assignedOpponents = new Set<string>();
         for (
             let i = 0;
             i < this.formArray.get([1]).get('category').value.length;
@@ -1601,18 +1624,13 @@ export class AddTournamentComponent implements OnInit {
                 return a.playerCategory == PLcategory;
             });
         } else {
-            if (
-                this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-                'TEXAS_SCRAMBLE'
-            ) {
+            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE) {
                 this.showTexas = true;
-            }
-            if (
-                this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-                'MATCH_PLAY' || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE
-                || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO
-            ) {
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
                 this.showMatchPlay = true;
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE
+                || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO) {
+                this.showBest = true;
             }
             FilteredPL = [...this.tournamentMembers];
         }
@@ -1650,7 +1668,7 @@ export class AddTournamentComponent implements OnInit {
                     if (cnter == 0) selMembers[outer] = [];
                     selMembers[outer][cnter] = obj;
                     let oponentId = '';
-                    oponentId = this.getSecondOppoenent(this.selectedTeams, obj)
+                    oponentId = this.getSecondOpponent(this.selectedTeams, obj)
                     if (oponentId != '') {
                         const indexOf = FilteredPL.findIndex(player => player.id === oponentId);
                         selMembers[outer][++cnter] = FilteredPL[indexOf];
@@ -1722,10 +1740,6 @@ export class AddTournamentComponent implements OnInit {
                 if (member.id === item.id) {
                     const style = {};
                     style['background-color'] = team.color;
-
-                    // Add more style properties as needed
-
-                    // console.log(color);
                     return style;// Return the color of the team containing the member
                 }
             }
@@ -2201,12 +2215,11 @@ export class AddTournamentComponent implements OnInit {
             matchFormat.SHAMBLES) {
             this.showShambles = true;
         }
-        if (
-            this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.MATCH_PLAY || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE
-            || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO
-        ) {
+        if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
             this.showMatchPlay = true;
+        } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE
+            || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO) {
+            this.showBest = true;
         }
         courseHoleSetsData.length > 0
             ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
@@ -2417,7 +2430,7 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
-    async editTournaments() {
+    async editTournaments(stepper: MatStepper) {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentCats: TournamentCategory[] = [];
 
@@ -2637,12 +2650,13 @@ export class AddTournamentComponent implements OnInit {
             )
         );
         if (result) {
-            this.snackBar.open('Tournament has been Updated.', 'x', {
+            this.snackBar.open('Tournament has been updated.', 'x', {
                 duration: 5000,
             });
+            stepper.next();
             //this.router.navigate(['/tournaments/view/' + this.tournamentID]);
         } else {
-            this.snackBar.open('Tournament has been Not  Updated.', 'x', {
+            this.snackBar.open('Error! Try Again later.', 'x', {
                 duration: 5000,
             });
         }
@@ -2819,6 +2833,7 @@ export class AddTournamentComponent implements OnInit {
         let DelplayerInfo: any;
         this.teamMembersToSave = [];
         let teamsToSave: Team[] = [];
+        let teamsMembersToRemove: any[] = [];
         // let selectionArray = Object.assign({}, this.selection.selected);
         let flag: boolean = true;
         // if (this.selectedTeams1[0].length !== this.selectedTeams2[0].length) {
@@ -2829,7 +2844,6 @@ export class AddTournamentComponent implements OnInit {
         // }
         this.selectedTeams.forEach((team, index) => {
             tournamentMember = [];
-            let teamId = UniqueIdGenerator.generate();
             let name: string = (<HTMLInputElement>(
                 document.getElementById(
                     'team_' + index + '_name'
@@ -2843,6 +2857,7 @@ export class AddTournamentComponent implements OnInit {
             )).value;
             team['name'] = name;
             team['color'] = color;
+            teamsMembersToRemove.push(team.id);
             team.members.forEach((mem) => {
                 let member: any = {
                     playerId: mem.id,
@@ -2850,7 +2865,7 @@ export class AddTournamentComponent implements OnInit {
                 tournamentMember.push(member);
             })
             let teams: any = {
-                id: teamId,
+                id: team.id,
                 tournamentId: this.tournamentID,
                 adminId: this.loggedInuser.id,
                 name: name,
@@ -2861,72 +2876,10 @@ export class AddTournamentComponent implements OnInit {
             }
             teamsToSave.push(teams);
         })
-        // for (let index in this.selectedTeams1) {
-        //     if (flag == true) {
-        //         for (let index2 in this.selectedTeams1[index]) {
-        //             if (Number.isInteger(Number(index2))) {
-        //                 let FM: any = {
-        //                     id: UniqueIdGenerator.generate(),
-        //                     team1Id: this.selectedTeams1[index]['id'],
-        //                     team2Id: this.selectedTeams2[index]['id'],
-        //                     team1MemberId: this.selectedTeams1[index][index2]['id'],
-        //                     team2MemberId: this.selectedTeams2[index][index2]['id'],
-        //                     tournamentId: this.tournamentID,
-        //                     flightId: null,
-        //                 };
-        //                 this.teamMembersToSave.push(FM);
-        //             }
-        //         }
-        //         flag = false;
-        //     }
-
-        //     let nameA: string = (<HTMLInputElement>(
-        //         document.getElementById(
-        //             'teamA_' + index + '_name'
-        //         )
-        //     )).value;
-
-        //     let colorA: string = (<HTMLInputElement>(
-        //         document.getElementById(
-        //             'teamA_' + index + '_color'
-        //         )
-        //     )).value;
-        //     let nameB: string = (<HTMLInputElement>(
-        //         document.getElementById(
-        //             'items_' + index + '_name'
-        //         )
-        //     )).value;
-
-        //     let colorB: string = (<HTMLInputElement>(
-        //         document.getElementById(
-        //             'items_' + index + '_color'
-        //         )
-        //     )).value;
-        //     this.selectedTeams1[index]['name'] = nameA;
-        //     this.selectedTeams1[index]['color'] = colorA;
-        //     this.selectedTeams2[index]['name'] = nameB;
-        //     this.selectedTeams2[index]['color'] = colorB;
-        //     let teamA: any = {
-        //         tournamentId: this.tournamentID,
-        //         adminId: this.loggedInuser.id,
-        //         id: this.selectedTeams1[index]['id'],
-        //         name: nameA,
-        //         color: colorA,
-        //     };
-        //     teamsToSave.push(teamA);
-        //     let teamB: any = {
-        //         tournamentId: this.tournamentID,
-        //         adminId: this.loggedInuser.id,
-        //         id: this.selectedTeams2[index]['id'],
-        //         name: nameB,
-        //         color: colorB,
-        //     };
-        //     teamsToSave.push(teamB);
-        // }
         console.log(teamsToSave);
-        console.log(this.teamMembersToSave);
+        // console.log(this.teamMembersToSave);
         let result = <any>(
-            await this.facadeService.insertTournamentTeam(teamsToSave, this.tournamentID)
+            await this.facadeService.insertTournamentTeam(teamsToSave, this.tournamentID, teamsMembersToRemove)
         );
 
         if (result) {
@@ -2944,7 +2897,7 @@ export class AddTournamentComponent implements OnInit {
                     dteday.substring(6, 4) +
                     '-' +
                     +dteday.substring(0, 4);
-                console.log(date);
+                // console.log(date);
                 if (!this.setupInitialized) {
                     for (
                         let i = 0;
@@ -3003,32 +2956,16 @@ export class AddTournamentComponent implements OnInit {
             color: randomColor,
             members: []
         });
-        console.log(this.selectedTeams);
+        // console.log(this.selectedTeams);
 
     }
-    onColorChange(event: Event, index: any) {
+    onColorChange(event: Event, id: any) {
         const inputElement = event.target as HTMLInputElement;
-        if (index == 1) {
-            this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = inputElement.value;
-        } else {
-            this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = inputElement.value;
+        const teamToUpdate = this.selectedTeams.find(t => t.id === id);
+        if (teamToUpdate) {
+            teamToUpdate.color = inputElement.value;
         }
-        // this.teamA['color'] = inputElement.value;
     }
-    // deleteEmptyFlight(id, index) {
-    //     console.log(id);
-    //     console.log(index);
-    //     console.log(this.selectedTeams);
-    //     let find = this.selectedTeams.find((a) => {
-    //         return a['id'] == id;
-    //     });
-    //     console.log(find);
-    //     console.log(this.selectedTeams.indexOf(find));
-    //     let num = this.selectedTeams.indexOf(find);
-    //     if (num != undefined) {
-    //         this.selectedTeams.splice(num, 1);
-    //     }
-    // }
 
     editTeam(teamId, index) {
         console.log(index);
@@ -3063,20 +3000,18 @@ export class AddTournamentComponent implements OnInit {
                     for (let obj of result) {
                         for (let team of this.selectedTeams) {
                             const isPlayerPresent = team.members.some(member => member.id === obj.id);
-                            if (!isPlayerPresent) {
-                                const teamToUpdate = this.selectedTeams.find(t => t.id === teamId);
-                                if (teamToUpdate) {
-                                    teamToUpdate.members.push(obj);
-                                    playerAdded = true; // Set the flag to true indicating that the player has been added
-                                    break; // Exit the loop since the player has been added to a team
-                                }
+                            if (isPlayerPresent) {
+                                playerAdded = true;
                             }
                         }
-                        // if (playerAdded) {
-                        //     break; // Exit the outer loop once the player has been added to a team
-                        // }
+                        if (!playerAdded) {
+                            const teamToUpdate = this.selectedTeams.find(t => t.id === teamId);
+                            if (teamToUpdate) {
+                                teamToUpdate.members.push(obj);
+                            }
+                        }
                     }
-                    if (!playerAdded) {
+                    if (playerAdded) {
                         // Show a message if the player is already present in all teams
                         this.snackBar.open('Player already exists in teams.', 'x', {
                             duration: 2000,
@@ -3099,7 +3034,7 @@ export class AddTournamentComponent implements OnInit {
         //   alert("You must select a valid 18 holes combination.");
         //   return validateValue;
         // }
-        console.log(this.formArray.get([0]).get('clubctgies').value);
+        // console.log(this.formArray.get([0]).get('clubctgies').value);
         this.tournamentMembersSetup();
         // if (!this.currentTournament && action != "back") {
         //  this.createTournament();
@@ -3124,8 +3059,8 @@ export class AddTournamentComponent implements OnInit {
                     ? this.loggedInuser.adminClubId
                     : this.formArray.get([0]).value.clubsFormCtrl.id;
             this.clubMembers = [];
-            console.log(selectedClubId);
-            console.log(this.formArray.get([0]).get('clubctgies').value);
+            // console.log(selectedClubId);
+            // console.log(this.formArray.get([0]).get('clubctgies').value);
 
             let clubMembersData: any = await this.facadeService.getPlayerByClub(
                 selectedClubId
@@ -3135,7 +3070,7 @@ export class AddTournamentComponent implements OnInit {
                 this.clubMembers.push(clubMembersData.club_member[i].player);
             }
 
-            console.log(this.clubMembers);
+            // console.log(this.clubMembers);
 
             this.syncClubMembers();
 
@@ -3173,7 +3108,7 @@ export class AddTournamentComponent implements OnInit {
             .subscribe(
                 (data) => {
                     this.isLoading = false;
-                    console.log(this.clubMembers);
+                    // console.log(this.clubMembers);
 
                     this.clubMembers = this.clubMembers.filter(
                         (ar) =>
@@ -3181,7 +3116,7 @@ export class AddTournamentComponent implements OnInit {
                                 (rm) => rm.id === ar.id
                             )
                     );
-                    console.log(this.clubMembers);
+                    // console.log(this.clubMembers);
 
                     this.dataSource = new MatTableDataSource(this.clubMembers);
                     this.dataSource.sort = this.sort;
@@ -3190,18 +3125,21 @@ export class AddTournamentComponent implements OnInit {
                 (error) => (this.isLoading = false)
             );
     }
-    getSecondOppoenent(teams, player): string {
-
+    getSecondOpponent(teams: any[], player: any): string {
         for (const team of teams) {
-            for (const member of team.members) {
-                if (member.id !== player.id && !this.assignedOpponents.has(member.id)) {
-                    this.assignedOpponents.add(member.id); // Mark this member as assigned
-                    return member.id; // Return the ID of the first member that is not the current player
+            const isPlayerInTeam = team.members.some(member => member.id === player.id);
+            if (!isPlayerInTeam) { // Check if the player is not in this team
+                for (const member of team.members) {
+                    if (member.id !== player.id && !this.assignedOpponents.has(member.id)) {
+                        this.assignedOpponents.add(member.id); // Mark this member as assigned
+                        return member.id; // Return the ID of the first member that is not the current player
+                    }
                 }
             }
         }
         return ''; // Return empty string if no available opponent is found
     }
+
     checkTeamMembers(teamMembersToSave, playerId): boolean {
 
         for (let data of teamMembersToSave) {
@@ -3217,7 +3155,7 @@ export class AddTournamentComponent implements OnInit {
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        console.log(this.dataSource);
+        // console.log(this.dataSource);
         this.dataSource.filter = filterValue;
 
         if (this.dataSource.paginator) {
@@ -3228,7 +3166,7 @@ export class AddTournamentComponent implements OnInit {
     applyMembersFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        console.log(this.membersSource);
+        // console.log(this.membersSource);
         this.membersSource.filter = filterValue;
 
         if (this.membersSource.paginator) {
@@ -3246,6 +3184,7 @@ export class AddTournamentComponent implements OnInit {
 
         let tournamentFlightMembers: FlightMembers[];
         let tournamentPairs: any[];
+        let tournamentTeamOpponents: any[] = [];
 
         if (this.currentTournament)
             this.tournamentID = this.currentTournament.id;
@@ -3261,15 +3200,17 @@ export class AddTournamentComponent implements OnInit {
                     return a.name == this.selectedMembers[index].title;
                 });
 
-            console.log(FilteredFlight);
-            console.log(this.selectedMembers);
+            // console.log(FilteredFlight);
+            // console.log(this.selectedMembers);
 
             for (let index2 in this.selectedMembers[index]) {
                 if (index2 != 'title') {
 
                     for (var index3 in this.selectedMembers[index][index2]) {
                         tournamentPairs = [];
+                        ind = 0;
                         for (var index4 in this.selectedMembers[index][index2][index3]) {
+
                             if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES) {
                                 if (Number.isInteger(Number(index4))) {
                                     let pair = {
@@ -3296,38 +3237,55 @@ export class AddTournamentComponent implements OnInit {
                                                 tee_id: roundTeeId.id,
                                             };
                                             console.log(FM);
-
                                             tournamentFlightMembers.push(FM);
-
-                                            let TM: any = {
-                                                playerId:
-                                                    this.selectedMembers[index][index2][
-                                                        index3
-                                                    ][index4][index5].id,
-                                                status: true,
-                                                playingTee: roundTeeId.result,
-                                                tee_id: roundTeeId.id,
-                                            };
-
-
-                                            tournamentMember.push(TM);
                                         }
+                                    }
+                                }
+                            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
+                                if (Number.isInteger(Number(index4))) {
+                                    if (ind % 2 == 0) {
+                                        let newIndex = Number(index4) + 1;
+                                        let teamOpponent = {
+                                            id: UniqueIdGenerator.generate(),
+                                            team1Id: this.selectedTeams[0]['id'],
+                                            team2Id: this.selectedTeams[1]['id'],
+                                            team1MemberId: this.selectedMembers[index][index2][index3][index4].id,
+                                            team2MemberId: this.selectedMembers[index][index2][index3][newIndex].id,
+                                            tournamentId: this.tournamentID,
+                                        }
+                                        tournamentTeamOpponents.push(teamOpponent);
+                                    }
+                                    ind++;
+                                    if (Number.isInteger(Number(index4))) {
+
+
+                                        let roundTeeId: any = General.getPlayersTe(
+                                            this.selectedMembers[index][index2][index3][
+                                                index4
+                                            ].playerCategory
+                                        );
+
+                                        let FM: any = {
+                                            playerId:
+                                                this.selectedMembers[index][index2][
+                                                    index3
+                                                ][index4].id,
+                                            attendance: false,
+                                            playingTee: roundTeeId.result,
+                                            tee_id: roundTeeId.id,
+                                        };
+
+                                        tournamentFlightMembers.push(FM);
                                     }
                                 }
                             } else {
                                 if (Number.isInteger(Number(index4))) {
-                                    console.log(
-                                        this.selectedMembers[index][index2][index3][
-                                            index4
-                                        ].playerCategory
-                                    );
 
                                     let roundTeeId: any = General.getPlayersTe(
                                         this.selectedMembers[index][index2][index3][
                                             index4
                                         ].playerCategory
                                     );
-                                    console.log(roundTeeId.id);
                                     let FM: any = {
                                         playerId:
                                             this.selectedMembers[index][index2][
@@ -3337,34 +3295,14 @@ export class AddTournamentComponent implements OnInit {
                                         playingTee: roundTeeId.result,
                                         tee_id: roundTeeId.id,
                                     };
-                                    console.log(FM);
 
                                     tournamentFlightMembers.push(FM);
-
-                                    let TM: any = {
-                                        playerId:
-                                            this.selectedMembers[index][index2][
-                                                index3
-                                            ][index4].id,
-                                        status: true,
-                                        playingTee: roundTeeId.result,
-                                        tee_id: roundTeeId.id,
-                                    };
-
-
-                                    tournamentMember.push(TM);
                                 }
                             }
                         }
-
-                        console.log(tournamentFlightMembers);
-                        console.log(tournamentPairs);
-
                         let roundTeeId1: any = General.getPlayersTees(
                             tournamentFlightMembers[0].playingTee
                         );
-
-
                         if (tournamentFlightMembers.length > 0) {
                             // console.log(tournamentFlightMembers);
                             fcnter++;
@@ -3404,8 +3342,12 @@ export class AddTournamentComponent implements OnInit {
                                 },
                                 pairs: {
                                     data: tournamentPairs,
+                                },
+                                team: {
+                                    data: tournamentTeamOpponents,
                                 }
                             };
+                            tournamentTeamOpponents = [];
                             if (this.showTexas) {
                                 let name: string = (<HTMLInputElement>(
                                     document.getElementById(
@@ -3436,181 +3378,12 @@ export class AddTournamentComponent implements OnInit {
             }
         }
 
-        //console.log(tournamentFlights);
-
-        //let loggedInuser = JSON.parse(localStorage.getItem(Constants.LOGGED_IN_USER));
-        let tournamentCats: TournamentCategory[] = [];
-
-        let marshalsData: Marshal[] = [];
-
-        //const tc:TournamenCategory = [];
-        if (!this.tournamentID)
-            this.tournamentID = UniqueIdGenerator.generate();
-
-        for (let index in this.formArray.get([0]).value.clubctgies) {
-            //console.log(index); // prints indexes: 0, 1, 2, 3
-
-            //console.log(this.formArray.get([0]).value.clubctgies[index].id);
-            //console.log(this.formArray.get([0]).value.clubctgies[index].name);
-            //console.log(this.formArray.get([0]).value.clubctgies[index].name);
-            //console.log(Constants.CATEGORY_AMATEURS);
-            let TCdata: any;
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_AMATEURS.replace(/\s/g, '').toLowerCase()
-            ) {
-                //this.TCdata.lowerLimitStart = 1;
-                //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
-
-                if (this.formArray.get([0]).value.handicapCats) {
-                    TCdata = {
-                        lowerLimitStart: 1,
-                        lowerLimitEnd: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryA
-                            : '',
-                        upperLimitStart: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryB
-                            : '',
-                        upperLimitEnd: 18,
-                    };
-                }
-            }
-
-            let prizeInfo: any;
-
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_PRO_AM.replace(/\s/g, '').toLowerCase()
-            ) {
-                if (this.formArray.get([0]).value.handicapRatio) {
-                    prizeInfo = {
-                        handicapratio: this.formArray.get([0]).value
-                            .handicapRatio,
-                    };
-                }
-            } else {
-                if (
-                    this.getGrossNetTop(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        'GT'
-                    ) ||
-                    this.getGrossNetTop(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        'NT'
-                    )
-                ) {
-                    prizeInfo = {
-                        noofgrosstop: this.getGrossNetTop(
-                            this.formArray.get([0]).value.clubctgies[index]
-                                .name,
-                            'GT'
-                        ),
-                        noofnettop: this.getGrossNetTop(
-                            this.formArray.get([0]).value.clubctgies[index]
-                                .name,
-                            'NT'
-                        ), //,
-                    };
-                }
-            }
-
-            let tc: any = {
-                id: UniqueIdGenerator.generate(),
-                //tournamentId: this.tournamentID,
-                category: this.formArray.get([0]).value.clubctgies[index].name,
-                handicapLimits: TCdata ? TCdata : null,
-                prizeInformation: prizeInfo ? prizeInfo : null,
-                default: true,
-            };
-
-            tournamentCats.push(tc);
-        }
-
-        for (let i = 1; i <= this.formArray.get([0]).value.noofMarshals; i++) {
-            let uniquePassword: string = passwordGenerator.generate();
-
-            let mshl: any = {
-                id: UniqueIdGenerator.generate(),
-                //tournamentId: this.tournamentID,
-                email:
-                    this.formArray.get([1]).value.marshalStart +
-                    (i + '').padStart(2, '0') +
-                    '@gem.com',
-                password: uniquePassword,
-                dateValidTill: General.parseToDate(
-                    this.formArray.get([0]).value.endDateFormCtrl
-                ),
-                firstHole: 1,
-                lastHole: 18,
-            };
-
-            marshalsData.push(mshl);
-        }
-        //console.log(marshalsData);
-
-        // let tournament: Tournament = {
-        //   id: this.tournamentID,//(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
-        //   clubId: (this.loggedInuser.userRole > 1) ? this.loggedInuser.adminClubId : this.formArray.get([0]).value.clubsFormCtrl.id,
-        //   leagueId: null,
-        //   courseId: (this.formArray.get([0]).value.courseInfo[0]) ? this.formArray.get([0]).value.courseInfo[0].courseName.id : '',
-        //   adminId: this.loggedInuser.id,
-        //   title: this.formArray.get([0]).value.titleFormCtrl,
-        //   prefix: this.formArray.get([0]).value.prefixFormCtrl,
-        //   courseHoleSets: 0,
-        //   teamMatch: false,
-        //   pairsMatch: false,
-        //   interLeague: false,
-        //   publicTournament: false,
-        //   confirmParticipants: this.formArray.get([0]).value.askConfirmation,
-        //   noOfRounds: this.formArray.get([0]).value.numOfRounds,
-        //   activeRound: 1,
-        //   matchFormat: this.formArray.get([0]).value.courseInfo[0].matchFormat,
-        //   pointsFormats: null,
-        //   pointsValues: null,
-        //   handicapAllocations: null,
-        //   tee: "BLUE",
-        //   scoreManagement: FilteredFlightt[0].scoreManagement,
-        //   startDate: General.parseToDate(this.formArray.get([0]).value.startDateFormCtrl),
-        //   endDate: General.parseToDate(this.formArray.get([0]).value.endDateFormCtrl),
-        //   started: true,
-        //   invited: false,
-        //   singleRound: false,
-        //   sponsorName: "",
-        //   sponsorLogo: "",
-        //   mobileLogoUrl: "",
-        //   webLogoUrl: "",
-        //   flightsCategory: FilteredFlightt,
-        //   categories: tournamentCats,
-        //   marshals: marshalsData,
-        //   flights: tournamentFlights,
-        //   members: tournamentMember,
-        // };
-
-        // let result = <any>await this.facadeService.addTournament(tournament);
-
-        // if (result) {
-        //   this.snackBar.open("Tournament has been setup.", "x", {
-        //     duration: 5000,
-        //   });
-        //   this.reset();
-        //   this.router.navigate(['/tournaments/view/' + this.tournamentID]);
-        // }
-
         let result = <any>(
             await this.facadeService.createNextRoundFlights(tournamentFlights)
         );
         if (this.showTexas == true) {
             await this.facadeService.addFlightName(flightName);
         }
-        //result = <any>await this.facadeService.createTournamentMarshals(marshalsData);
 
         if (result) {
             this.snackBar.open('Tournament has been setup.', 'x', {

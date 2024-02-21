@@ -446,6 +446,18 @@ query PostsGetQuery($tournamentId: String!) {
             tournamentId
             name
             color
+            membersQL{
+                teamId
+                playerId
+               player{
+                id
+                firstName
+                lastName
+                handicap
+                playerCategory
+                membershipNumber
+               }
+            }
            
         }
         opponents{

@@ -64,6 +64,7 @@ import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog
 import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { Team, TeamMembers } from 'app/shared/models/team.model';
 
 @Component({
     selector: 'app-team-management',
@@ -74,9 +75,8 @@ export class TeamManagementComponent implements OnInit {
     @Input()
     tournamentID: string;
     index = 0;
-    selectedTeams1: any[][] = [];
+    selectedTeams: any[] = [];
     loggedInuser: Player;
-    selectedTeams2: any[][] = [];
     teamMembersToSave: any[] = [];
     tournamentMembers: any[] = [];
     selectPlayer: any;
@@ -109,67 +109,67 @@ export class TeamManagementComponent implements OnInit {
                 ? tournamentInfo.tournament[0]
                 : [];
         if (this.currentTournament.teamMatch) {
-            this.index = this.currentTournament.teams.length;
-            this.selectedTeams1[0] = [];
-            this.selectedTeams2[0] = [];
-            this.selectedTeams1[this.selectedTeams1.length - 1]['id'] = this.currentTournament.teams[0].id;
-            this.selectedTeams1[this.selectedTeams1.length - 1]['name'] = this.currentTournament.teams[0].name;
-            this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = this.currentTournament.teams[0].color;
-            this.selectedTeams2[this.selectedTeams2.length - 1]['id'] = this.currentTournament.teams[1].id;
-            this.selectedTeams2[this.selectedTeams2.length - 1]['name'] = this.currentTournament.teams[1].name;
-            this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = this.currentTournament.teams[1].color;
+            this.currentTournament.teams.forEach((team) => {
+                const newTeam = {
+                    id: team.id,
+                    name: team.name,
+                    color: team.color,
+                    members: [] // Initialize an empty array for members
+                };
+
+                // Loop through each member in membersQL
+                team.membersQL.forEach((memberQL) => {
+                    const playerQL = memberQL.player; // Get the player object from membersQL
+
+                    // Extract relevant properties from the player object
+                    const player = {
+                        id: playerQL.id,
+                        firstName: playerQL.firstName,
+                        lastName: playerQL.lastName,
+                        handicap: playerQL.handicap,
+                        playerCategory: playerQL.playerCategory,
+                        membershipNumber: playerQL.membershipNumber,
+                    };
+
+                    // Push the player into the new team's members array
+                    newTeam.members.push(player);
+                });
+
+                // Push the new team into this.selectedTeams
+                this.selectedTeams.push(newTeam);
+            })
         }
         if (this.currentTournament.members)
             for (let p of this.currentTournament.members)
                 this.tournamentMembers.push(p.player);
         console.log(this.tournamentMembers);
-        for (let obj of this.tournamentMembers) {
-            if (this.currentTournament.opponents.length > 0) {
-                for (let objA of this.currentTournament.opponents) {
-                    if (objA.team1MemberId == obj.id
-                        && objA.team1Id == this.selectedTeams1[0]['id']) {
-                        this.selectedTeams1[0].push(obj);
-                    }
-                    if (objA.team2MemberId == obj.id
-                        && objA.team2Id == this.selectedTeams2[0]['id']) {
-                        this.selectedTeams2[0].push(obj);
-                    }
-                }
-            }
-        }
-        console.log(this.selectedTeams1);
         
 
     }
-
-    onColorChange(event: Event, index: any) {
+    onColorChange(event: Event, id: any) {
         const inputElement = event.target as HTMLInputElement;
-        if (index == 1) {
-            this.selectedTeams1[this.selectedTeams1.length - 1]['color'] = inputElement.value;
-        } else {
-            this.selectedTeams2[this.selectedTeams2.length - 1]['color'] = inputElement.value;
+        const teamToUpdate = this.selectedTeams.find(t => t.id === id);
+        if (teamToUpdate) {
+            teamToUpdate.color = inputElement.value;
         }
-        // this.teamA['color'] = inputElement.value;
     }
-    removeTeamPlayer(temaId: string, index, teamNumber) {
-        console.log(this.selectedTeams1);
-        console.log(this.selectedTeams2);
+    removeTeamPlayer(playerId: string, teamId: string) {
+        // Find the team with the given ID
+        const teamToUpdate = this.selectedTeams.find(team => team.id === teamId);
 
-        console.log(temaId);
-        console.log(index);
-        if (teamNumber == 1) {
-            this.selectedTeams1[temaId].splice(index, 1);
+        // Check if the team is found
+        if (teamToUpdate) {
+            // Filter out the player to be removed from the team's members array
+            teamToUpdate.members = teamToUpdate.members.filter(member => member.id !== playerId);
         } else {
-            this.selectedTeams2[temaId].splice(index, 1);
-
+            // Handle the case where the team with the given ID is not found
+            console.log('Team not found');
         }
-
-
     }
-    editTeam(id, index) {
+    editTeam(teamId, index) {
         console.log(index);
         try {
-            this.logger.log('Add New member to Team', "info", id);
+            this.logger.log('Add New member to Team', "info", teamId);
 
             let TM = [];
             for (let obj of this.tournamentMembers) {
@@ -187,126 +187,98 @@ export class TeamManagementComponent implements OnInit {
 
             const dialogRef = this.dialog.open(DialogAddMemberComponent, {
                 data: {
-                    id: id,
+                    id: teamId,
                     members: TM,
                 },
             });
 
             dialogRef.afterClosed().subscribe((result) => {
+                console.log(result);
                 if (result.length > 0) {
+                    let playerAdded = false; // Flag to track if the player has been added to a team
                     for (let obj of result) {
-                        let exist1 = this.selectedTeams1.find((item) =>
-                            item.some((f) => f.id == obj.id)
-                        );
-                        let exist2 = this.selectedTeams2.find((item) =>
-                            item.some((f) => f.id == obj.id)
-                        );
-                        if (exist1 || exist2) {
-                            this.snackBar.open(
-                                'Player already exist in the list.',
-                                'x',
-                                {
-                                    duration: 5000,
+                        for (let team of this.selectedTeams) {
+                            const isPlayerPresent = team.members.some(member => member.id === obj.id);
+                            if (!isPlayerPresent) {
+                                const teamToUpdate = this.selectedTeams.find(t => t.id === teamId);
+                                if (teamToUpdate) {
+                                    teamToUpdate.members.push(obj);
+                                    playerAdded = true; // Set the flag to true indicating that the player has been added
+                                    break; // Exit the loop since the player has been added to a team
                                 }
-                            );
-
-                            return;
-                        } else {
-                            if (index == 1) {
-                                this.selectedTeams1[0].push(obj);
-                            } else {
-                                this.selectedTeams2[0].push(obj);
-
                             }
                         }
+                        // if (playerAdded) {
+                        //     break; // Exit the outer loop once the player has been added to a team
+                        // }
+                    }
+                    if (!playerAdded) {
+                        // Show a message if the player is already present in all teams
+                        this.snackBar.open('Player already exists in teams.', 'x', {
+                            duration: 2000,
+                        });
                     }
                 }
+
             });
         } catch (error) {
             this.logger.log('Getting Tournaments DataAdd New member to flight Failed', "error", error.toString());
         }
     }
     async saveTournamentTeams() {
-        let tournamentMember: any[] = [];
+        let tournamentMember: TeamMembers[] = [];
         let counter: number;
         let DelplayerIndex: any;
         let DelplayerInfo: any;
         this.teamMembersToSave = [];
-        let teamsToSave: any[] = [];
+        let teamsToSave: Team[] = [];
+        let teamsMembersToRemove: any[] = [];
         // let selectionArray = Object.assign({}, this.selection.selected);
         let flag: boolean = true;
-        if (this.selectedTeams1[0].length !== this.selectedTeams2[0].length) {
-            this.snackBar.open('Teams Members are not equal.', 'x', {
-                duration: 2000,
-            });
-            return;
-        }
-        for (let index in this.selectedTeams1) {
-            if (flag == true) {
-                for (let index2 in this.selectedTeams1[index]) {
-                    if (Number.isInteger(Number(index2))) {
-                        let FM: any = {
-                            id: UniqueIdGenerator.generate(),
-                            team1Id: this.selectedTeams1[index]['id'],
-                            team2Id: this.selectedTeams2[index]['id'],
-                            team1MemberId: this.selectedTeams1[index][index2]['id'],
-                            team2MemberId: this.selectedTeams2[index][index2]['id'],
-                            tournamentId: this.tournamentID,
-                            flightId: null,
-                        };
-                        this.teamMembersToSave.push(FM);
-                    }
+        // if (this.selectedTeams1[0].length !== this.selectedTeams2[0].length) {
+        //     this.snackBar.open('Teams Members are not equal.', 'x', {
+        //         duration: 2000,
+        //     });
+        //     return;
+        // }
+        this.selectedTeams.forEach((team, index) => {
+            tournamentMember = [];
+            let name: string = (<HTMLInputElement>(
+                document.getElementById(
+                    'team_' + index + '_name'
+                )
+            )).value;
+
+            let color: string = (<HTMLInputElement>(
+                document.getElementById(
+                    'team_' + index + '_color'
+                )
+            )).value;
+            team['name'] = name;
+            team['color'] = color;
+            teamsMembersToRemove.push(team.id);
+            team.members.forEach((mem) => {
+                let member: any = {
+                    playerId: mem.id,
                 }
-                flag = false;
+                tournamentMember.push(member);
+            })
+            let teams: any = {
+                id: team.id,
+                tournamentId: this.tournamentID,
+                adminId: this.loggedInuser.id,
+                name: name,
+                color: color,
+                membersQL: {
+                    data: tournamentMember,
+                },
             }
-
-            let nameA: string = (<HTMLInputElement>(
-                document.getElementById(
-                    'teamA_' + index + '_name'
-                )
-            )).value;
-
-            let colorA: string = (<HTMLInputElement>(
-                document.getElementById(
-                    'teamA_' + index + '_color'
-                )
-            )).value;
-            let nameB: string = (<HTMLInputElement>(
-                document.getElementById(
-                    'items_' + index + '_name'
-                )
-            )).value;
-
-            let colorB: string = (<HTMLInputElement>(
-                document.getElementById(
-                    'items_' + index + '_color'
-                )
-            )).value;
-            this.selectedTeams1[index]['name'] = nameA;
-            this.selectedTeams1[index]['color'] = colorA;
-            this.selectedTeams2[index]['name'] = nameB;
-            this.selectedTeams2[index]['color'] = colorB;
-            let teamA: any = {
-                tournamentId: this.tournamentID,
-                adminId: this.loggedInuser.id,
-                id: this.selectedTeams1[index]['id'],
-                name: nameA,
-                color: colorA,
-            };
-            teamsToSave.push(teamA);
-            let teamB: any = {
-                tournamentId: this.tournamentID,
-                adminId: this.loggedInuser.id,
-                id: this.selectedTeams2[index]['id'],
-                name: nameB,
-                color: colorB,
-            };
-            teamsToSave.push(teamB);
-        }
+            teamsToSave.push(teams);
+        })
         console.log(teamsToSave);
-        console.log(this.teamMembersToSave);
+        // console.log(this.teamMembersToSave);
         let result = <any>(
-            await this.facadeService.insertTournamentTeam(teamsToSave,this.tournamentID)
+            await this.facadeService.insertTournamentTeam(teamsToSave, this.tournamentID,teamsMembersToRemove)
         );
 
         if (result) {

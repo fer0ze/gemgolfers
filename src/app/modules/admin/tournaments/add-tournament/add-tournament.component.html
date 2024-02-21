@@ -395,7 +395,8 @@
                             </button>
                         </div>
                         <div class="sm:col-span-4" style="text-align: center">
-                            <button mat-raised-button color="warn" (click)="editTournaments()" style="
+                            <button mat-raised-button color="warn" (click)="editTournaments(linearVerticalStepper)"
+                                style="
                                     text-align: center;
                                     justify-content: center;
                                 " *ngIf="editTournament">
@@ -727,7 +728,7 @@
                         <div style="clear: both"></div>
                     </div>
                 </mat-step>
-                <mat-step *ngIf="showMatchPlay" label="Select Teams">
+                <mat-step *ngIf="showMatchPlay || showBest" label="Select Teams">
                     <div class="flex flex-row mt-8">
                         <div class="flex-auto">
                             <div>
@@ -769,7 +770,7 @@
                                                         <div class="sm:col-span-1 px-2 py-1">
                                                             <mat-form-field class="color fuse-mat-no-subscript w-full">
                                                                 <input matInput type="color"
-                                                                    (input)="onColorChange( $event,i)"
+                                                                    (input)="onColorChange( $event,team.id)"
                                                                     value="{{team['color']}}" id="team_{{i}}_color"
                                                                     #query />
                                                             </mat-form-field>
@@ -1172,13 +1173,15 @@
                                         </div>
                                         <div *ngIf="
                                                 !showMatchPlay && !showShambles
-                                            " cdkDropList [cdkDropListData]="" (cdkDropListDropped)="drop($event)"
+                                            " cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"
                                             class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col rounded-r-lg flex-auto p-6 bg-card">
                                             <div class="moveableList">
                                                 <div class="moveableFlights p-4" *ngFor="
                                                         let item of items;
                                                         let j = index
-                                                    " cdkDrag [cdkDragData]="item">
+                                                    " cdkDrag [ngStyle]="
+                                                    getTeamColor(item)
+                                                    " [cdkDragData]="item">
                                                     <table class="overflow-y-visible" width="100%">
                                                         <tr>
                                                             <td width="20%">

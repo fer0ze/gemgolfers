@@ -336,8 +336,9 @@ export class ViewTournamentComponent implements OnInit {
                     this.tournamentPlayersAdd = true;
                 }
                 if (
-                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
-                    matchFormat.MATCH_PLAY
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] == matchFormat.MATCH_PLAY ||
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] == matchFormat.BEST_THREE ||
+                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] == matchFormat.BEST_TWO
                 ) {
                     this.showMatchPlay = true;
                 }
@@ -2202,7 +2203,7 @@ export class ViewTournamentComponent implements OnInit {
             // );
             doc.setFontSize(18);
             doc.setTextColor(99, 29, 5);
-          //  doc.text('\n' + element.category, 13, 25);
+            //  doc.text('\n' + element.category, 13, 25);
             doc.setFontSize(15);
             let count = 0;
             let grossAllArray: any[] = [];
@@ -2267,7 +2268,7 @@ export class ViewTournamentComponent implements OnInit {
                     ];
                     rows.push(temp);
                 }
-               
+
             }
 
             // From HTML
@@ -2307,7 +2308,7 @@ export class ViewTournamentComponent implements OnInit {
             // );
             doc.setFontSize(18);
             doc.setTextColor(99, 29, 5);
-         //   doc.text('\n' + element.category, 13, 25);
+            //   doc.text('\n' + element.category, 13, 25);
             doc.setFontSize(15);
             let count = 0;
             let grossAllArray: any[] = [];
@@ -2364,14 +2365,14 @@ export class ViewTournamentComponent implements OnInit {
                             : '-',
 
                         grossAllArray[leader].TotalNetUnder1 != '' &&
-                        grossAllArray[leader].TotalNetUnder1 != undefined
+                            grossAllArray[leader].TotalNetUnder1 != undefined
                             ? grossAllArray[leader].TotalNetUnder1
                             : '-',
 
                     ];
                     rows.push(temp);
                 }
-               
+
             }
 
             // From HTML
