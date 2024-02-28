@@ -7,7 +7,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { WhiteSectionModule } from 'app/shared/modules/white-section/white-section.module';
 import { CourseRoutingModule } from './course-routing.module';
-import { AddCourseComponent } from './add-course/add-course.component';
 import { ViewCourseComponent } from './view-course/view-course.component';
 import { CourseComponent } from './course.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -38,7 +37,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FlexFillDirective, FlexLayoutModule } from '@angular/flex-layout';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
-    declarations: [CourseComponent,AddCourseComponent,ViewCourseComponent],
+    declarations: [CourseComponent,ViewCourseComponent],
     imports: [
         CommonModule,
         MatSidenavModule,

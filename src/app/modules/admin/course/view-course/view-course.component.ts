@@ -371,17 +371,18 @@ export class ViewCourseComponent implements OnInit {
         var yyyy = today.getFullYear();
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
 
-        for (let obj of this.Tee) {
+        this.Tee.forEach((obj, index) => {
             let roundTeeId: any = General.getPlayersTe(obj.tee_id);
             let tee = {
+                tee_order: index + 1,
                 course_id: this.courseID,
                 tee_id: roundTeeId.id,
                 color: obj.color ? obj.color : '#ffffff',
                 name_by_club: obj.name_by_club,
-                created_at: General.parseToDate(todayDate.toDateString()),
+                created_at: General.parseToDate(todayDate.toDateString())
             };
             teeObj.push(tee);
-        }
+        });
         if (this.teeRemove) {
             for (let obj of this.teeRemove) {
                 let roundTeeId: any = General.getPlayersTe(

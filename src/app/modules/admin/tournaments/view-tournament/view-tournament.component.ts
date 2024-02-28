@@ -255,6 +255,7 @@ export class ViewTournamentComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     url: any;
     category: any[] = [];
+    rounds: any[] = [];
     totalPlayers: any = 0;
     matchFormat: any;
 
@@ -342,7 +343,7 @@ export class ViewTournamentComponent implements OnInit {
                 ) {
                     this.showMatchPlay = true;
                 }
-
+              
 
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
@@ -439,7 +440,10 @@ export class ViewTournamentComponent implements OnInit {
                         this.calculateStatistics4();
                     }
                 }
-
+                for (let i = 1; i <= this.noOfRounds; i++) {
+                    this.rounds.push({ label: 'Round ' + i });
+                }
+               // this.rounds.push({ label: 'Summary' });
                 //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
             } else {
                 this.router.navigate(['/tournaments/']);
@@ -2565,7 +2569,7 @@ export class ViewTournamentComponent implements OnInit {
         this.router.navigate(['/tournaments/attendance/' + this.tournamentID]);
     }
     redirectToHandicap() {
-        this.router.navigate(['/tournaments/handicap/' + this.tournamentID]);
+        // this.router.navigate(['/tournaments/handicap/' + this.tournamentID]);
     }
 
     redirectToTournamentSetup() {

@@ -32,9 +32,9 @@ import { TournamentsRoutingModule } from './tournaments-routing.module';
 import { TournamentsComponent } from './tournaments.component';
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
 import { FlightManagementComponent } from './flight-management/flight-management.component';
-import { CalculateHandicapComponent } from './calculate-handicap/calculate-handicap.component';
+// import { CalculateHandicapComponent } from './calculate-handicap/calculate-handicap.component';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
-import { HandicapCalculationWhsComponent } from './handicap-calculation-whs/handicap-calculation-whs.component';
+// import { HandicapCalculationWhsComponent } from './handicap-calculation-whs/handicap-calculation-whs.component';
 import { PlayerManagementComponent } from './player-management/player-management.component';
 import { DialogHanidcapListComponent } from '../dialogs/dialog-hanidcap-list/dialog-hanidcap-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,7 +55,6 @@ import { BlockWhiteSectionModule } from 'app/shared/modules/block-white-section/
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatchplayComponent } from '../matchplay/matchplay.component';
-import { LeaderboardComponent } from '../leaderboard/leaderboard.component';
 import { GraphQLModule } from 'app/graphql.module';
 import { ApolloModule } from 'apollo-angular';
 import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-add-player.component';
@@ -63,21 +62,15 @@ import { DialogPlayingDatesComponent } from '../dialogs/dialog-playing-dates/dia
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-add-member.component';
 import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
-import { StrokePlayMiniComponent } from '../leaderboard/strokePlay/strokePlay.component';
-import { ScrambleMiniComponent } from '../leaderboard/texasScramble/texasScramble.component';
-import { MatchPlayMiniComponent } from '../leaderboard/matchPlay/matchPlay.component';
-import { StableFordMiniComponent } from '../leaderboard/stableFord/stableFord.component';
 import { TeamManagementComponent } from './team-management/team-management.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
         AddTournamentComponent,
         FlightManagementComponent,
-        CalculateHandicapComponent,
         DialogHanidcapListComponent,
-        HandicapCalculationWhsComponent,
+        
         PlayerManagementComponent,
-        LeaderboardComponent,
         DialogMoveFlightComponent,
         DialogAddPlayerComponent,
         DialogOverviewComponent,
@@ -91,7 +84,7 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         DialogAddMemberComponent,TeamManagementComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
-        DialogPlayingDatesComponent,StrokePlayMiniComponent,ScrambleMiniComponent,MatchPlayMiniComponent,StableFordMiniComponent
+        DialogPlayingDatesComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [

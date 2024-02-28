@@ -262,7 +262,7 @@ export const saveColor = gql`
       objects: $tee
       on_conflict: {
         constraint: course_tees_pkey
-        update_columns: [course_id, color, tee_id, created_at, name_by_club]
+        update_columns: [course_id, color, tee_id, created_at, name_by_club,tee_order]
       }
     ) {
       AffectedRowsQLi: affected_rows

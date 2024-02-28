@@ -720,16 +720,7 @@ export class AddTournamentComponent implements OnInit {
 
     filterValues(search: string): any {
         console.log('aaa');
-
-        // return this.filteredCourseOptions.filter(value=>
-        // value.naem.toLowerCase().indexOf(search.toLowerCase()) === 0);
     }
-
-    // addplayingDates(category: any){
-    //   const control = this.formArray.get([1]).get("category") as FormArray;
-    //   control.push(this.playingDate(category[]));
-    //   console.log(this.formArray.get([1]).get("playingDate"));
-    // }
 
     createCategory(cat: any): FormGroup {
         let playersperFlight = '2';
@@ -791,14 +782,6 @@ export class AddTournamentComponent implements OnInit {
             control.reset();
         }
     }
-    // createPlayingDate(date: string): FormGroup {
-    //     return this._formBuilder.group({
-    //         Date: [date],
-    //         playing: [false, Validators.required],
-    //         noofHoles: ['18', Validators.required],
-    //     });
-    // }
-
     get categoryFormGroup() {
         return <FormArray>this.formArray.get([1]).get('category');
     }
@@ -829,25 +812,6 @@ export class AddTournamentComponent implements OnInit {
         console.log(this.calculateDiff(sDate, eDate));
 
         let noOfDays: any = this.calculateDiff(sDate, eDate);
-        // for (let i = 0; i <= noOfDays; i++) {
-        //   let dte = new Date(sDate);
-        //   dte.setDate(sDate.getDate() + i);
-        //   console.log(dte);
-        //   let dteday = this.datePipe.transform(dte, "yyyyMMdd");
-        //   console.log(dteday);
-        //   this.playingDat[i] =
-        //     dteday.substring(8, 6) +
-        //     "-" +
-        //     dteday.substring(6, 4) +
-        //     "-" +
-        //     +dteday.substring(0, 4);
-        //   //selectedDate [i] = this.datePipe.transform(selectedDate[i], 'dd-MM-yyyy')
-
-        //   //   this.selectedMembers.push(person);
-        //   console.log(this.playingDat[i]);
-
-        // }
-        // console.log(this.playingDat);
         return this.playingDat;
     }
     getplayingDates() {
@@ -881,27 +845,6 @@ export class AddTournamentComponent implements OnInit {
         console.log(this.playingDat);
         return this.playingDat;
     }
-
-    //     Date: ['', Validators.required],
-    //     playing: ['0', Validators.required],
-    //     noofHoles: ['1_10', Validators.required],
-
-    // addplayingDate(index: number) {
-    //     let dates = this.getplayingDates();
-    //     console.log(index);
-    //     for (let i of dates) {
-    //         const control = this.formArray
-    //             .get([1])
-    //             .get('category') as FormArray;
-    //         console.log(control);
-    //         console.log(i);
-    //         const newControl = control.controls[index].get(
-    //             'playingDate'
-    //         ) as FormArray;
-
-    //         newControl.push(this.createPlayingDate(i.toString()));
-    //     }
-    // }
 
     addFlightField(category: any) {
         const control = this.formArray.get([1]).get('category') as FormArray;
@@ -1171,20 +1114,6 @@ export class AddTournamentComponent implements OnInit {
                     });
                 }
             });
-
-        // if(course.nameForHoles1to9 && course.nameForHoles10to18) {
-        //   let course1to9 = { id: 1, name: course.nameForHoles1to9, checked: this.hasHoleSet1to9(course.nameForHoles1to9) };
-        //   let course10to18 = { id: 2, name: course.nameForHoles10to18, checked: this.hasHoleSet10to18(course.nameForHoles10to18) };
-        //   let course19to27 = { id: 4, name: course.nameForHoles19to27, checked: this.hasHoleSet19to27(course.nameForHoles19to27) };
-        //   let course28to36 = { id: 8, name: course.nameForHoles28to36, checked: this.hasHoleSet28to36(course.nameForHoles28to36) };
-
-        //   if(course.nameForHoles1to9) this.courseHoleSetNames.push(course1to9);
-        //   if(course.nameForHoles10to18) this.courseHoleSetNames.push(course10to18);
-        //   if(course.nameForHoles19to27) this.courseHoleSetNames.push(course19to27);
-        //   if(course.nameForHoles28to36) this.courseHoleSetNames.push(course28to36);
-        //   this.showCourseHole = true;
-        // }
-        // else this.showCourseHole = false;
     }
     getSelectedCourses(course) {
         this.courseHoleSetNames = [];
@@ -1439,87 +1368,10 @@ export class AddTournamentComponent implements OnInit {
     deleteCourseInfo(index) {
         this.courseFileds.removeAt(index);
     }
-    // onStepChange(event) {
-    //     if (event.selectedIndex == 0) {
-    //         this.editTournament = true;
-    //     } else if (event.selectedIndex == 1) {
-    //         this.syncClubMembers();
-    //         this.syncTournamentMembers();
-    //     } else if (event.selectedIndex == 2) {
-    //         console.log(
-    //             this.formArray.get([0]).value.courseInfo[0].matchFormat
-    //         );
-    //         if (
-    //             this.formArray.get([0]).value.courseInfo[0].matchFormat !=
-    //             'TEXAS_SCRAMBLE'
-    //         ) {
-    //             let sDate = new Date(
-    //                 this.formArray.get([0]).value.startDateFormCtrl
-    //             );
-    //             let dteday = this.datePipe.transform(sDate, 'yyyyMMdd');
-    //             let date =
-    //                 dteday.substring(8, 6) +
-    //                 '-' +
-    //                 dteday.substring(6, 4) +
-    //                 '-' +
-    //                 +dteday.substring(0, 4);
-    //             console.log(date);
-    //             if (!this.setupInitialized) {
-    //                 for (
-    //                     let i = 0;
-    //                     i <
-    //                     this.formArray.get([0]).get('clubctgies').value.length;
-    //                     i++
-    //                 ) {
-    //                     for (let obj of this.dates) {
-    //                         if (
-    //                             obj.playingDates['dates'] == date &&
-    //                             this.formArray.get([0]).get('clubctgies').value[
-    //                                 i
-    //                             ].name == obj.name
-    //                         ) {
-    //                             this.addFlightField(
-    //                                 this.formArray.get([0]).get('clubctgies')
-    //                                     .value[i]
-    //                             );
-    //                         }
-    //                     }
-    //                 }
-    //                 this.setupInitialized = true;
-    //             }
-    //         } else {
-    //             this.addFlightField('Teams');
-    //         }
-    //     } else {
-    //     }
-    // }
+  
 
     getSelectedPlayers(index, stepper: MatStepper) {
         console.log(index);
-
-        //console.log(this.selection.selected.length);
-        // if (document.getElementById('mat-tab-label-0-' + index)) {
-        //     document
-        //         .getElementById('mat-tab-label-0-' + index)
-        //         .insertAdjacentHTML(
-        //             'beforeend',
-        //             '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
-        //         );
-        // } else if (document.getElementById('mat-tab-label-1-' + index)) {
-        //     document
-        //         .getElementById('mat-tab-label-1-' + index)
-        //         .insertAdjacentHTML(
-        //             'beforeend',
-        //             '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
-        //         );
-        // } else if (document.getElementById('mat-tab-label-2-' + index)) {
-        //     document
-        //         .getElementById('mat-tab-label-2-' + index)
-        //         .insertAdjacentHTML(
-        //             'beforeend',
-        //             '<mat-icon style="padding: 2px;background: green;color: white;border-radius: 14px;margin: 2px;">Saved</mat-icon>'
-        //         );
-        // }
         this.flightArrangementSetup();
         this.selectedMembers = [];
         this.assignedOpponents = new Set<string>();
@@ -1540,44 +1392,11 @@ export class AddTournamentComponent implements OnInit {
             }
             console.log(person);
 
-            // console.log(this.formArray.get([1]).get('category'));
-            // for (let j in this.formArray.get([1]).get('category').value[i]
-            //     .playingDate) {
-            //     let sDte =
-            //         this.formArray
-            //             .get([1])
-            //             .get('category')
-            //             .value[i].playingDate[j].Date.substring(6, 10) +
-            //         this.formArray
-            //             .get([1])
-            //             .get('category')
-            //             .value[i].playingDate[j].Date.substring(3, 5) +
-            //         this.formArray
-            //             .get([1])
-            //             .get('category')
-            //             .value[i].playingDate[j].Date.substring(0, 2);
-            //     this.formArray.get([1]).get('category').value[i].playingDate[
-            //         j
-            //     ].Date = sDte;
-
-            //     //this.formArray.get([1]).get("category").value[i].playingDate[j].Date = this.datePipe.transform(this.formArray.get([1]).get("category").value[i].playingDate[j].Date, 'yyyyMMdd');
-            // }
-            // console.log(this.formArray.get([1]).get('category').value[i]);
+          
             this.formArray.get([1]).get('category').value[i].playingDate =
                 this.checkDate(
                     this.formArray.get([1]).get('category').value[i]
                 );
-            // console.log(
-            //     this.formArray.get([1]).get('category').value[i].playingDate
-            // );
-
-            // let flightSettingsStatus: any =
-            //     await this.facadeService.updateFlightSettings(
-            //         this.tournamentID,
-            //         this.formArray.get([1]).get('category').value[i].name,
-            //         this.formArray.get([1]).get('category').value[i]
-            //     );
-            // console.log(flightSettingsStatus);
         }
         if (index < this.formArray.get([1]).get('category').value.length - 1) {
             this.selectedIndex = ++index;
@@ -1645,16 +1464,6 @@ export class AddTournamentComponent implements OnInit {
         console.log(FilteredFlight);
         console.log(this.teamMembersToSave);
 
-        // this.playingFlight = FilteredFlight[0].playingDate.filter((a) => {
-        //     return a.Date == Pdate;
-        // });
-
-        // console.log(FilteredFlight[0].playersperFlight);
-        // console.log(this.playingFlight);
-
-        // if (!this.playingFlight[0].playing) {
-        //     return;
-        // } else {
         if (FilteredFlight.length > 0) {
             let PperFlight = FilteredFlight[0].playersperFlight;
             FilteredPL.forEach((filteredPlayer: any) => {
@@ -1944,41 +1753,6 @@ export class AddTournamentComponent implements OnInit {
         }
         //this.router.navigate(["/tournaments/view/" + this.tournamentID]);
     }
-
-    dateSetup() {
-        //this.stepTitle = "flights Setup Form";
-        //this.saveTournamentMembers();
-
-        // console.log(this.formArray.get([0]).get('clubctgies').value);
-
-        if (!this.setupInitialized) {
-            for (
-                let i = 0;
-                i < this.formArray.get([0]).get('clubctgies').value.length;
-                i++
-            ) {
-                // this.addFlightField(
-                //     this.formArray.get([0]).get('clubctgies').value[i].name
-                // );
-            }
-            //console.log(this.formArray.get([0]).get('clubctgies').value.length);
-            // for (
-            //   let i = 0;
-            //   i < this.formArray.get([0]).get("clubctgies").value.length;
-            //   i++
-            // ) {
-            //   //this.addplayingDate(i);
-            // }
-
-            this.getplayingDates();
-
-            //this.setupInitialized = true;
-        }
-
-        // console.log(this.formArray.get([1]).get('category'));
-        //this.router.navigate(["/tournaments/view/" + this.tournamentID]);
-    }
-
     datechanged(event, t) {
         console.log(event);
         console.log(t);
@@ -3921,47 +3695,4 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
-    // getGrossNetTop(selectedCTName, type) {
-    //   if (selectedCTName.replace(/\s/g, "").toLowerCase() == Constants.CATEGORY_AMATEURS.replace(/\s/g, "").toLowerCase()) {
-    //     if (type == "GT")
-    //       return +this.formArray.get([0]).value.amateursGT;
-    //     else
-    //       return +this.formArray.get([0]).value.amateursNT;
-    //   }
-    //   else if (selectedCTName.replace(/\s/g, "").toLowerCase() == Constants.CATEGORY_SENIORS.replace(/\s/g, "").toLowerCase()) {
-    //     if (type == "GT")
-    //       return +this.formArray.get([0]).value.seniorsGT;
-    //     else
-    //       return +this.formArray.get([0]).value.seniorsNT;
-    //   }
-    //   else if (selectedCTName.replace(/\s/g, "").toLowerCase() == Constants.CATEGORY_VETERANS.replace(/\s/g, "").toLowerCase()) {
-    //     if (type == "GT")
-    //       return +this.formArray.get([0]).value.veteransGT;
-    //     else
-    //       return +this.formArray.get([0]).value.veteransNT;
-    //   }
-    //   else if (selectedCTName.replace(/\s/g, "").toLowerCase() == Constants.CATEGORY_JUNIORS.replace(/\s/g, "").toLowerCase()) {
-    //     if (type == "GT")
-    //       return +this.formArray.get([0]).value.juniorsGT;
-    //     else
-    //       return +this.formArray.get([0]).value.juniorsNT;
-    //   }
-    //   else if (selectedCTName.replace(/\s/g, "").toLowerCase() == Constants.CATEGORY_LADIES.replace(/\s/g, "").toLowerCase()) {
-    //     if (type == "GT")
-    //       return +this.formArray.get([0]).value.ladiesGT;
-    //     else
-    //       return +this.formArray.get([0]).value.ladiesNT;
-    //   }
-    //   else if (selectedCTName.replace(/\s/g, "").toLowerCase() == Constants.CATEGORY_PROFESSIONALS.replace(/\s/g, "").toLowerCase()) {
-    //     if (type == "GT")
-    //       return +this.formArray.get([0]).value.professionalsGT;
-    //     else
-    //       return +this.formArray.get([0]).value.professionalsNT;
-    //   }
-    //   else return 0;
-    // }
-
-    // public hasError = (controlName: string, errorName: string) => {
-    //   return this.clubForm.controls[controlName].hasError(errorName);
-    // }
 }

@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AddDailyRoundComponent } from './add-daily-round/add-daily-round.component';
 import { DialogAddExisitingPlayerComponent } from '../dialogs/dialog-add-exisiting-player/dialog-add-exisiting-player.component';
-import { AddPlayerDailyScoreComponent } from './add-player-daily-score/add-player-daily-score.component';
+// import { AddPlayerDailyScoreComponent } from './add-player-daily-score/add-player-daily-score.component';
 import { ViewDailyRoundComponent } from './view-daily-round/view-daily-round.component';
 import { DailyRoundsComponent } from './daily-rounds.component';
 import { DailyRoundsRoutingModule } from './daily-rounds-routing.module';
@@ -33,7 +33,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     declarations: [
         DailyRoundsComponent,
         AddDailyRoundComponent,
-        AddPlayerDailyScoreComponent,
+        // AddPlayerDailyScoreComponent,
         ViewDailyRoundComponent,
         DialogAddExisitingPlayerComponent,
         DialogChangeCourseHoleSetComponent,

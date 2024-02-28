@@ -142,6 +142,7 @@
                                         Add New Tee
                                     </button>
                                 </div>
+                                <div class="my-1 text-md text-hint">Tees will be displayed from left to right on both mobile and web, starting with the first tee you entered.</div>
                                 <table>
                                     <tr class="topheader" style="
                                             background-color: #176478;
@@ -945,8 +946,8 @@
                                     </mat-card-actions>
                                 </div>
                             </div>
-                           
-                            
+
+
                         </ng-container>
                         <!-- Notifications -->
                         <ng-container *ngSwitchCase="'4'">
@@ -1088,8 +1089,8 @@
                                         </td>
                                         <td style="padding-left: 1px">
                                             <span>
-                                                <button (click)="deleteRating(rating.id)" id="delete_btn" mat-icon-button
-                                                    color="warn">
+                                                <button (click)="deleteRating(rating.id)" id="delete_btn"
+                                                    mat-icon-button color="warn">
                                                     <mat-icon class="mat-18">delete</mat-icon>
                                                 </button>
                                             </span>
