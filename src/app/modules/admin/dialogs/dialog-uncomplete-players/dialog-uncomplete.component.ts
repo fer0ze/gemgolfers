@@ -48,7 +48,7 @@ export class DialogUncompletedComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        console.log(this.data);
+        //console.log(this.data);
 
         this.playerList = this.data.players;
 

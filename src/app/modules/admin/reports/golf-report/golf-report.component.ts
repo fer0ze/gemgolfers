@@ -144,7 +144,7 @@ export class GolfReportComponent implements OnInit {
                 )
             );
         }
-        console.log(players);
+        //console.log(players);
 
         this.Players = [];
         this.dailyStats = [];
@@ -168,11 +168,11 @@ export class GolfReportComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.refresh = false;
         this.isLoading = true;
-        console.log(this.dataSource);
+        //console.log(this.dataSource);
     }
 
     redirectToHandicapDetails = (id: string) => {
-        console.log(id);
+        //console.log(id);
 
         if (id) {
             const dialogRef = this.dialog.open(UserDetailsDilogueComponent, {
@@ -183,15 +183,15 @@ export class GolfReportComponent implements OnInit {
                     to: this.toDate,
                 },
             });
-            console.log(id);
+            //console.log(id);
 
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
-                    //console.log("record deleted.");
+                    ////console.log("record deleted.");
                     //this.delete(id);
                     //this.ngOnInit();
                 } else {
-                    //console.log("cancel delete action");
+                    ////console.log("cancel delete action");
                 }
             });
         }
@@ -199,7 +199,7 @@ export class GolfReportComponent implements OnInit {
 
     applyFilter(filterValue: string) {
         
-        console.log(this.dataSource.data);
+        //console.log(this.dataSource.data);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
         this.dataSource.filter = filterValue;
@@ -248,14 +248,14 @@ export class GolfReportComponent implements OnInit {
     onDatePick() {
         const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
         this.logger.log('Getting Daily starter Data By date', "info",combinedData);
-        console.log(this.scheduleForm.value.startDate);
-        console.log(this.scheduleForm.value.endDate);
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
             let lastDate = this.scheduleForm.value.endDate;
             let startDate = this.scheduleForm.value.startDate;
 
-            console.log(lastDate);
-            console.log(startDate);
+            //console.log(lastDate);
+            //console.log(startDate);
             this.isLoading = false;
             this.refresh = true;
             this.dataSource = null;
@@ -270,7 +270,7 @@ export class GolfReportComponent implements OnInit {
     Dailysetup(selectedValue) {
         this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
         
-        console.log(selectedValue);
+        //console.log(selectedValue);
         this.isLoading = false;
         this.refresh = true;
         if (selectedValue.value == Constants.DR_TODAY) {
@@ -287,8 +287,8 @@ export class GolfReportComponent implements OnInit {
             this.dataSource = null;
             let currentDate = new Date();
             let lastDate = this.endOfWeek();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
@@ -296,8 +296,8 @@ export class GolfReportComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
@@ -305,8 +305,8 @@ export class GolfReportComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_6_MONTH) {
@@ -314,16 +314,16 @@ export class GolfReportComponent implements OnInit {
             this.dataSource = null;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;
             // let lastDate = this.customDate2.value;
-            // console.log(currentDate)
-            // console.log(lastDate)
+            // //console.log(currentDate)
+            // //console.log(lastDate)
             // this.getDailyRounds(currentDate,lastDate);
         } else {
         }

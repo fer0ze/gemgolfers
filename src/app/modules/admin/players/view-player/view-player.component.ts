@@ -206,7 +206,7 @@ export class ViewPlayerComponent implements OnInit {
     async ngOnInit() {
         try {
             this.logger.log('Getting Players Profile Data', "info");
-            //console.log(this.route.snapshot.paramMap.get("id"));
+            ////console.log(this.route.snapshot.paramMap.get("id"));
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
             this.route.paramMap.subscribe((params) => {
@@ -218,7 +218,7 @@ export class ViewPlayerComponent implements OnInit {
                             ? this.loggedInuser.membership[0].club
                             : null;
 
-                    console.log(clubInfo);
+                    //console.log(clubInfo);
 
                     this.clubTitle = clubInfo ? clubInfo.name : '';
                 }
@@ -226,7 +226,7 @@ export class ViewPlayerComponent implements OnInit {
 
             if (this.playerID) {
                 //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
-                //console.log(this.currentPlayer);
+                ////console.log(this.currentPlayer);
                 let club: any =
                     this.loggedInuser.membership.length > 0
                         ? this.loggedInuser.membership[0].club
@@ -243,7 +243,7 @@ export class ViewPlayerComponent implements OnInit {
                 );
 
                 this.playerWHSHistory = this.playerWHS['HandicapHistoryWhsQL'];
-                console.log(this.playerWHSHistory);
+                //console.log(this.playerWHSHistory);
 
                 this.usedForHandicap =
                     this.playerWHSHistory &&
@@ -257,7 +257,7 @@ export class ViewPlayerComponent implements OnInit {
                     this.playerHandicapWhsList.length > 0
                         ? this.playerHandicapWhsList[0].handicapDifferential
                         : null;
-                console.log('Lowest Handicap=' + this.topDiff20);
+                //console.log('Lowest Handicap=' + this.topDiff20);
 
                 // this.topDiff = this.playerHandicapWhsList.sort(
                 //     this.ComparatorHandicapDifferentialAsc
@@ -308,12 +308,12 @@ export class ViewPlayerComponent implements OnInit {
                 //     this.topDiff.length > this.handicapsToUse
                 //         ? this.topDiff[this.handicapsToUse].handicapDifferential
                 //         : 0;
-                //console.log("TopDiffer" + this.topDiff);
-                //console.log("Available Handicaps" + this.playerHandicapWhsList);
-                //console.log("Available Handicaps" + this.handicapsAvailable);
-                //console.log("Available Handicaps" + this.handicapsToUse);
+                ////console.log("TopDiffer" + this.topDiff);
+                ////console.log("Available Handicaps" + this.playerHandicapWhsList);
+                ////console.log("Available Handicaps" + this.handicapsAvailable);
+                ////console.log("Available Handicaps" + this.handicapsToUse);
                 const slicedWhs = this.playerWHSHistory;
-                console.log(slicedWhs);
+                //console.log(slicedWhs);
                 // for (let whsItem in slicedWhs) {
                 //     if (slicedWhs[+whsItem].combined_handicap) {
                 //         slicedWhs.splice(
@@ -353,7 +353,7 @@ export class ViewPlayerComponent implements OnInit {
 
                 let playerscore: any =
                     await this.facadeService.getPlayerFlightScores(this.playerID);
-                console.log(playerscore);
+                //console.log(playerscore);
                 this.currentPlayer = playerscore.PlayerQL;
                 this.totalRounds = playerscore.Aggegate.aggregate.totalCount;
                 let memberQLs: any = playerscore.MemberQL;
@@ -361,8 +361,8 @@ export class ViewPlayerComponent implements OnInit {
                 this.playerWHSRound = await this.facadeService.getPlayerWHSRound(
                     courseRating
                 );
-                // console.log(this.playerWHS);
-                console.log(this.playerWHSRound);
+                // //console.log(this.playerWHS);
+                //console.log(this.playerWHSRound);
                 let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
                 let rating = this.playerWHSRound['course_rating'];
                 for (let item of rating) {
@@ -401,11 +401,11 @@ export class ViewPlayerComponent implements OnInit {
                         this.balckVetTeeHI = Math.abs(Math.round(this.balckVetTeeHI));
                     }
                 }
-                // console.log(this.redTeeHI);
-                // console.log(this.balckVetTeeHI);
-                // console.log(this.blackTeeHI);
-                // console.log(this.whiteTeeHI);
-                // console.log(this.blueTeeHI);
+                // //console.log(this.redTeeHI);
+                // //console.log(this.balckVetTeeHI);
+                // //console.log(this.blackTeeHI);
+                // //console.log(this.whiteTeeHI);
+                // //console.log(this.blueTeeHI);
 
                 //this.barChartDataGross = [];
                 //this.barChartDataNet = [];
@@ -425,7 +425,7 @@ export class ViewPlayerComponent implements OnInit {
                         // Do not add flights without score
                         continue;
                     }
-                    //console.log(scoresQLs);
+                    ////console.log(scoresQLs);
 
                     let scores: any[] = [];
 
@@ -445,7 +445,7 @@ export class ViewPlayerComponent implements OnInit {
                             scoreQL.hole.par,
                             scoreQL.grossScore
                         );
-                        //console.log(objScore)
+                        ////console.log(objScore)
                         grossScore += objScore.getGrossScore();
                         netScore += objScore.getNetScore(handicapAllocation.AS_IS);
 
@@ -459,10 +459,10 @@ export class ViewPlayerComponent implements OnInit {
                         //scores.add(score);
                         scores.push(scoreQL);
                     }
-                    //console.log(dates);
-                    //console.log(scores);
-                    //console.log(this.barChartData);
-                    //console.log(flightQL);
+                    ////console.log(dates);
+                    ////console.log(scores);
+                    ////console.log(this.barChartData);
+                    ////console.log(flightQL);
 
                     // this.dataSource.sort = this.sort;
 
@@ -484,12 +484,12 @@ export class ViewPlayerComponent implements OnInit {
 
                     newScore.push(recentScores);
 
-                    //console.log(newScores);
+                    ////console.log(newScores);
 
-                    //console.log(this.barChartLabels);
-                    //console.log(this.barChartDataGross);
-                    //console.log(this.barChartDataNet);
-                    //console.log(this.barChartData);
+                    ////console.log(this.barChartLabels);
+                    ////console.log(this.barChartDataGross);
+                    ////console.log(this.barChartDataNet);
+                    ////console.log(this.barChartData);
                     this.ConguScoreLength = newScores.length;
                     this.CONGUgrossSource = new MatTableDataSource(newScores);
                     this.CONGUgrossSource.paginator =
@@ -536,15 +536,15 @@ export class ViewPlayerComponent implements OnInit {
                     name: 'Net',
                     data: dataMembersN,
                 });
-                console.log(this._series);
-                console.log(this._labels);
+                //console.log(this._series);
+                //console.log(this._labels);
 
-                //console.log(this.playerFlightScores);
+                ////console.log(this.playerFlightScores);
                 let finalScoreStats: ScoreStats = new ScoreStats();
                 for (let stats of this.playerFlightScores) {
                     finalScoreStats.addScoreStats(stats.scoreStats);
                 }
-                //console.log(finalScoreStats);
+                ////console.log(finalScoreStats);
 
                 // this.par3Avg = finalScoreStats.par3Stats.getAvgScores();
                 // this.par4Avg = finalScoreStats.par4Stats.getAvgScores();
@@ -580,16 +580,16 @@ export class ViewPlayerComponent implements OnInit {
                     );
                 }
 
-                // console.log(finalScoreStats);
+                // //console.log(finalScoreStats);
 
-                // console.log(finalScoreStats.par3Stats.getAvgScores());
-                // console.log(finalScoreStats.par4Stats.getAvgScores());
-                // console.log(finalScoreStats.par5Stats.getAvgScores());
-                // console.log(finalScoreStats.getShotsBirdiesPercent());
-                // console.log(finalScoreStats.getShotsBogeysPercent());
-                // console.log(finalScoreStats.getShotsThreeOrHigherPercent());
-                // console.log(finalScoreStats.getShotsParsPercent());
-                // console.log(finalScoreStats.getShotsDoubleBogeysPercent());
+                // //console.log(finalScoreStats.par3Stats.getAvgScores());
+                // //console.log(finalScoreStats.par4Stats.getAvgScores());
+                // //console.log(finalScoreStats.par5Stats.getAvgScores());
+                // //console.log(finalScoreStats.getShotsBirdiesPercent());
+                // //console.log(finalScoreStats.getShotsBogeysPercent());
+                // //console.log(finalScoreStats.getShotsThreeOrHigherPercent());
+                // //console.log(finalScoreStats.getShotsParsPercent());
+                // //console.log(finalScoreStats.getShotsDoubleBogeysPercent());
 
                 //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
                 this.chartVisitors = {
@@ -702,11 +702,11 @@ export class ViewPlayerComponent implements OnInit {
 
     // events
     public chartClicked(e: any): void {
-        // console.log(e);
+        // //console.log(e);
     }
 
     public chartHovered(e: any): void {
-        // console.log(e);
+        // //console.log(e);
     }
 
     ComparatorDate(a, b) {
@@ -739,7 +739,7 @@ export class ViewPlayerComponent implements OnInit {
         //<boolean>await this.facadeService.deletePlayer(clubId, playerId);
         // for(let id of this.KGCIds) {
         //   <boolean>await this.facadeService.insertClubMember("-LUFS3FAg4OEhIiK0vgY", id);
-        //   console.log(id);
+        //   //console.log(id);
         // }
     }
     onPageFired(event) { }
@@ -760,13 +760,13 @@ export class ViewPlayerComponent implements OnInit {
 
                 //this.router.navigate(["/players"]);
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
 
     isHandicapUsed(id: string) {
-        //console.log(this.usedForHandicap);
+        ////console.log(this.usedForHandicap);
         let used: boolean = this.usedForHandicap.some((handicap) => {
             return (
                 handicap.used_handicap_id == id ||
@@ -776,7 +776,7 @@ export class ViewPlayerComponent implements OnInit {
         return used;
     }
     playingTee(id: string) {
-        // console.log(id);
+        // //console.log(id);
         let used = this.memberQLs.find((handicap) => {
             return handicap.FlightQL.tournamentId == id;
         });
@@ -785,7 +785,7 @@ export class ViewPlayerComponent implements OnInit {
             : General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
     }
     isPanelty(flight) {
-        //console.log(this.usedForHandicap);
+        ////console.log(this.usedForHandicap);
         if (flight && flight[0] != undefined) {
             let used: boolean = flight[0].members.some((element) => {
                 return (
@@ -816,7 +816,7 @@ export class ViewPlayerComponent implements OnInit {
                 await this.handicapService
                     .adjustHandicapWHS(obj)
                     .then((response) => {
-                        console.log(response);
+                        //console.log(response);
 
                         this.snackBar.open(
                             'Handicap Adjusted Sucessfully.',
@@ -828,7 +828,7 @@ export class ViewPlayerComponent implements OnInit {
                         window.location.reload();
                     })
                     .catch((err) => {
-                        console.log('error' + err);
+                        //console.log('error' + err);
                         this.snackBar.open('Error!.', 'x', {
                             duration: 5000,
                         });
@@ -848,7 +848,7 @@ export class ViewPlayerComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(async (result) => {
             this.playerHandiData = this.playerHandiData.slice(0, 20);
-            console.log(this.playerHandiData);
+            //console.log(this.playerHandiData);
             let tournamentId = this.playerHandiData[0].tournamentId;
 
             if (result) {
@@ -880,7 +880,7 @@ export class ViewPlayerComponent implements OnInit {
                         updaterId: this.loggedInuser.id,
                     };
 
-                    console.log(handicap_change_log);
+                    //console.log(handicap_change_log);
                     //this.handicapLog = handicap_change_log;
 
                     const remarksAdded = <boolean>(
@@ -959,7 +959,7 @@ export class ViewPlayerComponent implements OnInit {
             rows.push(temp);
         });
         // From HTML
-        console.log(rows);
+        //console.log(rows);
 
         let a = 1;
         doc.autoTable(col, rows, {
@@ -975,15 +975,15 @@ export class ViewPlayerComponent implements OnInit {
                 a++;
                 if (data.row.raw[9] == true && a == 5) {
                     data.cell.styles.fillColor = [249, 187, 147];
-                    //console.log(1);
+                    ////console.log(1);
                     //a=false;
                 }
                 if (data.row.index == 1) {
-                    //console.log('assssssssssss');
+                    ////console.log('assssssssssss');
                 }
-                console.log(data.row.index);
+                //console.log(data.row.index);
 
-                //console.log(a);
+                ////console.log(a);
             },
         });
         // doc.autoTable({
@@ -1154,33 +1154,33 @@ export class ViewPlayerComponent implements OnInit {
     // }
 }
 //this.topDiff=this.topDiff[5].handicapDifferential;
-//console.log("TopDiffer"+this.topDiff[5].handicapDifferential)
+////console.log("TopDiffer"+this.topDiff[5].handicapDifferential)
 // this.bottomDiff = this.playerHandicapWhsList.sort(
 //   this.ComparatorHandicapDifferentialDsc
 // );
-// console.log("TopDiffer"+this.bottomDiff[0].handicapDifferential)
+// //console.log("TopDiffer"+this.bottomDiff[0].handicapDifferential)
 // this.bottomDiff =
 //   this.bottomDiff.length > 0
 //     ? this.bottomDiff[0].handicapDifferential
 //     : null;
-// console.log(this.bottomDiff);
+// //console.log(this.bottomDiff);
 // let len = this.playerHandicapWhsList.length;
 // this.bottomDiff20 =
 //   this.playerHandicapWhsList.length <= 19
 //     ? this.playerHandicapWhsList[len - 1].handicapDifferential
 //     : null;
 // //this.bottomDiff20 = (this.playerHandicapWhsList.length >= 20)? this.playerHandicapWhsList[19].handicapDifferential: this.playerHandicapWhsList[this.playerHandicapWhsList.length -1].handicapDifferential
-// console.log("Highest Handicap=" + this.bottomDiff20);
-//console.log( "Before"+this.playerHandicapWhsList);
+// //console.log("Highest Handicap=" + this.bottomDiff20);
+////console.log( "Before"+this.playerHandicapWhsList);
 
-// console.log("lenght=" + len);
+// //console.log("lenght=" + len);
 // this.playerHandicapWhsList = this.playerWHSHistory.sort(
 //   this.ComparatorHandicapDifferentialAsc
 // );
-// console.log(this.playerHandicapWhsList);
+// //console.log(this.playerHandicapWhsList);
 // this.palyerWHSHandDif=this.playerWHS.handicapDifferential;
-// console.log(this.playerWHS.handicapDifferential)
-// console.log("HandicapDiference"+this.palyerWHSHandDif)
-// console.log(this.playerWHSHistory);
+// //console.log(this.playerWHS.handicapDifferential)
+// //console.log("HandicapDiference"+this.palyerWHSHandDif)
+// //console.log(this.playerWHSHistory);
 // //this.playerWHSHistory = this.playerWHSHistory.sort(this.ComparatorDate);
-// console.log(this.playerWHSHistory);
+// //console.log(this.playerWHSHistory);

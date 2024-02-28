@@ -17,9 +17,9 @@ export class LogsService {
   ) { }
   log(msg: any, level: any, additionalData: any = "") {
     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-    // console.log(msg);
-    // console.log(level);
-    // console.log(additionalData);
+    // //console.log(msg);
+    // //console.log(level);
+    // //console.log(additionalData);
 
     this.apollo
       .query({
@@ -43,8 +43,8 @@ export class LogsService {
 
   logObject(object: any) {
     // if(environment.debugging) {
-    //   console.log(new Date() + ": ");
-    //   console.log(object);
+    //   //console.log(new Date() + ": ");
+    //   //console.log(object);
     // }
   }
 }

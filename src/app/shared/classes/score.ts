@@ -36,7 +36,7 @@ export class Score {
       backMarkerHandicap,
       handicapAllocation
     );
-    //console.log(this.playerId + " " + handicap + " " + backMarkerHandicap + " " + handicapAllocation + " " + this.holeIndex + " " + this.grossScore);
+    ////console.log(this.playerId + " " + handicap + " " + backMarkerHandicap + " " + handicapAllocation + " " + this.holeIndex + " " + this.grossScore);
     return this.holeIndex <= handicap ? this.grossScore - 1 : this.grossScore;
   }
 

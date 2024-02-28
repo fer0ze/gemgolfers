@@ -70,7 +70,7 @@ export class DialogClubScheduleComponent implements OnInit {
       description: this.scheduleForm.value.description
     }
 
-    console.log(schedule.matchFormat);
+    //console.log(schedule.matchFormat);
     
     let result = this.facadeService.AddClubSchedule(schedule);
 

@@ -116,17 +116,17 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: any) => {
                 this.data = data;
-                console.log(data);
+                //console.log(data);
                 let d = new Date();
                 d.setDate(1);
                 for (let i = 0; i <= 18; i++) {
-                    // console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
+                    // //console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
                     this.labelsE.push(
                         this.monthName[d.getMonth()] + ' ' + d.getFullYear()
                     );
                     d.setMonth(d.getMonth() - 1);
                 }
-                console.log(this.labelsE);
+                //console.log(this.labelsE);
 
                 this.sorts();
                 // this.series[0] = [
@@ -187,7 +187,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         let prevPlayerDate = null;
         let count = 0;
         let match = [];
-        console.log(match);
+        //console.log(match);
         let flag: boolean = true;
 
         for (let item of this.data.player) {
@@ -231,7 +231,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                     let countA = this.labelsE.find((a) => {
                         return a == date;
                     });
-                    console.log(countA);
+                    //console.log(countA);
                     if (countA !== undefined && prevDate == countA) {
                         memCounter++;
                         prevDate = countA;
@@ -255,7 +255,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(rows);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(this.dataMembers);
+        //console.log(this.dataMembers);
 
         for (let items of this.dataMembers) {
             if (items.x.toString().includes('Apr')) {
@@ -280,7 +280,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 //  this.dataMembersC.push(items.y);
             }
         }
-        console.log(this.dataMembers);
+        //console.log(this.dataMembers);
     }
     async toggleDetails(productId: string) {
         // If the product is already selected...
@@ -541,12 +541,12 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 events: {
                     dataPointSelection: (e, chart, options) => {
 
-                        console.log(options);
-                        console.log(this.labelsE[options.dataPointIndex]);
+                        //console.log(options);
+                        //console.log(this.labelsE[options.dataPointIndex]);
                         const { startDate, endDate } = this.getMonthDates(this.labelsE[options.dataPointIndex]);
                         this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
                             subscribe((res) => {
-                                console.log(res);
+                                //console.log(res);
                                 const dialogRef = this.dialog.open(DialogUncompletedComponent, {
                                     data: { players: res.data?.player, key: 'all', date: startDate },
                                 });

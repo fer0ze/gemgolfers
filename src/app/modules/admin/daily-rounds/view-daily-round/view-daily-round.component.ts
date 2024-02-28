@@ -216,7 +216,7 @@ export class ViewDailyRoundComponent implements OnInit {
             });
             this.logger.log('Getting View Daily Rounds Data By Date', "info", this.routeDate);
 
-            console.log(this.routeDate);
+            //console.log(this.routeDate);
 
             of(this.dailyRounds)
                 .pipe()
@@ -234,7 +234,7 @@ export class ViewDailyRoundComponent implements OnInit {
     async getDailyRounds(date) {
         this.isLoading = true;
         let dataPlayers: any;
-        console.log(this.loggedInUser);
+        //console.log(this.loggedInUser);
         if (this.loggedInuser.userRole > 1) {
             dataPlayers = await this.facadeService.getSingleDailyRound(
                 this.loggedInuser.adminClubId,
@@ -258,18 +258,18 @@ export class ViewDailyRoundComponent implements OnInit {
             await this.facadeService.getCourseHoleSetsForCourse(courseId);
         this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
         //this.courseHoleSetNamesDisplay = selectedCourseHoleSet['course_hole_sets'].filter(a=>a.isActive==true);
-        console.log(selectedCourseHoleSet);
+        //console.log(selectedCourseHoleSet);
         this.lenght = dataPlayers.TournamentsQL.length;
         // this.lenght /= 20;
         // this.lenght = Math.ceil(this.lenght);
-        console.log(this.courseHoleSetNames);
-        console.log(dataPlayers);
+        //console.log(this.courseHoleSetNames);
+        //console.log(dataPlayers);
         this.matchPlayData = dataPlayers.TournamentsQL;
         this.matchPlayDataFixed = dataPlayers.TournamentsQL;
         this.matchPlayDataFixed = this.matchPlayDataFixed.sort(
             this.flightComparatorForFixed
         );
-        console.log(this.matchPlayData);
+        //console.log(this.matchPlayData);
 
         this.parseSubscriptionResponse(this.routeDate, false);
     }
@@ -281,11 +281,11 @@ export class ViewDailyRoundComponent implements OnInit {
 
         let tournamentData: any = this.matchPlayData;
 
-        console.log(tournamentData);
+        //console.log(tournamentData);
 
-        console.log(date);
+        //console.log(date);
         let newDate = General.parseToDate(date);
-        console.log(this.datePipe.transform(newDate.toString(), 'yyyy-MM-dd'));
+        //console.log(this.datePipe.transform(newDate.toString(), 'yyyy-MM-dd'));
         let flightDate = this.datePipe.transform(
             newDate.toString(),
             'yyyy-MM-dd'
@@ -297,8 +297,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 flight.FlightsQL[0].date == flightDate
             ) {
                 if (flight.noOfRounds > 0) {
-                    console.log(flight);
-                    console.log(this.filterPlayer);
+                    //console.log(flight);
+                    //console.log(this.filterPlayer);
                     if (this.filterPlayer) {
                         var filteredArray: any = flight.FlightsQL.filter(
                             (element) =>
@@ -373,13 +373,13 @@ export class ViewDailyRoundComponent implements OnInit {
                             });
                             return n;
                         });
-                        console.log(filteredArray);
-                        console.log(filteredArray);
+                        //console.log(filteredArray);
+                        //console.log(filteredArray);
 
-                        console.log(flight.FlightsQL);
+                        //console.log(flight.FlightsQL);
                     }
 
-                    //console.log(this.roundFlights);
+                    ////console.log(this.roundFlights);
 
                     if (this.filterPlayer) {
                         if (filteredArray.length > 0) {
@@ -395,7 +395,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             );
                         }
                     } else {
-                        console.log(flight);
+                        //console.log(flight);
                         this.fPlayer.push(flight.FlightsQL);
                         this.setupMatchplay(
                             this.fPlayer,
@@ -406,7 +406,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     }
                 }
             } else {
-                console.log('Unamatched');
+                //console.log('Unamatched');
             }
         }
     }
@@ -417,7 +417,7 @@ export class ViewDailyRoundComponent implements OnInit {
         roundScore: any[],
         flag: boolean
     ) {
-        console.log(flightsQLs);
+        //console.log(flightsQLs);
 
         for (let flightData of flightsQLs) {
             let flightHeader = await this.setupMatchplayHeader(
@@ -426,7 +426,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 flightData.courseHoleSetsInverted,
                 course
             );
-            console.log(flightHeader);
+            //console.log(flightHeader);
 
             let singleFlight = this.setupSingleFlight(
                 flightData,
@@ -472,22 +472,22 @@ export class ViewDailyRoundComponent implements OnInit {
             this.flightPlayers[this.flightPlayers.length - 1]['ended'] =
                 flightData.ended;
         }
-        console.log('FILTERS' + this.flightPlayers);
+        //console.log('FILTERS' + this.flightPlayers);
         // this.dataSource = new MatTableDataSource(this.flightPlayers);
         // this.dataSource.paginator = this.paginator;
         // this.dataSource.sort = this.sort;
-        console.log(this.dataSource);
+        //console.log(this.dataSource);
     }
 
     setupSingleFlight(flightData, flightHeader, roundScore) {
-        //console.log(flightData);
-        //console.log("Flight ID: " + flightData.id);
+        ////console.log(flightData);
+        ////console.log("Flight ID: " + flightData.id);
         let membersQLs: any = flightData.MembersQL;
         let singleFlight: any[] = [];
 
-        //console.log(par9);
-        //console.log(par18);
-        //console.log(flightData);
+        ////console.log(par9);
+        ////console.log(par18);
+        ////console.log(flightData);
         for (let membersQL of membersQLs) {
             let player: Player = membersQL.PlayerQL;
             let playerScore: any[] = [];
@@ -517,7 +517,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 //   return el.holeNo == (i + 1);
                 // });
 
-                //console.log(courseHole);
+                ////console.log(courseHole);
                 let currentHole = flightHeader.courseHoles9[i]
                     ? flightHeader.courseHoles9[i]
                     : [];
@@ -531,7 +531,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         return a.holeId == (currentHole ? currentHole.id : '');
                     });
                 }
-                //console.log(hole);
+                ////console.log(hole);
 
                 if (hole) {
                     playerHole9Score[i] = hole.grossScore;
@@ -546,31 +546,31 @@ export class ViewDailyRoundComponent implements OnInit {
                     //   return el.holeNo == ((i + 9) + 1);
                     // });
 
-                    //console.log(((i + 9) + 1));
-                    //console.log(courseHole);
+                    ////console.log(((i + 9) + 1));
+                    ////console.log(courseHole);
                     let currentHole = flightHeader.courseHoles18[i]
                         ? flightHeader.courseHoles18[i]
                         : [];
                     let hole;
                     if (roundScore.length > 0) {
                         hole = playerScore[0]['ScoresQL'].find((a) => {
-                            //console.log(a.holeId + "<---->" + courseHole[0].id);
-                            //console.log((courseHole.length > 0)? courseHole[0].id : "");
+                            ////console.log(a.holeId + "<---->" + courseHole[0].id);
+                            ////console.log((courseHole.length > 0)? courseHole[0].id : "");
                             return (
                                 a.holeId == (currentHole ? currentHole.id : '')
                             );
                         });
                     } else {
                         hole = playerScore.find((a) => {
-                            //console.log(a.holeId + "<---->" + courseHole[0].id);
-                            //console.log((courseHole.length > 0)? courseHole[0].id : "");
+                            ////console.log(a.holeId + "<---->" + courseHole[0].id);
+                            ////console.log((courseHole.length > 0)? courseHole[0].id : "");
                             return (
                                 a.holeId == (currentHole ? currentHole.id : '')
                             );
                         });
                     }
 
-                    //console.log(hole);
+                    ////console.log(hole);
 
                     if (hole) {
                         playerHole18Score[i] = hole.grossScore;
@@ -581,8 +581,8 @@ export class ViewDailyRoundComponent implements OnInit {
             }
             let grossTotal: number = gross9Total + gross18Total;
 
-            //console.log(playerHole9Score);
-            //console.log(playerHole18Score);
+            ////console.log(playerHole9Score);
+            ////console.log(playerHole18Score);
             let undoHandicap = membersQL.undoHandicap == 0 ? false : true;
             let LeaderGross: any = {
                 flightId: flightData.id,
@@ -651,7 +651,7 @@ export class ViewDailyRoundComponent implements OnInit {
     }
 
     showDuplicates() {
-        console.log(this.duplicateIds.sort());
+        //console.log(this.duplicateIds.sort());
     }
 
     public getLastHolesTotal(noOfHoles: number, holeScores: any[]): number {
@@ -667,15 +667,15 @@ export class ViewDailyRoundComponent implements OnInit {
 
     private async parseSubscriptionResponse(date, flag): Promise<boolean> {
         this.duplicateIds = [];
-        console.log(date);
+        //console.log(date);
         // let dd = new Date();
         // dd.setDate((General.parseToDate(date)).getDate());
-        // console.log(dd);
+        // //console.log(dd);
         // //this.fDate = date;
         let newDate = General.parseToDate(date);
-        console.log(newDate);
+        //console.log(newDate);
         this.fDate = newDate.toString().substring(0, 16);
-        console.log(this.fDate);
+        //console.log(this.fDate);
 
         this.showtable = false;
         this.isLoading = true;
@@ -699,14 +699,14 @@ export class ViewDailyRoundComponent implements OnInit {
         // }
         // this.matchPlayData = this.matchPlayDataFixed.splice(this.index, end);
         // let tournamentData: any = this.matchPlayData;
-        // console.log(tournamentData);
+        // //console.log(tournamentData);
         let count = 0;
         for (
             this.pageIndex;
             this.pageIndex < this.matchPlayDataFixed.length;
             this.pageIndex++
         ) {
-            console.log(this.pageIndex);
+            //console.log(this.pageIndex);
             count++;
             let flight = this.matchPlayDataFixed[this.pageIndex];
             if (
@@ -751,12 +751,12 @@ export class ViewDailyRoundComponent implements OnInit {
 
                 this.allRoundData = this.flightPlayers;
             } else {
-                console.log('Unamatched');
+                //console.log('Unamatched');
             }
             if (count >= this.pageSize) break;
         }
         this.isLoading = false;
-        console.log('DETAILS' + this.flightPlayers);
+        //console.log('DETAILS' + this.flightPlayers);
         // for (let flight of tournamentData) {
         //   if (flight.FlightsQL.length > 0 && flight.FlightsQL[0].date == date) {
         //     this.setupMatchplayData(
@@ -769,7 +769,7 @@ export class ViewDailyRoundComponent implements OnInit {
 
         //     this.allRoundData = this.flightPlayers;
         //   } else {
-        //     console.log("Unamatched");
+        //     //console.log("Unamatched");
         //   }
         // }
     }
@@ -780,11 +780,11 @@ export class ViewDailyRoundComponent implements OnInit {
         courseHoleSetsInverted: boolean,
         dataLeaderboard
     ) {
-        console.log(courseId);
+        //console.log(courseId);
         // let dataLeaderboard = await this.facadeService.getCourseInformation(
         //   courseId
         // );
-        // console.log(dataLeaderboard);
+        // //console.log(dataLeaderboard);
 
         this.isLoading = false;
         if (dataLeaderboard.HolesQL.length <= 0) return;
@@ -816,7 +816,7 @@ export class ViewDailyRoundComponent implements OnInit {
         let par36: number = 0;
 
         let courseQLs: any = dataLeaderboard;
-        console.log(courseQLs);
+        //console.log(courseQLs);
 
         let holesQLs: any = courseQLs.HolesQL;
 
@@ -832,13 +832,13 @@ export class ViewDailyRoundComponent implements OnInit {
             this.coursesList.push(courseInfo);
         }
 
-        //console.log(this.coursesList)
+        ////console.log(this.coursesList)
         holesQLs = holesQLs.sort(this.Comparator);
 
-        console.log(holesQLs);
+        //console.log(holesQLs);
         //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
         // this.getSelectedCourse("-LUFS3FCQKOGpJ2IEHmf");
-        // console.log(this.courseHoleSetNames);
+        // //console.log(this.courseHoleSetNames);
 
         let holes = this.getHolesSets(
             holeSets,
@@ -846,7 +846,7 @@ export class ViewDailyRoundComponent implements OnInit {
             courseHoleSetsInverted,
             this.courseHoleSetNames
         );
-        console.log(holes);
+        //console.log(holes);
         for (let holeQL of holes) {
             //let teeDistance = JSON.parse(holeQL.teeDistances);
             let teeDistance = holeQL.teeDistances;
@@ -900,17 +900,17 @@ export class ViewDailyRoundComponent implements OnInit {
             parTotal: parTotal,
             yardageTotal: yardageTotal,
         };
-        //console.log(scoreHeader);
+        ////console.log(scoreHeader);
         flightHeader.push(scoreHeader);
-        console.log(scoreHeader);
+        //console.log(scoreHeader);
 
         return scoreHeader;
-        //console.log(this.scoreHeader);
+        ////console.log(this.scoreHeader);
     }
     onPageFired(event) {
         try {
             this.logger.log('Admin click on pagination on View Daily Round', "info", event);
-            console.log(event);
+            //console.log(event);
             this.pageSize = event.pageSize;
             this.pageIndex = event.pageIndex * event.pageSize;
             this.parseSubscriptionResponse(this.routeDate, true);
@@ -934,7 +934,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 return false;
             }
 
-            console.log(this.flightPlayers);
+            //console.log(this.flightPlayers);
 
             this.flightPlayers = [];
             this.parseSubscription(this.fDate);
@@ -956,14 +956,14 @@ export class ViewDailyRoundComponent implements OnInit {
         let holes10to18: boolean = this.hasHoleSet10to18(courseHoleSets);
         let holes19to27: boolean = this.hasHoleSet19to27(courseHoleSets);
         let holes28to36: boolean = this.hasHoleSet28to36(courseHoleSets);
-        console.log(holes1to9);
-        console.log(holes10to18);
-        console.log(holes19to27);
-        console.log(holes28to36);
+        //console.log(holes1to9);
+        //console.log(holes10to18);
+        //console.log(holes19to27);
+        //console.log(holes28to36);
         for (let i = 0; i < holes.length; i++) {
             //int holeNo = holes.get(i).getHoleNo();
             let holeNo: number = holes[i].holeNo;
-            //console.log("holeNo: " + holeNo);
+            ////console.log("holeNo: " + holeNo);
             if (holeNo >= 1 && holeNo <= 9) {
                 if (!holes1to9) {
                     holes.splice(i, 1); //holes.remove(i);
@@ -1005,7 +1005,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 }
             }
         }
-        //console.log(holes);
+        ////console.log(holes);
         let holesCount = holes.length;
         if (holesCount == 9) {
             //Collections.sort(holes, (hole1, hole2) -> hole1.getIndex() - hole2.getIndex());
@@ -1028,7 +1028,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 else h.holeNo = h.holeNo - 9;
             }
         }
-        console.log(holes);
+        //console.log(holes);
     }
     public getHolesSets(
         courseHoleSets: number,
@@ -1069,8 +1069,8 @@ export class ViewDailyRoundComponent implements OnInit {
                     let holesSetB = holesSets.find(
                         (x) => x.holeSets == obj.backId
                     );
-                    console.log(holesSetA);
-                    console.log(holesSetB);
+                    //console.log(holesSetA);
+                    //console.log(holesSetB);
                     let counter = 1;
                     for (let i of holes) {
                         if (holesSetA.id == i.holeSetId) {
@@ -1117,11 +1117,11 @@ export class ViewDailyRoundComponent implements OnInit {
         tournamentId: string
     ) {
         //let findex = 0;
-        // console.log(flightsQLs);
+        // //console.log(flightsQLs);
         this.index = 0;
         for (let flightData of flightsQLs) {
-            //console.log(flightData);
-            //console.log("Flight ID: " + flightData.id);
+            ////console.log(flightData);
+            ////console.log("Flight ID: " + flightData.id);
             let membersQLs: any = flightData.MembersQL;
             let singleFlight: any[] = [];
             let flightHeader = await this.setupMatchplayHeader(
@@ -1130,8 +1130,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 flightData.courseHoleSetsInverted,
                 courseInfo
             );
-            //  console.log(flightHeader);
-            // console.log(flightData);
+            //  //console.log(flightHeader);
+            // //console.log(flightData);
 
             let courseHoleSetTitle;
             if (courseInfo) {
@@ -1142,7 +1142,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     );
                 });
             }
-            // console.log(courseHoleSetTitle);
+            // //console.log(courseHoleSetTitle);
             let index1 = 0;
             for (let membersQL of membersQLs) {
                 let player: Player = membersQL.PlayerQL;
@@ -1192,7 +1192,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             });
                         }
 
-                        //console.log(hole);
+                        ////console.log(hole);
 
                         if (hole) {
                             playerHole9Score[i] = hole.grossScore;
@@ -1212,14 +1212,14 @@ export class ViewDailyRoundComponent implements OnInit {
                             ? flightHeader.courseHoles18[i]
                             : [];
 
-                        //console.log(((i + 9) + 1));
-                        //console.log(courseHole);
+                        ////console.log(((i + 9) + 1));
+                        ////console.log(courseHole);
                         let hole;
                         if (currentHole) {
                             if (roundScore.length > 0) {
                                 hole = playerScore[0]['ScoresQL'].find((a) => {
-                                    //console.log(a.holeId + "<---->" + courseHole[0].id);
-                                    //console.log((courseHole.length > 0)? courseHole[0].id : "");
+                                    ////console.log(a.holeId + "<---->" + courseHole[0].id);
+                                    ////console.log((courseHole.length > 0)? courseHole[0].id : "");
                                     return (
                                         a.holeId ==
                                         (currentHole ? currentHole.id : '')
@@ -1227,8 +1227,8 @@ export class ViewDailyRoundComponent implements OnInit {
                                 });
                             } else {
                                 hole = playerScore.find((a) => {
-                                    //console.log(a.holeId + "<---->" + courseHole[0].id);
-                                    //console.log((courseHole.length > 0)? courseHole[0].id : "");
+                                    ////console.log(a.holeId + "<---->" + courseHole[0].id);
+                                    ////console.log((courseHole.length > 0)? courseHole[0].id : "");
                                     return (
                                         a.holeId ==
                                         (currentHole ? currentHole.id : '')
@@ -1236,7 +1236,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 });
                             }
 
-                            //console.log(hole);
+                            ////console.log(hole);
 
                             if (hole) {
                                 playerHole18Score[i] = hole.grossScore;
@@ -1248,7 +1248,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 }
 
                 let grossTotal: number = gross9Total + gross18Total;
-                // console.log(this.index ,"=", this.dailyData.TournamentsQL[this.index].playingOnWhs)
+                // //console.log(this.index ,"=", this.dailyData.TournamentsQL[this.index].playingOnWhs)
                 let handicap = membersQLs[index1].playingHandicap;
                 for (let obj of this.matchPlayData) {
                     if (obj.id == tournamentId) {
@@ -1261,10 +1261,10 @@ export class ViewDailyRoundComponent implements OnInit {
                     }
                 }
                 //let handicap = membersQLs[index1].playingHandicap; //this.dailyData.TournamentsQL[this.index].playingOnWhs == true ? membersQLs[index1].playingHandicapWhs : membersQLs[index1].playingHandicap;
-                //  console.log(handicap);
+                //  //console.log(handicap);
 
                 index1++;
-                //  console.log(index1);
+                //  //console.log(index1);
                 let undoHandicap = membersQL.undoHandicap == 0 ? false : true;
                 let LeaderGross: any = {
                     flightId: flightData.id,
@@ -1287,14 +1287,14 @@ export class ViewDailyRoundComponent implements OnInit {
                 singleFlight.push(LeaderGross);
             }
             this.index++;
-            //console.log(this.index);
+            ////console.log(this.index);
 
-            //console.log(flightData.courseId + " -" + flightData.courseHoleSets);
+            ////console.log(flightData.courseId + " -" + flightData.courseHoleSets);
 
-            //console.log(flightData.id);
+            ////console.log(flightData.id);
 
             this.flightPlayers.push(singleFlight);
-            //console.log("members addeed");
+            ////console.log("members addeed");
             this.flightPlayers[this.findex]['header'] = flightHeader;
             this.flightPlayers[this.findex]['ended'] = flightData.ended;
             this.flightPlayers[this.findex]['categoryRound'] =
@@ -1316,15 +1316,15 @@ export class ViewDailyRoundComponent implements OnInit {
             this.flightPlayers[this.flightPlayers.length - 1]['membersCount'] =
                 singleFlight ? singleFlight.length : 0;
 
-            //console.log("flight setup");
+            ////console.log("flight setup");
 
-            //console.log(this.flightPlayers[this.findex]);
+            ////console.log(this.flightPlayers[this.findex]);
 
             this.findex++;
         }
 
         this.flightPlayers = this.flightPlayers.sort(this.flightComparator);
-        //  console.log('DETAILS' + this.flightPlayers);
+        //  //console.log('DETAILS' + this.flightPlayers);
         this.dataSource = new MatTableDataSource(this.flightPlayers);
         // this.dataSource.paginator.l = this.paginator;
         // this.dataSource.sort = this.sort;
@@ -1336,13 +1336,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
     async saveFlightScore(flightId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
-        //console.log(flightId);
+        ////console.log(flightId);
 
         let selectedFlight: any = this.flightPlayers.find((a) => {
             return a.flightId == flightId;
         });
 
-        //console.log(selectedFlight);
+        ////console.log(selectedFlight);
 
         let today: Date = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -1388,7 +1388,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         )).value
                     );
 
-                    //console.log(grossScore);
+                    ////console.log(grossScore);
                     if (grossScore) {
                         let playerScore: Score = {
                             playerId: player.playerId,
@@ -1428,9 +1428,9 @@ export class ViewDailyRoundComponent implements OnInit {
                         );
                 }
             }
-            console.log(playerScores);
-            //console.log(playerScoresIds);
-            //console.log(playerEmptyScoresIds);
+            //console.log(playerScores);
+            ////console.log(playerScoresIds);
+            ////console.log(playerEmptyScoresIds);
 
             if (totalPlayed > 0) {
                 for (let id of playerEmptyScoresIds)
@@ -1471,13 +1471,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
     async savePlayerScore(flightId: string, playerId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
-        //console.log(this.flightPlayers);
+        ////console.log(this.flightPlayers);
 
         let selectedFlight: any = this.flightPlayers.find((a) => {
             return a.flightId == flightId;
         });
 
-        //console.log(selectedFlight);
+        ////console.log(selectedFlight);
         //return false;
 
         let today: Date = new Date();
@@ -1505,15 +1505,15 @@ export class ViewDailyRoundComponent implements OnInit {
             courseHoleQLs = courseQLs.course[0].HolesQL;
 
         for (let player of selectedFlight) {
-            //console.log(player.playerId);
+            ////console.log(player.playerId);
 
             if (player.playerId == playerId) {
                 for (let hole of courseHoleQLs) {
                     let holeObj = <HTMLInputElement>(
                         document.getElementById(hole.id + '&' + player.playerId)
                     );
-                    console.log(holeObj);
-                    console.log(holeObj);
+                    //console.log(holeObj);
+                    //console.log(holeObj);
 
                     if (holeObj) {
                         let grossScore = holeObj
@@ -1544,7 +1544,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 .getElementById(hole.id + '&' + player.playerId)
                                 .classList.remove('warn');
 
-                        //console.log(grossScore);
+                        ////console.log(grossScore);
                         if (grossScore) {
                             let playerScore: Score = {
                                 playerId: player.playerId,
@@ -1571,10 +1571,10 @@ export class ViewDailyRoundComponent implements OnInit {
                 }
             }
         }
-        console.log(playerScores);
-        console.log(playerScores);
+        //console.log(playerScores);
+        //console.log(playerScores);
 
-        //console.log(playerScores.length);
+        ////console.log(playerScores.length);
 
         let result: any;
 
@@ -1605,7 +1605,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(async (result) => {
                     if (result) {
                         for (let player of selectedFlight) {
-                            //console.log(player.playerId);
+                            ////console.log(player.playerId);
 
                             if (player.playerId == playerId) {
                                 player.undoHandicap = false;
@@ -1634,7 +1634,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             await this.handicapService
                                 .calculatePlayerHandicap(obj)
                                 .then((response) => {
-                                    console.log(response);
+                                    //console.log(response);
                                 });
                             setTimeout(async () => {
                                 let newObj = {
@@ -1644,10 +1644,10 @@ export class ViewDailyRoundComponent implements OnInit {
                                 await this.handicapService
                                     .calculateHandicap(newObj)
                                     .then((response) => {
-                                        console.log(response);
+                                        //console.log(response);
                                     })
                                     .catch((err) => {
-                                        console.log('error' + err);
+                                        //console.log('error' + err);
                                         this.snackBar.open('Error!.', 'x', {
                                             duration: 5000,
                                         });
@@ -1655,10 +1655,10 @@ export class ViewDailyRoundComponent implements OnInit {
                                 await this.handicapService
                                     .calculateHandicapWHS(newObj)
                                     .then((response) => {
-                                        console.log(response);
+                                        //console.log(response);
                                     })
                                     .catch((err) => {
-                                        console.log('error' + err);
+                                        //console.log('error' + err);
                                         this.snackBar.open('Error!.', 'x', {
                                             duration: 5000,
                                         });
@@ -1687,11 +1687,11 @@ export class ViewDailyRoundComponent implements OnInit {
                     document.getElementById(hole.id + '&' + playerId)
                 )
             )
-                console.log(
-                    (<HTMLInputElement>(
-                        document.getElementById(hole.id + '&' + playerId)
-                    )).value
-                );
+                //console.log(
+                // (<HTMLInputElement>(
+                //     document.getElementById(hole.id + '&' + playerId)
+                // )).value
+                // );
             total9 +=
                 (<HTMLInputElement>(
                     document.getElementById(hole.id + '&' + playerId)
@@ -1734,8 +1734,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 ? Number(gross18total.value)
                 : 0);
         grosstotal.value = total.toString();
-        console.log(total);
-        console.log(total);
+        //console.log(total);
+        //console.log(total);
     }
 
     Comparator(a, b) {
@@ -1749,7 +1749,7 @@ export class ViewDailyRoundComponent implements OnInit {
         return 0;
     }
     flightComparatorForFixed(a, b) {
-        console.log(a);
+        //console.log(a);
 
         var x = a.FlightsQL.length > 0 ? a.FlightsQL[0]['time'] : 0;
 
@@ -1864,28 +1864,28 @@ export class ViewDailyRoundComponent implements OnInit {
     }
 
     public hasHoleSet1to9(courseHoleSets): boolean {
-        //console.log(Constants.Holes1to9);
+        ////console.log(Constants.Holes1to9);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes1to9) != 0
         );
     }
 
     public hasHoleSet10to18(courseHoleSets): boolean {
-        //console.log(Constants.Holes10to18);
+        ////console.log(Constants.Holes10to18);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes10to18) != 0
         );
     }
 
     public hasHoleSet19to27(courseHoleSets): boolean {
-        //console.log(Constants.Holes19to27);
+        ////console.log(Constants.Holes19to27);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes19to27) != 0
         );
     }
 
     public hasHoleSet28to36(courseHoleSets): boolean {
-        //console.log(Constants.Holes28to36);
+        ////console.log(Constants.Holes28to36);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes28to36) != 0
         );
@@ -1893,14 +1893,14 @@ export class ViewDailyRoundComponent implements OnInit {
 
     async redirectCalculation(id) {
         //this.router.navigate(["/tournaments/handicap-whs/" + id]);
-        //console.log(id);
+        ////console.log(id);
         try {
 
             this.logger.log('Handicap Calculation btn click on Daily Round Page', "info", id);
             let selectedFlight: any = this.flightPlayers.find((a) => {
                 return a.flightId == id;
             });
-            console.log(selectedFlight.tournamentId);
+            //console.log(selectedFlight.tournamentId);
 
             let flag: boolean = true;
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
@@ -1918,7 +1918,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 player.playerId,
                                 this.routeDate
                             );
-                        console.log(handicap);
+                        //console.log(handicap);
                         if (handicap && handicap.HandicapHistoryWhsQL.length > 0) {
                             flag = false;
                             break;
@@ -1934,16 +1934,16 @@ export class ViewDailyRoundComponent implements OnInit {
                                 duration: 5000,
                             });
                         } else {
-                            console.log('Handicap Calculation Cancel');
+                            //console.log('Handicap Calculation Cancel');
                         }
                     } else if (result && !flag) {
-                        // console.log(objA);
+                        // //console.log(objA);
                         let playersId = [];
                         for (let item of selectedFlight) {
-                            console.log(item);
+                            //console.log(item);
                             playersId.push(item.playerId);
                         }
-                        console.log(playersId);
+                        //console.log(playersId);
 
                         let isSuccess = <boolean>(
                             await this.facadeService.deletePlayerHandiCal(
@@ -1967,10 +1967,10 @@ export class ViewDailyRoundComponent implements OnInit {
                                         await this.handicapService
                                             .calculateHandicap(obj)
                                             .then((response) => {
-                                                console.log(response);
+                                                //console.log(response);
                                             })
                                             .catch((err) => {
-                                                console.log('error' + err);
+                                                //console.log('error' + err);
                                                 this.snackBar.open('Error!.', 'x', {
                                                     duration: 5000,
                                                 });
@@ -1978,10 +1978,10 @@ export class ViewDailyRoundComponent implements OnInit {
                                         await this.handicapService
                                             .calculateHandicapWHS(obj)
                                             .then((response) => {
-                                                console.log(response);
+                                                //console.log(response);
                                             })
                                             .catch((err) => {
-                                                console.log('error' + err);
+                                                //console.log('error' + err);
                                                 this.snackBar.open('Error!.', 'x', {
                                                     duration: 5000,
                                                 });
@@ -1991,7 +1991,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                         duration: 5000,
                                     });
                                 } else {
-                                    console.log('Handicap Calculation Cancel');
+                                    //console.log('Handicap Calculation Cancel');
                                 }
                             }, 5000);
                         } else {
@@ -2012,7 +2012,7 @@ export class ViewDailyRoundComponent implements OnInit {
         try {
             const combinedData = `flightId=${flightId}, playerId=${playerId}`;
             this.logger.log('Admin click undo Handicap on Daily Round Page', "info", combinedData);
-            console.log(flightId);
+            //console.log(flightId);
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',
                 data: 'Do you want to Undo Handicap?',
@@ -2100,13 +2100,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
             const combinedData = `flightId=${flightId}, tournamentID=${tournamentID}`;
             this.logger.log('Admin click change Hole Set on Daily Round Page', "info", combinedData);
-            console.log(this.flightPlayers);
+            //console.log(this.flightPlayers);
             let flight;
             //let flightData = this.matchPlayData.find(a => a.FlightsQL.some(f => f.id == flightId));
             let updatedData = await this.facadeService.singleRoundFlightsQuery(
                 flightId
             );
-            console.log(updatedData);
+            //console.log(updatedData);
 
             if (!updatedData) return;
             else {
@@ -2114,7 +2114,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     flight = updatedData.FlightsQL[0];
             }
 
-            console.log(flightId);
+            //console.log(flightId);
             this.logger.log('Dailog change Hole Set on Daily Round Page Open', "info");
             const dialogRef = this.dialog.open(DialogChangeCourseHoleSetComponent, {
                 data: {
@@ -2132,16 +2132,16 @@ export class ViewDailyRoundComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe(async (result) => {
-                console.log(result);
+                //console.log(result);
                 if (result) {
+                    ////console.log(result);
                     //console.log(result);
-                    console.log(result);
                     const resultString = JSON.stringify(result);
-                    this.logger.log('Rsult from Dailog change Hole Set on Daily Round Page', "info",resultString);
+                    this.logger.log('Rsult from Dailog change Hole Set on Daily Round Page', "info", resultString);
 
-                    console.log(this.flightPlayers);
+                    //console.log(this.flightPlayers);
                     let splited = result.holeSets.split('_', 2);
-                    console.log(splited);
+                    //console.log(splited);
                     let holeSetsSelection: number = Number(splited[0]);
                     let holeSetsInverted: boolean = splited[1] == 'true';
                     let tee = result.roundTee;
@@ -2160,7 +2160,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                         members
                                     ].playerCategory.toUpperCase()
                             );
-                            console.log(playerTeeId);
+                            //console.log(playerTeeId);
 
                             flightMember = {
                                 flightId: result.members[members].flightId
@@ -2185,7 +2185,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         }
                     }
 
-                    console.log(fMember);
+                    //console.log(fMember);
 
                     let flightScores: Array<Score> = null;
                     let oldHoles: Array<Hole> = null;
@@ -2196,7 +2196,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         flight.courseHoleSetsInverted;
                     let newScores: Array<Score> = new Array<Score>();
 
-                    console.log(flight);
+                    //console.log(flight);
 
                     if (!newFlight && flightId) {
                         if (
@@ -2205,7 +2205,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         ) {
                             // hole sets are changed, check if there are any scores for this flight
                             flightScores = this.getScoresCopy(flight); //flight.ScoresQL;
-                            console.log(flightScores);
+                            //console.log(flightScores);
                             if (flightScores) {
                                 oldHoles = this.getCourseHolesCopy(flightId);
                                 if (oldHoles != null) {
@@ -2213,7 +2213,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 }
                             }
 
-                            console.log(oldHoles);
+                            //console.log(oldHoles);
                             //flight.setCourseHoleSets(holeSetsSelection);
                             //flight.setCourseHoleSetsInverted(holeSetsInverted);
                             if (flightScores != null && oldHoles != null) {
@@ -2231,17 +2231,17 @@ export class ViewDailyRoundComponent implements OnInit {
                                     holeSetsInverted,
                                     holesQLs
                                 );
-                                console.log(newHoles);
+                                //console.log(newHoles);
 
                                 if (newHoles != null) {
                                     //flight.removeExtraHoleSets(newHoles);
                                     for (let score of flightScores) {
-                                        console.log(score);
+                                        //console.log(score);
                                         let holeId: string = score.holeId;
                                         for (let i = 0; i < oldHoles.length; i++) {
-                                            console.log(
-                                                oldHoles[i].id + ' <--> ' + holeId
-                                            );
+                                            //console.log(
+                                            // oldHoles[i].id + ' <--> ' + holeId
+                                            // );
                                             if (oldHoles[i].id == holeId) {
                                                 let newScore: Score = Object.assign(
                                                     {},
@@ -2257,8 +2257,8 @@ export class ViewDailyRoundComponent implements OnInit {
                                             }
                                         }
                                     }
-                                    console.log(flightScores);
-                                    console.log(newScores);
+                                    //console.log(flightScores);
+                                    //console.log(newScores);
                                     if (newScores.length > 0) {
                                         //flightManager.setScoresToDelete(flightScores);
                                         //flightManager.setScoresToInsert(newScores);
@@ -2270,7 +2270,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 let scorePlayerIdsToRemove: string[] = [];
 
                                 for (let oldScore of flightScores) {
-                                    console.log(oldScore);
+                                    //console.log(oldScore);
                                     if (oldScore['DetailQL']) {
                                         let detailId: string =
                                             oldScore['DetailQL'].id;
@@ -2352,7 +2352,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                         deleteMember,
                                         flightId
                                     );
-                                console.log(result);
+                                //console.log(result);
                                 //this.facadeService.updateDailyRoundCourseHoleset(this.tournamentID, flightScores, newScores);
 
                                 if (result) {
@@ -2401,7 +2401,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                     deleteMember,
                                     flightId
                                 );
-                            console.log(result);
+                            //console.log(result);
                             //this.facadeService.updateDailyRoundCourseHoleset(this.tournamentID, flightScores, newScores);
 
                             if (result) {
@@ -2417,15 +2417,15 @@ export class ViewDailyRoundComponent implements OnInit {
                         }
                     }
 
-                    console.log(flightId);
+                    //console.log(flightId);
 
                     // let getCurrentFlight = this.flightPlayers.find((f) => {
                     //   return f.flightId == flightId
                     // });
 
-                    // console.log(getCurrentFlight);
-                    // console.log(result);
-                    // console.log(this.matchPlayData);
+                    // //console.log(getCurrentFlight);
+                    // //console.log(result);
+                    // //console.log(this.matchPlayData);
 
                     //window.location.reload();
 
@@ -2440,14 +2440,14 @@ export class ViewDailyRoundComponent implements OnInit {
 
                     // }
 
-                    // console.log(currentFlight)
+                    // //console.log(currentFlight)
 
                     // let ourFlight = currentFlight.FlightsQL[0];
-                    // console.log(ourFlight)
+                    // //console.log(ourFlight)
 
                     let updatedFlight =
                         await this.facadeService.updatedFlightsQuery(flightId);
-                    console.log(updatedFlight);
+                    //console.log(updatedFlight);
 
                     // let getCurrentFlight = currentFlight;
                     // getCurrentFlight.time = time;
@@ -2460,9 +2460,9 @@ export class ViewDailyRoundComponent implements OnInit {
 
                     // }
 
-                    // console.log(getCurrentFlight);
+                    // //console.log(getCurrentFlight);
 
-                    //console.log(flightData)
+                    ////console.log(flightData)
 
                     let courseHoleSetTitle;
                     if (
@@ -2483,7 +2483,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 }
                             );
                     }
-                    console.log(courseHoleSetTitle);
+                    //console.log(courseHoleSetTitle);
 
                     let flightHeader = await this.setupMatchplayHeader(
                         updatedFlight.FlightsQL[0].courseId,
@@ -2491,16 +2491,16 @@ export class ViewDailyRoundComponent implements OnInit {
                         updatedFlight.FlightsQL[0].courseHoleSetsInverted,
                         updatedFlight.FlightsQL[0].CourseQL
                     );
-                    console.log(flightHeader);
+                    //console.log(flightHeader);
                     let singleFlight = this.setupSingleFlight(
                         updatedFlight.FlightsQL[0],
                         flightHeader,
                         []
                     );
-                    console.log(singleFlight);
+                    //console.log(singleFlight);
 
                     //this.flightPlayers.push(singleFlight);
-                    //console.log(this.flightPlayers)
+                    ////console.log(this.flightPlayers)
 
                     let flightIndex = this.flightPlayers.findIndex(
                         (a) => a.flightId == flightId
@@ -2528,14 +2528,14 @@ export class ViewDailyRoundComponent implements OnInit {
                     ] = singleFlight ? singleFlight.length : 0;
 
                     //this.flightPlayers = this.flightPlayers.sort(this.flightComparator);
-                    console.log(this.flightPlayers);
+                    //console.log(this.flightPlayers);
                 } else {
-                    console.log('else executed');
+                    //console.log('else executed');
                 }
             });
         } catch (error) {
             this.logger.log('Changing Hole Set on Daily Round Data Failed', "error", error.toString());
-      
+
         }
     }
 
@@ -2594,12 +2594,12 @@ export class ViewDailyRoundComponent implements OnInit {
         //   this.coursesList.push(courseInfo);
         // }
 
-        //console.log(this.coursesList);
+        ////console.log(this.coursesList);
 
         holesQLs = holesQLs.sort(this.Comparator);
-        console.log(holesQLs);
-        this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
         //console.log(holesQLs);
+        this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
+        ////console.log(holesQLs);
         for (let holeQL of holesQLs) {
             //let teeDistance = JSON.parse(holeQL.teeDistances);
             let teeDistance = holeQL.teeDistances;
@@ -2607,7 +2607,7 @@ export class ViewDailyRoundComponent implements OnInit {
             if (holeQL.holeNo < 10) {
                 //holeQL.yardage9 = yardage9;
                 //courseHoles9.push(holeQL);
-                //console.log(courseHoleSetsInverted);
+                ////console.log(courseHoleSetsInverted);
                 courseHoles9.push(holeQL);
                 courseHoles.push(holeQL);
             } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
@@ -2638,16 +2638,16 @@ export class ViewDailyRoundComponent implements OnInit {
     }
 
     async getSelectedCourse(course) {
-        console.log(course);
+        //console.log(course);
 
         await this.facadeService
             .getCourseHoleSets(course)
             .subscribe((selectedCourseHoleSet) => {
-                console.log(selectedCourseHoleSet);
+                //console.log(selectedCourseHoleSet);
                 if (selectedCourseHoleSet.course_hole_sets.length > 0) {
                     this.courseHoleSetNames =
                         selectedCourseHoleSet.course_hole_sets;
-                    console.log(this.courseHoleSetNames);
+                    //console.log(this.courseHoleSetNames);
                     //this.showCourseHole = true;
                 } else {
                     //this.showCourseHole = false;
@@ -2658,7 +2658,7 @@ export class ViewDailyRoundComponent implements OnInit {
     async saveFlightChanges(flightId) {
         let currentFlight: any = this.flightCourseHoleSets.get(flightId);
         let flight;
-        console.log(currentFlight);
+        //console.log(currentFlight);
         if (currentFlight) {
             let updatedData = await this.facadeService.singleRoundFlightsQuery(
                 flightId
@@ -2669,12 +2669,12 @@ export class ViewDailyRoundComponent implements OnInit {
                 if (updatedData.FlightsQL.length > 0)
                     flight = updatedData.FlightsQL[0];
             }
-            console.log(flight);
+            //console.log(flight);
 
-            //console.log(result);
-            console.log(this.flightPlayers);
+            ////console.log(result);
+            //console.log(this.flightPlayers);
             let splited = currentFlight.holeSet.split('_', 2);
-            console.log(splited);
+            //console.log(splited);
             let holeSetsSelection: number =
                 splited.length > 0 && splited[0] != ''
                     ? Number(splited[0])
@@ -2704,7 +2704,7 @@ export class ViewDailyRoundComponent implements OnInit {
             //   }
             // }
 
-            console.log(fMember);
+            //console.log(fMember);
 
             let flightScores: Array<Score> = null;
             let oldHoles: Array<Hole> = null;
@@ -2714,7 +2714,7 @@ export class ViewDailyRoundComponent implements OnInit {
             let courseHoleSetsInverted: boolean = flight.courseHoleSetsInverted;
             let newScores: Array<Score> = new Array<Score>();
 
-            console.log(flight);
+            //console.log(flight);
 
             if (!newFlight && flightId) {
                 if (
@@ -2723,7 +2723,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 ) {
                     // hole sets are changed, check if there are any scores for this flight
                     flightScores = this.getScoresCopy(flight); //flight.ScoresQL;
-                    console.log(flightScores);
+                    //console.log(flightScores);
                     if (flightScores) {
                         oldHoles = this.getCourseHolesCopy(flightId);
                         if (oldHoles != null) {
@@ -2731,7 +2731,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         }
                     }
 
-                    console.log(oldHoles);
+                    //console.log(oldHoles);
                     //flight.setCourseHoleSets(holeSetsSelection);
                     //flight.setCourseHoleSetsInverted(holeSetsInverted);
                     if (flightScores != null && oldHoles != null) {
@@ -2749,17 +2749,17 @@ export class ViewDailyRoundComponent implements OnInit {
                             holeSetsInverted,
                             holesQLs
                         );
-                        console.log(newHoles);
+                        //console.log(newHoles);
 
                         if (newHoles != null) {
                             //flight.removeExtraHoleSets(newHoles);
                             for (let score of flightScores) {
-                                console.log(score);
+                                //console.log(score);
                                 let holeId: string = score.holeId;
                                 for (let i = 0; i < oldHoles.length; i++) {
-                                    console.log(
-                                        oldHoles[i].id + ' <--> ' + holeId
-                                    );
+                                    //console.log(
+                                    // oldHoles[i].id + ' <--> ' + holeId
+                                    //     );
                                     if (oldHoles[i].id == holeId) {
                                         let newScore: Score = Object.assign(
                                             {},
@@ -2774,8 +2774,8 @@ export class ViewDailyRoundComponent implements OnInit {
                                     }
                                 }
                             }
-                            console.log(flightScores);
-                            console.log(newScores);
+                            //console.log(flightScores);
+                            //console.log(newScores);
                             if (newScores.length > 0) {
                                 //flightManager.setScoresToDelete(flightScores);
                                 //flightManager.setScoresToInsert(newScores);
@@ -2787,7 +2787,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         let scorePlayerIdsToRemove: string[] = [];
 
                         for (let oldScore of flightScores) {
-                            console.log(oldScore);
+                            //console.log(oldScore);
                             if (oldScore['DetailQL']) {
                                 let detailId: string = oldScore['DetailQL'].id;
                                 if (detailId) scoreDetailsDelete.push(detailId);
@@ -2862,7 +2862,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 deleteMember,
                                 flightId
                             );
-                        console.log(result);
+                        //console.log(result);
                         //this.facadeService.updateDailyRoundCourseHoleset(this.tournamentID, flightScores, newScores);
 
                         if (result) {
@@ -2901,15 +2901,15 @@ export class ViewDailyRoundComponent implements OnInit {
                 }
             }
 
-            console.log(flightId);
+            //console.log(flightId);
 
             // let getCurrentFlight = this.flightPlayers.find((f) => {
             //   return f.flightId == flightId
             // });
 
-            // console.log(getCurrentFlight);
-            // console.log(result);
-            // console.log(this.matchPlayData);
+            // //console.log(getCurrentFlight);
+            // //console.log(result);
+            // //console.log(this.matchPlayData);
 
             //window.location.reload();
 
@@ -2924,14 +2924,14 @@ export class ViewDailyRoundComponent implements OnInit {
 
             // }
 
-            // console.log(currentFlight)
+            // //console.log(currentFlight)
 
             // let ourFlight = currentFlight.FlightsQL[0];
-            // console.log(ourFlight)
+            // //console.log(ourFlight)
 
             let updatedFlight =
                 await this.facadeService.singleRoundFlightsQuery(flightId);
-            console.log(updatedFlight);
+            //console.log(updatedFlight);
 
             // let getCurrentFlight = currentFlight;
             // getCurrentFlight.time = time;
@@ -2944,9 +2944,9 @@ export class ViewDailyRoundComponent implements OnInit {
 
             // }
 
-            // console.log(getCurrentFlight);
+            // //console.log(getCurrentFlight);
 
-            //console.log(flightData)
+            ////console.log(flightData)
 
             let courseHoleSetTitle;
             if (
@@ -2966,7 +2966,7 @@ export class ViewDailyRoundComponent implements OnInit {
                         }
                     );
             }
-            console.log(courseHoleSetTitle);
+            //console.log(courseHoleSetTitle);
 
             let flightHeader = await this.setupMatchplayHeader(
                 updatedFlight.FlightsQL[0].courseId,
@@ -2974,16 +2974,16 @@ export class ViewDailyRoundComponent implements OnInit {
                 updatedFlight.FlightsQL[0].courseHoleSetsInverted,
                 updatedFlight.FlightsQL[0].CourseQL
             );
-            console.log(flightHeader);
+            //console.log(flightHeader);
             let singleFlight = this.setupSingleFlight(
                 updatedFlight.FlightsQL[0],
                 flightHeader,
                 []
             );
-            console.log(singleFlight);
+            //console.log(singleFlight);
 
             //this.flightPlayers.push(singleFlight);
-            //console.log(this.flightPlayers)
+            ////console.log(this.flightPlayers)
 
             let flightIndex = this.flightPlayers.findIndex(
                 (a) => a.flightId == flightId
@@ -3010,7 +3010,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 singleFlight ? singleFlight.length : 0;
 
             //this.flightPlayers = this.flightPlayers.sort(this.flightComparator);
-            console.log(this.flightPlayers);
+            //console.log(this.flightPlayers);
         }
     }
 
@@ -3058,7 +3058,7 @@ export class ViewDailyRoundComponent implements OnInit {
         }
     }
     movetoNewRound(player) {
-        console.log(player);
+        //console.log(player);
         this.createNewRound(player);
     }
 
@@ -3073,8 +3073,8 @@ export class ViewDailyRoundComponent implements OnInit {
                     return a.flightId == player.flightId;
                 });
                 let courseHS = selectedFlight.courseHoleSetKey.split('_', 2);
-                console.log(selectedFlight);
-                console.log(this.fDate);
+                //console.log(selectedFlight);
+                //console.log(this.fDate);
                 const addRound: any = {
                     holeSets: courseHS.length > 0 ? courseHS[0] : 3,
                     holeSetInverted: courseHS.length > 0 ? courseHS[1] : false,
@@ -3084,7 +3084,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     roundDate: this.fDate,
                     //addPlayer : starterFormValue.addPlayer
                 };
-                console.log(addRound);
+                //console.log(addRound);
                 let tournamentFlights: Flight[] = [];
                 let fcnter = 1;
                 // let roundMembers: any[] = [];
@@ -3116,9 +3116,9 @@ export class ViewDailyRoundComponent implements OnInit {
                         data: [],
                     },
                 };
-                console.log(flight);
+                //console.log(flight);
                 tournamentFlights.push(flight);
-                console.log(tournamentFlights);
+                //console.log(tournamentFlights);
                 let newTournamentId = UniqueIdGenerator.generate();
                 let tournament: Tournament = {
                     id: newTournamentId,
@@ -3170,12 +3170,12 @@ export class ViewDailyRoundComponent implements OnInit {
                     flights: tournamentFlights,
                     members: [],
                 };
-                console.log(tournament);
+                //console.log(tournament);
                 let result = <any>(
                     await this.facadeService.addTournament(tournament)
                 );
                 //this.executeStarterCreation(this.starterForm)
-                console.log(result);
+                //console.log(result);
                 if (result) {
                     let eliminated = <any>(
                         await this.facadeService.eliminateRound(
@@ -3196,7 +3196,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             await this.facadeService.singleRoundFlightsQuery(
                                 newFlightId
                             );
-                        console.log(updatedFlight);
+                        //console.log(updatedFlight);
                         let courseHoleSetTitle;
                         if (
                             updatedFlight.FlightsQL[0].CourseQL &&
@@ -3216,22 +3216,22 @@ export class ViewDailyRoundComponent implements OnInit {
                                     }
                                 );
                         }
-                        console.log(courseHoleSetTitle);
+                        //console.log(courseHoleSetTitle);
                         let flightHeader = await this.setupMatchplayHeader(
                             updatedFlight.FlightsQL[0].courseId,
                             updatedFlight.FlightsQL[0].courseHoleSets,
                             updatedFlight.FlightsQL[0].courseHoleSetsInverted,
                             updatedFlight.FlightsQL[0].CourseQL
                         );
-                        console.log(flightHeader);
+                        //console.log(flightHeader);
                         let singleFlight = this.setupSingleFlight(
                             updatedFlight.FlightsQL[0],
                             flightHeader,
                             []
                         );
-                        console.log(singleFlight);
+                        //console.log(singleFlight);
                         //this.flightPlayers.push(singleFlight);
-                        //console.log(this.flightPlayers)
+                        ////console.log(this.flightPlayers)
                         let newFlightData = singleFlight;
                         newFlightData['header'] = flightHeader;
                         newFlightData['flightId'] = newFlightId;
@@ -3269,7 +3269,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     //this.router.navigate(['/daily-rounds/']);
                 }
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3278,9 +3278,9 @@ export class ViewDailyRoundComponent implements OnInit {
         try {
             const combinedData = `flightId=${flightId}, playerId=${playerId}`;
             this.logger.log('Admin click delete player on Daily Round Page', "info", combinedData);
-            console.log(tournamentId);
-            console.log(flightId);
-            console.log(playerId);
+            //console.log(tournamentId);
+            //console.log(flightId);
+            //console.log(playerId);
 
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',
@@ -3319,13 +3319,13 @@ export class ViewDailyRoundComponent implements OnInit {
                                 await this.handicapService
                                     .calculateHandicap(newObj)
                                     .then((response) => {
-                                        console.log(response);
+                                        //console.log(response);
                                         this.snackBar.open('Congu-Handicap Recalculated.', 'x', {
                                             duration: 1000,
                                         });
                                     })
                                     .catch((err) => {
-                                        console.log('error' + err);
+                                        //console.log('error' + err);
                                         this.snackBar.open('Congu-Handicap Error!.', 'x', {
                                             duration: 1000,
                                         });
@@ -3333,13 +3333,13 @@ export class ViewDailyRoundComponent implements OnInit {
                                 await this.handicapService
                                     .calculateHandicapWHS(newObj)
                                     .then((response) => {
-                                        console.log(response);
+                                        //console.log(response);
                                         this.snackBar.open('WHS-Handicap Recalculated.', 'x', {
                                             duration: 1000,
                                         });
                                     })
                                     .catch((err) => {
-                                        console.log('error' + err);
+                                        //console.log('error' + err);
                                         this.snackBar.open('WHS-Handicap Error!.', 'x', {
                                             duration: 1000,
                                         });

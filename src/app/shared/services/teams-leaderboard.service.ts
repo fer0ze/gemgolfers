@@ -21,8 +21,8 @@ export class TeamsLeaderboardService {
       }
         })
         .subscribe(({ data }) => {
-          //console.log(data.tournament_by_pk);
-          //console.log("data gotten");
+          ////console.log(data.tournament_by_pk);
+          ////console.log("data gotten");
           if (!data) {
               resolve(null);
             } else {

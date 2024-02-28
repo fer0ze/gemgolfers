@@ -102,12 +102,12 @@ export class PlayerHandicapWhsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -125,12 +125,12 @@ export class PlayerHandicapWhsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -147,12 +147,12 @@ export class PlayerHandicapWhsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -168,12 +168,12 @@ export class PlayerHandicapWhsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });

@@ -102,8 +102,8 @@ export class PlayerHandicapWhsAllRounds {
     }
 
     public setAdjustedScores(adjustedScores: number, round: number) {
-        //console.log(adjustedScores);
-        //console.log(this.adjustedScores);
+        ////console.log(adjustedScores);
+        ////console.log(this.adjustedScores);
         if (this.adjustedScores.length < round) {
             return;
         }

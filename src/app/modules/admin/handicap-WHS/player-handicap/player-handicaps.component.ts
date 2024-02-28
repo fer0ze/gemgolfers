@@ -131,7 +131,7 @@ export class PlayerHandicapComponent implements OnInit {
                     ? this.loggedInuser.membership[0].club
                     : null;
 
-            console.log(clubInfo);
+            //console.log(clubInfo);
 
             this.clubTitle = clubInfo ? clubInfo.name : '';
         }
@@ -141,7 +141,7 @@ export class PlayerHandicapComponent implements OnInit {
             // this.currentPlayerHandicap = <Player>(
             //   await this.facadeService.getPlayerByID(this.playerID)
             // );
-            // console.log(this.currentPlayerHandicap);
+            // //console.log(this.currentPlayerHandicap);
             let club: any =
                 this.loggedInuser.membership.length > 0
                     ? this.loggedInuser.membership[0].club
@@ -157,19 +157,19 @@ export class PlayerHandicapComponent implements OnInit {
             let playerscore = <Player>(
                 await this._facadeService.getPlayerByIDDetailForm(this.playerID)
             );
-            console.log(playerscore);
+            //console.log(playerscore);
 
             this.playerWHS = await this._facadeService.getPlayerWHS(
                 this.playerID
             );
             let membersQL = await this._facadeService.getPlayerFlights(this.playerID);
             this.memberQLs = membersQL.MemberQL;
-            //console.log(this.playerWHS);
+            ////console.log(this.playerWHS);
             this.currentPlayer = playerscore['player'];
 
             this.playerWHSHistory =
                 this.playerWHS['HandicapHistoryWhsQL'];
-            console.log(this.playerWHSHistory);
+            //console.log(this.playerWHSHistory);
 
             this.usedForHandicap =
                 this.playerWHSHistory &&
@@ -183,7 +183,7 @@ export class PlayerHandicapComponent implements OnInit {
                 this.playerHandicapWhsList.length > 0
                     ? this.playerHandicapWhsList[0].handicapDifferential
                     : null;
-            console.log('Lowest Handicap=' + this.topDiff20);
+            //console.log('Lowest Handicap=' + this.topDiff20);
 
             // this.topDiff = this.playerHandicapWhsList.sort(
             //     this.ComparatorHandicapDifferentialAsc
@@ -234,14 +234,14 @@ export class PlayerHandicapComponent implements OnInit {
             //     this.topDiff.length > this.handicapsToUse
             //         ? this.topDiff[this.handicapsToUse].handicapDifferential
             //         : 0;
-            // console.log('TopDiffer' + this.topDiff);
-            // console.log('Available Handicaps' + this.playerHandicapWhsList);
-            // console.log('Available Handicaps' + this.handicapsAvailable);
-            // console.log('Available Handicaps' + this.handicapsToUse);
-            console.log(this.playerWHSHistory);
+            // //console.log('TopDiffer' + this.topDiff);
+            // //console.log('Available Handicaps' + this.playerHandicapWhsList);
+            // //console.log('Available Handicaps' + this.handicapsAvailable);
+            // //console.log('Available Handicaps' + this.handicapsToUse);
+            //console.log(this.playerWHSHistory);
             // let slicedWhs = this.playerWHSHistory.slice(0, 20);
             const slicedWhs = this.playerWHSHistory;
-            console.log(slicedWhs);
+            //console.log(slicedWhs);
             this.memerbershipNumber =
                 this.currentPlayer[0].membershipNumber;
             this.fullName =
@@ -259,13 +259,13 @@ export class PlayerHandicapComponent implements OnInit {
                     slicedWhs[index + 1].highlight = true;
                 }
             }
-            console.log(slicedWhs);
+            //console.log(slicedWhs);
             this.length = slicedWhs.length;
 
             this.personLeads = slicedWhs.filter(function (a) {
                 return !a.is_combined;
             }, 0);
-            console.log(this.personLeads);
+            //console.log(this.personLeads);
 
             this.WHSSource = new MatTableDataSource(this.personLeads);
 
@@ -276,8 +276,8 @@ export class PlayerHandicapComponent implements OnInit {
                 courseRating
             );
 
-            console.log(this.playerWHS);
-            console.log(this.playerWHSRound);
+            //console.log(this.playerWHS);
+            //console.log(this.playerWHSRound);
             let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
             let rating = this.playerWHSRound['course_rating'];
             for (let item of rating) {
@@ -316,11 +316,11 @@ export class PlayerHandicapComponent implements OnInit {
                     this.balckVetTeeHI = Math.round(this.balckVetTeeHI);
                 }
             }
-            console.log(this.redTeeHI);
-            console.log(this.balckVetTeeHI);
-            console.log(this.blackTeeHI);
-            console.log(this.whiteTeeHI);
-            console.log(this.blueTeeHI);
+            //console.log(this.redTeeHI);
+            //console.log(this.balckVetTeeHI);
+            //console.log(this.blackTeeHI);
+            //console.log(this.whiteTeeHI);
+            //console.log(this.blueTeeHI);
             this.showTable = Promise.resolve(true);
             let newScores: any[] = [];
 
@@ -355,7 +355,7 @@ export class PlayerHandicapComponent implements OnInit {
         return 0;
     }
     isHandicapUsed(id: string) {
-        //console.log(this.usedForHandicap);
+        ////console.log(this.usedForHandicap);
         let used: boolean = this.usedForHandicap.some((handicap) => {
             return (
                 handicap.used_handicap_id == id ||
@@ -371,7 +371,7 @@ export class PlayerHandicapComponent implements OnInit {
     }
 
     isPanelty(flight) {
-        //console.log(this.usedForHandicap);
+        ////console.log(this.usedForHandicap);
         if (flight && flight[0] != undefined) {
             let used: boolean = flight[0].members.some((element) => {
                 return (
@@ -483,15 +483,15 @@ export class PlayerHandicapComponent implements OnInit {
                     a++;
                     if (data.row.raw[9] == true && a == 5) {
                         data.cell.styles.fillColor = [249, 187, 147];
-                        //console.log(1);
+                        ////console.log(1);
                         //a=false;
                     }
                     if (data.row.index == 1) {
-                        //console.log('assssssssssss');
+                        ////console.log('assssssssssss');
                     }
-                    console.log(data.row.index);
+                    //console.log(data.row.index);
 
-                    //console.log(a);
+                    ////console.log(a);
                 },
             });
             // doc.autoTable({
@@ -509,7 +509,7 @@ export class PlayerHandicapComponent implements OnInit {
         //doc.save('flights.pdf');
     }
     playingTee(id: string) {
-        // console.log(id);
+        // //console.log(id);
         let used = this.memberQLs.find((handicap) => {
             return handicap.FlightQL.tournamentId == id;
         });

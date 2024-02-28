@@ -95,11 +95,11 @@ export class AddDailyRoundComponent implements OnInit {
     ) { }
 
     ngAfterViewInit(): void {
-        //console.log("Init");
+        ////console.log("Init");
     }
 
     async ngOnInit() {
-        //console.log(this.route.snapshot.paramMap.get("id"));
+        ////console.log(this.route.snapshot.paramMap.get("id"));
         try {
             this.logger.log('Admin Come to Add Daily Round Page', "info");
             this.logger.log('Getting Add Daily Round Data', "info", "Today");
@@ -125,7 +125,7 @@ export class AddDailyRoundComponent implements OnInit {
             }
 
             this.clubID = this.loggedInuser.membership[0].club;
-            console.log(this.clubID);
+            //console.log(this.clubID);
 
             this.currentDate = new Date();
             this.getSelectedCourse(
@@ -150,7 +150,7 @@ export class AddDailyRoundComponent implements OnInit {
                 //addPlayer: new FormControl('')
             });
 
-            console.log(this.starterForm.value);
+            //console.log(this.starterForm.value);
         } catch (error) {
             this.logger.log('Getting Daily Round Data Failed', "error", error.toString());
 
@@ -158,18 +158,18 @@ export class AddDailyRoundComponent implements OnInit {
     }
 
     changeFlight(item) {
-        //console.log("Selected value: " + item.value);
+        ////console.log("Selected value: " + item.value);
         this.selectedCourseHoleSet = item.value;
-        console.log(this.selectedCourseHoleSet);
+        //console.log(this.selectedCourseHoleSet);
     }
 
     getSelectedCourse(course) {
         this.facadeService
             .getCourseHoleSets(course)
             .subscribe((selectedCourseHoleSet) => {
-                console.log(selectedCourseHoleSet);
+                //console.log(selectedCourseHoleSet);
                 if (selectedCourseHoleSet.course_hole_sets.length > 0) {
-                    console.log(selectedCourseHoleSet);
+                    //console.log(selectedCourseHoleSet);
 
                     this.courseHoleSetNames =
                         selectedCourseHoleSet.course_hole_sets.filter(
@@ -229,7 +229,7 @@ export class AddDailyRoundComponent implements OnInit {
                 return;
             }
         }
-        console.log(starterFormValue.roundDate);
+        //console.log(starterFormValue.roundDate);
         const addRound: AddDailyRound = {
             holeSets: starterFormValue.holeSets,
             //startingHole: starterFormValue.startingHole,
@@ -239,7 +239,7 @@ export class AddDailyRoundComponent implements OnInit {
             //addPlayer : starterFormValue.addPlayer
         };
 
-        console.log(addRound);
+        //console.log(addRound);
 
         let tournamentFlights: Flight[] = [];
         let fcnter = 0;
@@ -247,7 +247,7 @@ export class AddDailyRoundComponent implements OnInit {
 
         for (let member of this.flightMembers) {
             let playerTee: any = this.playerTees.get(member.playerId);
-            console.log(playerTee);
+            //console.log(playerTee);
             let Tee;
             if (playerTee == undefined) {
                 Tee = starterFormValue.roundTee
@@ -269,7 +269,7 @@ export class AddDailyRoundComponent implements OnInit {
                     : 1,
                 guest: null,
             };
-            console.log(flightMember);
+            //console.log(flightMember);
 
             roundMembers.push(flightMember);
         }
@@ -282,13 +282,13 @@ export class AddDailyRoundComponent implements OnInit {
         let roundTeeId: any = General.getCourseTeeId(roundTee)
             ? General.getCourseTeeId(roundTee).id
             : 1;
-        console.log(roundTeeId.id);
+        //console.log(roundTeeId.id);
 
-        console.log(roundTeeId.result);
+        //console.log(roundTeeId.result);
         let index = this.selectedCourseHoleSet.indexOf('_');
-        // console.log(this.selectedCourseHoleSet);
-        // console.log(this.selectedCourseHoleSet.substring(0, index));
-        // console.log(this.selectedCourseHoleSet.substring(++index));
+        // //console.log(this.selectedCourseHoleSet);
+        // //console.log(this.selectedCourseHoleSet.substring(0, index));
+        // //console.log(this.selectedCourseHoleSet.substring(++index));
 
         let flight: any = {
             id: UniqueIdGenerator.generate(),
@@ -316,9 +316,9 @@ export class AddDailyRoundComponent implements OnInit {
             },
         };
 
-        console.log(flight);
+        //console.log(flight);
         tournamentFlights.push(flight);
-        console.log(tournamentFlights);
+        //console.log(tournamentFlights);
 
         let tournament: Tournament = {
             id: this.tournamentID,
@@ -369,12 +369,12 @@ export class AddDailyRoundComponent implements OnInit {
             members: [],
         };
 
-        console.log(tournament);
+        //console.log(tournament);
 
         let result = <any>await this.facadeService.addTournament(tournament);
         //this.executeStarterCreation(this.starterForm)
         this.currentTournament = tournament;
-        console.log(result);
+        //console.log(result);
 
         if (result) {
             this.snackBar.open('Daily Round has been setup.', 'x', {
@@ -391,14 +391,14 @@ export class AddDailyRoundComponent implements OnInit {
 
     async searchPlayer(query) {
         let player;
-        console.log(this.starterForm.value);
+        //console.log(this.starterForm.value);
 
         if (query) {
             player = <Player[]>(
                 await this.facadeService.getPlayerByMembershipNumber(query)
             );
 
-            console.log(this.clubID['id']);
+            //console.log(this.clubID['id']);
             let date = this.starterForm.value.roundDate;
             if (!player || player.length == 0) {
                 player = <Player>(
@@ -409,7 +409,7 @@ export class AddDailyRoundComponent implements OnInit {
                     )
                 );
             }
-            console.log(this.datepipe.transform(date.toString(), 'yyyy-MM-dd'));
+            //console.log(this.datepipe.transform(date.toString(), 'yyyy-MM-dd'));
 
             if (player.length == 1) {
                 let founded = await this.facadeService.getPlayerTodayRound(
@@ -432,7 +432,7 @@ export class AddDailyRoundComponent implements OnInit {
                 founded = this.tournamentMembers.filter((a) => {
                     return a.id == player[0].id;
                 });
-                console.log(founded);
+                //console.log(founded);
 
                 if (founded.length == 0) {
                     if (this.flightMembers.length > 4) {
@@ -495,16 +495,16 @@ export class AddDailyRoundComponent implements OnInit {
                 );
 
                 dialogRef.afterClosed().subscribe(async (result) => {
-                    console.log(result);
+                    //console.log(result);
                     if (result) {
-                        //console.log("record deleted.");
-                        console.log(result);
-                        console.log(
-                            this.datepipe.transform(
-                                date.toString(),
-                                'yyyy-MM-dd'
-                            )
-                        );
+                        ////console.log("record deleted.");
+                        //console.log(result);
+                        //console.log(
+                        //     this.datepipe.transform(
+                        //         date.toString(),
+                        //         'yyyy-MM-dd'
+                        //     )
+                        // );
 
                         let founded =
                             await this.facadeService.getPlayerTodayRound(
@@ -530,7 +530,7 @@ export class AddDailyRoundComponent implements OnInit {
                         founded = this.tournamentMembers.filter((a) => {
                             return a.id == result.player.id;
                         });
-                        console.log(founded);
+                        //console.log(founded);
 
                         if (founded.length == 0) {
                             if (this.flightMembers.length > 4) {
@@ -550,8 +550,8 @@ export class AddDailyRoundComponent implements OnInit {
                                 attendance: false,
                             };
 
-                            console.log(this.flightMembers);
-                            console.log(this.tournamentMembers);
+                            //console.log(this.flightMembers);
+                            //console.log(this.tournamentMembers);
                             let playerTee = result.player.playerCategory;
                             if (playerTee == 'Senior Amateurs') {
                                 playerTee = 'Seniors';
@@ -589,24 +589,24 @@ export class AddDailyRoundComponent implements OnInit {
                                 playingTee: playerTee,
                             };
 
-                            console.log(obj);
-                            console.log(this.tournamentMembers);
+                            //console.log(obj);
+                            //console.log(this.tournamentMembers);
 
                             this.tournamentMembers.push(obj);
                             this.flightMembers.push(member);
 
-                            console.log(this.tournamentMembers);
-                            console.log(this.flightMembers);
+                            //console.log(this.tournamentMembers);
+                            //console.log(this.flightMembers);
                             // if(this.tournamentMembers.length==2 && this.last==true)
                             // {
                             //   this.tournamentMembers.splice(0,1);
-                            //   console.log(this.tournamentMembers);
-                            //   console.log(this.flightMembers);
+                            //   //console.log(this.tournamentMembers);
+                            //   //console.log(this.flightMembers);
                             //   //this.flightMembers.splice(0,1);
 
                             // }
 
-                            console.log(this.tournamentMembers);
+                            //console.log(this.tournamentMembers);
                             this.syncTournamentMembers();
                             this.snackBar.open(
                                 'Player has been added in the list.',
@@ -625,7 +625,7 @@ export class AddDailyRoundComponent implements OnInit {
                             );
                         }
                     } else {
-                        //console.log("cancel delete action");
+                        ////console.log("cancel delete action");
                     }
                 });
             }
@@ -640,7 +640,7 @@ export class AddDailyRoundComponent implements OnInit {
             .subscribe(
                 (data) => {
                     this.isLoading = false;
-                    console.log(this.tournamentMembers);
+                    //console.log(this.tournamentMembers);
                     this.tournamentMembers.forEach(
                         (obj, i) =>
                         (obj['fullName'] =
@@ -651,7 +651,7 @@ export class AddDailyRoundComponent implements OnInit {
                     );
                     this.membersSource.sort = this.Memsort;
                     this.membersSource.paginator = this.Mempaginator;
-                    console.log(this.membersSource);
+                    //console.log(this.membersSource);
 
                     //this.updateTMCategorySelection();
                 },
@@ -662,26 +662,26 @@ export class AddDailyRoundComponent implements OnInit {
     removePlayer(playerId: string) {
         this.logger.log('Player remove from Add Daily Round', "info", playerId);
 
-        console.log(playerId);
-        console.log(this.tournamentMembers);
+        //console.log(playerId);
+        //console.log(this.tournamentMembers);
         let data: any = this.tournamentMembers;
-        console.log(data);
+        //console.log(data);
         let DelplayerIndex: any = data.findIndex((a) => {
             return a.id == playerId;
         });
-        console.log(DelplayerIndex);
+        //console.log(DelplayerIndex);
 
         let DelplayerInfo: any = data.filter((a) => {
             return a.id == playerId;
         });
-        console.log(DelplayerInfo);
+        //console.log(DelplayerInfo);
 
-        //console.log(flight + "<- ->" + player);
+        ////console.log(flight + "<- ->" + player);
 
-        //console.log("record deleted.");
+        ////console.log("record deleted.");
         data.splice(DelplayerIndex, 1);
         //data.splice(playerId, 1);
-        console.log(data);
+        //console.log(data);
         //this.tournamentMembers.splice(0,0,DelplayerInfo[0])
 
         this.tournamentMembers = data;
@@ -690,23 +690,23 @@ export class AddDailyRoundComponent implements OnInit {
                 return a.playerId == data[0].id;
             });
             this.flightMembers = flightDelMem;
-            console.log(this.flightMembers);
-            console.log(this.tournamentMembers);
+            //console.log(this.flightMembers);
+            //console.log(this.tournamentMembers);
 
             this.syncTournamentMembers();
         } else {
             this.flightMembers = [];
             this.tournamentMembers = [];
             this.last = true;
-            console.log(this.flightMembers);
-            console.log(this.tournamentMembers);
+            //console.log(this.flightMembers);
+            //console.log(this.tournamentMembers);
 
             this.syncTournamentMembers();
         }
 
         //this.facadeService.deleteTournamentMember(this.tournamentID, playerId);
         // } else {
-        //   console.log("cancel delete action");
+        //   //console.log("cancel delete action");
         // }
     }
     addPlayer() {
@@ -715,22 +715,22 @@ export class AddDailyRoundComponent implements OnInit {
         // });
         // dialogRef.afterClosed().subscribe((result) => {
         //   if (result) {
-        //     //console.log("record deleted.");
-        //     //console.log(result);
+        //     ////console.log("record deleted.");
+        //     ////console.log(result);
         //     this.flightMembers.push(result);
         //     this.tournamentMembers.push(result);
-        //     console.log(this.flightMembers);
-        //     console.log(this.tournamentMembers);
-        //     //console.log(this.clubMembers);
+        //     //console.log(this.flightMembers);
+        //     //console.log(this.tournamentMembers);
+        //     ////console.log(this.clubMembers);
         //     this.syncTournamentMembers();
         //   } else {
-        //     //console.log("cancel delete action");
+        //     ////console.log("cancel delete action");
         //   }
         // });
     }
 
     selectedTee(event, playerId) {
-        console.log(playerId);
+        //console.log(playerId);
         let target = event.source.selected._element.nativeElement;
         let selectedData = {
             value: event.value,
@@ -738,7 +738,7 @@ export class AddDailyRoundComponent implements OnInit {
         };
 
         this.playerTees.set(playerId, selectedData);
-        console.log(this.playerTees);
+        //console.log(this.playerTees);
     }
 
     //  async executeStarterCreation(starterFormValue:any)  {
@@ -755,7 +755,7 @@ export class AddDailyRoundComponent implements OnInit {
 
     //     };
 
-    //     console.log(addRound)
+    //     //console.log(addRound)
 
     //     let tournamentFlights: Flight[] = [];
     //     let fcnter = 0;
@@ -782,9 +782,9 @@ export class AddDailyRoundComponent implements OnInit {
     //           }
     //         }
 
-    //         console.log(flight);
+    //         //console.log(flight);
     //         tournamentFlights.push(flight);
-    //         console.log(tournamentFlights);
+    //         //console.log(tournamentFlights);
 
     //     let result = <any>await this.facadeService.createNextRoundFlights(tournamentFlights);
 

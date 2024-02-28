@@ -103,11 +103,11 @@ export class ViewCourseComponent implements OnInit {
 
     async ngOnInit() {
         this.listCountries = Country.getCity('DEFAULT');
-        console.log(this.listCountries);
+        //console.log(this.listCountries);
         this.route.paramMap.subscribe((params) => {
             this.courseID = params.get("id");
         });
-        console.log(this.courseID);
+        //console.log(this.courseID);
         this.courseForm = new FormGroup({
             courseName: new FormControl("", [
                 Validators.required,
@@ -141,7 +141,7 @@ export class ViewCourseComponent implements OnInit {
             this.courseData = await this.facadeService.getCourseByID(
                 this.courseID
             );
-            console.log(this.courseData);
+            //console.log(this.courseData);
             this.courseTitle = this.courseData['course'][0].name;
             this.countryName = this.courseData['course'][0].country;
             this.cityName = this.courseData['course'][0].city;
@@ -155,7 +155,7 @@ export class ViewCourseComponent implements OnInit {
             this.url = 'golfcourse.jpg';
             // this.setHoles(this.NoOfHoles);
             this.panels = (General.getGolfCourseFeatures(this.loggedInuser.userRole));
-            console.log(this.panels);
+            //console.log(this.panels);
 
 
         } else {
@@ -170,7 +170,7 @@ export class ViewCourseComponent implements OnInit {
 
         }
         this.courseForm.get('city').setValue(this.listCity[1]);
-        console.log(this.listCity);
+        //console.log(this.listCity);
 
     }
 
@@ -253,7 +253,7 @@ export class ViewCourseComponent implements OnInit {
      */
     async addIntialsTees() {
         let tee = await this.facadeService.getTeesOfCourse(this.courseID);
-        console.log(tee);
+        //console.log(tee);
 
         if (tee['course_tees'].length > 0) {
             for (let obj of tee['course_tees']) {
@@ -265,7 +265,7 @@ export class ViewCourseComponent implements OnInit {
                 };
                 this.Tee.push(tee);
             }
-            console.log(this.Tee);
+            //console.log(this.Tee);
 
             this.tees = [];
             this.tees =
@@ -303,7 +303,7 @@ export class ViewCourseComponent implements OnInit {
         this.Tee[this.Tee.length - 1]['tee_id'] = '';
         this.Tee[this.Tee.length - 1]['name_by_club'] = '';
         this.Tee[this.Tee.length - 1]['color'] = '';
-        console.log(this.Tee);
+        //console.log(this.Tee);
     }
     /**
      * onTeeColorChange
@@ -348,9 +348,9 @@ export class ViewCourseComponent implements OnInit {
         this.deleteTsee = this.Tee.filter((a) => a.id != teeID);
         let deletedTee = this.Tee.filter((a) => a.id == teeID);
         this.teeRemove.push(deletedTee[0]);
-        console.log(this.teeRemove);
-        console.log(this.deleteTsee);
-        console.log(this.Tee);
+        //console.log(this.teeRemove);
+        //console.log(this.deleteTsee);
+        //console.log(this.Tee);
 
         this.Tee = this.deleteTsee;
     }
@@ -362,9 +362,9 @@ export class ViewCourseComponent implements OnInit {
         let teeObj = [];
         let teeObjtoDelete = [];
 
-        console.log(this.teeRemove);
-        console.log(this.deleteTsee);
-        console.log(this.Tee);
+        //console.log(this.teeRemove);
+        //console.log(this.deleteTsee);
+        //console.log(this.Tee);
 
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -395,8 +395,8 @@ export class ViewCourseComponent implements OnInit {
             }
         }
 
-        console.log(teeObjtoDelete);
-        console.log(teeObj);
+        //console.log(teeObjtoDelete);
+        //console.log(teeObj);
 
         let saveTeeColor = <boolean>(
             await this.facadeService.saveTeeColor(teeObj)
@@ -429,9 +429,9 @@ export class ViewCourseComponent implements OnInit {
     ////*******************************************************************TEE HOLES SAVE**************************************************************************************** */
 
     async setHoles(Number: number) {
-        console.log(Number);
+        //console.log(Number);
         let holes = await this.facadeService.getCourseHole(this.courseID);
-        console.log(holes['HolesQL']);
+        //console.log(holes['HolesQL']);
 
         if (holes['HolesQL'].length > 0) {
             let holeCount = holes['HolesQL'][0].holes;
@@ -575,7 +575,7 @@ export class ViewCourseComponent implements OnInit {
      * onParInput
      */
     public onParInput(par: any, holeNo: any) {
-        console.log(holeNo);
+        //console.log(holeNo);
         let index = 0;
         if (holeNo <= 9) {
             for (let obj of this.holeSetfor9) {
@@ -619,7 +619,7 @@ export class ViewCourseComponent implements OnInit {
      * onIndexInput
      */
     public onIndexInput(val: any, holeNo: any) {
-        console.log(holeNo);
+        //console.log(holeNo);
 
         let index = 0;
         if (holeNo <= 9) {
@@ -660,7 +660,7 @@ export class ViewCourseComponent implements OnInit {
      * onIndexInputForWomen
      */
     public onIndexInputForWomen(val: any, holeNo: any) {
-        console.log(holeNo);
+        //console.log(holeNo);
 
         let index = 0;
         if (holeNo <= 9) {
@@ -715,7 +715,7 @@ event   */
             this.holeSetfor36.forEach(function (element) {
                 element['indexForW'] = null;
             });
-            console.log(this.holeSetfor9);
+            //console.log(this.holeSetfor9);
         } else {
             this.showholeindexforWomen = false;
             this.holeSetfor9.forEach(function (element) {
@@ -730,11 +730,11 @@ event   */
             this.holeSetfor36.forEach(function (element) {
                 delete element['indexForW'];
             });
-            console.log(this.holeSetfor9);
+            //console.log(this.holeSetfor9);
         }
     }
     selectionChangeDistance(event) {
-        console.log(event);
+        //console.log(event);
 
     }
     /**
@@ -878,8 +878,8 @@ event   */
                 holesToSave.push(tee);
             }
         }
-        console.log(holesToSave);
-        console.log(holesSet);
+        //console.log(holesToSave);
+        //console.log(holesSet);
 
         let succees = <boolean>(
             await this.facadeService.saveCourseHoles(holesToSave, holesSet)
@@ -928,7 +928,7 @@ event   */
                     let frontId = this.holeSetforSelect.find(
                         (a) => a.id == obj.frontId
                     );
-                    //console.log(id);
+                    ////console.log(id);
 
                     let holes = {
                         id: obj.holeSets,
@@ -953,8 +953,8 @@ event   */
             }
         }
 
-        console.log(this.holeSetforSelect);
-        console.log(this.Hole);
+        //console.log(this.holeSetforSelect);
+        //console.log(this.Hole);
     }
     /**
      * onTeeAddChange
@@ -965,7 +965,7 @@ event   */
         this.Hole[this.Hole.length - 1]['displayName'] = '';
         this.Hole[this.Hole.length - 1]['frontId'] = '';
         this.Hole[this.Hole.length - 1]['backId'] = '';
-        console.log(this.Hole);
+        //console.log(this.Hole);
     }
     initializeHoleSet() {
         this.Hole[this.Hole.length] = [];
@@ -973,7 +973,7 @@ event   */
         this.Hole[this.Hole.length - 1]['displayName'] = 'Front-9 - Back-9';
         this.Hole[this.Hole.length - 1]['frontId'] = 1;
         this.Hole[this.Hole.length - 1]['backId'] = 2;
-        console.log(this.Hole);
+        //console.log(this.Hole);
     }
     /**
      * onDisplayNameChange
@@ -1017,7 +1017,7 @@ event   */
         control2: FormControl,
         state: boolean
     ) {
-        console.log(this.Hole);
+        //console.log(this.Hole);
         let HoleSetObj = [];
         for (let obj of this.Hole) {
             var holesSet = obj.frontId + obj.backId;
@@ -1032,7 +1032,7 @@ event   */
             };
             HoleSetObj.push(hole);
         }
-        console.log(HoleSetObj);
+        //console.log(HoleSetObj);
         let saveTeeColor = <boolean>(
             await this.facadeService.saveCourseHolesSet(HoleSetObj)
         );
@@ -1059,14 +1059,14 @@ event   */
         this.holeMeta[this.holeMeta.length - 1]['tee_lat'] = '';
         this.holeMeta[this.holeMeta.length - 1]['tee_long'] = '';
         this.holeMeta[this.holeMeta.length - 1]['tee_id'] = '';
-        console.log(this.holeMeta);
+        //console.log(this.holeMeta);
     }
     async getTeeMeta() {
         this.holes = this.tees['course'][0]['HolesQL'];
         let teesMeta = await this.facadeService.getCourseTeeMeta(this.courseID);
-        console.log(teesMeta);
-        console.log(teesMeta['hole_tee_meta']);
-        console.log(this.holes);
+        //console.log(teesMeta);
+        //console.log(teesMeta['hole_tee_meta']);
+        //console.log(this.holes);
 
         if (teesMeta['hole_tee_meta'] && teesMeta['hole_tee_meta'].length > 0) {
             this.holeMeta = [];
@@ -1137,7 +1137,7 @@ event   */
         var yyyy = today.getFullYear();
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         let teeObj = [];
-        console.log(this.holeMeta);
+        //console.log(this.holeMeta);
         for (let obj of this.holeMeta) {
             let tee = {
                 course_id: this.courseID,
@@ -1150,7 +1150,7 @@ event   */
             };
             teeObj.push(tee);
         }
-        console.log(teeObj);
+        //console.log(teeObj);
         let saveTeeColor = <boolean>(
             await this.facadeService.saveCourseMetaSet(teeObj)
         );
@@ -1179,7 +1179,7 @@ event   */
         this.coursRating[this.coursRating.length - 1]['courseRating'] = '';
         this.coursRating[this.coursRating.length - 1]['coursePar'] = '';
         this.coursRating[this.coursRating.length - 1]['gender_id'] = '';
-        console.log(this.coursRating);
+        //console.log(this.coursRating);
     }
 
     deleteRating(id) {
@@ -1251,7 +1251,7 @@ event   */
      * onTeeSelectionChange
      */
     public gender_id(event, teeID) {
-        console.log(event);
+        //console.log(event);
 
         let index = 0;
         for (let obj of this.coursRating) {
@@ -1267,8 +1267,8 @@ event   */
             this.courseID
         );
         let rating = await this.facadeService.getCourseRating(this.courseID);
-        console.log(rating);
-        console.log(this.tees);
+        //console.log(rating);
+        //console.log(this.tees);
         this.coursRating = [];
         this.showTees = [];
         let tee = this.tees['course'][0]['TeesQL'];
@@ -1279,7 +1279,7 @@ event   */
             };
             this.showTees.push(teeObj);
         }
-        console.log(this.showTees);
+        //console.log(this.showTees);
 
         let HolesSet = this.courseHoleSet['course_hole_sets'];
         this.holeSetforSelect = [];
@@ -1290,7 +1290,7 @@ event   */
             };
             this.holeSetforSelect.push(hole);
         }
-        console.log(this.holeSetforSelect);
+        //console.log(this.holeSetforSelect);
         if (rating && rating['course_rating'].length > 0) {
             for (let obj of rating['course_rating']) {
                 let teeObj = {
@@ -1308,14 +1308,14 @@ event   */
         } else {
             this.coursRating = this.populateRatings(tee, HolesSet)
         }
-        console.log(this.coursRating);
+        //console.log(this.coursRating);
 
 
     }
 
     async savecoureRating() {
         let teeObj = [];
-        console.log(this.coursRating);
+        //console.log(this.coursRating);
         for (let obj of this.coursRating) {
             let tee = {
                 courseId: this.courseID,
@@ -1329,7 +1329,7 @@ event   */
             };
             teeObj.push(tee);
         }
-        console.log(teeObj);
+        //console.log(teeObj);
 
         let saveCourseRating = <boolean>(
             await this.facadeService.saveCourseRating(teeObj)

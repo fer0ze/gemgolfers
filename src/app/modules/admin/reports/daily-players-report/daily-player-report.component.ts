@@ -73,7 +73,7 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
       this._reportService.data$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((data) => {
-          console.log(data);
+          //console.log(data);
           this.chart(data.series, data.labels, data.holesSet)
           if (data.todayData.length > 0) {
             this.isPlayer = true;
@@ -111,7 +111,7 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
       this.datePipe.transform(todayDate.toString(), 'yyyy-MM-dd')
     );
 
-    console.log(players);
+    //console.log(players);
 
     this.Players = [];
     for (let obj of players['flight']) {

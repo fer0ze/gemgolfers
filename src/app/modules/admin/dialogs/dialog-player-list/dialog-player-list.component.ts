@@ -51,7 +51,7 @@ export class DialogPlayerListComponent implements OnInit {
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.playerCategories = this.facadeService.getPlayerCategories();
-        console.log(this.data);
+        //console.log(this.data);
         let dataClubs = await this.facadeService.getClubList();
         this.golfClubs = dataClubs.club;
 
@@ -73,7 +73,7 @@ export class DialogPlayerListComponent implements OnInit {
     }
 
     isAllSelected() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSource) {
             const numSelected = this.selection.selected.length;
             const numRows = this.dataSource.data.length;
@@ -83,8 +83,8 @@ export class DialogPlayerListComponent implements OnInit {
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        console.log(this.selection);
-        console.log(this.selection.selected.length);
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
         this.isAllSelected()
             ? this.selection.clear()
             : this.dataSource.data.forEach((row) => this.selection.select(row));
@@ -156,18 +156,18 @@ export class DialogPlayerListComponent implements OnInit {
                 }
                 tournamentMember.push(member);
                 counter = parseInt(index) + 1;
-                console.log(counter);
+                //console.log(counter);
 
-                console.log(selectionArray);
+                //console.log(selectionArray);
             }
         }
         //this.showCategory = false;
-        //console.log(this.categoryCounts[0]);
+        ////console.log(this.categoryCounts[0]);
 
         //this.categoryCounts[0].value = this.categoryCounts[0].value - counter;
-        //console.log(this.categoryCounts[0].value);
+        ////console.log(this.categoryCounts[0].value);
 
-        console.log(tournamentMember);
+        //console.log(tournamentMember);
 
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentMember)
@@ -193,20 +193,20 @@ export class DialogPlayerListComponent implements OnInit {
         let text1 = '%';
         let text4 = '%';
         let result = text1.concat(fullName, text4);
-        console.log('====================================');
-        console.log(fullName);
-        console.log('====================================');
-        console.log(result);
+        //console.log('====================================');
+        //console.log(fullName);
+        //console.log('====================================');
+        //console.log(result);
         if (fullName) {
             if (!fullName) fullName = 'NOTHING';
-            console.log('====================================');
-            console.log(handicap);
-            console.log('====================================');
+            //console.log('====================================');
+            //console.log(handicap);
+            //console.log('====================================');
             let lowerHandicap = handicap ? Number(handicap) - 1 : 70;
             let upperHandicap = handicap ? Number(handicap) + 1 : 70;
 
-            console.log(lowerHandicap);
-            console.log(upperHandicap);
+            //console.log(lowerHandicap);
+            //console.log(upperHandicap);
 
             let matchingList = <Player>(
                 await this.facadeService.searchPlayerForTournament(
@@ -216,7 +216,7 @@ export class DialogPlayerListComponent implements OnInit {
                 )
             );
             // this.player = matchingList['Result'];
-            console.log(matchingList['Result']);
+            //console.log(matchingList['Result']);
 
             this.setDataSource(matchingList['Result']);
 
@@ -291,7 +291,7 @@ export class DialogPlayerListComponent implements OnInit {
                 )
             );
 
-        //console.log(checkEmail);
+        ////console.log(checkEmail);
         if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
 
         if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
@@ -329,11 +329,11 @@ export class DialogPlayerListComponent implements OnInit {
         let players: any[] = await this.facadeService.getallPlayersforGGid();
         var sortarray = players['player'];
         sortarray.sort(this.Comparator);
-        console.log(sortarray);
+        //console.log(sortarray);
         UniqueId = UniqueIdGenerator.generate();
         GEMId = generateGemId.generate(sortarray[0].gemId);
 
-        //console.log(playerFormValue.isClubAdmin);
+        ////console.log(playerFormValue.isClubAdmin);
         const player: Player = {
             id: UniqueId,
             adminClubId:
@@ -363,11 +363,11 @@ export class DialogPlayerListComponent implements OnInit {
         };
 
         if (newFlag) {
-            //console.log("Going to add new player");
+            ////console.log("Going to add new player");
             const isSuccess = <boolean>(
                 await this.facadeService.AddPlayer(player)
             );
-            //console.log(isSuccess);
+            ////console.log(isSuccess);
             if (isSuccess) {
                 this.snackBar.open('Player has been created.', 'x', {
                     duration: 5000,
@@ -379,7 +379,7 @@ export class DialogPlayerListComponent implements OnInit {
 
         this.response = player;
         this.dialogRef.close(this.response);
-        console.log(this.response);
+        //console.log(this.response);
     }
     public hasError = (controlName: string, errorName: string) => {
         return this.playerForm.controls[controlName].hasError(errorName);

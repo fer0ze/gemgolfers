@@ -47,7 +47,7 @@ export class PlayerHandicapsMutation {
         }
 
         let playerHistoryQuery = await this.facadeService.getPlayersHandicapWhsHistory(this.playerIds, this.playingDate);
-        console.log(playerHistoryQuery);
+        //console.log(playerHistoryQuery);
         let playerHandicapData = playerHistoryQuery.PlayerQL;
         if (playerHandicapData != null) {
             this.playersHandicapWhs.clear();
@@ -63,7 +63,7 @@ export class PlayerHandicapsMutation {
             }
             
         } else {
-            console.log("Received null query response. Please try again.");
+            //console.log("Received null query response. Please try again.");
         }
         
     }

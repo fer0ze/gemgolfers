@@ -31,7 +31,7 @@ export class TourComponent implements OnInit {
     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     this._tourService.data$.pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        console.log(res);
+        //console.log(res);
         this.tours = [];
         for (let tour of res) {
           let obj = {
@@ -53,7 +53,7 @@ export class TourComponent implements OnInit {
   async addnewTour() {
     const dialogRef = this.dialog.open(DialogAddTourComponent);
     dialogRef.afterClosed().subscribe(async (result) => {
-      console.log(result);
+      //console.log(result);
       if (result) {
         let tour = {
           id: UniqueIdGenerator.generate(),
@@ -65,7 +65,7 @@ export class TourComponent implements OnInit {
           endDate:result.endDate,
         }
         this.facadeService.addTour(tour, result.file).subscribe((result) => {
-          console.log(result);
+          //console.log(result);
           if (result) {
             this.tours.push({
               id: tour.id,

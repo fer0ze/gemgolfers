@@ -118,7 +118,7 @@ export class DailyRoundsComponent implements OnInit {
                     this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
                 );
             }
-            console.log(dataPlayers);
+            //console.log(dataPlayers);
             const totalsMap = new Map(); // Map to store totals by date
 
             // Iterate through the data and calculate totals
@@ -142,7 +142,7 @@ export class DailyRoundsComponent implements OnInit {
             // Convert the map values to an array
             const totalsArray = Array.from(totalsMap.values());
 
-            console.log(totalsArray);
+            //console.log(totalsArray);
             this.dataSource = new MatTableDataSource(totalsArray);
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
@@ -178,8 +178,8 @@ export class DailyRoundsComponent implements OnInit {
     onDatePick() {
         const result = this.scheduleForm.value.startDate + ',' + this.scheduleForm.value.endDate;
         this.logger.log('Getting Daily Round Data By Dates', "info", result.toString());
-        console.log(this.scheduleForm.value.startDate);
-        console.log(this.scheduleForm.value.endDate);
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
             let lastDate = this.scheduleForm.value.endDate;
             let startDate = this.scheduleForm.value.startDate;
@@ -192,15 +192,15 @@ export class DailyRoundsComponent implements OnInit {
             // lastDate = startDate ? lastDate == "" : lastDate;
             // startDate = lastDate ? startDate == "" : startDate;
 
-            console.log(lastDate);
-            console.log(startDate);
+            //console.log(lastDate);
+            //console.log(startDate);
             this.getDailyRounds(lastDate, startDate);
         } else {
         }
     }
 
     Dailysetup(selectedValue) {
-        //console.log(selectedValue)
+        ////console.log(selectedValue)
         this.logger.log('Getting Daily Round Data By Dropdown', "info", selectedValue.value.toString());
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
@@ -210,32 +210,32 @@ export class DailyRoundsComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.yesterday();
-            //console.log(currentDate)
-            //console.log(lastDate)
+            ////console.log(currentDate)
+            ////console.log(lastDate)
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfWeek();
-            //console.log(currentDate)
-            //console.log(lastDate)
+            ////console.log(currentDate)
+            ////console.log(lastDate)
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            //console.log(currentDate)
-            //console.log(lastDate)
+            ////console.log(currentDate)
+            ////console.log(lastDate)
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;
             // let lastDate = this.customDate2.value;
-            // console.log(currentDate)
-            // console.log(lastDate)
+            // //console.log(currentDate)
+            // //console.log(lastDate)
             // this.getDailyRounds(currentDate,lastDate);
         } else {
         }

@@ -57,7 +57,7 @@ export class AuthMockApi {
                             await this.afAuth.sendPasswordResetEmail(email);
 
                             // Password reset email sent successfully
-                            console.log('Password reset email sent successfully');
+                            //console.log('Password reset email sent successfully');
 
                             observer.next([200, true]);
                             observer.complete();
@@ -112,7 +112,7 @@ export class AuthMockApi {
                                 //const idToken = await user.getIdToken();
 
                                 this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
-                                    console.log(user);
+                                    //console.log(user);
                                     this._user.name = user[0].firstName + " " + user[0].lastName;
                                     this._user.email = user[0].email;
                                     let clubInfo: any =
@@ -216,7 +216,7 @@ export class AuthMockApi {
                                 observer.complete();
                             }
                             // Password reset email sent successfully
-                           // console.log('Password reset email sent successfully');
+                           // //console.log('Password reset email sent successfully');
 
                             // observer.next([200, true]);
                             // observer.complete();

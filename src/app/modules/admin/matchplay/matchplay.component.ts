@@ -105,8 +105,8 @@ export class MatchplayComponent implements OnInit {
                             selectedCourseHoleSet['course_hole_sets'];
                         this.matchPlayData = dataLeaderboard.TournamentQL;
                         this.isLoading = false;
-                        //console.log('Match play data');
-                        console.log(this.matchPlayData);
+                        ////console.log('Match play data');
+                        //console.log(this.matchPlayData);
                         if (
                             this.matchPlayData['matchFormat'] ==
                             matchFormat.TEXAS_SCRAMBLE || this.matchPlayData['matchFormat'] ==
@@ -167,7 +167,7 @@ export class MatchplayComponent implements OnInit {
     }
 
     changeFlight(item) {
-        //console.log("Selected value: " + item.value);
+        ////console.log("Selected value: " + item.value);
         this.ddSelectedFlight = item.value;
 
         this.roundFlights = [];
@@ -180,7 +180,7 @@ export class MatchplayComponent implements OnInit {
     }
 
     changeCourse(item) {
-        console.log('Selected value: ' + item.value);
+        //console.log('Selected value: ' + item.value);
         this.selectedCourse = item.value;
 
         this.roundFlights = [];
@@ -209,7 +209,7 @@ export class MatchplayComponent implements OnInit {
     }
 
     changeRound(item) {
-        //console.log("Selected value: " + item.value);
+        ////console.log("Selected value: " + item.value);
         if (this.active) {
             this.flightRound = item.index + 1;
             if (this.flightRound == 1) this.showRound1 = true;
@@ -259,7 +259,7 @@ export class MatchplayComponent implements OnInit {
 
                     this.currentRoundFlights = [];
                     for (let flight of this.roundFlights) {
-                        //console.log(flight);
+                        ////console.log(flight);
                         if (!this.showTaxes) {
                             let r: any = {
                                 Text: 'Flight ' + flight.flightNo,
@@ -274,10 +274,10 @@ export class MatchplayComponent implements OnInit {
                             this.currentRoundFlights.push(r);
                         }
                     }
-                    //console.log(this.currentRoundFlights);
+                    ////console.log(this.currentRoundFlights);
                 }
-                //console.log(this.roundFlights);
-                console.log(this.filterPlayer);
+                ////console.log(this.roundFlights);
+                //console.log(this.filterPlayer);
                 if (!this.showTaxes && this.filterPlayer != '') {
                     var filteredArray: any = this.roundFlights
                         .filter((element) =>
@@ -320,7 +320,7 @@ export class MatchplayComponent implements OnInit {
                     //   return newElt.MembersQL.filter(subElement => subElement.PlayerQL.firstName === this.filterPlayer);
                     // });
 
-                    //console.log(filteredArray);
+                    ////console.log(filteredArray);
                 } else if (this.filterPlayer != '') {
                     if (!this.selectedTeamName) {
                         var filteredArray: any = this.roundFlights;
@@ -366,11 +366,11 @@ export class MatchplayComponent implements OnInit {
                     // });
                 }
 
-                //console.log(this.roundFlights);
+                ////console.log(this.roundFlights);
                 if (filteredArray) {
                     this.setupMatchplayData(filteredArray, 2, true);
                 } else if (this.roundFlights.length > 0) {
-                    //console.log("not null");
+                    ////console.log("not null");
                     this.setupMatchplayData(this.roundFlights, 2, true);
                 }
             }
@@ -388,8 +388,8 @@ export class MatchplayComponent implements OnInit {
 
             let findex = 0;
             for (let flightData of flightsQLs) {
-                //console.log(flightData);
-                //console.log("Flight ID: " + flightData.id);
+                ////console.log(flightData);
+                ////console.log("Flight ID: " + flightData.id);
                 let membersQLs: any = flightData.MembersQL;
                 let singleFlight: any[] = [];
                 let courseHoleSetTitle;
@@ -400,9 +400,9 @@ export class MatchplayComponent implements OnInit {
                     flightData.courseHoleSetsInverted
                 );
 
-                //console.log(par9);
-                //console.log(par18);
-                //console.log(flightData);
+                ////console.log(par9);
+                ////console.log(par18);
+                ////console.log(flightData);
                 if (!this.showTaxes) {
                     for (let membersQL of membersQLs) {
                         let player: Player = membersQL.PlayerQL;
@@ -427,7 +427,7 @@ export class MatchplayComponent implements OnInit {
                                 }
                             );
 
-                            // console.log(courseHole);
+                            // //console.log(courseHole);
 
                             let hole = playerScore.find((a) => {
                                 return (
@@ -435,7 +435,7 @@ export class MatchplayComponent implements OnInit {
                                     (courseHole.length > 0 ? courseHole[0].id : '')
                                 );
                             });
-                            // console.log(hole);
+                            // //console.log(hole);
 
                             if (hole) {
                                 playerHole9Score[i] = hole.grossScore;
@@ -452,12 +452,12 @@ export class MatchplayComponent implements OnInit {
                                     }
                                 );
 
-                                // console.log(i + 9 + 1);
-                                // console.log(courseHole);
+                                // //console.log(i + 9 + 1);
+                                // //console.log(courseHole);
 
                                 let hole = playerScore.find((a) => {
-                                    // console.log(a.holeId + "<---->" + courseHole[0].id);
-                                    // console.log(courseHole.length > 0 ? courseHole[0].id : "");
+                                    // //console.log(a.holeId + "<---->" + courseHole[0].id);
+                                    // //console.log(courseHole.length > 0 ? courseHole[0].id : "");
                                     return (
                                         a.holeId ==
                                         (courseHole.length > 0
@@ -466,7 +466,7 @@ export class MatchplayComponent implements OnInit {
                                     );
                                 });
 
-                                //console.log(hole);
+                                ////console.log(hole);
 
                                 if (hole) {
                                     playerHole18Score[i] = hole.grossScore;
@@ -478,8 +478,8 @@ export class MatchplayComponent implements OnInit {
 
                         let grossTotal: number = gross9Total + gross18Total;
 
-                        //console.log(playerHole9Score);
-                        //console.log(playerHole18Score);
+                        ////console.log(playerHole9Score);
+                        ////console.log(playerHole18Score);
 
                         if (this.courseHoleSetNames) {
                             courseHoleSetTitle = this.courseHoleSetNames.find(
@@ -534,7 +534,7 @@ export class MatchplayComponent implements OnInit {
                                 }
                             );
 
-                            //console.log(courseHole);
+                            ////console.log(courseHole);
 
                             let hole = playerScore.find((a) => {
                                 return (
@@ -542,7 +542,7 @@ export class MatchplayComponent implements OnInit {
                                     (courseHole.length > 0 ? courseHole[0].id : '')
                                 );
                             });
-                            //console.log(hole);
+                            ////console.log(hole);
 
                             if (hole) {
                                 playerHole9Score[i] = hole.grossScore;
@@ -558,12 +558,12 @@ export class MatchplayComponent implements OnInit {
                                 }
                             );
 
-                            // console.log(i + 9 + 1);
-                            // console.log(courseHole);
+                            // //console.log(i + 9 + 1);
+                            // //console.log(courseHole);
 
                             let hole = playerScore.find((a) => {
-                                // console.log(a.holeId + '<---->' + courseHole[0].id);
-                                // console.log(
+                                // //console.log(a.holeId + '<---->' + courseHole[0].id);
+                                // //console.log(
                                 //     courseHole.length > 0 ? courseHole[0].id : ''
                                 // );
                                 return (
@@ -572,7 +572,7 @@ export class MatchplayComponent implements OnInit {
                                 );
                             });
 
-                            //console.log(hole);
+                            ////console.log(hole);
 
                             if (hole) {
                                 playerHole18Score[i] = hole.grossScore;
@@ -583,8 +583,8 @@ export class MatchplayComponent implements OnInit {
 
                         let grossTotal: number = gross9Total + gross18Total;
 
-                        //console.log(playerHole9Score);
-                        //console.log(playerHole18Score);
+                        ////console.log(playerHole9Score);
+                        ////console.log(playerHole18Score);
 
                         if (this.courseHoleSetNames) {
                             courseHoleSetTitle = this.courseHoleSetNames.find(
@@ -644,11 +644,11 @@ export class MatchplayComponent implements OnInit {
                     this.flightPlayers[findex][0].gross18Total;
                 this.flightPlayers[findex]['grossTotal'] =
                     this.flightPlayers[findex][0].grossTotal;
-                console.log(this.flightPlayers);
+                //console.log(this.flightPlayers);
 
                 findex++;
             }
-            console.log(this.flightPlayers);
+            //console.log(this.flightPlayers);
             this.logger.log('Getting Tournament Score Data Successfully.', "info",);
             this.active = true;
         } catch (error) {
@@ -711,12 +711,12 @@ export class MatchplayComponent implements OnInit {
                 this.coursesList.push(courseInfo);
             }
 
-            //console.log(this.coursesList);
+            ////console.log(this.coursesList);
 
             holesQLs = holesQLs.sort(this.Comparator);
 
             //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
-            //console.log(holesQLs);
+            ////console.log(holesQLs);
             // let courseID: any = this.matchPlayData['courseId'];
 
             // this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
@@ -775,13 +775,13 @@ export class MatchplayComponent implements OnInit {
                 parTotal: parTotal,
                 yardageTotal: yardageTotal,
             };
-            //console.log(scoreHeader);
+            ////console.log(scoreHeader);
             flightHeader.push(scoreHeader);
             return scoreHeader;
         } catch (error) {
             this.logger.log('Getting Tournament Score Data Failed', "error", error.toString());
         }
-        //console.log(this.scoreHeader);
+        ////console.log(this.scoreHeader);
     }
 
     public getHolesSets(
@@ -830,8 +830,8 @@ export class MatchplayComponent implements OnInit {
                     let holesSetB = holesSets.find(
                         (x) => x.holeSets == obj.backId
                     );
-                    console.log(holesSetA);
-                    console.log(holesSetB);
+                    //console.log(holesSetA);
+                    //console.log(holesSetB);
                     let counter = 1;
                     for (let i of holes) {
                         if (holesSetA.id == i.holeSetId) {
@@ -883,10 +883,10 @@ export class MatchplayComponent implements OnInit {
     }
 
     viewPlayerScore(flight: any) {
-        console.log(flight);
+        //console.log(flight);
 
         let player: any[] = flight.filter((a) => a);
-        console.log(player);
+        //console.log(player);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
@@ -897,7 +897,7 @@ export class MatchplayComponent implements OnInit {
 
     async saveFlightScore(flightId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
-        //console.log(flightId);
+        ////console.log(flightId);
         try {
             this.logger.log('Tournament Group Score Save btn Clicked', "info", flightId);
 
@@ -905,7 +905,7 @@ export class MatchplayComponent implements OnInit {
                 return a.flightId == flightId;
             });
 
-            console.log(selectedFlight);
+            //console.log(selectedFlight);
 
             let today: Date = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -947,7 +947,7 @@ export class MatchplayComponent implements OnInit {
                     let player2DigitIds: string[] = [];
 
                     for (let hole of courseHoleQLs) {
-                        //console.log(hole.id);
+                        ////console.log(hole.id);
                         let holeObj = <HTMLInputElement>(
                             document.getElementById(hole.id + '&' + player.playerId)
                         );
@@ -960,7 +960,7 @@ export class MatchplayComponent implements OnInit {
                                 )).value
                             );
 
-                            console.log(grossScore);
+                            //console.log(grossScore);
                             if (grossScore) {
                                 let playerScore: Score = {
                                     playerId: player.playerId,
@@ -981,7 +981,7 @@ export class MatchplayComponent implements OnInit {
                                         this.loggedInuser.lastName,
                                     detailId: null,
                                 };
-                                console.log(playerScore);
+                                //console.log(playerScore);
 
                                 playerScores.push(playerScore);
 
@@ -997,11 +997,11 @@ export class MatchplayComponent implements OnInit {
                                             playerScore
                                         );
                                         subFlightScore.flightId = subScore.flightId;
-                                        console.log(
-                                            subFlightScore.flightId +
-                                            ' ### ' +
-                                            playerScore.flightId
-                                        );
+                                        //console.log(
+                                        //     subFlightScore.flightId +
+                                        //     ' ### ' +
+                                        //     playerScore.flightId
+                                        // );
                                         playerScores.push(subFlightScore);
                                     }
                                 }
@@ -1054,9 +1054,9 @@ export class MatchplayComponent implements OnInit {
                                 );
                         }
                     }
-                    console.log(playerScores);
-                    console.log(playerScoresIds);
-                    console.log(playerEmptyScoresIds);
+                    //console.log(playerScores);
+                    //console.log(playerScoresIds);
+                    //console.log(playerEmptyScoresIds);
 
                     if (totalPlayed > 0) {
                         if (playerEmptyScoresIds.length > 0) {
@@ -1142,7 +1142,7 @@ export class MatchplayComponent implements OnInit {
                     let playerScoreDBoogey: string[] = [];
 
                     for (let hole of courseHoleQLs) {
-                        //console.log(hole.id);
+                        ////console.log(hole.id);
                         let holeObj = <HTMLInputElement>(
                             document.getElementById(hole.id + '&' + flightId)
                         );
@@ -1155,7 +1155,7 @@ export class MatchplayComponent implements OnInit {
                                 )).value
                             );
 
-                            console.log(grossScore);
+                            //console.log(grossScore);
                             if (grossScore) {
                                 let playerScore: Score = {
                                     playerId: player.playerId,
@@ -1176,7 +1176,7 @@ export class MatchplayComponent implements OnInit {
                                         this.loggedInuser.lastName,
                                     detailId: null,
                                 };
-                                console.log(playerScore);
+                                //console.log(playerScore);
 
                                 playerScores.push(playerScore);
 
@@ -1192,11 +1192,11 @@ export class MatchplayComponent implements OnInit {
                                             playerScore
                                         );
                                         subFlightScore.flightId = subScore.flightId;
-                                        console.log(
-                                            subFlightScore.flightId +
-                                            ' ### ' +
-                                            playerScore.flightId
-                                        );
+                                        //console.log(
+                                        //     subFlightScore.flightId +
+                                        //     ' ### ' +
+                                        //     playerScore.flightId
+                                        // );
                                         playerScores.push(subFlightScore);
                                     }
                                 }
@@ -1236,9 +1236,9 @@ export class MatchplayComponent implements OnInit {
                                 playerEmptyScoresIds.push(hole.id + '&' + flightId);
                         }
                     }
-                    console.log(playerScores);
-                    console.log(playerScoresIds);
-                    console.log(playerEmptyScoresIds);
+                    //console.log(playerScores);
+                    //console.log(playerScoresIds);
+                    //console.log(playerEmptyScoresIds);
 
                     if (totalPlayed > 0) {
                         if (playerEmptyScoresIds.length > 0) {
@@ -1341,7 +1341,7 @@ export class MatchplayComponent implements OnInit {
 
     async savePlayerScore(flightId: string, playerId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
-        //console.log(this.flightPlayers);
+        ////console.log(this.flightPlayers);
         try {
             const combinedData = `flightId=${flightId}, playerId=${playerId}`;
             this.logger.log('Tournament Group Player Score Save btn Clicked', "info", combinedData);
@@ -1349,7 +1349,7 @@ export class MatchplayComponent implements OnInit {
                 return a.flightId == flightId;
             });
 
-            //console.log(selectedFlight);
+            ////console.log(selectedFlight);
             //return false;
 
             let today: Date = new Date();
@@ -1379,14 +1379,14 @@ export class MatchplayComponent implements OnInit {
             let allSubTournamentMember = this.getSubTournamentPlayers();
 
             for (let player of selectedFlight) {
-                //console.log(player.playerId);
+                ////console.log(player.playerId);
 
                 if (player.playerId == playerId) {
                     for (let hole of courseHoleQLs) {
                         let holeObj = <HTMLInputElement>(
                             document.getElementById(hole.id + '&' + player.playerId)
                         );
-                        console.log(holeObj);
+                        //console.log(holeObj);
                         if (holeObj) {
                             let grossScore = holeObj
                                 ? parseFloat(
@@ -1422,7 +1422,7 @@ export class MatchplayComponent implements OnInit {
                                 element.classList.remove('warn');
                             }
 
-                            //console.log(grossScore);
+                            ////console.log(grossScore);
                             if (grossScore) {
                                 let playerScore: Score = {
                                     playerId: player.playerId,
@@ -1457,11 +1457,11 @@ export class MatchplayComponent implements OnInit {
                                             playerScore
                                         );
                                         subFlightScore.flightId = subScore.flightId;
-                                        console.log(
-                                            subFlightScore.flightId +
-                                            ' ### ' +
-                                            playerScore.flightId
-                                        );
+                                        //console.log(
+                                        //     subFlightScore.flightId +
+                                        //     ' ### ' +
+                                        //     playerScore.flightId
+                                        // );
                                         playerScores.push(subFlightScore);
                                     }
                                 }
@@ -1503,8 +1503,8 @@ export class MatchplayComponent implements OnInit {
                     }
                 }
             }
-            console.log(playerScores);
-            //console.log(playerScores.length);
+            //console.log(playerScores);
+            ////console.log(playerScores.length);
 
             let result: any;
 
@@ -1591,7 +1591,7 @@ export class MatchplayComponent implements OnInit {
                             subTournamentFlightsQL.SubTournamentMembersQL;
                         for (let subTournamentMembersQL of subTournamentMembersQLs) {
                             var playerId = subTournamentMembersQL.playerId;
-                            console.log(playerId);
+                            //console.log(playerId);
                             let flightPlayer: any = {
                                 flightId: flightId,
                                 playerId: playerId,
@@ -1657,7 +1657,7 @@ export class MatchplayComponent implements OnInit {
             (Number(gross9total.value) ? Number(gross9total.value) : 0) +
             (Number(gross18total.value) ? Number(gross18total.value) : 0);
         grosstotal.value = total.toString();
-        console.log(total);
+        //console.log(total);
     }
 
     Comparator(a, b) {
@@ -1766,28 +1766,28 @@ export class MatchplayComponent implements OnInit {
     }
 
     public hasHoleSet1to9(courseHoleSets): boolean {
-        console.log(Constants.Holes1to9);
+        //console.log(Constants.Holes1to9);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes1to9) != 0
         );
     }
 
     public hasHoleSet10to18(courseHoleSets): boolean {
-        console.log(Constants.Holes10to18);
+        //console.log(Constants.Holes10to18);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes10to18) != 0
         );
     }
 
     public hasHoleSet19to27(courseHoleSets): boolean {
-        console.log(Constants.Holes19to27);
+        //console.log(Constants.Holes19to27);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes19to27) != 0
         );
     }
 
     public hasHoleSet28to36(courseHoleSets): boolean {
-        console.log(Constants.Holes28to36);
+        //console.log(Constants.Holes28to36);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes28to36) != 0
         );

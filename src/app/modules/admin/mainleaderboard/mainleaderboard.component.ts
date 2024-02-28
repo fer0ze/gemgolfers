@@ -131,7 +131,7 @@ export class MainLeaderboardComponent implements OnInit {
 
     async getOnLoadData() {
         this.route.paramMap.subscribe((params) => {
-            //console.log(params.get("id"));
+            ////console.log(params.get("id"));
             this.tournamentID = params.get('id');
         });
 
@@ -165,9 +165,9 @@ export class MainLeaderboardComponent implements OnInit {
             })
             .valueChanges.subscribe(({ data }) => {
                 if (!data) {
-                    //console.log(data);
+                    ////console.log(data);
                 } else {
-                    console.log(data);
+                    //console.log(data);
                     this.Leaderboard = data;
                     this.matchFormat = this.Leaderboard.TournamentQL[0].matchFormat;
                     this.isLoading = false;

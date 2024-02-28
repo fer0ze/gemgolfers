@@ -45,7 +45,7 @@ export class DialogPlayerComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        console.log(this.data);
+        //console.log(this.data);
 
         for (let flight = 1; flight <= this.data.flights; flight++) {
             let r: any = {
@@ -170,20 +170,20 @@ export class DialogPlayerComponent implements OnInit {
         let text1 = '%';
         let text4 = '%';
         let result = text1.concat(fullName, text4);
-        console.log('====================================');
-        console.log(fullName);
-        console.log('====================================');
-        console.log(result);
+        //console.log('====================================');
+        //console.log(fullName);
+        //console.log('====================================');
+        //console.log(result);
         if (fullName) {
             if (!fullName) fullName = 'NOTHING';
-            console.log('====================================');
-            console.log(handicap);
-            console.log('====================================');
+            //console.log('====================================');
+            //console.log(handicap);
+            //console.log('====================================');
             let lowerHandicap = handicap ? Number(handicap) - 1 : 70;
             let upperHandicap = handicap ? Number(handicap) + 1 : 70;
 
-            console.log(lowerHandicap);
-            console.log(upperHandicap);
+            //console.log(lowerHandicap);
+            //console.log(upperHandicap);
 
             let matchingList = <Player>(
                 await this.facadeService.searchPlayerForTournament(
@@ -209,35 +209,35 @@ export class DialogPlayerComponent implements OnInit {
 
     getMatchingPlayers(object) {
         let matching: any[] = [];
-        console.log(object);
+        //console.log(object);
         for (let i = 1; i <= 4; i++) {
             for (let j = 1; j < 4; j++) {
-                //console.log("Result" + i + j);
-                //console.log(object["Result" + i + j].length);
+                ////console.log("Result" + i + j);
+                ////console.log(object["Result" + i + j].length);
                 if (
                     object['Result' + i + j] != null &&
                     object['Result' + i + j].length < 50
                 ) {
                     for (let item of object['Result' + i + j]) {
-                        // console.log(matching);
-                        // console.log(item);
+                        // //console.log(matching);
+                        // //console.log(item);
                         let exist = matching.filter((a) => {
                             return a.id == item.id;
                         });
 
-                        // console.log(exist.length);
+                        // //console.log(exist.length);
 
                         if (exist.length == 0) matching.push(item);
                     }
                 }
             }
         }
-        //console.log(matching);
+        ////console.log(matching);
         return matching;
     }
 
     getClubTooltip(membership) {
-        console.log(membership);
+        //console.log(membership);
         let clubList: string;
         for (let member of membership) {
             clubList += member.club.name + ', ';
@@ -247,7 +247,7 @@ export class DialogPlayerComponent implements OnInit {
     }
 
     applyFilter(filterValue: string) {
-        console.log(filterValue);
+        //console.log(filterValue);
         if (filterValue.length > 0) {
             this.value = true;
         }
@@ -261,40 +261,40 @@ export class DialogPlayerComponent implements OnInit {
     }
 
     isAllSelected() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSource) {
-            // console.log(this.selection);
+            // //console.log(this.selection);
             const numSelected = this.selection.selected.length;
-            // console.log(numSelected);
+            // //console.log(numSelected);
             this.selectPlayer(this.selection.selected);
             const numRows = this.dataSource.data.length;
-            //console.log(this.dataSource.data);
+            ////console.log(this.dataSource.data);
 
-            // console.log(numRows);
+            // //console.log(numRows);
 
             return numSelected === numRows;
         }
     }
 
     isAllSelecteds() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSource) {
-            // console.log(this.selection);
+            // //console.log(this.selection);
             const numSelected = this.selection.selected.length;
-            // console.log(numSelected);
+            // //console.log(numSelected);
             this.selectPlayer(this.selection.selected);
             const numRows = this.dataSource.data.length;
-            console.log(this.dataSource.data);
+            //console.log(this.dataSource.data);
 
-            // console.log(numRows);
+            // //console.log(numRows);
 
             return numSelected === numRows;
         }
     }
 
     masterToggle() {
-        // console.log(this.selection);
-        // console.log(this.selection.selected.length);
+        // //console.log(this.selection);
+        // //console.log(this.selection.selected.length);
         this.isAllSelecteds()
             ? this.selection.clear()
             : this.dataSource.data.forEach((row) => this.selection.select(row));
@@ -302,7 +302,7 @@ export class DialogPlayerComponent implements OnInit {
     }
 
     checkboxLabel(row?: Player): string {
-        // console.log(this.selection);
+        // //console.log(this.selection);
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
@@ -319,7 +319,7 @@ export class DialogPlayerComponent implements OnInit {
     }
 
     selectPlayer(player) {
-        console.log(this.selection.selected);
+        //console.log(this.selection.selected);
         this.datas = this.selection.selected;
         this.response = [];
 
@@ -345,7 +345,7 @@ export class DialogPlayerComponent implements OnInit {
     }
 
     changeFlight(item) {
-        console.log('Selected value: ' + item.value);
+        //console.log('Selected value: ' + item.value);
         this.selectedFlight = item.value;
 
         if (this.response)

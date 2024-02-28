@@ -69,8 +69,8 @@ export class DailyPlayerReportResolver implements Resolve<any> {
         // Format the dates in the desired format (YYYY-MM-DD)
         const formattedSevenDaysAgo = sevenDaysAgo.toISOString().slice(0, 10);
 
-        // console.log('Current Date:', formattedCurrentDate);
-        // console.log('7 Days Ago:', formattedSevenDaysAgo);
+        // //console.log('Current Date:', formattedCurrentDate);
+        // //console.log('7 Days Ago:', formattedSevenDaysAgo);
 
         return formattedSevenDaysAgo;
     }

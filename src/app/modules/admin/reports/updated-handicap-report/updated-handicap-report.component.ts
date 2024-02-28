@@ -137,7 +137,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                 endDate: ['', [Validators.required]],
             });
 
-            console.log(this.scheduleForm);
+            //console.log(this.scheduleForm);
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
@@ -238,18 +238,18 @@ export class UpdatedHandicapReportComponent implements OnInit {
         //  let obja= this.dataPlayersWHS.player_handicap_whs.find(a=>{
         //   obj.tournamentId == a.tournamentId;
         //   })
-        //   console.log(obja);
+        //   //console.log(obja);
 
-        //   //console.log(result);
+        //   ////console.log(result);
         // }
         this.logger.log('Getting Daily Updated Handicap Data Sucessfully', "info", combinedData);
-        console.log(this.dataPlayersCongu)
+        //console.log(this.dataPlayersCongu)
         this.dataPlayersWHS = this.dataPlayersCongu.player_handicap_whs;
 
         this.conguLength = this.dataPlayersCongu.player_handicap.length;
         this.WHSLength = this.dataPlayersWHS.length;
-        console.log(this.dataPlayersWHS);
-        console.log(this.dataPlayersCongu);
+        //console.log(this.dataPlayersWHS);
+        //console.log(this.dataPlayersCongu);
 
         this.getPlayerUpdatedHandicapReportCongu();
     }
@@ -298,10 +298,10 @@ export class UpdatedHandicapReportComponent implements OnInit {
         }
         this.index = 0;
 
-        console.log(this.dailyStats);
+        //console.log(this.dailyStats);
 
         this.dataSourceCONGU = new MatTableDataSource(this.dailyStats);
-        console.log(this.dataSourceCONGU);
+        //console.log(this.dataSourceCONGU);
 
         //this.dataSourceCONGU.paginator = this.paginators;
         this.dataSourceCONGU.sort = this.sorts;
@@ -348,7 +348,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
                 if (count >= this.pageSize) break;
             }
             this.dataSourceWHS = new MatTableDataSource(this.dailyStatsWHS);
-            console.log(this.dataSourceWHS);
+            //console.log(this.dataSourceWHS);
         }
         //this.dataSourceWHS.paginator = this.paginator;
         this.dataSourceWHS.sort = this.sort;
@@ -375,7 +375,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
     onPageFired(event) {
         this.index = event.pageIndex * event.pageSize;
         this.pageSize = event.pageSize;
-        console.log(this.index);
+        //console.log(this.index);
         if (this.tabindex == 1) {
             this.getPlayerUpdatedHandicapReportWHS();
         } else {
@@ -383,11 +383,11 @@ export class UpdatedHandicapReportComponent implements OnInit {
             this.getPlayerUpdatedHandicapReportCongu();
         }
 
-        console.log(event);
+        //console.log(event);
     }
     async getPlayerInformationByMembershipNumber(filterValue: string) {
         this.logger.log('Admin Search by membershipNo in Updated Handicap Report', "info", filterValue);
-        console.log(filterValue);
+        //console.log(filterValue);
         //let membershipNumber : string = (<HTMLInputElement>document.getElementById("membershipNumber")).value;
         filterValue = filterValue.trim().toLowerCase().toString(); // Remove whitespace
         //filterValue = filterValue.toLowerCase(); // Dat
@@ -446,7 +446,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
     getPlayerInformationByName(filterValue: string) {
         this.logger.log('Admin Search by name in Updated Handicap Report', "info", filterValue);
         
-        console.log(filterValue);
+        //console.log(filterValue);
         if (filterValue == '') {
             this.getPlayerUpdatedHandicapReportCongu();
             this.getPlayerUpdatedHandicapReportWHS();
@@ -549,11 +549,11 @@ export class UpdatedHandicapReportComponent implements OnInit {
         if (this.tabindex == 0) {
             this.dataSourceCONGU = new MatTableDataSource(dataSource);
             this.dataSourceCONGU.sort = this.sort;
-            console.log(this.dataSourceCONGU);
+            //console.log(this.dataSourceCONGU);
         } else {
             this.dataSourceWHS = new MatTableDataSource(dataSource);
             this.dataSourceWHS.sort = this.sort;
-            //console.log(this. this.dataSourceWHS);
+            ////console.log(this. this.dataSourceWHS);
         }
     }
     endOfWeek() {
@@ -569,7 +569,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
     Dailysetup(selectedValue) {
         this.logger.log('Getting Updated Handicap Data By Dropdown', "info", selectedValue.value.toString());
         
-        console.log(selectedValue);
+        //console.log(selectedValue);
 
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
@@ -582,40 +582,40 @@ export class UpdatedHandicapReportComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfWeek();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getPlayerUpdatedHandicapReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getPlayerUpdatedHandicapReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getPlayerUpdatedHandicapReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_6_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getPlayerUpdatedHandicapReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;
             // let lastDate = this.customDate2.value;
-            // console.log(currentDate)
-            // console.log(lastDate)
+            // //console.log(currentDate)
+            // //console.log(lastDate)
             // this.getDailyRounds(currentDate,lastDate);
         } else {
         }
@@ -659,7 +659,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
         doc.setTextColor(100);
 
         let count = 0;
-        console.log(this.dataPlayersCongu.player_handicap);
+        //console.log(this.dataPlayersCongu.player_handicap);
 
         this.dataPlayersCongu.player_handicap.forEach((element) => {
             count++;
@@ -715,7 +715,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
         doc.setTextColor(100);
 
         let count = 0;
-        console.log(this.dataPlayersCongu.player_handicap);
+        //console.log(this.dataPlayersCongu.player_handicap);
 
         this.dataPlayersWHS.player_handicap_whs.forEach((element) => {
             count++;
@@ -743,8 +743,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
     onDatePick() {
         const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
         this.logger.log('Getting Updated Handicap Data By date', "info",combinedData);
-        console.log(this.scheduleForm.value.startDate);
-        console.log(this.scheduleForm.value.endDate);
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
             let lastDate = this.scheduleForm.value.endDate;
             let startDate = this.scheduleForm.value.startDate;
@@ -752,8 +752,8 @@ export class UpdatedHandicapReportComponent implements OnInit {
             this.showtable = false;
             this.dataSourceCONGU = null;
             this.dataSourceWHS = null;
-            console.log(lastDate);
-            console.log(startDate);
+            //console.log(lastDate);
+            //console.log(startDate);
             this.getPlayerUpdatedHandicapReport(lastDate, startDate);
         } else {
         }
@@ -777,14 +777,14 @@ export class UpdatedHandicapReportComponent implements OnInit {
     // }
 
     // onDatePick(item){
-    //   console.log(item)
+    //   //console.log(item)
     //   this.customDate = item;
     //   if(this.customDate2){
     //     let currentDate = this.customDate.value;
     //     let lastDate = this.customDate2.value;
 
-    //     console.log(currentDate)
-    //     console.log(lastDate)
+    //     //console.log(currentDate)
+    //     //console.log(lastDate)
     //     this.getPlayerUpdatedHandicapReport(currentDate,lastDate);
     //     }
     //     else{}
@@ -792,14 +792,14 @@ export class UpdatedHandicapReportComponent implements OnInit {
     // }
 
     // onDatePick2(item){
-    //   console.log(item)
+    //   //console.log(item)
     //   this.customDate2 = item;
     //   if(this.customDate){
     //   let currentDate = this.customDate.value;
     //   let lastDate = this.customDate2.value;
 
-    //   console.log(currentDate)
-    //   console.log(lastDate)
+    //   //console.log(currentDate)
+    //   //console.log(lastDate)
     //   this.getPlayerUpdatedHandicapReport(currentDate,lastDate);
     //   }
     //   else{}

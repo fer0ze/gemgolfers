@@ -48,7 +48,7 @@ export class NavigationMockApi {
         // @ Navigation - GET
         // -----------------------------------------------------------------------------------------------------
         // this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        // console.log(this.loggedInuser);
+        // //console.log(this.loggedInuser);
         
         this._fuseMockApiService.onGet('api/common/navigation').reply(() => {
            

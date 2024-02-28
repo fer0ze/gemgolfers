@@ -116,7 +116,7 @@ export class TournamentRoundScoresLoader {
 
     public getPlayerScores(round: number) : Map<string, Score[]> {
         let playerScore: Map<string, Score[]> = (this.roundPlayerScores.length > 0)? this.roundPlayerScores[round] : null; //this.roundPlayerScores(round);
-        //console.log(playerScore);
+        ////console.log(playerScore);
         if (playerScore == null) {
             playerScore = new Map<string, Score[]>();
             this.roundPlayerScores[round] =  playerScore; //this.roundPlayerScores.push(round, playerScore);
@@ -153,26 +153,26 @@ export class TournamentRoundScoresLoader {
 
     public async fetchTournamentScores() {
 
-        //console.log(this.tournament);
-        //console.log(this.roundPlayerScores);
+        ////console.log(this.tournament);
+        ////console.log(this.roundPlayerScores);
 
         
         let tournamentScoresQuery = await this.facadeService.getTorunamentScoreQuery(this.tournament.id);
         let tournamentQL = tournamentScoresQuery.TournamentQL;
         this.tournament = tournamentQL;
-        //console.log(tournamentQL);
+        ////console.log(tournamentQL);
         if (tournamentQL != null) {
             //tournament = QLModelMapper.tournamentQlToModel(tournamentQL.getFragments().getTournamentQL());
             let courseQL = this.course = tournamentQL.CourseQL;
             //course = QLModelMapper.courseQlToModel(courseQL.getFragments().getCourseQL());
-            //console.log(this.course);
+            ////console.log(this.course);
             this.holes = [];
             let holesQLs = courseQL.HolesQL;
             for (let holesQL of holesQLs) {
                 this.holes.push(holesQL);
             }
 
-            //console.log(this.holes);
+            ////console.log(this.holes);
             let memberHandicaps: Map<string, number> = null;
             let leagueQL = tournamentQL.LeagueQL;
             if (leagueQL != null) {
@@ -187,7 +187,7 @@ export class TournamentRoundScoresLoader {
             this.flights.clear();
             this.flightMemberIds.clear();
             let flightsQLs = tournamentQL.FlightsQL;
-            //console.log(flightsQLs);
+            ////console.log(flightsQLs);
             for (let flightsQL of flightsQLs) {
                 
                 let flight: Flight = flightsQL;
@@ -195,7 +195,7 @@ export class TournamentRoundScoresLoader {
                 this.flights.set(flightId, flight);
                 let memberIds: string[] = [];
                 let playerScores: Map<string, Score[]> = this.getPlayerScores(flight.flightRound);
-                //console.log(playerScores);
+                ////console.log(playerScores);
                 let membersQLs = flightsQL.MembersQL;
                 for (let membersQL of membersQLs) {
                     let playerId: string = membersQL.playerId;
@@ -224,25 +224,25 @@ export class TournamentRoundScoresLoader {
                     }
 
                     playerScores.set(playerId, scores);
-                    //console.log(playerScores);
-                    //console.log(flight.flightRound);
+                    ////console.log(playerScores);
+                    ////console.log(flight.flightRound);
                     this.roundPlayerScores[flight.flightRound] = playerScores;
-                    //console.log(this.roundPlayerScores);
+                    ////console.log(this.roundPlayerScores);
                 }
                 this.flightMemberIds.set(flightId, memberIds);
-                //console.log(this.flightMemberIds);
+                ////console.log(this.flightMemberIds);
             }
             let noOfRounds: number = this.tournament.noOfRounds;
             let playerHandicapsWhsQLs = tournamentQL.PlayerHandicapsWhsQL;
             for (let playerHandicapsWhsQL of playerHandicapsWhsQLs) {
-                //console.log(playerHandicapsWhsQL);
+                ////console.log(playerHandicapsWhsQL);
                 let round: number = playerHandicapsWhsQL.round;
                 
                 let playerHandicapWhs: PlayerHandicapWhs = new PlayerHandicapWhs(playerHandicapsWhsQL.playerId, playerHandicapsWhsQL.PlayerQL.firstName + " " + playerHandicapsWhsQL.PlayerQL.lastName, playerHandicapsWhsQL.PlayerQL.handicap, playerHandicapsWhsQL.handicapDifferential, playerHandicapsWhsQL.updatedAt, playerHandicapsWhsQL.playedAt, playerHandicapsWhsQL.score, playerHandicapsWhsQL.adjustedScore, playerHandicapsWhsQL.front9, playerHandicapsWhsQL.back9, playerHandicapsWhsQL.handicapIndex);
                 this.playerHandicapsWhs[round] = this.getPlayerHandicapsWhs(round).set(playerHandicapsWhsQL.playerId, playerHandicapWhs);
             }
-            //console.log(this.playerHandicapsWhs);
-           // console.log(this.roundPlayerScores);
+            ////console.log(this.playerHandicapsWhs);
+           // //console.log(this.roundPlayerScores);
         }
     }
 

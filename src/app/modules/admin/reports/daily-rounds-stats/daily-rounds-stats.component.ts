@@ -325,7 +325,7 @@ export class DailyRoundsStatsComponent implements OnInit {
                 BookingDate: ['', [Validators.required]],
             });
 
-            console.log(this.scheduleForm);
+            //console.log(this.scheduleForm);
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
@@ -411,7 +411,7 @@ export class DailyRoundsStatsComponent implements OnInit {
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
             );
         }
-        console.log(dataPlayers);
+        //console.log(dataPlayers);
         for (let stats of dataPlayers.FlightsQL) {
 
             const timestamp = stats.date;
@@ -559,18 +559,18 @@ export class DailyRoundsStatsComponent implements OnInit {
             myData4[myData.length - 1].blueFrontYellowback = blueFrontYellowback;
             myData4[myData.length - 1].redFrontYellowback = redFrontYellowback;
         }
-        console.log(myData);
-        console.log(myData4);
+        //console.log(myData);
+        //console.log(myData4);
         this.dataSource = null;
         this.dataSource = new MatTableDataSource(myData);
-        // console.log(this.dataSource);
+        // //console.log(this.dataSource);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
         this.dataSource4 = null;
         this.dataSource4 = new MatTableDataSource(myData4);
 
-        // console.log(this.dataSource4)
+        // //console.log(this.dataSource4)
         this.dataSource4.paginator = this.paginator;
         this.dataSource4.sort = this.sort;
 
@@ -601,7 +601,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         yellowFrontRedback = 0;
         blueFrontYellowback = 0;
         yellowFrontBlueback = 0;
-        console.log(myData);
+        //console.log(myData);
         for (let data of myData) {
             dataMembers.push(data.membersCount);
             this.barChartLabels.push(data.date);
@@ -692,7 +692,7 @@ export class DailyRoundsStatsComponent implements OnInit {
             },
         ];
 
-        console.log(this.barChartData);
+        //console.log(this.barChartData);
 
         this.barChartType = 'bar';
         this.barChartLegend = true;
@@ -743,13 +743,13 @@ export class DailyRoundsStatsComponent implements OnInit {
         //   }
         // }
 
-        //     console.log(myData2);
+        //     //console.log(myData2);
 
         //     this.dataSource2 = null;
 
         //     this.dataSource2 = new MatTableDataSource(myData2);
 
-        //     console.log(this.dataSource2)
+        //     //console.log(this.dataSource2)
         //     this.dataSource2.paginator = this.paginator;
         //     this.dataSource2.sort = this.sort;
 
@@ -818,12 +818,12 @@ export class DailyRoundsStatsComponent implements OnInit {
         //       }
         //     }
 
-        //         console.log(myData3);
+        //         //console.log(myData3);
 
         //         this.dataSource3 = null;
         //         this.dataSource3 = new MatTableDataSource(myData3);
 
-        //         console.log(this.dataSource3)
+        //         //console.log(this.dataSource3)
         //         this.dataSource3.paginator = this.paginator;
         //         this.dataSource3.sort = this.sort;
 
@@ -918,12 +918,12 @@ export class DailyRoundsStatsComponent implements OnInit {
         //   }
         // }
 
-        //             console.log(myData4);
+        //             //console.log(myData4);
 
         //             this.dataSource4 = null;
         //             this.dataSource4 = new MatTableDataSource(myData4);
 
-        //             console.log(this.dataSource4)
+        //             //console.log(this.dataSource4)
         //             this.dataSource4.paginator = this.paginator;
         //             this.dataSource4.sort = this.sort;
 
@@ -1007,7 +1007,7 @@ export class DailyRoundsStatsComponent implements OnInit {
 
     Dailysetup(selectedValue) {
         this.logger.log('Getting Daily Round Report Data by Dropdown', "info", selectedValue.value);
-        console.log(selectedValue);
+        //console.log(selectedValue);
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
             let currentDate = new Date();
@@ -1016,40 +1016,40 @@ export class DailyRoundsStatsComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfWeek();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_6_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;
             // let lastDate = this.customDate2.value;
-            // console.log(currentDate)
-            // console.log(lastDate)
+            // //console.log(currentDate)
+            // //console.log(lastDate)
             // this.getDailyRounds(currentDate,lastDate);
         } else {
         }
@@ -1205,38 +1205,38 @@ export class DailyRoundsStatsComponent implements OnInit {
         };
     }
     onDatePick(item) {
-        console.log(item);
+        //console.log(item);
         this.customDate = item;
         if (this.customDate2) {
             let currentDate = this.customDate.value;
             let lastDate = this.customDate2.value;
 
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
             this.getDailyRounds(currentDate, lastDate);
         } else {
         }
     }
 
     onDatePick2(item) {
-        console.log(item);
+        //console.log(item);
         this.customDate2 = item;
         if (this.customDate) {
             let currentDate = this.customDate.value;
             let lastDate = this.customDate2.value;
 
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
             this.getDailyRounds(currentDate, lastDate);
         } else {
         }
     }
 
     public chartClicked(e: any): void {
-        // console.log(e);
+        // //console.log(e);
     }
 
     public chartHovered(e: any): void {
-        // console.log(e);
+        // //console.log(e);
     }
 }

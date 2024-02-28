@@ -9,7 +9,7 @@ export class Crypto {
         try {
             return CryptoJS.AES.encrypt(JSON.stringify(data), environment.encryptSecretKey).toString();
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
     }
 
@@ -26,7 +26,7 @@ export class Crypto {
             }
             
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
     }
 }

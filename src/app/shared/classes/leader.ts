@@ -66,10 +66,10 @@ export class Leader {
                 return a.flightRound == round;
               });
     
-              //console.log(this.roundFlights[round - 1]);
+              ////console.log(this.roundFlights[round - 1]);
     
               if(this.roundFlights[round - 1].length > 0) {
-                //console.log("not null");
+                ////console.log("not null");
                 
                 // if(this.Leaderboard.matchFormat == matchFormat.TEXAS_SCRAMBLE)
                 //   this.createTexasScrampleLeaders(this.roundFlights[round - 1], round, true) 
@@ -83,39 +83,39 @@ export class Leader {
     
                 index++;
             }
-            //console.log(this.allMatchResults);
+            ////console.log(this.allMatchResults);
             let grossAllArray: any[] = [];
 
             for(let key in this.allMatchResults)
                 grossAllArray.push(this.allMatchResults[key]);
     
-            //console.log(grossAllArray);
+            ////console.log(grossAllArray);
             return grossAllArray;
         }
     }
 
     private createSimpleLeaders(flightsQLs: any[], round: number) {
 
-        //console.log("calling me once....");
+        ////console.log("calling me once....");
         this.playerScores = [];
     
         let handicapAllocation: string = this.getHandicapAllocation();
     
         for(let flightData of flightsQLs) {
     
-          //console.log("Flight ID: " + flightData.id);
+          ////console.log("Flight ID: " + flightData.id);
           let membersQLs: any = flightData.MembersQL;
           
           for (let membersQL of membersQLs) {
             
-            //console.log(membersQL);
+            ////console.log(membersQL);
             let playerId: String = membersQL.playerId;
             //let playerQL:Player = membersQL.PlayerQL;
     
             //this.players.push(playerQL);
     
             let player:Player = membersQL.PlayerQL;
-            //console.log(player);
+            ////console.log(player);
             if (player == null) {
               continue;
             }
@@ -167,7 +167,7 @@ export class Leader {
               cntr++;
     
               //if(player.id == "-L6192uVBlBFw3grUy9_")
-                //console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.HoleIPQL.holeNo);
+                ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.HoleIPQL.holeNo);
             }
     
             let playerHole18ScoreGross: any[] = [];
@@ -178,7 +178,7 @@ export class Leader {
               let hole = scores.find((a) => {
                 return a.hole.holeNo == i + 1;
               });
-              //console.log(hole);
+              ////console.log(hole);
     
               if(hole) {
                 playerHole18ScoreGross[i] = hole.grossScore;
@@ -190,9 +190,9 @@ export class Leader {
               }
             }
            
-            //console.log(scoreHandicap + " " + player.handicap);
+            ////console.log(scoreHandicap + " " + player.handicap);
             netTotal = grossTotal - scoreHandicap;
-            // console.log(netTotal);
+            // //console.log(netTotal);
             netUnderTotal = grossUnderTotal - scoreHandicap;
     
             let name: string = player.firstName + " " + player.lastName;
@@ -261,7 +261,7 @@ export class Leader {
     
         if(leaderGross.playerId in this.allMatchResults)
         {
-         //console.log("index exist"); 
+         ////console.log("index exist"); 
         }
         else {
           this.allMatchResults[leaderGross.playerId] = [];
@@ -281,7 +281,7 @@ export class Leader {
         this.allMatchResults[leaderGross.playerId]["points" + round] += 0;
         this.allMatchResults[leaderGross.playerId]["holes" + round] += 0;
           
-          //console.log("index created"); 
+          ////console.log("index created"); 
         }
     
         if(!this.allMatchResults[leaderGross.playerId]["TotalGross" + round])
@@ -331,7 +331,7 @@ export class Leader {
         // (status)? this.allMatchResults[leaderGross.playerId]["status"] = 1 :
         //           this.allMatchResults[leaderGross.playerId]["status"] = 0;
         
-        //console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
+        ////console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
         return false;
     
       }

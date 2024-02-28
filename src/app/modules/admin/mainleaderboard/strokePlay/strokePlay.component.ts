@@ -55,7 +55,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        console.log(this.data);
+        //console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
         this.activeRound = this.Leaderboard.activeRound
         this.totalRounds = this.Leaderboard.noOfRounds
@@ -77,7 +77,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.selectedCategoryValue =
                     this.selectedCategory.category;
             }
-            console.log(this.selectedCategoryValue);
+            //console.log(this.selectedCategoryValue);
 
         } else {
             if (!this.selectedCategoryValue) {
@@ -133,7 +133,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
     }
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
+        //console.log(changes);
         //this.data = changes.data.currentValue;
         this.ngOnInit();
     }
@@ -150,7 +150,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 } else {
                     this.LeaderboardPlayers = leaders;
                 }
-                console.log(this.LeaderboardPlayers);
+                //console.log(this.LeaderboardPlayers);
                 if (this.Leaderboard.cutOffCriteria !== null) {
                     this.cutLeaders(this.Leaderboard.cutOffCriteria, this.LeaderboardPlayers)
                 }
@@ -369,7 +369,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         this.activeRound = this.Leaderboard.activeRound;
         if (this.flightRound == 0) {
             if (item.value == LeaderTypeValue.GROSS) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.allRoundGrossScore = true;
                 this.allRoundCutOff = true;
 
@@ -382,7 +382,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
 
             } else if (item.value == LeaderTypeValue.NET) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.allRoundGrossScore = false;
                 this.allRoundCutOff = false;
 
@@ -397,7 +397,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
         } else {
             if (item.value == LeaderTypeValue.GROSS) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.isGross = true;
                 this.isNet = false;
                 this.allRoundGrossScore = false;
@@ -409,7 +409,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
 
             } else if (item.value == LeaderTypeValue.NET) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.isNet = true;
                 this.isGross = false;
                 this.allRoundGrossScore = false;
@@ -527,7 +527,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     filterByQuery(query) {
         if (query.length > 3) {
             this.searchName = true;
-            // console.log(this.allMatchResults);
+            // //console.log(this.allMatchResults);
             if (this.LeaderboardPlayers.length > 0) {
                 this.allMatchSearchResults = this.LeaderboardPlayers.filter(
                     (obj) => {
@@ -561,7 +561,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         return hcAllocation;
     }
     changeCategory(item) {
-        console.log('TAb Changes');
+        //console.log('TAb Changes');
 
         this.activeRound = this.Leaderboard.activeRound;
         let originalCategory: string = '';
@@ -662,7 +662,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
         let scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound);
-        console.log(scoreResult);
+        //console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
@@ -800,7 +800,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 return 1;
             }
             // let round = this.getFlightRound(this.flightRound);
-            // console.log(round);
+            // //console.log(round);
 
             let selfHoles: number = a[`holesPlayedR${round}`]
             let leaderHoles: number = b[`holesPlayedR${round}`]
@@ -911,11 +911,11 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
         if (leaderGrossList.length > 0) leaderGrossList[0]['position'] = pos;
 
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderGrossList.length; i++) {
             let leaderCurrent = leaderGrossList[i];
             let leaderPrevious = leaderGrossList[i - 1];
-            // console.log(i);
+            // //console.log(i);
 
             let firstCompleted = false;
             let secondCompleted = false;
@@ -952,11 +952,11 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderGrossList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
-        console.log(leaderGrossList);
+        //console.log(leaderGrossList);
 
         return leaderGrossList;
     }
@@ -965,14 +965,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         //Collections.sort(grossLeaders);
 
         leaderList = leaderList.sort(this.ComparatorAllNetPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -1010,13 +1010,13 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
-        ////console.log("return");
-        console.log(leaderList);
+        //////console.log("return");
+        //console.log(leaderList);
         return leaderList;
     }
 

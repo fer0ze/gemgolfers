@@ -89,7 +89,7 @@ export class LayoutComponent implements OnInit, OnDestroy
                 this.config = config;
 
                 // Update the layout
-                console.log('in Update');
+                //console.log('in Update');
                 this._updateLayout();
             });
 
@@ -98,7 +98,7 @@ export class LayoutComponent implements OnInit, OnDestroy
             filter(event => event instanceof NavigationEnd),
             takeUntil(this._unsubscribeAll)
         ).subscribe(() => {
-            console.log('in Update');
+            //console.log('in Update');
             
             // Update the layout
             this._updateLayout();

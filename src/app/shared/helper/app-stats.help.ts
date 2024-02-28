@@ -27,7 +27,7 @@ export class AppStats {
                     // Do not add flights without score
                     continue;
                 }
-                //console.log(scoresQLs);
+                ////console.log(scoresQLs);
 
                 let scores: any[] = [];
 
@@ -63,7 +63,7 @@ export class AppStats {
             }
         }
 
-        //console.log(this.playerFlightScores);
+        ////console.log(this.playerFlightScores);
         let finalScoreStats: ScoreStats = new ScoreStats();
         for (let stats of this.playerFlightScores) {
             finalScoreStats.addScoreStats(stats.scoreStats);

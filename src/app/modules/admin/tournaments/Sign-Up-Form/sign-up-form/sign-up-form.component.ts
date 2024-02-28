@@ -47,7 +47,7 @@ export class SignUpFormComponent implements OnInit {
         let data = await this._facadeService.getTournamentByID(
             this.tournamentID
         );
-        console.log(data);
+        //console.log(data);
         this.tournamentQL = data.tournament[0];
         //this.playerCategories = this._facadeService.getPlayerCategories();
         let dataClubs = await this._facadeService.getClubList();
@@ -72,7 +72,7 @@ export class SignUpFormComponent implements OnInit {
                 this.playerCategories.push(obja);
             }
         }
-        console.log(this.playerCategories);
+        //console.log(this.playerCategories);
     }
     createForm() {
         this.signUpForm = new FormGroup({
@@ -115,9 +115,9 @@ export class SignUpFormComponent implements OnInit {
 
         if (signUpPerson.phone && exist.length == 0) {
             // this.logger.log(signUpPerson.phone);
-            console.log(signUpPerson.phone);
+            //console.log(signUpPerson.phone);
             let phone = General.getPhonePrefix(signUpPerson.phone.trim());
-            console.log(phone);
+            //console.log(phone);
 
             exist = await this._facadeService.getPlayerByPhone(phone);
         }
@@ -140,7 +140,7 @@ export class SignUpFormComponent implements OnInit {
             let find = this.tournamentQL.members.find((a) => {
                 return a.playerId == exist[0].id;
             });
-            console.log(find);
+            //console.log(find);
             if (find ==undefined || Object.keys(find).length === 0) {
                 let member: any = {
                     tournamentId: this.tournamentID,
@@ -161,7 +161,7 @@ export class SignUpFormComponent implements OnInit {
                 await this._facadeService.getallPlayersforGGid();
             var sortarray = players['player'];
             sortarray.sort(this.Comparator);
-            console.log(sortarray);
+            //console.log(sortarray);
             let member: any = {
                 clubId: signUpPerson.club.id,
                 //clubId: "-KpFBx3dRDXWh7ZoK9vG",

@@ -67,7 +67,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             .subscribe((user: User) => {
                 this.user = user;
             });
-         console.log(this.user);
+         //console.log(this.user);
 
         // Subscribe to navigation data
         this._navigationService.navigation$
@@ -92,7 +92,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             this.user.avatar = 'assets/images/logo/e2esp.png';
 
         }
-        // console.log(this.navigation);
+        // //console.log(this.navigation);
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

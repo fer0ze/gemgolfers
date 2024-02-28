@@ -66,7 +66,7 @@ export class ClubReportComponent implements OnInit {
         let dataMembers: any[] = [];
         let clubName: any[] = [];
         let clubs = await this.facadeService.getClubList();
-        console.log(clubs);
+        //console.log(clubs);
         this.clubs = clubs.club;
         this.dataSource = new MatTableDataSource(clubs.club);
         this.dataSource.paginator = this.paginator;
@@ -115,7 +115,7 @@ export class ClubReportComponent implements OnInit {
         // dataMembers.push(this.barChartData1700.length);
         // dataMembers.push(this.barChartData2000.length);
         // dataMembers.push(this.barChartData2500.length);
-        console.log(this.barChartLabels);
+        //console.log(this.barChartLabels);
 
         this._series['0'] = [
             {

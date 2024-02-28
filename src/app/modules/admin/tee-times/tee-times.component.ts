@@ -82,7 +82,7 @@ export class TeeTimesComponent implements OnInit {
                     this.teeTimes = dataPlayers.tee_time_booking;
                     this.isLoading = false;
 
-                    console.log(this.teeTimes);
+                    //console.log(this.teeTimes);
 
                     this.dataSource = new MatTableDataSource(this.teeTimes);
                     this.dataSource.paginator = this.paginator;
@@ -129,7 +129,7 @@ export class TeeTimesComponent implements OnInit {
                 this.dataSource = new MatTableDataSource(this.teeTimes);
                 this.ngOnInit();
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }

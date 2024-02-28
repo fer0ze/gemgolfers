@@ -75,17 +75,17 @@ export class PlayerManagementComponent implements OnInit {
 
     async ngOnInit() {
          this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        console.log(this.loggedInuser);
+        //console.log(this.loggedInuser);
         let selectedClubId: string = this.loggedInuser.adminClubId;
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
         this.clubMembers = [];
-        console.log(selectedClubId);
+        //console.log(selectedClubId);
         let dataFullTournaments = await this.facadeService.getTournamentMembers(
             this.tournamentID
         );
-        console.log(dataFullTournaments);
+        //console.log(dataFullTournaments);
 
         this.tournamentMember = dataFullTournaments.TournamentMemberQL;
         this.clubMembers = await this.facadeService.getPlayerByClub(
@@ -106,7 +106,7 @@ export class PlayerManagementComponent implements OnInit {
             this.index < this.clubMembers['club_member'].length;
             this.index++
         ) {
-            //console.log(this.index);
+            ////console.log(this.index);
 
             let flag: boolean = false;
             for (let c of this.tournamentMember) {
@@ -130,14 +130,14 @@ export class PlayerManagementComponent implements OnInit {
         this.dataSources.sort = this.sort;
         // this.dataSources.paginator = this.paginator;
         this.isLoading = false;
-        console.log(this.dataSources);
+        //console.log(this.dataSources);
 
         this.player = [];
         //setTimeout(() => (this.dataSources.paginator = this.paginators), 2000);
     }
     syncTournamentMembers() {
-        console.log(this.tournamentMember.length);
-        // console.log(this.selectedMembers);
+        //console.log(this.tournamentMember.length);
+        // //console.log(this.selectedMembers);
         // let count = 0;
         this.aggregates = this.tournamentMember.length;
         let flightPlayers: any[] = [];
@@ -167,7 +167,7 @@ export class PlayerManagementComponent implements OnInit {
         //     count = 0;
         //   }
         // }
-        // console.log(flightPlayers);
+        // //console.log(flightPlayers);
         // if (flightPlayers.length > 0) {
         // for (let member of flightPlayers) {
         //   let index = 0;
@@ -187,7 +187,7 @@ export class PlayerManagementComponent implements OnInit {
             this.indexs < this.tournamentMember.length;
             this.indexs++
         ) {
-            //console.log(this.index);
+            ////console.log(this.index);
 
             count++;
             this.player.push(this.tournamentMember[this.indexs]);
@@ -195,7 +195,7 @@ export class PlayerManagementComponent implements OnInit {
         }
 
         this.indexs = 0;
-        console.log(this.tournamentMember);
+        //console.log(this.tournamentMember);
         this.dataSource = new MatTableDataSource(this.tournamentMember);
         this.dataSource.sort = this.sorts;
         this.isLoading = false;
@@ -211,18 +211,18 @@ export class PlayerManagementComponent implements OnInit {
     onPageFired(event) {
         this.index = event.pageIndex * event.pageSize;
         this.pageSize = event.pageSize;
-        console.log(this.index);
+        //console.log(this.index);
         this.syncClubMembers();
 
-        console.log(event);
+        //console.log(event);
     }
     onPageFireds(event) {
         this.indexs = event.pageIndex * event.pageSizes;
         this.pageSizes = event.pageSizes;
-        console.log(this.index);
+        //console.log(this.index);
         this.syncTournamentMembers();
 
-        console.log(event);
+        //console.log(event);
     }
     checkboxLabel(row?: Player): string {
         if (!row) {
@@ -233,7 +233,7 @@ export class PlayerManagementComponent implements OnInit {
         } player ${row.firstName} ${row.lastName}`;
     }
     isAllSelected() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSources) {
             const numSelected = this.selection.selected.length;
             const numRows = this.dataSources.data.length;
@@ -275,7 +275,7 @@ export class PlayerManagementComponent implements OnInit {
                         tournamentId: this.tournamentID,
                         status: false,
                     };
-                    console.log(obj);
+                    //console.log(obj);
                     this.tournamentMember.push(obj);
 
                     let member: any = {
@@ -286,19 +286,19 @@ export class PlayerManagementComponent implements OnInit {
                     tournamentmember.push(member);
                 }
                 counter = parseInt(index) + 1;
-                console.log(counter);
+                //console.log(counter);
 
-                console.log(selectionArray);
+                //console.log(selectionArray);
             }
         }
         this.showCategory = false;
         this.categoryCounts = [];
-        //console.log(this.categoryCounts[0]);
+        ////console.log(this.categoryCounts[0]);
 
         //this.categoryCounts[0].value = this.categoryCounts[0].value - counter;
-        //console.log(this.categoryCounts[0].value);
+        ////console.log(this.categoryCounts[0].value);
 
-        console.log(tournamentmember);
+        //console.log(tournamentmember);
 
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentmember)
@@ -316,34 +316,34 @@ export class PlayerManagementComponent implements OnInit {
     }
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        console.log(this.selection);
-        console.log(this.selection.selected.length);
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
         this.selection.clear();
     }
 
     updateCategorySelection(event, row) {
-        console.log(row);
+        //console.log(row);
 
-        console.log(this.selection.isSelected(row));
+        //console.log(this.selection.isSelected(row));
         let status = false;
 
         if (typeof event.checked !== 'undefined')
             status = event.checked ? true : false;
         else {
-            console.log(this.selection.isSelected(row));
+            //console.log(this.selection.isSelected(row));
             status = this.selection.isSelected(row) ? false : true;
         }
 
         this.countCategoryMember(status, row);
 
-        console.log(this.categoryCounts);
+        //console.log(this.categoryCounts);
     }
 
     countCategoryMember(status, row) {
         let founded = this.categoryCounts.filter((a) => {
             return a.name == row.player.playerCategory;
         });
-        console.log(founded);
+        //console.log(founded);
 
         if (status) {
             if (founded.length > 0) {
@@ -360,7 +360,7 @@ export class PlayerManagementComponent implements OnInit {
                 status
                     ? (founded[0].value = founded[0].value - 1)
                     : (founded[0].value = founded[0].value - 1);
-                console.log(this.categoryCounts);
+                //console.log(this.categoryCounts);
             }
         }
     }

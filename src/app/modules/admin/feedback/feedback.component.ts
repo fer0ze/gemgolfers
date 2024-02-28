@@ -25,13 +25,13 @@ export class FeedbackComponent implements OnInit {
   async ngOnInit() {
     let feedbacks = await this.facadeService.getAllFeedback();
     this.feedback = feedbacks.feedback;
-    console.log(this.feedback);
+    //console.log(this.feedback);
     this.dataSource = new MatTableDataSource(this.feedback);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
   showMessage(message) {
-    console.log(message);
+    //console.log(message);
     const dialogRef = this.dialog.open(DialogShowfeedbackComponent, {
       width: "50%",
       data: { message: message },

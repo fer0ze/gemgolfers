@@ -52,7 +52,7 @@ export class DialogAddPlayerComponent implements OnInit {
     ) {}
 
     async ngOnInit() {
-        //console.log(this.route.snapshot.paramMap.get("id"));
+        ////console.log(this.route.snapshot.paramMap.get("id"));
 
         this.route.paramMap.subscribe((params) => {
             this.playerID = params.get('id');
@@ -96,7 +96,7 @@ export class DialogAddPlayerComponent implements OnInit {
                 await this.facadeService.getPlayerByID(this.playerID)
             );
 
-            console.log(this.currentPlayer);
+            //console.log(this.currentPlayer);
 
             this.playerForm.setValue({
                 firstName: this.currentPlayer[0].firstName,
@@ -146,7 +146,7 @@ export class DialogAddPlayerComponent implements OnInit {
                 this.playerForm.get('email').value
             )
         );
-        //console.log(checkEmail);
+        ////console.log(checkEmail);
         if (checkEmail) flag = true;
 
         return flag;
@@ -160,7 +160,7 @@ export class DialogAddPlayerComponent implements OnInit {
                 this.playerForm.get('phone').value
             )
         );
-        //console.log(checkEmail);
+        ////console.log(checkEmail);
         if (checkEmail) flag = true;
 
         return flag;
@@ -187,7 +187,7 @@ export class DialogAddPlayerComponent implements OnInit {
                 )
             );
 
-        //console.log(checkEmail);
+        ////console.log(checkEmail);
         if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
 
         if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
@@ -231,7 +231,7 @@ export class DialogAddPlayerComponent implements OnInit {
         let players:any[] = await this.facadeService.getallPlayersforGGid();
         var sortarray = players['player'];
         sortarray.sort(this.Comparator);
-        console.log(sortarray);
+        //console.log(sortarray);
         this.playerID
             ? (UniqueId = this.playerID)
             : (UniqueId = UniqueIdGenerator.generate());
@@ -239,7 +239,7 @@ export class DialogAddPlayerComponent implements OnInit {
             ? (GEMId = this.currentPlayer.gemId)
             : (GEMId = generateGemId.generate(sortarray[0].gemId));
 
-        //console.log(playerFormValue.isClubAdmin);
+        ////console.log(playerFormValue.isClubAdmin);
         const player: Player = {
             id: UniqueId,
             adminClubId:
@@ -273,11 +273,11 @@ export class DialogAddPlayerComponent implements OnInit {
         };
 
         if (newFlag && !this.playerID) {
-            //console.log("Going to add new player");
+            ////console.log("Going to add new player");
             const isSuccess = <boolean>(
                 await this.facadeService.AddPlayer(player)
             );
-            //console.log(isSuccess);
+            ////console.log(isSuccess);
             if (isSuccess) {
                 this.snackBar.open('Player has been created.', 'x', {
                     duration: 5000,
@@ -289,7 +289,7 @@ export class DialogAddPlayerComponent implements OnInit {
 
         this.response = player;
         this.dialogRef.close(this.response);
-        console.log(this.response);
+        //console.log(this.response);
     }
 
     public Comparator(a, b) {

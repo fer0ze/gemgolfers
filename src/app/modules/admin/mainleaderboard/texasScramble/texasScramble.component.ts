@@ -33,9 +33,9 @@ export class ScrambleComponent implements OnInit, OnChanges {
         public dialog: MatDialog, private facadeService: FacadeService
     ) { }
     ngOnInit(): void {
-        console.log('a');
+        //console.log('a');
 
-        console.log(this.data);
+        //console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
         this.activeRound = this.Leaderboard.activeRound
         this.totalRounds = this.Leaderboard.noOfRounds
@@ -44,7 +44,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
+        //console.log(changes);
         //this.data = changes.data.currentValue;
         this.ngOnInit();
     }
@@ -94,11 +94,11 @@ export class ScrambleComponent implements OnInit, OnChanges {
 
         if (leaderGrossList.length > 0) leaderGrossList[0]['position'] = pos;
 
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderGrossList.length; i++) {
             let leaderCurrent = leaderGrossList[i];
             let leaderPrevious = leaderGrossList[i - 1];
-            // console.log(i);
+            // //console.log(i);
 
             let firstCompleted = false;
             let secondCompleted = false;
@@ -135,11 +135,11 @@ export class ScrambleComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderGrossList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
-        console.log(leaderGrossList);
+        //console.log(leaderGrossList);
 
         return leaderGrossList;
     }
@@ -148,14 +148,14 @@ export class ScrambleComponent implements OnInit, OnChanges {
         //Collections.sort(grossLeaders);
 
         leaderList = leaderList.sort(this.ComparatorAllNetPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -193,13 +193,13 @@ export class ScrambleComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
-        ////console.log("return");
-        console.log(leaderList);
+        //////console.log("return");
+        //console.log(leaderList);
         return leaderList;
     }
     ComparatorAllGrossPosition(a, b) {
@@ -394,7 +394,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
         } else if (this.Leaderboard.matchFormat == matchFormat.SHAMBLES) {
             scoreResult = ScoreLoader.getShamblesScore(playerId);
         }
-        console.log(scoreResult);
+        //console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {

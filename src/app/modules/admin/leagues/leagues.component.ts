@@ -57,13 +57,13 @@ export class LeaguesComponent implements OnInit {
         let dataTournaments: any[] = [];
         let clubName: any[] = [];
         let clubs: any;
-        console.log(this.loggedInuser);
+        //console.log(this.loggedInuser);
         if (this.loggedInuser.userRole == 1) {
             clubs = await this.facadeService.getLeagues();
         } else if (this.loggedInuser.userRole == 2) {
             clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.adminClubId);
         }
-        // console.log(clubs.league);
+        // //console.log(clubs.league);
         this.clubs = clubs.league;
         if (this.clubs.length == 0) {
             this.showLeaderBoards = true;

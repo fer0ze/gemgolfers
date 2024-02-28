@@ -41,7 +41,7 @@ export class DialogCloseRoundComponent implements OnInit {
             category: this.fb.array([]),
         });
 
-        console.log(this.data);
+        //console.log(this.data);
         this.round = this.data.round;
         let sDate = new Date(this.data.startDate);
 
@@ -60,7 +60,7 @@ export class DialogCloseRoundComponent implements OnInit {
                 var textB = b.category.toUpperCase();
                 return textA < textB ? -1 : textA > textB ? 1 : 0;
             });
-            console.log(this.data.categories);
+            //console.log(this.data.categories);
             for (let c of this.data.categories) {
                 if (c.allowCat) {
                     this.catArray[c.category] = [];
@@ -77,7 +77,7 @@ export class DialogCloseRoundComponent implements OnInit {
                         this.catArray[c.category]['cutshow'] = false;
                         this.catArray[c.category]['showCutCopy'] = false;
                     }
-                    //console.log(this.catArray);
+                    ////console.log(this.catArray);
                     this.addCategoryFlightField(c);
                 }
             }
@@ -88,7 +88,7 @@ export class DialogCloseRoundComponent implements OnInit {
             this.catArray['All']['cutshow'] = false;
             this.catArray['All']['showCutCopy'] = false;
 
-            //console.log(this.catArray);
+            ////console.log(this.catArray);
             this.addCategoryFlightField('All');
         }
 
@@ -96,7 +96,7 @@ export class DialogCloseRoundComponent implements OnInit {
 
 
         //this.categoryList.removeAt(0);
-        // console.log(this.categoryList);
+        // //console.log(this.categoryList);
     }
     getFlightTime(items: any) {
         let flightTime: string = '00:00';
@@ -155,10 +155,10 @@ export class DialogCloseRoundComponent implements OnInit {
             startDate.setDate(
                 startDate.getDate() - (parseInt(this.data.round) - 1)
             );
-            console.log(startDate);
-            //console.log(new Date(this.datePipe.transform(FilteredFlight[0].flightSettings.playingDate[0].Date, 'dd-MM-yyyy')));
+            //console.log(startDate);
+            ////console.log(new Date(this.datePipe.transform(FilteredFlight[0].flightSettings.playingDate[0].Date, 'dd-MM-yyyy')));
             let sDate = this.datePipe.transform(startDate, 'yyyyMMdd');
-            console.log(sDate);
+            //console.log(sDate);
             if (FilteredFlight.length > 1) {
                 this.PlayingFlight =
                     FilteredFlight[0].flightSettings.playingDate.filter((a) => {
@@ -170,9 +170,9 @@ export class DialogCloseRoundComponent implements OnInit {
                         //return ((new Date(this.datePipe.transform(a.Date, 'dd-MM-yyyy')).getTime())  == (startDate ).getTime() && (a.playing == true) && (FilteredFlight[0].category == cat))
                     });
 
-                console.log(this.PlayingFlight);
+                //console.log(this.PlayingFlight);
             } else {
-                console.log('flights No');
+                //console.log('flights No');
             }
             // if(PlayingFlight.length > 0)
             // {
@@ -180,10 +180,10 @@ export class DialogCloseRoundComponent implements OnInit {
             //var startDate = new Date(this.datePipe.transform(this.data.startDate, 'dd-MM-yyyy'));
             var startDate = new Date(this.data.startDate);
             startDate.setDate(startDate.getDate());
-            console.log(startDate);
-            //console.log(new Date(this.datePipe.transform(FilteredFlight[0].flightSettings.playingDate[0].Date, 'dd-MM-yyyy')));
+            //console.log(startDate);
+            ////console.log(new Date(this.datePipe.transform(FilteredFlight[0].flightSettings.playingDate[0].Date, 'dd-MM-yyyy')));
             let sDate = this.datePipe.transform(startDate, 'yyyyMMdd');
-            console.log(sDate);
+            //console.log(sDate);
             if (FilteredFlight.length > 1) {
                 this.PlayingFlight =
                     FilteredFlight[0].flightSettings.playingDate.filter((a) => {
@@ -194,9 +194,9 @@ export class DialogCloseRoundComponent implements OnInit {
                         );
                         //return ((new Date(this.datePipe.transform(a.Date, 'dd-MM-yyyy')).getTime())  == (startDate ).getTime() && (a.playing == true) && (FilteredFlight[0].category == cat))
                     });
-                console.log(this.PlayingFlight);
+                //console.log(this.PlayingFlight);
             } else {
-                console.log('flights No');
+                //console.log('flights No');
             }
         }
         //   this.playingCat = true
@@ -204,7 +204,7 @@ export class DialogCloseRoundComponent implements OnInit {
         if (FilteredFlight.length > 0) {
             this.flightData = FilteredFlight[0].flightSettings;
         }
-        console.log(this.flightData);
+        //console.log(this.flightData);
 
         return this.fb.group({
             name: [
@@ -226,16 +226,16 @@ export class DialogCloseRoundComponent implements OnInit {
     }
 
     selectionChangeCopy(evt, cat) {
-        console.log(evt);
-        console.log(cat);
+        //console.log(evt);
+        //console.log(cat);
 
         evt.value == 'Yes'
             ? (this.catArray[cat].showCutCopy = false)
             : (this.catArray[cat].showCutCopy = true);
     }
     selectionChange(evt, cat) {
-        console.log(evt);
-        console.log(cat);
+        //console.log(evt);
+        //console.log(cat);
 
         evt.value == 'true'
             ? (this.catArray[cat].value = true)
@@ -256,12 +256,12 @@ export class DialogCloseRoundComponent implements OnInit {
     // addField(category: any) {
     //   const control = this.cutOffform.get("category") as FormArray;
     //   control.push(this.createCategory(category));
-    //   console.log(control)
+    //   //console.log(control)
     // }
 
     addCategoryFlightField(category: any) {
         const control = this.cutOffform.get('category') as FormArray;
-        //console.log(this.catArray[category.category].value);
+        ////console.log(this.catArray[category.category].value);
         //if(this.catArray[category].value == true)
         //{
         if (category !== 'All') {
@@ -271,7 +271,7 @@ export class DialogCloseRoundComponent implements OnInit {
 
             control.push(this.createFlightSettingsForMatchPlay(category));
         }
-        console.log(control);
+        //console.log(control);
         //}
     }
 
@@ -285,13 +285,13 @@ export class DialogCloseRoundComponent implements OnInit {
     }
 
     saveCutSettings(index, event): void {
-        console.log(this.tabGroup);
-        // /console.log(event);
+        //console.log(this.tabGroup);
+        // ///console.log(event);
 
-        // console.log(document.getElementById('mat-tab-label-5-' + index));
-        // console.log(document.getElementById('mat-tab-label-6-' + index));
-        // console.log(document.getElementById('mat-tab-label-7-' + index));
-        // console.log(document.getElementById('mat-tab-label-8-' + index));
+        // //console.log(document.getElementById('mat-tab-label-5-' + index));
+        // //console.log(document.getElementById('mat-tab-label-6-' + index));
+        // //console.log(document.getElementById('mat-tab-label-7-' + index));
+        // //console.log(document.getElementById('mat-tab-label-8-' + index));
         // if (document.getElementById('mat-tab-label-5-' + index)) {
         //     document
         //         .getElementById('mat-tab-label-5-' + index)
@@ -315,9 +315,9 @@ export class DialogCloseRoundComponent implements OnInit {
         //         );
         // }
 
-        console.log(this.cutOffform.get('category').value.length);
+        //console.log(this.cutOffform.get('category').value.length);
 
-        console.log(index);
+        //console.log(index);
         if (index < this.cutOffform.get('category').value.length - 1) {
             this.selectedIndex = ++index;
         } else {

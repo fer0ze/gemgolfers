@@ -17,7 +17,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         //     clientSideData: navigator.userAgent,
         // }
         // this.logger.log('Getting Dashboard Data', "error", body);
-        console.log(error);
+        //console.log(error);
 
 
         // You can also re-throw the error if needed

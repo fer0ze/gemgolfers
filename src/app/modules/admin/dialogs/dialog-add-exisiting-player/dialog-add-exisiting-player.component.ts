@@ -99,8 +99,8 @@ export class DialogAddExisitingPlayerComponent implements OnInit {
         let lowerHandicap = (handicap)? Number(handicap) - 1 : 0;
         let upperHandicap = (handicap)? Number(handicap) + 1 : 0;
 
-        console.log(lowerHandicap);
-        console.log(upperHandicap);
+        //console.log(lowerHandicap);
+        //console.log(upperHandicap);
 
         let matchingList = <Player>await this.facadeService.searchPlayer(firstName, lastName, "NOTHING", lowerHandicap, upperHandicap);
         this.player = this.getMatchingPlayers(matchingList);
@@ -121,20 +121,20 @@ export class DialogAddExisitingPlayerComponent implements OnInit {
 
     getMatchingPlayers(object) {
       let matching: any[] = [];
-      console.log(object);
+      //console.log(object);
       for(let i=1; i<=4; i++) {
         for(let j=1; j<4; j++) {
-          console.log("Result" + i + j);
-          console.log(object["Result" + i + j].length);
+          //console.log("Result" + i + j);
+          //console.log(object["Result" + i + j].length);
           if(object["Result" + i + j] != null && object["Result" + i + j].length < 50) {
             for(let item of object["Result" + i + j]) {
-              console.log(matching);
-              console.log(item);
+              //console.log(matching);
+              //console.log(item);
               let exist = matching.filter((a) => {
                 return a.id == item.id;
               });
               
-              console.log(exist.length);
+              //console.log(exist.length);
               
               if(exist.length == 0)
                 matching.push(item);
@@ -142,12 +142,12 @@ export class DialogAddExisitingPlayerComponent implements OnInit {
           }
         }
       }
-      console.log(matching);
+      //console.log(matching);
       return matching;
     }
 
     getClubTooltip(membership) {
-      console.log(membership);
+      //console.log(membership);
       let clubList: string;
       for(let member of membership) {
         clubList += member.club.name + ", ";
@@ -176,7 +176,7 @@ export class DialogAddExisitingPlayerComponent implements OnInit {
 
 
     changeFlight(item) {
-      console.log("Selected value: " + item.value);
+      //console.log("Selected value: " + item.value);
       this.selectedFlight = item.value;
       
       if(this.response)

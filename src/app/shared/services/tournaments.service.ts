@@ -264,9 +264,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        console.log(clubId);
-        console.log(fromDate);
-        console.log(toDate);
+        //console.log(clubId);
+        //console.log(fromDate);
+        //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -278,7 +278,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
@@ -288,9 +288,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -302,7 +302,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -312,9 +312,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -326,7 +326,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -335,9 +335,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -348,7 +348,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -357,9 +357,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -370,7 +370,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -380,9 +380,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -394,7 +394,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -413,7 +413,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -422,9 +422,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -435,7 +435,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -445,9 +445,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -459,7 +459,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -470,9 +470,9 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Observable<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return this.apollo
             .subscribe<any>({
                 query: Query.getallDashboard,
@@ -483,12 +483,12 @@ export class TournamentsService {
                     toDate: toDate,
                 },
             })
-            .pipe(tap((data) => console.log(data)));
+            .pipe(tap((data) => (data)));
     }
     public getAllAdmin(fromDate: string, toDate: string): Promise<any> {
-        // console.log(clubId);
-        // console.log(fromDate);
-        // console.log(toDate);
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -499,7 +499,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    // console.log(data);
+                    // //console.log(data);
                     resolve(data);
                 });
         });
@@ -509,7 +509,7 @@ export class TournamentsService {
 
         Date: string
     ): Promise<any> {
-        console.log(clubId);
+        //console.log(clubId);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -521,7 +521,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
@@ -536,13 +536,13 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
     }
     public getRoundScore(Id: any): Promise<any> {
-        console.log(Id);
+        //console.log(Id);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -552,13 +552,13 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
     }
     public getPlayerScorebyID(Id: any): Promise<any> {
-        console.log(Id);
+        //console.log(Id);
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -568,7 +568,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
@@ -669,12 +669,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -694,12 +694,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -712,12 +712,12 @@ export class TournamentsService {
                     query: Query.getLeagues,
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -733,12 +733,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -754,12 +754,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -775,12 +775,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -801,12 +801,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -823,12 +823,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    //console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -845,12 +845,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    //console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -866,12 +866,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    //console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -904,12 +904,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -930,12 +930,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -972,12 +972,12 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(data);
                     }
                 });
@@ -994,8 +994,8 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    //console.log(data.tournament_by_pk);
-                    //console.log(data);
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
@@ -1062,11 +1062,11 @@ export class TournamentsService {
     //         }
     //       }
     //     }).subscribe(({ data }) => {
-    //       console.log(data);
+    //       //console.log(data);
     //       resolve(true);
     //     }, (error) => {
     //       resolve(false);
-    //       console.log('Could delete add due to ' + error);
+    //       //console.log('Could delete add due to ' + error);
     //     });
     //   });
     // }
@@ -1164,12 +1164,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1185,12 +1185,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1198,7 +1198,7 @@ export class TournamentsService {
 
     /*
     updateClub(club:Tournament): Promise<boolean> {
-      console.log(club.id);
+      //console.log(club.id);
       return new Promise( resolve => {
         this.apollo.mutate<any>({
           mutation: Query.UpdateMutation,
@@ -1220,7 +1220,7 @@ export class TournamentsService {
           resolve(true);
         }, (error) => {
           resolve(false);
-          console.log('Could update add due to ' + error);
+          //console.log('Could update add due to ' + error);
         });
       });
     } */
@@ -1250,12 +1250,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        console.log(data);
+                        //console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could delete add due to ' + error);
+                        //console.log('Could delete add due to ' + error);
                     }
                 );
         });
@@ -1278,19 +1278,19 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        console.log(data);
+                        //console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could delete add due to ' + error);
+                        //console.log('Could delete add due to ' + error);
                     }
                 );
         });
     }
 
     deleteClub(id: string): Promise<boolean> {
-        //console.log(id);
+        ////console.log(id);
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
@@ -1305,12 +1305,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could delete add due to ' + error);
+                        ////console.log('Could delete add due to ' + error);
                     }
                 );
         });
@@ -1333,12 +1333,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1363,12 +1363,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1431,12 +1431,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1455,12 +1455,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1478,12 +1478,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1504,11 +1504,11 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                         resolve(false);
                     }
                 );
@@ -1527,12 +1527,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1555,12 +1555,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1581,12 +1581,12 @@ export class TournamentsService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        //console.log(data);
+                        ////console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -1597,7 +1597,7 @@ export class TournamentsService {
         category: string,
         flightSettings: JSON
     ): Promise<any> {
-        console.log(flightSettings);
+        //console.log(flightSettings);
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
@@ -1622,7 +1622,7 @@ export class TournamentsService {
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not update add due to ' + error);
+                        //console.log('Could not update add due to ' + error);
                     }
                 );
         });
@@ -1638,7 +1638,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
@@ -1660,7 +1660,7 @@ export class TournamentsService {
                     },
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     resolve(data);
                 });
         });
@@ -1687,7 +1687,7 @@ export class TournamentsService {
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could Not Update due to' + error);
+                        //console.log('Could Not Update due to' + error);
                     }
                 );
         });

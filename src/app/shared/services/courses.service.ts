@@ -22,7 +22,7 @@ export class CoursesService {
           if (data == null) {
             resolve(null);
           } else {
-            //console.log(data.course);
+            ////console.log(data.course);
             resolve(data);
           }
         });
@@ -46,7 +46,7 @@ export class CoursesService {
           if (data == null) {
             resolve(null);
           } else {
-            //console.log(data.course);
+            ////console.log(data.course);
             resolve(data);
           }
         });
@@ -123,7 +123,7 @@ export class CoursesService {
           },
         })
         .subscribe(({ data }) => {
-          //console.log(data);
+          ////console.log(data);
           if (!data) {
             resolve(null);
           } else {
@@ -146,7 +146,7 @@ export class CoursesService {
           },
         })
         .subscribe(({ data }) => {
-          //console.log(data);
+          ////console.log(data);
           if (!data) {
             resolve(null);
           } else {
@@ -169,7 +169,7 @@ export class CoursesService {
           },
         })
         .subscribe(({ data }) => {
-          //console.log(data);
+          ////console.log(data);
           if (!data) {
             resolve(null);
           } else {
@@ -192,7 +192,7 @@ export class CoursesService {
           },
         })
         .subscribe(({ data }) => {
-          //console.log(data);
+          ////console.log(data);
           if (!data) {
             resolve(null);
           } else {
@@ -306,13 +306,13 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
   }
   public updateCourse(course: any, holes: any): Promise<boolean> {
-    console.log(course.id);
+    //console.log(course.id);
 
     return new Promise((resolve) => {
       this.apollo
@@ -329,13 +329,13 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
   }
   public saveTeeColor(tee: any[]): Promise<boolean> {
-    console.log(tee);
+    //console.log(tee);
 
     return new Promise((resolve) => {
       this.apollo
@@ -351,13 +351,13 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
   }
   public deleteTeeColor(courseID, tee: any[]): Promise<boolean> {
-    console.log(tee);
+    //console.log(tee);
 
     return new Promise((resolve) => {
       this.apollo
@@ -386,7 +386,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
@@ -409,7 +409,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
@@ -429,7 +429,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(error);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
@@ -449,7 +449,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
@@ -471,7 +471,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
@@ -495,7 +495,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });
@@ -522,7 +522,7 @@ export class CoursesService {
           },
           (error) => {
             resolve(false);
-            console.log("Could not add due to " + error);
+            //console.log("Could not add due to " + error);
           }
         );
     });

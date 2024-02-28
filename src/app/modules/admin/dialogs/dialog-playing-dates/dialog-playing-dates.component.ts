@@ -21,16 +21,16 @@ export class DialogPlayingDatesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.data);
+    //console.log(this.data);
     for (let i of this.data.dates) {
-      console.log(i);
+      //console.log(i);
       let obj = {
         dates: i,
       };
       this.date.push(obj);
     }
     // for (let i of this.data.category) {
-    //   console.log(i);
+    //   //console.log(i);
     //   let obj = {
     //     cat: i,
     //   };
@@ -40,16 +40,16 @@ export class DialogPlayingDatesComponent implements OnInit {
     // if (this.category.length > 1) {
     //   let pop: any = this.category.pop();
     //   this.categoryDate.push(pop);
-    //   console.log(this.categoryDate);
-    //   console.log(this.category);
+    //   //console.log(this.categoryDate);
+    //   //console.log(this.category);
     // }
-    console.log(this.category);
-    console.log(this.categoryDate);
+    //console.log(this.category);
+    //console.log(this.categoryDate);
   }
 
   dateChange(event, t) {
-    //console.log(this.category[0]["cat"].id);
-    //console.log(this.category["cat"].id);
+    ////console.log(this.category[0]["cat"].id);
+    ////console.log(this.category["cat"].id);
 
     let obj = {
       id:
@@ -61,8 +61,8 @@ export class DialogPlayingDatesComponent implements OnInit {
     };
 
     this.playingDates.push(obj);
-    console.log(t);
-    console.log(this.playingDates);
+    //console.log(t);
+    //console.log(this.playingDates);
   }
   onNoClick(): void {
     this.dialogRef.close();

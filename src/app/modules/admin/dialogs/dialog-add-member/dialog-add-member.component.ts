@@ -51,7 +51,7 @@ export class DialogAddMemberComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        console.log(this.data);
+        //console.log(this.data);
 
         this.dataSource = new MatTableDataSource(this.data.members);
         this.dataSource.sort = this.sort;
@@ -60,7 +60,7 @@ export class DialogAddMemberComponent implements OnInit {
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        console.log(this.dataSource);
+        //console.log(this.dataSource);
         this.dataSource.filter = filterValue;
 
         if (this.dataSource.paginator) {
@@ -68,7 +68,7 @@ export class DialogAddMemberComponent implements OnInit {
         }
     }
     isAllSelected() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSource) {
             const numSelected = this.selection.selected.length;
             const numRows = this.dataSource.data.length;
@@ -78,8 +78,8 @@ export class DialogAddMemberComponent implements OnInit {
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        console.log(this.selection);
-        console.log(this.selection.selected.length);
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
         this.isAllSelected()
             ? this.selection.clear()
             : this.dataSource.data.forEach((row) => this.selection.select(row));

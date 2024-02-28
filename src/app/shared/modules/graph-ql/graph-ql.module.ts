@@ -25,11 +25,11 @@ import { getMainDefinition } from 'apollo-utilities';
 export class GraphQLModule { 
 
   constructor(apollo: Apollo, httpLink: HttpLink) {
-    //console.log('GraphQL');
+    ////console.log('GraphQL');
     const uri = 'https://gemgolfers-hasura.herokuapp.com/v1alpha1/graphql';
     const wssuri = 'wss://gemgolfers-hasura.herokuapp.com/v1alpha1/graphql';
     //const storedNames = JSON.parse(localStorage.getItem("authToken"));
-    //console.log(storedNames.user.refreshToken);
+    ////console.log(storedNames.user.refreshToken);
 
     const authHeader = new HttpHeaders()
     .set('X-Hasura-Admin-Secret', 'fercjqjjpgcngydvqoze')
@@ -39,9 +39,9 @@ export class GraphQLModule {
     .set('X-Hasura-Allowed-Roles', ["admin"]);
     //.set('X-Hasura-User-Id', stringify('google-oauth2|107965524172514045377'));
 
-    //console.log(authHeader);
-    //console.log(localStorage.getItem('authToken'));
-	  //console.log(localStorage.getItem('user_id'));
+    ////console.log(authHeader);
+    ////console.log(localStorage.getItem('authToken'));
+	  ////console.log(localStorage.getItem('user_id'));
     const http = httpLink.create({ uri, headers: authHeader });
 	
    // create Apollo

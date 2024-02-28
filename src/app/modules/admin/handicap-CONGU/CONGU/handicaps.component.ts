@@ -118,10 +118,10 @@ export class HandicapsComponent implements OnInit {
             this._router.paramMap.subscribe((params) => {
                 this.filterCategory = params.get('category');
             });
-            //console.log(this.filterCategory);
+            ////console.log(this.filterCategory);
 
             this.MembersCat = this.filterCategory;
-            console.log(this.MembersCat);
+            //console.log(this.MembersCat);
             if (this.loggedInuser.userRole > 1) {
                 this.logger.log('Getting Congu Handicap Data', "info", this.loggedInuser.adminClubId);
                 if (this.filterCategory)
@@ -137,7 +137,7 @@ export class HandicapsComponent implements OnInit {
                         );
                     // this.aggregate =
                     //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                    console.log(this.aggregate);
+                    //console.log(this.aggregate);
                     this.syncHandicapCongu();
                 }
             } else {
@@ -150,11 +150,11 @@ export class HandicapsComponent implements OnInit {
                 else {
                     this.dataPlayers =
                         await this._facadeService.getPlayersListByAdminCONGU();
-                    console.log(this.dataPlayers);
+                    //console.log(this.dataPlayers);
 
                     // this.aggregate =
                     //     this.dataPlayers.AggregateQL['aggregate'].totalCount;
-                    console.log(this.aggregate);
+                    //console.log(this.aggregate);
                     this.syncHandicapCongu();
                 }
             }
@@ -164,7 +164,7 @@ export class HandicapsComponent implements OnInit {
                 if (!opened) {
                     // Remove the selected contact when drawer closed
                     //this.selectedContact = null;
-                    console.log(opened);
+                    //console.log(opened);
 
                     // Mark for check
                     this._changeDetectorRef.markForCheck();
@@ -203,7 +203,7 @@ export class HandicapsComponent implements OnInit {
     }
 
     syncHandicapCongu() {
-        console.log(this.dataPlayers.player);
+        //console.log(this.dataPlayers.player);
 
         let count = 0;
         this.player = [];
@@ -247,11 +247,11 @@ export class HandicapsComponent implements OnInit {
 
         this.index = 0;
 
-        console.log(this.player);
+        //console.log(this.player);
 
         this.dataSource = new MatTableDataSource(this.player);
 
-        console.log(this.dataSource);
+        //console.log(this.dataSource);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.isLoading = false;
@@ -268,7 +268,7 @@ export class HandicapsComponent implements OnInit {
             
             this.logger.log('Download Handicap Congu Button Click', "info");
         let holeObj = document.getElementById('a');
-        console.log(holeObj);
+        //console.log(holeObj);
 
         let doc = new jsPDF();
         let res = doc.autoTableHtmlToJson(document.getElementById('a'));
@@ -302,7 +302,7 @@ export class HandicapsComponent implements OnInit {
         // } else if (this.sorting == 'asc') {
         //     sortarray.sort(this.Comparatorasc);
         // }
-        console.log(this.dataPlayers);
+        //console.log(this.dataPlayers);
 
         let count = 0;
         sortarray.forEach((element) => {
@@ -367,7 +367,7 @@ export class HandicapsComponent implements OnInit {
 
     getPlayerInformationByName(filterValue: string) {
         this.logger.log('Search in Handicap Congu', "info",filterValue);
-        console.log(filterValue);
+        //console.log(filterValue);
         if (filterValue == '') {
             this.syncHandicapCongu();
             //this.syncHandicapWHS();
@@ -376,8 +376,8 @@ export class HandicapsComponent implements OnInit {
         filterValue = filterValue.trim();
         // let firstName = filterValue.substr(0,filterValue.indexOf(' '));
         //  let secondName=filterValue.substr(filterValue.indexOf(' ')+1)
-        //  console.log("firstname="+firstName);
-        //  console.log("ScondName="+ secondName);
+        //  //console.log("firstname="+firstName);
+        //  //console.log("ScondName="+ secondName);
 
         filterValue = filterValue.toLowerCase();
         this.player = [];
@@ -389,13 +389,13 @@ export class HandicapsComponent implements OnInit {
                     //this.selectPlayer = c;
                 }
             }
-            console.log(this.player);
+            //console.log(this.player);
             this.setDataSource(this.player);
         }
     }
 
     async getPlayerInformationByMembershipNumber(filterValue: string) {
-        console.log(filterValue);
+        //console.log(filterValue);
         if (filterValue == '') {
             this.syncHandicapCongu();
             //this.syncHandicapWHS();
@@ -410,7 +410,7 @@ export class HandicapsComponent implements OnInit {
                     //this.selectPlayer = c;
                 }
             }
-            console.log(this.player);
+            //console.log(this.player);
             this.setDataSource(this.player);
         }
     }
@@ -464,11 +464,11 @@ export class HandicapsComponent implements OnInit {
             this.dataSource = new MatTableDataSource(this.player);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
-            console.log(this.dataSource);
+            //console.log(this.dataSource);
         } else {
             //this.WHSSource = new MatTableDataSource(dataSource);
             //this.WHSSource.sort = this.sort;
-            //console.log(this.WHSSource);
+            ////console.log(this.WHSSource);
         }
     }
 
@@ -489,12 +489,12 @@ export class HandicapsComponent implements OnInit {
 
     //     memberAggregate =
     //         await this._facadeService.getClubMemberAggregateByCategroy(clubId);
-    //     //console.log(memberAggregate.club);
+    //     ////console.log(memberAggregate.club);
     //     //this.clubMemberAggregate = memberAggregate.club;
 
     //     for (var key of Object.keys(memberAggregate.club[0])) {
-    //         //console.log(key + " -> ");
-    //         //console.log(memberAggregate.club[0][key]);
+    //         ////console.log(key + " -> ");
+    //         ////console.log(memberAggregate.club[0][key]);
 
     //         if (
     //             memberAggregate.club[0][key].aggregate &&
@@ -515,7 +515,7 @@ export class HandicapsComponent implements OnInit {
     //         }
     //     }
     //     this.isLoading = false;
-    //     console.log(this.clubMemberAggregate);
+    //     //console.log(this.clubMemberAggregate);
     // }
 
     // async getAllMemberAggregateByCategroy(clubId: string) {
@@ -545,7 +545,7 @@ export class HandicapsComponent implements OnInit {
     //         }
     //     }
     //     this.isLoading = false;
-    //     //console.log(this.clubMemberAggregate);
+    //     ////console.log(this.clubMemberAggregate);
     // }
 
     // async getSuperAdminStats() {
@@ -555,13 +555,13 @@ export class HandicapsComponent implements OnInit {
 
     //     //memberAggregate = await this.facadeService.getClubMemberAggregateByCategroy(clubId);
     //     memberAggregate = await this.facadeService.getsuperAdminStats();
-    //     //console.log(memberAggregate);
+    //     ////console.log(memberAggregate);
 
     //     //this.clubMemberAggregate = memberAggregate.club;
 
     //     for (var key of Object.keys(memberAggregate)) {
-    //         //console.log(key + " -> ");
-    //         //console.log(memberAggregate[key]);
+    //         ////console.log(key + " -> ");
+    //         ////console.log(memberAggregate[key]);
 
     //         if (memberAggregate[key].length > 0) {
     //             let info: any = {
@@ -579,11 +579,11 @@ export class HandicapsComponent implements OnInit {
     //         }
     //     }
     //     this.isLoading = false;
-    //     //console.log(this.clubMemberAggregate);
+    //     ////console.log(this.clubMemberAggregate);
     // }
 
     redirectToDetails = (id: string) => {
-        console.log(id);
+        //console.log(id);
 
         this.location.navigate(['/players/view/' + id]);
     };

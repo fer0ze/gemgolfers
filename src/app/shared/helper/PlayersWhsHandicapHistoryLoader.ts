@@ -26,8 +26,8 @@ export class PlayersWhsHandicapHistoryLoader {
     }
 
     public async setParams(playerIds: string[], playingDate: Date) {
-        console.log(playerIds);
-        console.log(playingDate);
+        //console.log(playerIds);
+        //console.log(playingDate);
         this.playerIds = playerIds;
         this.playingDate = playingDate;
         
@@ -47,14 +47,14 @@ export class PlayersWhsHandicapHistoryLoader {
     }
 
     private async fetchData() {
-        console.log(this.playerIds + " - - - " + this.playerIds.length);
+        //console.log(this.playerIds + " - - - " + this.playerIds.length);
         if (this.playerIds == null || this.playerIds.length == 0 || this.playingDate == null) {
-            console.log("return me");
+            //console.log("return me");
             return;
         }
-        console.log("getting player history");
+        //console.log("getting player history");
         let playerHistoryQuery = await this.facadeService.getPlayersHandicapWhsHistory(this.playerIds, this.playingDate);
-        console.log(playerHistoryQuery);
+        //console.log(playerHistoryQuery);
         if (playerHistoryQuery) {
             this.playersHandicapWhs.clear();
             let playerHandicapData = playerHistoryQuery.PlayerQL;
@@ -63,7 +63,7 @@ export class PlayersWhsHandicapHistoryLoader {
                     let playerId: string = playerQL.id;
                     let playerHandicapsWhs: PlayerHandicapWhs[] = [];
                     let handicapHistoryWhsQLs = playerQL.HandicapHistoryWhsQL;
-                    console.log(playerQL);
+                    //console.log(playerQL);
                     for (let handicapHistoryWhsQL of handicapHistoryWhsQLs) {
                         let playerHandicapWhs: PlayerHandicapWhs = new PlayerHandicapWhs(playerId, handicapHistoryWhsQL.PlayerQL.firstName + " " + handicapHistoryWhsQL.PlayerQL.lastName, handicapHistoryWhsQL.PlayerQL.handicap, handicapHistoryWhsQL.handicapDifferential, handicapHistoryWhsQL.updatedAt, handicapHistoryWhsQL.playedAt, handicapHistoryWhsQL.score, handicapHistoryWhsQL.adjustedScore, handicapHistoryWhsQL.front9, handicapHistoryWhsQL.back9);
                         let tournamentQL = handicapHistoryWhsQL.TournamentQL;
@@ -83,7 +83,7 @@ export class PlayersWhsHandicapHistoryLoader {
                 }
                 
             } else {
-                console.log("Received null query response. Please try again.");
+                //console.log("Received null query response. Please try again.");
             }
         }
         

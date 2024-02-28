@@ -51,7 +51,7 @@ export class TourGuideComponent implements OnInit {
         });
         if (this.tourID) {
             let guides = await this.facadeService.getTourGuide(this.tourID);
-            console.log(guides['tour_guide']);
+            //console.log(guides['tour_guide']);
             this.guides = guides['tour_guide'];
 
         }
@@ -108,7 +108,7 @@ export class TourGuideComponent implements OnInit {
 
     }
     onPanelOpened(id) {
-        console.log(id);
+        //console.log(id);
         let guide = this.guides.find(a => { return a.id == id });
         if (guide) {
             this.guideForm.get('script').setValue(guide.details);

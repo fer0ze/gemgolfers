@@ -58,7 +58,7 @@ export class MergeProfilesComponent implements OnInit {
             .subscribe(
                 async (data) => {
                     data = await this._facadeService.getPlayersListMerge();
-                    console.log(data);
+                    //console.log(data);
                     this.Players = data.player;
 
                     for (let obj of this.Players) {
@@ -127,7 +127,7 @@ export class MergeProfilesComponent implements OnInit {
                     await this.handicapService
                         .calculateHandicap(obj)
                         .then((response) => {
-                            console.log(response);
+                            //console.log(response);
                             this.selectionA.clear(true);
                             this.selectionB.clear(true);
                             this.snackBar.open(
@@ -139,7 +139,7 @@ export class MergeProfilesComponent implements OnInit {
                             );
                         })
                         .catch((err) => {
-                            console.log('error' + err);
+                            //console.log('error' + err);
                             this.snackBar.open('Error!.', 'x', {
                                 duration: 5000,
                             });
@@ -183,7 +183,7 @@ export class MergeProfilesComponent implements OnInit {
                     await this.handicapService
                         .calculateHandicapWHS(obj)
                         .then((response) => {
-                            console.log(response);
+                            //console.log(response);
                             this.selectionA.clear(true);
                             this.selectionB.clear(true);
                             this.snackBar.open(
@@ -195,7 +195,7 @@ export class MergeProfilesComponent implements OnInit {
                             );
                         })
                         .catch((err) => {
-                            console.log('error' + err);
+                            //console.log('error' + err);
                             this.snackBar.open('Error!.', 'x', {
                                 duration: 5000,
                             });
@@ -217,7 +217,7 @@ export class MergeProfilesComponent implements OnInit {
             },
         });
         dialogRef.afterClosed().subscribe(async (result) => {
-            console.log(result);
+            //console.log(result);
             if (result != undefined) {
                 let response = await this._facadeService.mergePlayers(
                     oldPlayer[0].id,
@@ -232,7 +232,7 @@ export class MergeProfilesComponent implements OnInit {
                     this.handicapService
                         .calculateHandicap(obj)
                         .then((response) => {
-                            console.log(response);
+                            //console.log(response);
                             this.snackBar.open(
                                 'Players are Merged and Handicap Calculated Successfully.',
                                 'x',
@@ -244,7 +244,7 @@ export class MergeProfilesComponent implements OnInit {
                             this.selectionB.clear(true);
                         })
                         .catch((err) => {
-                            console.log('error' + err);
+                            //console.log('error' + err);
                             this.snackBar.open('Error!.', 'x', {
                                 duration: 5000,
                             });
@@ -252,7 +252,7 @@ export class MergeProfilesComponent implements OnInit {
                     // this.handicapService
                     //     .calculateHandicapWHS(obj)
                     //     .then((response) => {
-                    //         console.log(response);
+                    //         //console.log(response);
                     //         this.snackBar.open(
                     //             'Players are Merged and Handicap Calculated Successfully.',
                     //             'x',
@@ -264,7 +264,7 @@ export class MergeProfilesComponent implements OnInit {
                     //         this.selectionB.clear(true);
                     //     })
                     //     .catch((err) => {
-                    //         console.log('error' + err);
+                    //         //console.log('error' + err);
                     //         this.snackBar.open('Error!.', 'x', {
                     //             duration: 5000,
                     //         });

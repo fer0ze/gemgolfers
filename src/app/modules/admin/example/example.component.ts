@@ -28,7 +28,7 @@ export class ExampleComponent
         //   `
         // })
         // .valueChanges.subscribe((result: any) => {
-        //     console.log(result);
+        //     //console.log(result);
         // })
         this.getTournaments();
     }
@@ -43,6 +43,6 @@ export class ExampleComponent
         
         let dataTournamentsForCompleted = await this.facadeService.getTournamentsListForCompleted(todayDate);
         let RecentTournaments = dataTournamentsForCompleted.CompletedRecently;
-        console.log(RecentTournaments);
+        //console.log(RecentTournaments);
     }
 }

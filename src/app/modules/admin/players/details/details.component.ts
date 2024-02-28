@@ -173,7 +173,7 @@ export class ContactsDetailsComponent implements OnInit {
                         ),
                         map((name) => (name ? this._filter(name) : this.golfClubs))
                     );
-                console.log(this.filteredClubOptions);
+                //console.log(this.filteredClubOptions);
             } else if (this.loggedInuser.userRole == 1) {
                 dataClubs = await this._facadeService.getClubList();
                 this.golfClubs = dataClubs.club;
@@ -186,7 +186,7 @@ export class ContactsDetailsComponent implements OnInit {
                         ),
                         map((name) => (name ? this._filter(name) : this.golfClubs))
                     );
-                console.log(this.filteredClubOptions);
+                //console.log(this.filteredClubOptions);
             }
             if (this.playerID) {
                 await this.fetchData();
@@ -281,8 +281,8 @@ export class ContactsDetailsComponent implements OnInit {
      * Update the contact
      */
     async updateContact() {
-        // console.log(this.handicapIndex);
-        // console.log(this.contactForm.get('handicapWHS').value);
+        // //console.log(this.handicapIndex);
+        // //console.log(this.contactForm.get('handicapWHS').value);
         try {
             if (this.handicapIndex != this.contactForm.get('handicapWHS').value) {
                 this.changeWHSHandicap();
@@ -315,7 +315,7 @@ export class ContactsDetailsComponent implements OnInit {
                         )
                     );
 
-                console.log(checkEmail);
+                //console.log(checkEmail);
                 if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
 
                 if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
@@ -366,7 +366,7 @@ export class ContactsDetailsComponent implements OnInit {
             let players: any[] = await this._facadeService.getallPlayersforGGid();
             var sortarray = players['player'];
             //      sortarray.sort(this.Comparator);
-            console.log(sortarray);
+            //console.log(sortarray);
 
             this.playerID
                 ? (UniqueId = this.playerID)
@@ -374,9 +374,9 @@ export class ContactsDetailsComponent implements OnInit {
             this.playerID
                 ? (GEMId = this.currentPlayer.player[0].gemId)
                 : (GEMId = generateGemId.generate(sortarray[0].gemId));
-            console.log(GEMId);
+            //console.log(GEMId);
 
-            //console.log(playerFormValue.playerClubMember);
+            ////console.log(playerFormValue.playerClubMember);
             if (this.loggedInuser.userRole < 3) {
                 let member: any = {
                     clubId:
@@ -387,7 +387,7 @@ export class ContactsDetailsComponent implements OnInit {
                                 : '',
                     suspended: this.contactForm.get('status').value,
                 };
-                console.log(member);
+                //console.log(member);
                 clubMember.push(member);
             }
             const player: Player = {
@@ -417,7 +417,7 @@ export class ContactsDetailsComponent implements OnInit {
                 membership: clubMember,
                 membershipNumber: contact.membershipNo,
             };
-            console.log(contact);
+            //console.log(contact);
 
             if (!this.editMode) {
                 if (this.loggedInuser.userRole < 3) {
@@ -455,7 +455,7 @@ export class ContactsDetailsComponent implements OnInit {
                 );
 
                 if (this.currentPlayer.player[0].handicap !== contact.handicap) {
-                    console.log(this.tournamentId);
+                    //console.log(this.tournamentId);
 
                     const handicap_change_log: handicap_change_log = {
                         id: UniqueIdGenerator.generate(),
@@ -473,7 +473,7 @@ export class ContactsDetailsComponent implements OnInit {
                         updaterId: this.loggedInuser.id,
                     };
 
-                    console.log(handicap_change_log);
+                    //console.log(handicap_change_log);
                     //this.handicapLog = handicap_change_log;
 
                     const remarksAdded = <boolean>(
@@ -486,7 +486,7 @@ export class ContactsDetailsComponent implements OnInit {
                         contact.handicap ? contact.handicap : 0,
                         this.tournamentId
                     );
-                    console.log(remarksAdded);
+                    //console.log(remarksAdded);
                 } else if (
                     this.currentPlayer.player[0].handicapWhsIndex !==
                     contact.handicapWhsIndex
@@ -509,7 +509,7 @@ export class ContactsDetailsComponent implements OnInit {
                         updaterId: this.loggedInuser.id,
                     };
 
-                    console.log(handicap_change_log);
+                    //console.log(handicap_change_log);
                     //this.handicapLog = handicap_change_log;
 
                     const remarksAdded = <boolean>(
@@ -517,7 +517,7 @@ export class ContactsDetailsComponent implements OnInit {
                             handicap_change_log
                         )
                     );
-                    console.log(remarksAdded);
+                    //console.log(remarksAdded);
                 }
 
                 if (
@@ -539,7 +539,7 @@ export class ContactsDetailsComponent implements OnInit {
                         updaterId: this.loggedInuser.id,
                     };
 
-                    console.log(handicap_change_log);
+                    //console.log(handicap_change_log);
                     //this.handicapLog = handicap_change_log;
 
                     const remarksAdded = <boolean>(
@@ -547,10 +547,10 @@ export class ContactsDetailsComponent implements OnInit {
                             handicap_change_log
                         )
                     );
-                    console.log(remarksAdded);
+                    //console.log(remarksAdded);
                 }
 
-                //console.log(isSuccess);
+                ////console.log(isSuccess);
                 if (isSuccess) {
                     this.save = true;
                     this.snackBar.open('Player has been updated.', 'x', {
@@ -565,8 +565,8 @@ export class ContactsDetailsComponent implements OnInit {
     }
 
     public Comparator(a, b) {
-        console.log(a);
-        console.log(b);
+        //console.log(a);
+        //console.log(b);
 
         try {
             if (a['gemId']?.trim() !== '' && b['gemId']?.trim() !== '') {
@@ -578,7 +578,7 @@ export class ContactsDetailsComponent implements OnInit {
                 return 0;
             }
         } catch (error) {
-            console.log(error);
+            //console.log(error);
         }
 
     }
@@ -610,7 +610,7 @@ export class ContactsDetailsComponent implements OnInit {
         return item.id || index;
     }
     cancel() {
-        console.log(this.contactForm.value);
+        //console.log(this.contactForm.value);
 
         // this._router.navigate(['/players'], {
         //     relativeTo: this._activatedRoute,
@@ -690,7 +690,7 @@ export class ContactsDetailsComponent implements OnInit {
                     this.playerID
                 );
 
-            console.log(this.currentPlayer);
+            //console.log(this.currentPlayer);
             this.logger.log('Getting Player Edit Profile Data Successfull', "info", this.currentPlayer.toString());
             this.tournamentId =
                 this.currentPlayer.player[0].handicap_history !== undefined &&
@@ -703,7 +703,7 @@ export class ContactsDetailsComponent implements OnInit {
             //     this.playerID
             // );
             // let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
-            // console.log(whshandicap);
+            // //console.log(whshandicap);
         }
         if (this.currentPlayer.player.length > 0) {
             this.handicapsWhs = this.currentPlayer.player[0].handicapWhsIndex;
@@ -749,10 +749,10 @@ export class ContactsDetailsComponent implements OnInit {
         await this.handicapService
             .adjustHandicapWHS(obj)
             .then((response) => {
-                console.log(response);
+                //console.log(response);
             })
             .catch((err) => {
-                console.log('error' + err);
+                //console.log('error' + err);
                 this.snackBar.open('Error!.', 'x', {
                     duration: 5000,
                 });

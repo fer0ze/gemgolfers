@@ -137,9 +137,9 @@ export class PlayersComponent implements OnInit {
                         // this.dataSource = new MatTableDataSource(this.Players);
                         // this.dataSource.paginator = this.paginator;
                         // this.dataSource.sort = this.sort;
-                        // console.log(this.Players);
+                        // //console.log(this.Players);
                         this.count = data.player.length;
-                        console.log(data);
+                        //console.log(data);
                         this.Players = data.player;
                         for (let obj of this.Players) {
                             let Fname = obj.firstName
@@ -177,7 +177,7 @@ export class PlayersComponent implements OnInit {
             );
             this.count = data.player.length;
             this.Players = data.player;
-            console.log(data);
+            //console.log(data);
             for (let obj of this.Players) {
                 let Fname = obj.firstName
                     ? obj.firstName.trim()
@@ -207,7 +207,7 @@ export class PlayersComponent implements OnInit {
             data = await this._facadeService.getPlayersListByTour(
                 this.tourID
             );
-            console.log(data);
+            //console.log(data);
             this.count = data.tour_member.length;
             this.Players = data.tour_member;
             for (let obj of this.Players) {
@@ -490,7 +490,7 @@ export class PlayersComponent implements OnInit {
             });
 
             // this.logger.log(this.playersData);
-            console.log(this.playersData);
+            //console.log(this.playersData);
 
             this.importExcelData();
             //this.providerservice.importexcel(this.exceljsondata).subscribe(data=>{
@@ -510,7 +510,7 @@ export class PlayersComponent implements OnInit {
             //     let exist: any = [];
             //     if (p.membershipNumber) {
             //         // this.logger.log(p.membershipNumber);
-            //         console.log(p.membershipNumber);
+            //         //console.log(p.membershipNumber);
 
             //         exist = await this._facadeService.getPlayerByMembershipNumber(
             //             p.membershipNumber.toString()
@@ -520,7 +520,7 @@ export class PlayersComponent implements OnInit {
             //             this.savePlayers.push(exist);
             //             let update = await this._facadeService.updatePlayerCategory(p.membershipNumber.toString());
             //             if (update) {
-            //                 console.log('Done');
+            //                 //console.log('Done');
             //             }
             //             await this.delay(500);
             //             //continue;
@@ -529,14 +529,14 @@ export class PlayersComponent implements OnInit {
             //         }
             //     }
             // }
-            // console.log(this.duplicatePlayers);
-            // console.log(this.savePlayers);
+            // //console.log(this.duplicatePlayers);
+            // //console.log(this.savePlayers);
             let data: any[][] = [];
             for (let p of this.playersData) {
 
                 // let update = await this._facadeService.updateflightMember(p.id);
                 // if (update) {
-                //     console.log('Done');
+                //     //console.log('Done');
                 // }
                 //await this.delay(500);
                 // let member: any = {
@@ -547,7 +547,7 @@ export class PlayersComponent implements OnInit {
                 // clubMember.push(member)
 
                 let result = <any>(await this._facadeService.getPlayerScorebyID(p.playerId))
-                console.log(result);
+                //console.log(result);
                 let holeAverages: { holeNo: number; avgScore: number }[] = [];
                 // Get the unique hole numbers
                 let holeNumbers: number[] = Array.from(new Set(result['score'].map(score => score.hole.holeNo)));
@@ -568,7 +568,7 @@ export class PlayersComponent implements OnInit {
 
                 }
 
-                console.log(holeAverages);
+                //console.log(holeAverages);
                 data[p.player] = holeAverages;
 
                 // let sum = 0;
@@ -600,7 +600,7 @@ export class PlayersComponent implements OnInit {
             //     holeAverages[holeNo] /= Object.keys(data).length;
             // }
 
-            console.log(data);
+            //console.log(data);
             const flatData = [];
             // for (const playerName in selectedMember) {
             //     if (selectedMember.hasOwnProperty(playerName)) {
@@ -660,7 +660,7 @@ export class PlayersComponent implements OnInit {
                 array.push(obj)
 
             }
-            console.log(array);
+            //console.log(array);
             
             const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(array);
             const wb: XLSX.WorkBook = XLSX.utils.book_new();
@@ -673,7 +673,7 @@ export class PlayersComponent implements OnInit {
             // XLSX.utils.book_append_sheet(wb, ws, 'Scores');
             // Generate the Excel blob
             // XLSX.writeFile(workbook, 'Actify_Report.xlsx');
-            // console.log(this.duplicatePlayers);
+            // //console.log(this.duplicatePlayers);
 
             // for (let p of this.playersData) {
             //     let obj = {
@@ -736,16 +736,16 @@ export class PlayersComponent implements OnInit {
             //         },
             //     };
 
-            //     // console.log('a');
-            //     console.log(p.tournamentId);
+            //     // //console.log('a');
+            //     //console.log(p.tournamentId);
 
             //     await this._handicapServise
             //         .flightEndedTrigger(obj)
             //         .then((response) => {
-            //             console.log(response);
+            //             //console.log(response);
             //         })
             //         .catch((err) => {
-            //             console.log('error' + err);
+            //             //console.log('error' + err);
             //             this.snackBar.open('Error!.', 'x', {
             //                 duration: 5000,
             //             });
@@ -754,14 +754,14 @@ export class PlayersComponent implements OnInit {
             // for (let p of this.playersData) {
             //  let update = await this._facadeService.updateflightMember(p.ID);
             //     if (update) {
-            //         console.log('Done');
+            //         //console.log('Done');
             //     }
             //     await this.delay(500);
             // }
 
             // if (p.phone && exist.length == 0) {
             //     // this.logger.log(p.phone);
-            //     console.log(p.phone);
+            //     //console.log(p.phone);
             //     let phone;
             //     if (p.phone.toString().indexOf("+92") === 0) {
             //         phone = p.phone.toString();
@@ -770,7 +770,7 @@ export class PlayersComponent implements OnInit {
             //     } else if (p.phone.toString().indexOf("3") === 0) {
             //         phone = "+92" + p.phone.toString();
             //     }
-            //     console.log(phone);
+            //     //console.log(phone);
 
             //     exist = await this._facadeService.getPlayerByPhone(phone);
             //     // p.phone.toString().indexOf("+") !== -1
@@ -787,7 +787,7 @@ export class PlayersComponent implements OnInit {
 
             //     if (exist.length > 0) {
             //         // this.logger.log("email yes");
-            //         console.log("email Yes");
+            //         //console.log("email Yes");
 
             //         this.duplicatePlayers.push(p);
             //         //continue;
@@ -838,7 +838,7 @@ export class PlayersComponent implements OnInit {
 
             // //   this.logger.log(this.savePlayers);
             // //   this.logger.log(this.duplicatePlayers);
-            //   console.log(this.savePlayers);
+            //   //console.log(this.savePlayers);
 
             //   let status = await this._facadeService.importPlayerList(
             //     this.savePlayers,
@@ -872,16 +872,16 @@ export class PlayersComponent implements OnInit {
             //     });
             //     this.importingList = false;
             //   }
-            // console.log('b');
+            // //console.log('b');
 
             // this.logger.logObject(p);
-            // console.log(p);
+            // //console.log(p);
 
             // let exist: any = [];
 
             // if (p.membershipNumber) {
             //     // this.logger.log(p.membershipNumber);
-            //     console.log(p.membershipNumber);
+            //     //console.log(p.membershipNumber);
 
             //     exist =
             //         await this._facadeService.getPlayerByMembershipNumber(
@@ -897,7 +897,7 @@ export class PlayersComponent implements OnInit {
             // let phone="481";
             // if (p.phone && exist.length == 0) {
             //     // this.logger.log(p.phone);
-            //     console.log(p.phone);
+            //     //console.log(p.phone);
             //     if (p.phone.toString().indexOf('+92') === 0) {
             //         phone = p.phone.toString();
             //     } else if (p.phone.toString().indexOf('0') === 0) {
@@ -905,7 +905,7 @@ export class PlayersComponent implements OnInit {
             //     } else if (p.phone.toString().indexOf('3') === 0) {
             //         phone = '+92' + p.phone.toString();
             //     }
-            //     console.log(phone);
+            //     //console.log(phone);
 
             //     exist = await this._facadeService.getPlayerByPhone(phone);
             //     // p.phone.toString().indexOf("+") !== -1
@@ -924,7 +924,7 @@ export class PlayersComponent implements OnInit {
 
             //     if (exist.length > 0) {
             //         // this.logger.log("email yes");
-            //         console.log('email Yes');
+            //         //console.log('email Yes');
 
             //         this.duplicatePlayers.push(p);
             //         //continue;
@@ -932,7 +932,7 @@ export class PlayersComponent implements OnInit {
             // }
 
             // // this.logger.log(exist);
-            // console.log(exist);
+            // //console.log(exist);
 
             // let UniqueId: string =
             //     exist && exist.length > 0
@@ -977,8 +977,8 @@ export class PlayersComponent implements OnInit {
 
             // this.logger.log(this.savePlayers);
             // this.logger.log(this.duplicatePlayers);
-            // console.log(this.savePlayers);
-            // console.log(clubMember);
+            // //console.log(this.savePlayers);
+            // //console.log(clubMember);
 
             // let status = await this._facadeService.importPlayerList(
             //     this.savePlayers,

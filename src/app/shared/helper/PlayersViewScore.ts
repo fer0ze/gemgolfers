@@ -28,15 +28,15 @@ export class PlayersScoreLoader {
     }
 
     public async fetchTournamentScores() {
-        //console.log(this.tournament);
-        //console.log(this.roundPlayerScores);
+        ////console.log(this.tournament);
+        ////console.log(this.roundPlayerScores);
 
         let tournamentScoresQuery =
             await this.facadeService.getTorunamentScoreViewQuery(
                 this.tournamentId
             );
         let tournamentQL = tournamentScoresQuery.TournamentQL;
-        //console.log(tournamentQL);
+        ////console.log(tournamentQL);
         if (tournamentQL != null) {
             if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY) {
                 let calResult = this.strokePlayCalculation(tournamentQL);
@@ -170,13 +170,13 @@ export class PlayersScoreLoader {
         );
         let CourseQL = tournamentQL.CourseQL;
 
-        //console.log(flightsQLs);
+        ////console.log(flightsQLs);
         for (let flightData of flightsQLs) {
-            ////console.log("Flight ID: " + flightData.id);
+            //////console.log("Flight ID: " + flightData.id);
             let membersQLs: any = flightData.MembersQL;
 
             for (let membersQL of membersQLs) {
-                ////console.log(membersQL);
+                //////console.log(membersQL);
                 let playerId: String = membersQL.playerId;
                 //let playerQL:Player = membersQL.PlayerQL;
                 if (playerId !== this.playerId) {
@@ -185,7 +185,7 @@ export class PlayersScoreLoader {
                 //this.players.push(playerQL);
 
                 let player: Player = membersQL.PlayerQL;
-                ////console.log(player);
+                //////console.log(player);
                 if (player == null) {
                     continue;
                 }
@@ -240,7 +240,7 @@ export class PlayersScoreLoader {
                     cntr++;
 
                     //if(player.id == "-L6192uVBlBFw3grUy9_")
-                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
+                    //////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
                 }
 
                 let playerHole18ScoreGross: any[] = [];
@@ -260,9 +260,9 @@ export class PlayersScoreLoader {
                     }
                 }
 
-                ////console.log(scoreHandicap + " " + player.handicap);
+                //////console.log(scoreHandicap + " " + player.handicap);
                 netTotal = grossTotal - scoreHandicap;
-                // //console.log(netTotal);
+                // ////console.log(netTotal);
                 netUnderTotal = grossUnderTotal - scoreHandicap;
 
                 let name: string = player.firstName + ' ' + player.lastName;
@@ -355,13 +355,13 @@ export class PlayersScoreLoader {
         );
         let CourseQL = tournamentQL.CourseQL;
 
-        //console.log(flightsQLs);
+        ////console.log(flightsQLs);
         for (let flightData of flightsQLs) {
-            ////console.log("Flight ID: " + flightData.id);
+            //////console.log("Flight ID: " + flightData.id);
             let membersQLs: any = flightData.MembersQL;
 
             for (let membersQL of membersQLs) {
-                ////console.log(membersQL);
+                //////console.log(membersQL);
                 let playerId: String = membersQL.playerId;
                 //let playerQL:Player = membersQL.PlayerQL;
                 if (playerId !== this.playerId) {
@@ -370,7 +370,7 @@ export class PlayersScoreLoader {
                 //this.players.push(playerQL);
 
                 let player: Player = membersQL.PlayerQL;
-                ////console.log(player);
+                //////console.log(player);
                 if (player == null) {
                     continue;
                 }
@@ -425,7 +425,7 @@ export class PlayersScoreLoader {
                     cntr++;
 
                     //if(player.id == "-L6192uVBlBFw3grUy9_")
-                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
+                    //////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
                 }
 
                 let playerHole18ScoreGross: any[] = [];
@@ -445,9 +445,9 @@ export class PlayersScoreLoader {
                     }
                 }
 
-                ////console.log(scoreHandicap + " " + player.handicap);
+                //////console.log(scoreHandicap + " " + player.handicap);
                 netTotal = grossTotal - scoreHandicap;
-                // //console.log(netTotal);
+                // ////console.log(netTotal);
                 netUnderTotal = grossUnderTotal - scoreHandicap;
 
                 let name: string = player.firstName + ' ' + player.lastName;
@@ -540,9 +540,9 @@ export class PlayersScoreLoader {
         );
         let CourseQL = tournamentQL.CourseQL;
 
-        //console.log(flightsQLs);
+        ////console.log(flightsQLs);
         for (let flightData of flightsQLs) {
-            //console.log(flightData);
+            ////console.log(flightData);
 
             let membersQLs: any = flightData.MembersQL;
             let grossTotal: number = 0;
@@ -595,7 +595,7 @@ export class PlayersScoreLoader {
             let cntr: number = 0;
 
             if (scores.length <= 0) continue;
-            //console.log(scores);
+            ////console.log(scores);
 
             for (let score of scores) {
                 let objScore: Score = new Score(
@@ -636,7 +636,7 @@ export class PlayersScoreLoader {
                     let hole = scores.find((a) => {
                         return a.HoleIPQL.holeNo == i + 1;
                     });
-                    //console.log(hole);
+                    ////console.log(hole);
 
                     if (hole) {
                         playerHole18ScoreGross[i] = hole.grossScore;
@@ -651,7 +651,7 @@ export class PlayersScoreLoader {
                     let hole = scores.find((a) => {
                         return a.HoleIPQL.holeNo == i + 1;
                     });
-                    //console.log(hole);
+                    ////console.log(hole);
 
                     if (hole) {
                         playerHole18ScoreGross[i] = hole.grossScore;
@@ -663,10 +663,10 @@ export class PlayersScoreLoader {
                 }
             }
 
-            ////console.log(scoreHandicap + " " + grossTotal);
+            //////console.log(scoreHandicap + " " + grossTotal);
             netTotal = grossTotal - Math.round(combinedHandicap);;
 
-            //console.log(netTotal);
+            ////console.log(netTotal);
             netUnderTotal = grossUnderTotal - Math.round(combinedHandicap);;
 
             let name: string = flightData.name['name'];
@@ -732,9 +732,9 @@ export class PlayersScoreLoader {
         );
         let CourseQL = tournamentQL.CourseQL;
 
-        //console.log(flightsQLs);
+        ////console.log(flightsQLs);
         for (let flightData of flightsQLs) {
-            //console.log(flightData);
+            ////console.log(flightData);
 
             let membersQLs: any = flightData.MembersQL;
             let grossTotal: number = 0;
@@ -761,7 +761,7 @@ export class PlayersScoreLoader {
                 } else {
                     combinedHandicap += 0;
                 }
-                // //console.log("combined-> " + combinedHandicap);
+                // ////console.log("combined-> " + combinedHandicap);
                 // playerCategory = player.playerCategory;
 
                 scores = membersQL['ScoresQL'];
@@ -771,7 +771,7 @@ export class PlayersScoreLoader {
             let cntr: number = 0;
 
             if (scores.length <= 0) continue;
-            //console.log(scores);
+            ////console.log(scores);
 
             for (let score of scores) {
                 let objScore: Score = new Score(
@@ -797,14 +797,14 @@ export class PlayersScoreLoader {
                 grossUnderTotal += objScore.getGrossUnder();
                 //netUnderTotal = netUnderTotal + objScore.getNetUnder(handicapAllocation);
                 handicap += objScore.getPlayerHandicap(handicapAllocation);
-                ////console.log(membersQLs.length + "<<.>>" + combinedHandicap);
+                //////console.log(membersQLs.length + "<<.>>" + combinedHandicap);
                 // if(handicapAloc==handicapAllocation.)
                 scoreHandicap = objScore.getPlayerTSHandicaps(
                     handicapAllocation,
                     membersQLs.length,
                     combinedHandicap
                 );
-                ////console.log(scoreHandicap);
+                //////console.log(scoreHandicap);
 
                 holesPlayed++;
 
@@ -821,7 +821,7 @@ export class PlayersScoreLoader {
                     let hole = scores.find((a) => {
                         return a.HoleIPQL.holeNo == i + 1;
                     });
-                    //console.log(hole);
+                    ////console.log(hole);
 
                     if (hole) {
                         playerHole18ScoreGross[i] = hole.grossScore;
@@ -836,7 +836,7 @@ export class PlayersScoreLoader {
                     let hole = scores.find((a) => {
                         return a.HoleIPQL.holeNo == i + 1;
                     });
-                    //console.log(hole);
+                    ////console.log(hole);
 
                     if (hole) {
                         playerHole18ScoreGross[i] = hole.grossScore;
@@ -848,10 +848,10 @@ export class PlayersScoreLoader {
                 }
             }
 
-            ////console.log(scoreHandicap + " " + grossTotal);
+            //////console.log(scoreHandicap + " " + grossTotal);
             netTotal = grossTotal - scoreHandicap;
 
-            //console.log(netTotal);
+            ////console.log(netTotal);
             netUnderTotal = grossUnderTotal - scoreHandicap;
 
             let name: string = flightData.name['name'];
@@ -941,10 +941,10 @@ export class PlayersScoreLoader {
                     let { oppoentId, opponentTeamId, playerTeamId } = this.findOpponent(playerId, tournamentQL);
                     checkFlight.push(playerId);
                     checkFlight.push(oppoentId);
-                    console.log('----');
-                    console.log(playerId);
-                    console.log(oppoentId);
-                    console.log('----');
+                    //console.log('----');
+                    //console.log(playerId);
+                    //console.log(oppoentId);
+                    //console.log('----');
                     for (let score of scores) {
 
                         let objScore = new Score(
@@ -1236,8 +1236,8 @@ export class PlayersScoreLoader {
         }
         //newFindArray2 = team2Score.splice(1, team2Score.length);
 
-        console.log(doubleArray);
-        console.log(doubleArray2);
+        //console.log(doubleArray);
+        //console.log(doubleArray2);
         this.team1Score = [];
         this.team2Score = [];
 
@@ -1292,8 +1292,8 @@ export class PlayersScoreLoader {
         //     upScore: team1Points > team2Points ? team1Points : team2Points,
         //     remainingHoles: 18 - doubleArray.length
         // }
-        // console.log(team1Points);
-        // console.log(team2Points);
+        // //console.log(team1Points);
+        // //console.log(team2Points);
         // result['Double'] = []
         // result['Double'] = doubleObj;
         // return result;
@@ -1305,18 +1305,18 @@ export class PlayersScoreLoader {
         );
         let CourseQL = tournamentQL.CourseQL;
         let PairsQLs = tournamentQL.PairsQL;
-        console.log(PairsQLs);
+        //console.log(PairsQLs);
         let { teamMemberId, teamId, pairName } = this.findOpponentPair(this.playerId, tournamentQL);
 
 
-        //console.log(flightsQLs);
+        ////console.log(flightsQLs);
         for (let flightData of flightsQLs) {
-            ////console.log("Flight ID: " + flightData.id);
+            //////console.log("Flight ID: " + flightData.id);
             let membersQLs: any = flightData.MembersQL;
 
             for (let membersQL of membersQLs) {
 
-                ////console.log(membersQL);
+                //////console.log(membersQL);
                 let playerId: String = membersQL.playerId;
                 //let playerQL:Player = membersQL.PlayerQL;
                 if (playerId != this.playerId && playerId != teamMemberId) {
@@ -1325,7 +1325,7 @@ export class PlayersScoreLoader {
                 //this.players.push(playerQL);
 
                 let player: Player = membersQL.PlayerQL;
-                ////console.log(player);
+                //////console.log(player);
                 if (player == null) {
                     continue;
                 }
@@ -1380,7 +1380,7 @@ export class PlayersScoreLoader {
                     cntr++;
 
                     //if(player.id == "-L6192uVBlBFw3grUy9_")
-                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
+                    //////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.hole.holeNo);
                 }
 
                 let playerHole18ScoreGross: any[] = [];
@@ -1400,9 +1400,9 @@ export class PlayersScoreLoader {
                     }
                 }
 
-                ////console.log(scoreHandicap + " " + player.handicap);
+                //////console.log(scoreHandicap + " " + player.handicap);
                 netTotal = grossTotal - scoreHandicap;
-                // //console.log(netTotal);
+                // ////console.log(netTotal);
                 netUnderTotal = grossUnderTotal - scoreHandicap;
 
                 let name: string = player.firstName + ' ' + player.lastName;

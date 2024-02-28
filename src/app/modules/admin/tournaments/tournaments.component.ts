@@ -123,7 +123,7 @@ export class TournamentsComponent implements OnInit {
             this.categories.push(arraya);
             //this.categories.push(arrayb);
             this.categories.push(arrayc);
-            console.log(this.categories);
+            //console.log(this.categories);
 
             let today: Date = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
@@ -139,10 +139,10 @@ export class TournamentsComponent implements OnInit {
                         todayDate
                     );
                 this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
-                console.log(this.Tournaments);
+                //console.log(this.Tournaments);
                 this.copiedcompletedTournaments = this.Tournaments;
                 this.dataSource = new MatTableDataSource(this.Tournaments);
-                //console.log("change source");
+                ////console.log("change source");
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
                 this.isLoading = false;
@@ -157,7 +157,7 @@ export class TournamentsComponent implements OnInit {
                 this.copiedcompletedTournaments = this.Tournaments;
                 this.isIncompletedLoading = false;
                 this.isLoading = false;
-                console.log(this.Tournaments);
+                //console.log(this.Tournaments);
                 this.dataSource = new MatTableDataSource(this.Tournaments);
 
                 this.dataSource.paginator = this.paginator;
@@ -174,7 +174,7 @@ export class TournamentsComponent implements OnInit {
                     this.copiedcompletedTournaments = this.Tournaments;
                     this.isIncompletedLoading = false;
                     this.isLoading = false;
-                    console.log(this.Tournaments);
+                    //console.log(this.Tournaments);
                     this.dataSource = new MatTableDataSource(this.Tournaments);
 
                     this.dataSource.paginator = this.paginator;
@@ -196,7 +196,7 @@ export class TournamentsComponent implements OnInit {
         return item.id || index;
     }
     filterByCategory($event) {
-        console.log($event);
+        //console.log($event);
         try {
 
 
@@ -234,8 +234,8 @@ export class TournamentsComponent implements OnInit {
         }
     }
     filterByQuery(query) {
-        console.log(query);
-        console.log(this.copiedcompletedTournaments);
+        //console.log(query);
+        //console.log(this.copiedcompletedTournaments);
 
         if (query.length > 3) {
             this.Tournaments = this.Tournaments.filter((obj) => {
@@ -258,7 +258,7 @@ export class TournamentsComponent implements OnInit {
         this.location.navigate(['/tournaments/add']);
     }
     tabClicked(tab: any) {
-        console.log(tab);
+        //console.log(tab);
         if (this.loggedInuser.userRole >= 2) {
             if (tab.index == 1) {
                 this.selected = 1;
@@ -302,7 +302,7 @@ export class TournamentsComponent implements OnInit {
                     todayDate,
                     this.loggedInuser.adminClubId
                 );
-            //console.log(dataTournaments);
+            ////console.log(dataTournaments);
             this.isIncompletedLoading = false;
             this.isLoadingUpComing = false;
             this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
@@ -311,13 +311,13 @@ export class TournamentsComponent implements OnInit {
             this.isLoading = false;
             // Assign the data to the data source for the table to render
             this.dataSource = new MatTableDataSource(this.Tournaments);
-            //console.log("change source");
+            ////console.log("change source");
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
-        //console.log(this.Tournaments);
+        ////console.log(this.Tournaments);
     }
 
     async getTournamentLive() {
@@ -335,7 +335,7 @@ export class TournamentsComponent implements OnInit {
                     todayDate,
                     this.loggedInuser.adminClubId
                 );
-            console.log(dataTournamentsLive);
+            //console.log(dataTournamentsLive);
 
             this.Tournaments = dataTournamentsLive.ActiveTournaments;
             this.copiedTournamentsUpComing = this.Tournaments;
@@ -358,7 +358,7 @@ export class TournamentsComponent implements OnInit {
                     todayDate,
                     this.loggedInuser.adminClubId
                 );
-            console.log(dataTournamentsLive);
+            //console.log(dataTournamentsLive);
 
             this.Tournaments = dataTournamentsLive.Scheduled;
             this.copiedTournamentsSchedule = this.Tournaments;
@@ -366,7 +366,7 @@ export class TournamentsComponent implements OnInit {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
 
-        //console.log("change source");
+        ////console.log("change source");
     }
 
     async getTournamentIncompelete() {
@@ -389,7 +389,7 @@ export class TournamentsComponent implements OnInit {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
 
-        //console.log("change source");
+        ////console.log("change source");
     }
 
     async getTournamentCompeletedForAdmin() {
@@ -404,7 +404,7 @@ export class TournamentsComponent implements OnInit {
             let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
             let dataTournamentsForCompleted =
                 await this.facadeService.getTournamentsListForCompleted(todayDate);
-            //console.log(dataTournaments);
+            ////console.log(dataTournaments);
             this.isIncompletedLoading = false;
             this.isLoadingUpComing = false;
             this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
@@ -413,13 +413,13 @@ export class TournamentsComponent implements OnInit {
             this.isLoading = false;
             // Assign the data to the data source for the table to render
             this.dataSource = new MatTableDataSource(this.Tournaments);
-            //console.log("change source");
+            ////console.log("change source");
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
-        //console.log(this.Tournaments);
+        ////console.log(this.Tournaments);
     }
 
     async getTournamentLiveForAdmin() {
@@ -436,7 +436,7 @@ export class TournamentsComponent implements OnInit {
                 await this.facadeService.getTournamentsListForLiveByAdmin(
                     todayDate
                 );
-            console.log(dataTournamentsForLive);
+            //console.log(dataTournamentsForLive);
 
             this.Tournaments = dataTournamentsForLive.ActiveTournaments;
             this.copiedTournamentsUpComing = this.Tournaments;
@@ -459,7 +459,7 @@ export class TournamentsComponent implements OnInit {
                 await this.facadeService.getTournamentsListForSheduleByAdmin(
                     todayDate
                 );
-            console.log(dataTournamentsForSchedule);
+            //console.log(dataTournamentsForSchedule);
 
             this.Tournaments;
             dataTournamentsForSchedule.Scheduled;
@@ -512,7 +512,7 @@ export class TournamentsComponent implements OnInit {
     }
 
     redirectToDetails = (id: string) => {
-        //console.log(id);
+        ////console.log(id);
         this.logger.log('Admin Click on View in Tournamnet Page', "info", id);
         this.location.navigate(['tournaments/view/' + id]);
     };
@@ -530,7 +530,7 @@ export class TournamentsComponent implements OnInit {
         if (Whs) listView = listWhs;
         else listView = list;
 
-        console.log(listView);
+        //console.log(listView);
 
         if (listView.length > 0) {
             const dialogRef = this.dialog.open(DialogHanidcapListComponent, {
@@ -540,11 +540,11 @@ export class TournamentsComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
-                    //console.log("record deleted.");
+                    ////console.log("record deleted.");
                     //this.delete(id);
                     //this.ngOnInit();
                 } else {
-                    //console.log("cancel delete action");
+                    ////console.log("cancel delete action");
                 }
             });
         }
@@ -552,6 +552,6 @@ export class TournamentsComponent implements OnInit {
 
     menuChange(a) {
         this.selectedProject = 'Live';
-        console.log(a);
+        //console.log(a);
     }
 }

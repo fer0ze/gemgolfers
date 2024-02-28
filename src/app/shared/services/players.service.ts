@@ -25,7 +25,7 @@ export class PlayersService {
                     query: Query.GetPlayers,
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
@@ -49,7 +49,7 @@ export class PlayersService {
                     query: Query.getPlayersListByAdminCONGU,
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
@@ -65,7 +65,7 @@ export class PlayersService {
                     query: Query.GetPlayersMerge,
                 })
                 .subscribe(({ data }) => {
-                    console.log(data);
+                    //console.log(data);
                     if (!data) {
                         resolve(null);
                     } else {
@@ -407,7 +407,7 @@ export class PlayersService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        console.log(clubId);
+        //console.log(clubId);
 
         return new Promise((resolve) => {
             this.apollo
@@ -882,7 +882,7 @@ export class PlayersService {
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -925,7 +925,7 @@ export class PlayersService {
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -960,7 +960,7 @@ export class PlayersService {
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could not add due to ' + error);
+                        //console.log('Could not add due to ' + error);
                     }
                 );
         });
@@ -985,14 +985,14 @@ export class PlayersService {
                     },
                     (error) => {
                         resolve(false);
-                        console.log("Could not add due to " + error);
+                        //console.log("Could not add due to " + error);
                     }
                 );
         });
     }
 
     updatePlayer(player: Player): Promise<boolean> {
-        console.log(player.id);
+        //console.log(player.id);
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
@@ -1030,12 +1030,12 @@ export class PlayersService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        console.log(data);
+                        //console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could update add due to ' + error);
+                        //console.log('Could update add due to ' + error);
                     }
                 );
         });
@@ -1053,12 +1053,12 @@ export class PlayersService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        console.log(data);
+                        //console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could update add due to ' + error);
+                        //console.log('Could update add due to ' + error);
                     }
                 );
         });
@@ -1085,12 +1085,12 @@ export class PlayersService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        console.log(data);
+                        //console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        console.log('Could delete add due to ' + error);
+                        //console.log('Could delete add due to ' + error);
                     }
                 );
         });
@@ -1232,12 +1232,12 @@ export class PlayersService {
                 })
                 .subscribe(
                     ({ data }) => {
-                        console.log(data);
+                        //console.log(data);
                         resolve(true);
                     },
                     (error) => {
                         resolve(false);
-                        //console.log('Could not add due to ' + error);
+                        ////console.log('Could not add due to ' + error);
                     }
                 );
         });

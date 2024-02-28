@@ -67,7 +67,7 @@ export class CourseComponent implements OnInit {
       dataCourses = await this.facadeService.getCoursesListbyID(this.loggedInuser.id);
     }
     this.Courses = dataCourses?.course;
-    console.log(this.Courses)
+    //console.log(this.Courses)
     this.dataSource = new MatTableDataSource(this.Courses);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

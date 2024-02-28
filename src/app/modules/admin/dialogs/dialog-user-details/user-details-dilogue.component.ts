@@ -42,9 +42,9 @@ export class UserDetailsDilogueComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    console.log(this.data);
+    //console.log(this.data);
     this.playerId = this.data.id;
-    console.log(this.playerId);
+    //console.log(this.playerId);
     this.playerHandicapList =
       await this.facadeService.getPlayerHandicapListByPlayer(
         this.playerId,
@@ -57,11 +57,11 @@ export class UserDetailsDilogueComponent implements OnInit {
           "yyyy-MM-ddTHH:mm:SS" + "+00:00"
         )
       );
-    console.log(this.playerHandicapList);
+    //console.log(this.playerHandicapList);
     this.playerHandicapList = this.playerHandicapList["flight"].sort(
       this.ComparatorDate
     );
-    console.log(this.playerHandicapList);
+    //console.log(this.playerHandicapList);
     this.dataSource = new MatTableDataSource(this.playerHandicapList);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

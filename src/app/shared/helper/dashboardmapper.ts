@@ -2,7 +2,7 @@ import { General } from "../classes/general";
 
 export function mapDashboardData(data: any): any {
 
-    console.log(data);
+    //console.log(data);
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -202,8 +202,8 @@ export function mapDashboardData(data: any): any {
         return (timeB.getTime() - timeA.getTime()) as number; // Cast the result to number
     });
 
-    console.log(myData);
-    console.log(todayData);
+    //console.log(myData);
+    //console.log(todayData);
     let dataMembers: any[] = [];
     let dataFlight: any[] = [];
     let areaSource: any[] = [];
@@ -288,7 +288,7 @@ export function mapDashboardData(data: any): any {
             name: 'Played',
         },
     ];
-    console.log(_series);
+    //console.log(_series);
     const mappedData = {
         series: _series,
         labels: dataFlight,

@@ -27,7 +27,7 @@ export class DialogTeeTimeSlotComponent implements OnInit {
       @Inject(MAT_DIALOG_DATA) public data: any) {}
 
       ngOnInit() {
-        console.log(this.data);
+        //console.log(this.data);
         this.slotList = this.data.slots;
     
         for(let item of this.slotList)

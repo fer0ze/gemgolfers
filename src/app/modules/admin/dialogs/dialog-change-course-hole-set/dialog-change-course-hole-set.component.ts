@@ -100,15 +100,15 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        console.log(this.data);
+        //console.log(this.data);
         this.currentHoleSet =
             this.data.currentHoleSet + '_' + this.data.courseHoleSetsInverted;
         this.selectedCourseHoleSet =
             this.data.currentHoleSet + '_' + this.data.courseHoleSetsInverted;
         this.getSelectedCourse(this.data.course);
         this.tournamentID = this.data.tournament;
-        console.log(this.currentHoleSet);
-        console.log(General.getPlayersTee(this.data.course));
+        //console.log(this.currentHoleSet);
+        //console.log(General.getPlayersTee(this.data.course));
         this.route.paramMap.subscribe((params) => {
             this.routeDate = params.get('id');
         });
@@ -128,7 +128,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
         //   let playerTee: any = this.playerTees.get(member.playerId);
 
-        // console.log(playerTee);
+        // //console.log(playerTee);
         //   let flightMember = {
         //     playerId: member.playerId,
         //     attendance: false,
@@ -161,14 +161,14 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
             deleteMembers: new FormControl(this.delMember),
         });
 
-        console.log(this.starterForm.value.members);
+        //console.log(this.starterForm.value.members);
         this.courseTee = General.getPlayersTee(this.data.course);
-        console.log(this.courseTee);
+        //console.log(this.courseTee);
 
         this.membersSource = new MatTableDataSource(
             this.starterForm.value.members
         );
-        console.log(this.membersSource);
+        //console.log(this.membersSource);
 
         this.clubID = this.loggedInuser.membership[0].club;
         this.currentDate = new Date();
@@ -176,13 +176,13 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     }
 
     changeFlight(item) {
-        console.log('Selected value: ' + item.value);
+        //console.log('Selected value: ' + item.value);
         this.starterForm.value.holeSets = item.value;
-        console.log(this.starterForm);
+        //console.log(this.starterForm);
     }
 
     selectedTee(event, playerId) {
-        console.log(playerId);
+        //console.log(playerId);
         let target = event.source.selected._element.nativeElement;
         let selectedData = {
             value: event.value,
@@ -190,11 +190,11 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         };
 
         this.playerTees.set(playerId, selectedData);
-        console.log(this.playerTees);
+        //console.log(this.playerTees);
 
         this.starterForm.value.playingTee.push(this.playerTees.get(playerId));
-        console.log(this.playTee);
-        console.log(this.starterForm);
+        //console.log(this.playTee);
+        //console.log(this.starterForm);
     }
 
     onNoClick(): void {
@@ -205,11 +205,11 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         this.facadeService
             .getCourseHoleSets(course)
             .subscribe((selectedCourseHoleSet) => {
-                console.log(selectedCourseHoleSet);
+                //console.log(selectedCourseHoleSet);
                 if (selectedCourseHoleSet.course_hole_sets.length > 0) {
                     this.courseHoleSetNames =
                         selectedCourseHoleSet.course_hole_sets;
-                    console.log(this.courseHoleSetNames);
+                    //console.log(this.courseHoleSetNames);
                     //this.showCourseHole = true;
                 } else {
                     //this.showCourseHole = false;
@@ -247,7 +247,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                         return a.id == player[0].id;
                     }
                 });
-                console.log(founded);
+                //console.log(founded);
 
                 if (founded.length == 0) {
                     if (this.starterForm.value.members.length > 4) {
@@ -266,7 +266,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                             player[0].id,
                             this.data.date
                         );
-                    console.log(todayRoundCheck);
+                    //console.log(todayRoundCheck);
                     if (todayRoundCheck && todayRoundCheck.length > 0) {
                         this.snackBar.open(
                             'Player already played in a round today.',
@@ -308,10 +308,10 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 );
 
                 dialogRef.afterClosed().subscribe(async (result) => {
-                    console.log(result);
+                    //console.log(result);
                     if (result) {
-                        //console.log("record deleted.");
-                        console.log(result);
+                        ////console.log("record deleted.");
+                        //console.log(result);
 
                         let founded = this.starterForm.value.members.filter(
                             (a) => {
@@ -322,9 +322,9 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                                 }
                             }
                         );
-                        console.log(founded);
+                        //console.log(founded);
 
-                        console.log(this.data.date);
+                        //console.log(this.data.date);
                         if (founded.length == 0) {
                             if (this.starterForm.value.members.length > 4) {
                                 this.snackBar.open(
@@ -337,13 +337,13 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
                                 return false;
                             }
-                            console.log(this.data.date);
+                            //console.log(this.data.date);
                             let todayRoundCheck =
                                 await this.facadeService.getPlayerTodayRound(
                                     result['player'].id,
                                     this.data.date
                                 );
-                            console.log(todayRoundCheck);
+                            //console.log(todayRoundCheck);
                             if (todayRoundCheck && todayRoundCheck.length > 0) {
                                 this.snackBar.open(
                                     'Player already played in a round today.',
@@ -356,7 +356,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                                 return;
                             }
                             this.starterForm.value.members.push(result.player);
-                            console.log(this.starterForm.value.members);
+                            //console.log(this.starterForm.value.members);
                             this.syncTournamentMembers();
                             this.snackBar.open(
                                 'Player has been added in the list.',
@@ -375,7 +375,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                             );
                         }
                     } else {
-                        //console.log("cancel delete action");
+                        ////console.log("cancel delete action");
                     }
                 });
             }
@@ -388,7 +388,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
             .subscribe(
                 (data) => {
                     this.isLoading = false;
-                    console.log(this.starterForm.value.members);
+                    //console.log(this.starterForm.value.members);
                     this.starterForm.value.members.forEach(
                         (obj, i) =>
                         (obj['fullName'] =
@@ -399,7 +399,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                     );
                     this.membersSource.sort = this.Memsort;
                     this.membersSource.paginator = this.Mempaginator;
-                    console.log(this.membersSource);
+                    //console.log(this.membersSource);
 
                     //this.updateTMCategorySelection();
                 },
@@ -414,24 +414,24 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
-                console.log(result);
+                ////console.log("record deleted.");
+                //console.log(result);
                 this.flightMembers.push(result);
                 this.tournamentMembers.push(result);
-                //console.log(this.clubMembers);
+                ////console.log(this.clubMembers);
                 this.syncTournamentMembers();
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
 
     removePlayer(playerId: string) {
-        console.log(playerId);
+        //console.log(playerId);
         this.delMember.push(playerId);
-        console.log(this.starterForm.value.members);
+        //console.log(this.starterForm.value.members);
         let data: any = this.starterForm.value.members;
-        console.log(data);
+        //console.log(data);
         let DelplayerIndex: any = data.findIndex((a) => {
             if (a.PlayerQL) {
                 return a.PlayerQL.id == playerId;
@@ -439,7 +439,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 return a.id == playerId;
             }
         });
-        console.log(DelplayerIndex);
+        //console.log(DelplayerIndex);
 
         let DelplayerInfo: any = data.filter((a) => {
             if (a.PlayerQL) {
@@ -448,9 +448,9 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 return a.id == playerId;
             }
         });
-        console.log(DelplayerInfo);
+        //console.log(DelplayerInfo);
 
-        //console.log(flight + "<- ->" + player);
+        ////console.log(flight + "<- ->" + player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to remove this player from group?',
@@ -458,10 +458,10 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
+                ////console.log("record deleted.");
                 data.splice(DelplayerIndex, 1);
                 //data.splice(playerId, 1);
-                console.log(data);
+                //console.log(data);
                 //this.tournamentMembers.splice(0,0,DelplayerInfo[0])
                 this.tournamentMembers = data;
 
@@ -469,7 +469,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
                 //this.facadeService.deleteTournamentMember(this.tournamentID, playerId);
             } else {
-                console.log('cancel delete action');
+                //console.log('cancel delete action');
             }
         });
     }

@@ -33,8 +33,8 @@ export class DialogPlayerScoreComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        //  console.log(this.data.course);
-        console.log(this.data);
+        //  //console.log(this.data.course);
+        //console.log(this.data);
         if (this.data.players && this.data.players.length > 0) {
             this.isTaxes = true;
         }
@@ -46,9 +46,9 @@ export class DialogPlayerScoreComponent implements OnInit {
         let selectedCourseHoleSet =
             await this.facadeService.getCourseHoleSetsForCourse(courseID);
         this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
-        console.log(this.courseHoleSetNames);
-        //  console.log(this.data.allNet);
-        //  console.log(this.data.round);
+        //console.log(this.courseHoleSetNames);
+        //  //console.log(this.data.allNet);
+        //  //console.log(this.data.round);
         if (this.data.flight) {
             this.showName(this.data.flight);
             this.isTaxesScoreBor = true;
@@ -61,7 +61,7 @@ export class DialogPlayerScoreComponent implements OnInit {
             );
             this.isLoading = false;
             if (dataLeaderboard.course.length <= 0) return;
-            console.log(this.data.allGross);
+            //console.log(this.data.allGross);
             this.courseData = dataLeaderboard.course[0];
             this.isLoading = false;
             this.courseHoleSet = this.data.holeSets;
@@ -88,9 +88,9 @@ export class DialogPlayerScoreComponent implements OnInit {
 
             let courseQLs: any = this.courseData;
             let holesQLs: any = courseQLs.HolesQL;
-            console.log(courseQLs);
+            //console.log(courseQLs);
             holesQLs = holesQLs.sort(this.Comparator);
-            console.log(holesQLs);
+            //console.log(holesQLs);
             if (this.data.holeSets == 0) {
                 this.data.holeSets = 3;
             }
@@ -156,8 +156,8 @@ export class DialogPlayerScoreComponent implements OnInit {
             };
 
             this.scoreHeader.push(scoreHeader);
-            // console.log(this.scoreHeader);
-            // console.log(this.scoreHeader[0].courseHoles9[0]['par']);
+            // //console.log(this.scoreHeader);
+            // //console.log(this.scoreHeader[0].courseHoles9[0]['par']);
             if (this.data.type == 'Gross') {
                 this.grossScoreCard(scoreHeader);
             } else {
@@ -187,14 +187,14 @@ export class DialogPlayerScoreComponent implements OnInit {
         let holes10to18: boolean = this.hasHoleSet10to18(courseHoleSets);
         let holes19to27: boolean = this.hasHoleSet19to27(courseHoleSets);
         let holes28to36: boolean = this.hasHoleSet28to36(courseHoleSets);
-        // console.log(holes1to9);
-        // console.log(holes10to18);
-        // console.log(holes19to27);
-        // console.log(holes28to36);
+        // //console.log(holes1to9);
+        // //console.log(holes10to18);
+        // //console.log(holes19to27);
+        // //console.log(holes28to36);
         for (let i = 0; i < holes.length; i++) {
             //int holeNo = holes.get(i).getHoleNo();
             let holeNo: number = holes[i].holeNo;
-            //console.log("holeNo: " + holeNo);
+            ////console.log("holeNo: " + holeNo);
             if (holeNo >= 1 && holeNo <= 9) {
                 if (!holes1to9) {
                     holes.splice(i, 1); //holes.remove(i);
@@ -236,7 +236,7 @@ export class DialogPlayerScoreComponent implements OnInit {
                 }
             }
         }
-        //console.log(holes);
+        ////console.log(holes);
         let holesCount = holes.length;
         if (holesCount == 9) {
             //Collections.sort(holes, (hole1, hole2) -> hole1.getIndex() - hole2.getIndex());
@@ -259,13 +259,13 @@ export class DialogPlayerScoreComponent implements OnInit {
                 else h.holeNo = h.holeNo - 9;
             }
         }
-        //console.log(holes);
+        ////console.log(holes);
     }
 
     grossScoreCard(scoreHeader) {
         this.players=[];
         for (let score of this.data.allGross) {
-            console.log(score);
+            //console.log(score);
 
             let playerHole9Score: any = [];
             let playerHole18Score: any[] = [];
@@ -320,9 +320,9 @@ export class DialogPlayerScoreComponent implements OnInit {
                     })
                     : [];
 
-            console.log(gross27Total);
-            //console.log(this.data.removed);
-            //(IsRemovedFromScoring)? console.log("not"): console.log("yes");
+            //console.log(gross27Total);
+            ////console.log(this.data.removed);
+            //(IsRemovedFromScoring)? //console.log("not"): //console.log("yes");
 
             let grossTotal: number =
                 gross9Total + gross18Total + gross27Total + gross36Total;
@@ -342,7 +342,7 @@ export class DialogPlayerScoreComponent implements OnInit {
             };
 
             this.allScores.push(LeaderGross);
-            console.log(this.allScores);
+            //console.log(this.allScores);
         }
 
         if (this.data.players) {
@@ -490,8 +490,8 @@ export class DialogPlayerScoreComponent implements OnInit {
                     let holesSetB = holesSets.find(
                         (x) => x.holeSets == obj.backId
                     );
-                    console.log(holesSetA);
-                    console.log(holesSetB);
+                    //console.log(holesSetA);
+                    //console.log(holesSetB);
                     let counter = 1;
                     for (let i of holes) {
                         if (holesSetA.id == i.holeSetId) {
@@ -553,28 +553,28 @@ export class DialogPlayerScoreComponent implements OnInit {
     }
 
     public hasHoleSet1to9(courseHoleSets): boolean {
-        console.log(Constants.Holes1to9);
+        //console.log(Constants.Holes1to9);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes1to9) != 0
         );
     }
 
     public hasHoleSet10to18(courseHoleSets): boolean {
-        console.log(Constants.Holes10to18);
+        //console.log(Constants.Holes10to18);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes10to18) != 0
         );
     }
 
     public hasHoleSet19to27(courseHoleSets): boolean {
-        console.log(Constants.Holes19to27);
+        //console.log(Constants.Holes19to27);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes19to27) != 0
         );
     }
 
     public hasHoleSet28to36(courseHoleSets): boolean {
-        console.log(Constants.Holes28to36);
+        //console.log(Constants.Holes28to36);
         return (
             courseHoleSets > 0 && (courseHoleSets & Constants.Holes28to36) != 0
         );

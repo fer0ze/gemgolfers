@@ -29,12 +29,12 @@ export class DialogCourseDetailsComponent implements OnInit {
 
   async ngOnInit() {
 
-    console.log(this.data);
-    //console.log( this.data.course["TournamentQL"][0]["CourseQL"].id);
+    //console.log(this.data);
+    ////console.log( this.data.course["TournamentQL"][0]["CourseQL"].id);
     this.currentCourse = <CourseHoleSet>(
       await this.facadeService.getCourseByID( this.data.course)
     );
-    console.log(this.currentCourse);
+    //console.log(this.currentCourse);
     
     this.par=this.currentCourse["course"][0].par;
     // this.index=this.currentCourse["course"][0].index;
@@ -44,7 +44,7 @@ export class DialogCourseDetailsComponent implements OnInit {
     this.CourseCountry=this.currentCourse["course"][0].country
     this.NoOfHoles=this.currentCourse["course"][0].noOfHoles
     this.CourseName=this.currentCourse["course"][0].name
-    console.log(this.par);
+    //console.log(this.par);
     
   }
 

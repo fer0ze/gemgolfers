@@ -73,7 +73,7 @@ export class AddTeeTimesComponent implements OnInit {
     async createSchedule() {
         // TODO: Use EventEmitter with form value
         try {
-            console.log(this.scheduleForm.value);
+            //console.log(this.scheduleForm.value);
             this.loggedInuser = JSON.parse(
                 localStorage.getItem(Constants.LOGGED_IN_USER)
             );
@@ -85,7 +85,7 @@ export class AddTeeTimesComponent implements OnInit {
                     General.parseToDate(this.scheduleForm.value.BookingDate)
                 );
 
-            console.log(isExist['tee_time_booking']);
+            //console.log(isExist['tee_time_booking']);
 
             if (isExist['tee_time_booking'].length > 0) {
                 this.snackBar.open(
@@ -103,14 +103,14 @@ export class AddTeeTimesComponent implements OnInit {
                 this.loggedInuser.membership.length > 0
                     ? this.loggedInuser.membership[0].club
                     : [];
-            console.log(clubInfo);
+            //console.log(clubInfo);
             let courseId: string =
                 clubInfo.length > 0 && clubInfo.courses.length > 0
                     ? clubInfo.courses[0].id
                     : '-KpFJ5_ODeRpEQCz9Drd';
 
             this.generateTeeTimes();
-            console.log(this.teeSlots);
+            //console.log(this.teeSlots);
 
             let teeTimeSlots: TeeTimeSlot[] = [];
 
@@ -141,7 +141,7 @@ export class AddTeeTimesComponent implements OnInit {
                 }
             }
 
-            //console.log(this.scheduleForm);
+            ////console.log(this.scheduleForm);
             const schedule: TeeTime = {
                 id: UniqueIdGenerator.generate(),
                 clubId: clubId,
@@ -156,7 +156,7 @@ export class AddTeeTimesComponent implements OnInit {
                 allowNineHole: this.scheduleForm.value.allowNineHole,
             };
 
-            console.log(schedule);
+            //console.log(schedule);
 
             let response = this.facadeService.AddTeeTimeSchedule(schedule);
 
@@ -188,7 +188,7 @@ export class AddTeeTimesComponent implements OnInit {
                     ' ' +
                     this.scheduleForm.value.endTime.substr(0, 5)
             );
-            console.log(startLimit);
+            //console.log(startLimit);
             while (startLimit <= endLimit) {
                 var h = startLimit.getHours();
                 var m = startLimit.getMinutes();
@@ -200,8 +200,8 @@ export class AddTeeTimesComponent implements OnInit {
                 startLimit.setMinutes(
                     startLimit.getMinutes() + this.scheduleForm.value.interval
                 );
-                console.log(this.scheduleForm.value.interval);
-                console.log(startLimit);
+                //console.log(this.scheduleForm.value.interval);
+                //console.log(startLimit);
             }
         } catch {}
     }

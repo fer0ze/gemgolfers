@@ -47,7 +47,7 @@ export class DialogHanidcapListComponent implements OnInit {
         ? item.PlayerQL.firstName + " " + item.PlayerQL.lastName
         : "";
 
-    console.log(this.handicapList);
+    //console.log(this.handicapList);
 
     this.dataSource = new MatTableDataSource(this.handicapList);
     this.dataSource.paginator = this.paginator;
@@ -55,7 +55,7 @@ export class DialogHanidcapListComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    console.log(filterValue);
+    //console.log(filterValue);
     if (filterValue == "") {
       this.setDataSource(this.handicapList);
       return;
@@ -71,7 +71,7 @@ export class DialogHanidcapListComponent implements OnInit {
           this.player.push(obj);
         }
       }
-      console.log(this.player);
+      //console.log(this.player);
       this.setDataSource(this.player);
     }
   }

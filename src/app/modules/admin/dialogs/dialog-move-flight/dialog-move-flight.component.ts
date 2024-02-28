@@ -30,7 +30,7 @@ export class DialogMoveFlightComponent implements OnInit {
   }
 
   changeFlight(item) {
-    console.log("Selected value: " + item.value);
+    //console.log("Selected value: " + item.value);
     this.selectedFlight = item.value;
   }
 

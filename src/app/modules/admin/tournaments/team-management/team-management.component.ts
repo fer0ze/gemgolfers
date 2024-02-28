@@ -97,7 +97,7 @@ export class TeamManagementComponent implements OnInit {
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
-        console.log(this.tournamentID);
+        //console.log(this.tournamentID);
 
         let tournamentInfo = await this.facadeService.getTournamentsTeams(
             this.tournamentID
@@ -142,7 +142,7 @@ export class TeamManagementComponent implements OnInit {
         if (this.currentTournament.members)
             for (let p of this.currentTournament.members)
                 this.tournamentMembers.push(p.player);
-        console.log(this.tournamentMembers);
+        //console.log(this.tournamentMembers);
         
 
     }
@@ -163,11 +163,11 @@ export class TeamManagementComponent implements OnInit {
             teamToUpdate.members = teamToUpdate.members.filter(member => member.id !== playerId);
         } else {
             // Handle the case where the team with the given ID is not found
-            console.log('Team not found');
+            //console.log('Team not found');
         }
     }
     editTeam(teamId, index) {
-        console.log(index);
+        //console.log(index);
         try {
             this.logger.log('Add New member to Team', "info", teamId);
 
@@ -193,7 +193,7 @@ export class TeamManagementComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe((result) => {
-                console.log(result);
+                //console.log(result);
                 if (result.length > 0) {
                     let playerAdded = false; // Flag to track if the player has been added to a team
                     for (let obj of result) {
@@ -275,8 +275,8 @@ export class TeamManagementComponent implements OnInit {
             }
             teamsToSave.push(teams);
         })
-        console.log(teamsToSave);
-        // console.log(this.teamMembersToSave);
+        //console.log(teamsToSave);
+        // //console.log(this.teamMembersToSave);
         let result = <any>(
             await this.facadeService.insertTournamentTeam(teamsToSave, this.tournamentID,teamsMembersToRemove)
         );

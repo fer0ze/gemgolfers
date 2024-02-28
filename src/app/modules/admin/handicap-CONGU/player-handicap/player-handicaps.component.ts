@@ -129,7 +129,7 @@ export class PlayerHandicapComponent implements OnInit {
                     ? this.loggedInuser.membership[0].club
                     : null;
 
-            console.log(clubInfo);
+            //console.log(clubInfo);
 
             this.clubTitle = clubInfo ? clubInfo.name : '';
         }
@@ -137,7 +137,7 @@ export class PlayerHandicapComponent implements OnInit {
             // this.currentPlayerHandicap = <Player>(
             //   await this.facadeService.getPlayerByID(this.playerID)
             // );
-            // console.log(this.currentPlayerHandicap);
+            // //console.log(this.currentPlayerHandicap);
             let club: any =
                 this.loggedInuser.membership.length > 0
                     ? this.loggedInuser.membership[0].club
@@ -152,15 +152,15 @@ export class PlayerHandicapComponent implements OnInit {
             };
             let playerscore: any =
                 await this._facadeService.getPlayerFlightScores(this.playerID);
-            console.log(playerscore);
+            //console.log(playerscore);
             this.currentPlayer = playerscore.PlayerQL;
-            console.log(this.currentPlayer);
+            //console.log(this.currentPlayer);
             this.currentPlayerHandicap = this.currentPlayer[0];
 
             this.playerHandiData = playerscore['HandicapQL'];
-            console.log(this.playerHandiData);
+            //console.log(this.playerHandiData);
             const slicedCongu = this.playerHandiData;
-            console.log(slicedCongu);
+            //console.log(slicedCongu);
 
             this.dataSource = new MatTableDataSource(slicedCongu);
             this.dataSource.paginator = this.paginator;
@@ -179,7 +179,7 @@ export class PlayerHandicapComponent implements OnInit {
     }
 
     isPanelty(flight) {
-        //console.log(this.usedForHandicap);
+        ////console.log(this.usedForHandicap);
         if (flight && flight[0] != undefined) {
             let used: boolean = flight[0].members.some((element) => {
                 return (
@@ -283,7 +283,7 @@ export class PlayerHandicapComponent implements OnInit {
         }
     }
     pageEvents(event) {
-        console.log(event);
+        //console.log(event);
         this.pageSize = event.pageSize;
     }
 }

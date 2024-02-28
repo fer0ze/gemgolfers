@@ -65,6 +65,7 @@ export class ViewTournamentComponent implements OnInit {
     private flightRound: string;
     playersCatgery: any;
     dataSource: MatTableDataSource<any>;
+    dataSourceTournametMembers: MatTableDataSource<any>;
     dataSourceFlightMembers: MatTableDataSource<any>;
     allMatchResults: any[] = [];
     membersColumns = [
@@ -236,6 +237,15 @@ export class ViewTournamentComponent implements OnInit {
         'R4net',
         'total',
     ];
+    tournamentMembersColumn = [
+
+        'firstName',
+        'lastName',
+        'email',
+        'category',
+        'handicap',
+        'actions',
+    ]
 
     dataSourceMembersStatus: MatTableDataSource<any>;
     displayedColumnsMembersStatus = ['name', 'category', 'handicap'];
@@ -283,7 +293,7 @@ export class ViewTournamentComponent implements OnInit {
     }
 
     async ngOnInit() {
-        //console.log(this.route.snapshot.paramMap.get("id"));
+        ////console.log(this.route.snapshot.paramMap.get("id"));
         try {
             this.logger.log('Admin comes to View Tournament Page', "info");
 
@@ -303,7 +313,7 @@ export class ViewTournamentComponent implements OnInit {
                 this.url = 'golfcourse.jpg';
                 this.dataFullTournament =
                     await this.facadeService.tournamentDashBoard(this.tournamentID);
-                console.log(this.dataFullTournament);
+                //console.log(this.dataFullTournament);
                 // this.getTournamentMembers();
                 this.memberStatusesQLs =
                     this.dataFullTournament['TournamentQL'][0].MemberStatusesQL;
@@ -343,7 +353,7 @@ export class ViewTournamentComponent implements OnInit {
                 ) {
                     this.showMatchPlay = true;
                 }
-              
+
 
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
@@ -383,11 +393,11 @@ export class ViewTournamentComponent implements OnInit {
                     ) {
                         this.playerCategoryList =
                             this.facadeService.getPlayerCategories();
-                        //console.log(playerCategoryList);
+                        ////console.log(playerCategoryList);
                     }
                 } else this.router.navigate(['/tournaments/']);
 
-                //console.log(this.fullTournament);
+                ////console.log(this.fullTournament);
 
                 this.calculateStatistics();
                 // if (this.tournamentPlayersAdd) {
@@ -443,7 +453,7 @@ export class ViewTournamentComponent implements OnInit {
                 for (let i = 1; i <= this.noOfRounds; i++) {
                     this.rounds.push({ label: 'Round ' + i });
                 }
-               // this.rounds.push({ label: 'Summary' });
+                // this.rounds.push({ label: 'Summary' });
                 //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
             } else {
                 this.router.navigate(['/tournaments/']);
@@ -478,10 +488,10 @@ export class ViewTournamentComponent implements OnInit {
             // this.FlightsQL.slice(0,6);
             let totalPlayers =
                 this.dataFullTournament['TournamentQL'][0]['members'];
-            console.log(totalPlayers);
+            //console.log(totalPlayers);
 
             totalPlayers.sort(this.ComparatorHandicap);
-            console.log(totalPlayers);
+            //console.log(totalPlayers);
             let count = 0;
 
             for (const c of totalPlayers) {
@@ -498,7 +508,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 count++;
             }
-            console.log(this.topMembers);
+            //console.log(this.topMembers);
             this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
             this.totalPlayers =
                 this.dataFullTournament['TournamentQL'][0]['members'].length;
@@ -566,11 +576,11 @@ export class ViewTournamentComponent implements OnInit {
                         }
                     }
                 }
-                console.log(this.SeniorsCount);
+                //console.log(this.SeniorsCount);
 
-                console.log(this.membersStats);
+                //console.log(this.membersStats);
                 this.totalPlayers = this.totalMembers;
-                console.log(this.totalMembers);
+                //console.log(this.totalMembers);
 
                 let activeFights = this.fullTournament.FlightsQL.filter((a) => {
                     return a.flightRound == this.activeRound;
@@ -585,10 +595,10 @@ export class ViewTournamentComponent implements OnInit {
                     }
                 }
             } else {
-                console.log('dsdsds');
+                //console.log('dsdsds');
                 const colors = ['warn', 'success', 'info', 'danger'];
-                //console.log(this.fullTournament.FlightsQL);
-                //console.log(this.playersCatgery.TournamentMemberQL[0]);
+                ////console.log(this.fullTournament.FlightsQL);
+                ////console.log(this.playersCatgery.TournamentMemberQL[0]);
                 for (
                     let index = 0;
                     index <
@@ -599,11 +609,11 @@ export class ViewTournamentComponent implements OnInit {
                         this.dataFullTournament['TournamentQL'][0]['members'][index]
                     );
                 }
-                console.log(this.membersData);
                 //console.log(this.membersData);
+                ////console.log(this.membersData);
 
                 let index: number = 0;
-                console.log(this.fullTournament.CategoriesQL);
+                //console.log(this.fullTournament.CategoriesQL);
 
                 for (const c of this.fullTournament.CategoriesQL) {
                     let m = this.membersData.filter((a) => {
@@ -758,7 +768,7 @@ export class ViewTournamentComponent implements OnInit {
                     totalPlayers.push(obj);
                 }
             }
-            console.log(totalPlayers);
+            //console.log(totalPlayers);
             totalPlayers.sort(this.ComparatorHandicap);
             let count = 0;
 
@@ -776,7 +786,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 count++;
             }
-            console.log(this.topMembers);
+            //console.log(this.topMembers);
             this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -799,7 +809,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
             }
             totalPlayers.sort(this.ComparatorHandicap);
-            console.log(totalPlayers);
+            //console.log(totalPlayers);
             let count = 0;
 
             for (const c of totalPlayers) {
@@ -816,7 +826,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 count++;
             }
-            console.log(this.topMembers);
+            //console.log(this.topMembers);
             this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -839,7 +849,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
             }
             totalPlayers.sort(this.ComparatorHandicap);
-            console.log(totalPlayers);
+            //console.log(totalPlayers);
             let count = 0;
 
             for (const c of totalPlayers) {
@@ -856,7 +866,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 count++;
             }
-            console.log(this.topMembers);
+            //console.log(this.topMembers);
             this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -879,7 +889,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
             }
             totalPlayers.sort(this.ComparatorHandicap);
-            console.log(totalPlayers);
+            //console.log(totalPlayers);
             let count = 0;
 
             for (const c of totalPlayers) {
@@ -896,22 +906,22 @@ export class ViewTournamentComponent implements OnInit {
                 }
                 count++;
             }
-            console.log(this.topMembers);
+            //console.log(this.topMembers);
             this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
     public onChangeGross(event) {
-        console.log(event);
+        //console.log(event);
         this.selectedCategory = this.tournamentCategories[event.index].category;
-        console.log(this.selectedCategory);
+        //console.log(this.selectedCategory);
         if (this.showSummary) this.GrossData(this.selectedCategory);
     }
     public onChangeNet(event) {
-        console.log(event);
+        //console.log(event);
         this.selectedCategory = this.tournamentCategories[event.index].category;
-        console.log(this.selectedCategory);
+        //console.log(this.selectedCategory);
         if (this.showSummary) this.NetData(this.selectedCategory);
         this.showSummary = true;
     }
@@ -984,8 +994,9 @@ export class ViewTournamentComponent implements OnInit {
                     this.showMainTab1 = false;
                     this.showMainTab2 = false;
                     this.showMainTab3 = false;
-                    this.showMainTab4 = true;
-                    this.showMainTab5 = false;
+                    this.showMainTab4 = false;
+                    this.showMainTab5 = true;
+                    this.getTournamentMembers();
                 } else if (tab.index == 4) {
                     this.showMainTab1 = false;
                     this.showMainTab2 = false;
@@ -1063,7 +1074,7 @@ export class ViewTournamentComponent implements OnInit {
 
             let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
             let finalScoreStats: ScoreStats = stats.getApplicationStats();
-            console.log(finalScoreStats);
+            //console.log(finalScoreStats);
 
             this.avgScore['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
             this.avgScore['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
@@ -1115,7 +1126,7 @@ export class ViewTournamentComponent implements OnInit {
                     type: 'column',
                 },
             ];
-            console.log(this._series);
+            //console.log(this._series);
 
             if (finalScoreStats['grossTotal'] != 0) {
                 this.pieChartData1 = [
@@ -1147,7 +1158,7 @@ export class ViewTournamentComponent implements OnInit {
 
         let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
         let finalScoreStats: ScoreStats = stats.getApplicationStats();
-        console.log(finalScoreStats);
+        //console.log(finalScoreStats);
 
         this.avgScore1['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
         this.avgScore1['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
@@ -1201,7 +1212,7 @@ export class ViewTournamentComponent implements OnInit {
                 type: 'column',
             },
         ];
-        console.log(this._series);
+        //console.log(this._series);
 
         if (finalScoreStats['grossTotal'] != 0) {
             this.pieChartData1 = [
@@ -1552,11 +1563,11 @@ export class ViewTournamentComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe((result) => {
-                //console.log(result);
+                ////console.log(result);
                 if (result) {
-                    //console.log(result.player);
+                    ////console.log(result.player);
                 } else {
-                    //console.log("cancel delete action");
+                    ////console.log("cancel delete action");
                 }
             });
         } catch (error) {
@@ -1575,7 +1586,7 @@ export class ViewTournamentComponent implements OnInit {
     //     let getResult: any = result;
     //     if(getResult) {
 
-    //       console.log(getResult);
+    //       //console.log(getResult);
 
     //       let cutOffCriteria: any = {
     //         round: round,
@@ -1584,17 +1595,17 @@ export class ViewTournamentComponent implements OnInit {
     //         type: getResult.type,
     //         order: getResult.order
     //       }
-    //       console.log(cutOffCriteria);
+    //       //console.log(cutOffCriteria);
 
     //       let result = this.facadeService.closeActiveRound(this.tournamentID, round, cutOffCriteria);
-    //       //console.log(result);
+    //       ////console.log(result);
     //       this.activeRound = round;
     //       this.selected = round
 
     //       this.closeCurrentRound();
     //     }
     //     else {
-    //       //console.log("cancel delete action");
+    //       ////console.log("cancel delete action");
     //     }
     //   });
 
@@ -1628,7 +1639,7 @@ export class ViewTournamentComponent implements OnInit {
                         window.location.reload();
                     } else {
                         this.logger.log('Close Round Dialog Box Close Without Save', "info");
-                        //console.log("cancel delete action");
+                        ////console.log("cancel delete action");
                     }
                 });
             } else {
@@ -1640,11 +1651,11 @@ export class ViewTournamentComponent implements OnInit {
                     this.dataFullTournament['TournamentQL'][0].startDate;
                 startDate = new Date(startDate);
                 startDate.setDate(startDate.getDate() + this.activeRound);
-                console.log(startDate);
+                //console.log(startDate);
 
                 let newstartDate = startDate.getDate();
 
-                console.log(newstartDate);
+                //console.log(newstartDate);
                 if (this.categories.length > 0) {
                     for (let newObj of this.categories) {
                         let flightSettings: any = newObj.flightSettings;
@@ -1663,17 +1674,17 @@ export class ViewTournamentComponent implements OnInit {
                                     chngDate.substring(2, 4) +
                                     '-' +
                                     +chngDate.substring(0, 2);
-                                // console.log(newDate);
+                                // //console.log(newDate);
 
                                 let flightDate = new Date(newDate).getDate();
-                                console.log(flightDate);
+                                //console.log(flightDate);
                                 if (flightDate == newstartDate) {
                                     allowCat = true;
                                     newObj['allowCat'] = true;
                                     break;
                                 }
 
-                                //console.log(this.calculateDiff(newstartDate,flightDate));
+                                ////console.log(this.calculateDiff(newstartDate,flightDate));
                             }
                             if (!allowCat) {
                                 newObj['allowCat'] = false;
@@ -1709,13 +1720,13 @@ export class ViewTournamentComponent implements OnInit {
                                     +chngDate.substring(0, 2);
 
                                 let flightDate = new Date(newDate).getDate();
-                                console.log(flightDate);
+                                //console.log(flightDate);
                                 if (flightDate == newstartDate) {
                                     allowCat = true;
                                     newObj['allowCat'] = true;
                                     break;
                                 }
-                                //console.log(this.calculateDiff(newstartDate,flightDate));
+                                ////console.log(this.calculateDiff(newstartDate,flightDate));
                             }
                             if (!allowCat) {
                                 newObj['allowCat'] = false;
@@ -1773,15 +1784,15 @@ export class ViewTournamentComponent implements OnInit {
                     var jsons = new Array();
                     let flag = true;
                     jsons = [];
-                    console.log(getResult);
+                    //console.log(getResult);
                     if (getResult && getResult.category && this.matchFormat == matchFormat.STROKE_PLAY) {
-                        console.log(getResult.category);
+                        //console.log(getResult.category);
                         for (let cats in getResult.category) {
                             if (getResult.category[cats].copyFlights == 'No') {
                                 flag = false;
                             }
 
-                            console.log(getResult.category[cats]);
+                            //console.log(getResult.category[cats]);
                             let copyflights: any = [];
                             if (
                                 this.fullTournament.cutOffCriteria != null &&
@@ -1799,7 +1810,7 @@ export class ViewTournamentComponent implements OnInit {
                                         copyflights.push(cut);
                                     }
                                 }
-                                console.log(copyflights);
+                                //console.log(copyflights);
                             }
 
                             let cutOffCriteria: any = {
@@ -1830,7 +1841,7 @@ export class ViewTournamentComponent implements OnInit {
                                 lastRoundPlayed:
                                     getResult.category[cats].lastRoundPlayed,
                             };
-                            console.log(cutOffCriteria);
+                            //console.log(cutOffCriteria);
                             await this.closeCurrentRound(
                                 cutOffCriteria,
                                 cutOffCriteria.name,
@@ -1844,10 +1855,10 @@ export class ViewTournamentComponent implements OnInit {
                             jsons.push(cutOffCriteria);
                         }
                         let jObject = { cutOff: jsons };
-                        console.log(jObject);
+                        //console.log(jObject);
                         let a = JSON.stringify(jObject);
                         var src = a.replace(/\\/g, '');
-                        console.log(src);
+                        //console.log(src);
                         const resultString = JSON.stringify(result);
                         this.logger.log('Result from Close Round Dialog Box', "info", resultString);
                         let response = await this.facadeService.closeActiveRound(
@@ -1888,6 +1899,9 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
 
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
     async closeCurrentRound(
         cutOffCriteria: any,
         categoryName: string,
@@ -1897,7 +1911,7 @@ export class ViewTournamentComponent implements OnInit {
         try {
             this.logger.log('Cut calculation after Close Round.', "info", cutOffCriteria.toString());
             let nextRoundPlayers: any[] = [];
-            // console.log(category);
+            // //console.log(category);
             // let categoryScore = cutOffCriteria.score.filter((a) => {
             //   return a.name == category;
             // });
@@ -1908,7 +1922,7 @@ export class ViewTournamentComponent implements OnInit {
                 categoryName
             );
             let result = objLeader.parseSubscriptionResponse();
-            console.log(result);
+            //console.log(result);
             if (cutOffCriteria.copyflights == 'No') {
                 if (result.length == 0) {
                     result = this.dataFullTournament.TournamentQL[0].members.filter(
@@ -1917,14 +1931,6 @@ export class ViewTournamentComponent implements OnInit {
                                 return nextRoundPlayers.push(a.PlayerQL);
                         }
                     );
-                    //for(let res in this.dataFullTournament.TournamentQL[0].members){
-                    //if((this.dataFullTournament.TournamentQL[0].members[res].PlayerQL.playerCategory) == categoryName){
-                    //nextRoundPlayers.push(this.dataFullTournament.TournamentQL[0].members[res].PlayerQL)
-
-                    //nextRoundPlayers = result.PlayerQL;
-                    //}
-                    //}
-                    console.log(nextRoundPlayers);
                 } else {
                     if (cutOffCriteria.type == LeaderType.GROSS) {
                         result = result.filter((a) => {
@@ -1937,7 +1943,7 @@ export class ViewTournamentComponent implements OnInit {
                                 this.noOfHolesInCourse
                             );
                         });
-                        console.log(result);
+                        //console.log(result);
                         cutOffCriteria.order == 'asc'
                             ? (nextRoundPlayers = result.sort(
                                 this.ComparatorAllGross
@@ -1954,7 +1960,7 @@ export class ViewTournamentComponent implements OnInit {
                                 }
                             );
                         this.makePlayerFlights(result, cutOffCriteria.players);
-                        //console.log(this.selectedMembers);
+                        ////console.log(this.selectedMembers);
                         await this.saveCategoryFlights(cutOffCriteria, categoryName);
                     } else {
                         result = result.filter((a) => {
@@ -1977,20 +1983,20 @@ export class ViewTournamentComponent implements OnInit {
                     }
                 }
                 //nextRoundPlayers = result.sort(this.ComparatorAllGross);
-                //for(let p of nextRoundPlayers) console.log(p.name + "" + p.playerId);
-                console.log(nextRoundPlayers);
+                //for(let p of nextRoundPlayers) //console.log(p.name + "" + p.playerId);
+                //console.log(nextRoundPlayers);
                 if (copymembers == null) {
                     this.makePlayerFlights(
                         nextRoundPlayers,
                         cutOffCriteria.players
                     );
-                    //console.log(this.selectedMembers);
+                    ////console.log(this.selectedMembers);
                     await this.saveCategoryFlights(cutOffCriteria, categoryName);
                 }
             } else {
                 nextRoundPlayers = result;
                 this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
-                //console.log(this.selectedMembers);
+                ////console.log(this.selectedMembers);
                 await this.saveCategoryFlights(cutOffCriteria, categoryName);
             }
         } catch (error) {
@@ -2015,9 +2021,9 @@ export class ViewTournamentComponent implements OnInit {
             let outer = 0;
             this.selectedMembers = [];
 
-            //console.log(this.selectedMembers);
+            ////console.log(this.selectedMembers);
             for (var index in nextRoundPlayers) {
-                //console.log(outer + "<--->" + cnter);
+                ////console.log(outer + "<--->" + cnter);
 
                 if (cnter == 0) this.selectedMembers[outer] = [];
 
@@ -2039,7 +2045,7 @@ export class ViewTournamentComponent implements OnInit {
         try {
             let tournamentFlights: Flight[] = [];
             //let fcnter = 0;
-            //console.log(criteria);
+            ////console.log(criteria);
             this.changer++;
 
             let tournamentFlightMembers: FlightMembers[];
@@ -2049,13 +2055,13 @@ export class ViewTournamentComponent implements OnInit {
                 tournamentFlightMembers = [];
                 for (var index2 in this.selectedMembers[index]) {
                     if (Number.isInteger(Number(index2))) {
-                        // console.log(this.selectedMembers[index][index2]["playerCategory"]);
-                        // console.log(this.selectedMembers[index][index2].playerCategory);
-                        //console.log(categoryName);
-                        // console.log(this.selectedMembers[index][index2]["name"]);
+                        // //console.log(this.selectedMembers[index][index2]["playerCategory"]);
+                        // //console.log(this.selectedMembers[index][index2].playerCategory);
+                        ////console.log(categoryName);
+                        // //console.log(this.selectedMembers[index][index2]["name"]);
 
                         let roundTeeId: any = General.getPlayersTe(categoryName);
-                        // console.log(roundTeeId.id);
+                        // //console.log(roundTeeId.id);
                         let FM: any = {
                             playerId: this.selectedMembers[index][index2]['id']
                                 ? this.selectedMembers[index][index2]['id']
@@ -2069,8 +2075,8 @@ export class ViewTournamentComponent implements OnInit {
                     }
                 }
                 if (tournamentFlightMembers.length > 0) {
-                    //console.log(tournamentFlightMembers);
-                    // console.log('Before Running' + this.runningFlights);
+                    ////console.log(tournamentFlightMembers);
+                    // //console.log('Before Running' + this.runningFlights);
                     this.runningFlights++;
                     this.teetime++;
                     //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
@@ -2085,11 +2091,11 @@ export class ViewTournamentComponent implements OnInit {
                         this.teetime,
                         teeBox
                     );
-                    // console.log(teeBox);
-                    // console.log(teeTime);
-                    // console.log(General.parseToDate(currentDate.toDateString()));
+                    // //console.log(teeBox);
+                    // //console.log(teeTime);
+                    // //console.log(General.parseToDate(currentDate.toDateString()));
                     let roundTeeId: any = General.getPlayersTe(categoryName);
-                    console.log(roundTeeId.id);
+                    //console.log(roundTeeId.id);
                     let flight: any = {
                         id: UniqueIdGenerator.generate(),
                         tournamentId: this.tournamentID,
@@ -2109,16 +2115,16 @@ export class ViewTournamentComponent implements OnInit {
                             data: tournamentFlightMembers,
                         },
                     };
-                    //console.log(flight);
+                    ////console.log(flight);
                     tournamentFlights.push(flight);
                     //break;
-                    //console.log('After loop' + this.runningFlights);
+                    ////console.log('After loop' + this.runningFlights);
                 }
             }
             this.teetime = 0;
             await this.facadeService.createNextRoundFlights(tournamentFlights);
-            //console.log(tournamentFlights);
-            // console.log('After Function' + this.runningFlights);
+            ////console.log(tournamentFlights);
+            // //console.log('After Function' + this.runningFlights);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
@@ -2127,7 +2133,7 @@ export class ViewTournamentComponent implements OnInit {
         try {
             let tournamentFlights: Flight[] = [];
             //let fcnter = 0;
-            //console.log(criteria);
+            ////console.log(criteria);
             this.changer++;
 
             let tournamentFlightMembers: FlightMembers[];
@@ -2169,16 +2175,16 @@ export class ViewTournamentComponent implements OnInit {
                             data: tournamentFlightMembers,
                         },
                     };
-                    //console.log(flight);
+                    ////console.log(flight);
                     tournamentFlights.push(flight);
                     //break;
-                    //console.log('After loop' + this.runningFlights);
+                    ////console.log('After loop' + this.runningFlights);
                 }
             }
             this.teetime = 0;
             await this.facadeService.createNextRoundFlights(tournamentFlights);
-            //console.log(tournamentFlights);
-            // console.log('After Function' + this.runningFlights);
+            ////console.log(tournamentFlights);
+            // //console.log('After Function' + this.runningFlights);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
 
@@ -2217,7 +2223,7 @@ export class ViewTournamentComponent implements OnInit {
             }
             grossAllArray.sort(this.ComparatorAllGross);
             this.sortAllGrossLeadersTie(grossAllArray);
-            console.log(grossAllArray);
+            //console.log(grossAllArray);
 
             for (let leader in grossAllArray) {
                 count++;
@@ -2276,9 +2282,9 @@ export class ViewTournamentComponent implements OnInit {
             }
 
             // From HTML
-            // console.log(rows);
+            // //console.log(rows);
             // this.sortAllGrossLeadersTie(rows);
-            // console.log(rows);
+            // //console.log(rows);
             doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
             doc.addPage();
 
@@ -2322,7 +2328,7 @@ export class ViewTournamentComponent implements OnInit {
             }
             grossAllArray.sort(this.ComparatorAllNet);
             this.sortAllNetLeadersTie(grossAllArray);
-            console.log(grossAllArray);
+            //console.log(grossAllArray);
             for (let leader in grossAllArray) {
                 count++;
                 if (this.noOfRounds > 1) {
@@ -2380,9 +2386,9 @@ export class ViewTournamentComponent implements OnInit {
             }
 
             // From HTML
-            console.log(rows);
+            //console.log(rows);
             // this.sortAllGrossLeadersTie(rows);
-            // console.log(rows);
+            // //console.log(rows);
             doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
             doc.addPage();
 
@@ -2405,7 +2411,7 @@ export class ViewTournamentComponent implements OnInit {
 
             let tournamentLeaders = objLeader.parseSubscriptionResponse();
 
-            console.log(tournamentLeaders);
+            //console.log(tournamentLeaders);
 
             if (tournamentLeaders) {
                 tournamentLeaders = tournamentLeaders.filter((a) => {
@@ -2428,7 +2434,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
             }
 
-            //console.log(this.activeTournamentMembers);
+            ////console.log(this.activeTournamentMembers);
 
             this.markActiveTournamentMembers(this.activeTournamentMembers);
         }
@@ -2443,7 +2449,7 @@ export class ViewTournamentComponent implements OnInit {
 
     getNextTeeBox(startingHoleOption: string, flight: number): number {
         if (startingHoleOption == '1_10') {
-            console.log('In Function' + flight);
+            //console.log('In Function' + flight);
 
             if (flight !== 1 && flight % 2 === 0) return 10;
             else return 1;
@@ -2461,17 +2467,6 @@ export class ViewTournamentComponent implements OnInit {
         flight: number,
         teeBox: number
     ) {
-        console.log(
-            time +
-            '<>' +
-            interval +
-            '<>' +
-            startingHole +
-            '<>' +
-            flight +
-            '<>' +
-            teeBox
-        );
         let flightTime: string = '00:00';
 
         try {
@@ -2494,7 +2489,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
             }
 
-            console.log(dateNow);
+            //console.log(dateNow);
 
             let h = dateNow.getHours();
             let m = dateNow.getMinutes();
@@ -2521,9 +2516,9 @@ export class ViewTournamentComponent implements OnInit {
                 if (result) {
                     this.logger.log('Round undo sucessfully', "info", this.activeRound.toString());
                     let jObject = null;
-                    console.log('====================================');
-                    console.log(jObject);
-                    console.log('====================================');
+                    //console.log('====================================');
+                    //console.log(jObject);
+                    //console.log('====================================');
                     await this.facadeService.UndoTournamentRound(
                         this.tournamentID,
                         this.activeRound,
@@ -2533,7 +2528,7 @@ export class ViewTournamentComponent implements OnInit {
 
                     window.location.reload();
                 } else {
-                    //console.log("cancel delete action");
+                    ////console.log("cancel delete action");
                 }
             });
         } catch (error) {
@@ -2597,7 +2592,7 @@ export class ViewTournamentComponent implements OnInit {
         document.body.removeChild(selBox);
     }
     pop(s) {
-        console.log(s.title);
+        //console.log(s.title);
 
         const dialogRef = this.dialog.open(DialogPlayingCategoryComponent, {
             data: {
@@ -2607,7 +2602,7 @@ export class ViewTournamentComponent implements OnInit {
         });
     }
     viewProfile(s) {
-        console.log(s);
+        //console.log(s);
 
         this.router.navigate(['/players/view/' + s.id]);
     }
@@ -2690,11 +2685,11 @@ export class ViewTournamentComponent implements OnInit {
 
     // events
     public chartClicked(e: any): void {
-        // console.log(e);
+        // //console.log(e);
     }
 
     public chartHovered(e: any): void {
-        // console.log(e);
+        // //console.log(e);
     }
     getHandicapAllocation(): string {
         let hcAllocation: string;
@@ -2711,7 +2706,7 @@ export class ViewTournamentComponent implements OnInit {
     private async GrossData(category: any) {
         this.getSummaryData(category);
 
-        console.log(this.allMatchResults);
+        //console.log(this.allMatchResults);
         let grossAllArray: any[] = [];
 
         for (let leader in this.allMatchResults) {
@@ -2790,7 +2785,7 @@ export class ViewTournamentComponent implements OnInit {
                     cntr++;
 
                     //if(player.id == "-L6192uVBlBFw3grUy9_")
-                    ////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.HoleIPQL.holeNo);
+                    //////console.log("player: " + player.firstName + " ->" + gross + " -> " + currentNet + " ->" + netTotal + " ->" + score.HoleIPQL.holeNo);
                 }
 
                 let playerHole18ScoreGross: any[] = [];
@@ -2817,7 +2812,7 @@ export class ViewTournamentComponent implements OnInit {
                     }
                 }
                 netTotal = grossTotal - scoreHandicap;
-                // //console.log(netTotal);
+                // ////console.log(netTotal);
                 netUnderTotal = grossUnderTotal - scoreHandicap;
 
                 let name: string = player.firstName + ' ' + player.lastName;
@@ -2898,10 +2893,10 @@ export class ViewTournamentComponent implements OnInit {
                 };
 
                 // this.grossLeaders.push(LeaderGross);
-                // //console.log('Gross:' + this.grossLeaders);
+                // ////console.log('Gross:' + this.grossLeaders);
 
                 // this.grossAllLeaders.push(LeaderGross);
-                // //console.log(this.grossAllLeaders);
+                // ////console.log(this.grossAllLeaders);
 
                 let LeaderNet: any = {
                     position: 0,
@@ -2956,7 +2951,7 @@ export class ViewTournamentComponent implements OnInit {
 
                 // this.netLeaders.push(LeaderNet);
                 // this.netAllLeaders.push(LeaderNet);
-                // //console.log(this.netAllLeaders);
+                // ////console.log(this.netAllLeaders);
 
                 this.calculateTotal(
                     LeaderGross,
@@ -2969,10 +2964,10 @@ export class ViewTournamentComponent implements OnInit {
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
         leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
         //Collections.sort(grossLeaders);
-        console.log(leaderGrossList);
-
         //console.log(leaderGrossList);
-        ////console.log(leaderList);
+
+        ////console.log(leaderGrossList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
@@ -2980,7 +2975,7 @@ export class ViewTournamentComponent implements OnInit {
 
         if (leaderGrossList.length > 0) leaderGrossList[0]['position'] = pos;
 
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderGrossList.length; i++) {
             let leaderCurrent = leaderGrossList[i];
             let leaderPrevious = leaderGrossList[i - 1];
@@ -3020,11 +3015,11 @@ export class ViewTournamentComponent implements OnInit {
                 pos = i + 1;
                 leaderGrossList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
-        //console.log(leaderGrossList);
+        ////console.log(leaderGrossList);
 
         return leaderGrossList;
     }
@@ -3212,7 +3207,7 @@ export class ViewTournamentComponent implements OnInit {
         this.showSummary = true;
     }
     async deleteTM(player: any) {
-        console.log(player);
+        //console.log(player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to remove this player from Tournament?',
@@ -3220,7 +3215,7 @@ export class ViewTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
+                ////console.log("record deleted.");
                 let result = this.facadeService.deleteTournamentMember(
                     this.tournamentID,
                     player.id
@@ -3235,12 +3230,12 @@ export class ViewTournamentComponent implements OnInit {
                     );
                 }
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
     async disqulifyTM(player: any) {
-        console.log(player);
+        //console.log(player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to Disqualify this player from Tournament?',
@@ -3248,7 +3243,7 @@ export class ViewTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
+                ////console.log("record deleted.");
                 let member: any = {
                     tournamentId: this.tournamentID,
                     playerId: player.id,
@@ -3263,7 +3258,7 @@ export class ViewTournamentComponent implements OnInit {
                     });
                 }
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3282,15 +3277,27 @@ export class ViewTournamentComponent implements OnInit {
             this.logger.log('Getting Tournament Members', "info", this.tournamentID);
 
             let dataFullTournaments: any;
+            let tournamentsMember: any[] = [];
             if (this.dataFullTournament['TournamentQL'][0].leagueId == null) {
                 dataFullTournaments = await this.facadeService.getTournamentMembers(
                     this.tournamentID
                 );
-                console.log(dataFullTournaments);
+                //console.log(dataFullTournaments);
                 this.flightNumber = this.fullTournament.FlightsQL.length + 1;
                 this.tournamentMember = dataFullTournaments.TournamentMemberQL;
                 this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
                 this.logger.log('Getting Tournament Members Succesfully', "info", this.tournamentID);
+                this.tournamentMembers.forEach(account => {
+                    let member = {
+                        id: account.playerId,
+                        firstName: account.player ? account.player["firstName"] : account["firstName"],
+                        lastName: account.player ? account.player["lastName"] : account["lastName"],
+                        email: account.player ? account.player["email"] : account["email"],
+                        handicap: account.player ? account.player["handicap"] : account["handicap"],
+                        playerCategory: account.player ? account.player["playerCategory"] : account["playerCategory"],
+                    }
+                    tournamentsMember.push(member);
+                });
                 this.dataSource = new MatTableDataSource(this.tournamentMember);
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
@@ -3299,11 +3306,10 @@ export class ViewTournamentComponent implements OnInit {
                     await this.facadeService.getTournamentsFlights(
                         this.tournamentID
                     );
-                console.log(dataFullTournaments);
+                //console.log(dataFullTournaments);
                 this.logger.log('Getting Tournament Members Succesfully', "info", this.tournamentID);
                 if (dataFullTournaments) {
-                    for (let obj of dataFullTournaments['TournamentQL'][0]
-                        .FlightManagerQLi) {
+                    for (let obj of dataFullTournaments['TournamentQL'][0].FlightManagerQLi) {
                         for (const iterator of obj.MembersQL) {
                             this.tournamentMember.push(iterator.PlayerQL);
                             this.tournamentMembers.push(iterator.PlayerQL);
@@ -3331,7 +3337,7 @@ export class ViewTournamentComponent implements OnInit {
         // if (status && this.activeRound > 1) return false;
 
         if (leaderGross.playerId in this.allMatchResults) {
-            ////console.log("index exist");
+            //////console.log("index exist");
         } else {
             this.allMatchResults[leaderGross.playerId] = [];
 
@@ -3357,7 +3363,7 @@ export class ViewTournamentComponent implements OnInit {
             this.allMatchResults[leaderGross.playerId]['points' + round] += 0;
             this.allMatchResults[leaderGross.playerId]['holes' + round] += 0;
 
-            ////console.log("index created");
+            //////console.log("index created");
         }
 
         if (!this.allMatchResults[leaderGross.playerId]['TotalGross' + round])
@@ -3456,7 +3462,7 @@ export class ViewTournamentComponent implements OnInit {
             : (this.allMatchResults[leaderGross.playerId]['status'] = 0);
         this.allMatchResults[leaderGross.playerId]['playerStatus'] =
             leaderGross.playerStatus;
-        ////console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
+        //////console.log(leaderGross.playerId + " -> " + "TotalGross" + round + " "  + this.allMatchResults[leaderGross.playerId]["TotalGross" + round]);
         return false;
     }
 
@@ -3501,10 +3507,10 @@ export class ViewTournamentComponent implements OnInit {
                         players.push(c);
                     }
                 }
-                console.log(players);
+                //console.log(players);
 
                 this.tournamentMember = players;
-                //console.log(this.player);
+                ////console.log(this.player);
                 // this.setDataSource(this.player);
             }
         } catch (error) {
@@ -3519,13 +3525,13 @@ export class ViewTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
-                console.log(result);
+                ////console.log("record deleted.");
+                //console.log(result);
                 // this.clubMembers.push(result);
-                //console.log(this.clubMembers);
+                ////console.log(this.clubMembers);
                 // this.syncClubMembers();
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3537,15 +3543,15 @@ export class ViewTournamentComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
+            //console.log(result);
             if (result.length == 1) {
-                //console.log("record deleted.");
-                console.log(result);
+                ////console.log("record deleted.");
+                //console.log(result);
 
                 let founded = this.tournamentMembers.filter((a) => {
                     return a.player.id == result[0].player.id;
                 });
-                console.log(founded);
+                //console.log(founded);
 
                 if (founded.length == 0) {
                     let tournamentMember: TournamentMember[] = [];
@@ -3572,7 +3578,7 @@ export class ViewTournamentComponent implements OnInit {
                     let founded = this.tournamentMembers.filter((a) => {
                         return a.player.id == result[0].player.id;
                     });
-                    console.log(founded);
+                    //console.log(founded);
 
                     if (founded.length == 0) {
                         let tournamentMember: TournamentMember[] = [];
@@ -3636,18 +3642,18 @@ export class ViewTournamentComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe((result) => {
-                console.log(result);
+                //console.log(result);
                 const resultString = JSON.stringify(result);
                 this.logger.log('Result From Add New Member Btn on Members Tab', "info", resultString);
                 if (result) {
-                    //console.log("record deleted.");
-                    console.log(result);
+                    ////console.log("record deleted.");
+                    //console.log(result);
                     this.getTournamentMembers();
                     // this.clubMembers.push(result);
-                    // console.log(this.clubMembers);
+                    // //console.log(this.clubMembers);
                     // this.syncClubMembers();
                 } else {
-                    //console.log("cancel delete action");
+                    ////console.log("cancel delete action");
                 }
             });
         } catch (error) {
@@ -3671,13 +3677,13 @@ export class ViewTournamentComponent implements OnInit {
         this.dataSourceFlightMembers = null;
     }
     selectedTee(event, flightId) {
-        console.log(flightId);
+        //console.log(flightId);
         let target = event.source.selected._element.nativeElement;
         let selectedData = {
             value: event.value,
             text: target.innerText.trim(),
         };
-        // console.log(this.roundFlights);
+        // //console.log(this.roundFlights);
         if (this.flight) {
             let roundTeeId: any = General.getPlayersTe(selectedData.text);
 
@@ -3710,22 +3716,22 @@ export class ViewTournamentComponent implements OnInit {
         });
         this.dataSourceFlightMembers = new MatTableDataSource(flightPlayers);
         this.dataSourceFlightMembers.sort = this.sort;
-        console.log(this.flight);
+        //console.log(this.flight);
 
-        // console.log(this.flightid);
+        // //console.log(this.flightid);
     }
     private sortAllNetLeadersTie(leaderList: any[]) {
         //Collections.sort(grossLeaders);
 
         leaderList = leaderList.sort(this.ComparatorAllNetPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -3768,13 +3774,13 @@ export class ViewTournamentComponent implements OnInit {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
-        ////console.log("return");
-        console.log(leaderList);
+        //////console.log("return");
+        //console.log(leaderList);
         return leaderList;
     }
     async getnewFlightId(id: string) {
@@ -3791,13 +3797,13 @@ export class ViewTournamentComponent implements OnInit {
         });
         this.dataSourceFlightMembers = new MatTableDataSource(flightPlayers);
         this.dataSourceFlightMembers.sort = this.sort;
-        console.log(this.flight);
+        //console.log(this.flight);
 
-        // console.log(this.flightid);
+        // //console.log(this.flightid);
     }
 
     async removeFlightMembers(playerId) {
-        console.log(playerId);
+        //console.log(playerId);
         let count = 0;
         // this.flight.MembersQL.forEach((element) => {
         //     if (element['PlayerQL'].id == playerId) {
@@ -3811,7 +3817,7 @@ export class ViewTournamentComponent implements OnInit {
                 playerId
             )
         );
-        console.log(result);
+        //console.log(result);
         if (result) {
             this.snackBar.open('Flights members have been removed.', 'x', {
                 duration: 5000,
@@ -3849,7 +3855,7 @@ export class ViewTournamentComponent implements OnInit {
     }
     async saveTournamentPlayer(player: any) {
         let flightMembersToSave: any[] = [];
-        console.log(player);
+        //console.log(player);
         let roundTeeId: any = General.getPlayersTe(
             player.playerCategory ? player.playerCategory : 'AMATEURS'
         );
@@ -3930,7 +3936,7 @@ export class ViewTournamentComponent implements OnInit {
         // }
     }
     async saveFlight() {
-        console.log('flight saved');
+        //console.log('flight saved');
         let flight: any;
         if (this.flightid) {
             flight = {

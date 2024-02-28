@@ -172,12 +172,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        console.log(this.loggedInuser);
+        //console.log(this.loggedInuser);
 
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
-        console.log(this.tournamentID);
+        //console.log(this.tournamentID);
 
         let dataFullTournament = await this.facadeService.getTournamentsFlights(
             this.tournamentID
@@ -190,19 +190,19 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.noOfRounds = this.tournamentInfo[0].noOfRounds;
         this.selectedIndex = this.activeRound - 1;
         this.categories = this.tournamentInfo[0]['CategoriesQL'];
-        console.log(this.activeRound);
+        //console.log(this.activeRound);
 
-        console.log(this.tournamentInfo[0]);
+        //console.log(this.tournamentInfo[0]);
         let selectedClubId: string =
             this.loggedInuser.userRole > 1
                 ? this.loggedInuser.adminClubId
                 : this.tournamentInfo[0].clubId;
         this.clubMembers = [];
-        console.log(selectedClubId);
+        //console.log(selectedClubId);
         let dataFullTournaments = await this.facadeService.getTournamentMembers(
             this.tournamentID
         );
-        console.log(dataFullTournaments);
+        //console.log(dataFullTournaments);
 
         this.tournamentMember = dataFullTournaments.TournamentMemberQL;
         // this.clubMembers = await this.facadeService.getPlayerByClub(
@@ -229,16 +229,16 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.getSelectedPlayers();
 
         //this.syncTournamentMembers();
-        // console.log(clubMembersData);
+        // //console.log(clubMembersData);
 
         // for (let i = 0; i < clubMembersData.length; i++) {
         //   this.clubMembers.push(clubMembersData[i].player);
         // }
-        //console.log(this.clubMembers);
+        ////console.log(this.clubMembers);
 
         this.isLoading = false;
 
-        //console.log(this.tournamentInfo[0]);
+        ////console.log(this.tournamentInfo[0]);
         if (this.tournamentInfo[0]) {
             for (
                 let round = 1;
@@ -253,18 +253,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             }
         }
 
-        console.log(dataFullTournament);
+        //console.log(dataFullTournament);
 
         // this.tournamentMember = dataFullTournament.TournamentMemberQL;
         // this.isLoading = false;
-        // console.log(this.tournamentMember);
+        // //console.log(this.tournamentMember);
 
         // for (let m in this.tournamentMember)
         //   this.tournamentMember[m]["fullName"] =
         //     this.tournamentMember[m].player.firstName +
         //     " " +
         //     this.tournamentMember[m].player.lastName;
-        //console.log(this.tournamentMember);
+        ////console.log(this.tournamentMember);
         // this.syncTournamentMembers();
         // this.dataSource = new MatTableDataSource(this.tournamentMember);
         // setTimeout(() => (this.dataSource.paginator = this.paginator));
@@ -277,11 +277,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let startDate = this.tournamentInfo[0].startDate;
         startDate = new Date(startDate);
         startDate.setDate(startDate.getDate());
-        console.log(startDate);
+        //console.log(startDate);
 
         let newstartDate = startDate.getDate();
 
-        console.log(newstartDate);
+        //console.log(newstartDate);
 
         for (let newObj of this.categories) {
             let flightSettings: any = newObj.flightSettings;
@@ -300,17 +300,17 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         chngDate.substring(2, 4) +
                         '-' +
                         +chngDate.substring(0, 2);
-                    // console.log(newDate);
+                    // //console.log(newDate);
 
                     let flightDate = new Date(newDate).getDate();
-                    console.log(flightDate);
+                    //console.log(flightDate);
                     if (flightDate == newstartDate) {
                         allowCat = true;
                         newObj['allowCat'] = true;
                         break;
                     }
 
-                    //console.log(this.calculateDiff(newstartDate,flightDate));
+                    ////console.log(this.calculateDiff(newstartDate,flightDate));
                 }
                 if (!allowCat) {
                     newObj['allowCat'] = false;
@@ -330,13 +330,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         +chngDate.substring(0, 2);
 
                     let flightDate = new Date(newDate).getDate();
-                    console.log(flightDate);
+                    //console.log(flightDate);
                     if (flightDate == newstartDate) {
                         allowCat = true;
                         newObj['allowCat'] = true;
                         break;
                     }
-                    //console.log(this.calculateDiff(newstartDate,flightDate));
+                    ////console.log(this.calculateDiff(newstartDate,flightDate));
                 }
                 if (!allowCat) {
                     newObj['allowCat'] = false;
@@ -355,7 +355,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             },
         });
         dialogRef.afterClosed().subscribe(async (result) => {
-            console.log(result);
+            //console.log(result);
             if (result && result.category) {
                 let teeBox: number;
 
@@ -390,8 +390,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         });
 
                         for (const index in FilteredPL) {
-                            //console.log(outer + "<--->" + cnter);
-                            console.log(FilteredPL);
+                            ////console.log(outer + "<--->" + cnter);
+                            //console.log(FilteredPL);
                             if (cnter == 0) this.selectedMembers[outer] = [];
 
                             this.selectedMembers[outer][cnter] =
@@ -431,7 +431,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                 this.selectedMembers = tempSelMembers;
                             }
                         }
-                        console.log(this.selectedMembers);
+                        //console.log(this.selectedMembers);
                     }
                 }
             }
@@ -463,8 +463,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             });
 
             for (const index in FilteredPL) {
-                //console.log(outer + "<--->" + cnter);
-                console.log(FilteredPL);
+                ////console.log(outer + "<--->" + cnter);
+                //console.log(FilteredPL);
                 if (cnter == 0) this.selectedMembers[outer] = [];
 
                 this.selectedMembers[outer][cnter] =
@@ -495,12 +495,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 tempSelMembers[index]['time'] = flight.time;
                 this.selectedMembers = tempSelMembers;
             }
-            console.log(this.selectedMembers);
+            //console.log(this.selectedMembers);
         }
     }
     getNextTeeBox(startingHoleOption: string, flight: number): number {
         if (startingHoleOption == '1_10') {
-            console.log('In Function' + flight);
+            //console.log('In Function' + flight);
 
             if (flight !== 1 && flight % 2 === 0) return 10;
             else return 1;
@@ -511,7 +511,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         }
     }
     getPlayerInformationByNameClub(filterValue: string) {
-        console.log(filterValue);
+        //console.log(filterValue);
         if (filterValue == '') {
             this.syncClubMembers();
             return;
@@ -526,16 +526,16 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 this.selectPlayer = c;
             }
         }
-        console.log(this.player);
+        //console.log(this.player);
         this.setDataSources(this.player);
     }
     setDataSources(dataSource: Array<Player>) {
         this.dataSources = new MatTableDataSource(dataSource);
         this.dataSources.sort = this.sort;
-        console.log(this.dataSource);
+        //console.log(this.dataSource);
     }
     getPlayerInformationByNameTournament(filterValue: string) {
-        console.log(filterValue);
+        //console.log(filterValue);
         if (filterValue == '') {
             this.syncTournamentMembers();
 
@@ -551,13 +551,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 this.selectPlayer = c;
             }
         }
-        console.log(this.player);
+        //console.log(this.player);
         this.setDataSource(this.player);
     }
     setDataSource(dataSource: Array<Player>) {
         this.dataSource = new MatTableDataSource(dataSource);
         this.dataSource.sort = this.sort;
-        console.log(this.dataSource);
+        //console.log(this.dataSource);
     }
 
     tabClicked(tab: any) {
@@ -578,10 +578,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     onPageFired(event) {
         this.index = event.pageIndex * event.pageSize;
         this.pageSize = event.pageSize;
-        console.log(this.index);
+        //console.log(this.index);
         this.syncClubMembers();
 
-        console.log(event);
+        //console.log(event);
     }
     syncClubMembers() {
         let count = 0;
@@ -591,7 +591,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             this.index < this.clubMembers['club_member'].length;
             this.index++
         ) {
-            //console.log(this.index);
+            ////console.log(this.index);
 
             let flag: boolean = false;
             for (let c of this.tournamentMember) {
@@ -619,8 +619,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     syncTournamentMembers() {
-        // console.log(this.tournamentMember);
-        // console.log(this.selectedMembers);
+        // //console.log(this.tournamentMember);
+        // //console.log(this.selectedMembers);
         let count = 0;
         let flightPlayers: any[] = [];
         if (this.selectedMembers.length > 0) {
@@ -651,7 +651,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 count = 0;
             }
         }
-        console.log(flightPlayers);
+        //console.log(flightPlayers);
         if (flightPlayers.length > 0) {
             for (let member of flightPlayers) {
                 let index = 0;
@@ -664,7 +664,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
             }
         }
-        console.log(this.tournamentMember);
+        //console.log(this.tournamentMember);
 
         this.dataSource = new MatTableDataSource(this.tournamentMember);
         this.dataSource.sort = this.sort;
@@ -673,14 +673,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     onHoleChange($event, i, j) {
-        //console.log(i);
-        //console.log(this.stages[i]);
-        //console.log(this.stages[i][j]);
+        ////console.log(i);
+        ////console.log(this.stages[i]);
+        ////console.log(this.stages[i][j]);
         //this.stages[i][j][1] = $event.target.value;
         let flight_1_hole: string = (<HTMLInputElement>(
             document.getElementById('flight_' + i + '_hole')
         )).value;
-        //console.log(flight_1_hole);
+        ////console.log(flight_1_hole);
     }
 
     drop(event: CdkDragDrop<string[]>) {
@@ -734,7 +734,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         : 0)
                 )
                 : '';
-            //console.log(dateNow);
+            ////console.log(dateNow);
 
             let h = dateNow.getHours();
             let m = dateNow.getMinutes();
@@ -770,7 +770,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         }
     }
     changeRound(item) {
-        //console.log("Selected value: " + item.value);
+        ////console.log("Selected value: " + item.value);
         if (isNumber(item.index)) {
             this.flightRound = item.index + 1;
         } else {
@@ -783,7 +783,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     isAllSelected() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSources) {
             const numSelected = this.selection.selected.length;
             const numRows = this.dataSources.data.length;
@@ -793,8 +793,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        console.log(this.selection);
-        console.log(this.selection.selected.length);
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
         this.selection.clear();
     }
 
@@ -808,26 +808,26 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     updateCategorySelection(event, row) {
-        console.log(this.selection.isSelected(row));
+        //console.log(this.selection.isSelected(row));
         let status = false;
 
         if (typeof event.checked !== 'undefined')
             status = event.checked ? true : false;
         else {
-            console.log(this.selection.isSelected(row));
+            //console.log(this.selection.isSelected(row));
             status = this.selection.isSelected(row) ? false : true;
         }
         this.showCategory = true;
         this.countCategoryMember(status, row);
 
-        console.log(this.categoryCounts);
+        //console.log(this.categoryCounts);
     }
 
     countCategoryMember(status, row) {
         let founded = this.categoryCounts.filter((a) => {
             return a.name == row['player'].playerCategory;
         });
-        console.log(founded);
+        //console.log(founded);
 
         if (status) {
             if (founded.length > 0) {
@@ -844,7 +844,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 status
                     ? (founded[0].value = founded[0].value - 1)
                     : (founded[0].value = founded[0].value - 1);
-                console.log(this.categoryCounts);
+                //console.log(this.categoryCounts);
             }
         }
     }
@@ -869,9 +869,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 let outer = 0;
 
                 for (let index in this.roundFlights) {
-                    console.log(this.roundFlights);
+                    //console.log(this.roundFlights);
 
-                    //console.log(outer + "<--->" + cnter);
+                    ////console.log(outer + "<--->" + cnter);
 
                     let cnter = 0;
                     this.selectedMembers[outer] = [];
@@ -918,17 +918,17 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
             }
 
-            console.log(this.selectedMembers);
-            //console.log(this.groups);
+            //console.log(this.selectedMembers);
+            ////console.log(this.groups);
         } catch (error) {
             this.logger.log('Making Tournament Flights Data Failed', "error", error.toString());
         }
     }
 
     OnChange($event, i: number, j: number) {
-        // console.log(i);
-        // console.log(j);
-        // console.log($event.checked);
+        // //console.log(i);
+        // //console.log(j);
+        // //console.log($event.checked);
         // this.selectedMembers[i][j]["attendance"] = $event.checked;
     }
 
@@ -949,8 +949,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             let runningFlightcounter = 0;
             this.copyScoreInfo = [];
 
-            //console.log(this.selectedMembers);
-            //console.log(this.roundFlights);
+            ////console.log(this.selectedMembers);
+            ////console.log(this.roundFlights);
 
             for (let index in this.selectedMembers) {
                 tournamentFlightMembers = [];
@@ -1005,11 +1005,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     }
                 }
 
-                //console.log(this.selectedMembers[index].length);
+                ////console.log(this.selectedMembers[index].length);
                 fcnter++;
                 if (this.selectedMembers[index].length > 0) {
                     runningFlightcounter++;
-                    // console.log(tournamentFlightMembers);
+                    // //console.log(tournamentFlightMembers);
 
                     let startingHole = parseFloat(
                         (<HTMLInputElement>(
@@ -1037,7 +1037,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             document.getElementById('flight_' + index + '_name')
                         )).value;
                     }
-                    console.log(this.teamName);
+                    //console.log(this.teamName);
      
 
 
@@ -1054,8 +1054,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     });
 
 
-                    console.log(roundFlightData);
-                    console.log(this.selectedMembers[index]);
+                    //console.log(roundFlightData);
+                    //console.log(this.selectedMembers[index]);
 
                     let currentFlightId: string;
 
@@ -1111,13 +1111,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
                         flightName.push(flightNames);
                     }
-                    console.log(flight);
+                    //console.log(flight);
                     tournamentFlights.push(flight);
 
-                    console.log(tournamentFlights);
+                    //console.log(tournamentFlights);
 
                     //break;
-                    console.log(roundFlightData.length);
+                    //console.log(roundFlightData.length);
 
                     let oldMembers: any;
 
@@ -1129,7 +1129,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         }
                     } else oldMembers = [];
 
-                    console.log(oldMembers);
+                    //console.log(oldMembers);
                     //   for (let ids of oldMembers) {
                     //   let FM: any = {
                     //     playerId: ids.playerId,
@@ -1140,9 +1140,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     //   };
                     //   flightMembersToSave.push(FM);
                     // }
-                    console.log(tournamentFlightMembers);
+                    //console.log(tournamentFlightMembers);
 
-                    console.log(flightMembersToSave);
+                    //console.log(flightMembersToSave);
 
                     let removed = oldMembers.filter(
                         (n) =>
@@ -1150,7 +1150,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                 (n2) => n.playerId == n2.playerId
                             )
                     );
-                    console.log(removed);
+                    //console.log(removed);
 
                     for (let ids of removed) {
                         flightMembersToRemove.push(ids.playerId);
@@ -1160,8 +1160,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             n.some((n2) => n2.id == ids.playerId)
                         );
 
-                        console.log(newFlight);
-                        console.log(newFlight.length);
+                        //console.log(newFlight);
+                        //console.log(newFlight.length);
 
                         //if(newFlight.length > 0) {
                         let copy: any = {
@@ -1180,7 +1180,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     // let added = tournamentFlightMembers.filter(
                     //   (n) => !oldMembers.some((n2) => n.playerId == n2.playerId)
                     // );
-                    // console.log(added);
+                    // //console.log(added);
 
                     // if (added.length > 0) {
                     //   for (let ids of added) {
@@ -1193,23 +1193,23 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     //     };
 
                     //     flightMembersToSave.push(FM);
-                    //     console.log(flightMembersToSave);
+                    //     //console.log(flightMembersToSave);
                     //  }
                     //}
                     //break;
                 } else {
-                    //console.log("deleting");
-                    //console.log(this.roundFlights);
+                    ////console.log("deleting");
+                    ////console.log(this.roundFlights);
                     let roundFlightData = this.roundFlights.filter((a) => {
                         return (
                             a.flightRound == this.flightRound &&
                             a.id == this.selectedMembers[index]['id']
                         );
                     });
-                    //console.log(roundFlightData);
+                    ////console.log(roundFlightData);
                     if (roundFlightData.length > 0) {
                         let oldMembers: any = roundFlightData[0].MembersQL;
-                        // console.log(oldMembers);
+                        // //console.log(oldMembers);
 
                         for (let ids of oldMembers) {
                             flightMembersToRemove.push(ids.playerId);
@@ -1226,18 +1226,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
             }
 
-            console.log(this.tournamentInfo[0].id);
-            console.log(flightsToRemove);
-            console.log(flightName);
+            //console.log(this.tournamentInfo[0].id);
+            //console.log(flightsToRemove);
+            //console.log(flightName);
 
-            console.log(flightMembersToRemove);
-            console.log(tournamentFlights);
-            console.log(flightMembersToSave);
-            console.log(membersFromFlightToRemove);
-            console.log(this.copyScoreInfo);
+            //console.log(flightMembersToRemove);
+            //console.log(tournamentFlights);
+            //console.log(flightMembersToSave);
+            //console.log(membersFromFlightToRemove);
+            //console.log(this.copyScoreInfo);
             let save: boolean;
             if (this.showTeams == true) {
-                console.log(true);
+                //console.log(true);
 
                 save = <boolean>(
                     await this.facadeService.SaveTournamentFlightforTaxes(
@@ -1248,7 +1248,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     )
                 );
             } else {
-                console.log(false);
+                //console.log(false);
 
                 save = <boolean>(
                     await this.facadeService.SaveTournamentFlight(
@@ -1278,8 +1278,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     flightMembersToRemove
                 )
             );
-            console.log(save);
-            console.log(update);
+            //console.log(save);
+            //console.log(update);
 
             if (save && update) {
                 this.snackBar.open(
@@ -1312,7 +1312,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         } catch (error) {
             this.logger.log('Saving Tournaments Data Failed', "error", error.toString());
         }
-        //console.log(tournamentFlights);
+        ////console.log(tournamentFlights);
     }
     async saveTournamentMembers() {
         let tournamentmember: TournamentMember[] = [];
@@ -1349,7 +1349,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         tournamentId: this.tournamentID,
                         status: false,
                     };
-                    console.log(obj);
+                    //console.log(obj);
                     this.tournamentMember.push(obj);
 
                     let member: any = {
@@ -1360,18 +1360,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     tournamentmember.push(member);
                 }
                 counter = parseInt(index) + 1;
-                console.log(counter);
+                //console.log(counter);
 
-                console.log(selectionArray);
+                //console.log(selectionArray);
             }
         }
         this.showCategory = false;
-        //console.log(this.categoryCounts[0]);
+        ////console.log(this.categoryCounts[0]);
 
         //this.categoryCounts[0].value = this.categoryCounts[0].value - counter;
-        //console.log(this.categoryCounts[0].value);
+        ////console.log(this.categoryCounts[0].value);
 
-        console.log(tournamentmember);
+        //console.log(tournamentmember);
 
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentmember)
@@ -1401,8 +1401,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let runningFlightcounter = flightNo;
         this.copyScoreInfo = [];
 
-        //console.log(this.selectedMembers);
-        //console.log(flightData);
+        ////console.log(this.selectedMembers);
+        ////console.log(flightData);
 
         for (let index in flightData) {
             tournamentFlightMembers = [];
@@ -1424,11 +1424,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
             }
 
-            //console.log(flightData[index].length);
+            ////console.log(flightData[index].length);
             fcnter++;
             if (flightData[index].length > 0) {
                 runningFlightcounter++;
-                //console.log(tournamentFlightMembers);
+                ////console.log(tournamentFlightMembers);
 
                 let startingHole = parseFloat(
                     (<HTMLInputElement>(
@@ -1454,8 +1454,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     );
                 });
 
-                //console.log(roundFlightData);
-                //console.log(this.selectedMembers[index]);
+                ////console.log(roundFlightData);
+                ////console.log(this.selectedMembers[index]);
 
                 let currentFlightId: string;
 
@@ -1503,11 +1503,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     flightId: currentFlightId,
                     name: name,
                 };
-                //console.log(flight);
+                ////console.log(flight);
                 tournamentFlights.push(flight);
                 flightName.push(flightNames);
                 //break;
-                //console.log(roundFlightData.length);
+                ////console.log(roundFlightData.length);
 
                 let oldMembers: any;
 
@@ -1515,8 +1515,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     oldMembers = roundFlightData[0].MembersQL;
                 } else oldMembers = [];
 
-                // console.log(oldMembers);
-                // console.log(tournamentFlightMembers);
+                // //console.log(oldMembers);
+                // //console.log(tournamentFlightMembers);
 
                 let removed = oldMembers.filter(
                     (n) =>
@@ -1524,7 +1524,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             (n2) => n.playerId == n2.playerId
                         )
                 );
-                //console.log(removed);
+                ////console.log(removed);
 
                 for (let ids of removed) {
                     flightMembersToRemove.push(ids.playerId);
@@ -1533,7 +1533,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     let newFlight: any = this.selectedMembers.filter((n) =>
                         n.some((n2) => n2.id == ids.playerId)
                     );
-                    //console.log(newFlight);
+                    ////console.log(newFlight);
 
                     if (newFlight.length > 0) {
                         let copy: any = {
@@ -1549,7 +1549,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 let added = tournamentFlightMembers.filter(
                     (n) => !oldMembers.some((n2) => n.playerId == n2.playerId)
                 );
-                //console.log(added);
+                ////console.log(added);
 
                 for (let ids of added) {
                     let FM: any = {
@@ -1563,18 +1563,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
                 //break;
             } else {
-                //console.log("deleting");
-                //console.log(this.roundFlights);
+                ////console.log("deleting");
+                ////console.log(this.roundFlights);
                 let roundFlightData = this.roundFlights.filter((a) => {
                     return (
                         a.flightRound == this.flightRound &&
                         a.flightNo == fcnter
                     );
                 });
-                //console.log(roundFlightData);
+                ////console.log(roundFlightData);
                 if (roundFlightData.length > 0) {
                     let oldMembers: any = roundFlightData[0].MembersQL;
-                    //console.log(oldMembers);
+                    ////console.log(oldMembers);
 
                     for (let ids of oldMembers) {
                         flightMembersToRemove.push(ids.playerId);
@@ -1591,11 +1591,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             }
         }
 
-        // console.log(this.tournamentInfo.id);
-        // console.log(flightsToRemove);
-        // console.log(flightMembersToRemove);
-        // console.log(tournamentFlights);
-        // console.log(flightMembersToSave);
+        // //console.log(this.tournamentInfo.id);
+        // //console.log(flightsToRemove);
+        // //console.log(flightMembersToRemove);
+        // //console.log(tournamentFlights);
+        // //console.log(flightMembersToSave);
 
         //this.facadeService.SaveTournamentFlights(this.tournamentInfo.id, flightsToRemove, membersFromFlightToRemove, flightMembersToRemove, tournamentFlights, flightMembersToSave);
         let save: boolean;
@@ -1648,24 +1648,24 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             duration: 5000,
         });
 
-        //console.log(tournamentFlights);
+        ////console.log(tournamentFlights);
     }
     deleteEmptyFlight(id, index) {
-        console.log(id);
-        console.log(index);
-        console.log(this.selectedMembers);
+        //console.log(id);
+        //console.log(index);
+        //console.log(this.selectedMembers);
         let find = this.selectedMembers.find((a) => {
             return a['id'] == id;
         });
-        console.log(find);
-        console.log(this.selectedMembers.indexOf(find));
+        //console.log(find);
+        //console.log(this.selectedMembers.indexOf(find));
         let num = this.selectedMembers.indexOf(find);
         if (num != undefined) {
             this.selectedMembers.splice(num, 1);
         }
     }
     editFlight(id, index) {
-        console.log(index);
+        //console.log(index);
         try {
 
 
@@ -1712,8 +1712,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
     addFlight(index: any) {
         //const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
-        //console.log(this.selectedMembers.length);
-        // console.log(this.selectedMembers);
+        ////console.log(this.selectedMembers.length);
+        // //console.log(this.selectedMembers);
         // this._viewTournamentComponent.getTournamentMembers();
         // this._viewTournamentComponent.createFlight(index);
         // this._viewTournamentComponent.matDrawer.open();
@@ -1765,18 +1765,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.selectedMembers[this.selectedMembers.length - 1]['tee_id'] = '1';
 
         //this.newFlight.push(this.selectedMembers[this.selectedMembers.length - 1]);
-        //console.log(this.newFlight.id);
+        ////console.log(this.newFlight.id);
         this.newFlights[this.addFlightNum] =
             this.selectedMembers[this.selectedMembers.length - 1];
-        console.log(this.newFlights[this.addFlightNum]);
+        //console.log(this.newFlights[this.addFlightNum]);
         this.addFlightNum++;
-        //console.log(this.selectedMembers.length);
+        ////console.log(this.selectedMembers.length);
         //this.selectedMembers[this.selectedMembers.length - 1].push(player);
-        //console.log(this.selectedMembers);
+        ////console.log(this.selectedMembers);
     }
     public async closedrawer(id) {
-        console.log(id);
-        console.log(this.selectedMembers);
+        //console.log(id);
+        //console.log(this.selectedMembers);
         let dataFullTournament = await this.facadeService.getTournamentsFlights(
             id
         );
@@ -1795,15 +1795,15 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         // });
         // if (found.length>0) {
         //     // let newflight = await this.facadeService.singleRoundFlightQuery(id);
-        //     // console.log(newflight);
+        //     // //console.log(newflight);
 
         // } else {
         //   let newflight = await this.facadeService.singleRoundFlightQuery(id);
-        //   console.log(newflight);
+        //   //console.log(newflight);
         // }
     }
     saveFlight(index: number) {
-        //console.log(index);
+        ////console.log(index);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to save group ' + (index + 1) + '?',
@@ -1811,13 +1811,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log(this.selectedMembers[index]);
+                ////console.log(this.selectedMembers[index]);
                 let singleFlight: any[] = [];
                 singleFlight.push(this.selectedMembers[index]);
                 this.saveSingleFlight(singleFlight, index);
                 //this.selectedMembers.splice(index, 1);
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -1833,11 +1833,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
-            console.log(result);
+            //console.log(result);
             let lookup = [];
 
             if (result) {
-                console.log('record deleted.');
+                //console.log('record deleted.');
                 for (let i in result) {
                     this.exist = this.selectedMembers.find((item) =>
                         item.some((f) => f.id == result[i].player.id)
@@ -1870,7 +1870,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         tournamentId: this.tournamentID,
                         status: false,
                     };
-                    console.log(obj);
+                    //console.log(obj);
                     this.tournamentMember.push(obj);
 
                     let objs: Player = {
@@ -1921,7 +1921,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     };
                     this.newPlayers.push(objs);
                 }
-                console.log(this.newPlayers);
+                //console.log(this.newPlayers);
 
                 for (let i of result) {
                     let member: any = {
@@ -1950,8 +1950,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
 
                 if (result[0].flight != 10000) {
-                    //console.log(this.selectedMembers[result[0].flight]);
-                    console.log(result[0].flight);
+                    ////console.log(this.selectedMembers[result[0].flight]);
+                    //console.log(result[0].flight);
 
                     this.selectedMembers[result[0].flight - 1].splice(
                         this.selectedMembers[result[0].flight - 1].length,
@@ -1959,20 +1959,20 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         ...this.newPlayers
                     );
                 }
-                console.log(this.selectedMembers);
+                //console.log(this.selectedMembers);
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
     selectedTee(event, playerId) {
-        console.log(playerId);
+        //console.log(playerId);
         let target = event.source.selected._element.nativeElement;
         let selectedData = {
             value: event.value,
             text: target.innerText.trim(),
         };
-        console.log(this.roundFlights);
+        //console.log(this.roundFlights);
         if (this.roundFlights) {
             let roundTeeId: any = General.getPlayersTe(selectedData.text);
             for (let index in this.roundFlights) {
@@ -1989,8 +1989,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 this.newFlights[index]['tee'] = selectedData.value;
                 this.newFlights[index]['tee_id'] = roundTeeId.id;
                 this.roundFlights.push(this.newFlights[index]);
-                console.log(this.newFlights[index]);
-                console.log(this.roundFlights);
+                //console.log(this.newFlights[index]);
+                //console.log(this.roundFlights);
             }
         }
         if (this.importedFlights == true) {
@@ -2000,22 +2000,22 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.newFlights[index]['tee'] = selectedData.value;
                     this.newFlights[index]['tee_id'] = roundTeeId.id;
                     this.roundFlights.push(this.newFlights[index]);
-                    console.log(this.newFlights[index]);
-                    console.log(this.roundFlights);
+                    //console.log(this.newFlights[index]);
+                    //console.log(this.roundFlights);
                     return;
                 }
             }
         }
     }
     selectedPlayerTee(event, playerId) {
-        console.log(playerId);
+        //console.log(playerId);
         let target = event.source.selected._element.nativeElement;
         let selectedData = {
             value: event.value,
             text: target.innerText.trim(),
         };
-        console.log(selectedData);
-        console.log(this.selectedMembers);
+        //console.log(selectedData);
+        //console.log(this.selectedMembers);
         let roundTeeId: any = General.getPlayersTe(selectedData.text);
         for (let index in this.selectedMembers) {
             for (let index2 in this.selectedMembers[index]) {
@@ -2023,7 +2023,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     this.selectedMembers[index][index2].playingTee =
                         selectedData.value;
                     this.selectedMembers[index][index2].tee_id = roundTeeId.id;
-                    console.log(this.selectedMembers[index][index2]);
+                    //console.log(this.selectedMembers[index][index2]);
                     this.playerTee = true;
                 }
             }
@@ -2037,8 +2037,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
-                console.log(result);
+                ////console.log("record deleted.");
+                //console.log(result);
                 this.selectedMembers[this.selectedMembers.length - 1].splice(
                     this.selectedMembers[this.selectedMembers.length - 1]
                         .length - 3,
@@ -2046,13 +2046,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     result
                 );
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
 
     removePlayer(flight: number, player: number) {
-        //console.log(flight + "<- ->" + player);
+        ////console.log(flight + "<- ->" + player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to remove this player from group?',
@@ -2060,16 +2060,16 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
+                ////console.log("record deleted.");
                 this.selectedMembers[flight].splice(player, 1);
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
 
     movePlayer(flight: number, cplayer: number) {
-        console.log(flight + '<- ->' + cplayer);
+        //console.log(flight + '<- ->' + cplayer);
         let player: Player = this.selectedMembers[flight][cplayer];
         const dialogRef = this.dialog.open(DialogMoveFlightComponent, {
             width: '350px',
@@ -2083,18 +2083,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                console.log(result);
+                //console.log(result);
                 //let player: Player = this.selectedMembers[flight][cplayer];
-                //console.log(player);
+                ////console.log(player);
                 this.selectedMembers[flight].splice(cplayer, 1);
-                //console.log(this.selectedMembers);
+                ////console.log(this.selectedMembers);
                 this.selectedMembers[result - 1].splice(
                     this.selectedMembers[result - 1].length - 3,
                     0,
                     player
                 );
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -2128,25 +2128,25 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 }
 
                 //let player: Player = this.selectedMembers[flight][cplayer];
-                //console.log(player);
-                //console.log(this.selectedMembers);
+                ////console.log(player);
+                ////console.log(this.selectedMembers);
                 this.selectedMembers[result - 1].splice(
                     this.selectedMembers[result - 1].length - 3,
                     0,
                     player
                 );
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
 
     onFileChange(event) {
-        console.log(event.target.files.length);
+        //console.log(event.target.files.length);
         if (event.target.files.length > 0) {
             this.file = event.target.files[0];
 
-            console.log(this.file);
+            //console.log(this.file);
         }
     }
 
@@ -2167,7 +2167,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 defval: '',
             });
 
-            console.log(this.flightsData);
+            //console.log(this.flightsData);
             this.importExcelData();
             //this.providerservice.importexcel(this.exceljsondata).subscribe(data=>{
             //})
@@ -2176,14 +2176,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     async importExcelData() {
-        console.log(this.flightsData);
+        //console.log(this.flightsData);
         let tournamentMember: TournamentMember[] = [];
         let index = 0;
         for (let flight of this.flightsData) {
             let player = await this.facadeService.getPlayerByMembershipNumber(
                 flight.membershipNumber + ''
             );
-            console.log(player);
+            //console.log(player);
 
             if (player.length == 0) {
                 player = await this.facadeService.getPlayerByPhone(
@@ -2192,10 +2192,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             }
 
             if (player.length > 5) {
-                console.log(flight.membershipNumber);
+                //console.log(flight.membershipNumber);
                 continue;
             }
-            //console.log(flight.membershipNumber);
+            ////console.log(flight.membershipNumber);
             let roundTeeId: any = General.getPlayersTe(flight.tee);
             if (!this.showTeams) {
                 if (flight.flightNo > this.selectedMembers.length) {
@@ -2313,7 +2313,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 index++;
                 this.importedFlights = true;
                 this.importedFlightsNum++;
-                console.log(this.newFlights[index]);
+                //console.log(this.newFlights[index]);
             } else {
                 if (flight.teamNo > this.selectedMembers.length) {
                     this.selectedMembers[this.selectedMembers.length] = [];
@@ -2439,12 +2439,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
                     this.importedFlights = true;
                     this.importedFlightsNum++;
-                    console.log(this.newFlights[index]);
-                    console.log(player);
+                    //console.log(this.newFlights[index]);
+                    //console.log(player);
                     index++;
                 }
             }
-            console.log(player);
+            //console.log(player);
 
             let find: boolean = true;
             if (this.tournamentMember.length > 0) {
@@ -2517,10 +2517,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 this.syncTournamentMembers();
             }
         }
-        console.log(this.importedFlightsNum);
-        console.log(this.newFlights);
+        //console.log(this.importedFlightsNum);
+        //console.log(this.newFlights);
 
-        console.log(this.selectedMembers);
+        //console.log(this.selectedMembers);
     }
 
     redirectToScores() {

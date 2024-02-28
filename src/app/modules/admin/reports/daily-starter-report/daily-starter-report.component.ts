@@ -124,7 +124,7 @@ export class DailyStarterReportComponent implements OnInit {
                 endDate: ['', [Validators.required]],
             });
 
-            console.log(this.scheduleForm);
+            //console.log(this.scheduleForm);
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
@@ -182,8 +182,8 @@ export class DailyStarterReportComponent implements OnInit {
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')
             );
         }
-        console.log(dataPlayers.TournamentsQL);
-        console.log(dataPlayers.TournamentsQL.length);
+        //console.log(dataPlayers.TournamentsQL);
+        //console.log(dataPlayers.TournamentsQL.length);
         if (dataPlayers.TournamentsQL) {
             this.isLoading = false;
             this.showtable = true;
@@ -236,7 +236,7 @@ export class DailyStarterReportComponent implements OnInit {
                 this.dailyStats.push(dailyStat);
                 this.dailyStats = this.dailyStats.sort(this.Comparator);
             }
-            console.log(this.dailyStats);
+            //console.log(this.dailyStats);
 
             for (let stats of this.dailyStats) {
                 if (stats.date == prevDate) {
@@ -257,7 +257,7 @@ export class DailyStarterReportComponent implements OnInit {
                         nonSubmittedCards;
                     myData[myData.length - 1].submitPer = submitPer;
                     myData[myData.length - 1].nonSubmitPer = nonSubmitPer;
-                    //console.log(myData);
+                    ////console.log(myData);
 
                     if (stats.nonSubmittedCards.length) {
                         for (let p of stats.nonSubmittedCards)
@@ -327,8 +327,8 @@ export class DailyStarterReportComponent implements OnInit {
                     };
                     count++;
                     myData.push(obj);
-                    console.log(count);
-                    console.log(myData);
+                    //console.log(count);
+                    //console.log(myData);
                     prevDate = stats.date;
                 }
             }
@@ -336,7 +336,7 @@ export class DailyStarterReportComponent implements OnInit {
             this.showtable = true;
             this.dataSource = null;
             this.dataSource = new MatTableDataSource(myData);
-            console.log(this.dataSource);
+            //console.log(this.dataSource);
 
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
@@ -345,7 +345,7 @@ export class DailyStarterReportComponent implements OnInit {
                 this.matchPlayData = dataPlayers.TournamentsQL;
             }
         }
-        // console.log(this.dailyStats);
+        // //console.log(this.dailyStats);
         // let myData: any[] = [];
         // let prevDate = null;
         // let count = 0;
@@ -372,7 +372,7 @@ export class DailyStarterReportComponent implements OnInit {
         //     myData[myData.length - 1].nonSubmittedCards = nonSubmittedCards;
         //     myData[myData.length - 1].submitPer = submitPer;
         //     myData[myData.length - 1].nonSubmitPer = nonSubmitPer;
-        //     console.log(myData);
+        //     //console.log(myData);
 
         //     if (stats.nonSubmittedCards.length) {
         //       for (let p of stats.nonSubmittedCards)
@@ -413,7 +413,7 @@ export class DailyStarterReportComponent implements OnInit {
         //       nonSubmitPer: nonSubmitPer,
         //     };
         //     myData.push(obj);
-        //     console.log(myData);
+        //     //console.log(myData);
         //     // this.submit=((myData[stats].submittedCards/myData[stats]["membersCount"])*100);
         //     // this.nonSubmit=(myData[stats]["nonSubmittedCards"]/myData[stats]["membersCount"])*100;
         //     // this.nonSubmit=Math.round(this.nonSubmit);
@@ -422,7 +422,7 @@ export class DailyStarterReportComponent implements OnInit {
         //   }
         // }
 
-        // console.log(myData);
+        // //console.log(myData);
 
         //this.dataSource = null;
         // this.submit =
@@ -434,7 +434,7 @@ export class DailyStarterReportComponent implements OnInit {
         //this.dataSource = new MatTableDataSource(myData);
         // this.nonSubmit=0;
         // this.submit=0;
-        // console.log(this.dataSource);
+        // //console.log(this.dataSource);
 
         // this.dataSource.paginator = this.paginator;
         // this.dataSource.sort = this.sort;
@@ -495,7 +495,7 @@ export class DailyStarterReportComponent implements OnInit {
     }
     Dailysetup(selectedValue) {
         this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
-        console.log(selectedValue);
+        //console.log(selectedValue);
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
             let currentDate = new Date();
@@ -504,16 +504,16 @@ export class DailyStarterReportComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfWeek();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_YESTERDAY) {
@@ -525,24 +525,24 @@ export class DailyStarterReportComponent implements OnInit {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_6_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
-            console.log(currentDate);
-            console.log(lastDate);
+            //console.log(currentDate);
+            //console.log(lastDate);
 
             this.getDailyRounds(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;
             // let lastDate = this.customDate2.value;
-            // console.log(currentDate)
-            // console.log(lastDate)
+            // //console.log(currentDate)
+            // //console.log(lastDate)
             // this.getDailyRounds(currentDate,lastDate);
         } else {
         }
@@ -551,8 +551,8 @@ export class DailyStarterReportComponent implements OnInit {
     onDatePick() {
         const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
         this.logger.log('Getting Daily starter Data By date', "info",combinedData);
-        console.log(this.scheduleForm.value.startDate);
-        console.log(this.scheduleForm.value.endDate);
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
             let lastDate = this.scheduleForm.value.endDate;
             let startDate = this.scheduleForm.value.startDate;
@@ -563,8 +563,8 @@ export class DailyStarterReportComponent implements OnInit {
             if (startDate == '') {
                 startDate = lastDate;
             }
-            console.log(lastDate);
-            console.log(startDate);
+            //console.log(lastDate);
+            //console.log(startDate);
             this.getDailyRounds(lastDate, startDate);
         } else {
         }

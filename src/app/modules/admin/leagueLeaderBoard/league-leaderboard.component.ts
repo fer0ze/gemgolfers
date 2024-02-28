@@ -23,7 +23,7 @@ export class LeagueLeaderboardComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.paramMap.subscribe((params) => {
-            //console.log(params.get("id"));
+            ////console.log(params.get("id"));
             this.leagueId = params.get('id');
         });
         this.fetchData();
@@ -37,7 +37,7 @@ export class LeagueLeaderboardComponent implements OnInit {
         let leaderboard = await this.facadeService.getLeageLeaderBoards(
             this.leagueId
         );
-        console.log(leaderboard);
+        //console.log(leaderboard);
         this.leagueQL = leaderboard['LeaderBoardQL'];
         for (let obj of leaderboard['LeaderBoardQL']) {
             this.Leaders.push(obj);
@@ -76,7 +76,7 @@ export class LeagueLeaderboardComponent implements OnInit {
             this.results.push(players[leader]);
         }
         this.results.sort(this.Comparotor);
-        console.log(this.results);
+        //console.log(this.results);
     }
     Comparotor(a, b) {
         if (a['points'] < b['points']) return 1;
@@ -84,7 +84,7 @@ export class LeagueLeaderboardComponent implements OnInit {
         return 0;
     }
     changeleaderBoard(leader) {
-        console.log(leader);
+        //console.log(leader);
 
         for (let obj of this.leagueQL) {
             if (obj.name == leader.tab.textLabel) {

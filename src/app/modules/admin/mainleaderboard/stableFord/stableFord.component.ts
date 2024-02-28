@@ -52,7 +52,7 @@ export class StableFordComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit(): void {
-        console.log(this.data);
+        //console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
         this.activeRound = this.Leaderboard.activeRound
         this.totalRounds = this.Leaderboard.noOfRounds
@@ -75,7 +75,7 @@ export class StableFordComponent implements OnInit, OnChanges {
 
     }
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
+        //console.log(changes);
         //this.data = changes.data.currentValue;
         this.ngOnInit();
     }
@@ -86,7 +86,7 @@ export class StableFordComponent implements OnInit, OnChanges {
         if (round == 0) {
             if (leaders.length > 0) {
                 this.LeaderboardPlayers = leaders;
-                console.log(this.LeaderboardPlayers);
+                //console.log(this.LeaderboardPlayers);
                 if (this.Leaderboard.cutOffCriteria != null && this.Leaderboard.cutOffCriteria.cutOff && this.Leaderboard.cutOffCriteria.cutOff.length > 0) {
                     this.cutLeaders(this.Leaderboard.cutOffCriteria, this.LeaderboardPlayers)
                 }
@@ -210,7 +210,7 @@ export class StableFordComponent implements OnInit, OnChanges {
         this.activeRound = this.Leaderboard.activeRound;
         if (this.flightRound == 0) {
             if (item.value == LeaderTypeValue.GROSS) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.allRoundGrossScore = true;
                 this.allRoundCutOff = true;
 
@@ -223,7 +223,7 @@ export class StableFordComponent implements OnInit, OnChanges {
                 this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
 
             } else if (item.value == LeaderTypeValue.NET) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.allRoundGrossScore = false;
                 this.allRoundCutOff = false;
 
@@ -238,7 +238,7 @@ export class StableFordComponent implements OnInit, OnChanges {
 
         } else {
             if (item.value == LeaderTypeValue.GROSS) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.isGross = true;
                 this.isNet = false;
                 this.allRoundGrossScore = false;
@@ -250,7 +250,7 @@ export class StableFordComponent implements OnInit, OnChanges {
                 this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
 
             } else if (item.value == LeaderTypeValue.NET) {
-                ////console.log("Selected value: " + item.value);
+                //////console.log("Selected value: " + item.value);
                 this.isNet = true;
                 this.isGross = false;
                 this.allRoundGrossScore = false;
@@ -267,7 +267,7 @@ export class StableFordComponent implements OnInit, OnChanges {
     filterByQuery(query) {
         // if (query.length > 3) {
         //     this.searchName = true;
-        //     console.log(this.allMatchResults);
+        //     //console.log(this.allMatchResults);
         //     if (this.allLeadersGross.length > 0) {
         //         this.allMatchSearchResults = this.allLeadersGross.filter(
         //             (obj) => {
@@ -318,7 +318,7 @@ export class StableFordComponent implements OnInit, OnChanges {
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
         let scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound);
-        console.log(scoreResult);
+        //console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
@@ -366,17 +366,17 @@ export class StableFordComponent implements OnInit, OnChanges {
 
     private sortLeadersNet(leaderList: any[], round) {
         //Collections.sort(grossLeaders);
-        console.log(leaderList);
+        //console.log(leaderList);
 
         //leaderList = leaderList.sort(this.ComparatorPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -385,7 +385,7 @@ export class StableFordComponent implements OnInit, OnChanges {
             let previousHoleScore: number = 0;
 
             tied = leaderCurrent[`pointsRound${round}`] == leaderPrevious[`pointsRound${round}`];
-            ////console.log(tied);
+            //////console.log(tied);
             if (tied && leaderCurrent.completed && leaderPrevious.completed) {
                 let noOfHoles = 9;
                 while (tied && noOfHoles > 0) {
@@ -421,7 +421,7 @@ export class StableFordComponent implements OnInit, OnChanges {
                 leaderList[i]['position'] = pos;
             }
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorPosition);
     }
@@ -479,14 +479,14 @@ export class StableFordComponent implements OnInit, OnChanges {
         //Collections.sort(grossLeaders);
 
         leaderList = leaderList.sort(this.ComparatorAllNetPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -525,13 +525,13 @@ export class StableFordComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
-        ////console.log("return");
-        console.log(leaderList);
+        //////console.log("return");
+        //console.log(leaderList);
         return leaderList;
     }
 

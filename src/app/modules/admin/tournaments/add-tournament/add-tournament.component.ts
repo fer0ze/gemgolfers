@@ -169,16 +169,16 @@ export class AddTournamentComponent implements OnInit {
     showCat: boolean = true;
     showSubtournament: boolean = false;
     onHoleChange($event, i, j) {
-        console.log(i);
+        //console.log(i);
 
         let flight_1_hole: string = (<HTMLInputElement>(
             document.getElementById('flight_' + i + '_hole')
         )).value;
-        console.log(flight_1_hole);
+        //console.log(flight_1_hole);
     }
 
     drop(event: CdkDragDrop<string[]>) {
-        //console.log(event);
+        ////console.log(event);
         if (event.previousContainer === event.container) {
             moveItemInArray(
                 event.container.data,
@@ -234,11 +234,11 @@ export class AddTournamentComponent implements OnInit {
     dragDroppedShambles(event: CdkDragDrop<string[]>) {
         const newIndex = event.currentIndex;
         const previousIndex = event.previousIndex;
-        console.log(newIndex);
-        console.log(previousIndex);
+        //console.log(newIndex);
+        //console.log(previousIndex);
         if (event.previousContainer === event.container) {
             if (previousIndex == 0 && newIndex == 1) {
-                console.log('No changes');
+                //console.log('No changes');
             } else if ((previousIndex == 0 || previousIndex == 1) && (newIndex == 2 || newIndex == 3)) {
                 this.swapInnerObjects(event.container.data, previousIndex, newIndex);
             } else if ((previousIndex == 2 || previousIndex == 3) && (newIndex == 0 || newIndex == 1)) {
@@ -247,7 +247,7 @@ export class AddTournamentComponent implements OnInit {
         }
         else {
             if (previousIndex == 0 && newIndex == 1) {
-                console.log('No changes');
+                //console.log('No changes');
             } else if ((previousIndex == 0 || previousIndex == 1) && (newIndex == 2 || newIndex == 3)) {
                 this.swapOuterObjects(event.previousContainer.data, event.container.data, previousIndex, newIndex)
             } else if ((previousIndex == 2 || previousIndex == 3) && (newIndex == 0 || newIndex == 1)) {
@@ -259,8 +259,8 @@ export class AddTournamentComponent implements OnInit {
     dragDropped(event: CdkDragDrop<string[]>) {
         const newIndex = event.currentIndex;
         const previousIndex = event.previousIndex;
-        console.log(newIndex);
-        console.log(previousIndex);
+        //console.log(newIndex);
+        //console.log(previousIndex);
         if ((previousIndex % 2 == 0) && (newIndex % 2 == 0)) {
             this.swapArrayElements(event.container.data, previousIndex, newIndex);
         } else if ((previousIndex % 2 === 1) && (newIndex % 2 == 1)) {
@@ -397,10 +397,10 @@ export class AddTournamentComponent implements OnInit {
 
         // this.Categories =  this.facadeService.getPlayerCategories();
         this._courseHoles = this.facadeService.getCourseHoles('');
-        //console.log(this.Categories);
+        ////console.log(this.Categories);
 
         let playerCategoryList = this.facadeService.getPlayerCategories();
-        console.log(playerCategoryList);
+        //console.log(playerCategoryList);
 
         //this._courseHoles = this.facadeService.getCourseHoles('');
 
@@ -431,14 +431,14 @@ export class AddTournamentComponent implements OnInit {
                 this.tournamentID
             );
             this.editTournament = true;
-            console.log(tournamentInfo);
+            //console.log(tournamentInfo);
             this.currentTournament =
                 tournamentInfo.tournament.length > 0
                     ? tournamentInfo.tournament[0]
                     : [];
 
-            console.log(this.currentTournament);
-            console.log(this.currentTournament.teams);
+            //console.log(this.currentTournament);
+            //console.log(this.currentTournament.teams);
 
             this.getSelectedCourse(this.currentTournament['CourseQL']);
 
@@ -524,7 +524,7 @@ export class AddTournamentComponent implements OnInit {
 
                 //this.stepIndex = 1;
 
-                console.log(this.currentTournament);
+                //console.log(this.currentTournament);
 
                 if (this.currentTournament.members)
                     for (let p of this.currentTournament.members)
@@ -534,7 +534,7 @@ export class AddTournamentComponent implements OnInit {
 
                 //this.selection = new SelectionModel<Player>(true, this.tournamentMembers);
                 let TM = [];
-                console.log(this.tournamentMembers);
+                //console.log(this.tournamentMembers);
                 for (let obj of this.tournamentMembers) {
                     if (this.currentTournament.opponents.length > 0) {
                         for (let objA of this.currentTournament.opponents) {
@@ -555,7 +555,7 @@ export class AddTournamentComponent implements OnInit {
                     selectedClubId = this.loggedInuser.adminClubId
                 }
                 this.clubMembers = [];
-                console.log(selectedClubId);
+                //console.log(selectedClubId);
                 let clubMembersData: any =
                     await this.facadeService.getPlayerByClub(selectedClubId);
 
@@ -565,7 +565,7 @@ export class AddTournamentComponent implements OnInit {
                     );
                 }
 
-                console.log(this.clubMembers);
+                //console.log(this.clubMembers);
 
                 this.syncClubMembers();
 
@@ -600,7 +600,7 @@ export class AddTournamentComponent implements OnInit {
                 // .get([0])
                 // .get("matchFormat")
                 // .setValue({value: this.currentTournament.matchFormat})
-                console.log(this.currentTournament['CategoriesQL']);
+                //console.log(this.currentTournament['CategoriesQL']);
 
                 for (let p of playerCategoryList) {
                     let founded = this.currentTournament['CategoriesQL'].filter(
@@ -678,7 +678,7 @@ export class AddTournamentComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.Clubs.slice()))
             );
-        console.log(this.filteredClubOptions);
+        //console.log(this.filteredClubOptions);
 
         // this.formArray
         // .get([0])
@@ -701,7 +701,7 @@ export class AddTournamentComponent implements OnInit {
                     name ? this._filterCourse(name) : this.Courses.slice()
                 )
             );
-        console.log(this.filteredCourseOptions);
+        //console.log(this.filteredCourseOptions);
 
         const currentYear = new Date().getFullYear();
         if (!this.tournamentID) {
@@ -719,7 +719,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     filterValues(search: string): any {
-        console.log('aaa');
+        //console.log('aaa');
     }
 
     createCategory(cat: any): FormGroup {
@@ -788,8 +788,8 @@ export class AddTournamentComponent implements OnInit {
 
     PlayingDateFormGroup(index) {
         let catControls = this.categoryFormGroup;
-        //console.log(catControls);
-        console.log(catControls.controls[index].get('playingDate'));
+        ////console.log(catControls);
+        //console.log(catControls.controls[index].get('playingDate'));
 
         return <FormArray>catControls.controls[index].get('playingDate');
     }
@@ -807,9 +807,9 @@ export class AddTournamentComponent implements OnInit {
         let eDate = new Date(this.formArray.get([0]).value.endDateFormCtrl);
         //sDate.setDate(sDate.getDate() + 1);
 
-        console.log(sDate);
-        console.log(eDate);
-        console.log(this.calculateDiff(sDate, eDate));
+        //console.log(sDate);
+        //console.log(eDate);
+        //console.log(this.calculateDiff(sDate, eDate));
 
         let noOfDays: any = this.calculateDiff(sDate, eDate);
         return this.playingDat;
@@ -820,17 +820,17 @@ export class AddTournamentComponent implements OnInit {
         let eDate = new Date(this.formArray.get([0]).value.endDateFormCtrl);
         //sDate.setDate(sDate.getDate() + 1);
 
-        console.log(sDate);
-        console.log(eDate);
-        console.log(this.calculateDiff(sDate, eDate));
+        //console.log(sDate);
+        //console.log(eDate);
+        //console.log(this.calculateDiff(sDate, eDate));
 
         let noOfDays: any = this.calculateDiff(sDate, eDate);
         for (let i = 0; i <= noOfDays; i++) {
             let dte = new Date(sDate);
             dte.setDate(sDate.getDate() + i);
-            console.log(dte);
+            //console.log(dte);
             let dteday = this.datePipe.transform(dte, 'yyyyMMdd');
-            console.log(dteday);
+            //console.log(dteday);
             this.playingDat[i] =
                 dteday.substring(8, 6) +
                 '-' +
@@ -840,34 +840,34 @@ export class AddTournamentComponent implements OnInit {
             //selectedDate [i] = this.datePipe.transform(selectedDate[i], 'dd-MM-yyyy')
 
             //   this.selectedMembers.push(person);
-            console.log(this.playingDat[i]);
+            //console.log(this.playingDat[i]);
         }
-        console.log(this.playingDat);
+        //console.log(this.playingDat);
         return this.playingDat;
     }
 
     addFlightField(category: any) {
         const control = this.formArray.get([1]).get('category') as FormArray;
 
-        console.log(control.length);
+        //console.log(control.length);
 
         //  control.clear();
 
 
         control.push(this.createCategory(category));
-        console.log(control);
+        //console.log(control);
     }
 
     //newControl.push(this.createPlayingDate("Date of play"));
-    //console.log(this.formArray.get([1]).get("category"));
-    //console.log(this.formArray.get([1]).get("category").value[0].playingDate);
+    ////console.log(this.formArray.get([1]).get("category"));
+    ////console.log(this.formArray.get([1]).get("category").value[0].playingDate);
 
     displayFn(club: Club): string {
         return typeof club === 'string' ? club : club ? club.name : '';
     }
 
     displayCourseFn(course: any): string {
-        console.log(course);
+        //console.log(course);
         return typeof course === 'string'
             ? course
             : course.course
@@ -876,7 +876,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     private _filter(value: string): Club[] {
-        console.log(value);
+        //console.log(value);
 
         if (value) {
             const filterValue = value.toLowerCase();
@@ -889,7 +889,7 @@ export class AddTournamentComponent implements OnInit {
         return this.Clubs;
     }
     private _filterClub(value: string) {
-        console.log(value);
+        //console.log(value);
 
         if (value) {
             const filterValue = value.toLowerCase();
@@ -902,7 +902,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     private _filterCourse(value: any): Course[] {
-        console.log('value=' + value);
+        //console.log('value=' + value);
 
         if (value) {
             if (typeof value === 'object') {
@@ -940,7 +940,7 @@ export class AddTournamentComponent implements OnInit {
         }
     }
     checkDate(cat) {
-        console.log(cat);
+        //console.log(cat);
         if (this.editTournament == true) {
             return this.checkCatToUpdate(cat, false);
         }
@@ -950,7 +950,7 @@ export class AddTournamentComponent implements OnInit {
                 this.datesPlaying.push(i['playingDates']);
             }
         }
-        console.log(this.datesPlaying);
+        //console.log(this.datesPlaying);
         return this.datesPlaying;
     }
 
@@ -961,13 +961,13 @@ export class AddTournamentComponent implements OnInit {
             if (chkArray.controls.findIndex((x) => x.value.id == chk.id) == -1)
                 chkArray.push(new FormControl({ id: chk.id, name: chk.name }));
 
-            console.log(chkArray);
+            //console.log(chkArray);
             //this.dateSetup();
             this.getplayingDates();
             this.showDates = true;
             let category;
             category = this.formArray.get([0]).get('clubctgies').value;
-            console.log(category);
+            //console.log(category);
 
             const dialogRef = this.dialog.open(DialogPlayingDatesComponent, {
                 width: '800px',
@@ -979,7 +979,7 @@ export class AddTournamentComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe((result) => {
-                console.log(result);
+                //console.log(result);
                 if (result) {
                     for (let i = 0; i < result.length; i++) {
                         let obj = {
@@ -989,7 +989,7 @@ export class AddTournamentComponent implements OnInit {
                         };
                         this.dates.push(obj);
                     }
-                    console.log(this.dates);
+                    //console.log(this.dates);
                 } else {
                     this.snackBar.open('Dates have not been saved', 'x', {
                         duration: 3000,
@@ -1003,7 +1003,7 @@ export class AddTournamentComponent implements OnInit {
             );
             chkArray.removeAt(idx);
             this.dates = this.dates.filter((x) => x.name != chk.name);
-            console.log(this.dates);
+            //console.log(this.dates);
         }
 
         if (chkArray.controls.findIndex((x) => x.value.id == 1) != -1)
@@ -1038,8 +1038,8 @@ export class AddTournamentComponent implements OnInit {
             this.isProAm = true;
         else this.isProAm = false;
 
-        //console.log(chkArray.controls);
-        //console.log(chkArray.controls.findIndex(x => x.value.id == 1));
+        ////console.log(chkArray.controls);
+        ////console.log(chkArray.controls.findIndex(x => x.value.id == 1));
     }
 
     updateCourseHolSet(chk, isChecked, key) {
@@ -1064,7 +1064,7 @@ export class AddTournamentComponent implements OnInit {
         const courseHoleSet = this.formArray
             .get([0])
             .get('courseHoleSet') as FormArray;
-        console.log(isChecked['checked']);
+        //console.log(isChecked['checked']);
         if (isChecked['checked']) {
             courseHoleSet.controls.push(new FormControl(name));
             this.courseHoleSetCount += 1;
@@ -1075,7 +1075,7 @@ export class AddTournamentComponent implements OnInit {
             courseHoleSet.removeAt(index);
             this.courseHoleSetCount -= 1;
         }
-        console.log(courseHoleSet);
+        //console.log(courseHoleSet);
     }
 
     existInList(name: string) {
@@ -1092,7 +1092,7 @@ export class AddTournamentComponent implements OnInit {
 
     public datechange(event) {
         this.getplayingDates();
-        console.log(event);
+        //console.log(event);
     }
 
     getSelectedCourse(course) {
@@ -1101,7 +1101,7 @@ export class AddTournamentComponent implements OnInit {
         this.facadeService
             .getCourseHoleSets(course.id)
             .subscribe((selectedCourseHoleSet) => {
-                console.log(selectedCourseHoleSet);
+                //console.log(selectedCourseHoleSet);
                 if (selectedCourseHoleSet.course_hole_sets.length > 0) {
                     this.courseHoleSetNames =
                         selectedCourseHoleSet.course_hole_sets;
@@ -1118,26 +1118,26 @@ export class AddTournamentComponent implements OnInit {
     getSelectedCourses(course) {
         this.courseHoleSetNames = [];
         this.courseChange = true;
-        console.log(this.courseChange);
+        //console.log(this.courseChange);
         this.formArray
             .get([0])
             .get('courseInfo')
             .get([0])
             .get('courseName')
             .setValue({ course });
-        console.log(
-            this.formArray
-                .get([0])
-                .get('courseInfo')
-                .get([0])
-                .get('courseName')
-                .getRawValue()
-        );
+        //console.log(
+        //     this.formArray
+        //         .get([0])
+        //         .get('courseInfo')
+        //         .get([0])
+        //         .get('courseName')
+        //         .getRawValue()
+        // );
 
         this.facadeService
             .getCourseHoleSets(course.id)
             .subscribe((selectedCourseHoleSet) => {
-                console.log(selectedCourseHoleSet);
+                //console.log(selectedCourseHoleSet);
                 if (selectedCourseHoleSet.course_hole_sets.length > 0) {
                     this.courseHoleSetNames =
                         selectedCourseHoleSet.course_hole_sets;
@@ -1167,7 +1167,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     checkCatToUpdate(cat, check: boolean) {
-        console.log(cat);
+        //console.log(cat);
         let flag: boolean = false;
         if (check) {
             for (let i of this.currentTournament['categories']) {
@@ -1180,7 +1180,7 @@ export class AddTournamentComponent implements OnInit {
             for (let i of this.currentTournament['categories']) {
                 if (i.category == cat.name) {
                     flag = this.checkUpdatesofDates(cat);
-                    console.log(flag);
+                    //console.log(flag);
                     if (flag) {
                         return i.flightSettings;
                     }
@@ -1193,7 +1193,7 @@ export class AddTournamentComponent implements OnInit {
                     this.datesPlaying.push(j['playingDates']);
                 }
             }
-            console.log(this.datesPlaying);
+            //console.log(this.datesPlaying);
             return this.datesPlaying;
         }
     }
@@ -1334,12 +1334,12 @@ export class AddTournamentComponent implements OnInit {
     }
 
     resetClubMembers(selectedValue) {
-        console.log(selectedValue);
+        //console.log(selectedValue);
         this.clubMembers = [];
         this.selectedMembers = [];
         this.selection.clear();
         this.isLoading = true;
-        //console.log(this.selectedMembers);
+        ////console.log(this.selectedMembers);
     }
 
     get courseFileds() {
@@ -1371,7 +1371,7 @@ export class AddTournamentComponent implements OnInit {
   
 
     getSelectedPlayers(index, stepper: MatStepper) {
-        console.log(index);
+        //console.log(index);
         this.flightArrangementSetup();
         this.selectedMembers = [];
         this.assignedOpponents = new Set<string>();
@@ -1390,7 +1390,7 @@ export class AddTournamentComponent implements OnInit {
             if (typeof person.Members !== 'undefined') {
                 this.selectedMembers.push(person);
             }
-            console.log(person);
+            //console.log(person);
 
           
             this.formArray.get([1]).get('category').value[i].playingDate =
@@ -1404,15 +1404,15 @@ export class AddTournamentComponent implements OnInit {
             this.valid2.reset();
             stepper.next();
         }
-        console.log(this.selectedMembers);
+        //console.log(this.selectedMembers);
     }
 
     getFC(event, category: any) {
         const selectedATP = this.atp.open();
         selectedATP.afterClose().subscribe((t) => {
             this.atpTime = t;
-            console.log(t);
-            console.log(category);
+            //console.log(t);
+            //console.log(category);
             this.getFilteredCategory(category);
         });
     }
@@ -1433,7 +1433,7 @@ export class AddTournamentComponent implements OnInit {
             this.formArray.get([0]).value.startDateFormCtrl,
             'dd-MM-yyyy'
         );
-        console.log(Pdate);
+        //console.log(Pdate);
         //Pdate=Pdate.replace('-');
 
         if (
@@ -1461,15 +1461,15 @@ export class AddTournamentComponent implements OnInit {
                 return a.name == PLcategory;
             });
 
-        console.log(FilteredFlight);
-        console.log(this.teamMembersToSave);
+        //console.log(FilteredFlight);
+        //console.log(this.teamMembersToSave);
 
         if (FilteredFlight.length > 0) {
             let PperFlight = FilteredFlight[0].playersperFlight;
             FilteredPL.forEach((filteredPlayer: any) => {
                 if (cnter == 0) selMembers[outer] = [];
             });
-            console.log(FilteredPL);
+            //console.log(FilteredPL);
 
             for (let obj of FilteredPL) {
                 if (this.showMatchPlay) {
@@ -1535,7 +1535,7 @@ export class AddTournamentComponent implements OnInit {
                     : flightTime;
                 selMembers = tempSelMembers;
             }
-            console.log(selMembers);
+            //console.log(selMembers);
 
         }
 
@@ -1617,7 +1617,7 @@ export class AddTournamentComponent implements OnInit {
             .value.filter((a) => {
                 return a.name == category;
             });
-        // console.log(FilteredFlight);
+        // //console.log(FilteredFlight);
 
         // let startingHoleOption: any = this.formArray.get([0]).value.startDateFormCtrl;
 
@@ -1637,7 +1637,7 @@ export class AddTournamentComponent implements OnInit {
             if (tee == 1) makeInterval = true;
             else makeInterval = false;
         }
-        //console.log("2020-01-01 " + ((index == 0)? this.formArray.get([1]).value.flightStartTime : this.preFlightTime) + "");
+        ////console.log("2020-01-01 " + ((index == 0)? this.formArray.get([1]).value.flightStartTime : this.preFlightTime) + "");
         let dateNow: Date = new Date(
             Constants.DEFAULT_DATE +
             ' ' +
@@ -1646,7 +1646,7 @@ export class AddTournamentComponent implements OnInit {
                 : this.preFlightTime) +
             ''
         );
-        // console.log(FilteredFlight[0].flightStartTime);
+        // //console.log(FilteredFlight[0].flightStartTime);
 
         let arrangements: string = FilteredFlight[0].arrangements;
         if (arrangements == '0') {
@@ -1658,7 +1658,7 @@ export class AddTournamentComponent implements OnInit {
                         : 0)
                 )
                 : '';
-            // console.log(dateNow);
+            // //console.log(dateNow);
 
             let h = dateNow.getHours();
             let m = dateNow.getMinutes();
@@ -1674,14 +1674,14 @@ export class AddTournamentComponent implements OnInit {
                         : 0)
                 )
                 : '';
-            // console.log(dateNow);
+            // //console.log(dateNow);
 
             let h = dateNow.getHours();
             let m = dateNow.getMinutes();
 
             this.preFlightTime =
                 ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
-            // console.log(this.preFlightTime);
+            // //console.log(this.preFlightTime);
             flightData.time = this.preFlightTime;
             return this.preFlightTime;
         }
@@ -1695,13 +1695,13 @@ export class AddTournamentComponent implements OnInit {
 
     public close() {
         this.showDates = false;
-        console.log('sd');
+        //console.log('sd');
     }
 
     flightsSetup(stepper: MatStepper, action: string) {
         this.stepTitle = 'flights Setup Form';
         //this.saveTournamentMembers();
-        console.log(this.formArray.get([0]).value.courseInfo[0].matchFormat);
+        //console.log(this.formArray.get([0]).value.courseInfo[0].matchFormat);
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY
         ) {
@@ -1715,8 +1715,8 @@ export class AddTournamentComponent implements OnInit {
                 dteday.substring(6, 4) +
                 '-' +
                 +dteday.substring(0, 4);
-            console.log(this.formArray.get([0]).get('clubctgies').value);
-            console.log(date);
+            //console.log(this.formArray.get([0]).get('clubctgies').value);
+            //console.log(date);
 
             if (!this.setupInitialized) {
                 for (
@@ -1738,15 +1738,15 @@ export class AddTournamentComponent implements OnInit {
                         }
                     }
                 }
-                console.log(
-                    this.formArray.get([0]).get('clubctgies').value.length
-                );
+                //console.log(
+                //     this.formArray.get([0]).get('clubctgies').value.length
+                // );
             }
         } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat !== matchFormat.MATCH_PLAY) {
             this.addFlightField('Teams');
         }
 
-        // console.log(this.formArray.get([1]).get('category'));
+        // //console.log(this.formArray.get([1]).get('category'));
         if (action === 'next') stepper.next();
         else if (action === 'back') stepper.previous();
         else {
@@ -1754,12 +1754,12 @@ export class AddTournamentComponent implements OnInit {
         //this.router.navigate(["/tournaments/view/" + this.tournamentID]);
     }
     datechanged(event, t) {
-        console.log(event);
-        console.log(t);
+        //console.log(event);
+        //console.log(t);
     }
 
     tournamentMembersSetup() {
-        console.log(this.stepTitle);
+        //console.log(this.stepTitle);
 
         this.stepTitle = 'Select Tournament Members';
         this.syncClubMembers();
@@ -1815,7 +1815,7 @@ export class AddTournamentComponent implements OnInit {
         let selectedHoleSet = this.formArray
             .get([0])
             .get('courseHoleSet') as FormArray;
-        console.log(this.formArray.get([0]).get('courseHoleSet'));
+        //console.log(this.formArray.get([0]).get('courseHoleSet'));
         let courseHoleSet: number = 0;
         for (let a of selectedHoleSet.controls) {
             let option = this.courseHoleSetNames.filter((f) => {
@@ -1974,7 +1974,7 @@ export class AddTournamentComponent implements OnInit {
             handicapAllocation: this.formArray.get([0]).value
                 .handicapAllocations,
         };
-        console.log(handicapAllocations);
+        //console.log(handicapAllocations);
 
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
@@ -1999,7 +1999,7 @@ export class AddTournamentComponent implements OnInit {
             ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
             : (courseHoleSetsData = []);
 
-        console.log(this.formArray);
+        //console.log(this.formArray);
 
         let tournament = {
             id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
@@ -2071,7 +2071,7 @@ export class AddTournamentComponent implements OnInit {
             tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
         };
 
-        console.log(tournament);
+        //console.log(tournament);
 
         let result = <any>(
             await this.facadeService.createTournamentMarshals(marshalsData)
@@ -2085,7 +2085,7 @@ export class AddTournamentComponent implements OnInit {
                 )
             );
 
-            console.log(checkPrfix);
+            //console.log(checkPrfix);
 
             if (checkPrfix.length > 0) {
                 this.snackBar.open('Prefix already exist.', 'x', {
@@ -2094,10 +2094,10 @@ export class AddTournamentComponent implements OnInit {
             } else {
                 let result = <any>(
                     await this.facadeService.addTournament(tournament)
-                    // console.log('a')
+                    // //console.log('a')
                 );
                 this.currentTournament = tournament;
-                console.log(result);
+                //console.log(result);
                 if (result) {
 
                     // this.valid2.reset();
@@ -2122,10 +2122,10 @@ export class AddTournamentComponent implements OnInit {
                                 : this.formArray.get([0]).value.clubsFormCtrl
                                     .id;
                         this.clubMembers = [];
-                        console.log(selectedClubId);
-                        console.log(
-                            this.formArray.get([0]).get('clubctgies').value
-                        );
+                        //console.log(selectedClubId);
+                        //console.log(
+                        //     this.formArray.get([0]).get('clubctgies').value
+                        // );
 
                         if (this.loggedInuser.userRole == 4) {
                             selectedClubId = this._localStorage.get(Constants.TOUR_ID);
@@ -2161,13 +2161,13 @@ export class AddTournamentComponent implements OnInit {
                         }
 
 
-                        console.log(this.clubMembers);
+                        //console.log(this.clubMembers);
 
                         this.syncClubMembers();
 
                         stepper.next();
 
-                        //console.log(this.clubMembers);
+                        ////console.log(this.clubMembers);
 
                         //this.dataSource = new MatTableDataSource(this.clubMembers);
                     } else {
@@ -2295,13 +2295,13 @@ export class AddTournamentComponent implements OnInit {
                 default: true,
                 //flightSettings: null,
             };
-            console.log(tc);
+            //console.log(tc);
             // let json= JSON.stringify(tc.flightSettings);
 
             // tc["flightSettings"]=json;
-            console.log(tc);
+            //console.log(tc);
             tournamentCats.push(tc);
-            console.log(tournamentCats);
+            //console.log(tournamentCats);
         }
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
@@ -2412,9 +2412,9 @@ export class AddTournamentComponent implements OnInit {
                         : false
                     : false,
         };
-        console.log(tournament);
-        console.log(tournamentCats);
-        console.log(marshalsData);
+        //console.log(tournament);
+        //console.log(tournamentCats);
+        //console.log(marshalsData);
 
         let result = <boolean>(
             await this.facadeService.editTournament(
@@ -2442,7 +2442,7 @@ export class AddTournamentComponent implements OnInit {
             .subscribe(
                 (data) => {
                     this.isLoading = false;
-                    console.log(this.tournamentMembers);
+                    //console.log(this.tournamentMembers);
                     // this.tournamentMembers.forEach(
                     //   (obj, i) => (obj["fullName"] = obj.firstName + " " + obj.lastName)
                     // );
@@ -2489,18 +2489,18 @@ export class AddTournamentComponent implements OnInit {
                 }
                 tournamentMember.push(member);
                 counter = parseInt(index) + 1;
-                console.log(counter);
+                //console.log(counter);
 
-                console.log(selectionArray);
+                //console.log(selectionArray);
             }
         }
         this.showCategory = false;
-        //console.log(this.categoryCounts[0]);
+        ////console.log(this.categoryCounts[0]);
 
         //this.categoryCounts[0].value = this.categoryCounts[0].value - counter;
-        //console.log(this.categoryCounts[0].value);
+        ////console.log(this.categoryCounts[0].value);
 
-        console.log(tournamentMember);
+        //console.log(tournamentMember);
 
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentMember)
@@ -2515,7 +2515,7 @@ export class AddTournamentComponent implements OnInit {
                 if (!resultA) {
                     const control = this.formArray.get([1]).get('category') as FormArray;
 
-                    console.log(control.length);
+                    //console.log(control.length);
 
                     control.clear();
                     if (
@@ -2533,7 +2533,7 @@ export class AddTournamentComponent implements OnInit {
                             dteday.substring(6, 4) +
                             '-' +
                             +dteday.substring(0, 4);
-                        console.log(date);
+                        //console.log(date);
 
                         for (
                             let i = 0;
@@ -2578,7 +2578,7 @@ export class AddTournamentComponent implements OnInit {
             this.syncClubMembers();
             this.categoryCounts = [];
 
-            // console.log(
+            // //console.log(
             //     this.formArray.get([0]).get('clubctgies').value.length
             // );
             // for (
@@ -2650,8 +2650,8 @@ export class AddTournamentComponent implements OnInit {
             }
             teamsToSave.push(teams);
         })
-        console.log(teamsToSave);
-        // console.log(this.teamMembersToSave);
+        //console.log(teamsToSave);
+        // //console.log(this.teamMembersToSave);
         let result = <any>(
             await this.facadeService.insertTournamentTeam(teamsToSave, this.tournamentID, teamsMembersToRemove)
         );
@@ -2671,7 +2671,7 @@ export class AddTournamentComponent implements OnInit {
                     dteday.substring(6, 4) +
                     '-' +
                     +dteday.substring(0, 4);
-                // console.log(date);
+                // //console.log(date);
                 if (!this.setupInitialized) {
                     for (
                         let i = 0;
@@ -2701,7 +2701,7 @@ export class AddTournamentComponent implements OnInit {
             } else {
                 const control = this.formArray.get([1]).get('category') as FormArray;
 
-                console.log(control.length);
+                //console.log(control.length);
 
                 control.clear();
                 this.addFlightField('Teams');
@@ -2730,7 +2730,7 @@ export class AddTournamentComponent implements OnInit {
             color: randomColor,
             members: []
         });
-        // console.log(this.selectedTeams);
+        // //console.log(this.selectedTeams);
 
     }
     onColorChange(event: Event, id: any) {
@@ -2742,7 +2742,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     editTeam(teamId, index) {
-        console.log(index);
+        //console.log(index);
         try {
             this.logger.log('Add New member to Team', "info", teamId);
 
@@ -2768,7 +2768,7 @@ export class AddTournamentComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe((result) => {
-                console.log(result);
+                //console.log(result);
                 if (result.length > 0) {
                     let playerAdded = false; // Flag to track if the player has been added to a team
                     for (let obj of result) {
@@ -2808,17 +2808,17 @@ export class AddTournamentComponent implements OnInit {
         //   alert("You must select a valid 18 holes combination.");
         //   return validateValue;
         // }
-        // console.log(this.formArray.get([0]).get('clubctgies').value);
+        // //console.log(this.formArray.get([0]).get('clubctgies').value);
         this.tournamentMembersSetup();
         // if (!this.currentTournament && action != "back") {
         //  this.createTournament();
         // } else if(action != "back") {
-        //   // console.log(this.formArray.get([0]).value.prefixFormCtrl);
-        //   // console.log(this.formArray.get([0]).value.titleFormCtrl);
-        //   // console.log(this.formGroup.value["formArray"]);
-        //   // console.log(this.formGroup.get("formArray"));
+        //   // //console.log(this.formArray.get([0]).value.prefixFormCtrl);
+        //   // //console.log(this.formArray.get([0]).value.titleFormCtrl);
+        //   // //console.log(this.formGroup.value["formArray"]);
+        //   // //console.log(this.formGroup.get("formArray"));
 
-        //   console.log(this.formArray.get("formArray"));
+        //   //console.log(this.formArray.get("formArray"));
         //   //this.editTournaments();
         // }
 
@@ -2833,8 +2833,8 @@ export class AddTournamentComponent implements OnInit {
                     ? this.loggedInuser.adminClubId
                     : this.formArray.get([0]).value.clubsFormCtrl.id;
             this.clubMembers = [];
-            // console.log(selectedClubId);
-            // console.log(this.formArray.get([0]).get('clubctgies').value);
+            // //console.log(selectedClubId);
+            // //console.log(this.formArray.get([0]).get('clubctgies').value);
 
             let clubMembersData: any = await this.facadeService.getPlayerByClub(
                 selectedClubId
@@ -2844,11 +2844,11 @@ export class AddTournamentComponent implements OnInit {
                 this.clubMembers.push(clubMembersData.club_member[i].player);
             }
 
-            // console.log(this.clubMembers);
+            // //console.log(this.clubMembers);
 
             this.syncClubMembers();
 
-            //console.log(this.clubMembers);
+            ////console.log(this.clubMembers);
 
             //this.dataSource = new MatTableDataSource(this.clubMembers);
         } else {
@@ -2857,12 +2857,12 @@ export class AddTournamentComponent implements OnInit {
 
         // this.tournamentMembersSetup();
 
-        // console.log(this.formArray.get([1]).value.category);
+        // //console.log(this.formArray.get([1]).value.category);
 
         // if (this.formArray.get([0]).value.clubsFormCtrl) {
         //   let selectedClubId: string = (this.loggedInuser.userRole > 1) ? this.loggedInuser.adminClubId : this.formArray.get([0]).value.clubsFormCtrl.id;
         //   this.clubMembers = [];
-        //   console.log(selectedClubId);
+        //   //console.log(selectedClubId);
         //   let clubMembersData: any = await this.facadeService.getPlayerByClub(selectedClubId);
 
         //   for (let i = 0; i < clubMembersData.length; i++) {
@@ -2870,7 +2870,7 @@ export class AddTournamentComponent implements OnInit {
         //   }
 
         //   this.syncClubMembers();
-        //   //console.log(this.clubMembers);
+        //   ////console.log(this.clubMembers);
 
         //   //this.dataSource = new MatTableDataSource(this.clubMembers);
         // }
@@ -2882,7 +2882,7 @@ export class AddTournamentComponent implements OnInit {
             .subscribe(
                 (data) => {
                     this.isLoading = false;
-                    // console.log(this.clubMembers);
+                    // //console.log(this.clubMembers);
 
                     this.clubMembers = this.clubMembers.filter(
                         (ar) =>
@@ -2890,7 +2890,7 @@ export class AddTournamentComponent implements OnInit {
                                 (rm) => rm.id === ar.id
                             )
                     );
-                    // console.log(this.clubMembers);
+                    // //console.log(this.clubMembers);
 
                     this.dataSource = new MatTableDataSource(this.clubMembers);
                     this.dataSource.sort = this.sort;
@@ -2929,7 +2929,7 @@ export class AddTournamentComponent implements OnInit {
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        // console.log(this.dataSource);
+        // //console.log(this.dataSource);
         this.dataSource.filter = filterValue;
 
         if (this.dataSource.paginator) {
@@ -2940,7 +2940,7 @@ export class AddTournamentComponent implements OnInit {
     applyMembersFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        // console.log(this.membersSource);
+        // //console.log(this.membersSource);
         this.membersSource.filter = filterValue;
 
         if (this.membersSource.paginator) {
@@ -2974,8 +2974,8 @@ export class AddTournamentComponent implements OnInit {
                     return a.name == this.selectedMembers[index].title;
                 });
 
-            // console.log(FilteredFlight);
-            // console.log(this.selectedMembers);
+            // //console.log(FilteredFlight);
+            // //console.log(this.selectedMembers);
 
             for (let index2 in this.selectedMembers[index]) {
                 if (index2 != 'title') {
@@ -2997,12 +2997,12 @@ export class AddTournamentComponent implements OnInit {
                                     tournamentPairs.push(pair);
                                     for (var index5 in this.selectedMembers[index][index2][index3][index4]) {
                                         if (Number.isInteger(Number(index5))) {
-                                            console.log(this.selectedMembers[index][index2][index3][index4][index5].playerCategory);
+                                            //console.log(this.selectedMembers[index][index2][index3][index4][index5].playerCategory);
 
                                             let roundTeeId: any = General.getPlayersTe(
                                                 this.selectedMembers[index][index2][index3][index4][index5].playerCategory
                                             );
-                                            console.log(roundTeeId.id);
+                                            //console.log(roundTeeId.id);
                                             let FM: any = {
                                                 playerId:
                                                     this.selectedMembers[index][index2][index3][index4][index5].id,
@@ -3010,7 +3010,7 @@ export class AddTournamentComponent implements OnInit {
                                                 playingTee: roundTeeId.result,
                                                 tee_id: roundTeeId.id,
                                             };
-                                            console.log(FM);
+                                            //console.log(FM);
                                             tournamentFlightMembers.push(FM);
                                         }
                                     }
@@ -3078,7 +3078,7 @@ export class AddTournamentComponent implements OnInit {
                             tournamentFlightMembers[0].playingTee
                         );
                         if (tournamentFlightMembers.length > 0) {
-                            // console.log(tournamentFlightMembers);
+                            // //console.log(tournamentFlightMembers);
                             fcnter++;
                             let flight: any = {
                                 id: UniqueIdGenerator.generate(),
@@ -3128,7 +3128,7 @@ export class AddTournamentComponent implements OnInit {
                                         'flight_' + counter + '_name'
                                     )
                                 )).value;
-                                console.log(name);
+                                //console.log(name);
 
                                 let flightNames: any = {
                                     flightId: flight.id,
@@ -3139,9 +3139,9 @@ export class AddTournamentComponent implements OnInit {
                             }
                             counter = counter + 1;
 
-                            console.log(flight);
+                            //console.log(flight);
                             tournamentFlights.push(flight);
-                            console.log(tournamentFlights);
+                            //console.log(tournamentFlights);
                             tournamentFlightMembers = [];
 
                             //break;
@@ -3177,7 +3177,7 @@ export class AddTournamentComponent implements OnInit {
             teamToUpdate.members = teamToUpdate.members.filter(member => member.id !== playerId);
         } else {
             // Handle the case where the team with the given ID is not found
-            console.log('Team not found');
+            //console.log('Team not found');
         }
     }
 
@@ -3187,21 +3187,21 @@ export class AddTournamentComponent implements OnInit {
 
     removePlayer(playerId: string) {
 
-        console.log(playerId);
-        console.log(this.tournamentMembers);
+        //console.log(playerId);
+        //console.log(this.tournamentMembers);
         let data: any = this.tournamentMembers;
-        console.log(data);
+        //console.log(data);
         let DelplayerIndex: any = data.findIndex((a) => {
             return a.id == playerId;
         });
-        console.log(DelplayerIndex);
+        //console.log(DelplayerIndex);
 
         let DelplayerInfo: any = data.filter((a) => {
             return a.id == playerId;
         });
-        console.log(DelplayerInfo);
+        //console.log(DelplayerInfo);
 
-        //console.log(flight + "<- ->" + player);
+        ////console.log(flight + "<- ->" + player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
             data: 'Do you want to remove this player from group?',
@@ -3209,12 +3209,12 @@ export class AddTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
+                ////console.log("record deleted.");
                 data.splice(DelplayerIndex, 1);
                 //data.splice(playerId, 1);
                 this.clubMembers.splice(0, 0, DelplayerInfo[0]);
 
-                console.log(this.selection);
+                //console.log(this.selection);
 
                 this.tournamentMembers = data;
                 this.selection.clear();
@@ -3226,13 +3226,13 @@ export class AddTournamentComponent implements OnInit {
                     playerId
                 );
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
 
     movePlayer(flight: number, cplayer: number) {
-        //console.log(flight + "<- ->" + player);
+        ////console.log(flight + "<- ->" + player);
         let player: Player = this.selectedMembers[flight][cplayer];
         const dialogRef = this.dialog.open(DialogMoveFlightComponent, {
             width: '350px',
@@ -3246,18 +3246,18 @@ export class AddTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log(result);
+                ////console.log(result);
                 //let player: Player = this.selectedMembers[flight][cplayer];
-                //console.log(player);
+                ////console.log(player);
                 this.selectedMembers[flight].splice(cplayer, 1);
-                //console.log(this.selectedMembers);
+                ////console.log(this.selectedMembers);
                 this.selectedMembers[result - 1].splice(
                     this.selectedMembers[result - 1].length - 3,
                     0,
                     player
                 );
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3268,7 +3268,7 @@ export class AddTournamentComponent implements OnInit {
 
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelected() {
-        //console.log(this.dataSource);
+        ////console.log(this.dataSource);
         if (this.dataSource) {
             const numSelected = this.selection.selected.length;
             const numRows = this.dataSource.data.length;
@@ -3285,16 +3285,16 @@ export class AddTournamentComponent implements OnInit {
     }
 
     addFlight() {
-        //console.log(this.selectedMembers.length);
+        ////console.log(this.selectedMembers.length);
         this.selectedMembers[this.selectedMembers.length] = [];
         this.selectedMembers[this.selectedMembers.length - 1]['id'] =
             UniqueIdGenerator.generate();
         this.selectedMembers[this.selectedMembers.length - 1]['time'] = '09:00';
         this.selectedMembers[this.selectedMembers.length - 1]['startingHole'] =
             '1';
-        //console.log(this.selectedMembers.length);
+        ////console.log(this.selectedMembers.length);
         //this.selectedMembers[this.selectedMembers.length - 1].push(player);
-        //console.log(this.selectedMembers);
+        ////console.log(this.selectedMembers);
     }
 
     addFlightPlayer() {
@@ -3304,17 +3304,17 @@ export class AddTournamentComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
+            //console.log(result);
             if (result) {
-                //console.log("record deleted.");
-                console.log(result.player);
+                ////console.log("record deleted.");
+                //console.log(result.player);
                 this.selectedMembers[result.flight].splice(
                     this.selectedMembers[result.flight].length - 3,
                     0,
                     result.player
                 );
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3326,13 +3326,13 @@ export class AddTournamentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log("record deleted.");
-                console.log(result);
+                ////console.log("record deleted.");
+                //console.log(result);
                 this.clubMembers.push(result);
-                //console.log(this.clubMembers);
+                ////console.log(this.clubMembers);
                 this.syncClubMembers();
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3343,15 +3343,15 @@ export class AddTournamentComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
+            //console.log(result);
             if (result) {
-                //console.log("record deleted.");
-                console.log(result);
+                ////console.log("record deleted.");
+                //console.log(result);
                 this.clubMembers.push(result);
-                console.log(this.clubMembers);
+                //console.log(this.clubMembers);
                 this.syncClubMembers();
             } else {
-                //console.log("cancel delete action");
+                ////console.log("cancel delete action");
             }
         });
     }
@@ -3372,7 +3372,7 @@ export class AddTournamentComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
-            console.log(result);
+            //console.log(result);
             if (result) {
                 let dataFullTournaments: any;
 
@@ -3380,7 +3380,7 @@ export class AddTournamentComponent implements OnInit {
                     await this.facadeService.getTournamentMembers(
                         this.tournamentID
                     );
-                console.log(dataFullTournaments);
+                //console.log(dataFullTournaments);
                 this.tournamentMembers = [];
                 for (let p of dataFullTournaments.TournamentMemberQL)
                     this.tournamentMembers.push(p['player']);
@@ -3389,13 +3389,13 @@ export class AddTournamentComponent implements OnInit {
                 this.syncTournamentMembers();
             }
             // if (result.length == 1) {
-            //     //console.log("record deleted.");
-            //     console.log(result);
+            //     ////console.log("record deleted.");
+            //     //console.log(result);
 
             //     let founded = this.tournamentMembers.filter((a) => {
             //         return a.id == result[0].player.id;
             //     });
-            //     console.log(founded);
+            //     //console.log(founded);
 
             //     if (founded.length == 0) {
             //         let tournamentMember: TournamentMember[] = [];
@@ -3424,7 +3424,7 @@ export class AddTournamentComponent implements OnInit {
             //         let founded = this.tournamentMembers.filter((a) => {
             //             return a.id == element.player.id;
             //         });
-            //         console.log(founded);
+            //         //console.log(founded);
 
             //         if (founded.length == 0) {
             //             let tournamentMember: TournamentMember[] = [];
@@ -3467,26 +3467,26 @@ export class AddTournamentComponent implements OnInit {
     }
 
     updateCategorySelection(event, row) {
-        console.log(this.selection.isSelected(row));
+        //console.log(this.selection.isSelected(row));
         let status = false;
 
         if (typeof event.checked !== 'undefined')
             status = event.checked ? true : false;
         else {
-            console.log(this.selection.isSelected(row));
+            //console.log(this.selection.isSelected(row));
             status = this.selection.isSelected(row) ? false : true;
         }
         this.showCategory = true;
         this.countCategoryMember(status, row);
 
-        console.log(this.categoryCounts);
+        //console.log(this.categoryCounts);
     }
 
     countCategoryMember(status, row) {
         let founded = this.categoryCounts.filter((a) => {
             return a.name == row.playerCategory;
         });
-        console.log(founded);
+        //console.log(founded);
 
         if (status) {
             if (founded.length > 0) {
@@ -3503,7 +3503,7 @@ export class AddTournamentComponent implements OnInit {
                 status
                     ? (founded[0].value = founded[0].value - 1)
                     : (founded[0].value = founded[0].value - 1);
-                console.log(this.categoryCounts);
+                //console.log(this.categoryCounts);
             }
         }
     }
@@ -3584,7 +3584,7 @@ export class AddTournamentComponent implements OnInit {
             tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
         };
         let result = <any>await this.facadeService.addTournament(tournament);
-        // console.log(tournament)
+        // //console.log(tournament)
         if (result) {
             let obj = {
                 tournamentId: tournamentID,
@@ -3603,7 +3603,7 @@ export class AddTournamentComponent implements OnInit {
         this.TMcategoryCounts = [];
         if (this.tournamentMembers.length > 0) {
             for (let catCount of this.tournamentMembers) {
-                console.log(catCount);
+                //console.log(catCount);
                 let founded = this.TMcategoryCounts.filter((a) => {
                     return a.name == catCount.playerCategory;
                 });
@@ -3619,21 +3619,21 @@ export class AddTournamentComponent implements OnInit {
                 }
             }
         }
-        console.log(this.TMcategoryCounts);
+        //console.log(this.TMcategoryCounts);
         return this.TMcategoryCounts;
     }
     deletedTMcategorySelection(PLcategory) {
-        console.log(PLcategory);
+        //console.log(PLcategory);
         let founded = this.updateTMCategorySelection();
         if (founded.length > 0) {
             for (let catCount in founded) {
-                console.log(catCount);
+                //console.log(catCount);
                 if (founded[catCount].name == PLcategory) {
                     founded[catCount].value = founded[catCount].value - 1;
                 } else {
                 }
             }
-            console.log(founded);
+            //console.log(founded);
             this.TMcategoryCounts = founded;
         }
     }

@@ -42,13 +42,13 @@ export class DialogPlayingCategoryComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    console.log(this.data);
+    //console.log(this.data);
 
     this.dataFullTournament = await this.facadeService.LeaderboardSubscriptions(
       this.data.tournament,
       this.data["cat"].title
     );
-    console.log(this.dataFullTournament);
+    //console.log(this.dataFullTournament);
 
     let dataPlayers: any;
     dataPlayers =
@@ -62,20 +62,20 @@ export class DialogPlayingCategoryComponent implements OnInit {
     this.dataSource.sort = this.sort;
 
     // for (let i of this.dataFullTournament["tournament_member_category"]) {
-    //   console.log(i["flightSettings"]);
+    //   //console.log(i["flightSettings"]);
       
     // }
-    console.log(this.dataFullTournament["tournament_member_category"][0].flightSettings);
-    //console.log(this.dataFullTournament["tournament_member_category"]["flightSettings"]);
+    //console.log(this.dataFullTournament["tournament_member_category"][0].flightSettings);
+    ////console.log(this.dataFullTournament["tournament_member_category"]["flightSettings"]);
     
     
     for (let index = 0; index < this.dataFullTournament["tournament_member_category"][0].flightSettings.length; index++) {
       this.dates=true;
       let obj=this.dataFullTournament["tournament_member_category"][0].flightSettings[index];
-      console.log(this.dataFullTournament["tournament_member_category"][0].flightSettings[index]);
+      //console.log(this.dataFullTournament["tournament_member_category"][0].flightSettings[index]);
       this.category.push(obj)
 
     }
-    console.log(this.category);
+    //console.log(this.category);
   }
 }

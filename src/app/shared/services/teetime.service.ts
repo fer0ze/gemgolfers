@@ -22,7 +22,7 @@ export class TeeTimeService {
             if (!data) {
               resolve(null);
             } else {
-              //console.log(data.club);
+              ////console.log(data.club);
               resolve(data);
             }
         });
@@ -129,7 +129,7 @@ export class TeeTimeService {
             resolve(true);
           }, (error) => {
             resolve(false);
-            console.log('Could not add due to ' + error);
+            //console.log('Could not add due to ' + error);
           });
         
         });
@@ -137,7 +137,7 @@ export class TeeTimeService {
 
     
     updateClub(club:Club): Promise<boolean> {
-      console.log(club.id);
+      //console.log(club.id);
       return new Promise( resolve => {
         this.apollo.mutate<any>({
           mutation: Query.UpdateMutation,
@@ -159,13 +159,13 @@ export class TeeTimeService {
           resolve(true);
         }, (error) => {
           resolve(false);
-          console.log('Could update add due to ' + error);
+          //console.log('Could update add due to ' + error);
         });
       });
     }
 
     deleteClub(id:string) : Promise<boolean> {
-      console.log(id);
+      //console.log(id);
       return new Promise( resolve => {
         this.apollo.mutate<any>({
           mutation: Query.DeleteClub,
@@ -177,11 +177,11 @@ export class TeeTimeService {
             }
           }
         }).subscribe(({ data }) => {
-          console.log(data);
+          //console.log(data);
           resolve(true);
         }, (error) => {
           resolve(false);
-          console.log('Could delete add due to ' + error);
+          //console.log('Could delete add due to ' + error);
         });
       });
     }

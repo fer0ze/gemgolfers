@@ -45,9 +45,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   async ngOnInit() {
-      //console.log("getting List");
+      ////console.log("getting List");
       //this.Tournaments = await this.facadeService.getActiveTournamentsList("2019-08-22");
-      //console.log(this.Tournaments);
+      ////console.log(this.Tournaments);
         this.clubSchedule = [];
        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
@@ -58,20 +58,20 @@ export class ScheduleComponent implements OnInit {
             this.clubSchedule = dataTournaments.club_schedule;
         }
         else if(this.loggedInuser.userRole >= 2) {
-            //console.log(this.loggedInuser.adminClubId);
+            ////console.log(this.loggedInuser.adminClubId);
             let dataTournaments = await this.facadeService.getScheduleList(this.loggedInuser.adminClubId);
             this.clubSchedule = dataTournaments.club_schedule;
         }
 
         this.isLoading = false;
-        console.log(this.clubSchedule);
+        //console.log(this.clubSchedule);
         
         // Assign the data to the data source for the table to render
         this.dataSource = new MatTableDataSource(this.clubSchedule);
-        //console.log("change source");
+        ////console.log("change source");
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        //console.log(this.Tournaments);
+        ////console.log(this.Tournaments);
       });
 
       //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myTournament = result);
@@ -110,7 +110,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   redirectToDetails = (detail: any) => {
-      //console.log(id);
+      ////console.log(id);
       const dialogRef = this.dialog.open(DialogViewScheduleComponent, {
         width: '600px',
         data: { schedule: detail }
@@ -118,10 +118,10 @@ export class ScheduleComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-            //console.log("record deleted.");
+            ////console.log("record deleted.");
         }
         else {
-            //console.log("cancel delete action");
+            ////console.log("cancel delete action");
         }
     });
   }
@@ -135,9 +135,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   async delete(id:string) {
-      //console.log("Deleting...");
+      ////console.log("Deleting...");
       ///////////////<boolean>await this.facadeService.deleteTournament(id);
-      //console.log("Deleted.");
+      ////console.log("Deleted.");
   }
 
   addSchedule(): void {
@@ -148,14 +148,14 @@ export class ScheduleComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if(result) {
-              //console.log("record deleted.");
+              ////console.log("record deleted.");
               this.clubSchedule = [];
               this.dataSource = new MatTableDataSource(this.clubSchedule);
               this.isLoading = true;
               this.ngOnInit();
           }
           else {
-              //console.log("cancel delete action");
+              ////console.log("cancel delete action");
           }
       });
   }

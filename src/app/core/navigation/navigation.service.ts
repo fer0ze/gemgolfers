@@ -40,7 +40,7 @@ export class NavigationService
     {
         return this._httpClient.get<Navigation>('api/common/navigation').pipe(
             tap((navigation) => {
-                console.log(navigation);
+                //console.log(navigation);
                 
                 this._navigation.next(navigation);
             })

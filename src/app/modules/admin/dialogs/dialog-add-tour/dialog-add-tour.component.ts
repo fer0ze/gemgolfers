@@ -82,7 +82,7 @@ export class DialogAddTourComponent implements OnInit {
 
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
         this.file = fileList[0];
-        console.log(this.file);
+        //console.log(this.file);
 
         const reader = new FileReader();
         reader.onload = (event: any) => {

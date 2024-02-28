@@ -112,7 +112,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((res) => {
                     let getall = res.data;
-                    console.log(getall);
+                    //console.log(getall);
 
                     if (this.loggedInuser.userRole == 2 || this.loggedInuser.userRole == 1) {
 
@@ -123,16 +123,16 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             this.tournaments = getall.TournamentQL;
                         }
 
-                        console.log(this.tournamentCounts);
+                        //console.log(this.tournamentCounts);
 
                         this.flightCounts = getall.Count.aggregate.count;
-                        console.log(this.flightCounts);
+                        //console.log(this.flightCounts);
 
                         this.playerCounts = getall.AggregateQL.aggregate.totalCount;
-                        console.log(this.playerCounts);
-                        console.log('a');
+                        //console.log(this.playerCounts);
+                        //console.log('a');
 
-                        console.log(res.data);
+                        //console.log(res.data);
 
                         let myData: any[] = [];
                         let prevDate = null;
@@ -198,11 +198,11 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                                 prevDate = stats.date;
                             }
                         }
-                        // console.log(distinctMembers.size);
-                        // console.log(distinctCategory);
-                        // console.log(categoryCounts);
+                        // //console.log(distinctMembers.size);
+                        // //console.log(distinctCategory);
+                        // //console.log(categoryCounts);
 
-                        // console.log(myData);
+                        // //console.log(myData);
                         this.membersCountsCal = distinctMembers.size;
                         let dataMembers: any[] = [];
                         let dataFlight: any[] = [];
@@ -226,7 +226,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
 
                         // this.flightCountsNotCal =
                         //     getall.TournamentsQLs.length - this.flightCountsCal;
-                        // console.log(this._overview);
+                        // //console.log(this._overview);
 
                         this._overview = {
                             newIssues: getall.TournamentsQLs.length,
@@ -236,7 +236,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             reopened: categoryCounts.Ladies,
                             needstriage: categoryCounts.Veterans,
                         }
-                        // console.log(players);
+                        // //console.log(players);
                         if (this.loggedInuser.userRole == 1) {
                             this._seriesPlayers['all'] = [
                                 getall.Amateurs.aggregate['count'],
@@ -353,11 +353,11 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                                 prevDate = stats.startDate;
                             }
                         }
-                        // console.log(distinctMembers.size);
-                        // console.log(distinctCategory);
-                        // console.log(categoryCounts);
+                        // //console.log(distinctMembers.size);
+                        // //console.log(distinctCategory);
+                        // //console.log(categoryCounts);
 
-                        // console.log(myData);
+                        // //console.log(myData);
                         this.membersCountsCal = distinctMembers.size;
                         let dataMembers: any[] = [];
                         let dataFlight: any[] = [];
@@ -387,7 +387,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             reopened: categoryCounts.Ladies,
                             needstriage: categoryCounts.Veterans,
                         }
-                        // console.log(players);
+                        // //console.log(players);
                         this._seriesPlayers['all'] = [
                             membersCatCounts.Amateurs,
                             membersCatCounts['Senior Amateurs'],
@@ -481,7 +481,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     private _prepareChartData(): void {
         // Github issues
-        console.log('b');
+        //console.log('b');
 
         this.chartGithubIssues = {
             chart: {
@@ -786,7 +786,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     async addnewTour() {
         const dialogRef = this.dialog.open(DialogAddTourMainComponent);
         dialogRef.afterClosed().subscribe(async (result) => {
-          console.log(result);
+          //console.log(result);
           if (result) {
             let tour = {
               id: UniqueIdGenerator.generate(),
@@ -798,7 +798,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
               endDate:result.endDate,
             }
             this._facadeService.addTour(tour, result.file).subscribe((result) => {
-              console.log(result);
+              //console.log(result);
               if (result) {
                 
               }

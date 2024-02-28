@@ -64,7 +64,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit(): void {
-        console.log(this.data);
+        //console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
         this.LeaderboardScore = this.data.LeaderBoardQL;
         this.activeRound = this.Leaderboard.activeRound;
@@ -136,9 +136,9 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 }
             }
         }
-        console.log(this.Team1);
-        console.log(this.Team2);
-        // console.log('a');
+        //console.log(this.Team1);
+        //console.log(this.Team2);
+        // //console.log('a');
         this.LeaderboardAllPlayers = [];
         this.team1PointS = 0;
         this.team2PointS = 0;
@@ -242,13 +242,13 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 }
 
             }
-            console.log(matchResult);
+            //console.log(matchResult);
             this.LeaderboardAllPlayers = Object.values(matchResult);
-            // console.log(this.LeaderboardAllPlayers);
+            // //console.log(this.LeaderboardAllPlayers);
 
         }
 
-        /// console.log(this.allTeams);
+        /// //console.log(this.allTeams);
 
         // this.LeaderboardAllPlayers = this.data.LeaderBoardQL;
         this.tRounds = [];
@@ -297,9 +297,9 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     }
 
     getSinglesBG(item: any): { [key: string]: string } {
-        //console.log(item);
+        ////console.log(item);
         const underValue = this.LeaderboardAllPlayers.filter((a) => { return a.id == item.id })
-        // console.log(underValue);
+        // //console.log(underValue);
         const style = {};
         if (underValue.length > 0) {
             style['background-color'] = underValue[0]['color']; // Set the 'color' property to 'red'
@@ -307,7 +307,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         return style;
     }
     getSinglePlayerScore(item: any, round: any): string {
-        //console.log(item);
+        ////console.log(item);
         const underValue = this.LeaderboardAllPlayers.filter((a) => { return a.id == item.id })
         if (underValue.length > 0) {
             if (underValue[0]['upScore' + round] != undefined && underValue[0]['upScore' + round] > 0) {
@@ -333,7 +333,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
     }
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
+        //console.log(changes);
         //this.data = changes.data.currentValue;
         this.ngOnInit();
     }
@@ -344,7 +344,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         if (round == 0) {
             if (leaders.length > 0) {
                 this.LeaderboardPlayers = leaders;
-                console.log(this.LeaderboardPlayers);
+                //console.log(this.LeaderboardPlayers);
                 if (this.Leaderboard.cutOffCriteria !== null) {
                     this.cutLeaders(this.Leaderboard.cutOffCriteria, this.LeaderboardPlayers)
                 }
@@ -466,7 +466,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         // this.activeRound = this.Leaderboard.activeRound;
         // if (this.flightRound == 0) {
         //     if (item.value == LeaderTypeValue.GROSS) {
-        //         ////console.log("Selected value: " + item.value);
+        //         //////console.log("Selected value: " + item.value);
         //         this.allRoundGrossScore = true;
         //         this.allRoundCutOff = true;
 
@@ -479,7 +479,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         //         this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
 
         //     } else if (item.value == LeaderTypeValue.NET) {
-        //         ////console.log("Selected value: " + item.value);
+        //         //////console.log("Selected value: " + item.value);
         //         this.allRoundGrossScore = false;
         //         this.allRoundCutOff = false;
 
@@ -494,7 +494,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
         // } else {
         //     if (item.value == LeaderTypeValue.GROSS) {
-        //         ////console.log("Selected value: " + item.value);
+        //         //////console.log("Selected value: " + item.value);
         //         this.isGross = true;
         //         this.isNet = false;
         //         this.allRoundGrossScore = false;
@@ -506,7 +506,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         //         this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
 
         //     } else if (item.value == LeaderTypeValue.NET) {
-        //         ////console.log("Selected value: " + item.value);
+        //         //////console.log("Selected value: " + item.value);
         //         this.isNet = true;
         //         this.isGross = false;
         //         this.allRoundGrossScore = false;
@@ -531,7 +531,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     filterByQuery(query) {
         // if (query.length > 3) {
         //     this.searchName = true;
-        //     console.log(this.allMatchResults);
+        //     //console.log(this.allMatchResults);
         //     if (this.allLeadersGross.length > 0) {
         //         this.allMatchSearchResults = this.allLeadersGross.filter(
         //             (obj) => {
@@ -582,7 +582,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
         let scoreResult = ScoreLoader.getMatchPlayScore(playerId);
-        console.log(scoreResult);
+        //console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
@@ -622,7 +622,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
         let scoreResult = ScoreLoader.getMatchPlayTeamScore(playerId);
-        console.log(scoreResult);
+        //console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
@@ -668,17 +668,17 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
     private sortLeadersNet(leaderList: any[], round) {
         //Collections.sort(grossLeaders);
-        console.log(leaderList);
+        //console.log(leaderList);
 
         //leaderList = leaderList.sort(this.ComparatorPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -687,7 +687,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             let previousHoleScore: number = 0;
 
             tied = leaderCurrent[`underNet${round}`] == leaderPrevious[`underNet${round}`];
-            ////console.log(tied);
+            //////console.log(tied);
             if (tied && leaderCurrent.completed && leaderPrevious.completed) {
                 let noOfHoles = 9;
                 while (tied && noOfHoles > 0) {
@@ -723,7 +723,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 leaderList[i]['position'] = pos;
             }
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorPosition);
     }
@@ -781,14 +781,14 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         //Collections.sort(grossLeaders);
 
         leaderList = leaderList.sort(this.ComparatorAllNetPosition);
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         //return false;
 
         let pos: number = 1;
         let tied: boolean;
 
         if (leaderList.length > 0) leaderList[0]['position'] = pos;
-        ////console.log(leaderList);
+        //////console.log(leaderList);
         for (let i = 1; i < leaderList.length; i++) {
             let leaderCurrent = leaderList[i];
             let leaderPrevious = leaderList[i - 1];
@@ -826,13 +826,13 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 pos = i + 1;
                 leaderList[i]['position'] = pos;
             }
-            ////console.log(pos);
+            //////console.log(pos);
 
-            ////console.log("position-> " + pos + " -->" + leaderCurrent.name);
+            //////console.log("position-> " + pos + " -->" + leaderCurrent.name);
         }
         //leaderList = leaderList.sort(this.ComparatorAllGrossPosition);
-        ////console.log("return");
-        console.log(leaderList);
+        //////console.log("return");
+        //console.log(leaderList);
         return leaderList;
     }
 

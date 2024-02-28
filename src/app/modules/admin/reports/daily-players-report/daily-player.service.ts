@@ -41,8 +41,8 @@ export class DailyReportService {
         toDate: any,
 
     ): Observable<any> {
-        console.log(fromDate);
-        console.log(toDate);
+        //console.log(fromDate);
+        //console.log(toDate);
 
         return this.apollo
             .subscribe<any>({

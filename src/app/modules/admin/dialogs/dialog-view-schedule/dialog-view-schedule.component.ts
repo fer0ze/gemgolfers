@@ -17,7 +17,7 @@ export class DialogViewScheduleComponent implements OnInit {
 
   ngOnInit() {
     this.scheduleInfo = this.data.schedule;
-    console.log(this.scheduleInfo);
+    //console.log(this.scheduleInfo);
   }
 
   onNoClick(): void {

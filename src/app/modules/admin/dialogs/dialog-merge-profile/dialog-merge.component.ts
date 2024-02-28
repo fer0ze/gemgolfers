@@ -29,7 +29,7 @@ export class DialogMergeComponent implements OnInit {
         this.dialogRef.close();
     }
     toggle(event) {
-        console.log(event);
+        //console.log(event);
         this.show = event.checked;
 
         if (this.show) {
