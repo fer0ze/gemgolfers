@@ -3298,7 +3298,7 @@ export class ViewTournamentComponent implements OnInit {
                     }
                     tournamentsMember.push(member);
                 });
-                this.dataSource = new MatTableDataSource(this.tournamentMember);
+                this.dataSource = new MatTableDataSource(tournamentsMember);
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
             } else {
