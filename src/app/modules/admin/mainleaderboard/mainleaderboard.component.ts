@@ -154,7 +154,7 @@ export class MainLeaderboardComponent implements OnInit {
         //     this.clubLogo =
         //         clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
         // }
-        this.clubLogo = 'rumanza.png';
+        this.clubLogo = 'J-Zaman.png';
         this.apollo
             .watchQuery({
                 query: LeaderboardSubscription,
