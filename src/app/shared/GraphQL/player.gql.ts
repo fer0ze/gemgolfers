@@ -742,11 +742,7 @@ export const SavePlayersList = gql`
             on_conflict: {
                 constraint: player_pkey
                 update_columns: [
-                    phone
-                    email
-                    firstName
-                    lastName
-                    membershipNumber
+                    
                 ]
             }
         ) {
@@ -756,7 +752,7 @@ export const SavePlayersList = gql`
             objects: $clubmembers
             on_conflict: {
                 constraint: club_member_pkey
-                update_columns: [playerId]
+                update_columns: []
             }
         ) {
             returning {

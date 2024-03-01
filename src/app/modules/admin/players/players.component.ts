@@ -505,520 +505,190 @@ export class PlayersComponent implements OnInit {
 
             this.savePlayers = [];
             this.duplicatePlayers = [];
-            let clubMember: any[] = [];
-            // for (let p of this.playersData) {
-            //     let exist: any = [];
-            //     if (p.membershipNumber) {
-            //         // this.logger.log(p.membershipNumber);
-            //         //console.log(p.membershipNumber);
-
-            //         exist = await this._facadeService.getPlayerByMembershipNumber(
-            //             p.membershipNumber.toString()
-            //         );
-
-            //         if (exist.length > 0) {
-            //             this.savePlayers.push(exist);
-            //             let update = await this._facadeService.updatePlayerCategory(p.membershipNumber.toString());
-            //             if (update) {
-            //                 //console.log('Done');
-            //             }
-            //             await this.delay(500);
-            //             //continue;
-            //         } else {
-            //             this.duplicatePlayers.push(p);
-            //         }
-            //     }
-            // }
-            // //console.log(this.duplicatePlayers);
-            // //console.log(this.savePlayers);
-            let data: any[][] = [];
-            for (let p of this.playersData) {
-
-                // let update = await this._facadeService.updateflightMember(p.id);
-                // if (update) {
-                //     //console.log('Done');
-                // }
-                //await this.delay(500);
-                // let member: any = {
-                //     tournamentId: '-NddQacHUwjnptTHOeSP',
-                //     playerId: p.id,
-                //     status: true,
-                // };
-                // clubMember.push(member)
-
-                let result = <any>(await this._facadeService.getPlayerScorebyID(p.playerId))
-                //console.log(result);
-                let holeAverages: { holeNo: number; avgScore: number }[] = [];
-                // Get the unique hole numbers
-                let holeNumbers: number[] = Array.from(new Set(result['score'].map(score => score.hole.holeNo)));
-
-                // Calculate average score for each hole number
-                for (let holeNo of holeNumbers) {
-                    // Filter scores for the current hole number
-                    let holeScores = result['score'].filter(score => score.hole.holeNo === holeNo);
-
-                    if (holeScores.length > 0) {
-                        // Calculate the average score for the current hole number
-                        let totalScore = holeScores.reduce((sum, score) => sum + score.grossScore, 0);
-                        let avgScore = totalScore / holeScores.length;
-
-                        // Push the hole number and its average score to the holeAverages array
-                        holeAverages.push({ holeNo: holeNo, avgScore: avgScore });
-                    }
-
-                }
-
-                //console.log(holeAverages);
-                data[p.player] = holeAverages;
-
-                // let sum = 0;
-
-                // for (let scr of result['score']) {
-                //     sum += scr.grossScore;
-                // }
-                // let avgScr = sum / result['score'].length;
-                // clubMember.push(avgScr);
-            }
-            // let holeAverages: { [holeNo: number]: number } = {};
-
-            // // Loop through each player's scores
-            // for (let playerId in data) {
-            //     let playerData = data[playerId];
-
-            //     // Calculate the total score for each hole across all players
-            //     playerData.forEach(score => {
-            //         if (holeAverages[score.holeNo] === undefined) {
-            //             holeAverages[score.holeNo] = score.avgScore;
-            //         } else {
-            //             holeAverages[score.holeNo] += score.avgScore;
-            //         }
-            //     });
-            // }
-
-            // // Calculate the average score for each hole across all players
-            // for (let holeNo in holeAverages) {
-            //     holeAverages[holeNo] /= Object.keys(data).length;
-            // }
-
-            //console.log(data);
-            const flatData = [];
-            // for (const playerName in selectedMember) {
-            //     if (selectedMember.hasOwnProperty(playerName)) {
-            //         const playerData = selectedMember[playerName];
-            //         playerData.forEach(item => {
-            //             flatData.push({ Name: playerName,HoleNo: item.holeNo, GrossScore: item.avgScore });
-            //         });
-            //     }
-            // }
-            // for (const name in selectedMember) {
-            //     if (selectedMember.hasOwnProperty(name)) {
-            //         const personData = selectedMember[name];
-            //         const worksheet = XLSX.utils.json_to_sheet(personData);
-
-            //         // Add the worksheet to the workbook with the person's name as the sheet name
-            //         XLSX.utils.book_append_sheet(workbook, worksheet, name);
-            //     }
-            // }
-
-            // const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
-            // const wb: XLSX.WorkBook = XLSX.utils.book_new();
-            // const header = ['Player'];
-            // for (let holeNo = 1; holeNo <= 18; holeNo++) {
-            //     header.push(`Hole ${holeNo}`);
-            // }
-            // XLSX.utils.sheet_add_json(ws, [header]);
-            let array = [];
-            for (const playerName in data) {
-                const playerData = data[playerName];
-                const playerRow = [playerName];
-                // for (let holeNo = 1; holeNo <= 18; holeNo++) {
-                //     const holeData = playerData.find(item => item.holeNo === holeNo);
-                //     playerRow.push(holeData.avgScore);
-                // }
-                // XLSX.utils.sheet_add_json(ws, [playerRow]);
-                let obj = {
-                    'Name': playerName,
-                    'HoleNo1':  data[playerName][0] ?Math.round(data[playerName][0]['avgScore']) : '-' ,
-                    'HoleNo2':  data[playerName][1] ?Math.round(data[playerName][1]['avgScore']) : '-' ,
-                    'HoleNo3':  data[playerName][2] ?Math.round(data[playerName][2]['avgScore']) : '-' ,
-                    'HoleNo4':  data[playerName][3] ?Math.round(data[playerName][3]['avgScore']) : '-' ,
-                    'HoleNo5':  data[playerName][4] ?Math.round(data[playerName][4]['avgScore']) : '-' ,
-                    'HoleNo6':  data[playerName][5] ?Math.round(data[playerName][5]['avgScore']) : '-' ,
-                    'HoleNo7':  data[playerName][6] ?Math.round(data[playerName][6]['avgScore']) : '-' ,
-                    'HoleNo8':  data[playerName][7] ?Math.round(data[playerName][7]['avgScore']) : '-' ,
-                    'HoleNo9':  data[playerName][8] ?Math.round(data[playerName][8]['avgScore']) : '-' ,
-                    'HoleNo10': data[playerName][9] ?Math.round(data[playerName][9]['avgScore']) : '-' ,
-                    'HoleNo11': data[playerName][10] ?Math.round(data[playerName][10]['avgScore']): '-' ,
-                    'HoleNo12': data[playerName][11] ?Math.round(data[playerName][11]['avgScore']): '-' ,
-                    'HoleNo13': data[playerName][12] ?Math.round(data[playerName][12]['avgScore']): '-' ,
-                    'HoleNo14': data[playerName][13] ?Math.round(data[playerName][13]['avgScore']): '-' ,
-                    'HoleNo15': data[playerName][14] ?Math.round(data[playerName][14]['avgScore']): '-' ,
-                    'HoleNo16': data[playerName][15] ?Math.round(data[playerName][15]['avgScore']): '-' ,
-                    'HoleNo17': data[playerName][16] ?Math.round(data[playerName][16]['avgScore']): '-' ,
-                    'HoleNo18': data[playerName][17] ?Math.round(data[playerName][17]['avgScore']): '-' ,
-                }
-                array.push(obj)
-
-            }
-            //console.log(array);
-            
-            const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(array);
-            const wb: XLSX.WorkBook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Report');
-
-            // Export the Excel file
-            XLSX.writeFile(wb, 'Score.xlsx');
-            //XLSX.writeFile(wb, { bookType: 'xlsx', type: 'blob' });
-            // Append the worksheet to the workbook
-            // XLSX.utils.book_append_sheet(wb, ws, 'Scores');
-            // Generate the Excel blob
-            // XLSX.writeFile(workbook, 'Actify_Report.xlsx');
-            // //console.log(this.duplicatePlayers);
+            let clubMember: ClubMembership[] = [];
 
             // for (let p of this.playersData) {
-            //     let obj = {
-            //         event: {
-            //             session_variables: {
-            //                 'x-hasura-role': 'admin',
-            //                 'x-hasura-allowed-roles': 'admin',
-            //             },
-            //             op: 'UPDATE',
-            //             data: {
-            //                 old: {
-            //                     tee: 'AMATEURS',
-            //                     flightRound: 0,
-            //                     time: '18:59:00+05',
-            //                     category: null,
-            //                     courseId: '-LUFS3FCQKOGpJ2IEHmf',
-            //                     startingHole: 1,
-            //                     courseHoleSetsInverted: false,
-            //                     flightNo: 1,
-            //                     date: '2022-05-27',
-            //                     tournamentId: p.tournamentId,
-            //                     courseHoleSets: 3,
-            //                     adminId: '-L61c9obophnGAu73YSM',
-            //                     id: '-N34oqug_aFn244dvq2g',
-            //                     ended: false,
-            //                     tee_id: 1,
-            //                 },
-            //                 new: {
-            //                     tee: 'AMATEURS',
-            //                     flightRound: 0,
-            //                     time: '18:59:00+05',
-            //                     category: null,
-            //                     courseId: '-LUFS3FCQKOGpJ2IEHmf',
-            //                     startingHole: 1,
-            //                     courseHoleSetsInverted: false,
-            //                     flightNo: 1,
-            //                     date: '2022-05-27',
-            //                     tournamentId: p.tournamentId,
-            //                     courseHoleSets: 3,
-            //                     adminId: '-L61c9obophnGAu73YSM',
-            //                     id: '-N34oqug_aFn244dvq2g',
-            //                     ended: true,
-            //                     tee_id: 1,
-            //                 },
-            //             },
-            //             trace_context: null,
-            //         },
-            //         created_at: '2022-05-27T14:13:07.573411Z',
-            //         id: '22a65faf-ca91-4de1-b576-04ba73814232',
-            //         delivery_info: {
-            //             max_retries: 0,
-            //             current_retry: 0,
-            //         },
-            //         trigger: {
-            //             name: 'flight_ended_trigger',
-            //         },
-            //         table: {
-            //             schema: 'public',
-            //             name: 'flight',
-            //         },
-            //     };
+            //   // this.logger.logObject(p);
+            //   console.log(p);
 
-            //     // //console.log('a');
-            //     //console.log(p.tournamentId);
+            //   let exist: any = [];
 
-            //     await this._handicapServise
-            //         .flightEndedTrigger(obj)
-            //         .then((response) => {
-            //             //console.log(response);
-            //         })
-            //         .catch((err) => {
-            //             //console.log('error' + err);
-            //             this.snackBar.open('Error!.', 'x', {
-            //                 duration: 5000,
-            //             });
-            //         });
-
-            // for (let p of this.playersData) {
-            //  let update = await this._facadeService.updateflightMember(p.ID);
-            //     if (update) {
-            //         //console.log('Done');
-            //     }
-            //     await this.delay(500);
-            // }
-
-            // if (p.phone && exist.length == 0) {
-            //     // this.logger.log(p.phone);
-            //     //console.log(p.phone);
-            //     let phone;
-            //     if (p.phone.toString().indexOf("+92") === 0) {
-            //         phone = p.phone.toString();
-            //     } else if (p.phone.toString().indexOf("0") === 0) {
-            //         phone = p.phone.toString().replace(0, "+92");
-            //     } else if (p.phone.toString().indexOf("3") === 0) {
-            //         phone = "+92" + p.phone.toString();
-            //     }
-            //     //console.log(phone);
-
-            //     exist = await this._facadeService.getPlayerByPhone(phone);
-            //     // p.phone.toString().indexOf("+") !== -1
-            //     // ? p.phone.toString()
-            //     // : "+" + p.phone.toString()
-            //     if (exist.length > 0) {
-            //         this.duplicatePlayers.push(p);
-            //         //continue;
-            //     }
-            // }
-
-            // if (p.email && exist.length == 0) {
-            //     exist = await this._facadeService.getPlayerByEmail(p.email.toString());
-
-            //     if (exist.length > 0) {
-            //         // this.logger.log("email yes");
-            //         //console.log("email Yes");
-
-            //         this.duplicatePlayers.push(p);
-            //         //continue;
-            //     }
-            // }
-
-            // this.logger.log(exist);
-
-            // let UniqueId: string =
-            //     exist && exist.length > 0
-            //         ? exist[0].id
-            //         : UniqueIdGenerator.generate();
-
-            // //if(p.club) {
-
-            // let member: any = {
-            //     clubId: this.loggedInuser.adminClubId,
-            //     playerId: UniqueId,
-            // };
-
-            // clubMember.push(member);
-            //}
-
-            // let player: any = {
-            //     id: UniqueId,
-            //     adminClubId: null,
-            //     firebaseUid: null,
-            //     fcmToken: null,
-            //     gemId: generateGemId.generate(UniqueId),
-            //     firstName: p.firstName,
-            //     lastName: p.lastName,
-            //     gender: p.gender ? p.gender : null,
-            //     dob: p.dob ? p.dob : null,
-            //     picture: p.picture ? p.picture : null,
-            //     email: p.email ? p.email : null,
-            //     phone: p.phone ? p.phone : null,
-            //     playerCategory: p.category ? p.category : null,
-            //     handicap: p.handicap ? p.handicap : 0,
-            //     online: false,
-            //     countryCode: p.code ? p.code : null,
-            //     extraData: p.extra ? p.extra : null,
-            //     membershipNumber: p.membershipNumber.toString(),
-            //     userRole: 3,
-            //     membership: null,
-            // };
-
-            // this.savePlayers.push(player);
-
-            // //   this.logger.log(this.savePlayers);
-            // //   this.logger.log(this.duplicatePlayers);
-            //   //console.log(this.savePlayers);
-
-            //   let status = await this._facadeService.importPlayerList(
-            //     this.savePlayers,
-            //     clubMember
-            //   );
-
-            //   if (status) {
-            //     let newProfiles =
-            //       Number(this.savePlayers.length) -
-            //       Number(this.duplicatePlayers.length);
-            //     this.snackBar.open(
-            //       (newProfiles < 0 ? 0 : newProfiles) +
-            //         " players have been created. " +
-            //         this.duplicatePlayers.length +
-            //         " player(s) were already exist.",
-            //       "x",
-            //       {
-            //         duration: 5000,
-            //       }
-            //     );
-
-            //     this.importingList = false;
-            //     this.file = null;
-            //     this.fileInputVariable.nativeElement.value = "";
-
-            //     await this.delay(5000);
-            //     //window.location.reload();
-            //   } else {
-            //     this.snackBar.open("There was an Error while loading file", "x", {
-            //       duration: 3000,
-            //     });
-            //     this.importingList = false;
-            //   }
-            // //console.log('b');
-
-            // this.logger.logObject(p);
-            // //console.log(p);
-
-            // let exist: any = [];
-
-            // if (p.membershipNumber) {
+            //   if (p.membershipNumber) {
             //     // this.logger.log(p.membershipNumber);
-            //     //console.log(p.membershipNumber);
+            //     console.log(p.membershipNumber);
 
-            //     exist =
-            //         await this._facadeService.getPlayerByMembershipNumber(
-            //             p.membershipNumber.toString()
-            //         );
-
-            //     if (exist.length > 0) {
-            //         this.duplicatePlayers.push(p);
-            //         //continue;
-            //     }
-            // }
-
-            // let phone="481";
-            // if (p.phone && exist.length == 0) {
-            //     // this.logger.log(p.phone);
-            //     //console.log(p.phone);
-            //     if (p.phone.toString().indexOf('+92') === 0) {
-            //         phone = p.phone.toString();
-            //     } else if (p.phone.toString().indexOf('0') === 0) {
-            //         phone = p.phone.toString().replace(0, '+92');
-            //     } else if (p.phone.toString().indexOf('3') === 0) {
-            //         phone = '+92' + p.phone.toString();
-            //     }
-            //     //console.log(phone);
-
-            //     exist = await this._facadeService.getPlayerByPhone(phone);
-            //     // p.phone.toString().indexOf("+") !== -1
-            //     // ? p.phone.toString()
-            //     // : "+" + p.phone.toString()
-            //     if (exist.length > 0) {
-            //         this.duplicatePlayers.push(p);
-            //         //continue;
-            //     }
-            // }
-
-            // if (p.email && exist.length == 0) {
-            //     exist = await this._facadeService.getPlayerByEmail(
-            //         p.email.toString()
+            //     exist = await this.facadeService.getPlayerByMembershipNumber(
+            //       p.membershipNumber.toString()
             //     );
 
             //     if (exist.length > 0) {
-            //         // this.logger.log("email yes");
-            //         //console.log('email Yes');
+            //       if (exist[0].handicapQL.length > 0) {
+            //         let handicapHistory = exist[0].handicapQL;
+            //         let lastTournamentID =
+            //           handicapHistory[handicapHistory.length - 1].tournamentId;
+            //         console.log(lastTournamentID);
 
-            //         this.duplicatePlayers.push(p);
-            //         //continue;
+            //         const handicapChangeLog =
+            //           await this.facadeService.updateLastHandicap(
+            //             exist[0].id,
+            //             lastTournamentID,
+            //             p.handicap
+            //           );
+            //         console.log(handicapChangeLog);
+            //       }
+
+            //       let succes = await this.facadeService.updatePlayerHandicap(
+            //         exist[0].id,
+            //         p.handicap
+            //       );
+
+            //       this.duplicatePlayers.push(exist);
+            //       //continue;
             //     }
+            //   }
             // }
+            // console.log(this.duplicatePlayers);
 
-            // // this.logger.log(exist);
-            // //console.log(exist);
+            for (let p of this.playersData) {
+                // this.logger.logObject(p);
+                console.log(p);
 
-            // let UniqueId: string =
-            //     exist && exist.length > 0
-            //         ? exist[0].id
-            //         : UniqueIdGenerator.generate();
+                let exist: any = [];
 
-            // //if(p.club) {
+                // if (p.membershipNumber) {
+                //     // this.logger.log(p.membershipNumber);
+                //     console.log(p.membershipNumber);
 
-            // let member: any = {
-            //     clubId: this.loggedInuser.adminClubId,
-            //     playerId: UniqueId,
-            // };
+                //     exist = await this.facadeService.getPlayerByMembershipNumber(
+                //         p.membershipNumber.toString()
+                //     );
 
-            // clubMember.push(member);
-            // //}
+                //     if (exist.length > 0) {
+                //         this.duplicatePlayers.push(p);
+                //         //continue;
+                //     }
+                // }
 
-            // let player: any = {
-            //     id: UniqueId,
-            //     adminClubId: null,
-            //     firebaseUid: null,
-            //     fcmToken: null,
-            //     gemId: null,
-            //     firstName: p.firstName,
-            //     lastName: p.lastName,
-            //     gender:  null,
-            //     dob: null,
-            //     picture:null,
-            //     email: p.email ? p.email : null,
-            //     phone: p.phone ? phone : null,
-            //     playerCategory: p.category ? p.category : null,
-            //     handicap: p.handicap ? p.handicap : 0,
-            //     online: false,
-            //     countryCode:  null,
-            //     extraData:  null,
-            //     membershipNumber: p.membershipNumber.toString(),
-            //     userRole: 3,
-            //     membership: null,
-            // };
+                // if (p.phone && exist.length == 0) {
+                //     // this.logger.log(p.phone);
+                //     console.log(p.phone);
+                //     let phone;
+                //     if (p.phone.toString().indexOf("+92") === 0) {
+                //         phone = p.phone.toString();
+                //     } else if (p.phone.toString().indexOf("0") === 0) {
+                //         phone = p.phone.toString().replace(0, "+92");
+                //     } else if (p.phone.toString().indexOf("3") === 0) {
+                //         phone = "+92" + p.phone.toString();
+                //     }
+                //     console.log(phone);
 
-            // this.savePlayers.push(player);
-            //}
+                //     exist = await this.facadeService.getPlayerByPhone(phone);
+                //     // p.phone.toString().indexOf("+") !== -1
+                //     // ? p.phone.toString()
+                //     // : "+" + p.phone.toString()
+                //     if (exist.length > 0) {
+                //         this.duplicatePlayers.push(p);
+                //         //continue;
+                //     }
+                // }
+
+                // if (p.email && exist.length == 0) {
+                //     exist = await this.facadeService.getPlayerByEmail(p.email.toString());
+
+                //     if (exist.length > 0) {
+                //         // this.logger.log("email yes");
+                //         console.log("email Yes");
+
+                //         this.duplicatePlayers.push(p);
+                //         //continue;
+                //     }
+                // }
+
+                // this.logger.log(exist);
+                console.log(exist);
+
+                let UniqueId: string =
+                    exist && exist.length > 0
+                        ? exist[0].id
+                        : UniqueIdGenerator.generate();
+
+                //if(p.club) {
+
+                let member: any = {
+                    clubId: this.loggedInuser.adminClubId,
+                    playerId: UniqueId,
+                };
+
+                clubMember.push(member);
+                //}
+
+                let player: any = {
+                    id: UniqueId,
+                    adminClubId: null,
+                    firebaseUid: null,
+                    fcmToken: null,
+                    gemId: generateGemId.generate(UniqueId),
+                    firstName: p.firstName,
+                    lastName: p.lastName,
+                    gender: p.gender ? p.gender : null,
+                    dob: p.dob ? p.dob : null,
+                    picture: p.picture ? p.picture : null,
+                    email: p.email ? p.email : null,
+                    phone: p.phone ? p.phone : null,
+                    playerCategory: p.category ? p.category : null,
+                    handicap: p.handicap ? p.handicap : 0,
+                    online: false,
+                    countryCode: p.code ? p.code : null,
+                    extraData: p.extra ? p.extra : null,
+                    membershipNumber: null,
+                    userRole: 3,
+                    membership: null,
+                };
+
+                this.savePlayers.push(player);
+            }
 
             // this.logger.log(this.savePlayers);
             // this.logger.log(this.duplicatePlayers);
-            // //console.log(this.savePlayers);
-            // //console.log(clubMember);
+            console.log(this.savePlayers);
 
-            // let status = await this._facadeService.importPlayerList(
-            //     this.savePlayers,
-            //     clubMember
-            // );
+            let status = await this._facadeService.importPlayerList(
+                this.savePlayers,
+                clubMember
+            );
 
-            // if (status) {
-            //     let newProfiles =
-            //         Number(this.savePlayers.length) -
-            //         Number(this.duplicatePlayers.length);
-            //     this.snackBar.open(
-            //         (newProfiles < 0 ? 0 : newProfiles) +
-            //             ' players have been created. ' +
-            //             this.duplicatePlayers.length +
-            //             ' player(s) were already exist.',
-            //         'x',
-            //         {
-            //             duration: 5000,
-            //         }
-            //     );
+            if (status) {
+                let newProfiles =
+                    Number(this.savePlayers.length) -
+                    Number(this.duplicatePlayers.length);
+                this.snackBar.open(
+                    (newProfiles < 0 ? 0 : newProfiles) +
+                    " players have been created. " +
+                    this.duplicatePlayers.length +
+                    " player(s) were already exist.",
+                    "x",
+                    {
+                        duration: 5000,
+                    }
+                );
 
-            //     this.importingList = false;
-            //     this.file = null;
-            //     this.fileInputVariable.nativeElement.value = '';
+                this.importingList = false;
+                this.file = null;
+                this.fileInputVariable.nativeElement.value = "";
 
-            //     //window.location.reload();
-            // } else {
-            //     this.snackBar.open(
-            //         'There was an Error while loading file',
-            //         'x',
-            //         {
-            //             duration: 3000,
-            //         }
-            //     );
-            //     this.importingList = false;
-            // }
+                await this.delay(5000);
+                //window.location.reload();
+            } else {
+                this.snackBar.open("There was an Error while loading file", "x", {
+                    duration: 3000,
+                });
+                this.importingList = false;
+            }
         } catch {
             this.importingList = false;
         }
     }
+
     delay(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
