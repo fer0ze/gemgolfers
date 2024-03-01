@@ -313,10 +313,7 @@
                                 <ng-template matTabContent>
                                     <div class="flex flex-auto justify-end">
                                         <button mat-raised-button mat-button class="my-3 float-right" color="warn"
-                                            *ngIf="
-                                                activeRound == 1 &&
-                                                this.showCloseBtn
-                                            " (click)="closeRound()">
+                                            (click)="closeRound()">
                                             Close Round {{activeRound}}
                                         </button>
                                         <button mat-raised-button mat-button color="primary"
