@@ -146,15 +146,16 @@ export class MainLeaderboardComponent implements OnInit {
         //             : null;
         // }
 
-        // if (this.tournamentID == 'jazamanogc') {
-        //     this.clubLogo = 'J-Zaman.png';
-        // } else if (this.tournamentID == '1stumanza-1' || this.tournamentID=='1stRumanza-2') {
-        //     this.clubLogo = 'rumanza.png';
-        // } else {
-        //     this.clubLogo =
-        //         clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
-        // }
-        this.clubLogo = 'J-Zaman.png';
+        if (this.tournamentID == '10jazaman2024') {
+            this.clubLogo = 'J-Zaman.png';
+        } else if (this.tournamentID == 'IST') {
+            this.clubLogo = 'rumanza.png';
+        } else {
+            this.clubLogo =
+                clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+        }
+        
+        //this.clubLogo = 'J-Zaman.png';
         this.apollo
             .watchQuery({
                 query: LeaderboardSubscription,
