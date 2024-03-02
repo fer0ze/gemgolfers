@@ -151,8 +151,7 @@ export class MainLeaderboardComponent implements OnInit {
         } else if (this.tournamentID == 'IST') {
             this.clubLogo = 'rumanza.png';
         } else {
-            this.clubLogo =
-                clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+            this.clubLogo = 'e2esp.png';
         }
         
         //this.clubLogo = 'J-Zaman.png';
