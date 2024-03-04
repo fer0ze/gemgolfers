@@ -45,7 +45,7 @@ import { ApexOptions } from 'ng-apexcharts';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FlightManagementComponent } from '../flight-management/flight-management.component';
-import { PlayerManagementComponent } from '../player-management/player-management.component';
+// import { PlayerManagementComponent } from '../player-management/player-management.component';
 import { forEach } from 'lodash';
 import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player.component';
 import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog-add-player.component';

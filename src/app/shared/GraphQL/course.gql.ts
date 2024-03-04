@@ -22,6 +22,7 @@ export const GetCourses = gql`
       nameForHoles10to18
       nameForHoles19to27
       nameForHoles28to36
+      createdAt
     }
   }
 `;

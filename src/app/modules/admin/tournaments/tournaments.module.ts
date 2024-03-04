@@ -34,8 +34,7 @@ import { AddTournamentComponent } from './add-tournament/add-tournament.componen
 import { FlightManagementComponent } from './flight-management/flight-management.component';
 // import { CalculateHandicapComponent } from './calculate-handicap/calculate-handicap.component';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
-// import { HandicapCalculationWhsComponent } from './handicap-calculation-whs/handicap-calculation-whs.component';
-import { PlayerManagementComponent } from './player-management/player-management.component';
+
 import { DialogHanidcapListComponent } from '../dialogs/dialog-hanidcap-list/dialog-hanidcap-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogMoveFlightComponent } from '../dialogs/dialog-move-flight/dialog-move-flight.component';
@@ -55,8 +54,6 @@ import { BlockWhiteSectionModule } from 'app/shared/modules/block-white-section/
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatchplayComponent } from '../matchplay/matchplay.component';
-import { GraphQLModule } from 'app/graphql.module';
-import { ApolloModule } from 'apollo-angular';
 import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-add-player.component';
 import { DialogPlayingDatesComponent } from '../dialogs/dialog-playing-dates/dialog-playing-dates.component';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
@@ -69,8 +66,6 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         AddTournamentComponent,
         FlightManagementComponent,
         DialogHanidcapListComponent,
-        
-        PlayerManagementComponent,
         DialogMoveFlightComponent,
         DialogAddPlayerComponent,
         DialogOverviewComponent,
@@ -101,7 +96,6 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         WhiteSectionModule,
         TopPlayerModule,
         MatButtonModule,
-        GraphQLModule,
         BlockWhiteSectionModule,
         MatIconModule,
         MatSortModule,
@@ -120,7 +114,6 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         MatSnackBarModule,
         MatToolbarModule,
         DragDropModule,
-        ApolloModule,
         MatDialogModule,
         FormsModule,
         MatAutocompleteModule,

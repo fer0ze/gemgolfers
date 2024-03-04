@@ -5,7 +5,7 @@ import { TournamentsComponent } from './tournaments.component';
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
 import { FlightManagementComponent } from './flight-management/flight-management.component';
 import { DatePipe } from '@angular/common';
-import { PlayerManagementComponent } from './player-management/player-management.component';
+// import { PlayerManagementComponent } from './player-management/player-management.component';
 import { ViewTournamentComponent } from './view-tournament/view-tournament.component';
 import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
 
@@ -30,10 +30,10 @@ const routes: Routes = [
         path: 'add/:id',
         component: AddTournamentComponent,
     },
-    {
-        path: 'players/:id',
-        component: PlayerManagementComponent,
-    },
+    // {
+    //     path: 'players/:id',
+    //     component: PlayerManagementComponent,
+    // },
 ];
 
 @NgModule({

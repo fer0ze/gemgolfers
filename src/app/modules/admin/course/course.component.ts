@@ -33,15 +33,12 @@ export class CourseComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   Courses: Course[] = [];
   displayedColumns = [
-    "id",
     "name",
     "noOfHoles",
     "par",
-    "courseRating",
-    "slopeRating",
+    "country",
     "city",
-    "update",
-    "delete",
+    "action",
   ];
   courseData: any;
   public loggedInuser: any;
@@ -86,6 +83,10 @@ export class CourseComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  createCourse(){
+    this.location.navigate(['/courses/add']);
   }
 
 }

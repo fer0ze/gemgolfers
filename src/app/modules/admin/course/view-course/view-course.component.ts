@@ -7,9 +7,10 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Country } from 'app/shared/classes/country';
+import { countries, getCity } from 'app/shared/classes/country';
 import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/general';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
@@ -93,7 +94,7 @@ export class ViewCourseComponent implements OnInit {
         private router: Router,
         private _localStorage: LocalStorageService,
         private route: ActivatedRoute,
-        // private location: Location,
+        private _cityService: HandicapService,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         public facadeService: FacadeService // private storage: AngularFireStorage
@@ -102,7 +103,7 @@ export class ViewCourseComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.listCountries = Country.getCity('DEFAULT');
+        this.listCountries = countries;
         //console.log(this.listCountries);
         this.route.paramMap.subscribe((params) => {
             this.courseID = params.get("id");
@@ -164,10 +165,11 @@ export class ViewCourseComponent implements OnInit {
     }
     ////*******************************************************************COURSE CREATE**************************************************************************************** */
     countrySelected(event) {
-        let obj = Country.getCity(event);
-        for (let objs of obj["cities"]) {
-            this.listCity = objs.split("|");
+        // let obj = Country.getCity(event);
 
+        const city = new getCity().getCity(event);
+        for (let objs of city['cities']) {
+            this.listCity = objs.split("|");
         }
         this.courseForm.get('city').setValue(this.listCity[1]);
         //console.log(this.listCity);
