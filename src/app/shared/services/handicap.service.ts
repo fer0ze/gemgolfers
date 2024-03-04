@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
@@ -7,33 +7,33 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class HandicapService {
-    constructor(private $http: HttpClient) {}
-
-    calculateHandicap(obj):Promise<any> {
+    constructor(private $http: HttpClient) { }
+    private apiUrl = 'https://api.countrystatecity.in/v1';
+    calculateHandicap(obj): Promise<any> {
         return this.$http.post(
             'https://gemgolfers-api.herokuapp.com/handicap/revertAndReCalculateHcCongo',
             obj
         ).toPromise();
     }
-    calculatePlayerHandicap(obj):Promise<any> {
+    calculatePlayerHandicap(obj): Promise<any> {
         return this.$http.post(
             'https://gemgolfers-api.herokuapp.com/handicap/calculateHandicapForPlayer',
             obj
         ).toPromise();
     }
-    calculateHandicapWHS(obj):Promise<any> {
+    calculateHandicapWHS(obj): Promise<any> {
         return this.$http.post(
             'https://gemgolfers-api.herokuapp.com/handicap/revertAndReCalculateHcWHS',
             obj
         ).toPromise();
     }
-    adjustHandicapWHS(obj):Promise<any> {
+    adjustHandicapWHS(obj): Promise<any> {
         return this.$http.post(
             'https://gemgolfers-api.herokuapp.com/handicap/adjustSelectedHcDiff',
             obj
         ).toPromise();
     }
-    flightEndedTrigger(obj):Promise<any> {
+    flightEndedTrigger(obj): Promise<any> {
         return this.$http.post(
             'https://gemgolfers-api.herokuapp.com/triggers/updateFlightEndedField',
             obj

@@ -13,7 +13,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class DialogTeeTimeSlotComponent implements OnInit {
 
   dataSource: MatTableDataSource<any>;
-  displayedColumns = ['slotTime', 'joined', 'members', 'status'];
+  displayedColumns = [
+    'firstName',
+    'lastName',
+    'email',
+    'handicap',
+    'action',
+  ];
   public response: any;
   slotList: any[] = [];
   panelOpenState = false;
@@ -21,35 +27,61 @@ export class DialogTeeTimeSlotComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  openedPanel: any = null;
   constructor(
-      public dialogRef: MatDialogRef<DialogTeeTimeSlotComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any) {}
+    public dialogRef: MatDialogRef<DialogTeeTimeSlotComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-      ngOnInit() {
-        //console.log(this.data);
-        this.slotList = this.data.slots;
-    
-        for(let item of this.slotList)
-          item["name"] = (item.PlayerQL)? item.PlayerQL.firstName + " " + item.PlayerQL.lastName : "";
-    
-        this.dataSource = new MatTableDataSource(this.slotList);
+  ngOnInit() {
+    console.log(this.data);
+    this.slotList = this.data.slots;
+
+    for (let item of this.slotList)
+      item["name"] = (item.PlayerQL) ? item.PlayerQL.firstName + " " + item.PlayerQL.lastName : "";
+
+
+  }
+
+  isPanelOpened(item: any): boolean {
+    // Check if the given item is the opened panel
+    return this.openedPanel === item;
+  }
+  onPanelOpened(item: any) {
+    // Set the openedPanel to the currently opened panel
+    let members = [];
+    this.dataSource = null;
+    this.openedPanel = item;
+    if (this.openedPanel.flight) {
+      if (this.openedPanel.flight.MembersQL.length > 0) {
+        this.openedPanel.flight.MembersQL.forEach(member => {
+          let mem = {
+            id: member.playerId,
+            firstName: member.PlayerQL.firstName,
+            lastName: member.PlayerQL.lastName,
+            email: member.PlayerQL.email,
+            handicap: member.PlayerQL.handicap,
+          }
+          members.push(mem)
+        });
+        this.dataSource = new MatTableDataSource(members);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       }
-    
-      applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-    
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
-        }
+
     }
-    
-      onNoClick(): void {
-          this.dialogRef.close();
-      }
+  }
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }

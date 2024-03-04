@@ -1253,7 +1253,7 @@ export class getCity {
       {
         id: "Pakistan",
         cities: [
-          "|Islamabad|Lahore|Multan|Karachi|Rawalpindi|Peshawar",
+          "|Islamabad|Lahore|Multan|Karachi|Rawalpindi|Peshawar|Faisalabad|Gujranwala|Quetta|Sialkot|Hyderabad|Bahawalpur|Sargodha|Sukkur|Jhang|Sheikhupura|Larkana|Gujrat|Mardan|Kasur|Rahim Yar Khan|Sahiwal|Okara|Wah Cantonment|Dera Ghazi Khan|Mirpur Khas|Nawabshah|Mingora|Chiniot|Kamoke|Mandi Bahauddin|Jhelum|Sadiqabad|Khanewal|Hafizabad|Kohat|Jacobabad|Shikarpur|Muzaffargarh|Khanpur|Gojra|Bahawalnagar|Abbottabad|Muridke|Pakpattan|Khuzdar|Dera Ismail Khan|Muzaffarabad|Mansehra|Layyah|Kohat|Khushab|Gilgit|Dera Murad Jamali|Jamshoro|Charsadda|Zahir Pir|Attock|Vehari|Badin|Chaman|Tank|Kandhkot|Mehar|Haripur|Matli|Ghotki|Sibi|Nowshera|Chitral|Qila Abdullah|Hangu|Shahdadkot|Mianwali|Kharan|Umerkot|Hangu|Timargara|Gwadar|Nushki|Kalat|Khairpur|Dera Bugti|Gwadar|Chaman|Hub|Duki|Loralai|Dera Allah Yar|Dera Bugti|Turbat|Chaman|Panjgur|Mastung|Kalat|Zhob|Gandava|Killa Saifullah|"
         ],
       },
       {
@@ -1424,4 +1424,5 @@ export class getCity {
     }
   }
 }
+
 
