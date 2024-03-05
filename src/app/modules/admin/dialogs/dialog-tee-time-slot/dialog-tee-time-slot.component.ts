@@ -144,7 +144,14 @@ export class DialogTeeTimeSlotComponent implements OnInit {
 
   async createTournament(item, players) {
     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-
+    let clubInfo: any
+    if (this.loggedInuser) {
+      clubInfo =
+        this.loggedInuser.membership.length > 0
+          ? this.loggedInuser.membership[0].club
+          : null;
+    }
+    let courseId = clubInfo?.courses[0].id;
     // starterFormValue.roundDate = this.datepipe.transform(
     //   starterFormValue.roundDate.toString(),
     //   'yyyy-MM-dd'
@@ -215,7 +222,7 @@ export class DialogTeeTimeSlotComponent implements OnInit {
       : 1;
     let flight: any = {
       id: UniqueIdGenerator.generate(),
-      courseId: '-LUFS3FCQKOGpJ2IEHmf',
+      courseId: courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf',
       adminId: this.loggedInuser.id,
       courseHoleSets: 3,
       flightNo: 1,
@@ -241,7 +248,7 @@ export class DialogTeeTimeSlotComponent implements OnInit {
       id: UniqueIdGenerator.generate(),
       clubId: this.loggedInuser.adminClubId,
       leagueId: null,
-      courseId: '-LUFS3FCQKOGpJ2IEHmf',
+      courseId: courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf',
       adminId: this.loggedInuser.id,
       title:
         this.data.date.toString().substring(0, 10) +
