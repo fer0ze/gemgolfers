@@ -775,7 +775,7 @@ export class FacadeService {
     slotId: string, flightMembersToSave: any, count: any
   ) {
     return this.flightsService.insertFlightMembers(
-slotId,
+      slotId,
       flightMembersToSave, count
     );
   }
@@ -847,13 +847,11 @@ slotId,
       flightMembersToRemove
     );
   }
-
   moveFlightsPlayer(flightMembersToSave: any) {
     return this.flightsService.moveFlightsPlayer(flightMembersToSave);
   }
-
-  DeleteFlightMembers(flightid: any, flightMembersToRemove: any,count=0) {
-    return this.flightsService.DeleteFlightMembers(flightid, flightMembersToRemove,count);
+  DeleteFlightMembers(flightid: any, flightMembersToRemove: any, count = 0) {
+    return this.flightsService.DeleteFlightMembers(flightid, flightMembersToRemove, count);
   }
 
   getTournamentsFlights(tournamentId: string) {

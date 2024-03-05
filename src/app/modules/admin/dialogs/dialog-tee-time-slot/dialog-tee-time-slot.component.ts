@@ -11,6 +11,7 @@ import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/genera
 import { Player } from 'app/shared/models/player.model';
 import { Flight, FlightMembers } from 'app/shared/models/flight.model';
 import { AddDailyRound, Tournament } from 'app/shared/models/tournament.model';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
   selector: 'app-dialog-tee-time-slot',
@@ -43,7 +44,7 @@ export class DialogTeeTimeSlotComponent implements OnInit {
     private _localStorage: LocalStorageService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private facadeService: FacadeService,
-    public dialog: MatDialog,
+    public dialog: MatDialog, private _fuseConfirmationService: FuseConfirmationService,
     public snackBar?: MatSnackBar,
   ) { }
 
@@ -297,7 +298,11 @@ export class DialogTeeTimeSlotComponent implements OnInit {
         }
         members.push(mem)
       }
-      this.dataSource.data = [...this.dataSource.data, ...members];
+      if (this.dataSource.data) {
+        this.dataSource.data = [...this.dataSource.data, ...members];
+      } else {
+        this.dataSource.data = members;
+      }
       this.dataSource._updateChangeSubscription();
     }
   }
@@ -349,19 +354,36 @@ export class DialogTeeTimeSlotComponent implements OnInit {
       this.dataSource._updateChangeSubscription();
     }
   }
-  async deleteUser(id: string, slote: any) {
-    const count = slote.joinedMembers - 1;
-    let result = await this.facadeService.DeleteFlightMembers(slote.flightId, id, count);
-    if (result) {
-      const slot = this.slotList.find((slots) => slots.id == slote.id);
-      slot.joinedMembers--;
-      const index = this.dataSource.data.findIndex(member => member.id === id);
-      // If the item is found, remove it from the array
-      if (index !== -1) {
-        this.dataSource.data.splice(index, 1);
-        // Update the data source
-        this.dataSource._updateChangeSubscription();
+  deleteUser(id: string, slote: any) {
+    const confirmation = this._fuseConfirmationService.open({
+      title: 'Delete member',
+      message:
+        'Are you sure you want to delete this member? This action cannot be undone!',
+      actions: {
+        confirm: {
+          label: 'Delete',
+        },
+      },
+    });
+
+    // Subscribe to the confirmation dialog closed action
+    confirmation.afterClosed().subscribe(async(result) => {
+      // If the confirm button pressed...
+      if (result === 'confirmed') {
+        const count = slote.joinedMembers - 1;
+        let result = await this.facadeService.DeleteFlightMembers(slote.flightId, id, count);
+        if (result) {
+          const slot = this.slotList.find((slots) => slots.id == slote.id);
+          slot.joinedMembers--;
+          const index = this.dataSource.data.findIndex(member => member.id === id);
+          // If the item is found, remove it from the array
+          if (index !== -1) {
+            this.dataSource.data.splice(index, 1);
+            // Update the data source
+            this.dataSource._updateChangeSubscription();
+          }
+        }
       }
-    }
+    })
   }
 }
