@@ -217,7 +217,7 @@ export class DialogTeeTimeSlotComponent implements OnInit {
       id: UniqueIdGenerator.generate(),
       courseId: '-LUFS3FCQKOGpJ2IEHmf',
       adminId: this.loggedInuser.id,
-      courseHoleSets: 0,
+      courseHoleSets: 3,
       flightNo: 1,
       flightRound: 0,
       startingHole: 1,
@@ -298,10 +298,10 @@ export class DialogTeeTimeSlotComponent implements OnInit {
         }
         members.push(mem)
       }
-      if (this.dataSource.data) {
+      if (this.dataSource) {
         this.dataSource.data = [...this.dataSource.data, ...members];
       } else {
-        this.dataSource.data = members;
+        this.dataSource = new MatTableDataSource(members);
       }
       this.dataSource._updateChangeSubscription();
     }
@@ -350,7 +350,11 @@ export class DialogTeeTimeSlotComponent implements OnInit {
         }
         members.push(mem)
       }
-      this.dataSource.data = [...this.dataSource.data, ...members];
+      if (this.dataSource) {
+        this.dataSource.data = [...this.dataSource.data, ...members];
+      } else {
+        this.dataSource = new MatTableDataSource(members);
+      }
       this.dataSource._updateChangeSubscription();
     }
   }
@@ -367,7 +371,7 @@ export class DialogTeeTimeSlotComponent implements OnInit {
     });
 
     // Subscribe to the confirmation dialog closed action
-    confirmation.afterClosed().subscribe(async(result) => {
+    confirmation.afterClosed().subscribe(async (result) => {
       // If the confirm button pressed...
       if (result === 'confirmed') {
         const count = slote.joinedMembers - 1;
