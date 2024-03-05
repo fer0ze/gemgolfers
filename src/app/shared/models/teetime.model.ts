@@ -5,7 +5,8 @@ export interface TeeTime {
     bookingDate: Date;
     startTime: string;
     endTime: string;
-    interval: number
+    interval: number;
+    noOfPlayers: number;
     teeTimeSlot: TeeTimeSlot[];
     allowNineHole: boolean;
 }

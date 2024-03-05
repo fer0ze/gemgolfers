@@ -35,11 +35,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/dialog-player-list.component';
 
 
 
 @NgModule({
-  declarations: [TeeTimesComponent, AddTeeTimesComponent, DialogTeeTimeSlotComponent],
+  declarations: [TeeTimesComponent, AddTeeTimesComponent, DialogTeeTimeSlotComponent,DialogPlayerListComponent],
   imports: [
     CommonModule,
     TeeTimesRoutingModule,

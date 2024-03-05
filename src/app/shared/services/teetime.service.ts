@@ -119,6 +119,7 @@ export class TeeTimeService {
               'startTime': teeTime.startTime,
               'endTime': teeTime.endTime,
               'interval': teeTime.interval,
+              'noOfPlayers': teeTime.noOfPlayers,
               'allowNineHole': teeTime.allowNineHole,
               'slots': { 
                 'data': teeTime.teeTimeSlot

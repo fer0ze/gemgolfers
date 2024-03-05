@@ -19,6 +19,8 @@ import {
 import { of } from 'rxjs';
 import { DialogTeeTimeSlotComponent } from '../dialogs/dialog-tee-time-slot/dialog-tee-time-slot.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-add-player.component';
+import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/dialog-player-list.component';
 
 @Component({
     selector: 'app-tee-times',
@@ -61,14 +63,14 @@ export class TeeTimesComponent implements OnInit {
         public dialog: MatDialog,
         private facadeService: FacadeService,
         private _localStorage: LocalStorageService
-    ) {}
+    ) { }
 
     ngAfterViewInit(): void {
         //this.dataSource.sort = this.sort;
     }
 
     async ngOnInit() {
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.teeTimes = [];
 
         of(this.teeTimes)
@@ -112,10 +114,14 @@ export class TeeTimesComponent implements OnInit {
         this.location.navigate(['/players/update/' + id]);
     };
 
-    listTeeTimeSlots(slots: any): void {
+    listTeeTimeSlots(row: any): void {
         const dialogRef = this.dialog.open(DialogTeeTimeSlotComponent, {
             width: '600px',
-            data: { slots: slots },
+            data: {
+                date: row.bookingDate,
+                noOfPlayers: row.noOfPlayers,
+                slots: row.slots
+            },
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
@@ -133,4 +139,32 @@ export class TeeTimesComponent implements OnInit {
             }
         });
     }
+    convertToAMPMFormat(timeString: string): string {
+        // Split the time string to extract the hour and minute parts
+        const timeParts = timeString.split(':')[0]; // Extracts "09"
+        // Convert the hour part to a number
+        const hour = parseInt(timeParts, 10);
+        // Determine whether it's AM or PM
+        const period = hour >= 12 ? 'PM' : 'AM';
+        // Convert the hour from 24-hour to 12-hour format
+        const displayHour = hour % 12 || 12; // Convert 0 to 12 for 12 AM
+        // Construct the formatted time string
+        return displayHour + ' ' + period;
+    }
+
+
+    async openAddPlayersDialog(item: any) {
+        let datas = await this.facadeService.getPlayersListForTournament(
+            this.loggedInuser.adminClubId
+        );
+        const dialogRef = this.dialog.open(DialogPlayerListComponent, {
+            data: { players: datas.player },
+        });
+
+        // Handle dialog close or dismiss if needed
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
+    }
+
 }

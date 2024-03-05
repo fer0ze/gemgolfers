@@ -870,7 +870,7 @@ export const GetFlightSettings = gql`
 `;
 
 export const AddMutation = gql`
-    mutation insert_tournament($objects: [tournament_insert_input!]!) {
+    mutation insert_tournament($objects: [tournament_insert_input!]!,$flightId:String!,$slotId: String!,$count:Int!) {
         insert_tournament(objects: $objects) {
             returning {
                 id
@@ -883,6 +883,14 @@ export const AddMutation = gql`
                     id
                     category
                 }
+            }
+        }
+        update_tee_time_booking_slot(
+            where:{ id:{ _eq :$slotId }}
+            _set:{ flightId: $flightId,joinedMembers:$count}
+        ){
+            returning{
+                id
             }
         }
     }
@@ -1040,7 +1048,7 @@ export const SavePlayerHandicapsMutation = gql`
     ${PlayerQL}
     ${ScoreQL}
     ${PlayerHandicapQL}
-    ${PlayerHandicapLogQL}
+    ${PlayerHandicapLogQL}  
 `;
 
 export const UndoTournamentRoundMutation = gql`

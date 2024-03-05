@@ -1,32 +1,37 @@
 <div mat-dialog-content>
-    <h3 class="m-3">Tee Time Booking Slots</h3>
+    <h3 class="m-3 font-bold">Tee Time Booking Slots</h3>
     <mat-accordion>
         <mat-expansion-panel *ngFor="let item of this.slotList" (opened)="onPanelOpened(item)">
             <mat-expansion-panel-header class="py-8" [ngClass]="{
-                    full: item.joinedMembers > 3,
-                    partial: item.joinedMembers > 0 && item.joinedMembers < 4
+                    full: item.joinedMembers >= this.data.noOfPlayers,
+                    partial: item.joinedMembers > 0 && item.joinedMembers < this.data.noOfPlayers
                 }">
                 <mat-panel-title>
                     <table>
                         <tr>
                             <td>{{ item.slotTime.substring(0, 5) }}</td>
-                            <td>{{ item.joinedMembers }}/4</td>
+                            <td>{{ item.joinedMembers }}/{{this.data.noOfPlayers}}</td>
                             <td>Tee Box {{ item.startingHole }}</td>
                         </tr>
                     </table>
                 </mat-panel-title>
                 <mat-panel-description>
                     <mat-icon class="mat-18" [ngClass]="{
-                            active: item.joinedMembers > 3,
-                            disabled: item.joinedMembers < 4
+                            active: item.joinedMembers >= this.data.noOfPlayers,
+                            disabled: item.joinedMembers < this.data.noOfPlayers
                         }">check_circle</mat-icon>
+                    <button *ngIf="item.joinedMembers < this.data.noOfPlayers" mat-icon-button [color]="'primary'" (click)="openAddPlayersDialog(item)">
+                        <mat-icon svgIcon="heroicons_outline:plus-user"></mat-icon>
+                    </button>
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
+
             <ng-template matExpansionPanelContent>
-                <div *ngIf="isPanelOpened(item)">
+                <div class="overflow-auto" *ngIf="isPanelOpened(item)">
                     <!-- Your mat-table goes here -->
-                    <table class="w-full bg-transparent" mat-table [dataSource]="dataSource" matSort>
+                    <table *ngIf="dataSource!=null;else noContacts" class="w-full bg-transparent" mat-table [dataSource]="dataSource"
+                        matSort>
                         <ng-container matColumnDef="firstName">
                             <th mat-header-cell mat-sort-header *matHeaderCellDef>
                                 First Name
@@ -74,7 +79,7 @@
                             <td mat-cell *matCellDef="let account">
                                 <div class="flex">
                                     <span class="font-medium ml-1 whitespace-nowrap">
-                                        <button [matTooltip]="'Delete User'">
+                                        <button [matTooltip]="'Delete User'" (click)="deleteUser(account.id,item)">
                                             <mat-icon class="icon-size-7" [svgIcon]="'heroicons_solid:delete'"
                                                 color="warn"></mat-icon>
                                         </button>
@@ -88,6 +93,17 @@
                             </tr>
                         </ng-container>
                     </table>
+                    <ng-template #noContacts>
+                        <div
+                            class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden items-center justify-center dark:bg-transparent">
+                            <mat-icon class="icon-size-24" [svgIcon]="
+                                'heroicons_outline:document-search'
+                            "></mat-icon>
+                            <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+                                No Member Added!
+                            </div>
+                        </div>
+                    </ng-template>
                 </div>
             </ng-template>
         </mat-expansion-panel>

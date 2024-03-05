@@ -589,8 +589,8 @@ export class FacadeService {
     return this.tournamentService.getTournamentByID(id);
   }
 
-  addTournament(tournament: any) {
-    return this.tournamentService.addTournament(tournament);
+  addTournament(tournament: any, flightId: string = '', slotId: string = '', count = 0) {
+    return this.tournamentService.addTournament(tournament, flightId, slotId, count);
   }
   addTour(tour: any, file: any) {
     return this.tournamentService.addTour(tour, file);
@@ -664,8 +664,8 @@ export class FacadeService {
   insertTourGuide(tourGuide: any[]) {
     return this.tournamentService.insertTourGuide(tourGuide);
   }
-  insertTournamentTeam(teamsToSave: Team[], tournamentId,teamsMembersToRemove:any[]=[]) {
-    return this.tournamentService.insertTournamentTeam(teamsToSave, tournamentId,teamsMembersToRemove);
+  insertTournamentTeam(teamsToSave: Team[], tournamentId, teamsMembersToRemove: any[] = []) {
+    return this.tournamentService.insertTournamentTeam(teamsToSave, tournamentId, teamsMembersToRemove);
   }
   insertTournamentMemberStatus(tournamentMemberStatus) {
     return this.tournamentService.insertTournamentMemberStatus(tournamentMemberStatus);
@@ -771,6 +771,14 @@ export class FacadeService {
       flightMembersToSave
     );
   }
+  insertFlightMembers(
+    slotId: string, flightMembersToSave: any, count: any
+  ) {
+    return this.flightsService.insertFlightMembers(
+slotId,
+      flightMembersToSave, count
+    );
+  }
 
   SaveTournamentFlight(
     tournamentId: string,
@@ -844,8 +852,8 @@ export class FacadeService {
     return this.flightsService.moveFlightsPlayer(flightMembersToSave);
   }
 
-  DeleteFlightMembers(flightid: any, flightMembersToRemove: any) {
-    return this.flightsService.DeleteFlightMembers(flightid, flightMembersToRemove);
+  DeleteFlightMembers(flightid: any, flightMembersToRemove: any,count=0) {
+    return this.flightsService.DeleteFlightMembers(flightid, flightMembersToRemove,count);
   }
 
   getTournamentsFlights(tournamentId: string) {

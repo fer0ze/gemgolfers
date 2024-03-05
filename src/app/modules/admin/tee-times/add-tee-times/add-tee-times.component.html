@@ -1,21 +1,11 @@
-<div
-    class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
->
+<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Contact form -->
-        <mat-drawer
-            class="sm:w-96 dark:bg-gray-900"
-            [autoFocus]="false"
-            [mode]="drawerMode"
-            [opened]="true"
-            #drawer
-        >
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="true" #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
-                <div
-                    class="text-4xl font-extrabold tracking-tight leading-none"
-                >
+                <div class="text-4xl font-extrabold tracking-tight leading-none">
                     Add Tee Booking
                 </div>
                 <!-- Close button -->
@@ -27,17 +17,11 @@
             </div>
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container>
-                    <div
-                        class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50"
-                    >
-                        <mat-icon
-                            class="text-primary dark:text-primary-500"
-                            [svgIcon]="'heroicons_outline:user-circle'"
-                        ></mat-icon>
+                    <div class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50">
+                        <mat-icon class="text-primary dark:text-primary-500"
+                            [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
                         <div class="ml-3">
-                            <div
-                                class="font-medium leading-6 text-primary dark:text-primary-500"
-                            >
+                            <div class="font-medium leading-6 text-primary dark:text-primary-500">
                                 Tees Booking
                             </div>
                             <div class="mt-0.5 text-secondary">
@@ -56,9 +40,7 @@
                 </button>
 
                 <!-- Panel title -->
-                <div
-                    class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none"
-                >
+                <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
                     Setup
                 </div>
             </div>
@@ -68,120 +50,88 @@
                 <div class="text-secondary">
                     Following information is mandatory, be careful!
                 </div>
-                <form
-                    [formGroup]="scheduleForm"
-                    autocomplete="off"
-                    novalidate
-                    (ngSubmit)="createSchedule()"
-                >
+                <form [formGroup]="scheduleForm" autocomplete="off" novalidate (ngSubmit)="createSchedule()">
                     <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-                        <div class="sm:col-span-4">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <input
-                                    matInput
-                                    [matDatepicker]="picker"
-                                    [min]="minDate"
-                                    [max]="maxDate"
-                                    formControlName="BookingDate"
-                                    placeholder="Schedule Date"
-                                    disabled
-                                />
-                                <mat-datepicker-toggle
-                                    matSuffix
-                                    [for]="picker"
-                                ></mat-datepicker-toggle>
-                                <mat-datepicker
-                                    #picker
-                                    disabled="false"
-                                ></mat-datepicker>
+                        <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Tee Date:</mat-label>
+                                <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate"
+                                    formControlName="BookingDate" placeholder="Schedule Date" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
                                 <mat-error>This field is required</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <mat-label>Starting Tee Box:</mat-label>
-                                <mat-select
-                                    placeholder="Starting Tee Box"
-                                    formControlName="startingHole"
-                                >
-                                    <mat-option value="1">Tee Box 1</mat-option>
-                                    <mat-option value="10"
-                                        >Tee Box 10</mat-option
-                                    >
-                                    <mat-option value="both">Both</mat-option>
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>No Of Players:</mat-label>
+                                <mat-select placeholder="Players" formControlName="noOfPlayers">
+                                    <mat-option value="2">2 Ball</mat-option>
+                                    <mat-option value="3">2 Ball</mat-option>
+                                    <mat-option value="4">4 Ball</mat-option>
                                 </mat-select>
                                 <mat-icon matSuffix>golf_course</mat-icon>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Starting Tee Box:</mat-label>
+                                <mat-select (selectionChange)="teeChange($event)" placeholder="Starting Tee Box"
+                                    formControlName="startingHole">
+                                    <mat-option value="1">Tee Box 1</mat-option>
+                                    <mat-option value="10">Tee Box 10</mat-option>
+                                    <mat-option value="both">Both</mat-option>
+                                </mat-select>
+                                <mat-icon matSuffix>golf_course</mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Internal (Minutes)</mat-label>
-                                <input
-                                    matInput
-                                    formControlName="interval"
-                                    type="number"
-                                    min="1"
-                                    max="30"
-                                />
+                                <input matInput formControlName="interval" type="number" min="1" max="30" />
                                 <mat-icon matSuffix>av_timer</mat-icon>
                             </mat-form-field>
                         </div>
+                        <!-- <div *ngIf="showTeeTime" class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Tee 1 Start Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="teeOnestartTime" />
+                                <mat-error>The input is required.</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showTeeTime" class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Tee 10 Start Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="teeTenstartTime" />
+                                <mat-error>The input is required.</mat-error>
+                            </mat-form-field>
+                        </div> -->
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>First Tee Time:</mat-label>
-                                <input
-                                    type="time"
-                                    matInput
-                                    atp-time-picker
-                                    formControlName="startTime"
-                                />
+                                <input type="time" matInput atp-time-picker formControlName="startTime" />
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Last Tee Time:</mat-label>
-                                <input
-                                    type="time"
-                                    matInput
-                                    atp-time-picker
-                                    formControlName="endTime"
-                                />
+                                <input type="time" matInput atp-time-picker formControlName="endTime" />
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-4">
-                            <mat-checkbox formControlName="allowNineHole"
-                                >Allow Playing Nine Hole</mat-checkbox
-                            >
+                            <mat-checkbox formControlName="allowNineHole">Allow Playing Nine Hole</mat-checkbox>
                         </div>
                     </div>
                     <div class="my-4 border-t"></div>
                     <div class="flex items-center justify-end">
-                        <button
-                            class="mx-2"
-                            mat-raised-button
-                            color="primary"
-                            [disabled]="!scheduleForm.valid"
-                        >
+                        <button class="mx-2" mat-raised-button color="primary" [disabled]="!scheduleForm.valid">
                             Save
                         </button>
-                        <button
-                            mat-raised-button
-                            color="accent"
-                            [routerLinkActive]="'active'"
-                            [routerLink]="['/teetimes']"
-                        >
+                        <button mat-raised-button color="accent" [routerLinkActive]="'active'"
+                            [routerLink]="['/teetimes']">
                             Cancel
                         </button>
                     </div>

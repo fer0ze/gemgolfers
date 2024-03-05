@@ -20,6 +20,7 @@ import {
     Constants,
 } from '../../../../shared/classes/general';
 import { Router } from '@angular/router';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
     selector: 'app-add-tee-times',
@@ -29,7 +30,7 @@ import { Router } from '@angular/router';
 export class AddTeeTimesComponent implements OnInit {
     scheduleForm: FormGroup;
     loggedInuser: Player;
-    refresh: boolean = false;
+    showTeeTime: boolean = false;
     teeSlots: string[] = [];
     minDate: Date;
     maxDate: Date;
@@ -38,17 +39,22 @@ export class AddTeeTimesComponent implements OnInit {
         private fb: FormBuilder,
         private facadeService: FacadeService,
         public snackBar: MatSnackBar,
-        private router:Router,
-    ) {}
+        private router: Router,
+        private _localStorage: LocalStorageService,
+    ) { }
 
     ngOnInit() {
         this.scheduleForm = this.fb.group({
             allowNineHole: [false, Validators.required],
             BookingDate: ['', Validators.required],
+            teeOnestartTime: ['09:00', Validators.required],
+            teeTenstartTime: ['16:00', Validators.required],
             startTime: ['09:00', Validators.required],
             endTime: ['16:00', Validators.required],
             interval: [5, Validators.required],
+            noOfPlayers: ['4', Validators.required],
             startingHole: ['1', Validators.required],
+
         });
 
         let today: Date = new Date();
@@ -73,10 +79,9 @@ export class AddTeeTimesComponent implements OnInit {
     async createSchedule() {
         // TODO: Use EventEmitter with form value
         try {
-            //console.log(this.scheduleForm.value);
-            this.loggedInuser = JSON.parse(
-                localStorage.getItem(Constants.LOGGED_IN_USER)
-            );
+            console.log(this.scheduleForm.value);
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
             let clubId: string = this.loggedInuser.adminClubId;
 
             let isExist: TeeTime[] =
@@ -110,7 +115,7 @@ export class AddTeeTimesComponent implements OnInit {
                     : '-KpFJ5_ODeRpEQCz9Drd';
 
             this.generateTeeTimes();
-            //console.log(this.teeSlots);
+            console.log(this.teeSlots);
 
             let teeTimeSlots: TeeTimeSlot[] = [];
 
@@ -146,10 +151,9 @@ export class AddTeeTimesComponent implements OnInit {
                 id: UniqueIdGenerator.generate(),
                 clubId: clubId,
                 courseId: courseId,
-                bookingDate: General.parseToDate(
-                    this.scheduleForm.value.BookingDate
-                ),
+                bookingDate: General.parseToDate(this.scheduleForm.value.BookingDate),
                 startTime: this.scheduleForm.value.startTime,
+                noOfPlayers: Number(this.scheduleForm.value.noOfPlayers),
                 endTime: this.scheduleForm.value.endTime,
                 interval: this.scheduleForm.value.interval,
                 teeTimeSlot: teeTimeSlots,
@@ -180,13 +184,13 @@ export class AddTeeTimesComponent implements OnInit {
             this.teeSlots = [];
             let startLimit: Date = new Date(
                 Constants.DEFAULT_DATE +
-                    ' ' +
-                    this.scheduleForm.value.startTime.substr(0, 5)
+                ' ' +
+                this.scheduleForm.value.startTime.substr(0, 5)
             );
             let endLimit: Date = new Date(
                 Constants.DEFAULT_DATE +
-                    ' ' +
-                    this.scheduleForm.value.endTime.substr(0, 5)
+                ' ' +
+                this.scheduleForm.value.endTime.substr(0, 5)
             );
             //console.log(startLimit);
             while (startLimit <= endLimit) {
@@ -203,12 +207,22 @@ export class AddTeeTimesComponent implements OnInit {
                 //console.log(this.scheduleForm.value.interval);
                 //console.log(startLimit);
             }
-        } catch {}
+        } catch { }
     }
 
     public reset() {
         this.scheduleForm.reset();
     }
 
-    public onCancel() {}
+    public onCancel() { }
+
+    public teeChange(event) {
+        console.log(event);
+        if (event.value == 'both') {
+            this.showTeeTime = true;
+        } else {
+            this.showTeeTime = false;
+        }
+
+    }
 }

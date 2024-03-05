@@ -88,6 +88,31 @@ export class FlightsService {
                 );
         });
     }
+    public insertFlightMembers(
+        slotId:string, flightMembersToSave: any,count:any
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertFlightMembers,
+                    variables: {
+                        slotId:slotId,
+                        flightMembersToSave: flightMembersToSave,
+                        count:count
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
 
     public SaveTournamentFlight(
         tournamentId: string,
@@ -303,7 +328,7 @@ export class FlightsService {
     }
     public DeleteFlightMembers(
         flightid: any,
-        flightMembersToRemove: any
+        flightMembersToRemove: any,count=0
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -324,6 +349,8 @@ export class FlightsService {
                                 },
                             ],
                         },
+                        flightId:flightid,
+                        count:count
                     },
                 })
                 .subscribe(

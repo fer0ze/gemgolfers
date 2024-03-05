@@ -257,6 +257,7 @@ export const GetTeeTimeBookingQL = gql`
       endTime
       interval
       allowNineHole
+      noOfPlayers
       slots(order_by: { slotTime: asc }) {
         id
         slotTime

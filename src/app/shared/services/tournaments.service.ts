@@ -1100,7 +1100,7 @@ export class TournamentsService {
             })
         );
     }
-    public addTournament(tmnt: any): Promise<any> {
+    public addTournament(tmnt: any, flightId: string = '', slotId: string = '',count=0): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
@@ -1160,6 +1160,9 @@ export class TournamentsService {
                                 },
                             },
                         ],
+                        flightId: flightId,
+                        slotId: slotId,
+                        count: count,
                     },
                 })
                 .subscribe(
