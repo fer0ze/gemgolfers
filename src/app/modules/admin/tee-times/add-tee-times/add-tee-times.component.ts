@@ -47,10 +47,11 @@ export class AddTeeTimesComponent implements OnInit {
         this.scheduleForm = this.fb.group({
             allowNineHole: [false, Validators.required],
             BookingDate: ['', Validators.required],
-            teeOnestartTime: ['09:00', Validators.required],
-            teeTenstartTime: ['16:00', Validators.required],
-            startTime: ['09:00', Validators.required],
-            endTime: ['16:00', Validators.required],
+            teeBookingTime: ['09:00', Validators.required],
+            teeOneStartTime: ['09:00', Validators.required],
+            teeOneEndTime: ['16:00', Validators.required],
+            teeTenStartTime: ['09:00', Validators.required],
+            teeTenEndTime: ['16:00', Validators.required],
             interval: [5, Validators.required],
             noOfPlayers: ['4', Validators.required],
             startingHole: ['1', Validators.required],
@@ -100,7 +101,6 @@ export class AddTeeTimesComponent implements OnInit {
                         duration: 5000,
                     }
                 );
-
                 return false;
             }
 
@@ -108,9 +108,9 @@ export class AddTeeTimesComponent implements OnInit {
                 this.loggedInuser.membership.length > 0
                     ? this.loggedInuser.membership[0].club
                     : [];
-            //console.log(clubInfo);
+            console.log(clubInfo);
             let courseId: string =
-                clubInfo.length > 0 && clubInfo.courses.length > 0
+                clubInfo?.courses.length > 0
                     ? clubInfo.courses[0].id
                     : '-KpFJ5_ODeRpEQCz9Drd';
 
@@ -120,31 +120,39 @@ export class AddTeeTimesComponent implements OnInit {
             let teeTimeSlots: TeeTimeSlot[] = [];
 
             for (let slot of this.teeSlots) {
+
                 let tee1: any = {
                     id: UniqueIdGenerator.generate(),
-                    slotTime: slot,
+                    slotTime:this.convertToUTCTime(slot),
                     joinedMembers: 0,
                     startingHole:
-                        this.scheduleForm.value.startingHole == 'both'
-                            ? 1
-                            : Number(this.scheduleForm.value.startingHole),
+                        this.scheduleForm.value.startingHole !== 'both'
+                            ? Number(this.scheduleForm.value.startingHole)
+                            : 1,
                     flightId: null,
                 };
-
+                if (this.scheduleForm.value.startingHole == 'both') {
+                    if (slot < this.scheduleForm.value.teeOneEndTime) {
+                        tee1.startingHole = 1;
+                    } else {
+                        tee1.startingHole = 10;
+                    }
+                }
                 teeTimeSlots.push(tee1);
 
-                if (this.scheduleForm.value.startingHole == 'both') {
-                    let tee10: any = {
-                        id: UniqueIdGenerator.generate(),
-                        slotTime: slot,
-                        joinedMembers: 0,
-                        startingHole: 10,
-                        flightId: null,
-                    };
+                // if (this.scheduleForm.value.startingHole == 'both') {
+                //     let tee10: any = {
+                //         id: UniqueIdGenerator.generate(),
+                //         slotTime: slot,
+                //         joinedMembers: 0,
+                //         startingHole: 10,
+                //         flightId: null,
+                //     };
 
-                    teeTimeSlots.push(tee10);
-                }
+                //     teeTimeSlots.push(tee10);
+                // }
             }
+          //  console.log(this.convertToUTC(this.scheduleForm.value.teeBookingTime));
 
             ////console.log(this.scheduleForm);
             const schedule: TeeTime = {
@@ -152,23 +160,23 @@ export class AddTeeTimesComponent implements OnInit {
                 clubId: clubId,
                 courseId: courseId,
                 bookingDate: General.parseToDate(this.scheduleForm.value.BookingDate),
-                startTime: this.scheduleForm.value.startTime,
+                startTime: this.scheduleForm.value.teeOneStartTime,
                 noOfPlayers: Number(this.scheduleForm.value.noOfPlayers),
-                endTime: this.scheduleForm.value.endTime,
+                endTime: this.scheduleForm.value.startingHole == 'both' ? this.scheduleForm.value.teeTenEndTime : this.scheduleForm.value.teeOneEndTime,
                 interval: this.scheduleForm.value.interval,
                 teeTimeSlot: teeTimeSlots,
                 allowNineHole: this.scheduleForm.value.allowNineHole,
+                bookingTime: this.scheduleForm.value.teeBookingTime
             };
 
             //console.log(schedule);
 
-            let response = this.facadeService.AddTeeTimeSchedule(schedule);
+            let response = await this.facadeService.AddTeeTimeSchedule(schedule);
 
             if (response) {
                 this.snackBar.open('Tee Time has been created.', 'x', {
                     duration: 5000,
                 });
-
                 this.reset();
                 this.router.navigate(['/teetimes']);
             }
@@ -182,16 +190,31 @@ export class AddTeeTimesComponent implements OnInit {
     generateTeeTimes() {
         try {
             this.teeSlots = [];
-            let startLimit: Date = new Date(
-                Constants.DEFAULT_DATE +
-                ' ' +
-                this.scheduleForm.value.startTime.substr(0, 5)
-            );
-            let endLimit: Date = new Date(
-                Constants.DEFAULT_DATE +
-                ' ' +
-                this.scheduleForm.value.endTime.substr(0, 5)
-            );
+            let startLimit;
+            let endLimit;
+            if (this.scheduleForm.value.startingHole == '1' || this.scheduleForm.value.startingHole == '10') {
+                startLimit = new Date(
+                    Constants.DEFAULT_DATE +
+                    ' ' +
+                    this.scheduleForm.value.teeOneStartTime.substr(0, 5)
+                );
+                endLimit = new Date(
+                    Constants.DEFAULT_DATE +
+                    ' ' +
+                    this.scheduleForm.value.teeOneEndTime.substr(0, 5)
+                );
+            } else if (this.scheduleForm.value.startingHole == 'both') {
+                startLimit = new Date(
+                    Constants.DEFAULT_DATE +
+                    ' ' +
+                    this.scheduleForm.value.teeOneStartTime.substr(0, 5)
+                );
+                endLimit = new Date(
+                    Constants.DEFAULT_DATE +
+                    ' ' +
+                    this.scheduleForm.value.teeTenEndTime.substr(0, 5)
+                );
+            }
             //console.log(startLimit);
             while (startLimit <= endLimit) {
                 var h = startLimit.getHours();
@@ -207,6 +230,7 @@ export class AddTeeTimesComponent implements OnInit {
                 //console.log(this.scheduleForm.value.interval);
                 //console.log(startLimit);
             }
+
         } catch { }
     }
 
@@ -225,4 +249,36 @@ export class AddTeeTimesComponent implements OnInit {
         }
 
     }
+
+    convertToUTC(timeString) {
+        // Parse the time string
+        const [hours, minutes] = timeString.split(':').map(str => parseInt(str));
+
+        // Create a Date object with today's date and the provided time
+        const date = new Date(General.parseToDate(this.scheduleForm.value.BookingDate));
+        date.setHours(hours);
+        date.setMinutes(minutes);
+
+        // Convert the time to UTC by subtracting the timezone offset
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+        // Return the time in UTC format
+        return date.toISOString();
+    }
+    convertToUTCTime(timeString: string): string {
+        // Parse the time string
+        const [hours, minutes] = timeString.split(':').map(str => parseInt(str));
+    
+        // Create a Date object with today's date and the provided time
+        const date = new Date();
+        date.setUTCHours(hours);
+        date.setUTCMinutes(minutes);
+    
+        // Convert the time to UTC by subtracting the timezone offset
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    
+        // Return the time in UTC format
+        return date.toISOString().substr(11, 5);
+    }
+    
 }

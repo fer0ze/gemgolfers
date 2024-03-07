@@ -9,6 +9,7 @@ export interface TeeTime {
     noOfPlayers: number;
     teeTimeSlot: TeeTimeSlot[];
     allowNineHole: boolean;
+    bookingTime:string;
 }
 
 export interface TeeTimeSlot {

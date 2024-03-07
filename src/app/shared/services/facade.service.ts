@@ -994,6 +994,12 @@ export class FacadeService {
   getSingleDailyRoundAdmin(Date: string) {
     return this.tournamentService.getSingleDailyRoundAdmin(Date);
   }
+  getTeeTimesSlots(clubId: string, Date: string) {
+    return this.tournamentService.getTeeTimesSlots(clubId, Date);
+  }
+  getTeeTimesSlotsAdmin(Date: string) {
+    return this.tournamentService.getTeeTimesSlotsAdmin(Date);
+  }
   getRoundScore(Id: any) {
     return this.tournamentService.getRoundScore(Id);
   }

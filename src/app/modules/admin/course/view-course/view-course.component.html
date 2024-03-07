@@ -87,7 +87,7 @@
                                         <div class="sm:col-span-2">
                                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                                 <mat-label>Country</mat-label>
-                                                <mat-select (selectionChange)="countrySelected($event.value.name)
+                                                <mat-select (selectionChange)="countrySelected($event.value)
                                                     " placeholder="Country Name" formControlName="country">
                                                     <mat-option *ngFor="let country of listCountries"
                                                         [value]="country.name">{{ country.name }}</mat-option>

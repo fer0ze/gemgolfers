@@ -14,17 +14,17 @@ export class TeeTimeService {
   constructor(private apollo: Apollo) { }
 
   public getClubsList(): Promise<any> {
-    return new Promise( resolve => {
-        this.apollo.subscribe({
+    return new Promise(resolve => {
+      this.apollo.subscribe({
         query: Query.GetClubs
-        })
+      })
         .subscribe(({ data }) => {
-            if (!data) {
-              resolve(null);
-            } else {
-              ////console.log(data.club);
-              resolve(data);
-            }
+          if (!data) {
+            resolve(null);
+          } else {
+            ////console.log(data.club);
+            resolve(data);
+          }
         });
     });
   }
@@ -37,36 +37,38 @@ export class TeeTimeService {
 
   findOne(id: string): Observable<any> {
     return this.apollo
-      .query<any>({ query: Query.GetClubByID, variables: {
-        'where': {
-          'id': {
-            '_eq': id
+      .query<any>({
+        query: Query.GetClubByID, variables: {
+          'where': {
+            'id': {
+              '_eq': id
+            }
           }
         }
-    } }).pipe(map(res => res.data));
+      }).pipe(map(res => res.data));
   }
 
-    getClubByID(id:string) : Promise<any> {
-      return new Promise( resolve => {
-          this.apollo.watchQuery<any>({
-          query: Query.GetClubByID,
-          variables: {
-              'where': {
-                'id': {
-                  '_eq': id
-                }
-              }
+  getClubByID(id: string): Promise<any> {
+    return new Promise(resolve => {
+      this.apollo.watchQuery<any>({
+        query: Query.GetClubByID,
+        variables: {
+          'where': {
+            'id': {
+              '_eq': id
+            }
           }
-        }).valueChanges
-          .subscribe(({ data }) => {
-            resolve(data.club);
-          });
-      });
-    }
+        }
+      }).valueChanges
+        .subscribe(({ data }) => {
+          resolve(data.club);
+        });
+    });
+  }
 
-    public getClubTeeTimeBooking(clubId: string): Promise<any> {
-      return new Promise( resolve => {
-        this.apollo.subscribe<any>({
+  public getClubTeeTimeBooking(clubId: string): Promise<any> {
+    return new Promise(resolve => {
+      this.apollo.subscribe<any>({
         query: Query.GetTeeTimeBookingQL,
         variables: {
           'where': {
@@ -75,139 +77,140 @@ export class TeeTimeService {
             }
           }
         }
-        }).subscribe(({ data }) => {
-            resolve(data);
-          });
+      }).subscribe(({ data }) => {
+        resolve(data);
       });
-    }
+    });
+  }
 
-    public isTeeTimeDateExist(clubId: string, selectedDate: Date): Promise<TeeTime[]> {
-      return new Promise( resolve => {
-        this.apollo.subscribe<any>({
+  public isTeeTimeDateExist(clubId: string, selectedDate: Date): Promise<TeeTime[]> {
+    return new Promise(resolve => {
+      this.apollo.subscribe<any>({
         query: Query.GetTeeTimeBookingQL,
         variables: {
           'where': {
             "_and": [
-            {
-              'clubId': {
-                '_eq': clubId
-              }
-            },
-            {
-              'bookingDate': {
-                '_eq': selectedDate
-              }
-          }]
+              {
+                'clubId': {
+                  '_eq': clubId
+                }
+              },
+              {
+                'bookingDate': {
+                  '_eq': selectedDate
+                }
+              }]
           }
         }
-        }).subscribe(({ data }) => {
+      }).subscribe(({ data }) => {
+        resolve(data);
+      });
+    });
+  }
+
+  public AddTeeTimeSchedule(teeTime: TeeTime): Promise<boolean> {
+    return new Promise(resolve => {
+      this.apollo.mutate<any>({
+        mutation: Query.AddTeeTimeQL,
+        variables: {
+          'objects': [{
+            'id': teeTime.id,
+            'clubId': teeTime.clubId,
+            'courseId': teeTime.courseId,
+            'bookingDate': teeTime.bookingDate,
+            'startTime': teeTime.startTime,
+            'endTime': teeTime.endTime,
+            'interval': teeTime.interval,
+            'noOfPlayers': teeTime.noOfPlayers,
+            'allowNineHole': teeTime.allowNineHole,
+            'bookingTime': teeTime.bookingTime,
+            'slots': {
+              'data': teeTime.teeTimeSlot
+            }
+          }]
+        }
+      }).subscribe(({ data }) => {
+        resolve(true);
+      }, (error) => {
+        resolve(false);
+        //console.log('Could not add due to ' + error);
+      });
+
+    });
+  }
+
+
+  updateClub(club: Club): Promise<boolean> {
+    //console.log(club.id);
+    return new Promise(resolve => {
+      this.apollo.mutate<any>({
+        mutation: Query.UpdateMutation,
+        variables: {
+          'where': {
+            'id': {
+              '_eq': club.id
+            }
+          },
+          'set':
+          {
+            'name': club.name,
+            'address': club.address,
+            'email': club.email,
+            'phone': club.phone
+          }
+        }
+      }).subscribe(({ data }) => {
+        resolve(true);
+      }, (error) => {
+        resolve(false);
+        //console.log('Could update add due to ' + error);
+      });
+    });
+  }
+
+  deleteClub(id: string): Promise<boolean> {
+    //console.log(id);
+    return new Promise(resolve => {
+      this.apollo.mutate<any>({
+        mutation: Query.DeleteClub,
+        variables: {
+          'where': {
+            'id': {
+              '_eq': id
+            }
+          }
+        }
+      }).subscribe(({ data }) => {
+        //console.log(data);
+        resolve(true);
+      }, (error) => {
+        resolve(false);
+        //console.log('Could delete add due to ' + error);
+      });
+    });
+  }
+
+  public getScheduleList(clubId: string): Promise<any> {
+    return new Promise(resolve => {
+      this.apollo.subscribe({
+        query: Query.GetSchedule,
+        variables: {
+          'where': {
+            'clubId': {
+              '_eq': clubId
+            }
+          }
+        }
+      })
+        .subscribe(({ data }) => {
+          if (!data) {
+            resolve(null);
+          } else {
             resolve(data);
-          });
-      });
-    }
-
-    public AddTeeTimeSchedule(teeTime:TeeTime): Promise<boolean> {
-      return new Promise( resolve => {
-          this.apollo.mutate<any>({
-          mutation: Query.AddTeeTimeQL,
-          variables: {
-            'objects': [{
-              'id': teeTime.id,
-              'clubId': teeTime.clubId,
-              'courseId': teeTime.courseId,
-              'bookingDate': teeTime.bookingDate,
-              'startTime': teeTime.startTime,
-              'endTime': teeTime.endTime,
-              'interval': teeTime.interval,
-              'noOfPlayers': teeTime.noOfPlayers,
-              'allowNineHole': teeTime.allowNineHole,
-              'slots': { 
-                'data': teeTime.teeTimeSlot
-              }
-            }]
           }
-          }).subscribe(({ data }) => {
-            resolve(true);
-          }, (error) => {
-            resolve(false);
-            //console.log('Could not add due to ' + error);
-          });
-        
         });
-      }
-
-    
-    updateClub(club:Club): Promise<boolean> {
-      //console.log(club.id);
-      return new Promise( resolve => {
-        this.apollo.mutate<any>({
-          mutation: Query.UpdateMutation,
-          variables: {
-            'where': {
-              'id': {
-                '_eq': club.id
-              }
-            },
-            'set':
-            {
-              'name': club.name,
-              'address': club.address,
-              'email': club.email,
-              'phone': club.phone
-            }
-          }
-        }).subscribe(({ data }) => {
-          resolve(true);
-        }, (error) => {
-          resolve(false);
-          //console.log('Could update add due to ' + error);
-        });
-      });
-    }
-
-    deleteClub(id:string) : Promise<boolean> {
-      //console.log(id);
-      return new Promise( resolve => {
-        this.apollo.mutate<any>({
-          mutation: Query.DeleteClub,
-          variables: {
-            'where': {
-              'id': {
-                '_eq': id
-              }
-            }
-          }
-        }).subscribe(({ data }) => {
-          //console.log(data);
-          resolve(true);
-        }, (error) => {
-          resolve(false);
-          //console.log('Could delete add due to ' + error);
-        });
-      });
-    }
-
-    public getScheduleList(clubId: string): Promise<any> {
-      return new Promise( resolve => {
-          this.apollo.subscribe({
-          query: Query.GetSchedule,
-          variables: {
-            'where': {
-              'clubId': {
-                '_eq': clubId
-              }
-            }
-          }
-          })
-          .subscribe(({ data }) => {
-              if (!data) {
-                resolve(null);
-              } else {
-                resolve(data);
-              }
-          });
-      });
-    }
+    });
+  }
 
   /*
   public getClubsList(): any {

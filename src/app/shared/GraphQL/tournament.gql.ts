@@ -1598,7 +1598,6 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
         TournamentsQL: tournament(
             where: {
                 clubId: { _eq: $clubId }
-                singleRound: { _eq: true }
                 startDate: { _eq: $toDate }
             }
         ) {
@@ -1662,6 +1661,136 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
     ${HoleQL}
     ${TournamentRoleManagerQL}
     ${PlayerHandicapQL}
+`;
+export const getTeeTimesSlots = gql`
+    query ClubSingleRoundFlightsQuery($clubId: String!, $toDate: date!) {
+        TournamentsQL: tee_time_booking(
+            where: { clubId: { _eq: $clubId }, bookingDate: { _eq: $toDate } }
+        ) {
+            id
+            bookingDate
+            noOfPlayers
+            slots {
+                id
+                bookingId
+                flightId
+                joinedMembers
+startingHole
+slotTime
+                FlightsQL: flight {
+                    id
+                    courseId
+                    courseHoleSets
+                    courseHoleSetsInverted
+                    tournamentId
+                    date
+                    ended
+                    tee
+                    categoryRound
+                    tee_id
+                    time
+                    flightNo
+                    MembersQL: members {
+                        flightId
+                        playerId
+                        attendance
+                        guest
+                        playingTee
+                        playingHandicap
+                        playingHandicapWhs
+                        undoHandicap
+                        panelty
+                        PlayerQL: player {
+                            id
+                            firstName
+                            lastName
+                            handicap
+                            membershipNumber
+                            picture
+                            email
+                        }
+                        ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
+                            ...ScoreQL
+                        }
+                    }
+                    CourseQL: course {
+                        ...CourseQL
+                        HolesQL: holes {
+                            ...HoleQL
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${ScoreQL}
+    ${CourseQL}
+    ${HoleQL}
+`;
+export const getTeeTimesSlotsAdmin = gql`
+    query ClubSingleRoundFlightsQuery($clubId: String!, $toDate: date!) {
+        TournamentsQL: tee_time_booking(
+            where: { clubId: { _eq: $clubId }, bookingDate: { _eq: $toDate } }
+        ) {
+            id
+            bookingDate
+            noOfPlayers
+            slots {
+                id
+                bookingId
+                flightId
+                joinedMembers
+                startingHole
+                slotTime
+                FlightsQL: flight {
+                    id
+                    courseId
+                    courseHoleSets
+                    courseHoleSetsInverted
+                    tournamentId
+                    date
+                    ended
+                    tee
+                    categoryRound
+                    tee_id
+                    time
+                    flightNo
+                    MembersQL: members {
+                        flightId
+                        playerId
+                        attendance
+                        guest
+                        playingTee
+                        playingHandicap
+                        playingHandicapWhs
+                        undoHandicap
+                        panelty
+                        PlayerQL: player {
+                            id
+                            firstName
+                            lastName
+                            handicap
+                            membershipNumber
+                            picture
+                            email
+                        }
+                        ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
+                            ...ScoreQL
+                        }
+                    }
+                    CourseQL: course {
+                        ...CourseQL
+                        HolesQL: holes {
+                            ...HoleQL
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${ScoreQL}
+    ${CourseQL}
+    ${HoleQL}
 `;
 export const ClubSingleRoundFlightsQueryAdminQLA = gql`
     query ClubSingleRoundFlightsQuery($toDate: date!) {

@@ -141,15 +141,19 @@ export class TeeTimesComponent implements OnInit {
     }
     convertToAMPMFormat(timeString: string): string {
         // Split the time string to extract the hour and minute parts
-        const timeParts = timeString.split(':')[0]; // Extracts "09"
-        // Convert the hour part to a number
-        const hour = parseInt(timeParts, 10);
-        // Determine whether it's AM or PM
-        const period = hour >= 12 ? 'PM' : 'AM';
-        // Convert the hour from 24-hour to 12-hour format
-        const displayHour = hour % 12 || 12; // Convert 0 to 12 for 12 AM
-        // Construct the formatted time string
-        return displayHour + ' ' + period;
+        if (timeString) {
+            const timeParts = timeString.split(':')[0]; // Extracts "09"
+            // Convert the hour part to a number
+            const hour = parseInt(timeParts, 10);
+            // Determine whether it's AM or PM
+            const period = hour >= 12 ? 'PM' : 'AM';
+            // Convert the hour from 24-hour to 12-hour format
+            const displayHour = hour % 12 || 12; // Convert 0 to 12 for 12 AM
+            // Construct the formatted time string
+            return displayHour + ' ' + period;
+        } else {
+            return '-';
+        }
     }
 
 
@@ -166,5 +170,9 @@ export class TeeTimesComponent implements OnInit {
             console.log('The dialog was closed');
         });
     }
+
+    redirectToView = (date: string) => {
+        this.location.navigate(['/teetimes/view-teetimes/' + date]);
+    };
 
 }

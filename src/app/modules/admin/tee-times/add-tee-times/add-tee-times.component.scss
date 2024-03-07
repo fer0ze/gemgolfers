@@ -1,3 +1,17 @@
 .checkbox-margin {
-    margin: 0 5px!important;
+    margin: 0 5px !important;
+}
+
+::ng-deep .zero-padding .mat-form-field-infix {
+    position: static;
+    display: flex;
+    align-items: center;
+    width: 88px;
+    padding: 0;
+    border: 0;
+
+    .mat-input-element {
+        padding: 12px 0px 0px  0px !important;
+        margin-top: 0;
+    }
 }

@@ -1,0 +1,201 @@
+
+.icon-styl{
+  background: red;
+    color: white;
+    padding: 8px;
+    margin: 3px;
+    border-radius: 22px;
+    mat-icon{
+      padding-top: 14px;
+      /* padding: 34px; */
+      color: white
+    }
+}
+table {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 500px;
+  border-spacing: unset;
+  border-collapse: collapse;
+  border-radius: 0px;
+  margin: 0px;
+
+  tr.topheader {
+    background-color: #1e587a;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    color: #ffffff;
+  }
+
+  tr.topheader th {
+    padding: 5px;
+    font-weight: normal;
+  }
+
+  tr.subhead {
+    font-family: monospace;
+    background-color: #1e587a;
+    color: #ffffff;
+  }
+
+  tr.subhead th {
+    border: solid 1px #fff;
+    font-weight: bold;
+    padding: 5px;
+  }
+
+  tr.scorebody {
+    font-family: monospace;
+    color: #585858;
+  }
+
+  tr.scorebody td {
+    border: solid 1px #e8e8e7;
+    font-weight: bold;
+    padding: 5px;
+    text-align: center;
+    background-color: #fff !important;
+  }
+
+  tr.scorebody td .title {
+    text-align: left;
+  }
+
+  tr.scorebody td input.empty {
+    background-color: #f7f74f !important;
+    color: #fff;
+    width: 28px;
+  }
+
+  tr.scorebody td input.warn {
+    background-color: #ff6464 !important;
+    color: #fff;
+
+    width: 28px;
+  }
+
+  tr.scorebody td input {
+    border: none;
+    text-align: center;
+    width: 30px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  td .mat-icon {
+    cursor: pointer;
+    font-size: 22px;
+  }
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+  margin-bottom: 30px;
+  border: 1px solid #deebfd;
+  box-shadow: -8px 12px 18px 0 #dadee8;
+  padding: 20px;
+}
+
+.class_name_round {
+  display: inline-block;
+  text-align: center;
+  width: 38px;
+  height: 38px;
+  border: 2px solid #00397e;
+  border-radius: 50%;
+  padding-top: 5px;
+}
+
+// table th {
+//     padding: 0 10px;
+//     vertical-align: middle;
+//     background-color: #f5f5f5;
+//     color: #666;
+//     font-weight: 500;
+//     border: none;
+// }
+
+.paddingClass {
+  padding-bottom: 20px;
+}
+
+.ngxTableHeader {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  border-color: #e6e9ed;
+  background-color: #ebebee;
+  min-width: 800px;
+  height: 70px;
+}
+
+.ngxTableHeader .header-buttons {
+  position: absolute;
+  right: 30px;
+  list-style: none;
+  margin-bottom: 0px;
+  cursor: pointer;
+}
+
+.buttonClass {
+  background-color: #3f51b5;
+  border-radius: 30px;
+  color: aliceblue;
+}
+
+.mat-mini-fab .mat-button-wrapper {
+  padding: 1px 0;
+  display: inline-block;
+  line-height: 24px;
+}
+
+.buttonClass[_ngcontent-c10] {
+  background-color: #3f51b5;
+  border-radius: 30px;
+  color: aliceblue;
+  cursor: pointer;
+}
+
+.mat-class {
+  padding-bottom: 0px;
+  padding-top: 5px;
+}
+
+.mat-class-table {
+  margin-top: 60px;
+}
+
+.field-background-color {
+  background-color: #4e4c4b;
+}
+
+
+.th-color {
+  color: #ebeaef;
+}
+
+.tooltipStyle {
+  font-size: 16px;
+  background: #b71c1c;
+}
+
+.scoreCardBox {
+  background: #ffffff !important;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.trues {
+  background-color: #1e587a !important;
+}
+
+.falses {
+  background: #ffffff !important;
+}

@@ -541,6 +541,43 @@ export class TournamentsService {
                 });
         });
     }
+    public getTeeTimesSlots(
+        clubId: string,
+
+        Date: string
+    ): Promise<any> {
+        //console.log(clubId);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getTeeTimesSlots,
+                    variables: {
+                        clubId: clubId,
+
+                        toDate: Date,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data);
+                    resolve(data);
+                });
+        });
+    }
+    public getTeeTimesSlotsAdmin(Date: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getTeeTimesSlotsAdmin,
+                    variables: {
+                        toDate: Date,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    //console.log(data);
+                    resolve(data);
+                });
+        });
+    }
     public getRoundScore(Id: any): Promise<any> {
         //console.log(Id);
         return new Promise((resolve) => {

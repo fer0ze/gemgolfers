@@ -36,11 +36,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/dialog-player-list.component';
+import { ViewTeeTimeComponent } from './view-tee-times/view-tee-timescomponent';
 
 
 
 @NgModule({
-  declarations: [TeeTimesComponent, AddTeeTimesComponent, DialogTeeTimeSlotComponent,DialogPlayerListComponent],
+  declarations: [TeeTimesComponent, AddTeeTimesComponent, DialogTeeTimeSlotComponent,DialogPlayerListComponent,ViewTeeTimeComponent],
   imports: [
     CommonModule,
     TeeTimesRoutingModule,
