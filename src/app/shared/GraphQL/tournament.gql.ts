@@ -271,8 +271,11 @@ export const LeaderboardSubscriptions = gql`
     ${TournamentMemberCategoryQL}
 `;
 export const getTourGuides = gql`
-    query getGuides($tourId:String!) {
-        tour_guide(where: { tourId: { _eq: $tourId } } ,order_by: { date: asc }) {
+    query getGuides($tourId: String!) {
+        tour_guide(
+            where: { tourId: { _eq: $tourId } }
+            order_by: { date: asc }
+        ) {
             id
             tourId
             date
@@ -517,11 +520,9 @@ export const GetTournamnetListForCompleted = gql`
 `;
 export const getTournamentsListByTourForCompleted = gql`
     query PostsGetQuery($tourId: String!) {
-        CompletedRecently: tour(
-            where: { id: { _eq: $tourId } }
-        ) {
+        CompletedRecently: tour(where: { id: { _eq: $tourId } }) {
             id
-            tournaments{
+            tournaments {
                 id
                 title
                 startDate
@@ -833,17 +834,17 @@ export const GetTournamentByID = gql`
                 tournamentId
                 name
                 color
-                membersQL{
+                membersQL {
                     teamId
                     playerId
-                   player{
-                    id
-                    firstName
-                    lastName
-                    handicap
-                    playerCategory
-                    membershipNumber
-                   }
+                    player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        playerCategory
+                        membershipNumber
+                    }
                 }
             }
             opponents {
@@ -870,7 +871,12 @@ export const GetFlightSettings = gql`
 `;
 
 export const AddMutation = gql`
-    mutation insert_tournament($objects: [tournament_insert_input!]!,$flightId:String!,$slotId: String!,$count:Int!) {
+    mutation insert_tournament(
+        $objects: [tournament_insert_input!]!
+        $flightId: String!
+        $slotId: String!
+        $count: Int!
+    ) {
         insert_tournament(objects: $objects) {
             returning {
                 id
@@ -886,10 +892,10 @@ export const AddMutation = gql`
             }
         }
         update_tee_time_booking_slot(
-            where:{ id:{ _eq :$slotId }}
-            _set:{ flightId: $flightId,joinedMembers:$count}
-        ){
-            returning{
+            where: { id: { _eq: $slotId } }
+            _set: { flightId: $flightId, joinedMembers: $count }
+        ) {
+            returning {
                 id
             }
         }
@@ -1048,7 +1054,7 @@ export const SavePlayerHandicapsMutation = gql`
     ${PlayerQL}
     ${ScoreQL}
     ${PlayerHandicapQL}
-    ${PlayerHandicapLogQL}  
+    ${PlayerHandicapLogQL}
 `;
 
 export const UndoTournamentRoundMutation = gql`
@@ -1173,9 +1179,7 @@ export const insertTournamentMemberQL = gql`
     }
 `;
 export const insertTourGuideQL = gql`
-    mutation insertTournamentMemberQL(
-        $tourGuide: [tour_guide_insert_input!]!
-    ) {
+    mutation insertTournamentMemberQL($tourGuide: [tour_guide_insert_input!]!) {
         insert_tour_guide(
             objects: $tourGuide
             on_conflict: {
@@ -1192,17 +1196,9 @@ export const insertTournamentTeamQL = gql`
         $teamsToSave: [tournament_team_insert_input!]!
         $teamsMembersToRemove: [String!]!
     ) {
-
-        delete_team_member(
-            where: {
-                teamId:{
-                    _in:$teamsMembersToRemove
-                }
-            }
-        ) {
+        delete_team_member(where: { teamId: { _in: $teamsMembersToRemove } }) {
             AffectedRowsQL: affected_rows
         }
-
 
         insert_tournament_team(
             objects: $teamsToSave
@@ -1213,7 +1209,6 @@ export const insertTournamentTeamQL = gql`
         ) {
             AffectedRowsQL: affected_rows
         }
-        
     }
 `;
 export const insertTournamentMemberStatusQL = gql`
@@ -1596,10 +1591,7 @@ export const ClubSingleRoundFlightsQueryQL = gql`
 export const ClubSingleRoundFlightsQueryQLA = gql`
     query ClubSingleRoundFlightsQuery($clubId: String!, $toDate: date!) {
         TournamentsQL: tournament(
-            where: {
-                clubId: { _eq: $clubId }
-                startDate: { _eq: $toDate }
-            }
+            where: { clubId: { _eq: $clubId }, startDate: { _eq: $toDate } }
         ) {
             id
             noOfRounds
@@ -1670,13 +1662,13 @@ export const getTeeTimesSlots = gql`
             id
             bookingDate
             noOfPlayers
-            slots {
+            slots(order_by: {slotTime:asc }) {
                 id
                 bookingId
                 flightId
                 joinedMembers
-startingHole
-slotTime
+                startingHole
+                slotTime
                 FlightsQL: flight {
                     id
                     courseId
@@ -1896,12 +1888,25 @@ export const RoundScoreQLA = gql`
 `;
 export const getPlayerScorebyIDQLA = gql`
     query ClubSingleRoundFlightsQuery($id: String!) {
-        score(where: {_and: [{playerId: {_eq: $id}},{updatedAt: {_gte: "2023-09-10T00:00:00Z", _lt: "2023-09-11T00:00:00Z"}},,{hole: {courseId: {_eq: "-Nd_BBNwmiEvFbyR-Qtz"}}}]}) {
+        score(
+            where: {
+                _and: [
+                    { playerId: { _eq: $id } }
+                    {
+                        updatedAt: {
+                            _gte: "2023-09-10T00:00:00Z"
+                            _lt: "2023-09-11T00:00:00Z"
+                        }
+                    }
+                    { hole: { courseId: { _eq: "-Nd_BBNwmiEvFbyR-Qtz" } } }
+                ]
+            }
+        ) {
             hole {
-              holeNo
+                holeNo
             }
             grossScore
-          }
+        }
     }
 `;
 export const updateTournamentFlightSettings = gql`
@@ -2239,30 +2244,27 @@ export const getallDashboard = gql`
     }
 `;
 export const getPlayer = gql`
-  query geteverything(
-    $fromDate: timestamptz!
-    $toDate: timestamptz!
-  ) { 
-    player(
-      where: {
-        _and: [
-          { createdAt: { _lte: $toDate } }
-          { createdAt: { _gt: $fromDate } }
-        ]
+    query geteverything($fromDate: timestamptz!, $toDate: timestamptz!) {
+        player(
+            where: {
+                _and: [
+                    { createdAt: { _lte: $toDate } }
+                    { createdAt: { _gt: $fromDate } }
+                ]
+            }
+            order_by: { createdAt: desc }
+        ) {
+            id
+            createdAt
+            firstName
+            lastName
+            playerCategory
+            handicap
+            handicapWhsIndex
+            phone
+            email
+        }
     }
-    order_by: { createdAt: desc }
-    ) {
-      id
-      createdAt
-      firstName
-      lastName
-      playerCategory
-      handicap
-      handicapWhsIndex
-      phone
-      email
-    }
-  }
 `;
 
 export const getTourDashboard = gql`

@@ -600,12 +600,12 @@ export class ViewTeeTimeComponent implements OnInit {
                 }
                 members.push(mem)
             }
-            // if (this.dataSource) {
-            //     this.dataSource.data = [...this.dataSource.data, ...members];
-            // } else {
-            //     this.dataSource = new MatTableDataSource(members);
-            // }
-            // this.dataSource._updateChangeSubscription();
+            if (item.members) {
+                item.members.data = [...item.members.data, ...members];
+            } else {
+                item.members = new MatTableDataSource(members);
+            }
+            item.members._updateChangeSubscription();
         }
     }
 
