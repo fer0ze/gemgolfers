@@ -1720,9 +1720,9 @@ export const getTeeTimesSlots = gql`
     ${HoleQL}
 `;
 export const getTeeTimesSlotsAdmin = gql`
-    query ClubSingleRoundFlightsQuery($clubId: String!, $toDate: date!) {
+    query ClubSingleRoundFlightsQuery( $toDate: date!) {
         TournamentsQL: tee_time_booking(
-            where: { clubId: { _eq: $clubId }, bookingDate: { _eq: $toDate } }
+            where: { bookingDate: { _eq: $toDate } }
         ) {
             id
             bookingDate

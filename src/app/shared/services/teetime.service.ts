@@ -82,6 +82,15 @@ export class TeeTimeService {
       });
     });
   }
+  public getClubTeeTimeBookingForSuperAdmin(): Promise<any> {
+    return new Promise(resolve => {
+      this.apollo.subscribe<any>({
+        query: Query.GetTeeTimeBookingSuperAdminQL,
+      }).subscribe(({ data }) => {
+        resolve(data);
+      });
+    });
+  }
 
   public isTeeTimeDateExist(clubId: string, selectedDate: Date): Promise<TeeTime[]> {
     return new Promise(resolve => {

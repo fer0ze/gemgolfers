@@ -905,7 +905,11 @@ export class FacadeService {
   }
 
   getClubTeeTimeBooking(clubId: string) {
-    return this.TeeTimeService.getClubTeeTimeBooking(clubId);
+    if(clubId){
+      return this.TeeTimeService.getClubTeeTimeBooking(clubId);
+    }else{
+      return this.TeeTimeService.getClubTeeTimeBookingForSuperAdmin();
+    }
   }
 
   getPlayerWHS(playerId: string) {

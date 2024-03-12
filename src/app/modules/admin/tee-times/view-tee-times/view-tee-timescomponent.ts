@@ -419,29 +419,43 @@ export class ViewTeeTimeComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result) {
-                for (var index in result) {
-                    let member: any = {
-                        playerId: result[index].id,
-                        attendance: false,
-                    };
-                    this.flightMembers.push(member);
-                    let playerTee = result[index].playerCategory;
-                    if (playerTee == 'Senior Amateurs') {
-                        playerTee = 'Seniors';
+                let membersCount = Object.keys(result).length;
+                let flag: boolean = this.checkMembersCount(membersCount, item?.noOfPlayers);
+                if (flag) {
+                    for (var index in result) {
+                        let member: any = {
+                            playerId: result[index].id,
+                            attendance: false,
+                        };
+                        this.flightMembers.push(member);
+                        let playerTee = result[index].playerCategory;
+                        if (playerTee == 'Senior Amateurs') {
+                            playerTee = 'Seniors';
+                        }
+                        result[index]['playingTee'] = playerTee.toUpperCase();
+                        let selectedData = {
+                            value: result[index]['playingTee'],
+                            text: result[index]['playingTee'],
+                        };
+                        this.playerTees.set(result[index].id, selectedData);
                     }
-                    result[index]['playingTee'] = playerTee.toUpperCase();
-                    let selectedData = {
-                        value: result[index]['playingTee'],
-                        text: result[index]['playingTee'],
-                    };
-                    this.playerTees.set(result[index].id, selectedData);
-                }
-                if (!item.flightId) {
-                    this.createTournament(item, result);
+                    if (!item.flightId) {
+                        this.createTournament(item, result);
+                    } else {
+                        this.insertFlightMember(item, this.flightMembers, result);
+                    }
                 } else {
-                    this.insertFlightMember(item, this.flightMembers, result);
-                }
+                    this.snackBar.open(
+                        "Incorrect number of members selected. Please choose the correct count."
+                        ,
+                        'x',
+                        {
+                            duration: 5000,
+                        }
+                    );
 
+                    return;
+                }
             }
             console.log('The dialog was closed');
         });
@@ -692,6 +706,17 @@ export class ViewTeeTimeComponent implements OnInit {
                 }
             }
         })
+    }
+
+    checkMembersCount(count, noOfPlayers): boolean {
+        if (noOfPlayers == 2 && (count < 2 || count > 4)) {
+            return false;
+        } else if (noOfPlayers == 3 && (count < 3 || count > 4)) {
+            return false;
+        } else if (noOfPlayers == 4 && count !== 4) {
+            return false;
+        }
+        return true;
     }
 
 }

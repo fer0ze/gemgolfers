@@ -250,27 +250,53 @@ export const GetTeeTimeBookingQL = gql`
   query GetTeeTimeBookingQL($where: tee_time_booking_bool_exp!) {
     tee_time_booking(where: $where, order_by: { bookingDate: desc }) {
       id
-      clubId
-      courseId
       bookingDate
       startTime
       endTime
+      bookingTime
       interval
-      allowNineHole
       noOfPlayers
-      slots(order_by: { slotTime: asc }) {
+      club{
+        id 
+        name
+      }
+      course{
         id
-        slotTime
-        joinedMembers
-        flightId
-        startingHole
-        flight {
-          ...FlightManagerQL
+        name
+      }
+      slots_aggregate{
+        aggregate {
+          count
         }
       }
     }
   }
-  ${FlightManagerQL}
+`;
+export const GetTeeTimeBookingSuperAdminQL = gql`
+  query GetTeeTimeBookingSuperAdminQL {
+    tee_time_booking( order_by: { bookingDate: desc }) {
+      id
+      bookingDate
+      startTime
+      endTime
+      interval
+      bookingTime
+      noOfPlayers
+      club{
+        id 
+        name
+      }
+      course{
+        id
+        name
+      }
+      slots_aggregate{
+        aggregate {
+          count
+        }
+      }
+    }
+  }
 `;
 
 export const AddTeeTimeQL = gql`

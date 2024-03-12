@@ -32,6 +32,9 @@ export class TeeTimesComponent implements OnInit {
     displayedColumns = [
         'id',
         'bookingDate',
+        'bookingTime',
+        'club',
+        'course',
         'startTime',
         'endTime',
         'interval',
@@ -72,26 +75,19 @@ export class TeeTimesComponent implements OnInit {
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.teeTimes = [];
-
-        of(this.teeTimes)
-            .pipe()
-            .subscribe(
-                async (data) => {
-                    let dataPlayers =
-                        await this.facadeService.getClubTeeTimeBooking(
-                            this.loggedInuser.adminClubId
-                        );
-                    this.teeTimes = dataPlayers.tee_time_booking;
-                    this.isLoading = false;
-
-                    //console.log(this.teeTimes);
-
-                    this.dataSource = new MatTableDataSource(this.teeTimes);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                },
-                (error) => (this.isLoading = false)
+        let dataPlayers =
+            await this.facadeService.getClubTeeTimeBooking(
+                this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null
             );
+        this.teeTimes = dataPlayers.tee_time_booking;
+        this.isLoading = false;
+
+        console.log(this.teeTimes);
+
+        this.dataSource = new MatTableDataSource(this.teeTimes);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
 
         //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
     }

@@ -80,8 +80,57 @@
                                 <mat-icon matSuffix>golf_course</mat-icon>
                             </mat-form-field>
                         </div>
-                        <div class="sm:col-span-2"></div>
-                        
+                        <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Participants:</mat-label>
+                                <mat-select placeholder="Players" formControlName="allowGuest">
+                                    <mat-option value="0">Club Members</mat-option>
+                                    <mat-option value="1">Club Members and Guests</mat-option>
+                                </mat-select>
+                                <mat-icon matSuffix>golf_course</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Club</mat-label>
+                                <input type="text" matInput formControlName="club" [matAutocomplete]="auto1"
+                                    [readonly]="hideClubs" placeholder="Club" />
+                                <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete"
+                                    [displayWith]="displayFn">
+                                    <mat-option *ngFor="
+                                                    let option of filteredClubOptions
+                                                        | async
+                                                " [value]="option">
+                                        {{ option.name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-icon matSuffix>golf_course</mat-icon>
+                                <mat-error>
+                                    Please select a club from list.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Course</mat-label>
+                                <input type="text" matInput formControlName="courseName" [matAutocomplete]="auto"
+                                    [readonly]="hideClubs" placeholder="Course" />
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                    [displayWith]="displayCourseFn">
+                                    <mat-option *ngFor="
+                                                    let option of filteredCourseOptions
+                                                        | async
+                                                " [value]="option">
+                                        {{ option.name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-icon matSuffix>golf_course</mat-icon>
+                                <mat-error>
+                                    Please select a course from list.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Starting Tee Box:</mat-label>
@@ -95,6 +144,8 @@
                             </mat-form-field>
                         </div>
 
+
+
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Internal (Minutes)</mat-label>
@@ -107,7 +158,7 @@
                                 <mat-label>Tee 1 Start Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="teeOneStartTime" />
                                 <mat-error>The input is required.</mat-error>
-                                
+
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
@@ -117,7 +168,7 @@
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
-                        
+
                         <div *ngIf="showTeeTime" class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                 <mat-label>Tee 10 Start Time:</mat-label>
