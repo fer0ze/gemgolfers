@@ -184,7 +184,7 @@
                                 <!-- Course launch button -->
                                 <div
                                     class="flex justify-end items-center px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button  mat-flat-button
+                                    <button *ngIf="event.joinedMembers < 4" mat-flat-button
                                         [color]="'primary'" (click)="openAddPlayersDialog(event)">
                                         <mat-icon svgIcon="heroicons_outline:plus-user"></mat-icon>
                                         <span class="ml-2 mr-1"> Add</span>

@@ -543,7 +543,7 @@ export class ViewTeeTimeComponent implements OnInit {
             date: this.routeDate,
             time: item.slotTime,
             ended: false,
-            courseHoleSetsInverted: true,
+            courseHoleSetsInverted: false,
             members: {
                 data: roundMembers,
             },

@@ -1657,11 +1657,12 @@ export const ClubSingleRoundFlightsQueryQLA = gql`
 export const getTeeTimesSlots = gql`
     query ClubSingleRoundFlightsQuery($clubId: String!, $toDate: date!) {
         TournamentsQL: tee_time_booking(
-            where: { clubId: { _eq: $clubId }, bookingDate: { _eq: $toDate } }
+            where: { clubId: { _eq: $clubId }, teeDate: { _eq: $toDate } }
         ) {
             id
             bookingDate
             noOfPlayers
+            teeDate
             slots(order_by: {slotTime:asc }) {
                 id
                 bookingId
@@ -1722,11 +1723,12 @@ export const getTeeTimesSlots = gql`
 export const getTeeTimesSlotsAdmin = gql`
     query ClubSingleRoundFlightsQuery( $toDate: date!) {
         TournamentsQL: tee_time_booking(
-            where: { bookingDate: { _eq: $toDate } }
+            where: { teeDate: { _eq: $toDate } }
         ) {
             id
             bookingDate
             noOfPlayers
+            teeDate
             slots {
                 id
                 bookingId

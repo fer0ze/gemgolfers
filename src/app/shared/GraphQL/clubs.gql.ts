@@ -255,6 +255,7 @@ export const GetTeeTimeBookingQL = gql`
       endTime
       bookingTime
       interval
+      teeDate
       noOfPlayers
       club{
         id 
@@ -281,6 +282,7 @@ export const GetTeeTimeBookingSuperAdminQL = gql`
       endTime
       interval
       bookingTime
+      teeDate
       noOfPlayers
       club{
         id 
