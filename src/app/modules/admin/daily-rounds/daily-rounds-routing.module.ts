@@ -4,7 +4,6 @@ import { AddDailyRoundComponent } from "./add-daily-round/add-daily-round.compon
 import { DailyRoundsComponent } from "./daily-rounds.component";
 // import { AddPlayerDailyScoreComponent } from "./add-player-daily-score/add-player-daily-score.component";
 import { DatePipe } from "@angular/common";
-import { DirtyCheckGuard } from "../../../shared/guard/dirty-check.guard";
 import { ViewDailyRoundComponent } from "./view-daily-round/view-daily-round.component";
 
 const routes: Routes = [

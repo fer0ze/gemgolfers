@@ -47,8 +47,7 @@ import { DialogPlayingCategoryComponent } from '../dialogs/dialog-playing-catego
 import { DialogCourseDetailsComponent } from '../dialogs/dialog-course-details/dialog-course-details.component';
 import { DialogCloseRoundComponent } from '../dialogs/dialog-close-round/dialog-close-round.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { WhiteSectionModule } from 'app/shared/modules/white-section/white-section.module';
-import { TopPlayerModule } from 'app/shared/modules/top-player-section/top-player.module';
+// import { TopPlayerModule } from 'app/shared/modules/top-player-section/top-player.module';
 import { BlockWhiteSectionComponent } from 'app/shared/modules/block-white-section/block-white-section.component';
 import { BlockWhiteSectionModule } from 'app/shared/modules/block-white-section/block-white-section.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -93,8 +92,6 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         MatButtonToggleModule,
         MatPaginatorModule,
         MatInputModule,
-        WhiteSectionModule,
-        TopPlayerModule,
         MatButtonModule,
         BlockWhiteSectionModule,
         MatIconModule,

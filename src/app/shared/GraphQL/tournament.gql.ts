@@ -1432,6 +1432,94 @@ export const getDailyCardSingle = gql`
         }
     }
 `;
+export const getDailyTeeTimeReportClub = gql`
+    query getDailyTeeTimeReportClub(
+        $clubId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        TournamentsQL:tee_time_booking(
+            where: {
+                clubId: { _eq: $clubId }
+                _and: [
+                    { teeDate: { _gte: $toDate } }
+                    { teeDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            teeDate
+            slots {
+                id
+                FlightsQL: flight {
+                    id
+                    ended
+                    courseHoleSets
+                    courseHoleSetsInverted
+                    MembersQL: members {
+                        flightId
+                        playerId
+                        ScoresQL: scores {
+                            flightId
+                        }
+                        PlayerQL: player {
+                            id
+                            playerCategory
+                            firstName
+                            lastName
+                            handicap
+                            membershipNumber
+                            email
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+export const getDailyTeeTimeReportAdmin = gql`
+    query getDailyTeeTimeReportClub(
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        TournamentsQL:tee_time_booking(
+            where: {
+                _and: [
+                    { teeDate: { _gte: $toDate } }
+                    { teeDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            teeDate
+            slots {
+                id
+                FlightsQL: flight {
+                    id
+                    ended
+                    courseHoleSets
+                    courseHoleSetsInverted
+                    MembersQL: members {
+                        flightId
+                        playerId
+                        ScoresQL: scores {
+                            flightId
+                        }
+                        PlayerQL: player {
+                            id
+                            playerCategory
+                            firstName
+                            lastName
+                            handicap
+                            membershipNumber
+                            email
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
 export const getDailyCardSingleAdmin = gql`
     query ClubSingleRoundFlightsQuery($fromDate: date!, $toDate: date!) {
         TournamentsQL: tournament(
@@ -1663,7 +1751,7 @@ export const getTeeTimesSlots = gql`
             bookingDate
             noOfPlayers
             teeDate
-            slots(order_by: {slotTime:asc }) {
+            slots(order_by: { slotTime: asc }) {
                 id
                 bookingId
                 flightId
@@ -1721,10 +1809,8 @@ export const getTeeTimesSlots = gql`
     ${HoleQL}
 `;
 export const getTeeTimesSlotsAdmin = gql`
-    query ClubSingleRoundFlightsQuery( $toDate: date!) {
-        TournamentsQL: tee_time_booking(
-            where: { teeDate: { _eq: $toDate } }
-        ) {
+    query ClubSingleRoundFlightsQuery($toDate: date!) {
+        TournamentsQL: tee_time_booking(where: { teeDate: { _eq: $toDate } }) {
             id
             bookingDate
             noOfPlayers

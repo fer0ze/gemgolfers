@@ -331,6 +331,30 @@ export class TournamentsService {
                 });
         });
     }
+    public getDailyTeeTimeReportClub(
+        clubId: string,
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getDailyTeeTimeReportClub,
+                    variables: {
+                        clubId: clubId,
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // //console.log(data);
+                    resolve(data);
+                });
+        });
+    }
     public getDailyRoundsSingleAdmin(
         fromDate: string,
         toDate: string
@@ -364,6 +388,28 @@ export class TournamentsService {
             this.apollo
                 .subscribe<any>({
                     query: Query.getDailyCardSingleAdmin,
+                    variables: {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    // //console.log(data);
+                    resolve(data);
+                });
+        });
+    }
+    public getDailyTeeTimeReportAdmin(
+        fromDate: string,
+        toDate: string
+    ): Promise<any> {
+        // //console.log(clubId);
+        // //console.log(fromDate);
+        // //console.log(toDate);
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.getDailyTeeTimeReportAdmin,
                     variables: {
                         fromDate: fromDate,
                         toDate: toDate,

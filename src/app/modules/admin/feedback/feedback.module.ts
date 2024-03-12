@@ -8,7 +8,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { StatModule } from "../../../shared/modules/stat/stat.module";
 // import { UserDetailsDilogueComponent } from "../material-components/user-details-dilogue/user-details-dilogue.component";
 // import { UserWHSDeatilsDialogueComponent } from "../material-components/user-whs-deatils-dialogue/user-whs-deatils-dialogue.component";
-import { WhiteSectionModule } from '../../../shared/modules/white-section/white-section.module';
+// import { WhiteSectionModule } from '../../../shared/modules/white-section/white-section.module';
 import { DatePipe } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';

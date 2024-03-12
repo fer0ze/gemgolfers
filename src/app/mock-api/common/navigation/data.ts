@@ -173,6 +173,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:speakerphone',
                 link: '/reports/players',
             },
+            {
+                id: 'reports.teeTimes',
+                title: 'Tee Times',
+                type: 'basic',
+                icon: 'heroicons_outline:newspaper',
+                link: '/reports/teeTime',
+            },
         ],
     }
 ];
@@ -463,6 +470,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:speakerphone',
                 link: '/reports/players',
+            },
+            {
+                id: 'reports.teeTimes',
+                title: 'Tee Times',
+                type: 'basic',
+                icon: 'heroicons_outline:newspaper',
+                link: '/reports/teeTime',
             },
         ],
     },

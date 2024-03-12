@@ -11,7 +11,7 @@ import { HandicapRoutingModule } from './handicap-routing.module';
 import { HandicapComponent } from './handicap.component';
 // import { UserDetailsDilogueComponent } from "../material-components/user-details-dilogue/user-details-dilogue.component";
 // import { UserWHSDeatilsDialogueComponent } from "../material-components/user-whs-deatils-dialogue/user-whs-deatils-dialogue.component";
-import { WhiteSectionModule } from '../../../shared/modules/white-section/white-section.module';
+// import { WhiteSectionModule } from '../../../shared/modules/white-section/white-section.module';
 import { PlayerHandicapComponent } from './player-handicap/player-handicaps.component';
 import { DatePipe } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -63,7 +63,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         // StatModule,
         MatDialogModule,
         MatTooltipModule,
-        WhiteSectionModule,
+        // WhiteSectionModule,
         MatProgressBarModule,
         MatRippleModule,
         CommonModule,

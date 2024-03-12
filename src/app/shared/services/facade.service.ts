@@ -943,7 +943,21 @@ export class FacadeService {
       toDate
     );
   }
+  getDailyTeeTimeReportClub(clubId: string, fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyTeeTimeReportClub(
+      clubId,
+      fromDate,
+      toDate
+    );
+  }
   getDailyCardSingleAdmin(fromDate: string, toDate: string) {
+    return this.tournamentService.getDailyCardSingleAdmin(
+
+      fromDate,
+      toDate
+    );
+  }
+  getDailyTeeTimeReportAdmin(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyCardSingleAdmin(
 
       fromDate,

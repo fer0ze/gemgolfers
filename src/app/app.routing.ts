@@ -285,6 +285,13 @@ export const appRoutes: Route[] = [
                         'app/modules/admin/reports/daily-players-report/daily-player-report.module'
                     ).then((m) => m.DailyPlayerReportModule),
             },
+            {
+                path: 'reports/teeTime',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/daily-teeTime-report/daily-starter-report.module'
+                    ).then((m) => m.DailyTeeTimeReportModule),
+            },
             //{path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
         ],
     },

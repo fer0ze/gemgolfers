@@ -4,8 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
 // import { PlayersRoutingModule } from './players-routing.module';
-
-import { WhiteSectionModule } from 'app/shared/modules/white-section/white-section.module';
 import { CourseRoutingModule } from './course-routing.module';
 import { ViewCourseComponent } from './view-course/view-course.component';
 import { CourseComponent } from './course.component';
@@ -59,7 +57,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         MatDatepickerModule,
         MatRadioModule,
         MatTabsModule,
-        WhiteSectionModule,
+        // WhiteSectionModule,
         MatProgressSpinnerModule,
         MatAutocompleteModule,
         MatToolbarModule,
