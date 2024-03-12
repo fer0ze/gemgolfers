@@ -52,26 +52,36 @@
                 </div>
                 <form [formGroup]="scheduleForm" autocomplete="off" novalidate (ngSubmit)="createSchedule()">
                     <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Tee Date:</mat-label>
                                 <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate"
-                                    formControlName="BookingDate" placeholder="Schedule Date" />
+                                    formControlName="teeDate" placeholder="Schedule Date" />
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker disabled="false"></mat-datepicker>
                                 <mat-error>This field is required</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Tee Booking Live Date:</mat-label>
+                                <input matInput [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
+                                    formControlName="bookingDate" placeholder="Schedule Date" />
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                                <mat-error>This field is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Tee Booking Time:</mat-label>
+                                <mat-label>Tee Booking Live Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="teeBookingTime" />
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>No Of Players:</mat-label>
+                                <mat-label>No of Players:</mat-label>
                                 <mat-select placeholder="Players" formControlName="noOfPlayers">
                                     <mat-option value="2">2,3,4 Ball</mat-option>
                                     <mat-option value="3">3,4 Ball</mat-option>
@@ -83,11 +93,27 @@
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Participants:</mat-label>
-                                <mat-select placeholder="Players" formControlName="allowGuest">
+                                <mat-select  (selectionChange)="participantsChange($event)" placeholder="Players" formControlName="allowGuest">
                                     <mat-option value="0">Club Members</mat-option>
                                     <mat-option value="1">Club Members and Guests</mat-option>
                                 </mat-select>
                                 <mat-icon matSuffix>golf_course</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime" class="sm:col-span-2">
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Guest Start Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="guestStartTime" />
+                                <mat-error>The input is required.</mat-error>
+
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime" class="sm:col-span-2">
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Guest End Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="guestEndTime" />
+                                <mat-error>The input is required.</mat-error>
+
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">

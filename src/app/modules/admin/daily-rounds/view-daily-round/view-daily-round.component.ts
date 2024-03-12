@@ -3278,9 +3278,9 @@ export class ViewDailyRoundComponent implements OnInit {
         try {
             const combinedData = `flightId=${flightId}, playerId=${playerId}`;
             this.logger.log('Admin click delete player on Daily Round Page', "info", combinedData);
-            //console.log(tournamentId);
-            //console.log(flightId);
-            //console.log(playerId);
+            console.log(tournamentId);
+            console.log(flightId);
+            console.log(playerId);
 
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',

@@ -105,7 +105,7 @@ export class TeeTimeService {
                 }
               },
               {
-                'bookingDate': {
+                'teeDate': {
                   '_eq': selectedDate
                 }
               }]
@@ -127,6 +127,7 @@ export class TeeTimeService {
             'clubId': teeTime.clubId,
             'courseId': teeTime.courseId,
             'bookingDate': teeTime.bookingDate,
+            'teeDate': teeTime.teeDate,
             'startTime': teeTime.startTime,
             'endTime': teeTime.endTime,
             'interval': teeTime.interval,

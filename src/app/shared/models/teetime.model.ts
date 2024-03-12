@@ -3,6 +3,7 @@ export interface TeeTime {
     clubId: string;
     courseId: string;
     bookingDate: Date;
+    teeDate: Date;
     startTime: string;
     endTime: string;
     interval: number;
