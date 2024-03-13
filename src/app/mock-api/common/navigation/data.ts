@@ -161,7 +161,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'reports.dailycard',
-                title: 'Daily Card',
+                title: 'Daily Cards',
                 type: 'basic',
                 icon: 'heroicons_outline:book-open',
                 link: '/reports/dailycard',
@@ -452,7 +452,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
             },
             {
                 id: 'reports.dailycard',
-                title: 'Daily Card',
+                title: 'Daily Cards',
                 type: 'basic',
                 icon: 'heroicons_outline:book-open',
                 link: '/reports/dailycard',
