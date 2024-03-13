@@ -295,6 +295,9 @@ export class FacadeService {
   AddPlayer(club: Player) {
     return this.playerService.AddPlayer(club);
   }
+  changePlayerTee(id: String, tee: string,teeId) {
+    return this.playerService.changePlayerTee(id, tee,teeId);
+  }
   AddTourPlayer(club: Player, tourMember: any) {
     return this.playerService.AddTourPlayer(club, tourMember);
   }
@@ -869,9 +872,9 @@ export class FacadeService {
   }
 
   getClubTeeTimeBooking(clubId: string) {
-    if(clubId){
+    if (clubId) {
       return this.TeeTimeService.getClubTeeTimeBooking(clubId);
-    }else{
+    } else {
       return this.TeeTimeService.getClubTeeTimeBookingForSuperAdmin();
     }
   }
@@ -949,8 +952,8 @@ export class FacadeService {
       toDate
     );
   }
-  
-  
+
+
   getDailyRoundsSingleDashboardAll(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleDashboardAll(
 

@@ -1063,6 +1063,29 @@ export class PlayersService {
                 );
         });
     }
+    changePlayerTee(id, tee,teeId): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.UpdatePlayerTeeMutation,
+                    variables: {
+                        id: id,
+                        tee: tee,
+                        teeId: teeId,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could update add due to ' + error);
+                    }
+                );
+        });
+    }
     deletePlayer(clubId: string, playerId: string): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo

@@ -35,6 +35,7 @@ import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { DialogTeeComponent } from '../../dialogs/dialog-tee-change/dialog-tee.component';
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
@@ -52,6 +53,7 @@ export class HandicapsComponent implements OnInit {
         'membershipNumber',
         'category',
         'handicapWhsIndex',
+        'handicapChange',
         'details',
     ];
     count: any = 0;
@@ -203,7 +205,7 @@ export class HandicapsComponent implements OnInit {
                 });
         } catch (error) {
             this.logger.log('Getting All WHS Handicap Data Failed', "error", error.toString());
-       
+
         }
         //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
     }
@@ -216,8 +218,8 @@ export class HandicapsComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
     updatePlayer(id: string): void {
-        this.logger.log('View Player Handicap WHS Button Click', "info",id);
-        
+        this.logger.log('View Player Handicap WHS Button Click', "info", id);
+
         this.location.navigate(['./', id], {
             relativeTo: this._activatedRoute,
         });
@@ -308,94 +310,94 @@ export class HandicapsComponent implements OnInit {
     };
     public downloadAsPDFWHS() {
         try {
-            
+
             this.logger.log('Download Handicap WHS Button Click', "info");
-        var doc = new jsPDF();
-        var col = [
-            'Sr.',
-            'M.No',
-            'Name',
-            'Category',
-            'Handicap Index',
-            'Blue Tee',
-            'White Tee',
-            'Yellow Tee',
-            'Black Tee',
-            'Red Tee'
-        ];
-        var rows = [];
-        doc.setFontSize(30);
-        doc.text('WHS Handicap List', 15, 15);
-        doc.setFontSize(15);
-        doc.text('W.E.F:', 143, 15);
-        doc.text(
-            this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
-            160,
-            15
-        );
-        doc.setFontSize(15);
-        doc.setTextColor(100);
+            var doc = new jsPDF();
+            var col = [
+                'Sr.',
+                'M.No',
+                'Name',
+                'Category',
+                'Handicap Index',
+                'Blue Tee',
+                'White Tee',
+                'Yellow Tee',
+                'Black Tee',
+                'Red Tee'
+            ];
+            var rows = [];
+            doc.setFontSize(30);
+            doc.text('WHS Handicap List', 15, 15);
+            doc.setFontSize(15);
+            doc.text('W.E.F:', 143, 15);
+            doc.text(
+                this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
+                160,
+                15
+            );
+            doc.setFontSize(15);
+            doc.setTextColor(100);
 
-        let count = 0;
+            let count = 0;
 
-        this.dataPlayers.player.forEach((element) => {
-            if (
-                element.membershipNumber != null &&
-                element.membershipNumber != '' &&
-                (element.handicapWhsIndex != null || element.handicap > 0)
-            ) {
-                count++;
-                let handicapIndex =
-                    element.handicapWhsIndex != null
-                        ? element.handicapWhsIndex
-                        : element.handicap;
-                let ratings = this.getTeesRating(handicapIndex);
-                var temp = [
-                    count,
-                    element.membershipNumber,
-                    element.firstName + ' ' + element.lastName,
-                    element.playerCategory,
-                    element.handicapWhsIndex != null
-                        ? element.handicapWhsIndex.toFixed(1)
-                        : element.handicap.toFixed(1),
-                    ratings['BLACK'],//blue
-                    ratings['BLUE'],//white
-                    ratings['WHITE'],//yellow
-                    ratings['Black-Veterans'],//Balck
-                    ratings['RED'],//red
-                ];
-                rows.push(temp);
-            }
-        });
-        // From HTML
-        var columnStyles = {
-            4: { // Adjusting the width of the "Handicap Index" column (index starts from 1)
-                cellWidth: 20, // Adjust the width as needed
-            },
-        };
-        // From HTML
-        doc.autoTable({
-            head: [col],
-            body: rows,
-            startY: 25,
-            theme: 'grid',
-            columnStyles: columnStyles,
-        });
+            this.dataPlayers.player.forEach((element) => {
+                if (
+                    element.membershipNumber != null &&
+                    element.membershipNumber != '' &&
+                    (element.handicapWhsIndex != null || element.handicap > 0)
+                ) {
+                    count++;
+                    let handicapIndex =
+                        element.handicapWhsIndex != null
+                            ? element.handicapWhsIndex
+                            : element.handicap;
+                    let ratings = this.getTeesRating(handicapIndex);
+                    var temp = [
+                        count,
+                        element.membershipNumber,
+                        element.firstName + ' ' + element.lastName,
+                        element.playerCategory,
+                        element.handicapWhsIndex != null
+                            ? element.handicapWhsIndex.toFixed(1)
+                            : element.handicap.toFixed(1),
+                        ratings['BLACK'],//blue
+                        ratings['BLUE'],//white
+                        ratings['WHITE'],//yellow
+                        ratings['Black-Veterans'],//Balck
+                        ratings['RED'],//red
+                    ];
+                    rows.push(temp);
+                }
+            });
+            // From HTML
+            var columnStyles = {
+                4: { // Adjusting the width of the "Handicap Index" column (index starts from 1)
+                    cellWidth: 20, // Adjust the width as needed
+                },
+            };
+            // From HTML
+            doc.autoTable({
+                head: [col],
+                body: rows,
+                startY: 25,
+                theme: 'grid',
+                columnStyles: columnStyles,
+            });
 
-        // Open PDF document in new tab
-        //doc.output('dataurlnewwindow');
+            // Open PDF document in new tab
+            //doc.output('dataurlnewwindow');
 
-        // Download PDF document
-        doc.save('WHS.pdf');
-    } catch (error) {
-        this.logger.log('Downloading WHS Handicap Data Failed', "error", error.toString());
-         
-    }
+            // Download PDF document
+            doc.save('WHS.pdf');
+        } catch (error) {
+            this.logger.log('Downloading WHS Handicap Data Failed', "error", error.toString());
+
+        }
     }
 
     getPlayerInformationByName(filterValue: string) {
         //console.log(filterValue);
-        this.logger.log('Search in Handicap WHS', "info",filterValue);
+        this.logger.log('Search in Handicap WHS', "info", filterValue);
         if (filterValue == '') {
             this.syncHandicapWHS();
             return;
@@ -519,106 +521,6 @@ export class HandicapsComponent implements OnInit {
         }
     }
 
-    // async getClubMemberAggregateByCategroy(clubId: string) {
-    //     let memberAggregate: any;
-    //     let index: number = 0;
-    //     const colors = ['navi', 'success', 'info', 'danger', 'purple', 'warn'];
-
-    //     memberAggregate =
-    //         await this._facadeService.getClubMemberAggregateByCategroy(clubId);
-    //     ////console.log(memberAggregate.club);
-    //     //this.clubMemberAggregate = memberAggregate.club;
-
-    //     for (var key of Object.keys(memberAggregate.club[0])) {
-    //         ////console.log(key + " -> ");
-    //         ////console.log(memberAggregate.club[0][key]);
-
-    //         if (
-    //             memberAggregate.club[0][key].aggregate &&
-    //             memberAggregate.club[0][key].aggregate.count > 0
-    //         ) {
-    //             let info: any = {
-    //                 title: `${key.replace('_', ' ')}`,
-    //                 count: memberAggregate.club[0][key].aggregate.count,
-    //                 class: 0,
-    //             };
-
-    //             this.totalMembers += info.count;
-
-    //             this.clubMemberAggregate.push(info);
-
-    //             index++;
-    //             if (index > 5) index = 0;
-    //         }
-    //     }
-    //     this.isLoading = false;
-    //     //console.log(this.clubMemberAggregate);
-    // }
-
-    // async getAllMemberAggregateByCategroy(clubId: string) {
-    //     let memberAggregate: any;
-    //     let index: number = 0;
-    //     const colors = ['navi', 'success', 'info', 'danger', 'purple', 'warn'];
-
-    //     //memberAggregate = await this.facadeService.getClubMemberAggregateByCategroy(clubId);
-    //     memberAggregate = await this.facadeService.getAllPlayersByCategory();
-
-    //     //this.clubMemberAggregate = memberAggregate.club;
-
-    //     for (var key of Object.keys(memberAggregate)) {
-    //         if (memberAggregate[key].length > 0) {
-    //             let info: any = {
-    //                 title: `${key}`,
-    //                 count: memberAggregate[key].length,
-    //                 class: colors[index],
-    //             };
-
-    //             this.totalMembers += info.count;
-
-    //             this.clubMemberAggregate.push(info);
-
-    //             index++;
-    //             if (index > 5) index = 0;
-    //         }
-    //     }
-    //     this.isLoading = false;
-    //     ////console.log(this.clubMemberAggregate);
-    // }
-
-    // async getSuperAdminStats() {
-    //     let memberAggregate: any;
-    //     let index: number = 0;
-    //     const colors = ['navi', 'success', 'info', 'danger', 'purple', 'warn'];
-
-    //     //memberAggregate = await this.facadeService.getClubMemberAggregateByCategroy(clubId);
-    //     memberAggregate = await this.facadeService.getsuperAdminStats();
-    //     ////console.log(memberAggregate);
-
-    //     //this.clubMemberAggregate = memberAggregate.club;
-
-    //     for (var key of Object.keys(memberAggregate)) {
-    //         ////console.log(key + " -> ");
-    //         ////console.log(memberAggregate[key]);
-
-    //         if (memberAggregate[key].length > 0) {
-    //             let info: any = {
-    //                 title: `${key}`.split('_').join(' '),
-    //                 count: memberAggregate[key].length,
-    //                 class: colors[index],
-    //             };
-
-    //             this.totalMembers += info.count;
-
-    //             this.superAdminstats.push(info);
-
-    //             index++;
-    //             if (index > 5) index = 0;
-    //         }
-    //     }
-    //     this.isLoading = false;
-    //     ////console.log(this.clubMemberAggregate);
-    // }
-
     redirectToDetails = (id: string) => {
         //console.log(id);
 
@@ -671,6 +573,17 @@ export class HandicapsComponent implements OnInit {
         }
 
         return teeRatings; // Return object containing handicap index for each tee
+    }
+
+    openTeeChangeDailog(player) {
+        console.log(player);
+
+        const dialogRef = this.dialog.open(DialogTeeComponent, {
+            data: {
+                player: player,
+                loggedInUser: this.loggedInuser
+            }
+        });
     }
 
 }

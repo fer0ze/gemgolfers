@@ -821,6 +821,20 @@ export const UpdateHandicapMutation = gql`
         }
     }
 `;
+export const UpdatePlayerTeeMutation = gql`
+    mutation updateMutation(
+        $id: String!
+        $tee: String!
+        $teeId:Int!
+    ) {
+        PlayerUpdateQL: update_flight_member(
+            where: { playerId: { _eq: $id } }
+            _set: { playingTee: $tee, tee_id:$teeId }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
 
 // export const DeletePlayer = gql`
 // mutation DeletePlayer($where: player_bool_exp!) {

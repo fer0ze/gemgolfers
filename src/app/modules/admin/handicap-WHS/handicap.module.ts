@@ -33,12 +33,13 @@ import { HandicapsComponent } from './WHS/handicaps.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DialogTeeComponent } from '../dialogs/dialog-tee-change/dialog-tee.component';
 @NgModule({
     declarations: [
         HandicapComponent,
         // UserWHSDeatilsDialogueComponent,
         HandicapsComponent,
-        PlayerHandicapComponent,
+        PlayerHandicapComponent,DialogTeeComponent
     ],
     providers: [DatePipe],
     imports: [

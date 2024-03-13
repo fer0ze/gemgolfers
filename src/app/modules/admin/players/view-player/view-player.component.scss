@@ -1,3 +1,27 @@
 table{
   width: 100%;
 }
+.primary-background {
+  background-color: #1c7a93;
+}
+
+.primary-text {
+  color: #00a5d1  !important;
+}
+
+.noBorderBotton {
+  border-bottom: none;
+}
+
+.class_name {
+  display: inline-block;
+  text-align: center;
+  width: 43px;
+  height: 41px;
+  color: #fff;
+  border-radius: 50%;
+  background-color: rgb(197, 82, 15);
+  padding-top: 11px;
+  padding-left: 4px;
+  margin-top: 5px;
+}
