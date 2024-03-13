@@ -288,9 +288,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -312,9 +310,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -336,9 +332,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -359,9 +353,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -381,9 +373,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -403,9 +393,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -426,9 +414,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -468,9 +454,7 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
@@ -491,55 +475,13 @@ export class TournamentsService {
         fromDate: string,
         toDate: string
     ): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
+
         return new Promise((resolve) => {
             this.apollo
                 .subscribe<any>({
                     query: Query.DailyRoundsSingleDashboardQueryQLs,
                     variables: {
                         clubId: clubId,
-                        fromDate: fromDate,
-                        toDate: toDate,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    // //console.log(data);
-                    resolve(data);
-                });
-        });
-    }
-    public getAll(
-        Id: string,
-        clubId: string,
-        fromDate: string,
-        toDate: string
-    ): Observable<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
-        return this.apollo
-            .subscribe<any>({
-                query: Query.getallDashboard,
-                variables: {
-                    adminId: Id,
-                    adminClubId: clubId,
-                    fromDate: fromDate,
-                    toDate: toDate,
-                },
-            })
-            .pipe(tap((data) => (data)));
-    }
-    public getAllAdmin(fromDate: string, toDate: string): Promise<any> {
-        // //console.log(clubId);
-        // //console.log(fromDate);
-        // //console.log(toDate);
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe<any>({
-                    query: Query.getAllAdmin,
-                    variables: {
                         fromDate: fromDate,
                         toDate: toDate,
                     },
@@ -690,104 +632,6 @@ export class TournamentsService {
         });
     }
 
-    public getClubDashboardStats(
-        endDate: string,
-        clubId: string
-    ): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.GetClubDashboardStatsQL,
-                    variables: {
-                        endDate: endDate,
-                        clubId: clubId,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        resolve(data);
-                    }
-                });
-        });
-    }
-
-    public getClubDashboardStatsForAdmin(endDate: string): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.GetClubDashboardStatsQLs,
-                    variables: {
-                        endDate: endDate,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        resolve(data);
-                    }
-                });
-        });
-    }
-    public getTournamentCountsByClub(clubId: string): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.getTournamentCountsByClub,
-                    variables: {
-                        where: {
-                            _and: [
-                                {
-                                    singleRound: {
-                                        _eq: false,
-                                    },
-                                    clubId: {
-                                        _eq: clubId,
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                })
-                .subscribe(({ data }) => {
-                    ////console.log(data.tournament_by_pk);
-                    ////console.log(data);
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        ////console.log(data);
-                        resolve(data);
-                    }
-                });
-        });
-    }
-    public getTournamentCountsByClubAll(): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.getTournamentCountsByClubAll,
-                    variables: {
-                        where: {
-                            singleRound: {
-                                _eq: false,
-                            },
-                        },
-                    },
-                })
-                .subscribe(({ data }) => {
-                    ////console.log(data.tournament_by_pk);
-                    ////console.log(data);
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        ////console.log(data);
-                        resolve(data);
-                    }
-                });
-        });
-    }
     public getLeagues(): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -870,31 +714,7 @@ export class TournamentsService {
         });
     }
 
-    public LeaderboardOneTimeDataQuery(
-        tournamentId: string,
-        playerId: string
-    ): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.LeaderboardOneTimeDataQueryQL,
-                    variables: {
-                        tournamentId: tournamentId,
-                        playerId: playerId,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    ////console.log(data.tournament_by_pk);
-                    ////console.log(data);
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        ////console.log(data);
-                        resolve(data);
-                    }
-                });
-        });
-    }
+    
 
     public LeaderboardSubscription(tournamentId: string): Promise<any> {
         return new Promise((resolve) => {
@@ -999,31 +819,7 @@ export class TournamentsService {
         });
     }
 
-    public LeaderRoundsSubscription(
-        tournamentId: string,
-        activeRound: number
-    ): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.LeaderRoundsSubscriptionQL,
-                    variables: {
-                        tournamentId: tournamentId,
-                        activeRound: activeRound,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    ////console.log(data.tournament_by_pk);
-                    ////console.log(data);
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        ////console.log(data);
-                        resolve(data);
-                    }
-                });
-        });
-    }
+    
 
     public checkPrefix(prefix: string): Promise<any> {
         return new Promise((resolve) => {
@@ -1044,28 +840,6 @@ export class TournamentsService {
         });
     }
 
-    public LeaderRoundQuery(tournamentId: string, round: number): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.LeaderRoundQueryQL,
-                    variables: {
-                        tournamentId: tournamentId,
-                        round: round,
-                    },
-                })
-                .subscribe(({ data }) => {
-                    ////console.log(data.tournament_by_pk);
-                    ////console.log(data);
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        ////console.log(data);
-                        resolve(data);
-                    }
-                });
-        });
-    }
 
     public tournamentScoreLoader(tournamentId: string): Promise<any> {
         return new Promise((resolve) => {
@@ -1457,22 +1231,6 @@ export class TournamentsService {
                         ////console.log('Could not add due to ' + error);
                     }
                 );
-        });
-    }
-
-    public getsuperAdminStats(): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
-                .subscribe({
-                    query: Query.superAdminStatsQL,
-                })
-                .subscribe(({ data }) => {
-                    if (!data) {
-                        resolve(null);
-                    } else {
-                        resolve(data);
-                    }
-                });
         });
     }
 

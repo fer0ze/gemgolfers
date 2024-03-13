@@ -33,40 +33,17 @@ import { LogsService } from 'app/shared/services/logs.service';
     styleUrls: ['./daily-starter-report.component.scss'],
 })
 export class DailyStarterReportComponent implements OnInit {
-    Leaderboard: any;
+   
     isLoading: boolean = false;
-    isClubAdmin: boolean = false;
-    lastActiveTab = 1;
-    noItemsInList = false;
+    showtable: boolean = false;
     loggedInuser: Player;
     scheduleForm: FormGroup;
     refresh: boolean = false;
     minDate: Date;
     maxDate: Date;
-    startingHole: string;
-    startTime: string;
-    RoundDate: string;
     currentDate: string;
-    Players: Player[] = [];
-    file: File;
-    arrayBuffer: any;
-    customDate: any;
-    customDate2: any;
     customValue: boolean;
     dailyStats: any[] = [];
-    tournamentID: string;
-    filterPlayer: string = '';
-    filterCategory: string;
-    HandicapIndex: any[] = [];
-    weeklyRounds: any = [];
-    nonSubmit: number = 0;
-    submit: number = 0;
-    singleRound: any[] = [];
-    flightPlayers: any[] = [];
-    findex = 0;
-    showResult: boolean = false;
-    showtable: boolean = true;
-    matchPlayData: any[] = [];
 
     dataSource: MatTableDataSource<any>;
     displayedColumns = [
@@ -104,14 +81,9 @@ export class DailyStarterReportComponent implements OnInit {
             this.logger.log('Getting Daily Starter Report Data', "info", "Today");
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-            this.Players = [];
-
-            this.route.paramMap.subscribe((params) => {
-                this.filterCategory = params.get('category');
-            });
 
             this.isLoading = true;
-            this.showResult = false;
+           
             this.showtable = false;
 
             //  this.scheduleForm = this.fb.group({
@@ -128,13 +100,13 @@ export class DailyStarterReportComponent implements OnInit {
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
-            this.weeklyRounds = [];
-            of(this.weeklyRounds)
+           
+            of()
                 .pipe()
                 .subscribe(
                     async (data) => {
                         var currentDate = new Date();
-                        currentDate.setDate(currentDate.getDate() - 1);
+                        currentDate.setDate(currentDate.getDate());
 
                         //var nxtDate = new Date();
                         //nxtDate.setDate(nxtDate.getDate() + 7);
@@ -160,13 +132,10 @@ export class DailyStarterReportComponent implements OnInit {
 
     async getDailyRounds(fromDate: Date, toDate: Date) {
         let dailyRoundsData: any[] = [];
-        this.singleRound.length = 0;
+       
         let dataPlayers: any;
-        this.flightPlayers = [];
-        this.findex = 0;
         this.dailyStats = [];
         this.showtable = false;
-        this.showResult = false;
         this.isLoading = true;
         let counter: number = 0;
 
@@ -201,31 +170,31 @@ export class DailyStarterReportComponent implements OnInit {
                     const dailyStat = {
                         date: obj.teeDate,
                         membersCount:
-                            obj.slots[i]?.FlightsQL && obj.slots[i]?.FlightsQL.length > 0
-                                ? obj.slots[i].FlightsQL[0]
+                            obj.slots[i]?.FlightsQL 
+                                ? obj.slots[i].FlightsQL
                                     .MembersQL.length
                                 : 0,
-                        noOfFlights: totalFlights++,
+                        noOfFlights: ++totalFlights,
                         allPlayers:
-                            obj.slots[i]?.FlightsQL && obj.slots[i]?.FlightsQL.length > 0 &&
-                                obj.slots[i].FlightsQL[0].MembersQL
+                            obj.slots[i]?.FlightsQL  &&
+                                obj.slots[i].FlightsQL.MembersQL
                                     .length > 0
-                                ? obj.slots[i].FlightsQL[0]
+                                ? obj.slots[i].FlightsQL
                                     .MembersQL
                                 : [],
                         submittedCards:
-                            obj.slots[i]?.FlightsQL && obj.slots[i]?.FlightsQL.length > 0 &&
-                                obj.slots[i].FlightsQL[0].MembersQL
+                            obj.slots[i]?.FlightsQL  &&
+                                obj.slots[i].FlightsQL.MembersQL
                                     .length > 0
-                                ? obj.slots[i].FlightsQL[0].MembersQL.filter((a) => {
+                                ? obj.slots[i].FlightsQL.MembersQL.filter((a) => {
                                     return a.ScoresQL.length > 0;
                                 })
                                 : [],
                         nonSubmittedCards:
-                            obj.slots[i]?.FlightsQL && obj.slots[i]?.FlightsQL.length > 0 &&
-                                obj.slots[i].FlightsQL[0].MembersQL
+                            obj.slots[i]?.FlightsQL  &&
+                                obj.slots[i].FlightsQL.MembersQL
                                     .length > 0
-                                ? obj.slots[i].FlightsQL[0].MembersQL.filter((a) => {
+                                ? obj.slots[i].FlightsQL.MembersQL.filter((a) => {
                                     return a.ScoresQL.length == 0;
                                 })
                                 : [],
@@ -238,7 +207,7 @@ export class DailyStarterReportComponent implements OnInit {
             for (let stats of this.dailyStats) {
                 if (stats.date == prevDate) {
                     memCounter = memCounter + stats.membersCount;
-                    totalFlights = totalFlights + stats.noOfFlights;
+                    totalFlights = stats.noOfFlights;
                     submittedCards =
                         submittedCards + stats.submittedCards.length;
                     nonSubmittedCards =
@@ -283,7 +252,7 @@ export class DailyStarterReportComponent implements OnInit {
                     submitPer = 0;
                     nonSubmitPer = 0;
                     memCounter = memCounter + stats.membersCount;
-                    totalFlights = totalFlights + stats.noOfFlights;
+                    totalFlights = stats.noOfFlights;
                     submittedCards =
                         submittedCards + stats.submittedCards.length;
                     nonSubmittedCards =
@@ -338,9 +307,7 @@ export class DailyStarterReportComponent implements OnInit {
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
 
-            if (dataPlayers.TournamentsQL.length) {
-                this.matchPlayData = dataPlayers.TournamentsQL;
-            }
+       
         }
     }
     public downloadAsPDF() {

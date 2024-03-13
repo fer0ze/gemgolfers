@@ -147,7 +147,7 @@
 
                 <ng-container matColumnDef="roundsPlayed">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Rounds Played
+                        # of Slots 
                     </th>
                     <td mat-cell *matCellDef="let row">
                         {{ row.totalFlights }}
@@ -156,7 +156,7 @@
 
                 <ng-container matColumnDef="membersPlayed">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Members Played
+                        Members Booked
                     </th>
                     <td mat-cell *matCellDef="let row">
                         {{ row.membersCount }}
@@ -165,7 +165,7 @@
 
                 <ng-container matColumnDef="submittedCards">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Submitted Cards
+                        Members Played
                     </th>
                     <td mat-cell *matCellDef="let row">
                         <div class="flex">
@@ -198,7 +198,7 @@
                 <!-- Email Column -->
                 <ng-container matColumnDef="nonSubmittedCards">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                        Non-Submitted Cards
+                        Members Not Played
                     </th>
                     <td mat-cell *matCellDef="let row">
                         <div class="flex" (click)="playerList(row.nonSubmittedCardsList,'non',row.date.substring(0, 10))">

@@ -510,38 +510,6 @@ export class FacadeService {
     );
   }
 
-  getClubDashboardStats(todayDate: string, clubId: string) {
-    return this.tournamentService.getClubDashboardStats(todayDate, clubId);
-  }
-  getClubDashboardStatsForAdmin(todayDate: string) {
-    return this.tournamentService.getClubDashboardStatsForAdmin(todayDate);
-  }
-
-  getTournamentCountsByClub(clubId: string) {
-    return this.tournamentService.getTournamentCountsByClub(clubId);
-  }
-  getTournamentCountsByClubAll() {
-    return this.tournamentService.getTournamentCountsByClubAll();
-  }
-
-  LeaderboardOneTimeDataQuery(tournamentId: string, playerId: string) {
-    return this.tournamentService.LeaderboardOneTimeDataQuery(
-      tournamentId,
-      playerId
-    );
-  }
-
-  LeaderRoundsSubscription(tournamentId: string, activeRound: number) {
-    return this.tournamentService.LeaderRoundsSubscription(
-      tournamentId,
-      activeRound
-    );
-  }
-
-  LeaderRoundQuery(tournamentId: string, round: number) {
-    return this.tournamentService.LeaderRoundQuery(tournamentId, round);
-  }
-
   LeaderboardSubscription(id: string) {
     return this.tournamentService.LeaderboardSubscription(id);
   }
@@ -638,10 +606,6 @@ export class FacadeService {
       resetRound,
       cut
     );
-  }
-
-  getsuperAdminStats() {
-    return this.tournamentService.getsuperAdminStats();
   }
 
   getTournamentMembers(tournamentId: string) {
@@ -958,7 +922,7 @@ export class FacadeService {
     );
   }
   getDailyTeeTimeReportAdmin(fromDate: string, toDate: string) {
-    return this.tournamentService.getDailyCardSingleAdmin(
+    return this.tournamentService.getDailyTeeTimeReportAdmin(
 
       fromDate,
       toDate
@@ -985,20 +949,8 @@ export class FacadeService {
       toDate
     );
   }
-  getAll(id: string, clubId: string, fromDate: string, toDate: string) {
-    return this.tournamentService.getAll(
-      id,
-      clubId,
-      fromDate,
-      toDate
-    );
-  }
-  getAllAdmin(fromDate: string, toDate: string) {
-    return this.tournamentService.getAllAdmin(
-      fromDate,
-      toDate
-    );
-  }
+  
+  
   getDailyRoundsSingleDashboardAll(fromDate: string, toDate: string) {
     return this.tournamentService.getDailyRoundsSingleDashboardAll(
 

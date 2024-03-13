@@ -97,8 +97,6 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
             let currentDate = new Date();
-            let lastWeekSunday = this.lastWeekSunday();
-            let lastWeekMonday = this.lastWeekMonday();
             let tournamentCounts;
             let flightCounts;
             let playerCounts;
@@ -116,7 +114,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
 
                     if (this.loggedInuser.userRole == 2 || this.loggedInuser.userRole == 1) {
 
-                        this.tournamentCounts = getall.TournamentQL.length;
+                        this.tournamentCounts = getall.TournamentCount.aggregate.count;
                         if (this.tournamentCounts > 6) {
                             this.tournaments = getall.TournamentQL.splice(0, 6);
                         } else {
@@ -270,8 +268,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                         this.tournamentCounts = 0;
                         let latestTournament = [];
+                        this.tournamentCounts = getall.TournamentCount.aggregate.count;
                         for (let tour of getall.tour) {
-                            this.tournamentCounts += tour.tournaments.length;
                             for (let tournament of tour.tournaments) {
                                 latestTournament.push(tournament);
                             }
@@ -447,32 +445,6 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
         if (a['date'] > b['date']) return 1;
         return 0;
     }
-    lastWeekMonday() {
-        //let date = new Date();
-        //return new Date(date.setDate(date.getDate() - 8));
-        let date = new Date();
-        let day = date.getDay();
-        let prevMonday = new Date();
-        if (date.getDay() == 0) {
-            prevMonday.setDate(date.getDate() - 7);
-        } else {
-            prevMonday.setDate(date.getDate() - (day + 6));
-        }
-
-        return prevMonday;
-    }
-    lastWeekSunday() {
-        let date = new Date();
-        let day = date.getDay();
-        let prevSunday = new Date();
-        if (date.getDay() == 7) {
-            prevSunday.setDate(date.getDate() - 7);
-        } else {
-            prevSunday.setDate(date.getDate() - day);
-        }
-
-        return prevSunday;
-    }
 
     /**
      * Prepare the chart data from the data
@@ -618,170 +590,6 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
             },
         };
-
-        // Budget distribution
-        // this.chartBudgetDistribution = {
-        //     chart: {
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         height: '100%',
-        //         type: 'radar',
-        //         sparkline: {
-        //             enabled: true,
-        //         },
-        //     },
-        //     colors: ['#818CF8'],
-        //     dataLabels: {
-        //         enabled: true,
-        //         formatter: (val: number): string | number => `${val}%`,
-        //         textAnchor: 'start',
-        //         style: {
-        //             fontSize: '13px',
-        //             fontWeight: 500,
-        //         },
-        //         background: {
-        //             borderWidth: 0,
-        //             padding: 4,
-        //         },
-        //         offsetY: -15,
-        //     },
-        //     markers: {
-        //         strokeColors: '#818CF8',
-        //         strokeWidth: 4,
-        //     },
-        //     plotOptions: {
-        //         radar: {
-        //             polygons: {
-        //                 strokeColors: 'var(--fuse-border)',
-        //                 connectorColors: 'var(--fuse-border)',
-        //             },
-        //         },
-        //     },
-        //     series: this.data.budgetDistribution.series,
-        //     stroke: {
-        //         width: 2,
-        //     },
-        //     tooltip: {
-        //         theme: 'dark',
-        //         y: {
-        //             formatter: (val: number): string => `${val}%`,
-        //         },
-        //     },
-        //     xaxis: {
-        //         labels: {
-        //             show: true,
-        //             style: {
-        //                 fontSize: '12px',
-        //                 fontWeight: '500',
-        //             },
-        //         },
-        //         categories: this.data.budgetDistribution.categories,
-        //     },
-        //     yaxis: {
-        //         max: (max: number): number =>
-        //             parseInt((max + 10).toFixed(0), 10),
-        //         tickAmount: 7,
-        //     },
-        // };
-
-        // Weekly expenses
-        // this.chartWeeklyExpenses = {
-        //     chart: {
-        //         animations: {
-        //             enabled: false,
-        //         },
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         height: '100%',
-        //         type: 'line',
-        //         sparkline: {
-        //             enabled: true,
-        //         },
-        //     },
-        //     colors: ['#22D3EE'],
-        //     series: this.data.weeklyExpenses.series,
-        //     stroke: {
-        //         curve: 'smooth',
-        //     },
-        //     tooltip: {
-        //         theme: 'dark',
-        //     },
-        //     xaxis: {
-        //         type: 'category',
-        //         categories: this.data.weeklyExpenses.labels,
-        //     },
-        //     yaxis: {
-        //         labels: {
-        //             formatter: (val): string => `$${val}`,
-        //         },
-        //     },
-        // };
-
-        // Monthly expenses
-        // this.chartMonthlyExpenses = {
-        //     chart: {
-        //         animations: {
-        //             enabled: false,
-        //         },
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         height: '100%',
-        //         type: 'line',
-        //         sparkline: {
-        //             enabled: true,
-        //         },
-        //     },
-        //     colors: ['#4ADE80'],
-        //     series: this.data.monthlyExpenses.series,
-        //     stroke: {
-        //         curve: 'smooth',
-        //     },
-        //     tooltip: {
-        //         theme: 'dark',
-        //     },
-        //     xaxis: {
-        //         type: 'category',
-        //         categories: this.data.monthlyExpenses.labels,
-        //     },
-        //     yaxis: {
-        //         labels: {
-        //             formatter: (val): string => `$${val}`,
-        //         },
-        //     },
-        // };
-
-        // Yearly expenses
-        // this.chartYearlyExpenses = {
-        //     chart: {
-        //         animations: {
-        //             enabled: false,
-        //         },
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         height: '100%',
-        //         type: 'line',
-        //         sparkline: {
-        //             enabled: true,
-        //         },
-        //     },
-        //     colors: ['#FB7185'],
-        //     series: this.data.yearlyExpenses.series,
-        //     stroke: {
-        //         curve: 'smooth',
-        //     },
-        //     tooltip: {
-        //         theme: 'dark',
-        //     },
-        //     xaxis: {
-        //         type: 'category',
-        //         categories: this.data.yearlyExpenses.labels,
-        //     },
-        //     yaxis: {
-        //         labels: {
-        //             formatter: (val): string => `$${val}`,
-        //         },
-        //     },
-        // };
     }
     async addnewTour() {
         const dialogRef = this.dialog.open(DialogAddTourMainComponent);

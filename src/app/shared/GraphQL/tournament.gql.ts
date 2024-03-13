@@ -344,43 +344,6 @@ export const getLeagueName = gql`
         }
     }
 `;
-export const LeaderboardTeamSubscription = gql`
-    query LeaderboardTeamSubscription(
-        $tournamentId: String!
-        $playerId: String!
-    ) {
-        TournamentQL: tournament_by_pk(id: $tournamentId) {
-            ...TournamentQL
-            FlightsQL: flights(
-                order_by: [{ flightRound: asc }, { flightNo: asc }]
-            ) {
-                id
-                ...FlightManagerTeamQL
-                ScoresQL: scores(where: { grossScore: { _gt: 0 } }) {
-                    ...ScoreQL
-                }
-            }
-            TeamsQL: teams {
-                ...TournamentTeamQL
-            }
-            OwnRoleManagerQL: role_managers(
-                where: { playerId: { _eq: $playerId } }
-            ) {
-                ...TournamentRoleManagerQL
-            }
-            LeaderboardAdQL: leaderboard_ad {
-                ...LeaderboardAdQL
-            }
-        }
-    }
-    ${TournamentQL}
-    ${FlightManagerTeamQL}
-    ${ScoreQL}
-    ${TournamentTeamQL}
-    ${TournamentMemberStatusQL}
-    ${TournamentRoleManagerQL}
-    ${LeaderboardAdQL}
-`;
 
 export const GetTournamentsForAdminCompeleted = gql`
     query PostsGetQuery($endDate: date!) {
@@ -726,98 +689,6 @@ export const GetUpCommingTournamentsByClub = gql`
     ${TournamentQL}
 `;
 
-export const GetClubDashboardStatsQL = gql`
-    query GetClubDashboardStatsQL($endDate: date!, $clubId: String!) {
-        ActiveTournaments: tournament(
-            where: {
-                _and: [
-                    {
-                        endDate: { _gte: $endDate }
-                        clubId: { _eq: $clubId }
-                        singleRound: { _eq: false }
-                    }
-                ]
-            }
-        ) {
-            id
-            activeRound
-            title
-        }
-        CompletedRecently: tournament(
-            limit: 3
-            where: {
-                _and: [
-                    {
-                        endDate: { _lt: $endDate }
-                        clubId: { _eq: $clubId }
-                        singleRound: { _eq: false }
-                    }
-                ]
-            }
-            order_by: { endDate: desc }
-        ) {
-            id
-            activeRound
-            title
-        }
-        HandicapCalculated: tournament(
-            limit: 3
-            where: {
-                _not: { player_handicaps: {} }
-                clubId: { _eq: $clubId }
-                singleRound: { _eq: false }
-            }
-            order_by: { endDate: desc }
-        ) {
-            id
-            title
-            endDate
-        }
-    }
-    ${TournamentQL}
-`;
-
-export const GetClubDashboardStatsQLs = gql`
-    query GetClubDashboardStatsQL($endDate: date!) {
-        ActiveTournaments: tournament(
-            where: {
-                _and: [
-                    { endDate: { _gte: $endDate }, singleRound: { _eq: false } }
-                ]
-            }
-        ) {
-            id
-            activeRound
-            title
-        }
-        CompletedRecently: tournament(
-            limit: 3
-            where: {
-                _and: [
-                    { endDate: { _lt: $endDate }, singleRound: { _eq: false } }
-                ]
-            }
-            order_by: { endDate: desc }
-        ) {
-            id
-            activeRound
-            title
-        }
-        HandicapCalculated: tournament(
-            limit: 3
-            where: {
-                _not: { player_handicaps: {} }
-                singleRound: { _eq: false }
-            }
-            order_by: { endDate: desc }
-        ) {
-            id
-            title
-            endDate
-        }
-    }
-`;
-
 export const GetTournamentByID = gql`
     query PostsGetQuery($where: tournament_bool_exp!) {
         tournament(where: $where) {
@@ -1077,31 +948,6 @@ export const UndoTournamentRoundMutation = gql`
             _set: { activeRound: $resetRound, cutOffCriteria: $cut }
         ) {
             AffectedRowsQL: affected_rows
-        }
-    }
-`;
-
-export const superAdminStatsQL = gql`
-    query SuperAdminStatsQL {
-        Leagues: league {
-            id
-        }
-        Clubs: club {
-            id
-        }
-        Tours: tour {
-            id
-        }
-        Tournament_Rounds: tournament(where: { singleRound: { _eq: false } }) {
-            id
-        }
-        NON_Tournament_Rounds: tournament(
-            where: { singleRound: { _eq: true } }
-        ) {
-            id
-        }
-        Tour_Rounds: tournament(where: { tourId: { _is_null: false } }) {
-            id
         }
     }
 `;
@@ -2044,125 +1890,6 @@ export const eliminateRoundQL = gql`
 /*******************************************  Leaderboard Quries and Subscriptions ************************************************/
 /******************************************************************************************************************************** */
 
-/* query to fetch data only once when leaderboard is shown, this data usually does not changes */
-export const LeaderboardOneTimeDataQueryQL = gql`
-    query LeaderboardOneTimeDataQuery(
-        $tournamentId: String!
-        $playerId: String!
-    ) {
-        TournamentQL: tournament(
-            where: { _or: [{ id: { _eq: $tournamentId } }] }
-        ) {
-            ...TournamentQL
-            CourseQL: course {
-                ...CourseQL
-                HolesQL: holes(order_by: [{ holeNo: asc }]) {
-                    ...HoleQL
-                }
-            }
-            CategoriesQL: categories {
-                ...TournamentMemberCategoryQL
-            }
-            TeamsQL: teams {
-                ...TournamentTeamQL
-            }
-            OwnRoleManagerQL: role_managers(
-                where: { playerId: { _eq: $playerId } }
-            ) {
-                ...TournamentRoleManagerQL
-            }
-            SubTournamentsQL: sub_tournaments {
-                SubTournamentQL: sub_tournament {
-                    ...TournamentQL
-                }
-            }
-            ParentTournamentQL: parent_tournament {
-                TournamentQL: tournament {
-                    ...TournamentQL
-                    SubTournamentsQL: sub_tournaments {
-                        SubTournamentQL: sub_tournament {
-                            ...TournamentQL
-                        }
-                    }
-                }
-            }
-            LeaderboardAdQL: leaderboard_ad {
-                ...LeaderboardAdQL
-            }
-        }
-    }
-    ${TournamentQL}
-    ${HoleQL}
-    ${ScoreQL}
-    ${TournamentMemberCategoryQL}
-    ${TournamentTeamQL}
-    ${TournamentRoleManagerQL}
-    ${LeaderboardAdQL}
-    ${CourseQL}
-`;
-
-/* subscription to fetch active round and all rounds processed leader live data */
-export const LeaderRoundsSubscriptionQL = gql`
-    subscription LeaderRoundsSubscription(
-        $tournamentId: String!
-        $activeRound: Int!
-    ) {
-        TournamentQL: tournament(
-            where: {
-                _or: [
-                    { id: { _eq: $tournamentId } }
-                    { prefix: { _eq: $tournamentId } }
-                ]
-            }
-        ) {
-            LeaderGrossQL: leaders(
-                where: {
-                    flight: { flightRound: { _eq: $activeRound } }
-                    type: { _eq: "GROSS" }
-                }
-                order_by: [
-                    { position: asc }
-                    { player: { firstName: asc, lastName: asc } }
-                ]
-            ) {
-                ...LeaderQL
-            }
-            LeaderNetQL: leaders(
-                where: {
-                    flight: { flightRound: { _eq: $activeRound } }
-                    type: { _eq: "NET" }
-                }
-                order_by: [
-                    { position: asc }
-                    { player: { firstName: asc, lastName: asc } }
-                ]
-            ) {
-                ...LeaderQL
-            }
-            LeaderAllRoundGrossQL: leader_all_rounds(
-                where: { type: { _eq: "GROSS" } }
-                order_by: [
-                    { position: asc }
-                    { player: { firstName: asc, lastName: asc } }
-                ]
-            ) {
-                ...LeaderAllRoundQL
-            }
-            LeaderAllRoundNetQL: leader_all_rounds(
-                where: { type: { _eq: "NET" } }
-                order_by: [
-                    { position: asc }
-                    { player: { firstName: asc, lastName: asc } }
-                ]
-            ) {
-                ...LeaderAllRoundQL
-            }
-        }
-    }
-    ${LeaderQL}
-    ${LeaderAllRoundQL}
-`;
-
 export const LeaderAllRoundDataQL = gql`
     query leaderAllRoundData($tournamentId: String!) {
         LeaderGrossQL: leader(
@@ -2185,58 +1912,6 @@ export const LeaderAllRoundDataQL = gql`
     ${LeaderQL}
 `;
 
-export const LeaderRoundQueryQL = gql`
-    query LeaderRoundQuery($tournamentId: String!, $round: Int!) {
-        LeaderGrossQL: leader(
-            where: {
-                tournamentId: { _eq: $tournamentId }
-                flight: { flightRound: { _eq: $round } }
-                type: { _eq: "GROSS" }
-            }
-            order_by: [
-                { position: asc }
-                { player: { firstName: asc, lastName: asc } }
-            ]
-        ) {
-            ...LeaderQL
-        }
-        LeaderNetQL: leader(
-            where: {
-                tournamentId: { _eq: $tournamentId }
-                flight: { flightRound: { _eq: $round } }
-                type: { _eq: "NET" }
-            }
-            order_by: [
-                { position: asc }
-                { player: { firstName: asc, lastName: asc } }
-            ]
-        ) {
-            ...LeaderQL
-        }
-    }
-    ${LeaderQL}
-`;
-
-export const getTournamentCountsByClub = gql`
-    query getTournamentCountsByClub($where: tournament_bool_exp!) {
-        Count: tournament(where: $where) {
-            id
-            title
-            matchFormat
-            noOfRounds
-        }
-    }
-`;
-export const getTournamentCountsByClubAll = gql`
-    query getTournamentCountsByClub($where: tournament_bool_exp!) {
-        Count: tournament_aggregate(where: $where) {
-            aggregate {
-                count
-            }
-        }
-    }
-`;
-
 export const getallDashboard = gql`
     query geteverything(
         $adminId: String!
@@ -2254,6 +1929,7 @@ export const getallDashboard = gql`
                 ]
             }
             order_by: [{ startDate: desc }]
+            limit: 8
         ) {
             id
             title
@@ -2262,6 +1938,18 @@ export const getallDashboard = gql`
             admin {
                 firstName
                 lastName
+            }
+        }
+        TournamentCount: tournament_aggregate(
+            where: {_and: [
+                {
+                    singleRound: { _eq: false }
+                    clubId: { _eq: $adminClubId }
+                }
+            ] }
+        ) {
+            aggregate {
+                count
             }
         }
         Count: flight_aggregate(
@@ -2436,6 +2124,7 @@ export const getAllAdmin = gql`
         TournamentQL: tournament(
             where: { singleRound: { _eq: false } }
             order_by: [{ startDate: desc }]
+            limit:8
         ) {
             id
             title
@@ -2444,6 +2133,11 @@ export const getAllAdmin = gql`
             admin {
                 firstName
                 lastName
+            }
+        }
+        TournamentCount: tournament_aggregate(where: { singleRound: { _eq: false } }) {
+            aggregate {
+                count
             }
         }
         Count: flight_aggregate {
