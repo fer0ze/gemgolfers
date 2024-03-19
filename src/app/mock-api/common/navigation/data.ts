@@ -564,18 +564,25 @@ export const compactNavigation: FuseNavigationItem[] = [
 
 export const userNavigation: FuseNavigationItem[] = [
     {
-        id: 'courses',
+        id: 'course',
         title: 'Courses',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/courses',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'course.courses',
+                title: 'Courses',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/courses',
+            },
+        ],
     },
 ]
 export const sectaryNavigation: FuseNavigationItem[] = [
     {
         id: 'report',
         title: 'Reports',
-
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
@@ -586,94 +593,13 @@ export const sectaryNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:clipboard-check',
                 link: '/reports/dailyPlayer'
             },
+            {
+                id: 'courses',
+                title: 'Courses',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/courses',
+            },
         ],
     },
 ]
-export const futuristicNavigation: FuseNavigationItem[] = [
-    {
-        id: 'dashboard',
-        title: 'DashBoard',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/dashboards/project',
-    },
-    {
-        id: 'tournaments',
-        title: 'Tournament',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/tournament',
-    },
-    {
-        id: 'players',
-        title: 'Players',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/players',
-    },
-    {
-        id: 'handicaps',
-        title: 'Handicap',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/handicap',
-    },
-    {
-        id: 'dailyRounds',
-        title: 'DailyRound',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/dailyRound',
-    },
-    {
-        id: 'reports',
-        title: 'Report',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/report',
-    },
-];
-export const horizontalNavigation: FuseNavigationItem[] = [
-    {
-        id: 'dashboard',
-        title: 'DashBoard',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/dashboards/project',
-    },
-    {
-        id: 'tournaments',
-        title: 'Tournament',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/tournament',
-    },
-    {
-        id: 'players',
-        title: 'Players',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/players',
-    },
-    {
-        id: 'handicaps',
-        title: 'Handicap',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/handicap',
-    },
-    {
-        id: 'dailyRounds',
-        title: 'DailyRound',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/dailyRound',
-    },
-    {
-        id: 'reports',
-        title: 'Report',
-        type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
-        link: '/report',
-    },
-];

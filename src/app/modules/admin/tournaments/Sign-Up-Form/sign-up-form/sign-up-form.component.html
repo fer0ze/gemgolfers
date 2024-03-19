@@ -1,10 +1,10 @@
 <div
     class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-card">
     <!-- <div class="flex items-center bg-card h-full"> -->
-        <!-- <div class="h-full">
+    <!-- <div class="h-full">
             <img class="h-full" src="assets/images/logo/GymKhanaHeader.jpg" />
         </div> -->
-        <!-- <div class="z-10 relative w-full max-w-2xl">
+    <!-- <div class="z-10 relative w-full max-w-2xl">
 <div class="text-7xl font-bold leading-none">
     <div>Welcome to</div>
     <div>Gemgolfers</div>
@@ -47,6 +47,17 @@
             </div>
             <div class="mt-2 text-4xl font-extrabold tracking-tight leading-tight">
                 {{ this.tournamentQL?.title }}
+            </div>
+            <div class="flex items-center">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                <div class="leading-6 truncate">
+                    {{
+                    this.tournamentQL?.startDate
+                    | date
+                    }}-{{
+                    this.tournamentQL?.endDate | date
+                    }}
+                </div>
             </div>
             <div class="flex items-baseline mt-0.5 font-medium">
                 <div>Powered by Gemgolfers</div>

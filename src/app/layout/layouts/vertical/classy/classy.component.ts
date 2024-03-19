@@ -79,7 +79,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         if (this.loggedInuser.userRole == 1) {
             this.navigation['default'] = defaultNavigationSuperAdmin;
-
         } else if (this.loggedInuser.adminClubId != null && this.loggedInuser.userRole == 2) {
             this.navigation['default'] = defaultNavigation;
         } else if (this.loggedInuser.userRole == 8) {
@@ -89,8 +88,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             this.user.avatar = 'assets/images/logo/e2esp.png';
         } else {
             this.navigation['default'] = userNavigation;
-            this.user.avatar = 'assets/images/logo/e2esp.png';
-
+            this.user.avatar = 'assets/images/logo/leaderboradlogo.png';
         }
         // //console.log(this.navigation);
 

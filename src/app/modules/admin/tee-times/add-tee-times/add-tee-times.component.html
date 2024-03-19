@@ -1,7 +1,7 @@
 <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Contact form -->
-        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="true" #drawer>
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="'side'" [opened]="true" #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
@@ -100,22 +100,7 @@
                                 <mat-icon matSuffix>golf_course</mat-icon>
                             </mat-form-field>
                         </div>
-                        <div *ngIf="showGuestTime" class="sm:col-span-2">
-                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Guest Start Time:</mat-label>
-                                <input type="time" matInput atp-time-picker formControlName="guestStartTime" />
-                                <mat-error>The input is required.</mat-error>
-
-                            </mat-form-field>
-                        </div>
-                        <div *ngIf="showGuestTime" class="sm:col-span-2">
-                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Guest End Time:</mat-label>
-                                <input type="time" matInput atp-time-picker formControlName="guestEndTime" />
-                                <mat-error>The input is required.</mat-error>
-
-                            </mat-form-field>
-                        </div>
+                        
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Club</mat-label>
@@ -159,7 +144,7 @@
 
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Starting Tee Box:</mat-label>
+                                <mat-label>Club Members Starting Tee Box:</mat-label>
                                 <mat-select (selectionChange)="teeChange($event)" placeholder="Starting Tee Box"
                                     formControlName="startingHole">
                                     <mat-option value="1">Tee Box 1</mat-option>
@@ -181,7 +166,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Tee 1 Start Time:</mat-label>
+                                <mat-label>Tee {{tee}} Start Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="teeOneStartTime" />
                                 <mat-error>The input is required.</mat-error>
 
@@ -189,7 +174,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Tee 1 last Time:</mat-label>
+                                <mat-label>Tee {{tee}} last Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="teeOneEndTime" />
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
@@ -207,6 +192,52 @@
                                 <mat-label>Tee 10 End Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="teeTenEndTime" />
                                 <mat-error>The input is required.</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime" class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Guest Starting Tee Box:</mat-label>
+                                <mat-select (selectionChange)="guestTeeChange($event)" placeholder="Starting Tee Box"
+                                    formControlName="guestStartingHole">
+                                    <mat-option value="1">Tee Box 1</mat-option>
+                                    <mat-option value="10">Tee Box 10</mat-option>
+                                    <mat-option value="both">Both</mat-option>
+                                </mat-select>
+                                <mat-icon matSuffix>golf_course</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime" class="sm:col-span-2">
+                        </div>
+                        <div *ngIf="showGuestTime" class="sm:col-span-2">
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Guest Tee {{guestTee}} Start Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="guestTeeOneStartTime" />
+                                <mat-error>The input is required.</mat-error>
+
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime" class="sm:col-span-2">
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Guest Tee {{guestTee}} End Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="guestTeeOneEndTime" />
+                                <mat-error>The input is required.</mat-error>
+
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime && showGuestTee" class="sm:col-span-2">
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Guest Tee 10 Start Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="guestTeeTenStartTime" />
+                                <mat-error>The input is required.</mat-error>
+
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showGuestTime  && showGuestTee" class="sm:col-span-2">
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Guest Tee 10 End Time:</mat-label>
+                                <input type="time" matInput atp-time-picker formControlName="guestTeeTenEndTime" />
+                                <mat-error>The input is required.</mat-error>
+
                             </mat-form-field>
                         </div>
                     </div>

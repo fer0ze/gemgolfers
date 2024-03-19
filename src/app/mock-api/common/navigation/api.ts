@@ -6,8 +6,7 @@ import {
     compactNavigation,
     defaultNavigation,
     userNavigation,
-    futuristicNavigation,
-    horizontalNavigation,
+
     defaultNavigationSuperAdmin,
     sectaryNavigation,
     tourNavigation,
@@ -24,8 +23,6 @@ export class NavigationMockApi {
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
     private readonly _userNavigation: FuseNavigationItem[] = userNavigation;
     private readonly _defaultNavigationSuperAdmin: FuseNavigationItem[] = defaultNavigationSuperAdmin;
-    private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
-    private readonly _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
     private readonly _sectaryNavigation: FuseNavigationItem[] = sectaryNavigation;
     private loggedInuser: any;
     /**
@@ -49,71 +46,69 @@ export class NavigationMockApi {
         // -----------------------------------------------------------------------------------------------------
         // this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         // //console.log(this.loggedInuser);
-        
+
         this._fuseMockApiService.onGet('api/common/navigation').reply(() => {
-           
-                // Fill compact navigation children using the default navigation
-                this._compactNavigation.forEach((compactNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === compactNavItem.id )
-                        {
-                            compactNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
-                });
-                // Fill compact navigation children using the default navigation
-                // this._defaultNavigationSuperAdmin.forEach((compactNavItem) => {
-                //     this._defaultNavigation.forEach((defaultNavItem) => {
-                //         if ( defaultNavItem.id === compactNavItem.id )
-                //         {
-                //             compactNavItem.children = cloneDeep(defaultNavItem.children);
-                //         }
-                //     });
-                // });
-                this._sectaryNavigation.forEach((compactNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === compactNavItem.id )
-                        {
-                            compactNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
-                });
 
-                // Fill futuristic navigation children using the default navigation
-                this._futuristicNavigation.forEach((futuristicNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === futuristicNavItem.id )
-                        {
-                            futuristicNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
-                });
+            // // Fill compact navigation children using the default navigation
+            // this._compactNavigation.forEach((compactNavItem) => {
+            //     this._defaultNavigation.forEach((defaultNavItem) => {
+            //         if ( defaultNavItem.id === compactNavItem.id )
+            //         {
+            //             compactNavItem.children = cloneDeep(defaultNavItem.children);
+            //         }
+            //     });
+            // });
+            // // Fill compact navigation children using the default navigation
+            // // this._defaultNavigationSuperAdmin.forEach((compactNavItem) => {
+            // //     this._defaultNavigation.forEach((defaultNavItem) => {
+            // //         if ( defaultNavItem.id === compactNavItem.id )
+            // //         {
+            // //             compactNavItem.children = cloneDeep(defaultNavItem.children);
+            // //         }
+            // //     });
+            // // });
+            // this._sectaryNavigation.forEach((compactNavItem) => {
+            //     this._defaultNavigation.forEach((defaultNavItem) => {
+            //         if ( defaultNavItem.id === compactNavItem.id )
+            //         {
+            //             compactNavItem.children = cloneDeep(defaultNavItem.children);
+            //         }
+            //     });
+            // });
 
-                // Fill horizontal navigation children using the default navigation
-                this._horizontalNavigation.forEach((horizontalNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if ( defaultNavItem.id === horizontalNavItem.id )
-                        {
-                            horizontalNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
-                });
+            // // Fill futuristic navigation children using the default navigation
+            // this._futuristicNavigation.forEach((futuristicNavItem) => {
+            //     this._defaultNavigation.forEach((defaultNavItem) => {
+            //         if ( defaultNavItem.id === futuristicNavItem.id )
+            //         {
+            //             futuristicNavItem.children = cloneDeep(defaultNavItem.children);
+            //         }
+            //     });
+            // });
 
-                // Return the response
-                return [
-                    200,
-                    {
-                        compact   : cloneDeep(this._compactNavigation),
-                        default   : cloneDeep(this._defaultNavigation),
-                        secetary   : cloneDeep(this._sectaryNavigation),
-                        defaultAdmimn   : cloneDeep(this._defaultNavigationSuperAdmin),
-                        futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation),
-                        tour:cloneDeep(this._tourNavigation),
-                        courses:cloneDeep(this._userNavigation),
-                    }
-                ];
-           
+            // // Fill horizontal navigation children using the default navigation
+            // this._horizontalNavigation.forEach((horizontalNavItem) => {
+            //     this._defaultNavigation.forEach((defaultNavItem) => {
+            //         if ( defaultNavItem.id === horizontalNavItem.id )
+            //         {
+            //             horizontalNavItem.children = cloneDeep(defaultNavItem.children);
+            //         }
+            //     });
+            // });
+
+            // Return the response
+            return [
+                200,
+                {
+                    compact: cloneDeep(this._compactNavigation),
+                    default: cloneDeep(this._defaultNavigation),
+                    secetary: cloneDeep(this._sectaryNavigation),
+                    defaultAdmimn: cloneDeep(this._defaultNavigationSuperAdmin),
+                    tour: cloneDeep(this._tourNavigation),
+                    courses: cloneDeep(this._userNavigation),
+                }
+            ];
+
         });
     }
 }

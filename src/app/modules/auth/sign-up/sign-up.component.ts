@@ -83,6 +83,15 @@ export class AuthSignUpComponent implements OnInit {
                         type   : 'success',
                         message: 'Welcome! Your account has been created. Please proceed to log in.'
                     };
+                    setTimeout(() => {
+                        // Hide alert after 2 seconds
+                        this.showAlert = false;
+                    
+                        // Navigate to the sign-in page after hiding the alert
+                        this._router.navigateByUrl('/sign-in').catch((error) => {
+                            console.error('Navigation error:', error);
+                        });
+                    }, 1500);
                 },
                 (response) => {
 

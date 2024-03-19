@@ -34,6 +34,7 @@ export class AddTeeTimesComponent implements OnInit {
     scheduleForm: FormGroup;
     loggedInuser: Player;
     showTeeTime: boolean = false;
+    showGuestTee: boolean = false;
     showGuestTime: boolean = false;
     teeSlots: any[] = [];
     minDate: Date;
@@ -42,7 +43,8 @@ export class AddTeeTimesComponent implements OnInit {
     Clubs: Club[] = [];
     filteredCourseOptions: any;
     filteredClubOptions: any;
-    drawerMode: 'over' | 'side' = 'side';
+    tee: '1' | '10' = '1';
+    guestTee: '1' | '10' = '1';
     hideClubs: boolean = true;
     constructor(
         private fb: FormBuilder,
@@ -65,14 +67,17 @@ export class AddTeeTimesComponent implements OnInit {
             teeOneEndTime: ['16:00', Validators.required],
             teeTenStartTime: ['09:00', Validators.required],
             teeTenEndTime: ['16:00', Validators.required],
-            guestStartTime: ['09:00', Validators.required],
-            guestEndTime: ['16:00', Validators.required],
+            guestTeeOneStartTime: ['09:00', Validators.required],
+            guestTeeOneEndTime: ['16:00', Validators.required],
+            guestTeeTenStartTime: ['09:00', Validators.required],
+            guestTeeTenEndTime: ['16:00', Validators.required],
             interval: [5, Validators.required],
             courseName: ['', Validators.required],
             club: ['', Validators.required],
             noOfPlayers: ['4', Validators.required],
             allowGuest: ['0', Validators.required],
             startingHole: ['1', Validators.required],
+            guestStartingHole: ['1', Validators.required],
         });
         let dataClubs = await this.facadeService.getClubList();
         this.Clubs = dataClubs.club;
@@ -218,7 +223,7 @@ export class AddTeeTimesComponent implements OnInit {
 
             if (response) {
                 this.snackBar.open('Tee Time has been created.', 'x', {
-                    duration: 5000,
+                    duration: 2000,
                 });
                 this.reset();
                 this.router.navigate(['/teetimes']);
@@ -266,10 +271,10 @@ export class AddTeeTimesComponent implements OnInit {
     }
 
     generateTeeTimes() {
-        
+
         try {
             this.teeSlots = [];
-            const createSlot = (hole, startTime, endTime) => {
+            const createSlot = (hole, startTime, endTime, guestHole) => {
                 let startLimit = new Date(Constants.DEFAULT_DATE + ' ' + startTime.substr(0, 5));
                 const endLimit = new Date(Constants.DEFAULT_DATE + ' ' + endTime.substr(0, 5));
                 while (startLimit <= endLimit) {
@@ -277,17 +282,21 @@ export class AddTeeTimesComponent implements OnInit {
                     const m = startLimit.getMinutes();
                     const time = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
                     const allowGuest = this.scheduleForm.value.allowGuest == '1' &&
-                        this.scheduleForm.value.guestStartTime &&
-                        this.scheduleForm.value.guestEndTime &&
-                        startLimit >= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestStartTime.substr(0, 5)) &&
-                        startLimit <= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestEndTime.substr(0, 5));
+                        this.scheduleForm.value.guestTeeOneStartTime && hole == guestHole &&
+                        this.scheduleForm.value.guestTeeOneEndTime &&
+                        startLimit >= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneStartTime.substr(0, 5)) &&
+                        startLimit <= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneEndTime.substr(0, 5));
                     this.teeSlots.push({ hole, time, allowGuest });
                     startLimit.setMinutes(startLimit.getMinutes() + this.scheduleForm.value.interval);
                 }
             };
-            createSlot(1, this.scheduleForm.value.teeOneStartTime, this.scheduleForm.value.teeOneEndTime);
+            let hole = this.scheduleForm.value.startingHole !== 'both'
+                ? Number(this.scheduleForm.value.startingHole) : 1;
+            let guesthole = this.scheduleForm.value.guestStartingHole !== 'both'
+                ? Number(this.scheduleForm.value.guestStartingHole) : 1;
+            createSlot(hole, this.scheduleForm.value.teeOneStartTime, this.scheduleForm.value.teeOneEndTime, guesthole);
             if (this.scheduleForm.value.startingHole == 'both') {
-                createSlot(10, this.scheduleForm.value.teeTenStartTime, this.scheduleForm.value.teeTenEndTime);
+                createSlot(10, this.scheduleForm.value.teeTenStartTime, this.scheduleForm.value.teeTenEndTime, guesthole);
             }
         } catch { }
     }
@@ -303,8 +312,20 @@ export class AddTeeTimesComponent implements OnInit {
         console.log(event);
         if (event.value == 'both') {
             this.showTeeTime = true;
+            this.tee = '1';
         } else {
+            this.tee = event.value;
             this.showTeeTime = false;
+        }
+    }
+    public guestTeeChange(event) {
+        console.log(event);
+        if (event.value == 'both') {
+            this.showGuestTee = true;
+            this.guestTee = '1';
+        } else {
+            this.guestTee = event.value;
+            this.showGuestTee = false;
         }
     }
     public participantsChange(event) {

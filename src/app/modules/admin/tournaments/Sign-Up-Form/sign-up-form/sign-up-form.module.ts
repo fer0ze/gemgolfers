@@ -15,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FuseAlertModule } from '@fuse/components/alert';
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
     declarations: [SignUpFormComponent],
     imports: [
@@ -27,7 +28,7 @@ import { FuseAlertModule } from '@fuse/components/alert';
         MatButtonToggleModule,
         MatSnackBarModule,
         MatDialogModule,
-        MatButtonModule,
+        MatButtonModule,MatIconModule,
         MatCheckboxModule,
         ReactiveFormsModule,
         MatProgressBarModule,
