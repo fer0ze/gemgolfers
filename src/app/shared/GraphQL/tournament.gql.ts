@@ -285,7 +285,7 @@ export const getTourGuides = gql`
 `;
 export const getLeagues = gql`
     query getLeagues {
-        league {
+        league( order_by: { dateCreated: desc }) {
             id
             name
             dateCreated
@@ -294,6 +294,37 @@ export const getLeagues = gql`
             }
             tournaments {
                 id
+            }
+            admin{
+                firstName
+                lastName
+                email
+            }
+        }
+    }
+`;
+export const getLeaguesListByDate = gql`
+    query getLeaguesListByDate($fromDate: date!, $toDate: date!) {
+        league(
+            where: {
+                _and: [
+                    { dateCreated: { _lte: $toDate } }
+                    { dateCreated: { _gt: $fromDate } }
+                ]
+            }){
+            id
+            name
+            dateCreated
+            members {
+                playerId
+            }
+            tournaments {
+                id
+            }
+            admin{
+                firstName
+                lastName
+                email
             }
         }
     }
@@ -368,6 +399,59 @@ export const GetTournamentsForAdminCompeleted = gql`
             HandicapCalculated: player_handicaps(limit: 1) {
                 playerId
                 tournamentId
+            }
+        }
+    }
+`;
+
+export const GetTournamentsReport = gql`
+    query GetTournamentsReport {
+        tournament(
+            where: { singleRound: { _eq: false } }
+            order_by: { createdAt: desc }) {
+            id
+            title
+            startDate
+            endDate
+            noOfRounds
+            matchFormat
+            createdAt
+            admin {
+                firstName
+                lastName
+                email
+            }
+            flights_aggregate{
+                aggregate{count}
+            }
+        }
+    }
+`;
+export const GetTournamentsReportByDate = gql`
+    query GetTournamentsReportByDate($fromDate: timestamptz!, $toDate: timestamptz!) {
+        tournament(
+            where: {
+                _and: [
+                    { createdAt: { _lte: $toDate } }
+                    { createdAt: { _gt: $fromDate } }
+                    { singleRound: { _eq: false } }
+                ]
+            }
+            order_by: { createdAt: desc }) {
+            id
+            title
+            startDate
+            endDate
+            noOfRounds
+            matchFormat
+            createdAt
+            admin {
+                firstName
+                lastName
+                email
+            }
+            flights_aggregate{
+                aggregate{count}
             }
         }
     }
@@ -2115,6 +2199,68 @@ export const getTours = gql`
             }
             members {
                 playerId
+            }
+        }
+    }
+`;
+export const getToursReport = gql`
+    query getTourDashboard {
+        tour(
+            order_by: [{ dateCreated: desc }]
+        ) {
+            id
+            name
+            logo
+            dateCreated
+            startDate
+            endDate
+            tournaments {
+                id
+                leagueId
+                title
+            }
+            members {
+                playerId
+            }
+            admin{
+                firstName
+                lastName
+                id
+                email
+            }
+        }
+    }
+`;
+export const getToursListByDate = gql`
+    query getTourDashboard($fromDate: date!, $toDate: date!) {
+        tour(
+            where: {
+                _and: [
+                    { dateCreated: { _lte: $toDate } }
+                    { dateCreated: { _gt: $fromDate } }
+                ]
+            }
+            order_by: [{ dateCreated: desc }]
+        ) {
+            id
+            name
+            logo
+            dateCreated
+            startDate
+            endDate
+            tournaments {
+                id
+                leagueId
+                title
+            }
+            members {
+                playerId
+            }
+            admin{
+                firstName
+                lastName
+                id
+                email
             }
         }
     }

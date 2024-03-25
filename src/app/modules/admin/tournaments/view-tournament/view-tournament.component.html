@@ -267,7 +267,11 @@
                             (selectedTabChange)="tabClicked($event)">
                             <mat-tab *ngFor="let round of rounds" [label]="round.label">
                                 <ng-template matTabContent>
-                                    <div class="flex flex-auto justify-end">
+                                    <div class="flex flex-auto justify-end gap-3">
+                                        <button *ngIf="activeRound > 1" mat-raised-button mat-button class="my-3 float-right" color="primary"
+                                            (click)="undoRound()">
+                                            Undo Round {{activeRound}}
+                                        </button>
                                         <button mat-raised-button mat-button class="my-3 float-right" color="warn"
                                             (click)="closeRound()">
                                             Close Round {{activeRound}}

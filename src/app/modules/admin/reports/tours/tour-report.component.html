@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between w-full">
             <div>
                 <div class="text-3xl font-semibold tracking-tight leading-8">
-                    Players dashboard
+                    Tours dashboard
                 </div>
                 <div class="font-medium tracking-tight text-secondary">
                     Monitor metrics, check reports and review performance
@@ -24,10 +24,10 @@
                         <div
                             class="mr-4 text-2xl md:text-3xl font-semibold tracking-tight leading-7"
                         >
-                            New Players Overview
+                            New Leagues Overview
                         </div>
                         <div class="font-medium text-secondary">
-                            Number of unique players
+                            Number of unique Leagues
                         </div>
                     </div>
                     <div class="ml-2">
@@ -83,17 +83,17 @@
             <div class="sm:col-span-2 lg:col-span-1 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Tournaments
+                        This month Tours
                     </div>
-                    <div class="ml-2">
-                        <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/tournament']">
+                    <!-- <div class="ml-2">
+                        <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/Leagues']">
                             <span class="font-medium text-sm text-secondary">View Detail</span>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="flex flex-col lg:flex-row lg:items-center mx-6 mt-3">
                     <div class="text-7xl font-bold tracking-tighter leading-tight">
-                        {{ this.data?.tournament_aggregate?.aggregate?.count }}
+                        {{ this.dataMembersE[0] | number : "1.0-0" }}
                     </div>
                     <div class="flex lg:flex-col lg:ml-3">
                         <mat-icon class="icon-size-5 text-red-500"
@@ -116,17 +116,17 @@
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Leagues
+                        Last month Tours
                     </div>
-                    <div class="ml-2">
+                    <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/league']">
                             <span class="font-medium text-sm text-secondary">View Detail</span>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="flex flex-col lg:flex-row lg:items-center mx-6 mt-3">
                     <div class="text-7xl font-bold tracking-tighter leading-tight">
-                        {{ this.data?.league_aggregate?.aggregate?.count  }}
+                        {{ this.dataMembersE[1] | number : "1.0-0" }}
                     </div>
                     <div class="flex lg:flex-col lg:ml-3">
                         <mat-icon class="icon-size-5 text-red-500"
@@ -149,17 +149,17 @@
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Tours
+                        Previous Tours
                     </div>
-                    <div class="ml-2">
+                    <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/tour']">
                             <span class="font-medium text-sm text-secondary">View Detail</span>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="flex flex-col lg:flex-row lg:items-center mx-6 mt-3">
                     <div class="text-7xl font-bold tracking-tighter leading-tight">
-                        {{ this.data?.tour_aggregate?.aggregate?.count  }}
+                        {{ this.dataMembersE[2] | number : "1.0-0" }}
                     </div>
                     <div class="flex lg:flex-col lg:ml-3">
                         <mat-icon class="icon-size-5 text-red-500"
@@ -183,15 +183,15 @@
         <div class="flex flex-col flex-auto mt-8 bg-card shadow rounded-2xl overflow-hidden">
             <div class="flex items-start justify-between m-6 mb-0">
                 <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                    Players
+                    Tours
                 </div>
                 <div class="ml-2">
                     <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button
                         [matMenuTriggerFor]="conversionMenu">
-                        <span class="font-medium text-sm text-secondary">30 days</span>
+                        <span class="font-medium text-sm text-secondary">30 months</span>
                     </button>
                     <mat-menu #conversionMenu="matMenu">
-                        <button mat-menu-item>30 days</button>
+                        <button mat-menu-item>30 months</button>
                     </mat-menu>
                 </div>
             </div>
@@ -200,25 +200,22 @@
                     <div class="flex flex-col">
                         <div class="flex items-center">
                             <div class="font-medium text-secondary leading-5">
-                                Overall Players
+                                Overall Tours
                             </div>
-                            <mat-icon class="ml-1.5 icon-size-4 text-hint"
-                                [svgIcon]="'heroicons_solid:information-circle'" [matTooltip]="
-                                    'Score is calculated by using the historical ratio between Page Views and Visitors. Best score is 1000, worst score is 0.'
-                                "></mat-icon>
+                            
                         </div>
                         <div class="flex items-start mt-2">
                             <div class="text-4xl font-bold tracking-tight leading-none">
-                                {{ this.data.player.length }}
+                                {{ this.data.tour.length }}
                             </div>
-                            <div class="flex items-center ml-2">
+                            <!-- <div class="flex items-center ml-2">
                                 <mat-icon class="icon-size-5 text-green-500" [svgIcon]="
                                         'heroicons_solid:arrow-circle-up'
                                     "></mat-icon>
                                 <div class="ml-1 text-md font-medium text-green-500">
                                     42.9%
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <!-- <div class="flex flex-col">
@@ -228,7 +225,7 @@
                             </div>
                             <mat-icon class="ml-1.5 icon-size-4 text-hint"
                                 [svgIcon]="'heroicons_solid:information-circle'" [matTooltip]="
-                                    'Average Ratio is the average ratio between Players and Dailyround.'
+                                    'Average Ratio is the average ratio between Leagues and Dailyround.'
                                 "></mat-icon>
                         </div>
                         <div class="flex items-start mt-2">
@@ -252,7 +249,7 @@
                             </div>
                             <mat-icon class="ml-1.5 icon-size-4 text-hint"
                                 [svgIcon]="'heroicons_solid:information-circle'" [matTooltip]="
-                                    'Predicted Ratio is calculated by using historical ratio, current players and your goal targets.'
+                                    'Predicted Ratio is calculated by using historical ratio, current Leagues and your goal targets.'
                                 "></mat-icon>
                         </div>
                         <div class="flex items-start mt-2">
@@ -283,15 +280,15 @@
         </div>
 
         <!-- Section title -->
-        <div class="w-full mt-12">
+        <!-- <div class="w-full mt-12">
             <div class="text-2xl font-semibold tracking-tight leading-6">
                 Your Audience
             </div>
             <div class="font-medium tracking-tight text-secondary">
                 Demographic properties of your users
             </div>
-        </div>
-        <div class="grid grid-cols-4 gap-8 w-full mt-6 md:mt-8">
+        </div> -->
+        <div class="grid grid-cols-4 gap-8 w-full mt-4 md:mt-4">
             <!-- New vs. Returning -->
             <div class="flex flex-col col-span-4 flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
                 <div class="flex flex-auto justify-end">
@@ -304,7 +301,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col flex-auto mt-6">
-                    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+                    <table mat-table [dataSource]="dataSource" matSort>
                         <ng-container matColumnDef="id">
                             <th mat-header-cell *matHeaderCellDef>Sr.</th>
                             <td mat-cell *matCellDef="let row; let i = index">
@@ -320,86 +317,31 @@
                         <ng-container matColumnDef="date">
                             <th mat-header-cell *matHeaderCellDef>Date</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.date | date: 'MMM d, y'}}
+                                {{ row.date | date: 'MMM d, y' }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="email">
-                            <th mat-header-cell *matHeaderCellDef>Email</th>
+                        <ng-container matColumnDef="tournaments">
+                            <th mat-header-cell *matHeaderCellDef>Tournaments</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.email }}
+                                {{ row.tournaments }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="phone">
-                            <th mat-header-cell *matHeaderCellDef>Phone</th>
+                        <ng-container matColumnDef="owner">
+                            <th mat-header-cell *matHeaderCellDef>Created By</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.phone }}
+                                {{ row.owner }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="flights">
-                            <th mat-header-cell *matHeaderCellDef>Rounds Played</th>
+                        <ng-container matColumnDef="members">
+                            <th mat-header-cell *matHeaderCellDef>Tour Members</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
-                                    (click)="toggleDetails(row.id)">
-                                    <mat-icon class="icon-size-5" [svgIcon]="
-                                            selectedPlayer?.id === row.id
-                                                ? 'heroicons_solid:chevron-up'
-                                                : 'heroicons_solid:chevron-down'
-                                        "></mat-icon>
-                                </button>
+                                {{ row.members }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="expandedDetail">
-                            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-                                <div class="example-element-detail" [@detailExpand]="
-                                        element == expandedElement
-                                            ? 'expanded'
-                                            : 'collapsed'
-                                    ">
-                                    <div class="flex flex-col col-span-4 flex-auto bg-card shadow rounded-2xl border-gray-300 overflow-hidden m-4">
-
-                                        <table mat-table [dataSource]="dataSourcePlayer" matSort>
-                                        
-                                            <ng-container matColumnDef="dailyRound">
-                                                <th mat-header-cell *matHeaderCellDef>Daily Rounds</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.dailyRoundCount }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="tournament">
-                                                <th mat-header-cell *matHeaderCellDef>Tournaments</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.tournamentCount }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="league">
-                                                <th mat-header-cell *matHeaderCellDef>League</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.leagueCount }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="tour">
-                                                <th mat-header-cell *matHeaderCellDef>Tours</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.tourCount }}
-                                                </td>
-                                            </ng-container>
-                                            <tr mat-header-row *matHeaderRowDef="displayedPlayersColumns"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: displayedPlayersColumns" ></tr>
-                                            
-                                        </table>
-                                    </div>
-                                </div>
-                            </td>
-                        </ng-container>
+                        
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="example-element-row"
-                            [class.example-expanded-row]="
-                                expandedElement === row
-                            " (click)="expandedElement = expandedElement === row ? null : row"></tr>
-                        <tr mat-row *matRowDef="
-                                let element;
-                                columns: ['expandedDetail']
-                            " id="{{element.id}}" class="example-detail-row warn"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns" ></tr>
+                        
                     </table>
                     <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 100,200,500,1000]"></mat-paginator>
                 </div>

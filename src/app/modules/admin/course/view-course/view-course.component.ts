@@ -433,7 +433,7 @@ export class ViewCourseComponent implements OnInit {
     async setHoles(Number: number) {
         //console.log(Number);
         let holes = await this.facadeService.getCourseHole(this.courseID);
-        //console.log(holes['HolesQL']);
+        console.log(holes['HolesQL']);
 
         if (holes['HolesQL'].length > 0) {
             let holeCount = holes['HolesQL'][0].holes;

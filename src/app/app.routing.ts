@@ -292,6 +292,27 @@ export const appRoutes: Route[] = [
                         'app/modules/admin/reports/daily-teeTime-report/daily-starter-report.module'
                     ).then((m) => m.DailyTeeTimeReportModule),
             },
+            {
+                path: 'reports/tournament',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/tournaments/tournament-report.module'
+                    ).then((m) => m.TournamentReportModule),
+            },
+            {
+                path: 'reports/league',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/leagues/league-report.module'
+                    ).then((m) => m.LeagueReportModule),
+            },
+            {
+                path: 'reports/tour',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/tours/tour-report.module'
+                    ).then((m) => m.TourReportModule),
+            },
             //{path: 'matchplay', loadChildren: () => import('app/modules/admin/matchplay/matchplay.module').then(m => m.MatchplayModule)},
         ],
     },

@@ -1,0 +1,73 @@
+<div mat-dialog-content>
+    <div>
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
+        </mat-form-field>
+        <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>Sr.</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.count }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.name }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.date | date: 'MMM d, y' }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="noOfRounds">
+                <th mat-header-cell *matHeaderCellDef>Rounds</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.rounds }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef>Created By</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.owner }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="noOfFlights">
+                <th mat-header-cell *matHeaderCellDef>Flights</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.flights }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="matchFormat">
+                <th mat-header-cell *matHeaderCellDef>Format</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.matchFormat }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef>Start Date</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.startDate | date: 'MMM d, y' }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef>End Date</th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    {{ row.endDate | date: 'MMM d, y' }}
+                </td>
+            </ng-container>
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" ></tr>
+            
+        </table>
+        <mat-paginator #MatPaginatorA="matPaginator" [pageSize]="10"
+            [pageSizeOptions]="[10,20,30, 50, 100]"></mat-paginator>
+    </div>
+</div>
+<div mat-dialog-actions class="flex justify-center mt-4">
+    <button mat-raised-button (click)="close()">Close</button>
+
+</div>

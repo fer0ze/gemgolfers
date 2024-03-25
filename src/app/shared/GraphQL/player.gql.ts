@@ -46,6 +46,21 @@ export const getPlayersListReport = gql`
             phone
             gender
         }
+        tournament_aggregate(where:{singleRound:{_eq:false}}) {
+            aggregate {
+                count
+            }
+        }
+        tour_aggregate {
+            aggregate {
+                count
+            }
+        }
+        league_aggregate {
+            aggregate {
+                count
+            }
+        }
     }
 `;
 export const GetPlayersMerge = gql`
@@ -286,7 +301,7 @@ export const GetPlayersByTour = gql`
         tour_member(where: $where) {
             tourId
             playerId
-            player{
+            player {
                 id
                 firstName
                 lastName
@@ -548,7 +563,7 @@ export const getPlayerByEmailLogin = gql`
             id
             adminClubId
             firstName
-            email 
+            email
             firebaseUid
             lastName
             fullName
@@ -566,11 +581,11 @@ export const getPlayerByEmailLogin = gql`
                     }
                 }
             }
-            role{
+            role {
                 id
                 name
             }
-            tour_admin{
+            tour_admin {
                 id
                 adminId
             }
@@ -604,6 +619,18 @@ export const getTotalFlightsPlayedByPlayer = gql`
     query PostsGetQuery($where: flight_member_bool_exp!) {
         flight_member(where: $where) {
             flightId
+            flight{
+                id
+                tournament{
+                    id
+                    title
+                    singleRound
+                    league{
+                        id
+                        name
+                    }
+                }
+            }
         }
     }
 `;
@@ -666,7 +693,10 @@ export const AddMutation = gql`
     }
 `;
 export const AddTourMemberMutation = gql`
-    mutation insert_player($objects: [player_insert_input!]!,$tourMember:[tour_member_insert_input!]!) {
+    mutation insert_player(
+        $objects: [player_insert_input!]!
+        $tourMember: [tour_member_insert_input!]!
+    ) {
         insert_player(objects: $objects) {
             returning {
                 id
@@ -739,21 +769,13 @@ export const SavePlayersList = gql`
     ) {
         PlayerEntryQLi: insert_player(
             objects: $playersToSave
-            on_conflict: {
-                constraint: player_pkey
-                update_columns: [
-                    
-                ]
-            }
+            on_conflict: { constraint: player_pkey, update_columns: [] }
         ) {
             AffectedRowsQLi: affected_rows
         }
         insert_club_member(
             objects: $clubmembers
-            on_conflict: {
-                constraint: club_member_pkey
-                update_columns: []
-            }
+            on_conflict: { constraint: club_member_pkey, update_columns: [] }
         ) {
             returning {
                 playerId
@@ -822,14 +844,10 @@ export const UpdateHandicapMutation = gql`
     }
 `;
 export const UpdatePlayerTeeMutation = gql`
-    mutation updateMutation(
-        $id: String!
-        $tee: String!
-        $teeId:Int!
-    ) {
+    mutation updateMutation($id: String!, $tee: String!, $teeId: Int!) {
         PlayerUpdateQL: update_flight_member(
             where: { playerId: { _eq: $id } }
-            _set: { playingTee: $tee, tee_id:$teeId }
+            _set: { playingTee: $tee, tee_id: $teeId }
         ) {
             AffectedRowsQL: affected_rows
         }
@@ -1325,59 +1343,54 @@ export const playerUpdatedHandicapReport = gql`
             }
         }
     }
-   
 `;
 export const playerUpdatedHandicapReportAdmin = gql`
-query playerUpdatedHandicapReport(
-    $fromDate: date!
-    $toDate: date!
-) {
-    player_handicap(
-        where: {
-            _and: [
-                { tournament: { endDate: { _gte: $toDate } } }
-                { tournament: { endDate: { _lte: $fromDate } } }
-            ]
+    query playerUpdatedHandicapReport($fromDate: date!, $toDate: date!) {
+        player_handicap(
+            where: {
+                _and: [
+                    { tournament: { endDate: { _gte: $toDate } } }
+                    { tournament: { endDate: { _lte: $fromDate } } }
+                ]
+            }
+            order_by: [{ tournament: { endDate: asc } }]
+        ) {
+            playerId
+            handicap
+            oldHandicap
+            score
+            grossScore
+            adjustedScore
+            PlayerQL: player {
+                fullName
+                membershipNumber
+            }
+            tournament {
+                endDate
+            }
         }
-        order_by: [{ tournament: { endDate: asc } }]
-    ) {
-        playerId
-        handicap
-        oldHandicap
-        score
-        grossScore
-        adjustedScore
-        PlayerQL: player {
-            fullName
-            membershipNumber
-        }
-        tournament {
-            endDate
-        }
-    }
-    player_handicap_whs(
-        where: {
-            _and: [
-                { tournament: { endDate: { _gte: $toDate } } }
-                { tournament: { endDate: { _lte: $fromDate } } }
-            ]
-        }
-        order_by: [{ tournament: { endDate: desc } }]
-    ) {
-        adjustedScore
-        handicapDifferential
-        handicapIndex
-        score
-        player {
-            fullName
-            membershipNumber
-        }
-        tournament {
-            endDate
+        player_handicap_whs(
+            where: {
+                _and: [
+                    { tournament: { endDate: { _gte: $toDate } } }
+                    { tournament: { endDate: { _lte: $fromDate } } }
+                ]
+            }
+            order_by: [{ tournament: { endDate: desc } }]
+        ) {
+            adjustedScore
+            handicapDifferential
+            handicapIndex
+            score
+            player {
+                fullName
+                membershipNumber
+            }
+            tournament {
+                endDate
+            }
         }
     }
-}
-   
 `;
 export const playerUpdatedHandicapWHSReport = gql`
     query playerUpdatedHandicapReport(
@@ -1389,8 +1402,8 @@ export const playerUpdatedHandicapWHSReport = gql`
             where: {
                 _and: [
                     { tournament: { clubId: { _eq: $clubId } } }
-                    { updatedAt: { _gte: $toDate } } 
-                    { updatedAt: { _lte: $fromDate } } 
+                    { updatedAt: { _gte: $toDate } }
+                    { updatedAt: { _lte: $fromDate } }
                 ]
             }
             order_by: [{ tournament: { endDate: desc } }]

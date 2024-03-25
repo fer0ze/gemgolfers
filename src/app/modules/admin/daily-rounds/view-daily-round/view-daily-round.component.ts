@@ -1069,8 +1069,8 @@ export class ViewDailyRoundComponent implements OnInit {
                     let holesSetB = holesSets.find(
                         (x) => x.holeSets == obj.backId
                     );
-                    //console.log(holesSetA);
-                    //console.log(holesSetB);
+                    console.log(holesSetA);
+                    console.log(holesSetB);
                     let counter = 1;
                     for (let i of holes) {
                         if (holesSetA.id == i.holeSetId) {

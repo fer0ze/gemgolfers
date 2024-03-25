@@ -3088,7 +3088,7 @@ export class AddTournamentComponent implements OnInit {
                                 courseHoleSets: this.currentTournament
                                     .courseHoleSets
                                     ? this.currentTournament.courseHoleSets
-                                    : 0,
+                                    : 3,
                                 flightNo: fcnter,
                                 flightRound: 1,
                                 categoryRound: 1,

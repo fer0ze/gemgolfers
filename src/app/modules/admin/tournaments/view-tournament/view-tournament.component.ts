@@ -2101,7 +2101,7 @@ export class ViewTournamentComponent implements OnInit {
                         tournamentId: this.tournamentID,
                         courseId: this.fullTournament.courseId,
                         adminId: this.loggedInUser.id,
-                        courseHoleSets: 0,
+                        courseHoleSets: this.fullTournament.courseHoleSets ? this.fullTournament.courseHoleSets : 3,
                         flightNo: this.runningFlights,
                         flightRound: this.activeRound + 1,
                         startingHole: teeBox,

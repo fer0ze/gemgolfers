@@ -16,15 +16,16 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
-import { Resolver } from './signUp-resolver.component';
-import { SignUpService } from './signUp-service';
+import { Resolver } from './tournament-resolver.component';
+import { TournamentService } from './tournament-service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { ProjectService } from '../../dashboards/project/project.service';
+import { DialogTournamentComponent } from '../../dialogs/dialog-tournament/dialog-tournament.component';
 @Component({
     selector: 'app-signUp-report',
-    templateUrl: './signUp-report.component.html',
-    styleUrls: ['./signUp-report.component.scss'],
+    templateUrl: './tournament-report.component.html',
+    styleUrls: ['./tournament-report.component.scss'],
     animations: [
         trigger('detailExpand', [
             state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -36,7 +37,7 @@ import { ProjectService } from '../../dashboards/project/project.service';
         ]),
     ],
 })
-export class SignUpReportComponent implements OnInit, AfterViewInit {
+export class TournamentReportComponent implements OnInit, AfterViewInit {
     chartVisitors: ApexOptions;
     showdata: Promise<boolean>;
     chartConversions: ApexOptions;
@@ -73,9 +74,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
     mobilePlayers: number = 0;
     SecondLastMonth: number = 0;
     dataSource: MatTableDataSource<any>;
-    dataSourcePlayer: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'date', 'email', 'phone', 'flights'];
-    displayedPlayersColumns = ['dailyRound', 'tournament', 'league', 'tour'];
+    displayedColumns = ['id', 'name', 'date', 'noOfRounds', 'noOfFlights', 'matchFormat', 'startDate', 'endDate', 'owner'];
     monthName = [
         'January',
         'February',
@@ -90,7 +89,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         'November',
         'December',
     ];
-    flightCount: any;
+    flightCount: number = 0;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -101,7 +100,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         private facadeService: FacadeService,
         private route: ActivatedRoute,
         private apollo: Apollo,
-        private _data: SignUpService, private _projectService: ProjectService,
+        private _data: TournamentService, private _projectService: ProjectService,
         public dialog: MatDialog,
     ) { }
 
@@ -121,7 +120,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 console.log(data);
                 let d = new Date();
                 d.setDate(1);
-                for (let i = 0; i <= 18; i++) {
+                for (let i = 0; i <= 50; i++) {
                     // //console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
                     this.labelsE.push(
                         this.monthName[d.getMonth()] + ' ' + d.getFullYear()
@@ -160,12 +159,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 this._seriesE[0] = [
                     {
                         data: this.dataMembersE,
-                        name: 'Players',
-                        type: 'line',
-                    },
-                    {
-                        data: this.dataMembersE,
-                        name: 'Players',
+                        name: 'Tournaments',
                         type: 'column',
                     },
                 ];
@@ -192,7 +186,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         //console.log(match);
         let flag: boolean = true;
 
-        for (let item of this.data.player) {
+        for (let item of this.data.tournament) {
             if (item.createdAt != null) {
                 let SplitDate = item.createdAt?.split('T');
                 if (SplitDate[0] == prevPlayerDate) {
@@ -219,11 +213,14 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 let obj = {
                     id: item.id,
                     count: ++count,
-                    name: item.fullName,
+                    name: item.title,
                     date: item.createdAt?.substring(0, 10),
-                    email: item.email,
-                    phone: item.phone,
-                    flights: 0,
+                    startDate: item.startDate?.substring(0, 10),
+                    endDate: item.endDate?.substring(0, 10),
+                    rounds: item.noOfRounds,
+                    flights: item.flights_aggregate.aggregate?.count,
+                    matchFormat: item.matchFormat,
+                    owner: item.admin.firstName + ' ' + item.admin.lastName + ' (' + item.admin.email + ')',
                 };
                 let date = new Date(item?.createdAt).toLocaleString('default', {
                     month: 'long',
@@ -252,8 +249,8 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 rows.push(obj);
             }
         }
-        this.clubPlayers = (5000 * 100) / this.data.player.length;
-        this.mobilePlayers = (4000 * 100) / this.data.player.length;
+        // this.clubPlayers = (5000 * 100) / this.data.tournament.length;
+        // this.mobilePlayers = (4000 * 100) / this.data.tournament.length;
         this.dataSource = new MatTableDataSource(rows);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -285,10 +282,6 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         //console.log(this.dataMembers);
     }
     async toggleDetails(productId: string) {
-        let dailyRoundCount = 0;
-        let tournamentCount = 0;
-        let leagueCount = 0;
-        let rows = [];
         // If the product is already selected...
         if (this.selectedPlayer != null && this.selectedPlayer == productId) {
             // Close the details
@@ -311,40 +304,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         let count = await this.facadeService.getTotalFlightsPlayedByPlayer(
             productId
         );
-        console.log(count);
-
-        this.flightCount = count['flight_member'];
-        for (let obj of this.flightCount) {
-            if (obj.flight.tournament.singleRound) {
-                dailyRoundCount++;
-            } else {
-                tournamentCount++;
-            }
-            if (obj.flight.tournament.league) {
-                leagueCount++;
-            }
-            let item = {
-                id: obj.flightId,
-                dailyRoundCount: dailyRoundCount,
-                tournamentCount: tournamentCount,
-                leagueCount: leagueCount,
-                tourCount: 0,
-            }
-            rows.push(item);
-        }
-        if (rows.length == 0) {
-            let item = {
-                id: '1',
-                dailyRoundCount: 0,
-                tournamentCount: 0,
-                leagueCount: 0,
-                tourCount: 0,
-            }
-            rows.push(item);
-        }
-        this.dataSourcePlayer = new MatTableDataSource(rows);
-        this.dataSourcePlayer.paginator = this.paginator;
-        this.dataSourcePlayer.sort = this.sort;
+        this.flightCount = count['flight_member'].length;
         const selectedPlayerElement = document.getElementById(productId);
         if (selectedPlayerElement) {
             selectedPlayerElement.classList.remove('warn');
@@ -352,103 +312,6 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         this.selectedPlayer = productId;
     }
     private _prepareChartData(): void {
-        // Visitors
-        // this.chartVisitors = {
-        //     chart: {
-        //         animations: {
-        //             speed: 400,
-        //             animateGradually: {
-        //                 enabled: false,
-        //             },
-        //         },
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         width: '100%',
-        //         height: '100%',
-        //         type: 'area',
-        //         toolbar: {
-        //             show: false,
-        //         },
-        //         zoom: {
-        //             enabled: false,
-        //         },
-        //     },
-        //     colors: ['#818CF8'],
-        //     dataLabels: {
-        //         enabled: false,
-        //     },
-        //     fill: {
-        //         colors: ['#312E81'],
-        //     },
-        //     grid: {
-        //         show: true,
-        //         borderColor: '#334155',
-        //         padding: {
-        //             top: 10,
-        //             bottom: -40,
-        //             left: 0,
-        //             right: 0,
-        //         },
-        //         position: 'back',
-        //         xaxis: {
-        //             lines: {
-        //                 show: true,
-        //             },
-        //         },
-        //     },
-        //     series: this.series,
-        //     stroke: {
-        //         width: 2,
-        //     },
-        //     tooltip: {
-        //         followCursor: true,
-        //         theme: 'dark',
-        //         x: {
-        //             format: 'MMM dd, yyyy',
-        //         },
-        //         y: {
-        //             formatter: (value: number): string => `${value}`,
-        //         },
-        //     },
-        //     xaxis: {
-        //         axisBorder: {
-        //             show: false,
-        //         },
-        //         axisTicks: {
-        //             show: false,
-        //         },
-        //         crosshairs: {
-        //             stroke: {
-        //                 color: '#475569',
-        //                 dashArray: 0,
-        //                 width: 2,
-        //             },
-        //         },
-        //         labels: {
-        //             offsetY: -20,
-        //             style: {
-        //                 colors: '#CBD5E1',
-        //             },
-        //         },
-        //         tickAmount: 20,
-        //         tooltip: {
-        //             enabled: false,
-        //         },
-        //         type: 'datetime',
-        //     },
-        //     yaxis: {
-        //         axisTicks: {
-        //             show: false,
-        //         },
-        //         axisBorder: {
-        //             show: false,
-        //         },
-        //         min: (min): number => min - 1000,
-        //         max: (max): number => max + 300,
-        //         tickAmount: 5,
-        //         show: false,
-        //     },
-        // };
 
         // Conversions
         this.chartConversions = {
@@ -583,11 +446,28 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                         //console.log(options);
                         //console.log(this.labelsE[options.dataPointIndex]);
                         const { startDate, endDate } = this.getMonthDates(this.labelsE[options.dataPointIndex]);
-                        this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
+                        this.facadeService.getTournamentListByDate(startDate.toString(), endDate.toString()).
                             subscribe((res) => {
-                                //console.log(res);
-                                const dialogRef = this.dialog.open(DialogUncompletedComponent, {
-                                    data: { players: res.data?.player, key: 'all', date: startDate },
+                                console.log(res);
+                                let rows = [];
+                                let count = 0;
+                                for (let item of res?.tournament) {
+                                    let obj = {
+                                        id: item.id,
+                                        count: ++count,
+                                        name: item.title,
+                                        date: item.createdAt?.substring(0, 10),
+                                        startDate: item.startDate?.substring(0, 10),
+                                        endDate: item.endDate?.substring(0, 10),
+                                        rounds: item.noOfRounds,
+                                        flights: item.flights_aggregate.aggregate?.count,
+                                        matchFormat: item.matchFormat,
+                                        owner: item.admin.firstName + ' ' + item.admin.lastName+ ' (' + item.admin.email + ')',
+                                    };
+                                    rows.push(obj)
+                                }
+                                const dialogRef = this.dialog.open(DialogTournamentComponent, {
+                                    data: { tournaments: rows },
                                 });
                             })
                     },

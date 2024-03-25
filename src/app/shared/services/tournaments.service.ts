@@ -43,6 +43,36 @@ export class TournamentsService {
                 });
         });
     }
+    public getTournamentsListReport(): Observable<any> {
+        return this.apollo
+            .subscribe({
+                query: Query.GetTournamentsReport,
+
+            })
+            .pipe(map((item) => item.data))
+    }
+    public getTournamentListByDate(fromDate?: any, toDate?: any): Observable<any> {
+        return this.apollo
+            .subscribe({
+                query: Query.GetTournamentsReportByDate,
+                variables: {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                },
+            })
+            .pipe(map((item) => item.data))
+    }
+    public getLeaguesListByDate(fromDate?: any, toDate?: any): Observable<any> {
+        return this.apollo
+            .subscribe({
+                query: Query.getLeaguesListByDate,
+                variables: {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                },
+            })
+            .pipe(map((item) => item.data))
+    }
 
     public getTournamentsListForLiveByAdmin(endDate: Date): Promise<any> {
         return new Promise((resolve) => {
@@ -650,6 +680,31 @@ export class TournamentsService {
                 });
         });
     }
+    public getLeaguesReport(): Observable<any> {
+        return  this.apollo
+            .subscribe({
+                query: Query.getLeagues,
+            })
+            .pipe(map((item) => item.data))
+    }
+    public getToursListByDate(fromDate?: any, toDate?: any): Observable<any> {
+        return  this.apollo
+            .subscribe({
+                query: Query.getToursListByDate,
+                variables: {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                },
+            })
+            .pipe(map((item) => item.data))
+    }
+    public getToursReport(): Observable<any> {
+        return  this.apollo
+            .subscribe({
+                query: Query.getToursReport,
+            })
+            .pipe(map((item) => item.data))
+    }
     public getLeaguesByClub(id): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -714,7 +769,7 @@ export class TournamentsService {
         });
     }
 
-    
+
 
     public LeaderboardSubscription(tournamentId: string): Promise<any> {
         return new Promise((resolve) => {
@@ -819,7 +874,7 @@ export class TournamentsService {
         });
     }
 
-    
+
 
     public checkPrefix(prefix: string): Promise<any> {
         return new Promise((resolve) => {
@@ -957,7 +1012,7 @@ export class TournamentsService {
             })
         );
     }
-    public addTournament(tmnt: any, flightId: string = '', slotId: string = '',count=0): Promise<any> {
+    public addTournament(tmnt: any, flightId: string = '', slotId: string = '', count = 0): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({

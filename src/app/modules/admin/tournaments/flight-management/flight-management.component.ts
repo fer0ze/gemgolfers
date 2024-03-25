@@ -1083,7 +1083,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         courseHoleSets:
                             roundFlightData.length > 0
                                 ? roundFlightData[0].courseHoleSets
-                                : 0,
+                                : 3,
                         flightNo: flightNumber,
                         categoryRound: 1,
                         flightRound: this.flightRound,

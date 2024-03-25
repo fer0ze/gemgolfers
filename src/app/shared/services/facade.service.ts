@@ -295,8 +295,8 @@ export class FacadeService {
   AddPlayer(club: Player) {
     return this.playerService.AddPlayer(club);
   }
-  changePlayerTee(id: String, tee: string,teeId) {
-    return this.playerService.changePlayerTee(id, tee,teeId);
+  changePlayerTee(id: String, tee: string, teeId) {
+    return this.playerService.changePlayerTee(id, tee, teeId);
   }
   AddTourPlayer(club: Player, tourMember: any) {
     return this.playerService.AddTourPlayer(club, tourMember);
@@ -445,8 +445,26 @@ export class FacadeService {
     return this.tournamentService.getTournamentsListForCompleted(endDate);
   }
 
+  getTournamentsListReport() {
+    return this.tournamentService.getTournamentsListReport();
+  }
+  getTournamentListByDate(fromDate?: any, toDate?: any) {
+    return this.tournamentService.getTournamentListByDate(fromDate, toDate);
+  }
   getLeagues() {
     return this.tournamentService.getLeagues();
+  }
+  getLeaguesListByDate(fromDate?: any, toDate?: any) {
+    return this.tournamentService.getLeaguesListByDate(fromDate, toDate);
+  }
+  getToursReport() {
+    return this.tournamentService.getToursReport();
+  }
+  getToursListByDate(fromDate?: any, toDate?: any) {
+    return this.tournamentService.getToursListByDate(fromDate, toDate);
+  }
+  getLeaguesReport() {
+    return this.tournamentService.getLeaguesReport();
   }
   getLeaguesByClub(id: string) {
     return this.tournamentService.getLeaguesByClub(id);
