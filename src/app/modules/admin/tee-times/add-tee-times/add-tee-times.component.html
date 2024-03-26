@@ -141,10 +141,14 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-
+                        <div class="border-t sm:col-span-4"></div>
+                        <div class="w-full sm:col-span-4">
+                            <div class="text-xl">Club Member Booking</div>
+                            <div class="text-secondary">Tee Times settings for club members only.</div>
+                        </div>
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Club Members Starting Tee Box:</mat-label>
+                                <mat-label>Starting Tee Box:</mat-label>
                                 <mat-select (selectionChange)="teeChange($event)" placeholder="Starting Tee Box"
                                     formControlName="startingHole">
                                     <mat-option value="1">Tee Box 1</mat-option>
@@ -194,9 +198,14 @@
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
+                        <div class="mb-2 border-t sm:col-span-4"></div>
+                        <div *ngIf="showGuestTime" class="w-full sm:col-span-4">
+                            <div class="text-xl">Guest Booking</div>
+                            <div class="text-secondary">Tee Times settings for guests only.</div>
+                        </div>
                         <div *ngIf="showGuestTime" class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>Guest Starting Tee Box:</mat-label>
+                                <mat-label> Starting Tee Box:</mat-label>
                                 <mat-select (selectionChange)="guestTeeChange($event)" placeholder="Starting Tee Box"
                                     formControlName="guestStartingHole">
                                     <mat-option value="1">Tee Box 1</mat-option>
@@ -210,7 +219,7 @@
                         </div>
                         <div *ngIf="showGuestTime" class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Guest Tee {{guestTee}} Start Time:</mat-label>
+                                <mat-label> Tee {{guestTee}} Start Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="guestTeeOneStartTime" />
                                 <mat-error>The input is required.</mat-error>
 
@@ -218,7 +227,7 @@
                         </div>
                         <div *ngIf="showGuestTime" class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Guest Tee {{guestTee}} End Time:</mat-label>
+                                <mat-label> Tee {{guestTee}} End Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="guestTeeOneEndTime" />
                                 <mat-error>The input is required.</mat-error>
 
@@ -226,7 +235,7 @@
                         </div>
                         <div *ngIf="showGuestTime && showGuestTee" class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Guest Tee 10 Start Time:</mat-label>
+                                <mat-label> Tee 10 Start Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="guestTeeTenStartTime" />
                                 <mat-error>The input is required.</mat-error>
 
@@ -234,14 +243,15 @@
                         </div>
                         <div *ngIf="showGuestTime  && showGuestTee" class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                <mat-label>Guest Tee 10 End Time:</mat-label>
+                                <mat-label> Tee 10 End Time:</mat-label>
                                 <input type="time" matInput atp-time-picker formControlName="guestTeeTenEndTime" />
                                 <mat-error>The input is required.</mat-error>
 
                             </mat-form-field>
                         </div>
+                        <div *ngIf="showGuestTime" class="mb-2 border-t sm:col-span-4"></div>
                     </div>
-                    <div class="my-4 border-t"></div>
+                    
                     <div class="flex items-center justify-end">
                         <button class="mx-2" mat-raised-button color="primary" [disabled]="!scheduleForm.valid">
                             Save
