@@ -10,6 +10,8 @@ import 'jspdf-autotable';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TournamentMember } from 'app/shared/models/tournament.model';
 import { FacadeService } from 'app/shared/services/facade.service';
+import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 @Component({
     selector: 'app-uncompleted',
     templateUrl: './dialog-uncomplete.component.html',
@@ -108,5 +110,22 @@ export class DialogUncompletedComponent implements OnInit {
    
     close() {
         this.dialogRef.close();
+    }
+
+    exportToExcel(): void {
+
+        const data = this.dataSource.data.map((item) => {
+            // Create a new object without the 'Details' column
+            const {  id, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Players_report.xlsx');
+        this.selection.clear();
     }
 }

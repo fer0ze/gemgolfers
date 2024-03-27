@@ -114,6 +114,30 @@ export class General {
         // }
     }
 
+    public static getMonthDates(monthYearText) {
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        const [month, year] = monthYearText.split(" ");
+        const monthIndex = months.indexOf(month);
+
+        if (monthIndex === -1 || !year) {
+            // Handle invalid input
+            console.error("Invalid input format");
+            return null;
+        }
+
+        const startDate = new Date(year, monthIndex, 1);
+        const endDate = new Date(year, monthIndex + 1, 0);
+
+        const formattedStartDate = startDate.toISOString().split("T")[0];
+        const formattedEndDate = endDate.toISOString().split("T")[0];
+
+        return { startDate: formattedStartDate, endDate: formattedEndDate };
+    }
+
 
     public static getPlayersTees(teeName: String) {
         const Course_Tee = [

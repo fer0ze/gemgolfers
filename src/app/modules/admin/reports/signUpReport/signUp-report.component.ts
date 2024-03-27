@@ -16,11 +16,16 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
+import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 import { Resolver } from './signUp-resolver.component';
 import { SignUpService } from './signUp-service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { ProjectService } from '../../dashboards/project/project.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Constants, General } from 'app/shared/classes/general';
+import { SelectionModel } from '@angular/cdk/collections';
 @Component({
     selector: 'app-signUp-report',
     templateUrl: './signUp-report.component.html',
@@ -37,17 +42,14 @@ import { ProjectService } from '../../dashboards/project/project.service';
     ],
 })
 export class SignUpReportComponent implements OnInit, AfterViewInit {
-    chartVisitors: ApexOptions;
-    showdata: Promise<boolean>;
+
+
     chartConversions: ApexOptions;
     chartImpressions: ApexOptions;
     chartVisits: ApexOptions;
     chartVisitorsVsPageViews: ApexOptions;
-    chartNewVsReturning: ApexOptions;
-    chartGender: ApexOptions;
-    chartAge: ApexOptions;
-    chartLanguage: ApexOptions;
     data: any;
+    scheduleForm: FormGroup;
     male: number = 0;
     female: number = 0;
     series: any[] = [];
@@ -74,7 +76,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
     SecondLastMonth: number = 0;
     dataSource: MatTableDataSource<any>;
     dataSourcePlayer: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'date', 'email', 'phone', 'flights'];
+    displayedColumns = ['id', 'name', 'date', 'email', 'phone','countryCode','club', 'flights'];
     displayedPlayersColumns = ['dailyRound', 'tournament', 'league', 'tour'];
     monthName = [
         'January',
@@ -91,14 +93,17 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         'December',
     ];
     flightCount: any;
+    customValue: boolean;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    selection = new SelectionModel<any>(true, []);
     constructor(
         private datePipe: DatePipe,
         private _changeDetectorRef: ChangeDetectorRef,
         private location: Router,
-        private facadeService: FacadeService,
+        private facadeService: FacadeService, private fb: FormBuilder,
         private route: ActivatedRoute,
         private apollo: Apollo,
         private _data: SignUpService, private _projectService: ProjectService,
@@ -114,6 +119,10 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
     }
 
     fecthData() {
+        this.scheduleForm = this.fb.group({
+            startDate: ['', [Validators.required]],
+            endDate: ['', [Validators.required]],
+        });
         this._data.data$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: any) => {
@@ -224,6 +233,8 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                     email: item.email,
                     phone: item.phone,
                     flights: 0,
+                    club:item.membership[0]?.club?.name,
+                    countryCode:item.countryCode,
                 };
                 let date = new Date(item?.createdAt).toLocaleString('default', {
                     month: 'long',
@@ -323,15 +334,16 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
             if (obj.flight.tournament.league) {
                 leagueCount++;
             }
-            let item = {
-                id: obj.flightId,
-                dailyRoundCount: dailyRoundCount,
-                tournamentCount: tournamentCount,
-                leagueCount: leagueCount,
-                tourCount: 0,
-            }
-            rows.push(item);
+            
         }
+        let item = {
+            id: '1',
+            dailyRoundCount: dailyRoundCount,
+            tournamentCount: tournamentCount,
+            leagueCount: leagueCount,
+            tourCount: 0,
+        }
+        rows.push(item);
         if (rows.length == 0) {
             let item = {
                 id: '1',
@@ -352,103 +364,6 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         this.selectedPlayer = productId;
     }
     private _prepareChartData(): void {
-        // Visitors
-        // this.chartVisitors = {
-        //     chart: {
-        //         animations: {
-        //             speed: 400,
-        //             animateGradually: {
-        //                 enabled: false,
-        //             },
-        //         },
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         width: '100%',
-        //         height: '100%',
-        //         type: 'area',
-        //         toolbar: {
-        //             show: false,
-        //         },
-        //         zoom: {
-        //             enabled: false,
-        //         },
-        //     },
-        //     colors: ['#818CF8'],
-        //     dataLabels: {
-        //         enabled: false,
-        //     },
-        //     fill: {
-        //         colors: ['#312E81'],
-        //     },
-        //     grid: {
-        //         show: true,
-        //         borderColor: '#334155',
-        //         padding: {
-        //             top: 10,
-        //             bottom: -40,
-        //             left: 0,
-        //             right: 0,
-        //         },
-        //         position: 'back',
-        //         xaxis: {
-        //             lines: {
-        //                 show: true,
-        //             },
-        //         },
-        //     },
-        //     series: this.series,
-        //     stroke: {
-        //         width: 2,
-        //     },
-        //     tooltip: {
-        //         followCursor: true,
-        //         theme: 'dark',
-        //         x: {
-        //             format: 'MMM dd, yyyy',
-        //         },
-        //         y: {
-        //             formatter: (value: number): string => `${value}`,
-        //         },
-        //     },
-        //     xaxis: {
-        //         axisBorder: {
-        //             show: false,
-        //         },
-        //         axisTicks: {
-        //             show: false,
-        //         },
-        //         crosshairs: {
-        //             stroke: {
-        //                 color: '#475569',
-        //                 dashArray: 0,
-        //                 width: 2,
-        //             },
-        //         },
-        //         labels: {
-        //             offsetY: -20,
-        //             style: {
-        //                 colors: '#CBD5E1',
-        //             },
-        //         },
-        //         tickAmount: 20,
-        //         tooltip: {
-        //             enabled: false,
-        //         },
-        //         type: 'datetime',
-        //     },
-        //     yaxis: {
-        //         axisTicks: {
-        //             show: false,
-        //         },
-        //         axisBorder: {
-        //             show: false,
-        //         },
-        //         min: (min): number => min - 1000,
-        //         max: (max): number => max + 300,
-        //         tickAmount: 5,
-        //         show: false,
-        //     },
-        // };
 
         // Conversions
         this.chartConversions = {
@@ -582,7 +497,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
 
                         //console.log(options);
                         //console.log(this.labelsE[options.dataPointIndex]);
-                        const { startDate, endDate } = this.getMonthDates(this.labelsE[options.dataPointIndex]);
+                        const { startDate, endDate } = General.getMonthDates(this.labelsE[options.dataPointIndex]);
                         this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
                             subscribe((res) => {
                                 //console.log(res);
@@ -657,198 +572,131 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
             },
         };
 
-        // Gender
-        this.chartGender = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#319795', '#4FD1C5'],
-            labels: this.genderLabels,
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: this.seriesD,
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                     <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                     <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                     <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                 </div>`,
-            },
-        };
-
-        // Age
-        this.chartAge = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#DD6B20', '#F6AD55'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
-        // Language
-        this.chartLanguage = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#805AD5', '#B794F4'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
 
     }
 
-    getMonthDates(monthYearText) {
-        const months = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
+    Dailysetup(selectedValue) {
+        ////console.log(selectedValue)
+        // this.lo.log('Getting Daily Round Data By Dropdown', "info", selectedValue.value.toString());
+        if (selectedValue.value == Constants.DR_TODAY) {
+            this.customValue = false;
+            let currentDate = new Date();
+            this._data.getFilterData(currentDate, currentDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_YESTERDAY) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.yesterday();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
 
-        const [month, year] = monthYearText.split(" ");
-        const monthIndex = months.indexOf(month);
+            this._data.getFilterData(currentDate, lastDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.endOfWeek();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
 
-        if (monthIndex === -1 || !year) {
-            // Handle invalid input
-            console.error("Invalid input format");
-            return null;
+            this._data.getFilterData(currentDate, lastDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
+            this.customValue = false;
+            let currentDate = new Date();
+            let lastDate = this.endOfMonth();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
+
+            this._data.getFilterData(currentDate, lastDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_CUSTOM) {
+            this.customValue = true;
+            // let currentDate = this.customDate.value;
+            // let lastDate = this.customDate2.value;
+            // //console.log(currentDate)
+            // //console.log(lastDate)
+            // this.fecthData(currentDate,lastDate);
+        } else {
         }
+    }
 
-        const startDate = new Date(year, monthIndex, 1);
-        const endDate = new Date(year, monthIndex + 1, 0);
+    yesterday() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 1));
+    }
 
-        const formattedStartDate = startDate.toISOString().split("T")[0];
-        const formattedEndDate = endDate.toISOString().split("T")[0];
+    endOfWeek() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 7));
+    }
 
-        return { startDate: formattedStartDate, endDate: formattedEndDate };
+    endOfMonth() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 29));
+    }
+
+    onDatePick() {
+        const result = this.scheduleForm.value.startDate + ',' + this.scheduleForm.value.endDate;
+        // this.logger.log('Getting Daily Round Data By Dates', "info", result.toString());
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
+        if (this.scheduleForm.value.startDate) {
+            let lastDate = this.scheduleForm.value.endDate;
+            let startDate = this.scheduleForm.value.startDate;
+            if (lastDate == '') {
+                lastDate = startDate;
+            }
+            if (startDate == '') {
+                startDate = lastDate;
+            }
+            // lastDate = startDate ? lastDate == "" : lastDate;
+            // startDate = lastDate ? startDate == "" : startDate;
+
+            //console.log(lastDate);
+            //console.log(startDate);
+            this._data.getFilterData(lastDate, startDate).subscribe();
+        } else {
+        }
+    }
+    isAllSelected() {
+        ////console.log(this.dataSource);
+        if (this.dataSource) {
+            const numSelected = this.selection.selected.length;
+            const numRows = this.dataSource.data.length;
+            return numSelected === numRows;
+        }
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
+        this.isAllSelected()
+            ? this.selection.clear()
+            : this.dataSource.data.forEach((row) =>
+                this.selection.select(row)
+            );
+    }
+
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
+    }
+    exportToExcel(): void {
+
+        const data = this.selection.selected.map((item) => {
+            // Create a new object without the 'Details' column
+            const { Select, id, Details,count,flights, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Players_report.xlsx');
+        this.selection.clear();
     }
 }

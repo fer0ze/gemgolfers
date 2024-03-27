@@ -16,12 +16,17 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
+import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 import { Resolver } from './tournament-resolver.component';
 import { TournamentService } from './tournament-service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { ProjectService } from '../../dashboards/project/project.service';
 import { DialogTournamentComponent } from '../../dialogs/dialog-tournament/dialog-tournament.component';
+import { Constants, General } from 'app/shared/classes/general';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SelectionModel } from '@angular/cdk/collections';
 @Component({
     selector: 'app-signUp-report',
     templateUrl: './tournament-report.component.html',
@@ -73,8 +78,10 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
     clubPlayers: number = 0;
     mobilePlayers: number = 0;
     SecondLastMonth: number = 0;
+    scheduleForm: FormGroup;
     dataSource: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'date', 'noOfRounds', 'noOfFlights', 'matchFormat', 'startDate', 'endDate', 'owner'];
+    selection = new SelectionModel<any>(true, []);
+    displayedColumns = ['id', 'name', 'date', 'noOfRounds', 'noOfFlights', 'members', 'matchFormat', 'startDate', 'endDate', 'owner'];
     monthName = [
         'January',
         'February',
@@ -97,7 +104,7 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
         private datePipe: DatePipe,
         private _changeDetectorRef: ChangeDetectorRef,
         private location: Router,
-        private facadeService: FacadeService,
+        private facadeService: FacadeService, private fb: FormBuilder,
         private route: ActivatedRoute,
         private apollo: Apollo,
         private _data: TournamentService, private _projectService: ProjectService,
@@ -105,6 +112,10 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit(): void {
+        this.scheduleForm = this.fb.group({
+            startDate: ['', [Validators.required]],
+            endDate: ['', [Validators.required]],
+        });
         this.fecthData();
     }
     ngAfterViewInit(): void {
@@ -219,6 +230,7 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
                     endDate: item.endDate?.substring(0, 10),
                     rounds: item.noOfRounds,
                     flights: item.flights_aggregate.aggregate?.count,
+                    members: item.members_aggregate.aggregate?.count,
                     matchFormat: item.matchFormat,
                     owner: item.admin.firstName + ' ' + item.admin.lastName + ' (' + item.admin.email + ')',
                 };
@@ -445,7 +457,7 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
 
                         //console.log(options);
                         //console.log(this.labelsE[options.dataPointIndex]);
-                        const { startDate, endDate } = this.getMonthDates(this.labelsE[options.dataPointIndex]);
+                        const { startDate, endDate } = General.getMonthDates(this.labelsE[options.dataPointIndex]);
                         this.facadeService.getTournamentListByDate(startDate.toString(), endDate.toString()).
                             subscribe((res) => {
                                 console.log(res);
@@ -462,7 +474,7 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
                                         rounds: item.noOfRounds,
                                         flights: item.flights_aggregate.aggregate?.count,
                                         matchFormat: item.matchFormat,
-                                        owner: item.admin.firstName + ' ' + item.admin.lastName+ ' (' + item.admin.email + ')',
+                                        owner: item.admin.firstName + ' ' + item.admin.lastName + ' (' + item.admin.email + ')',
                                     };
                                     rows.push(obj)
                                 }
@@ -593,119 +605,6 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
             },
         };
 
-        // Age
-        this.chartAge = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#DD6B20', '#F6AD55'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
-        // Language
-        this.chartLanguage = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#805AD5', '#B794F4'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
-
     }
 
     getMonthDates(monthYearText) {
@@ -730,5 +629,125 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
         const formattedEndDate = endDate.toISOString().split("T")[0];
 
         return { startDate: formattedStartDate, endDate: formattedEndDate };
+    }
+
+    Dailysetup(selectedValue) {
+        ////console.log(selectedValue)
+        // this.lo.log('Getting Daily Round Data By Dropdown', "info", selectedValue.value.toString());
+        if (selectedValue.value == Constants.DR_TODAY) {
+
+            let currentDate = new Date();
+            this._data.getFilterData(currentDate, currentDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_YESTERDAY) {
+
+            let currentDate = new Date();
+            let lastDate = this.yesterday();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
+
+            this._data.getFilterData(lastDate, currentDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
+
+            let currentDate = new Date();
+            let lastDate = this.endOfWeek();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
+
+            this._data.getFilterData(lastDate, currentDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
+
+            let currentDate = new Date();
+            let lastDate = this.endOfMonth();
+
+            this._data.getFilterData(lastDate, currentDate).subscribe();
+        } else if (selectedValue.value == Constants.DR_CUSTOM) {
+        } else {
+        }
+    }
+
+    yesterday() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 1));
+    }
+
+    endOfWeek() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 7));
+    }
+
+    endOfMonth() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 29));
+    }
+
+    onDatePick() {
+        const result = this.scheduleForm.value.startDate + ',' + this.scheduleForm.value.endDate;
+        // this.logger.log('Getting Daily Round Data By Dates', "info", result.toString());
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
+        if (this.scheduleForm.value.startDate) {
+            let lastDate = this.scheduleForm.value.endDate;
+            let startDate = this.scheduleForm.value.startDate;
+            if (lastDate == '') {
+                lastDate = startDate;
+            }
+            if (startDate == '') {
+                startDate = lastDate;
+            }
+            // lastDate = startDate ? lastDate == "" : lastDate;
+            // startDate = lastDate ? startDate == "" : startDate;
+
+            //console.log(lastDate);
+            //console.log(startDate);
+            this._data.getFilterData(lastDate, startDate).subscribe();
+        } else {
+        }
+    }
+    isAllSelected() {
+        ////console.log(this.dataSource);
+        if (this.dataSource) {
+            const numSelected = this.selection.selected.length;
+            const numRows = this.dataSource.data.length;
+            return numSelected === numRows;
+        }
+    }
+    navigateToTournament(tournamentId: string) {
+        this.location.navigate(['/tournaments/view', tournamentId]);
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
+        this.isAllSelected()
+            ? this.selection.clear()
+            : this.dataSource.data.forEach((row) =>
+                this.selection.select(row)
+            );
+    }
+
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
+    }
+    exportToExcel(): void {
+
+        const data = this.selection.selected.map((item) => {
+            // Create a new object without the 'Details' column
+            const { Select, id, Details, count, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Tournaments_report.xlsx');
+        this.selection.clear();
     }
 }

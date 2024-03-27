@@ -246,6 +246,15 @@ export class ViewTeeTimeComponent implements OnInit {
     async getTeeTime(date) {
         this.isLoading = true;
         let dataPlayers: any;
+        let club: any =
+            this.loggedInuser.membership.length > 0
+                ? this.loggedInuser.membership[0].club
+                : null;
+        let courseId =
+            club != null && club.courses.length > 0
+                ? club.courses[0].id
+                : '-LUFS3FCQKOGpJ2IEHmf';
+        this.getSelectedCourse(courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf');
         //console.log(this.loggedInUser);
         if (this.loggedInuser.userRole > 1) {
             dataPlayers = await this.facadeService.getTeeTimesSlots(
@@ -277,7 +286,9 @@ export class ViewTeeTimeComponent implements OnInit {
                     flightId: slot.flightId,
                     noOfPlayers: dataPlayers.TournamentsQL[0].noOfPlayers,
                     status: this.getStatus(dataPlayers.TournamentsQL[0].noOfPlayers, slot.joinedMembers),
-
+                    courseHoleSets: slot.courseHoleSets,
+                    courseHoleSetsInverted: slot.courseHoleSetsInverted,
+                    displayName: this.getSelectedHoleSet(slot.courseHoleSets, slot.courseHoleSetsInverted),
                     // status:this.getStatus(dataPlayers.TournamentQL[0].noOfPlayers,slot.joinedMembers)
                 }
                 this.teeTimes.push(teeTimeObj)
@@ -286,14 +297,31 @@ export class ViewTeeTimeComponent implements OnInit {
         }
 
 
-        // let club: any =
-        //     this.loggedInuser.membership.length > 0
-        //         ? this.loggedInuser.membership[0].club
-        //         : null;
-        // let courseId =
-        //     club != null && club.courses.length > 0
-        //         ? club.courses[0].id
-        //         : '-LUFS3FCQKOGpJ2IEHmf';
+    }
+
+    getSelectedCourse(course) {
+        this.facadeService
+            .getCourseHoleSets(course)
+            .subscribe((selectedCourseHoleSet) => {
+                //console.log(selectedCourseHoleSet);
+                if (selectedCourseHoleSet.course_hole_sets.length > 0) {
+                    //console.log(selectedCourseHoleSet);
+
+                    this.courseHoleSetNames =
+                        selectedCourseHoleSet.course_hole_sets.filter(
+                            (holeSet) => holeSet.isActive == true
+                        );
+                    //this.showCourseHole = true;
+                } else {
+                    //this.showCourseHole = false;
+                }
+            });
+    }
+    getSelectedHoleSet(holeSet, inverted) {
+        const name = this.courseHoleSetNames.find((holes) => {
+            return holes.holeSets == (holeSet) && holes.inverted == inverted;
+        });
+        return name?.displayName;
     }
     getStatus(noOfPlayers, joinedMembers) {
         if (joinedMembers == 0) {
@@ -533,7 +561,7 @@ export class ViewTeeTimeComponent implements OnInit {
             id: UniqueIdGenerator.generate(),
             courseId: courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf',
             adminId: this.loggedInuser.id,
-            courseHoleSets: 3,
+            courseHoleSets: item?.courseHoleSets ? item?.courseHoleSets : 3,
             flightNo: 1,
             flightRound: 0,
             startingHole: 1,
@@ -543,7 +571,7 @@ export class ViewTeeTimeComponent implements OnInit {
             date: this.routeDate,
             time: item.slotTime,
             ended: false,
-            courseHoleSetsInverted: false,
+            courseHoleSetsInverted: item.courseHoleSetsInverted ? item.courseHoleSetsInverted : false,
             members: {
                 data: roundMembers,
             },
@@ -564,7 +592,7 @@ export class ViewTeeTimeComponent implements OnInit {
                 ' ' +
                 this.loggedInuser.membership[0].club.name,
             prefix: null,
-            courseHoleSets: 3,
+            courseHoleSets: item?.courseHoleSets ? item?.courseHoleSets : 3,
             teamMatch: false,
             pairsMatch: false,
             interLeague: false,
@@ -591,7 +619,7 @@ export class ViewTeeTimeComponent implements OnInit {
             mobileLogoUrl: '',
             webLogoUrl: '',
             createdAt: new Date(this.routeDate).toISOString(),
-            courseHoleSetsInverted: false,
+            courseHoleSetsInverted: item.courseHoleSetsInverted ? item.courseHoleSetsInverted : false,
             categories: [],
             marshals: [],
             flights: tournamentFlights,

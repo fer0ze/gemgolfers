@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Resolver } from './tournament-resolver.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogTournamentComponent } from '../../dialogs/dialog-tournament/dialog-tournament.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
@@ -65,7 +66,7 @@ const ClubReportRoutes: Route[] = [
         TranslocoModule,
         SharedModule,
         MatInputModule,
-        MatDatepickerModule,
+        MatDatepickerModule,MatCheckboxModule,
     ],
     providers: [DatePipe],
 })

@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Resolver } from './league-resolver.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogLeaguesComponent } from '../../dialogs/dialog-leagues/dialog-leagues.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
@@ -45,7 +46,7 @@ const ClubReportRoutes: Route[] = [
         MatButtonModule,
         MatButtonToggleModule,
         MatDividerModule,
-        MatIconModule,
+        MatIconModule,MatCheckboxModule,
         NgApexchartsModule,
         MatMenuModule,
         MatFormFieldModule,

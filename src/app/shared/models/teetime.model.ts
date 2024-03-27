@@ -20,4 +20,6 @@ export interface TeeTimeSlot {
     joinedMembers: number;
     flightId: string;
     strtingHole: number;
+    courseHoleSets:Number;
+    courseHoleSetsInverted:boolean;
 }

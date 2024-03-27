@@ -40,4 +40,16 @@ export class TournamentService {
             })
         );
     }
+
+    
+    /**
+     * Get data
+     */
+    getFilterData(currentDate, lastDate): Observable<any> {
+        return this.facadeService.getTournamentListByDate(currentDate, lastDate).pipe(
+            tap((response: any) => {
+                this._data.next(response);
+            })
+        );
+    }
 }

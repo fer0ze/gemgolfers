@@ -16,19 +16,35 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
+import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 import { Resolver } from './league-resolver.component';
 import { LeagueService } from './league-service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { ProjectService } from '../../dashboards/project/project.service';
 import { DialogLeaguesComponent } from '../../dialogs/dialog-leagues/dialog-leagues.component';
+import { Constants, General } from 'app/shared/classes/general';
+import { SelectionModel } from '@angular/cdk/collections';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
     selector: 'app-league-report',
     templateUrl: './league-report.component.html',
     styleUrls: ['./league-report.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition(
+                'expanded <=> collapsed',
+                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ),
+        ]),
+    ],
 })
 export class LeagueReportComponent implements OnInit, AfterViewInit {
     chartVisitors: ApexOptions;
+    selection = new SelectionModel<any>(true, []);
     showdata: Promise<boolean>;
     chartConversions: ApexOptions;
     chartImpressions: ApexOptions;
@@ -64,7 +80,9 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
     mobilePlayers: number = 0;
     SecondLastMonth: number = 0;
     dataSource: MatTableDataSource<any>;
+    dataSourcePlayer: MatTableDataSource<any>;
     displayedColumns = ['id', 'name', 'date', 'tournaments', 'owner', 'members'];
+    displayedPlayersColumns = ['firstName', 'lastName', 'email'];
     monthName = [
         'January',
         'February',
@@ -80,13 +98,14 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
         'December',
     ];
     flightCount: number = 0;
+    scheduleForm: FormGroup;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     constructor(
         private datePipe: DatePipe,
         private _changeDetectorRef: ChangeDetectorRef,
-        private location: Router,
+        private location: Router, private fb: FormBuilder,
         private facadeService: FacadeService,
         private route: ActivatedRoute,
         private apollo: Apollo,
@@ -95,6 +114,10 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit(): void {
+        this.scheduleForm = this.fb.group({
+            startDate: ['', [Validators.required]],
+            endDate: ['', [Validators.required]],
+        });
         this.fecthData();
     }
     ngAfterViewInit(): void {
@@ -267,6 +290,10 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
         //console.log(this.dataMembers);
     }
     async toggleDetails(productId: string) {
+        let dailyRoundCount = 0;
+        let tournamentCount = 0;
+        let leagueCount = 0;
+        let rows = [];
         // If the product is already selected...
         if (this.selectedPlayer != null && this.selectedPlayer == productId) {
             // Close the details
@@ -286,10 +313,24 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
                 selectedPlayerElement.classList.add('warn');
             }
         }
-        let count = await this.facadeService.getTotalFlightsPlayedByPlayer(
+        let count = await this.facadeService.getLeaguesMembers(
             productId
         );
-        this.flightCount = count['flight_member'].length;
+        console.log(count);
+
+        for (let obj of count['league'][0]?.members) {
+            let item = {
+                id: obj.playerId,
+                firstName: obj.player['firstName'],
+                lastName: obj.player['lastName'],
+                email: obj.player['email'],
+            }
+            rows.push(item);
+        }
+
+        this.dataSourcePlayer = new MatTableDataSource(rows);
+        this.dataSourcePlayer.paginator = this.paginator;
+        this.dataSourcePlayer.sort = this.sort;
         const selectedPlayerElement = document.getElementById(productId);
         if (selectedPlayerElement) {
             selectedPlayerElement.classList.remove('warn');
@@ -297,103 +338,7 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
         this.selectedPlayer = productId;
     }
     private _prepareChartData(): void {
-        // Visitors
-        // this.chartVisitors = {
-        //     chart: {
-        //         animations: {
-        //             speed: 400,
-        //             animateGradually: {
-        //                 enabled: false,
-        //             },
-        //         },
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         width: '100%',
-        //         height: '100%',
-        //         type: 'area',
-        //         toolbar: {
-        //             show: false,
-        //         },
-        //         zoom: {
-        //             enabled: false,
-        //         },
-        //     },
-        //     colors: ['#818CF8'],
-        //     dataLabels: {
-        //         enabled: false,
-        //     },
-        //     fill: {
-        //         colors: ['#312E81'],
-        //     },
-        //     grid: {
-        //         show: true,
-        //         borderColor: '#334155',
-        //         padding: {
-        //             top: 10,
-        //             bottom: -40,
-        //             left: 0,
-        //             right: 0,
-        //         },
-        //         position: 'back',
-        //         xaxis: {
-        //             lines: {
-        //                 show: true,
-        //             },
-        //         },
-        //     },
-        //     series: this.series,
-        //     stroke: {
-        //         width: 2,
-        //     },
-        //     tooltip: {
-        //         followCursor: true,
-        //         theme: 'dark',
-        //         x: {
-        //             format: 'MMM dd, yyyy',
-        //         },
-        //         y: {
-        //             formatter: (value: number): string => `${value}`,
-        //         },
-        //     },
-        //     xaxis: {
-        //         axisBorder: {
-        //             show: false,
-        //         },
-        //         axisTicks: {
-        //             show: false,
-        //         },
-        //         crosshairs: {
-        //             stroke: {
-        //                 color: '#475569',
-        //                 dashArray: 0,
-        //                 width: 2,
-        //             },
-        //         },
-        //         labels: {
-        //             offsetY: -20,
-        //             style: {
-        //                 colors: '#CBD5E1',
-        //             },
-        //         },
-        //         tickAmount: 20,
-        //         tooltip: {
-        //             enabled: false,
-        //         },
-        //         type: 'datetime',
-        //     },
-        //     yaxis: {
-        //         axisTicks: {
-        //             show: false,
-        //         },
-        //         axisBorder: {
-        //             show: false,
-        //         },
-        //         min: (min): number => min - 1000,
-        //         max: (max): number => max + 300,
-        //         tickAmount: 5,
-        //         show: false,
-        //     },
-        // };
+
 
         // Conversions
         this.chartConversions = {
@@ -527,7 +472,7 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
 
                         //console.log(options);
                         //console.log(this.labelsE[options.dataPointIndex]);
-                        const { startDate, endDate } = this.getMonthDates(this.labelsE[options.dataPointIndex]);
+                        const { startDate, endDate } = General.getMonthDates(this.labelsE[options.dataPointIndex]);
                         this.facadeService.getLeaguesListByDate(startDate.toString(), endDate.toString()).
                             subscribe((res) => {
                                 console.log(res);
@@ -616,198 +561,141 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
             },
         };
 
-        // Gender
-        this.chartGender = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#319795', '#4FD1C5'],
-            labels: this.genderLabels,
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: this.seriesD,
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                     <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                     <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                     <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                 </div>`,
-            },
-        };
-
-        // Age
-        this.chartAge = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#DD6B20', '#F6AD55'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
-        // Language
-        this.chartLanguage = {
-            chart: {
-                animations: {
-                    speed: 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'donut',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#805AD5', '#B794F4'],
-            labels: [],
-            plotOptions: {
-                pie: {
-                    customScale: 0.9,
-                    expandOnClick: false,
-                    donut: {
-                        size: '70%',
-                    },
-                },
-            },
-            series: [],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip: {
-                enabled: true,
-                fillSeriesColor: false,
-                theme: 'dark',
-                custom: ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
-
     }
 
-    getMonthDates(monthYearText) {
-        const months = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
+    Dailysetup(selectedValue) {
+        ////console.log(selectedValue)
+        // this.lo.log('Getting Daily Round Data By Dropdown', "info", selectedValue.value.toString());
+        if (selectedValue.value == Constants.DR_TODAY) {
 
-        const [month, year] = monthYearText.split(" ");
-        const monthIndex = months.indexOf(month);
+            let currentDate = new Date();
+            this._data.getFilterData(currentDate.toISOString().split('T')[0], currentDate.toISOString().split('T')[0]).subscribe();
+        } else if (selectedValue.value == Constants.DR_YESTERDAY) {
 
-        if (monthIndex === -1 || !year) {
-            // Handle invalid input
-            console.error("Invalid input format");
-            return null;
+            let currentDate = new Date();
+            let lastDate = this.yesterday();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
+
+            this._data.getFilterData(lastDate.toISOString().split('T')[0], currentDate.toISOString().split('T')[0]).subscribe();
+        } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
+
+            let currentDate = new Date();
+            let lastDate = this.endOfWeek();
+            ////console.log(currentDate)
+            ////console.log(lastDate)
+
+            this._data.getFilterData(lastDate.toISOString().split('T')[0], currentDate.toISOString().split('T')[0]).subscribe();
+        } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
+
+            let currentDate = new Date();
+            let lastDate = this.endOfMonth();
+
+            this._data.getFilterData(lastDate.toISOString().split('T')[0], currentDate.toISOString().split('T')[0]).subscribe();
+        } else if (selectedValue.value == Constants.DR_CUSTOM) {
+        } else {
         }
+    }
 
-        const startDate = new Date(year, monthIndex, 1);
-        const endDate = new Date(year, monthIndex + 1, 0);
+    yesterday() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 1));
+    }
 
-        const formattedStartDate = startDate.toISOString().split("T")[0];
-        const formattedEndDate = endDate.toISOString().split("T")[0];
+    endOfWeek() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 7));
+    }
 
-        return { startDate: formattedStartDate, endDate: formattedEndDate };
+    endOfMonth() {
+        let date = new Date();
+        return new Date(date.setDate(date.getDate() - 29));
+    }
+
+    onDatePick() {
+        const result = this.scheduleForm.value.startDate + ',' + this.scheduleForm.value.endDate;
+        // this.logger.log('Getting Daily Round Data By Dates', "info", result.toString());
+        //console.log(this.scheduleForm.value.startDate);
+        //console.log(this.scheduleForm.value.endDate);
+        if (this.scheduleForm.value.startDate) {
+            let lastDate = this.scheduleForm.value.endDate;
+            let startDate = this.scheduleForm.value.startDate;
+            if (lastDate == '') {
+                lastDate = startDate;
+            }
+            if (startDate == '') {
+                startDate = lastDate;
+            }
+            // lastDate = startDate ? lastDate == "" : lastDate;
+            // startDate = lastDate ? startDate == "" : startDate;
+
+            //console.log(lastDate);
+            //console.log(startDate);
+            this._data.getFilterData(startDate.toISOString().split('T')[0], lastDate.toISOString().split('T')[0]).subscribe();
+        } else {
+        }
+    }
+    isAllSelected() {
+        ////console.log(this.dataSource);
+        if (this.dataSource) {
+            const numSelected = this.selection.selected.length;
+            const numRows = this.dataSource.data.length;
+            return numSelected === numRows;
+        }
+    }
+    navigateToTournament(tournamentId: string) {
+        this.location.navigate(['/tournaments/view', tournamentId]);
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
+        this.isAllSelected()
+            ? this.selection.clear()
+            : this.dataSource.data.forEach((row) =>
+                this.selection.select(row)
+            );
+    }
+
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
+    }
+    exportToExcel(): void {
+
+        const data = this.selection.selected.map((item) => {
+            // Create a new object without the 'Details' column
+            const { Select, id, Details, count, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Leagues_report.xlsx');
+        this.selection.clear();
+    }
+    exportToExcelPlayers(): void {
+
+        const data = this.dataSourcePlayer.data.map((item) => {
+            // Create a new object without the 'Details' column
+            const { id,  ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'League_Players_report.xlsx');
+        this.selection.clear();
     }
 }

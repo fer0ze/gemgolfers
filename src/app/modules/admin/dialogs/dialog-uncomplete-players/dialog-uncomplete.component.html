@@ -1,13 +1,17 @@
 <div mat-dialog-content>
     <div>
-        <mat-form-field>
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
-        </mat-form-field>
-        <div class="flex justify-end ml-auto mb-1">
+        <div class="flex flex-auto w-full justify-between gap-4">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-80">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                <input matInput (keyup)="applyFilter($event.target.value)" [autocomplete]="'off'"
+                    [placeholder]="'Search'" />
+            </mat-form-field>
 
-            <mat-icon aria-hidden="false" (click)="downloadAsPDF()" color="warn" aria-label="Dragable"
-                class="remove">picture_as_pdf</mat-icon>
-
+            <button (click)="exportToExcel()" class="bg-accent" mat-flat-button [color]="'accent'">
+                <mat-icon class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
+                <span class="ml-2 ">Export Selected</span>
+            </button>
         </div>
         <table id="playerTables" mat-table [dataSource]="dataSource" matSort>
             <!-- Membership Number Column -->

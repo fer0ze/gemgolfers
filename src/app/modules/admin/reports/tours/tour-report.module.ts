@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Resolver } from './tour-resolver.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogTourComponent } from '../../dialogs/dialog-tour/dialog-tour.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
@@ -50,7 +51,7 @@ const ClubReportRoutes: Route[] = [
         MatMenuModule,
         MatFormFieldModule,
         MatProgressBarModule,
-        MatRippleModule,
+        MatRippleModule,MatCheckboxModule,
         MatNativeDateModule,
         MatSelectModule,
         MatSnackBarModule,

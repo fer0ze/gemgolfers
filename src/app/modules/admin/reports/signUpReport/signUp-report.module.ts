@@ -27,6 +27,7 @@ import { SignUpReportComponent } from './signUp-report.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Resolver } from './signUp-resolver.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
@@ -51,7 +52,7 @@ const ClubReportRoutes: Route[] = [
         MatProgressBarModule,
         MatRippleModule,
         MatNativeDateModule,
-        MatSelectModule,
+        MatSelectModule,MatCheckboxModule,
         MatSnackBarModule,
         MatPaginatorModule,MatDialogModule,
         MatSidenavModule,

@@ -40,4 +40,14 @@ export class LeagueService {
             })
         );
     }
+    /**
+     * Get data
+     */
+    getFilterData(currentDate, lastDate): Observable<any> {
+        return this.facadeService.getLeaguesListByDate(currentDate, lastDate).pipe(
+            tap((response: any) => {
+                this._data.next(response);
+            })
+        );
+    }
 }

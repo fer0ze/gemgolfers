@@ -168,7 +168,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'reports.Players',
-                title: 'Players',
+                title: 'Players Round',
                 type: 'basic',
                 icon: 'heroicons_outline:speakerphone',
                 link: '/reports/players',
@@ -458,6 +458,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 link: '/reports/dailycard',
             },
             {
+                id: 'reports.tournament',
+                title: 'Tournaments',
+                type: 'basic',
+                icon: 'heroicons_outline:bookmark-alt',
+                link: '/reports/tournament',
+            },
+            {
                 id: 'reports.signUpPlayers',
                 title: 'SignUp-Players',
                 type: 'basic',
@@ -465,8 +472,22 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 link: '/reports/signUpPlayers',
             },
             {
+                id: 'reports.leagues',
+                title: 'Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:cube',
+                link: '/reports/league',
+            },
+            {
+                id: 'reports.tour',
+                title: 'Tours',
+                type: 'basic',
+                icon: 'heroicons_outline:color-swatch',
+                link: '/reports/tour',
+            },
+            {
                 id: 'reports.Players',
-                title: 'Players',
+                title: 'Players Round',
                 type: 'basic',
                 icon: 'heroicons_outline:speakerphone',
                 link: '/reports/players',

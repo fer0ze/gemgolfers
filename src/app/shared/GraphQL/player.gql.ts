@@ -39,18 +39,71 @@ export const getPlayersListReport = gql`
         ) {
             id
             fullName
-            firstName
-            lastName
             email
             createdAt
             phone
-            gender
+            countryCode
+            membership{
+                club{
+                    name
+                }
+            }
         }
-        tournament_aggregate(where:{singleRound:{_eq:false}}) {
+        tournament_aggregate(where: { singleRound: { _eq: false } }) {
             aggregate {
                 count
             }
         }
+        tour_aggregate {
+            aggregate {
+                count
+            }
+        }
+        league_aggregate {
+            aggregate {
+                count
+            }
+        }
+    }
+`;
+export const getPlayersListReportDateWise = gql`
+    query PostsGetQuery($fromDate: timestamptz!, $toDate: timestamptz!) {
+        player(
+            where: {
+                _and: [
+                    { createdAt: { _lte: $fromDate } }
+                    { createdAt: { _gt: $toDate } }
+                    { firstName: { _neq: "" } }
+                ]
+            }
+            order_by: { createdAt: desc }
+        ) {
+            id
+            fullName
+            email
+            createdAt
+            phone
+            countryCode
+            membership{
+                club{
+                    name
+                }
+            }
+        }
+        tournament_aggregate(
+            where: {
+                singleRound: { _eq: false }
+                _and: [
+                    { createdAt: { _lte: $fromDate } }
+                    { createdAt: { _gt: $toDate } }
+                ]
+            }
+        ) {
+            aggregate {
+                count
+            }
+        }
+
         tour_aggregate {
             aggregate {
                 count
@@ -619,13 +672,13 @@ export const getTotalFlightsPlayedByPlayer = gql`
     query PostsGetQuery($where: flight_member_bool_exp!) {
         flight_member(where: $where) {
             flightId
-            flight{
+            flight {
                 id
-                tournament{
+                tournament {
                     id
                     title
                     singleRound
-                    league{
+                    league {
                         id
                         name
                     }

@@ -197,6 +197,9 @@ export class FacadeService {
   getPlayersListReport() {
     return this.playerService.getPlayersListReport();
   }
+  getPlayersListReportDateWise(currentDate, lastDate) {
+    return this.playerService.getPlayersListReportDateWise(currentDate, lastDate);
+  }
   getPlayersListByAdminCONGU() {
     return this.playerService.getPlayersListByAdminCONGU();
   }
@@ -468,6 +471,12 @@ export class FacadeService {
   }
   getLeaguesByClub(id: string) {
     return this.tournamentService.getLeaguesByClub(id);
+  }
+  getLeaguesMembers(id: string) {
+    return this.tournamentService.getLeaguesMembers(id);
+  }
+  getTourMembers(id: string) {
+    return this.tournamentService.getTourMembers(id);
   }
 
   getTournamentsListForLiveByAdmin(endDate: Date) {

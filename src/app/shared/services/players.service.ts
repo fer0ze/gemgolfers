@@ -42,6 +42,18 @@ export class PlayersService {
             .pipe(map((item) => item.data))
 
     }
+    public getPlayersListReportDateWise(fromDate?: any, toDate?: any): Observable<any> {
+        return this.apollo
+            .subscribe({
+                query: Query.getPlayersListReportDateWise,
+                variables:{
+                    fromDate: fromDate,
+                    toDate: toDate,
+                }
+            })
+            .pipe(map((item) => item.data))
+
+    }
     public getPlayersListByAdminCONGU(): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -1063,7 +1075,7 @@ export class PlayersService {
                 );
         });
     }
-    changePlayerTee(id, tee,teeId): Promise<boolean> {
+    changePlayerTee(id, tee, teeId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({

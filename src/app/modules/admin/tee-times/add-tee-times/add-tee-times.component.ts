@@ -43,9 +43,11 @@ export class AddTeeTimesComponent implements OnInit {
     Clubs: Club[] = [];
     filteredCourseOptions: any;
     filteredClubOptions: any;
+    courseHoleSetNames;
     tee: '1' | '10' = '1';
     guestTee: '1' | '10' = '1';
     hideClubs: boolean = true;
+    selectedOptions: any[] = [];
     constructor(
         private fb: FormBuilder,
         private facadeService: FacadeService,
@@ -63,21 +65,15 @@ export class AddTeeTimesComponent implements OnInit {
             teeDate: [new Date(), Validators.required],
             bookingDate: [new Date(), Validators.required],
             teeBookingTime: ['09:00', Validators.required],
-            teeOneStartTime: ['09:00', Validators.required],
-            teeOneEndTime: ['16:00', Validators.required],
-            teeTenStartTime: ['09:00', Validators.required],
-            teeTenEndTime: ['16:00', Validators.required],
-            guestTeeOneStartTime: ['09:00', Validators.required],
-            guestTeeOneEndTime: ['16:00', Validators.required],
-            guestTeeTenStartTime: ['09:00', Validators.required],
-            guestTeeTenEndTime: ['16:00', Validators.required],
             interval: [5, Validators.required],
             courseName: ['', Validators.required],
             club: ['', Validators.required],
             noOfPlayers: ['4', Validators.required],
             allowGuest: ['0', Validators.required],
-            startingHole: ['1', Validators.required],
-            guestStartingHole: ['1', Validators.required],
+            startingHole: this.fb.array([]),
+            guestStartingHole: this.fb.array([]),
+            timing: this.fb.array([], Validators.required),
+            guestTiming: this.fb.array([]),
         });
         let dataClubs = await this.facadeService.getClubList();
         this.Clubs = dataClubs.club;
@@ -118,6 +114,8 @@ export class AddTeeTimesComponent implements OnInit {
                     id: clubInfo?.id,
                     name: clubInfo?.name
                 });
+
+            this.getSelectedCourse(courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf');
         }
         this.filteredCourseOptions = this.scheduleForm
             .get('courseName')!
@@ -141,6 +139,26 @@ export class AddTeeTimesComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.Clubs.slice()))
             );
+
+    }
+
+    getSelectedCourse(course) {
+        this.facadeService
+            .getCourseHoleSets(course)
+            .subscribe((selectedCourseHoleSet) => {
+                //console.log(selectedCourseHoleSet);
+                if (selectedCourseHoleSet.course_hole_sets.length > 0) {
+                    //console.log(selectedCourseHoleSet);
+
+                    this.courseHoleSetNames =
+                        selectedCourseHoleSet.course_hole_sets.filter(
+                            (holeSet) => holeSet.isActive == true
+                        );
+                    //this.showCourseHole = true;
+                } else {
+                    //this.showCourseHole = false;
+                }
+            });
     }
 
     private _filter(value: string): Club[] {
@@ -192,10 +210,8 @@ export class AddTeeTimesComponent implements OnInit {
                     id: UniqueIdGenerator.generate(),
                     slotTime: (slot.time),
                     joinedMembers: 0,
-                    startingHole:
-                        this.scheduleForm.value.startingHole !== 'both'
-                            ? Number(this.scheduleForm.value.startingHole)
-                            : slot.hole,
+                    courseHoleSets: Number(slot.courseHoleSets),
+                    courseHoleSetsInverted: slot.inverted,
                     flightId: null,
                     allowGuest: slot.allowGuest,
                 };
@@ -273,20 +289,26 @@ export class AddTeeTimesComponent implements OnInit {
     generateTeeTimes() {
 
         try {
+            const timingFormArray = this.scheduleForm.get('timing') as FormArray;
+            const controls = timingFormArray.controls;
+            const guestTimingFormArray = this.scheduleForm.get('guestTiming') as FormArray;
+            const guestTimingControls = guestTimingFormArray.controls;
+            console.log(controls);
+
             this.teeSlots = [];
-            const createSlot = (hole, startTime, endTime, guestHole) => {
+            const createSlot = (courseHoleSets, inverted, startTime, endTime, guestHole) => {
                 let startLimit = new Date(Constants.DEFAULT_DATE + ' ' + startTime.substr(0, 5));
                 const endLimit = new Date(Constants.DEFAULT_DATE + ' ' + endTime.substr(0, 5));
                 while (startLimit <= endLimit) {
                     const h = startLimit.getHours();
                     const m = startLimit.getMinutes();
                     const time = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
-                    const allowGuest = this.scheduleForm.value.allowGuest == '1' &&
-                        this.scheduleForm.value.guestTeeOneStartTime && hole == guestHole &&
-                        this.scheduleForm.value.guestTeeOneEndTime &&
-                        startLimit >= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneStartTime.substr(0, 5)) &&
-                        startLimit <= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneEndTime.substr(0, 5));
-                    this.teeSlots.push({ hole, time, allowGuest });
+                    // const allowGuest = this.scheduleForm.value.allowGuest == '1' &&
+                    //     this.scheduleForm.value.guestTeeOneStartTime && hole == guestHole &&
+                    //     this.scheduleForm.value.guestTeeOneEndTime &&
+                    //     startLimit >= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneStartTime.substr(0, 5)) &&
+                    //     startLimit <= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneEndTime.substr(0, 5));
+                    this.teeSlots.push({ courseHoleSets, inverted, time, guestHole });
                     startLimit.setMinutes(startLimit.getMinutes() + this.scheduleForm.value.interval);
                 }
             };
@@ -294,10 +316,25 @@ export class AddTeeTimesComponent implements OnInit {
                 ? Number(this.scheduleForm.value.startingHole) : 1;
             let guesthole = this.scheduleForm.value.guestStartingHole !== 'both'
                 ? Number(this.scheduleForm.value.guestStartingHole) : 1;
-            createSlot(hole, this.scheduleForm.value.teeOneStartTime, this.scheduleForm.value.teeOneEndTime, guesthole);
-            if (this.scheduleForm.value.startingHole == 'both') {
-                createSlot(10, this.scheduleForm.value.teeTenStartTime, this.scheduleForm.value.teeTenEndTime, guesthole);
-            }
+            // createSlot(hole, this.scheduleForm.value.teeOneStartTime, this.scheduleForm.value.teeOneEndTime, guesthole);
+            // if (this.scheduleForm.value.startingHole == 'both') {
+            //     createSlot(10, this.scheduleForm.value.teeTenStartTime, this.scheduleForm.value.teeTenEndTime, guesthole);
+            // }
+            controls?.forEach((form) => {
+                const courseHoleSets = form.get('courseHoleSets').value;
+                const inverted = form.get('inverted').value;
+                const startTime = form.get('startTime').value;
+                const endTime = form.get('endTime').value;
+                createSlot(courseHoleSets, inverted, startTime, endTime, false);
+            })
+            guestTimingControls?.forEach((form) => {
+                const courseHoleSets = form.get('courseHoleSets').value;
+                const inverted = form.get('inverted').value;
+                const startTime = form.get('startTime').value;
+                const endTime = form.get('endTime').value;
+                createSlot(courseHoleSets, inverted, startTime, endTime, true);
+            })
+
         } catch { }
     }
 
@@ -308,26 +345,95 @@ export class AddTeeTimesComponent implements OnInit {
 
     public onCancel() { }
 
-    public teeChange(event) {
-        console.log(event);
-        if (event.value == 'both') {
-            this.showTeeTime = true;
-            this.tee = '1';
-        } else {
-            this.tee = event.value;
-            this.showTeeTime = false;
+    teeChange(event: any) {
+        const selectedValues = event.value; // Get the selected values from the event
+
+        const timingFormArray = this.scheduleForm.get('timing') as FormArray;
+        const controls = timingFormArray.controls;
+
+        // Iterate over the existing controls in the timing FormArray
+        for (let i = controls.length - 1; i >= 0; i--) {
+            const control = controls[i] as FormGroup;
+            const name = control.get('name').value;
+            const index = selectedValues.indexOf(name);
+
+            // If the name of the control exists in the selectedValues array, do nothing
+            // Otherwise, remove the control from the timing FormArray
+            if (index === -1) {
+                timingFormArray.removeAt(i);
+            }
         }
+
+        // Iterate over selected values and add a FormGroup for each if it does not exist
+        selectedValues.forEach((value: string) => {
+            const [holeSet, inverted] = value.split('_');
+            const name = this.courseHoleSetNames.find((holes) => {
+                return holes.holeSets == Number(holeSet) && holes.inverted.toString() == inverted;
+            });
+
+            // Check if the name is already present in the timing FormArray
+            const exists = controls.some(control => control.get('name').value === name?.displayName);
+
+            if (!exists) {
+                const newFormGroup = this.createTimingFormGroup(name?.displayName, holeSet, inverted);
+                timingFormArray.push(newFormGroup);
+            }
+        });
     }
-    public guestTeeChange(event) {
-        console.log(event);
-        if (event.value == 'both') {
-            this.showGuestTee = true;
-            this.guestTee = '1';
-        } else {
-            this.guestTee = event.value;
-            this.showGuestTee = false;
+
+
+    createTimingFormGroup(name: string, holeSet: string, inverted: string): FormGroup {
+        return this.fb.group({
+            name: name,
+            courseHoleSets: holeSet,
+            inverted: inverted,
+            startTime: '09:00',
+            endTime: '16:00',
+        });
+    }
+    // Getter for the timing FormArray
+    get timingFormArray(): FormArray {
+        return this.scheduleForm.get('timing') as FormArray;
+    }
+    get guestTimingFormArray(): FormArray {
+        return this.scheduleForm.get('guestTiming') as FormArray;
+    }
+    guestTeeChange(event: any) {
+        const selectedValues = event.value; // Get the selected values from the event
+
+        const timingFormArray = this.scheduleForm.get('guestTiming') as FormArray;
+        const controls = timingFormArray.controls;
+
+        // Iterate over the existing controls in the timing FormArray
+        for (let i = controls.length - 1; i >= 0; i--) {
+            const control = controls[i] as FormGroup;
+            const name = control.get('name').value;
+            const index = selectedValues.indexOf(name);
+
+            // If the name of the control exists in the selectedValues array, do nothing
+            // Otherwise, remove the control from the timing FormArray
+            if (index === -1) {
+                timingFormArray.removeAt(i);
+            }
         }
+
+        // Iterate over selected values and add a FormGroup for each if it does not exist
+        selectedValues.forEach((value: string) => {
+            const [holeSet, inverted] = value.split('_');
+            const name = this.courseHoleSetNames.find((holes) => {
+                return holes.holeSets == Number(holeSet) && holes.inverted.toString() == inverted;
+            });
+
+            // Check if the name is already present in the timing FormArray
+            const exists = controls.some(control => control.get('name').value === name?.displayName);
+
+            if (!exists) {
+                const newFormGroup = this.createTimingFormGroup(name?.displayName, holeSet, inverted);
+                timingFormArray.push(newFormGroup);
+            }
+        });
     }
+
     public participantsChange(event) {
         console.log(event);
         if (event.value == '1') {
@@ -367,5 +473,6 @@ export class AddTeeTimesComponent implements OnInit {
         // Return the time in UTC format
         return date.toISOString().substr(11, 5);
     }
+
 
 }

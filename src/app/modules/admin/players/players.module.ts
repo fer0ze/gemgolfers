@@ -30,6 +30,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
+import { PlayerResolver } from './players.resolver';
 
 @NgModule({
     declarations: [
@@ -81,7 +82,7 @@ import { MatDialogModule } from '@angular/material/dialog';
                 },
             },
         },
-        DatePipe,
+        DatePipe,PlayerResolver
     ],
 })
 export class PlayersModule {}

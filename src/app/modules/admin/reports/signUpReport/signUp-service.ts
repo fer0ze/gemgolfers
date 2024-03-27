@@ -40,4 +40,16 @@ export class SignUpService {
             })
         );
     }
+
+
+    /**
+     * Get data
+     */
+    getFilterData(currentDate, lastDate): Observable<any> {
+        return this.facadeService.getPlayersListReportDateWise(currentDate, lastDate).pipe(
+            tap((response: any) => {
+                this._data.next(response);
+            })
+        );
+    }
 }

@@ -726,6 +726,48 @@ export class TournamentsService {
                 });
         });
     }
+    public getLeaguesMembers(id): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getLeaguesMembers,
+                    variables: {
+                        adminId: id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        ////console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
+    public getTourMembers(id): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTourMembers,
+                    variables: {
+                        adminId: id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    ////console.log(data.tournament_by_pk);
+                    ////console.log(data);
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        ////console.log(data);
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getLeageLeaderBoards(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

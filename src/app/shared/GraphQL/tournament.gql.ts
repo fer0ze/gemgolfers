@@ -344,6 +344,41 @@ export const getLeaguesByClub = gql`
         }
     }
 `;
+export const getLeaguesMembers = gql`
+    query getLeaguesMembers($adminId: String!) {
+        league(where: { id:{ _eq: $adminId } }) {
+            id
+            name
+            dateCreated
+            members {
+                playerId
+                player{
+                    id
+                    firstName
+                    lastName
+                    email
+                }
+            }
+        }
+    }
+`;
+export const getTourMembers = gql`
+    query getTourMembers($adminId: String!) {
+        tour(where: { id:{ _eq: $adminId } }) {
+            id
+            
+            members {
+                playerId
+                player{
+                    id
+                    firstName
+                    lastName
+                    email
+                }
+            }
+        }
+    }
+`;
 export const getLeageLeaderBoards = gql`
     query getLeagues($leagueId: String!) {
         LeaderBoardQL: mvp_leaderboard(
@@ -424,6 +459,10 @@ export const GetTournamentsReport = gql`
             flights_aggregate{
                 aggregate{count}
             }
+            members_aggregate{
+                aggregate{count}
+            }
+
         }
     }
 `;
@@ -451,6 +490,9 @@ export const GetTournamentsReportByDate = gql`
                 email
             }
             flights_aggregate{
+                aggregate{count}
+            }
+            members_aggregate{
                 aggregate{count}
             }
         }
@@ -1688,6 +1730,8 @@ export const getTeeTimesSlots = gql`
                 joinedMembers
                 startingHole
                 slotTime
+                courseHoleSets
+                courseHoleSetsInverted
                 FlightsQL: flight {
                     id
                     courseId
@@ -1752,6 +1796,8 @@ export const getTeeTimesSlotsAdmin = gql`
                 joinedMembers
                 startingHole
                 slotTime
+                courseHoleSets
+                courseHoleSetsInverted
                 FlightsQL: flight {
                     id
                     courseId

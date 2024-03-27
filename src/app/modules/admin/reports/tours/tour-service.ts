@@ -40,4 +40,15 @@ export class TourService {
             })
         );
     }
+
+    /**
+     * Get data
+     */
+    getFilterData(currentDate, lastDate): Observable<any> {
+        return this.facadeService.getToursListByDate(currentDate, lastDate).pipe(
+            tap((response: any) => {
+                this._data.next(response);
+            })
+        );
+    }
 }
