@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Resolver } from './signUp-resolver.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
@@ -39,7 +40,7 @@ const ClubReportRoutes: Route[] = [
 ];
 
 @NgModule({
-    declarations: [SignUpReportComponent],
+    declarations: [SignUpReportComponent,DialogPlayersComponent],
     imports: [
         RouterModule.forChild(ClubReportRoutes),
         MatButtonModule,

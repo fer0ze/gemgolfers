@@ -26,6 +26,7 @@ import { ProjectService } from '../../dashboards/project/project.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Constants, General } from 'app/shared/classes/general';
 import { SelectionModel } from '@angular/cdk/collections';
+import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 @Component({
     selector: 'app-signUp-report',
     templateUrl: './signUp-report.component.html',
@@ -501,7 +502,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                         this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
                             subscribe((res) => {
                                 //console.log(res);
-                                const dialogRef = this.dialog.open(DialogUncompletedComponent, {
+                                const dialogRef = this.dialog.open(DialogPlayersComponent, {
                                     data: { players: res.data?.player, key: 'all', date: startDate },
                                 });
                             })

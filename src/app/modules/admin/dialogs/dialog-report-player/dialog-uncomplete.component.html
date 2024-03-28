@@ -7,15 +7,11 @@
                     [placeholder]="'Search'" />
             </mat-form-field>
 
-            <div style="text-align: right; color: red; cursor: pointer">
-                <mat-icon
-                  aria-hidden="false"
-                  aria-label="Dragable"
-                  class="remove"
-                  (click)="downloadAsPDF()"
-                  >picture_as_pdf</mat-icon
-                >
-              </div>
+            <button (click)="exportToExcel()" class="bg-accent" mat-flat-button [color]="'accent'">
+                <mat-icon class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
+                <span class="ml-2 ">Export</span>
+            </button>
         </div>
         <table id="playerTables" mat-table [dataSource]="dataSource" matSort>
             <!-- Membership Number Column -->
