@@ -213,7 +213,7 @@ export class AddTeeTimesComponent implements OnInit {
                     courseHoleSets: Number(slot.courseHoleSets),
                     courseHoleSetsInverted: slot.inverted,
                     flightId: null,
-                    allowGuest: slot.allowGuest,
+                    allowGuest: slot.guestHole,
                 };
                 teeTimeSlots.push(tee1);
             }
