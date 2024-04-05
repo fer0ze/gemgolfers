@@ -248,6 +248,23 @@ export const tournamentDashBoard = gql`
             MemberStatusesQL: member_statuses {
                 ...TournamentMemberStatusQL
             }
+            CoursesQL:tournament_round_courses{
+                tournamentId
+                round
+                courseId
+                courseHoleSets
+                inverted
+                course {
+                    ...CourseQL
+                HolesQL: holes {
+                    ...HoleQL
+                    HoleMetaQL:meta{
+                        hole_id
+                        tee_distance
+                        tee_id
+                    }
+                }}
+            }
         }
         SubTournamentQL: sub_tournament(
             where: { tournamentId: { _eq: $tournamentPrefix } }
@@ -258,6 +275,7 @@ export const tournamentDashBoard = gql`
     }
     ${TournamentMemberStatusQL}
     ${TournamentMemberCategoryQL}
+    ${ CourseQL}${HoleQL}
 `;
 
 export const LeaderboardSubscriptions = gql`
@@ -851,9 +869,26 @@ export const GetTournamentByID = gql`
                 team1MemberId
                 team2MemberId
             }
+            CoursesQL:tournament_round_courses{
+                tournamentId
+                round
+                courseId
+                courseHoleSets
+                inverted
+                course {
+                    ...CourseQL
+                HolesQL: holes {
+                    ...HoleQL
+                    HoleMetaQL:meta{
+                        hole_id
+                        tee_distance
+                        tee_id
+                    }
+                }}
+            }
         }
     }
-    ${TournamentQL}
+    ${TournamentQL} ${ CourseQL}${HoleQL}
 `;
 
 export const GetFlightSettings = gql`

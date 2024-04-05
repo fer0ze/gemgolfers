@@ -68,7 +68,8 @@
                                 <mat-icon class="icon-size-5" [svgIcon]="
                                         'heroicons_solid:office-building'
                                     " matPrefix></mat-icon>
-                                <mat-select formControlName="numOfRounds" class="w-full" placeholder="Pick one">
+                                <mat-select formControlName="numOfRounds" (selectionChange)="roundChange($event)"
+                                    class="w-full" placeholder="Pick one">
                                     <mat-option [value]="'1'">1</mat-option>
                                     <mat-option [value]="'2'">2</mat-option>
                                     <mat-option [value]="'3'">3</mat-option>
@@ -147,27 +148,25 @@
 
                                 </mat-radio-group> -->
 
-                        <div class="sm:col-span-1" formArrayName="courseInfo">
+                        <div *ngIf="!showMultipleCourses" class="sm:col-span-1" formArrayName="courseInfo">
                             <div *ngFor="
-                                    let url of courseFileds.controls;
-                                    let i = index
-                                " [formGroupName]="i" class="flex flex-auto">
+                                            let url of courseFileds.controls;
+                                            let i = index
+                                        " [formGroupName]="i" class="flex flex-auto">
                                 <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                     <mat-label>Course</mat-label>
-                                    <input type="text" matInput (keyup)="
-                                            courseChnage($event.target.value)
-                                        " formControlName="courseName" [matAutocomplete]="auto"
+                                    <input type="text" matInput formControlName="courseName" [matAutocomplete]="auto"
                                         placeholder="Course Name" />
                                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
                                         [displayWith]="displayCourseFn" (optionSelected)="
-                                            getSelectedCourses(
-                                                $event.option.value
-                                            )
-                                        ">
+                                                    getSelectedCourses(
+                                                        $event.option.value
+                                                    )
+                                                ">
                                         <mat-option *ngFor="
-                                                let option of filteredCourseOptions
-                                                    | async
-                                            " [value]="option">
+                                                        let option of filteredCourseOptions
+                                                            | async
+                                                    " [value]="option">
                                             {{ option.name }}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -177,7 +176,7 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="sm:col-span-1" *ngIf="showCourseHole">
+                        <div class="sm:col-span-1" *ngIf="showCourseHole && !showMultipleCourses">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>Course Hole Set</mat-label>
                                 <mat-select class="w-full" placeholder="Course" formControlName="courseHoleSet">
@@ -194,14 +193,14 @@
                         </div>
                         <div class="sm:col-span-1" formArrayName="courseInfo">
                             <div *ngFor="
-                                    let url of courseFileds.controls;
-                                    let i = index
-                                " [formGroupName]="i" class="flex flex-auto">
+                                            let url of courseFileds.controls;
+                                            let i = index
+                                        " [formGroupName]="i" class="flex flex-auto">
                                 <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                     <mat-label>Match Format</mat-label>
                                     <mat-icon class="icon-size-5" [svgIcon]="
-                                            'heroicons_solid:office-building'
-                                        " matPrefix></mat-icon>
+                                                    'heroicons_solid:office-building'
+                                                " matPrefix></mat-icon>
                                     <mat-select class="w-full" placeholder="Match Format" formControlName="matchFormat"
                                         (selectionChange)="formatChange($event)">
                                         <mat-option *ngFor="let format of matchFormats" [value]="format">{{ format
@@ -210,11 +209,12 @@
                                 </mat-form-field>
                             </div>
                         </div>
+
                         <div class="sm:col-span-1" formArrayName="courseInfo">
                             <div *ngFor="
-                                    let url of courseFileds.controls;
-                                    let i = index
-                                " [formGroupName]="i" class="flex flex-auto">
+                                            let url of courseFileds.controls;
+                                            let i = index
+                                        " [formGroupName]="i" class="flex flex-auto">
                                 <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                     <mat-label>LeaderBoard Format</mat-label>
                                     <mat-select class="w-full" placeholder="LeaderBoard Format"
@@ -227,7 +227,52 @@
                         </div>
 
                         <div class="sm:col-span-1" *ngIf="!showCourseHole"></div>
+                        <div class="sm:col-span-1" *ngIf="showMultipleCourses"></div>
 
+                        <div *ngIf="showMultipleCourses" class="sm:col-span-4">
+                            <div>
+                                <div>
+                                    <div class="flex justify-center my-4 text-2xl">
+                                        <h3>Course Selection</h3>
+                                    </div>
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0 ng-star-inserted">
+                                    <div formArrayName="courses"
+                                        *ngFor="let url of courseFormGroup.controls; let i = index">
+                                        <div [formGroupName]="i">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                                <mat-label>Round {{ i + 1 }} Course</mat-label>
+                                                <input type="text" matInput formControlName="courseName" (keyup)="courseChnage($event.target.value,i)" [matAutocomplete]="auto" placeholder="Course Name" />
+                                                <mat-autocomplete autoActiveFirstOption [displayWith]="displayCourseFn"
+                                                    #auto="matAutocomplete"
+                                                    (optionSelected)="getSelectedCoursesMulti($event.option.value,i)">
+                                                    <mat-option *ngFor="let option of filteredCourseOptions | async"
+                                                        [value]="option">
+                                                        {{ option.name }}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <mat-error>Please select a course from the list.</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div [formGroupName]="i">
+                                            <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                                <mat-label>Round {{ i + 1 }} Course Hole Set</mat-label>
+                                                <mat-select class="w-full" placeholder="courseHoleSet"
+                                                    formControlName="courseHolSet">
+                                                    <mat-option *ngFor="let course of courseHoleSetName[i]"
+                                                        [value]="course.holeSets + '_' + course.inverted">
+                                                        {{ course.displayName }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-icon matSuffix>place</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                         <div *ngIf="showSubtournament" class="flex my-4 text-2xl" fxLayoutAlign="start end">
                             <h3>New Sub LeaderBoard</h3>
                         </div>
@@ -244,6 +289,9 @@
                                 </mat-form-field>
                             </div>
                         </div>
+
+
+
                         <div *ngIf="showSubtournament" class="sm:col-span-1" formArrayName="subTournament">
                             <div *ngFor="
                                     let url of subTournamentFileds.controls;
@@ -277,7 +325,7 @@
                         </div>
 
                         <div *ngIf="this.showCat" class="sm:col-span-4">
-                            <div style="margin-bottom: 30px">
+                            <div class="mt-8">
                                 <div>
                                     <div class="flex justify-center my-4 text-2xl">
                                         <h3>Player Categories</h3>
@@ -853,96 +901,8 @@
                                 formArray.get([1]).get("category").value[i].name
                                 }}</ng-template>
 
-                            <!-- <mat-card style="margin-bottom: 30px">
-
-                                            <div
-                                                fxLayout="row"
-                                                fxLayout.lt-md="column"
-                                                fxLayoutGap="20px"
-                                            >
-                                                <div
-                                                    fxLayoutAlign="center center"
-                                                    class="m-4"
-                                                >
-                                                    <mat-label
-                                                        >Select Playing
-                                                        Dates:</mat-label
-                                                    >
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="flex flex-row justify-evenly"
-                                            >
-                                                <div
-                                                    formArrayName="playingDate"
-                                                    *ngFor="
-                                                        let t of PlayingDateFormGroup(
-                                                            i
-                                                        ).controls;
-                                                        let w = index
-                                                    "
-                                                >
-                                                    <div [formGroupName]="w">
-                                                        <mat-checkbox
-                                                            class="checkbox-margin pl-4 pb-1"
-                                                            value="t.id"
-                                                            matInput
-                                                            formControlName="playing"
-                                                            >{{
-                                                                t.value.Date
-                                                            }}</mat-checkbox
-                                                        >
-
-                                                        <mat-form-field
-                                                            class="mx-4"
-                                                        >
-                                                            <mat-select
-                                                                class="w-full"
-                                                                placeholder="18"
-                                                                formControlName="noofHoles"
-                                                            >
-                                                                <mat-option
-                                                                    value="1_9"
-                                                                    >1_9</mat-option
-                                                                >
-                                                                <mat-option
-                                                                    value="10_18"
-                                                                    >10_18</mat-option
-                                                                >
-                                                                <mat-option
-                                                                    value="10"
-                                                                    >10</mat-option
-                                                                >
-                                                                <mat-option
-                                                                    value="18"
-                                                                    >18</mat-option
-                                                                >
-                                                            </mat-select>
-                                                            <mat-icon matSuffix
-                                                                >golf_course</mat-icon
-                                                            >
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </mat-card> -->
-
 
                             <div [formGroupName]="i" class="grid sm:grid-cols-4 gap-6 w-full mb-10">
-                                <!-- <div
-                                        class="py-2 ml-4 px-3 mb-2 items-center rounded-full text-md w-28 font-extrabold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500">
-                                        Day 1 Group
-                                    </div> -->
-                                <!-- <div
-
-                                                        class="ml-5 mt-1 mb-4 text-slate-600 font-extrabold"
-                                                    >
-                                                        Note*: These are only
-                                                        Day 1 flights. Remaining
-                                                        flights are generated
-                                                        according to the cut.
-                                                    </div> -->
 
                                 <div class="sm:col-span-2">
                                     <mat-form-field class="fuse-mat-no-subscript w-full mt-5">

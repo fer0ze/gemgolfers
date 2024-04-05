@@ -51,7 +51,7 @@
                             </mat-select>
                         </mat-form-field>
 
-                        <mat-form-field *ngIf="coursesList.length > 1">
+                        <mat-form-field  class="mx-4 fuse-mat-no-subscript min-w-40" *ngIf="coursesList.length > 1">
                             <mat-select
                                 (selectionChange)="changeCourse($event)"
                                 [(value)]="selectedCourse"

@@ -1112,6 +1112,9 @@ export class TournamentsService {
                                 members: {
                                     data: tmnt.members,
                                 },
+                                tournament_round_courses: {
+                                    data: tmnt.tournament_round_courses,
+                                },
                             },
                         ],
                         flightId: flightId,

@@ -22,6 +22,7 @@ import {
     Tournament,
     TournamentCategory,
     TournamentMember,
+    TournamentRoundCourses,
 } from '../../../../shared/models/tournament.model';
 import {
     Player,
@@ -100,7 +101,7 @@ export class AddTournamentComponent implements OnInit {
     intervalPerFlight = 0;
     stepTitle: string = 'Tournament Setup Form';
     PLcats: Player[] = [];
-
+    tournamentCourses: any[] = [];
     formGroup: FormGroup;
     filteredClubOptions: Observable<Club[]>;
     filteredCourseOptions: any;
@@ -136,6 +137,7 @@ export class AddTournamentComponent implements OnInit {
     hideClubs: boolean = true;
     showTexas: boolean = false;
     showMatchPlay: boolean = false;
+    showMultipleCourses: boolean = false;
     showShambles: boolean = false;
     showBest: boolean = false;
     clubTitle: string;
@@ -146,11 +148,14 @@ export class AddTournamentComponent implements OnInit {
     public preFlightTime = this.selectedTime;
     minDate: Date;
     maxDate: Date;
+    courseIndex: number = 0;
+    courseFlag: boolean = true;;
     currentTournament: any;
     classifiedPlayers: any[] = [];
     setupInitialized: boolean = false;
     playingFlight: any[] = [];
     courseHoleSetNames: any[];
+    courseHoleSetName: any[] = [];
     courseChange: boolean = false;
     courseHoleSetCount: number = 0;
     showCourseHole: boolean = false;
@@ -344,7 +349,6 @@ export class AddTournamentComponent implements OnInit {
                         this._formBuilder.group({
                             courseName: [
                                 '',
-                                [Validators.required, RequireMatch],
                             ],
                             matchFormat: [Constants.MF_STROKE_PLAY],
                             multiFormat: ['SINGLE'],
@@ -382,6 +386,7 @@ export class AddTournamentComponent implements OnInit {
                     spLongestDriveTwo: [''],
                     spNearestDrive: [''],
                     askConfirmation: [false],
+                    courses: this._formBuilder.array([]),
                 }),
                 this._formBuilder.group({
                     category: this._formBuilder.array([]),
@@ -408,7 +413,7 @@ export class AddTournamentComponent implements OnInit {
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = today.getFullYear();
-
+        // this.courseFormGroup
         let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
         /*
     this.nameFormGroup = this._formBuilder.group({
@@ -437,10 +442,10 @@ export class AddTournamentComponent implements OnInit {
                     ? tournamentInfo.tournament[0]
                     : [];
 
-            //console.log(this.currentTournament);
+            console.log(this.currentTournament);
             //console.log(this.currentTournament.teams);
 
-            this.getSelectedCourse(this.currentTournament['CourseQL']);
+            // this.getSelectedCourse(this.currentTournament['CourseQL']);
 
             if (this.currentTournament) {
                 this.formArray.get([0]).patchValue({
@@ -461,7 +466,6 @@ export class AddTournamentComponent implements OnInit {
                 });
                 if (this.currentTournament.scoreManagement != Constants.SM_ONLY_PLAYERS) {
                     this.isMarshals = true;
-
                 }
                 if (this.currentTournament.teamMatch) {
                     this.currentTournament.teams.forEach((team) => {
@@ -564,6 +568,29 @@ export class AddTournamentComponent implements OnInit {
                         clubMembersData.club_member[i].player
                     );
                 }
+                this.tournamentCourses = this.currentTournament['CoursesQL'];
+                if (this.tournamentCourses.length > 0) {
+                    this.showMultipleCourses = true;
+                    for (let course of this.tournamentCourses) {
+                        const chkArray = this.formArray.get([0]).get('courses')as FormArray;
+                        chkArray.push(
+                            this._formBuilder.group({
+                                courseName: [course.course, Validators.required],
+                                round: [course.round, Validators.required],
+                                courseHolSet: [course.courseHoleSets, Validators.required]
+                            })
+                        );
+                    }
+                } else {
+                    this.formArray
+                        .get([0])
+                        .get('courseInfo')!
+                        .get([0])
+                        .get('courseName')
+                        .setValue({
+                            name: this.currentTournament['CourseQL'].name,
+                        });
+                }
 
                 //console.log(this.clubMembers);
 
@@ -571,14 +598,7 @@ export class AddTournamentComponent implements OnInit {
 
                 //this.dataSource = new MatTableDataSource(this.clubMembers);
 
-                this.formArray
-                    .get([0])
-                    .get('courseInfo')!
-                    .get([0])
-                    .get('courseName')
-                    .setValue({
-                        name: this.currentTournament['CourseQL'].name,
-                    });
+
                 this.formGroup.get('formArray')!
                     .get([0])
                     .get('courseInfo')!
@@ -701,6 +721,7 @@ export class AddTournamentComponent implements OnInit {
                     name ? this._filterCourse(name) : this.Courses.slice()
                 )
             );
+
         //console.log(this.filteredCourseOptions);
 
         const currentYear = new Date().getFullYear();
@@ -720,6 +741,16 @@ export class AddTournamentComponent implements OnInit {
 
     filterValues(search: string): any {
         //console.log('aaa');
+    }
+    createCourses(round: any): FormGroup {
+        return this._formBuilder.group({
+            courseName: [
+                '',
+                [Validators.required, RequireMatch],
+            ],
+            round: [round],
+            courseHolSet: [''],
+        });
     }
 
     createCategory(cat: any): FormGroup {
@@ -781,6 +812,9 @@ export class AddTournamentComponent implements OnInit {
         } else {
             control.reset();
         }
+    }
+    get courseFormGroup() {
+        return <FormArray>this.formArray.get([0]).get('courses');
     }
     get categoryFormGroup() {
         return <FormArray>this.formArray.get([1]).get('category');
@@ -848,20 +882,31 @@ export class AddTournamentComponent implements OnInit {
 
     addFlightField(category: any) {
         const control = this.formArray.get([1]).get('category') as FormArray;
-
-        //console.log(control.length);
-
-        //  control.clear();
-
-
         control.push(this.createCategory(category));
-        //console.log(control);
+    }
+    addCourseField(round: any) {
+        const control = this.formArray.get([0]).get('courses') as FormArray;
+        control.push(this.createCourses(round));
+
+        // Get the index of the newly added control
+        const index = control.length - 1;
+
+        // Set up value change observable for the newly added control
+        const courseNameControl = control.at(index).get('courseName');
+        this.setupValueChangeObservable(courseNameControl);
     }
 
-    //newControl.push(this.createPlayingDate("Date of play"));
-    ////console.log(this.formArray.get([1]).get("category"));
-    ////console.log(this.formArray.get([1]).get("category").value[0].playingDate);
-
+    setupValueChangeObservable(control: AbstractControl) {
+        control.valueChanges.pipe(
+            startWith(''),
+            map((value) =>
+                typeof value === 'string' ? value : value ? value.name : ''
+            ),
+            map((name) =>
+                name ? this._filterCourse(name) : this.Courses.slice()
+            )
+        );
+    }
     displayFn(club: Club): string {
         return typeof club === 'string' ? club : club ? club.name : '';
     }
@@ -922,23 +967,9 @@ export class AddTournamentComponent implements OnInit {
             }
         }
 
-        return this.Courses;
+        return this.Courses.slice();
     }
-    courseChnage(values) {
-        if (values.length > 280) {
-            this.filteredCourseOptions = this._filterCourse(values);
-        } else {
-            // this.filteredCourseOptions = this.formArray
-            //     .get([0])
-            //     .get('courseInfo')
-            //     .get([0])
-            //     .get('courseName')
-            //     .valueChanges.pipe(
-            //         startWith(''),
-            //         map((values) => this._filterCourse(values))
-            //     );
-        }
-    }
+
     checkDate(cat) {
         //console.log(cat);
         if (this.editTournament == true) {
@@ -1125,15 +1156,6 @@ export class AddTournamentComponent implements OnInit {
             .get([0])
             .get('courseName')
             .setValue({ course });
-        //console.log(
-        //     this.formArray
-        //         .get([0])
-        //         .get('courseInfo')
-        //         .get([0])
-        //         .get('courseName')
-        //         .getRawValue()
-        // );
-
         this.facadeService
             .getCourseHoleSets(course.id)
             .subscribe((selectedCourseHoleSet) => {
@@ -1150,20 +1172,46 @@ export class AddTournamentComponent implements OnInit {
                     });
                 }
             });
+    }
+    getSelectedCoursesMulti(course, index) {
 
-        // if(course.nameForHoles1to9 && course.nameForHoles10to18) {
-        //   let course1to9 = { id: 1, name: course.nameForHoles1to9, checked: this.hasHoleSet1to9(course.nameForHoles1to9) };
-        //   let course10to18 = { id: 2, name: course.nameForHoles10to18, checked: this.hasHoleSet10to18(course.nameForHoles10to18) };
-        //   let course19to27 = { id: 4, name: course.nameForHoles19to27, checked: this.hasHoleSet19to27(course.nameForHoles19to27) };
-        //   let course28to36 = { id: 8, name: course.nameForHoles28to36, checked: this.hasHoleSet28to36(course.nameForHoles28to36) };
-
-        //   if(course.nameForHoles1to9) this.courseHoleSetNames.push(course1to9);
-        //   if(course.nameForHoles10to18) this.courseHoleSetNames.push(course10to18);
-        //   if(course.nameForHoles19to27) this.courseHoleSetNames.push(course19to27);
-        //   if(course.nameForHoles28to36) this.courseHoleSetNames.push(course28to36);
-        //   this.showCourseHole = true;
-        // }
-        // else this.showCourseHole = false;
+        this.courseChange = true;
+        //console.log(this.courseChange);
+        this.facadeService
+            .getCourseHoleSets(course.id)
+            .subscribe((selectedCourseHoleSet) => {
+                //console.log(selectedCourseHoleSet);
+                if (selectedCourseHoleSet.course_hole_sets.length > 0) {
+                    this.courseHoleSetName.push(selectedCourseHoleSet.course_hole_sets)
+                    // this.filteredCourseOptions = this.Courses.slice();
+                    this.filteredCourseOptions = of(this._filterCourse(''));
+                } else {
+                }
+            });
+    }
+    courseChnage(values, i) {
+        if (this.courseIndex != i) {
+            this.courseFlag = true;
+        }
+        if (this.courseFlag) {
+            this.filteredCourseOptions = this.formArray.get([0])
+                .get('courses')
+                .get([i])
+                .get('courseName')!
+                .valueChanges.pipe(
+                    startWith(''),
+                    map((value) =>
+                        typeof value === 'string' ? value : value ? value.name : ''
+                    ),
+                    map((name) =>
+                        name ? this._filterCourse(name) : this.Courses.slice()
+                    )
+                );
+            this.courseIndex = i;
+            this.courseFlag = false;
+        } else if (this.courseIndex != i) {
+            this.courseFlag = true;
+        }
     }
 
     checkCatToUpdate(cat, check: boolean) {
@@ -1368,7 +1416,7 @@ export class AddTournamentComponent implements OnInit {
     deleteCourseInfo(index) {
         this.courseFileds.removeAt(index);
     }
-  
+
 
     getSelectedPlayers(index, stepper: MatStepper) {
         //console.log(index);
@@ -1392,7 +1440,7 @@ export class AddTournamentComponent implements OnInit {
             }
             //console.log(person);
 
-          
+
             this.formArray.get([1]).get('category').value[i].playingDate =
                 this.checkDate(
                     this.formArray.get([1]).get('category').value[i]
@@ -1852,12 +1900,29 @@ export class AddTournamentComponent implements OnInit {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let tournamentCats: TournamentCategory[] = [];
+        let tournamentRoundCourses: TournamentRoundCourses[] = [];
 
         let marshalsData: Marshal[] = [];
 
         //const tc:TournamenCategory = [];
         if (!this.tournamentID)
             this.tournamentID = UniqueIdGenerator.generate();
+        if (this.formArray.get([0]).value.numOfRounds > 1) {
+            for (let index in this.formArray.get([0]).value.courses) {
+                console.log(this.formArray.get([0]).value.courses[index]);
+                let course = this.formArray.get([0]).value.courses[index];
+                let courseHoleSet = course.courseHolSet?.split('_');
+
+                let obj: TournamentRoundCourses = {
+                    round: course.round,
+                    courseId: course?.courseName?.id ?? '',
+                    courseHoleSets: courseHoleSet ? Number(courseHoleSet[0]) : 3,
+                    inverted: courseHoleSet[1] == 'false' ? false : true,
+                }
+                tournamentRoundCourses.push(obj);
+            }
+        }
+        console.log(tournamentRoundCourses);
 
         for (let index in this.formArray.get([0]).value.clubctgies) {
             let TCdata: any;
@@ -1999,7 +2064,7 @@ export class AddTournamentComponent implements OnInit {
             ? (courseHoleSetsData = courseHoleSetsData.split('_', 2))
             : (courseHoleSetsData = []);
 
-        //console.log(this.formArray);
+        console.log(this.formArray);
 
         let tournament = {
             id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
@@ -2008,10 +2073,7 @@ export class AddTournamentComponent implements OnInit {
                     ? this.loggedInuser.adminClubId
                     : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: null,
-            courseId: this.formArray.get([0]).value.courseInfo[0]
-                ? this.formArray.get([0]).value.courseInfo[0].courseName.course
-                    .id
-                : '',
+            courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id,
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
             prefix: this.formArray.get([0]).value.prefixFormCtrl,
@@ -2069,6 +2131,7 @@ export class AddTournamentComponent implements OnInit {
             flights: [],
             members: [],
             tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
+            tournament_round_courses: tournamentRoundCourses,
         };
 
         //console.log(tournament);
@@ -3230,7 +3293,18 @@ export class AddTournamentComponent implements OnInit {
             }
         });
     }
-
+    roundChange(event) {
+        if (Number(event.value) > 1) {
+            const control = this.formArray.get([0]).get('courses') as FormArray;
+            control.clear();
+            for (let i = 1; i <= Number(event.value); i++) {
+                this.addCourseField(i);
+            }
+            this.showMultipleCourses = true;
+        } else {
+            this.showMultipleCourses = false;
+        }
+    }
     movePlayer(flight: number, cplayer: number) {
         ////console.log(flight + "<- ->" + player);
         let player: Player = this.selectedMembers[flight][cplayer];

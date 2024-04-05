@@ -97,12 +97,9 @@ export class MatchplayComponent implements OnInit {
                                 '-L6WPki8tSDZ1IAAoRXZ',
                                 this.tournamentID
                             );
-                        let selectedCourseHoleSet =
-                            await this.facadeService.getCourseHoleSetsForCourse(
-                                this.courseID
-                            );
-                        this.courseHoleSetNames =
-                            selectedCourseHoleSet['course_hole_sets'];
+                        console.log(dataLeaderboard);
+
+
                         this.matchPlayData = dataLeaderboard.TournamentQL;
                         this.isLoading = false;
                         ////console.log('Match play data');
@@ -113,7 +110,7 @@ export class MatchplayComponent implements OnInit {
                             matchFormat.BESTBALL || this.matchPlayData['matchFormat'] ==
                             matchFormat.TWO_Ball_SCRAMBLE || this.matchPlayData['matchFormat'] ==
                             matchFormat.THREE_BALL_SCRAMBLE || this.matchPlayData['matchFormat'] ==
-                            matchFormat.FOUR_BALL_SCRAMBLE 
+                            matchFormat.FOUR_BALL_SCRAMBLE
                         ) {
                             this.showTaxes = true;
                         }
@@ -123,7 +120,7 @@ export class MatchplayComponent implements OnInit {
                         this.activeRound = tournamentData.activeRound;
                         this.totalRounds = tournamentData.noOfRounds;
                         this.selectedIndex = this.activeRound - 1;
-
+                        let roundCourse;
                         this.noOfRounds = tournamentData.noOfRounds;
                         if (this.activeRound > this.noOfRounds) {
                             if (this.noOfRounds == 1) this.showRound1 = true;
@@ -132,13 +129,35 @@ export class MatchplayComponent implements OnInit {
                             else if (this.noOfRounds == 4) this.showRound4 = true;
                             else this.showRound4 = true;
                         } else {
-                            if (this.activeRound == 1) this.showRound1 = true;
-                            else if (this.activeRound == 2) this.showRound2 = true;
-                            else if (this.activeRound == 3) this.showRound3 = true;
-                            else if (this.activeRound == 4) this.showRound4 = true;
-                            else this.showRound4 = true;
+                            if (this.activeRound == 1) {
+                                this.showRound1 = true;
+                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                console.log(roundCourse);
+                                this.courseID = roundCourse[0].courseId??this.courseID;
+                            } else if (this.activeRound == 2) {
+                                this.showRound2 = true;
+                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                console.log(roundCourse);
+                                this.courseID = roundCourse[0].courseId??this.courseID;
+                            } else if (this.activeRound == 3) {
+                                this.showRound3 = true;
+                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                console.log(roundCourse);
+                                this.courseID = roundCourse[0].courseId??this.courseID;
+                            } else if (this.activeRound == 4) {
+                                this.showRound4 = true;
+                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                console.log(roundCourse);
+                                this.courseID = roundCourse[0].courseId??this.courseID;
+                            } else this.showRound4 = true;
                         }
 
+                        let selectedCourseHoleSet =
+                            await this.facadeService.getCourseHoleSetsForCourse(
+                                this.courseID
+                            );
+                        this.courseHoleSetNames =
+                            selectedCourseHoleSet['course_hole_sets'];
                         this.subTournaments = tournamentData.SubTournamentsQL;
 
                         if (tournamentData.activeRound > tournamentData.noOfRounds)
@@ -208,15 +227,38 @@ export class MatchplayComponent implements OnInit {
         this.parseSubscriptionResponse();
     }
 
-    changeRound(item) {
+    async changeRound(item) {
         ////console.log("Selected value: " + item.value);
+        let roundCourse;
         if (this.active) {
             this.flightRound = item.index + 1;
-            if (this.flightRound == 1) this.showRound1 = true;
-            else if (this.flightRound == 2) this.showRound2 = true;
-            else if (this.flightRound == 3) this.showRound3 = true;
-            else if (this.flightRound == 4) this.showRound4 = true;
-
+            if (this.flightRound == 1) {
+                this.showRound1 = true;
+                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
+                console.log(roundCourse);
+                this.courseID = roundCourse[0].courseId??this.courseID;
+            } else if (this.flightRound == 2) {
+                this.showRound2 = true;
+                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
+                console.log(roundCourse);
+                this.courseID = roundCourse[0].courseId??this.courseID;
+            } else if (this.flightRound == 3) {
+                this.showRound3 = true;
+                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
+                console.log(roundCourse);
+                this.courseID = roundCourse[0].courseId??this.courseID;
+            } else if (this.flightRound == 4) {
+                this.showRound4 = true;
+                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
+                console.log(roundCourse);
+                this.courseID = roundCourse[0].courseId??this.courseID;
+            } else this.showRound4 = true;
+            let selectedCourseHoleSet =
+                            await this.facadeService.getCourseHoleSetsForCourse(
+                                this.courseID
+                            );
+                        this.courseHoleSetNames =
+                            selectedCourseHoleSet['course_hole_sets'];
             this.ddSelectedFlight = '0';
             this.roundFlights = [];
             //this.scoreHeader = [];
@@ -395,7 +437,7 @@ export class MatchplayComponent implements OnInit {
                 let courseHoleSetTitle;
                 let flightHeader = await this.setupMatchplayHeader(
                     flightData.tee_id,
-                    this.matchPlayData['CourseQL'],
+                    this.noOfRounds > 1 ? this.matchPlayData['CoursesQL'] : this.matchPlayData['CoursesQL'],
                     flightData.courseHoleSets !== 0 ? flightData.courseHoleSets : 3,
                     flightData.courseHoleSetsInverted
                 );
@@ -494,7 +536,7 @@ export class MatchplayComponent implements OnInit {
                         }
                         let LeaderGross: any = {
                             flightId: flightData.id,
-                            courseId: this.matchPlayData['CourseQL'].id,
+                            courseId:  flightData.courseId,
                             playerId: player.id,
                             name: player.firstName + ' ' + player.lastName,
                             picture: player.picture,
@@ -601,7 +643,7 @@ export class MatchplayComponent implements OnInit {
                         let LeaderGross: any = {
                             teamName: flightData['FlightName'].name,
                             flightId: flightData.id,
-                            courseId: this.matchPlayData['CourseQL'].id,
+                            courseId: flightData.courseId,
                             playerId: player.id,
                             name: player.firstName + ' ' + player.lastName,
                             picture: player.picture,
@@ -666,7 +708,13 @@ export class MatchplayComponent implements OnInit {
         // );
         try {
 
-
+            console.log(course);
+            if (Array.isArray(course)) {
+                // course is an array
+                console.log('Array:', course);
+                let selectedCourse: any = course.filter((cour) => { return cour.round == this.flightRound })
+                course = selectedCourse[0].course;
+            }
             this.isLoading = false;
             if (course.length <= 0) return;
 
@@ -1316,7 +1364,7 @@ export class MatchplayComponent implements OnInit {
             );
 
             if (result) {
-                if(!this.showTaxes){
+                if (!this.showTaxes) {
                     for (let obj of playerScores) {
                         document.getElementById('savePlayer_' + obj.playerId).classList.add('active')
                     }
@@ -1349,7 +1397,7 @@ export class MatchplayComponent implements OnInit {
                 return a.flightId == flightId;
             });
 
-            ////console.log(selectedFlight);
+            console.log(selectedFlight);
             //return false;
 
             let today: Date = new Date();

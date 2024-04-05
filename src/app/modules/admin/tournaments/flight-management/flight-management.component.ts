@@ -253,22 +253,6 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             }
         }
 
-        //console.log(dataFullTournament);
-
-        // this.tournamentMember = dataFullTournament.TournamentMemberQL;
-        // this.isLoading = false;
-        // //console.log(this.tournamentMember);
-
-        // for (let m in this.tournamentMember)
-        //   this.tournamentMember[m]["fullName"] =
-        //     this.tournamentMember[m].player.firstName +
-        //     " " +
-        //     this.tournamentMember[m].player.lastName;
-        ////console.log(this.tournamentMember);
-        // this.syncTournamentMembers();
-        // this.dataSource = new MatTableDataSource(this.tournamentMember);
-        // setTimeout(() => (this.dataSource.paginator = this.paginator));
-        // this.dataSource.sort = this.sort;
     }
 
     createAutoFlights() {

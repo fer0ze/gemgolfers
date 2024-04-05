@@ -63,6 +63,21 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                   }
             }
         }
+        CoursesQL:tournament_round_courses{
+            tournamentId
+            round
+            courseId
+            course {
+                ...CourseQL
+            HolesQL: holes {
+                ...HoleQL
+                HoleMetaQL:meta{
+                    hole_id
+                    tee_distance
+                    tee_id
+                }
+            }}
+        }
     }
 }${PlayerQL}${TournamentQL}${FlightsQL}${ScoreQL}${ScoreDetailQL}${CourseQL}${HoleQL}${TournamentRoleManagerQL}`;
 

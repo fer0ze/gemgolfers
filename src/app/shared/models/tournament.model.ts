@@ -75,6 +75,13 @@ export class TournamentCategory {
     flightSettings: JSON;
     default?: Boolean;
 }
+export class TournamentRoundCourses {
+    tournamentId?: string;
+    round: number;
+    courseId: string;
+    courseHoleSets: number;
+    inverted: boolean;
+}
 
 export class TournamentMember {
     tournamentId: string;

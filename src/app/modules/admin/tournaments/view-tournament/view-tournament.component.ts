@@ -99,6 +99,7 @@ export class ViewTournamentComponent implements OnInit {
     allPlayers: Player[] = [];
     membersStats: any[] = [];
     topMembers: any[] = [];
+    tournamentCourses: any[] = [];
     topMembers1: any[] = [];
     topMembers2: any[] = [];
     topMembers3: any[] = [];
@@ -315,8 +316,11 @@ export class ViewTournamentComponent implements OnInit {
                     await this.facadeService.tournamentDashBoard(this.tournamentID);
                 //console.log(this.dataFullTournament);
                 // this.getTournamentMembers();
+                console.log(this.tournamentCourses);
                 this.memberStatusesQLs =
                     this.dataFullTournament['TournamentQL'][0].MemberStatusesQL;
+                this.tournamentCourses =
+                    this.dataFullTournament['TournamentQL'][0].CoursesQL;
                 this.noOfROund =
                     this.dataFullTournament['TournamentQL'][0].noOfRounds;
 
@@ -2096,12 +2100,18 @@ export class ViewTournamentComponent implements OnInit {
                     // //console.log(General.parseToDate(currentDate.toDateString()));
                     let roundTeeId: any = General.getPlayersTe(categoryName);
                     //console.log(roundTeeId.id);
+                    let selectedCourse;
+                    console.log(this.tournamentCourses);
+                    if (this.tournamentCourses.length > 0) {
+                        selectedCourse = this.tournamentCourses.filter((cour) => { return cour.round == this.activeRound + 1 })
+                    }
+
                     let flight: any = {
                         id: UniqueIdGenerator.generate(),
                         tournamentId: this.tournamentID,
-                        courseId: this.fullTournament.courseId,
+                        courseId: this.noOfRounds > 1 ? selectedCourse[0].courseId : this.fullTournament.courseId,
                         adminId: this.loggedInUser.id,
-                        courseHoleSets: this.fullTournament.courseHoleSets ? this.fullTournament.courseHoleSets : 3,
+                        courseHoleSets: this.noOfRounds > 1  ? selectedCourse[0].courseHoleSets :this.fullTournament.courseHoleSets,
                         flightNo: this.runningFlights,
                         flightRound: this.activeRound + 1,
                         startingHole: teeBox,
