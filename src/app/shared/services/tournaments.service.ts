@@ -1113,7 +1113,7 @@ export class TournamentsService {
                                     data: tmnt.members,
                                 },
                                 tournament_round_courses: {
-                                    data: tmnt.tournament_round_courses,
+                                    data: tmnt.tournament_round_courses? tmnt.tournament_round_courses : [],
                                 },
                             },
                         ],
