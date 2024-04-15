@@ -244,6 +244,28 @@ export class General {
         return ID;
     }
 
+    public static getTeeYards(teeDistance, tee,courseId) {
+        console.log(teeDistance);
+        let teeYards = [];
+        for (const [key, value] of Object.entries(teeDistance)) {
+            console.log(`Key: ${key}, Value: ${value}`);
+            let teeId = this.getPlayersTe(key);
+            console.log(teeId);
+            if (teeId) {
+                let obj = {
+                    tee_distance: value,
+                    tee_lat: null,
+                    tee_long: null,
+                    tee_id: teeId?.id,
+                    course_id:courseId,
+                }
+                teeYards.push(obj)
+            }
+        }
+        console.log(tee);
+        return teeYards;
+    }
+
     public static getPhonePrefix(phone) {
         if (phone.toString().indexOf('+92') === 0) {
             phone = phone.toString();

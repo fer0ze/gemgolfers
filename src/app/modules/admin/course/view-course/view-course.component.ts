@@ -12,6 +12,7 @@ import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/genera
 import { FacadeService } from 'app/shared/services/facade.service';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { Observable, map, startWith } from 'rxjs';
 
 @Component({
     selector: 'app-view-course',
@@ -81,14 +82,10 @@ export class ViewCourseComponent implements OnInit {
     thirtySixHoleTotalPar: number = 0;
     loggedInuser: any;
     public courseForm: FormGroup;
-    listCity = [];
-    listCountries: {
-        id: string; //------------------------------------Sorting the Array according to the No of hole----------------------------------------------------//
-        cities: string[];
-    } | {
-        id: string; //------------------------------------Sorting the Array according to the No of hole----------------------------------------------------//
-        cities: string[];
-    }[];
+    countries: any;
+    cities: any;
+    listCountries: Observable<any[]>;
+    listCity: Observable<any[]>;
     constructor(
         // private datePipe: DatePipe,
         private router: Router,
@@ -103,7 +100,7 @@ export class ViewCourseComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.listCountries = countries;
+        this.countries = countries;
         //console.log(this.listCountries);
         this.route.paramMap.subscribe((params) => {
             this.courseID = params.get("id");
@@ -162,39 +159,86 @@ export class ViewCourseComponent implements OnInit {
         } else {
 
         }
+
+        this.listCountries = this.courseForm
+            .get('country')!
+            .valueChanges.pipe(
+                startWith(''),
+                map((value) =>
+                    typeof value === 'string' ? value : value ? value.name : ''
+                ),
+                map((name) => (name ? this._filter(name) : this.countries.slice()))
+            );
+
     }
     ////*******************************************************************COURSE CREATE**************************************************************************************** */
     countrySelected(event) {
         // let obj = Country.getCity(event);
 
-        const city = new getCity().getCity(event);
+        const city = new getCity().getCity(event?.name || event);
         for (let objs of city['cities']) {
-            this.listCity = objs.split("|");
+            this.cities = objs.split("|");
         }
-        this.courseForm.get('city').setValue(this.listCity[1]);
-        //console.log(this.listCity);
+        // this.courseForm.get('city').setValue(this.cities[1]);
+        console.log(this.cities);
+        this.listCity = this.courseForm
+            .get('city')!
+            .valueChanges.pipe(
+                startWith(''),
+                map((value) =>
+                    typeof value === 'string' ? value : value ? value.name : ''
+                ),
+                map((name) => (name ? this._filterCity(name) : this.cities.slice()))
+            );
 
     }
 
+    private _filter(value: string) {
+        if (value) {
+            const filterValue = value.toLowerCase();
+            return this.countries.filter(
+                (option) => option.name.toLowerCase().indexOf(filterValue) === 0
+            );
+        }
+        return this.countries;
+    }
+
+    private _filterCity(value: string) {
+        if (value) {
+            const filterValue = value.toLowerCase();
+            return this.cities.filter(
+                (option) => option.toLowerCase().indexOf(filterValue) === 0
+            );
+        }
+        return this.cities;
+    }
+
+    displayFn(country): string {
+        return typeof country === 'string' ? country : country ? country.name : '';
+    }
+    displayCity(city): string {
+        return typeof city === 'string' ? city : city ? city : '';
+    }
 
     public createCourse = async (playerFormValue: any) => {
         let course = {
             id: UniqueIdGenerator.generate(),
             clubId: this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null,
             name: playerFormValue.courseName,
-            country: playerFormValue.country,
+            country: playerFormValue.country.name || playerFormValue.country,
             noOfHoles: playerFormValue.noOfHoles,
             teeDistanceUnit: "YARDS",
             par: "72",
             city: playerFormValue.city,
             createdBy: this.loggedInuser?.id,
+            status:'In Review',
         };
         if (this.courseID) {
             let courses = {
                 id: this.courseID,
                 clubId: this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null,
                 name: playerFormValue.courseName,
-                country: playerFormValue.country,
+                country: playerFormValue.country.name || playerFormValue.country,
                 noOfHoles: playerFormValue.noOfHoles,
                 teeDistanceUnit: "YARDS",
                 par: '72',
@@ -202,6 +246,7 @@ export class ViewCourseComponent implements OnInit {
                 cityGeonameId: 787878,
                 city: playerFormValue.city,
                 createdBy: this.loggedInuser?.id,
+                
             };
 
             const isSuccess = <boolean>(
@@ -267,7 +312,7 @@ export class ViewCourseComponent implements OnInit {
                 };
                 this.Tee.push(tee);
             }
-            //console.log(this.Tee);
+            console.log(this.Tee);
 
             this.tees = [];
             this.tees =
@@ -278,7 +323,7 @@ export class ViewCourseComponent implements OnInit {
             let item = this.tees['course'][0]['TeesQL'];
             for (let obj of item) {
                 item = {
-                    name: obj.name_by_club,
+                    name_by_club: obj.name_by_club,
                     id: obj.tee_id,
                 };
                 this.showTees.push(item);
@@ -448,7 +493,11 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
+                        teeDistances: {}
                     };
+                    for (let meta of holes['HolesQL'][0]['holes'][index].meta) {
+                        hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                    }
                     this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
                 }
@@ -466,9 +515,12 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
+                        teeDistances: {}
                     };
+                    for (let meta of holes['HolesQL'][1]['holes'][index].meta) {
+                        hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                    }
                     this.eighteenHoleTotalPar += parseInt(hole.par);
-
                     this.holeSetfor18.push(hole);
                 }
             }
@@ -485,7 +537,11 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
+                        teeDistances: {}
                     };
+                    for (let meta of holes['HolesQL'][2]['holes'][index].meta) {
+                        hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                    }
                     this.twentysevenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor27.push(hole);
                 }
@@ -503,7 +559,11 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
+                        teeDistances: {}
                     };
+                    for (let meta of holes['HolesQL'][3]['holes'][index].meta) {
+                        hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                    }
                     this.thirtySixHoleTotalPar += parseInt(hole.par);
 
                     this.holeSetfor36.push(hole);
@@ -519,6 +579,7 @@ export class ViewCourseComponent implements OnInit {
                         displayName: 'Front-9',
                         par: null,
                         index: null,
+                        teeDistances: {}
                     };
 
                     this.holeSetfor9.push(hole);
@@ -535,6 +596,7 @@ export class ViewCourseComponent implements OnInit {
                         displayName: 'Back-9',
                         par: null,
                         index: null,
+                        teeDistances: {}
                     };
 
                     this.holeSetfor18.push(hole);
@@ -551,6 +613,7 @@ export class ViewCourseComponent implements OnInit {
                         displayName: null,
                         par: null,
                         index: null,
+                        teeDistances: {}
                     };
 
                     this.holeSetfor27.push(hole);
@@ -566,6 +629,7 @@ export class ViewCourseComponent implements OnInit {
                         displayName: null,
                         par: null,
                         index: null,
+                        teeDistances: {}
                     };
 
                     this.holeSetfor36.push(hole);
@@ -578,43 +642,63 @@ export class ViewCourseComponent implements OnInit {
      */
     public onParInput(par: any, holeNo: any) {
         //console.log(holeNo);
+        par = par != '' ? par : 0;
         let index = 0;
+        this.nineHoleTotalPar = 0;
+        this.eighteenHoleTotalPar = 0;
+        this.twentysevenHoleTotalPar = 0;
+        this.thirtySixHoleTotalPar = 0;
         if (holeNo <= 9) {
             for (let obj of this.holeSetfor9) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor9[index]['par'] = par;
-                    this.nineHoleTotalPar += parseInt(par);
-                    break;
                 }
+                this.nineHoleTotalPar += parseInt(this.holeSetfor9[index]['par'] || 0)
                 index++;
             }
         } else if (holeNo <= 18) {
             for (let obj of this.holeSetfor18) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor18[index]['par'] = par;
-                    this.eighteenHoleTotalPar += parseInt(par);
-                    break;
                 }
+                this.eighteenHoleTotalPar += parseInt(this.holeSetfor18[index]['par'] || 0)
                 index++;
             }
         } else if (holeNo <= 27) {
             for (let obj of this.holeSetfor27) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor27[index]['par'] = par;
-                    this.twentysevenHoleTotalPar += parseInt(par);
-                    break;
                 }
+                this.twentysevenHoleTotalPar += parseInt(this.holeSetfor27[index]['par'] || 0)
                 index++;
             }
         } else if (holeNo <= 36) {
             for (let obj of this.holeSetfor36) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor36[index]['par'] = par;
-                    this.thirtySixHoleTotalPar += parseInt(par);
-                    break;
                 }
+                this.thirtySixHoleTotalPar += parseInt(this.holeSetfor36[index]['par'] || 0)
                 index++;
             }
+        }
+    }
+    /**
+     * onTeeInput
+     */
+    public onTeeInput(dist: any, tee_id: any, hole_id: any, holeSet: any) {
+
+        if (holeSet == 9) {
+            let hole = this.holeSetfor9.filter((hole) => { return hole.id == hole_id.id });
+            hole[0]['teeDistances'][tee_id] = dist;
+        } else if (holeSet == 18) {
+            let hole = this.holeSetfor18.filter((hole) => { return hole.id == hole_id.id });
+            hole[0]['teeDistances'][tee_id] = dist;
+        } else if (holeSet == 27) {
+            let hole = this.holeSetfor27.filter((hole) => { return hole.id == hole_id.id });
+            hole[0]['teeDistances'][tee_id] = dist;
+        } else if (holeSet == 36) {
+            let hole = this.holeSetfor36.filter((hole) => { return hole.id == hole_id.id });
+            hole[0]['teeDistances'][tee_id] = dist;
         }
     }
     /**
@@ -776,6 +860,7 @@ event   */
         } else {
             holeObj = this.holeSetfor9;
         }
+        console.log(holeObj);
 
         if (this.showholeindexforWomen == false) {
             let count = holeObj.length / 9;
@@ -810,7 +895,7 @@ event   */
             let number = 0;
             let counter = 0;
             for (let obj of holeObj) {
-                // let roundTeeId: any = General.getPlayersTe(obj.Tee);
+             //   let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee);
                 let tee = {
                     id: obj.id,
                     courseId: this.courseID,
@@ -821,6 +906,7 @@ event   */
                     par: obj.par ? obj.par : 0,
                     index: obj.index ? obj.index : 0,
                     holeSetId: this.id[counter],
+                    meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
                 };
                 number++;
                 if (number % 9 == 0) {

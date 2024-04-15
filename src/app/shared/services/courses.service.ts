@@ -296,6 +296,7 @@ export class CoursesService {
                 countryGeonameId: 565656,
                 cityGeonameId: 787878,
                 createdBy: course.createdBy,
+                status: course.status
               },
             ],
           },

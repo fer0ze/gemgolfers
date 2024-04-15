@@ -23,6 +23,7 @@ export const GetCourses = gql`
       nameForHoles19to27
       nameForHoles28to36
       createdAt
+      status
     }
   }
 `;
@@ -42,6 +43,7 @@ query PostsGetQuery($where: course_bool_exp!) {
     countryGeonameId
     city
     cityGeonameId
+    status
     nameForHoles1to9
     nameForHoles10to18
     nameForHoles19to27
@@ -253,6 +255,14 @@ export const getCourseHole = gql`
         par
         index
         holeSetId
+        meta{
+          hole_id
+          tee_distance
+          tee_id
+          tee_name{
+            name
+          }
+        }
       }
     }
   }

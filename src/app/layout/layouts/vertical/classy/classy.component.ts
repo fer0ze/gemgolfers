@@ -88,7 +88,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             this.user.avatar = 'assets/images/logo/e2esp.png';
         } else {
             this.navigation['default'] = userNavigation;
-            this.user.avatar = 'assets/images/logo/leaderboradlogo.png';
+            this.user.avatar = 'assets/images/logo/leaderboradlogo-without-pb.png';
         }
         // //console.log(this.navigation);
 

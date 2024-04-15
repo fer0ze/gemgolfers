@@ -38,6 +38,7 @@ export class CourseComponent implements OnInit {
     "par",
     "country",
     "city",
+    "status",
     "action",
   ];
   courseData: any;

@@ -116,20 +116,24 @@ body {
 
     border: 1px solid #c0bfbf !important;
     text-align: center;
-
+    margin: 1px;
     border-radius: 10px;
+    color: #000000;
     /* margin: -0.5px; */
 }
 
 .holeInputs {
-    width: 44px;
-    height: 53px !important;
-    border: none;
-    border: 1px solid #c0bfbf;
+    width: 245px !important;
+    height: 39px !important;
+    border: 1px solid #c0bfbf !important;
     text-align: center;
-
-    border-radius: 10px;
-    /* margin: -0.5px; */
+    margin: 1px;
+    border-radius: 6px;
+}
+.holeSetInputs {
+    width: 245px !important;
+    height: 53px !important;
+    border: 2px solid #085fa8 !important;
 }
 
 .tabelinput {
@@ -138,15 +142,14 @@ body {
 }
 
 .holeNum {
-    background-color: #1c7a93 !important;
+    background-color: #085fa8 !important;
     color: white !important;
-    padding: 9px !important;
-    font-weight: normal !important;
+    font-size: 15px;
 }
 
 .holehr {
-    background-color: #f46036;
-    color: white;
+    background-color: #ffffff;
+   font-weight: bold !important;
 }
 
 .dist {
@@ -156,9 +159,9 @@ body {
 
 .numberCircle {
     border-radius: 50%;
-    width: 39px;
-    height: 36px;
-    padding: 8px;
+    width: 45px;
+    height: 40px;
+    padding: 10px;
     margin-left: -5px;
     background: #e01111;
     border: 2px solid #ffffff;
@@ -170,29 +173,27 @@ body {
 
 .numberCirclea {
     border-radius: 50%;
-    width: 39px;
-    height: 36px;
-    padding: 8px;
+    width: 45px;
+    height: 40px;
+    padding: 10px;
     margin-left: -5px;
     background: #005c34;
     border: 2px solid #ffffff;
     color: rgb(255, 255, 255);
     text-align: center;
-
     font: 16px Arial, sans-serif;
 }
 
 .numberCircleb {
     border-radius: 50%;
-    width: 39px;
-    height: 36px;
-    padding: 8px;
+    width: 45px;
+    height: 40px;
+    padding: 9px;
     margin-left: -5px;
     background: #003b88;
     border: 2px solid #ffffff;
     color: rgb(255, 255, 255);
     text-align: center;
-
     font: 15px Arial, sans-serif;
 }
 
