@@ -20,6 +20,7 @@ import { read, utils } from "xlsx";
 import { LogsService } from "app/shared/services/logs.service";
 import { Course } from "app/shared/models/course.model";
 import { LocalStorageService } from "app/shared/services/localStorage";
+import { FuseConfirmationService } from "@fuse/services/confirmation";
 
 @Component({
   selector: 'app-course',
@@ -51,7 +52,8 @@ export class CourseComponent implements OnInit {
     public dialog: MatDialog,
     private facadeService: FacadeService,
     private logger: LogsService,
-    private _localStorage: LocalStorageService
+    private _localStorage: LocalStorageService,
+    private _fuseConfirmationService: FuseConfirmationService,
 
   ) { }
 
@@ -86,8 +88,49 @@ export class CourseComponent implements OnInit {
     }
   }
 
-  createCourse(){
+  createCourse() {
     this.location.navigate(['/courses/add']);
   }
 
+  compelteCourse(id) {
+    console.log(id);
+    const confirmation = this._fuseConfirmationService.open({
+      title: 'Course Status',
+      message: 'Are you sure you want to activate this course?',
+      actions: {
+        confirm: {
+          label: 'Confirm',
+        },
+      },
+    });
+
+    // Subscribe to the confirmation dialog closed action
+    confirmation.afterClosed().subscribe(async (result) => {
+      // If the confirm button pressed...
+      if (result === 'confirmed') {
+        try {
+          const success = await this.facadeService.updateCourseStatus(id);
+          console.log(success);
+
+          if (success) {
+            // Update the dataSource data
+            this.dataSource.data = this.dataSource.data.map(course => {
+              if (course.id === id) {
+                return { ...course, status: 'Active' };
+              } else {
+                return course;
+              }
+            });
+            this.dataSource._updateChangeSubscription();
+            // Optional: Refresh paginator if necessary
+            //this.dataSource.paginator?.firstPage();
+          }
+        } catch (error) {
+          console.error('Error updating course status:', error);
+        }
+      }
+    })
+
+
+  }
 }

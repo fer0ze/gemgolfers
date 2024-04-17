@@ -355,8 +355,15 @@
                                                     </td>
                                                 </tr>
                                                 <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr" [style.backgroundColor]="tee.color">
-                                                        {{tee.name_by_club}} Tee (Yards)</th>
+                                                    <th class="holehr">
+                                                        <div class="flex justify-center gap-2">
+                                                            {{tee.name_by_club}} Tee (Yards)
+                                                            <div class="flex justify-center">
+                                                                <div class="flex-0 w-6 h-6 rounded-full"
+                                                                    [style.backgroundColor]="tee.color"></div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor9;
                                                         let i = index
@@ -364,7 +371,6 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                [style.backgroundColor]="tee.color"
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,9)"
                                                                 maxlength="3" />
                                                         </span>
@@ -485,8 +491,15 @@
                                                     </td>
                                                 </tr>
                                                 <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr" [style.backgroundColor]="tee.color">
-                                                        {{tee.name_by_club}} Tee (Yards)</th>
+                                                    <th class="holehr">
+                                                        <div class="flex justify-center gap-2">
+                                                            {{tee.name_by_club}} Tee (Yards)
+                                                            <div class="flex justify-center">
+                                                                <div class="flex-0 w-6 h-6 rounded-full"
+                                                                    [style.backgroundColor]="tee.color"></div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor18;
                                                         let i = index
@@ -494,7 +507,7 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                [style.backgroundColor]="tee.color"
+                                                               
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
                                                                 maxlength="3" />
                                                         </span>
@@ -613,8 +626,15 @@
                                                     </td>
                                                 </tr>
                                                 <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr" [style.backgroundColor]="tee.color">
-                                                        {{tee.name_by_club}} Tee (Yards)</th>
+                                                    <th class="holehr">
+                                                        <div class="flex justify-center gap-2">
+                                                            {{tee.name_by_club}} Tee (Yards)
+                                                            <div class="flex justify-center">
+                                                                <div class="flex-0 w-6 h-6 rounded-full"
+                                                                    [style.backgroundColor]="tee.color"></div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor27;
                                                         let i = index
@@ -622,7 +642,7 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                [style.backgroundColor]="tee.color"
+                                                                
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
                                                                 maxlength="3" />
                                                         </span>
@@ -741,8 +761,15 @@
                                                     </td>
                                                 </tr>
                                                 <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr" [style.backgroundColor]="tee.color">
-                                                        {{tee.name_by_club}} Tee (Yards)</th>
+                                                    <th class="holehr">
+                                                        <div class="flex justify-center gap-2">
+                                                            {{tee.name_by_club}} Tee (Yards)
+                                                            <div class="flex justify-center">
+                                                                <div class="flex-0 w-6 h-6 rounded-full"
+                                                                    [style.backgroundColor]="tee.color"></div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor36;
                                                         let i = index
@@ -750,7 +777,7 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                [style.backgroundColor]="tee.color"
+                                                                
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
                                                                 maxlength="3" />
                                                         </span>

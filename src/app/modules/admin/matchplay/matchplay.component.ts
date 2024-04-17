@@ -133,7 +133,7 @@ export class MatchplayComponent implements OnInit {
                                 this.showRound1 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0].courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId??this.courseID;
                             } else if (this.activeRound == 2) {
                                 this.showRound2 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
@@ -437,7 +437,7 @@ export class MatchplayComponent implements OnInit {
                 let courseHoleSetTitle;
                 let flightHeader = await this.setupMatchplayHeader(
                     flightData.tee_id,
-                    this.noOfRounds > 1 ? this.matchPlayData['CoursesQL'] : this.matchPlayData['CoursesQL'],
+                    this.noOfRounds > 1 ? this.matchPlayData['CoursesQL'] : this.matchPlayData['CourseQL'],
                     flightData.courseHoleSets !== 0 ? flightData.courseHoleSets : 3,
                     flightData.courseHoleSetsInverted
                 );

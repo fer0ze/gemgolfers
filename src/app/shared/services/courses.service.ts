@@ -335,6 +335,28 @@ export class CoursesService {
         );
     });
   }
+  public updateCourseStatus(id: any): Promise<boolean> {
+    //console.log(course.id);
+
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.UpdateCourseStatus,
+          variables: {
+            id:id
+          },
+        })
+        .subscribe(
+          ({ data }) => {
+            resolve(true);
+          },
+          (error) => {
+            resolve(false);
+            //console.log("Could not add due to " + error);
+          }
+        );
+    });
+  }
   public saveTeeColor(tee: any[]): Promise<boolean> {
     //console.log(tee);
 
@@ -392,7 +414,7 @@ export class CoursesService {
         );
     });
   }
-  public saveHolesANDholeSets(holes: any[], holeSets: any[]): Promise<boolean> {
+  public saveHolesANDholeSets(holes: any[], holeSets: any[],holesYardages:any[]): Promise<boolean> {
     clearInterval;
 
     return new Promise((resolve) => {
@@ -402,6 +424,7 @@ export class CoursesService {
           variables: {
             holes: holes,
             holeSets: holeSets,
+            holesYardages: holesYardages,
           },
         })
         .subscribe(

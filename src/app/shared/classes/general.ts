@@ -244,7 +244,7 @@ export class General {
         return ID;
     }
 
-    public static getTeeYards(teeDistance, tee,courseId) {
+    public static getTeeYards(teeDistance, tee, courseId, holeId) {
         console.log(teeDistance);
         let teeYards = [];
         for (const [key, value] of Object.entries(teeDistance)) {
@@ -256,8 +256,9 @@ export class General {
                     tee_distance: value,
                     tee_lat: null,
                     tee_long: null,
-                    tee_id: teeId?.id,
-                    course_id:courseId,
+                    tee_id: Number(teeId?.id),
+                    course_id: courseId,
+                    hole_id: holeId,
                 }
                 teeYards.push(obj)
             }

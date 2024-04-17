@@ -33,8 +33,7 @@
             <!-- Main -->
             <div class="flex-auto border-t  -mt-px p-2 sm:p-2">
                 <div class="w-full max-w-screen-xl mx-auto">
-                    <div *ngIf="this.Courses.length>0; else noContacts"
-                        class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full mt-8">
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full mt-8">
                         <!-- Recent assessments table -->
                         <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                             <div class="p-6 flex flex-col sm:flex-row items-center justify-between">
@@ -162,21 +161,23 @@
                                                     <a [routerLinkActive]="'active'"
                                                         [routerLink]="['/courses/add/' + course.id ]">
                                                         <button [matTooltip]="'Edit Course'">
-                                                            <mat-icon [svgIcon]="'heroicons_outline:pencil'"
+                                                            <mat-icon [svgIcon]="'heroicons_outline:eye'"
                                                                 color="primary"></mat-icon>
                                                         </button>
                                                     </a>
                                                 </span>
 
-                                                <!-- <span *ngIf="isUserAdmin()" class="font-bold mx-3 whitespace-nowrap">
-                                                <button (click)="loginAs(account.email)" [matTooltip]="'Login As'"
-                                                    [disabled]="account.userRole === 'Event Organizer'">
-                                                    <mat-icon class="icon-size-7"
-                                                        [svgIcon]="'heroicons_outline:switch-horizontal'"
-                                                        color="primary"></mat-icon>
-                                                </button>
-                                            </span>
-                                            <span class="font-medium ml-1 whitespace-nowrap">
+                                                <span
+                                                    *ngIf="this.loggedInuser.userRole === 1 &&  course.status!='Active'"
+                                                    class="font-bold mx-3 whitespace-nowrap">
+                                                    <button (click)="compelteCourse(course.id)"
+                                                        [matTooltip]="'Mark as Active'">
+                                                        <mat-icon class="icon-size-7"
+                                                            [svgIcon]="'heroicons_outline:check'"
+                                                            color="primary"></mat-icon>
+                                                    </button>
+                                                </span>
+                                                <!--<span class="font-medium ml-1 whitespace-nowrap">
                                                 <button (click)="deleteUser(account)" [matTooltip]="'Delete User'">
                                                     <mat-icon class="icon-size-7" [svgIcon]="'heroicons_solid:delete'"
                                                         color="warn"></mat-icon>
@@ -212,7 +213,7 @@
                     </div>
                 </div>
             </div>
-            <ng-template #noContacts>
+            <!-- <ng-template #noContacts>
                 <div
                     class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden items-center justify-center dark:bg-transparent">
                     <mat-icon class="icon-size-24" [svgIcon]="
@@ -222,7 +223,7 @@
                         No Course Added!
                     </div>
                 </div>
-            </ng-template>
+            </ng-template> -->
         </mat-drawer-content>
     </mat-drawer-container>
 </div>

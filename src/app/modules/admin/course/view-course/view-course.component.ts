@@ -231,7 +231,7 @@ export class ViewCourseComponent implements OnInit {
             par: "72",
             city: playerFormValue.city,
             createdBy: this.loggedInuser?.id,
-            status:'In Review',
+            status: 'In Review',
         };
         if (this.courseID) {
             let courses = {
@@ -246,7 +246,7 @@ export class ViewCourseComponent implements OnInit {
                 cityGeonameId: 787878,
                 city: playerFormValue.city,
                 createdBy: this.loggedInuser?.id,
-                
+
             };
 
             const isSuccess = <boolean>(
@@ -484,7 +484,7 @@ export class ViewCourseComponent implements OnInit {
             let holeCount = holes['HolesQL'][0].holes;
             if (this.NoOfHoles > 8) {
                 this.holeSetfor9 = [];
-                this.setName9 = holes['HolesQL'][0].displayName
+                this.setName9 = holes['HolesQL'][0].displayName;
                 for (let index = 0; index <= 8; index++) {
                     let hole: any = {
                         displayName: holes['HolesQL'][0].displayName,
@@ -843,6 +843,7 @@ event   */
     public saveHoles = async (control: FormControl, state: boolean) => {
         let holeObj = [];
         let holesToSave = [];
+        let holesYardageToSave = [];
         let holesSet = [];
         if (this.NoOfHoles == 18) {
             holeObj = this.holeSetfor9.concat(this.holeSetfor18);
@@ -895,7 +896,7 @@ event   */
             let number = 0;
             let counter = 0;
             for (let obj of holeObj) {
-             //   let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee);
+                let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id)
                 let tee = {
                     id: obj.id,
                     courseId: this.courseID,
@@ -906,13 +907,15 @@ event   */
                     par: obj.par ? obj.par : 0,
                     index: obj.index ? obj.index : 0,
                     holeSetId: this.id[counter],
-                    meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
+                    // meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
                 };
+
                 number++;
                 if (number % 9 == 0) {
                     counter++;
                 }
                 holesToSave.push(tee);
+                holesYardageToSave.push(holeYards);
             }
         } else {
             let count = holeObj.length / 9;
@@ -968,9 +971,14 @@ event   */
         }
         //console.log(holesToSave);
         //console.log(holesSet);
+        console.log(holesYardageToSave);
+        const mergedArray = [].concat(...holesYardageToSave);
+
+        // Output the merged array
+        console.log(mergedArray);
 
         let succees = <boolean>(
-            await this.facadeService.saveCourseHoles(holesToSave, holesSet)
+            await this.facadeService.saveCourseHoles(holesToSave, holesSet, mergedArray)
         );
         if (succees) {
             this.snackBar.open('Course Holes are Saves!', 'x', {
