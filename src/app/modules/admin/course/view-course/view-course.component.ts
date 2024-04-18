@@ -12,6 +12,7 @@ import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/genera
 import { FacadeService } from 'app/shared/services/facade.service';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import e from 'express';
 import { Observable, map, startWith } from 'rxjs';
 
 @Component({
@@ -644,11 +645,8 @@ export class ViewCourseComponent implements OnInit {
         //console.log(holeNo);
         par = par != '' ? par : 0;
         let index = 0;
-        this.nineHoleTotalPar = 0;
-        this.eighteenHoleTotalPar = 0;
-        this.twentysevenHoleTotalPar = 0;
-        this.thirtySixHoleTotalPar = 0;
         if (holeNo <= 9) {
+            this.nineHoleTotalPar = 0;
             for (let obj of this.holeSetfor9) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor9[index]['par'] = par;
@@ -657,6 +655,7 @@ export class ViewCourseComponent implements OnInit {
                 index++;
             }
         } else if (holeNo <= 18) {
+            this.eighteenHoleTotalPar = 0;
             for (let obj of this.holeSetfor18) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor18[index]['par'] = par;
@@ -665,6 +664,7 @@ export class ViewCourseComponent implements OnInit {
                 index++;
             }
         } else if (holeNo <= 27) {
+            this.twentysevenHoleTotalPar = 0;
             for (let obj of this.holeSetfor27) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor27[index]['par'] = par;
@@ -673,6 +673,7 @@ export class ViewCourseComponent implements OnInit {
                 index++;
             }
         } else if (holeNo <= 36) {
+            this.thirtySixHoleTotalPar = 0;
             for (let obj of this.holeSetfor36) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor36[index]['par'] = par;
@@ -701,14 +702,40 @@ export class ViewCourseComponent implements OnInit {
             hole[0]['teeDistances'][tee_id] = dist;
         }
     }
+    private isIndexUnique(val: any, holes): boolean {
+        // Extract index values from holeSetfor9
+        const indexValues = holes.map(obj => obj['index']);
+
+        // Check if the input value is unique
+        return indexValues.indexOf(Number(val)) === indexValues.lastIndexOf(val);
+    }
+    private areIndexesUnique(...holeSets: any[][]): boolean {
+        // Check uniqueness for each set of holes
+        for (const holeSet of holeSets) {
+            // Extract index values from the current holeSet
+            const indexValues = holeSet.map(obj => Number(obj['index']));
+
+            // Check if all index values are unique
+            if (indexValues.length !== new Set(indexValues).size) {
+                return false; // Return false if duplicates found
+            }
+        }
+
+        // If all sets of holes have unique indexes, return true
+        return true;
+    }
     /**
      * onIndexInput
      */
     public onIndexInput(val: any, holeNo: any) {
         //console.log(holeNo);
-
         let index = 0;
         if (holeNo <= 9) {
+            const isUnique = this.isIndexUnique(val, this.holeSetfor9);
+            const spanElement = document.getElementById(`index_${holeNo}`);
+            if (!isUnique && spanElement) {
+                spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
+            }
             for (let obj of this.holeSetfor9) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor9[index]['index'] = val;
@@ -716,7 +743,13 @@ export class ViewCourseComponent implements OnInit {
                 }
                 index++;
             }
+
         } else if (holeNo <= 18) {
+            const isUnique = this.isIndexUnique(val, this.holeSetfor18);
+            const spanElement = document.getElementById(`index_${holeNo}`);
+            if (!isUnique && spanElement) {
+                spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
+            }
             for (let obj of this.holeSetfor18) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor18[index]['index'] = val;
@@ -724,7 +757,13 @@ export class ViewCourseComponent implements OnInit {
                 }
                 index++;
             }
+
         } else if (holeNo <= 27) {
+            const isUnique = this.isIndexUnique(val, this.holeSetfor27);
+            const spanElement = document.getElementById(`index_${holeNo}`);
+            if (!isUnique && spanElement) {
+                spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
+            }
             for (let obj of this.holeSetfor27) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor27[index]['index'] = val;
@@ -732,7 +771,13 @@ export class ViewCourseComponent implements OnInit {
                 }
                 index++;
             }
+
         } else if (holeNo <= 36) {
+            const isUnique = this.isIndexUnique(val, this.holeSetfor36);
+            const spanElement = document.getElementById(`index_${holeNo}`);
+            if (!isUnique && spanElement) {
+                spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
+            }
             for (let obj of this.holeSetfor36) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor36[index]['index'] = val;
@@ -740,6 +785,7 @@ export class ViewCourseComponent implements OnInit {
                 }
                 index++;
             }
+
         }
     }
     /**
@@ -845,153 +891,161 @@ event   */
         let holesToSave = [];
         let holesYardageToSave = [];
         let holesSet = [];
-        if (this.NoOfHoles == 18) {
-            holeObj = this.holeSetfor9.concat(this.holeSetfor18);
-        } else if (this.NoOfHoles == 27) {
-            holeObj = this.holeSetfor9.concat(
-                this.holeSetfor18,
-                this.holeSetfor27
+        const holeSets = [this.holeSetfor9, this.holeSetfor18, this.holeSetfor27, this.holeSetfor36];
+        const isUnique = this.areIndexesUnique(...holeSets);
+        if (isUnique) {
+            if (this.NoOfHoles == 18) {
+                holeObj = this.holeSetfor9.concat(this.holeSetfor18);
+            } else if (this.NoOfHoles == 27) {
+                holeObj = this.holeSetfor9.concat(
+                    this.holeSetfor18,
+                    this.holeSetfor27
+                );
+            } else if (this.NoOfHoles == 36) {
+                holeObj = this.holeSetfor9.concat(
+                    this.holeSetfor18,
+                    this.holeSetfor27,
+                    this.holeSetfor36
+                );
+            } else {
+                holeObj = this.holeSetfor9;
+            }
+            console.log(holeObj);
+
+            if (this.showholeindexforWomen == false) {
+                let count = holeObj.length / 9;
+                let set = 1;
+                this.id = [];
+                let name = this.setName9;
+                for (let index = 1; index <= count; index++) {
+                    if (index == 2) {
+                        set = 2;
+                        name = this.setName18;
+                    } else if (index == 3) {
+                        set = 4;
+                        name = this.setName27;
+                    } else if (index == 4) {
+                        set = 8;
+                        name = this.setName36;
+                    }
+                    var ids = General.generateUUID();
+                    this.id.push(ids);
+                    let holeSet = {
+                        id: ids,
+                        holeSets: set,
+                        courseId: this.courseID,
+                        inverted: false,
+                        noOfHoles: 9,
+                        displayName: name,
+                        frontId: set,
+                        backId: null,
+                    };
+                    holesSet.push(holeSet);
+                }
+                let number = 0;
+                let counter = 0;
+                for (let obj of holeObj) {
+                    let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id)
+                    let tee = {
+                        id: obj.id,
+                        courseId: this.courseID,
+                        holeNo: obj.holeNo,
+                        teeDistances: {},
+                        teeLatLongs: {},
+                        indexWomen: null,
+                        par: obj.par ? obj.par : 0,
+                        index: obj.index ? obj.index : 0,
+                        holeSetId: this.id[counter],
+                        // meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
+                    };
+
+                    number++;
+                    if (number % 9 == 0) {
+                        counter++;
+                    }
+                    holesToSave.push(tee);
+                    holesYardageToSave.push(holeYards);
+                }
+            } else {
+                let count = holeObj.length / 9;
+                let set = 1;
+                this.id = [];
+                let name = this.setName9;
+                for (let index = 1; index <= count; index++) {
+                    if (index == 2) {
+                        set = 2;
+                        name = this.setName18;
+                    } else if (index == 3) {
+                        set = 4;
+                        name = this.setName27;
+                    } else if (index == 4) {
+                        set = 8;
+                        name = this.setName36;
+                    }
+                    var ids = General.generateUUID();
+                    this.id.push(ids);
+                    let holeSet = {
+                        id: ids,
+                        holeSets: set,
+                        courseId: this.courseID,
+                        inverted: false,
+                        noOfHoles: 9,
+                        displayName: name,
+                        frontId: set,
+                        backId: null,
+                    };
+                    holesSet.push(holeSet);
+                }
+                let number = 0;
+                let counter = 0;
+                for (let obj of holeObj) {
+                    // let roundTeeId: any = General.getPlayersTe(obj.Tee);
+                    let tee = {
+                        id: obj.id,
+                        courseId: this.courseID,
+                        holeNo: obj.holeNo,
+                        teeDistances: {},
+                        teeLatLongs: {},
+                        indexWomen: obj.indexForW,
+                        par: obj.par ? obj.par : 0,
+                        index: obj.index ? obj.index : 0,
+                        holeSetId: this.id[counter],
+                    };
+                    number++;
+                    if (number % 9 == 0) {
+                        counter++;
+                    }
+                    holesToSave.push(tee);
+                }
+            }
+            //console.log(holesToSave);
+            //console.log(holesSet);
+            console.log(holesYardageToSave);
+            const mergedArray = [].concat(...holesYardageToSave);
+
+            // Output the merged array
+            console.log(mergedArray);
+
+            let succees = <boolean>(
+                await this.facadeService.saveCourseHoles(holesToSave, holesSet, mergedArray)
             );
-        } else if (this.NoOfHoles == 36) {
-            holeObj = this.holeSetfor9.concat(
-                this.holeSetfor18,
-                this.holeSetfor27,
-                this.holeSetfor36
-            );
-        } else {
-            holeObj = this.holeSetfor9;
-        }
-        console.log(holeObj);
-
-        if (this.showholeindexforWomen == false) {
-            let count = holeObj.length / 9;
-            let set = 1;
-            this.id = [];
-            let name = this.setName9;
-            for (let index = 1; index <= count; index++) {
-                if (index == 2) {
-                    set = 2;
-                    name = this.setName18;
-                } else if (index == 3) {
-                    set = 4;
-                    name = this.setName27;
-                } else if (index == 4) {
-                    set = 8;
-                    name = this.setName36;
-                }
-                var ids = General.generateUUID();
-                this.id.push(ids);
-                let holeSet = {
-                    id: ids,
-                    holeSets: set,
-                    courseId: this.courseID,
-                    inverted: false,
-                    noOfHoles: 9,
-                    displayName: name,
-                    frontId: set,
-                    backId: null,
-                };
-                holesSet.push(holeSet);
-            }
-            let number = 0;
-            let counter = 0;
-            for (let obj of holeObj) {
-                let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id)
-                let tee = {
-                    id: obj.id,
-                    courseId: this.courseID,
-                    holeNo: obj.holeNo,
-                    teeDistances: {},
-                    teeLatLongs: {},
-                    indexWomen: null,
-                    par: obj.par ? obj.par : 0,
-                    index: obj.index ? obj.index : 0,
-                    holeSetId: this.id[counter],
-                    // meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
-                };
-
-                number++;
-                if (number % 9 == 0) {
-                    counter++;
-                }
-                holesToSave.push(tee);
-                holesYardageToSave.push(holeYards);
+            if (succees) {
+                this.snackBar.open('Course Holes are Saves!', 'x', {
+                    duration: 2000,
+                });
+                this.goToPanel('3')
+                // if (this.NoOfHoles <= 18) {
+                //     this.goToPanel('4')
+                // } else {
+                //     this.goToPanel('3')
+                // }
+            } else {
+                this.snackBar.open('Course Holes has not Saved!', 'x', {
+                    duration: 5000,
+                });
             }
         } else {
-            let count = holeObj.length / 9;
-            let set = 1;
-            this.id = [];
-            let name = this.setName9;
-            for (let index = 1; index <= count; index++) {
-                if (index == 2) {
-                    set = 2;
-                    name = this.setName18;
-                } else if (index == 3) {
-                    set = 4;
-                    name = this.setName27;
-                } else if (index == 4) {
-                    set = 8;
-                    name = this.setName36;
-                }
-                var ids = General.generateUUID();
-                this.id.push(ids);
-                let holeSet = {
-                    id: ids,
-                    holeSets: set,
-                    courseId: this.courseID,
-                    inverted: false,
-                    noOfHoles: 9,
-                    displayName: name,
-                    frontId: set,
-                    backId: null,
-                };
-                holesSet.push(holeSet);
-            }
-            let number = 0;
-            let counter = 0;
-            for (let obj of holeObj) {
-                // let roundTeeId: any = General.getPlayersTe(obj.Tee);
-                let tee = {
-                    id: obj.id,
-                    courseId: this.courseID,
-                    holeNo: obj.holeNo,
-                    teeDistances: {},
-                    teeLatLongs: {},
-                    indexWomen: obj.indexForW,
-                    par: obj.par ? obj.par : 0,
-                    index: obj.index ? obj.index : 0,
-                    holeSetId: this.id[counter],
-                };
-                number++;
-                if (number % 9 == 0) {
-                    counter++;
-                }
-                holesToSave.push(tee);
-            }
-        }
-        //console.log(holesToSave);
-        //console.log(holesSet);
-        console.log(holesYardageToSave);
-        const mergedArray = [].concat(...holesYardageToSave);
-
-        // Output the merged array
-        console.log(mergedArray);
-
-        let succees = <boolean>(
-            await this.facadeService.saveCourseHoles(holesToSave, holesSet, mergedArray)
-        );
-        if (succees) {
-            this.snackBar.open('Course Holes are Saves!', 'x', {
-                duration: 2000,
-            });
-            this.goToPanel('3')
-            // if (this.NoOfHoles <= 18) {
-            //     this.goToPanel('4')
-            // } else {
-            //     this.goToPanel('3')
-            // }
-        } else {
-            this.snackBar.open('Course Holes has not Saved!', 'x', {
+            this.snackBar.open('Index duplicates!', 'x', {
                 duration: 5000,
             });
         }
