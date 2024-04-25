@@ -1431,6 +1431,7 @@ export const getDailyCardSingle = gql`
                         firstName
                         lastName
                         handicap
+                        handicapWhsIndex
                         membershipNumber
                         email
                     }
@@ -1558,6 +1559,7 @@ export const getDailyCardSingleAdmin = gql`
                         firstName
                         lastName
                         handicap
+                        handicapWhsIndex
                         membershipNumber
                         email
                     }
