@@ -268,7 +268,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                         this.tournamentCounts = 0;
                         let latestTournament = [];
-                        this.tournamentCounts = getall.TournamentCount.aggregate.count;
+                        this.tournamentCounts = getall.TournamentsQLs.length;
                         for (let tour of getall.tour) {
                             for (let tournament of tour.tournaments) {
                                 latestTournament.push(tournament);
