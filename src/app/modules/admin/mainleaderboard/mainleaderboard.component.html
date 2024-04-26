@@ -52,6 +52,12 @@
             <ng-container *ngSwitchCase="'STABLEFORD'">
                 <app-stable-ford [data]="Leaderboard"></app-stable-ford>
             </ng-container>
+            <ng-container *ngSwitchCase="'MODIFIED_STABLEFORD'">
+                <app-stable-ford [data]="Leaderboard"></app-stable-ford>
+            </ng-container>
+            <ng-container *ngSwitchCase="'SPLIT_SIXES'">
+                <app-stable-ford [data]="Leaderboard"></app-stable-ford>
+            </ng-container>
             <ng-container *ngSwitchCase="'MATCH_PLAY'">
                 <app-match-play [data]="Leaderboard"></app-match-play>
             </ng-container>

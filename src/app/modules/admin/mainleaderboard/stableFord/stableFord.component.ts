@@ -318,7 +318,7 @@ export class StableFordComponent implements OnInit, OnChanges {
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
         let scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound);
-        //console.log(scoreResult);
+        console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {

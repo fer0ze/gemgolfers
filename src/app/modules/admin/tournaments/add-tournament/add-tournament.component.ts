@@ -93,6 +93,8 @@ export class AddTournamentComponent implements OnInit {
     matchFormats: string[] = [
         "STROKE_PLAY",
         "STABLEFORD",
+        "MODIFIED_STABLEFORD",
+        "SPLIT_SIXES",
     ];
 
     dataSource: MatTableDataSource<Player>;
@@ -518,7 +520,7 @@ export class AddTournamentComponent implements OnInit {
                     this.currentTournament.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                     this.showCat = false;
                     this.showTexas = true;
-                } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD) {
+                } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD || this.currentTournament.matchFormat==matchFormat.MODIFIED_STABLEFORD ||this.currentTournament.matchFormat==matchFormat.SPLIT_SIXES) {
                     this.showCat = false;
                 } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE ||
                     this.currentTournament.matchFormat == matchFormat.BEST_TWO) {
@@ -782,7 +784,7 @@ export class AddTournamentComponent implements OnInit {
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TWO_Ball_SCRAMBLE) {
                 playersperFlight = '2'
 
-            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE) {
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SPLIT_SIXES ) {
                 playersperFlight = '3'
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                 playersperFlight = '4'
@@ -3732,6 +3734,9 @@ export class AddTournamentComponent implements OnInit {
             this.matchFormats = [
                 "STROKE_PLAY",
                 "STABLEFORD",
+                "MODIFIED_STABLEFORD",
+                "SPLIT_SIXES",
+                
             ]
             this.showCat = true;
             this.formGroup.get('formArray')!

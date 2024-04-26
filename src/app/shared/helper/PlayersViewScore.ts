@@ -41,7 +41,7 @@ export class PlayersScoreLoader {
             if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY) {
                 let calResult = this.strokePlayCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.STABLEFORD) {
+            } else if (tournamentQL.matchFormat === matchFormat.STABLEFORD || tournamentQL.matchFormat === matchFormat.MODIFIED_STABLEFORD || tournamentQL.matchFormat === matchFormat.SPLIT_SIXES) {
                 let calResult = this.stableFordCalculation(tournamentQL);
 
             } else if (tournamentQL.matchFormat === matchFormat.MATCH_PLAY) {
