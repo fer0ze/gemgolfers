@@ -1912,18 +1912,18 @@ export class ViewDailyRoundComponent implements OnInit {
                     if (selectedFlight.categoryRound == 2) {
                         flag = false;
                     }
-                    for (let player of selectedFlight) {
-                        let handicap =
-                            await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(
-                                player.playerId,
-                                this.routeDate
-                            );
-                        //console.log(handicap);
-                        if (handicap && handicap.HandicapHistoryWhsQL.length > 0) {
-                            flag = false;
-                            break;
-                        }
-                    }
+                    // for (let player of selectedFlight) {
+                    //     let handicap =
+                    //         await this.facadeService.getPlayersHandicapWhsHistoryAboveDate(
+                    //             player.playerId,
+                    //             this.routeDate
+                    //         );
+                    //     //console.log(handicap);
+                    //     if (handicap && handicap.HandicapHistoryWhsQL.length > 0) {
+                    //         flag = false;
+                    //         break;
+                    //     }
+                    // }
                     if (result && flag) {
                         const isSuccess = <boolean>(
                             await this.facadeService.singleRoundFlightQuery(id)

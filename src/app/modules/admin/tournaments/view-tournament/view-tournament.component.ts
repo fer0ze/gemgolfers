@@ -1638,7 +1638,7 @@ export class ViewTournamentComponent implements OnInit {
                         await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
-                            this.fullTournament.cutOffCriteria
+                            this.fullTournament.cutOffCriteria,this.activeRound
                         );
                         window.location.reload();
                     } else {
@@ -1868,7 +1868,8 @@ export class ViewTournamentComponent implements OnInit {
                         let response = await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
-                            jObject
+                            jObject,
+                            this.activeRound
                         );
                         if (response) {
                             window.location.reload();
@@ -1881,7 +1882,7 @@ export class ViewTournamentComponent implements OnInit {
                         let response = await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
-                            jObject
+                            jObject,this.activeRound
                         );
                         if (response) {
                             window.location.reload();

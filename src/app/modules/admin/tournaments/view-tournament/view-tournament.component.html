@@ -272,15 +272,15 @@
                                             (click)="undoRound()">
                                             Undo Round {{activeRound}}
                                         </button>
-                                        <button mat-raised-button mat-button class="my-3 float-right" color="warn"
+                                        <button *ngIf="activeRound <= noOfRounds" mat-raised-button mat-button class="my-3 float-right" color="warn"
                                             (click)="closeRound()">
                                             Close Round {{activeRound}}
                                         </button>
-                                        <button mat-raised-button mat-button color="primary"
+                                        <!-- <button mat-raised-button mat-button color="primary"
                                             class="my-3 mx-1 float-right" *ngIf="activeRound > noOfRounds"
                                             (click)="redirectToHandicap()">
                                             Handicap Calculation
-                                        </button>
+                                        </button> -->
                                     </div>
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0">

@@ -862,11 +862,12 @@ export class FacadeService {
     return this.flightsService.markPlayerAttendance(flightId, playerId, status);
   }
 
-  closeActiveRound(tournamentId: string, round: number, cutOffCriteria: any) {
+  closeActiveRound(tournamentId: string, round: number, cutOffCriteria: any,activeRound:number) {
     return this.flightsService.closeActiveRound(
       tournamentId,
       round,
-      cutOffCriteria
+      cutOffCriteria,
+      activeRound
     );
   }
 

@@ -442,7 +442,7 @@ export class FlightsService {
     public closeActiveRound(
         tournamentId: string,
         round: number,
-        cutOffCriteria: any
+        cutOffCriteria: any,activeRound:number
     ) {
         return new Promise((resolve) => {
             this.apollo
@@ -458,6 +458,8 @@ export class FlightsService {
                             activeRound: round,
                             cutOffCriteria: cutOffCriteria,
                         },
+                        tournamentId:tournamentId,
+                        activeRound:activeRound
                     },
                 })
                 .subscribe(

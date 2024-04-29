@@ -415,7 +415,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundGrossScore = false;
                 this.allRoundCutOff = false;
 
-                this.allRoundNetScore = false;
+                this.allRoundNetScore = true;
                 this.allRoundCutOffNet = false;
                 this.lastActiveTab = 2;
                 this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 2)
@@ -678,7 +678,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 courseHoleSetsInverted: this.Leaderboard.courseHoleSetsInverted,
                 allNet: scoreResult.netScore,
                 round: this.flightRound,
-                type: this.allRoundNetScore ? 'Net' : 'Gross',
+                type: this.allRoundNetScore || this.isNet ? 'Net' : 'Gross',
                 team: team,
                 removed: removed,
             },
@@ -874,13 +874,13 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                     let noOfHoles: number = 9;
                     while (noOfHoles > 0) {
                         if (noOfHoles == 9)
-                            compare = a.holeScoreLast9 - b.holeScoreLast9;
+                            compare = a.holeScoreLast9Net - b.holeScoreLast9Net;
                         else if (noOfHoles == 6)
-                            compare = a.holeScoreLast6 - b.holeScoreLast6;
+                            compare = a.holeScoreLast6Net - b.holeScoreLast6Net;
                         else if (noOfHoles == 3)
-                            compare = a.holeScoreLast3 - b.holeScoreLast3;
+                            compare = a.holeScoreLast3Net - b.holeScoreLast3Net;
                         else if (noOfHoles < 3)
-                            compare = a.holeScoreLast1 - b.holeScoreLast1;
+                            compare = a.holeScoreLast1Net - b.holeScoreLast1Net;
 
                         if (compare != 0) {
                             return compare;
@@ -1156,13 +1156,13 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 let noOfHoles: number = 9;
                 while (noOfHoles > 0) {
                     if (noOfHoles == 9)
-                        compare = a.holeScoreLast9 - b.holeScoreLast9;
+                        compare = a.holeScoreLast9Net - b.holeScoreLast9Net;
                     else if (noOfHoles == 6)
-                        compare = a.holeScoreLast6 - b.holeScoreLast6;
+                        compare = a.holeScoreLast6Net - b.holeScoreLast6Net;
                     else if (noOfHoles == 3)
-                        compare = a.holeScoreLast3 - b.holeScoreLast3;
+                        compare = a.holeScoreLast3Net - b.holeScoreLast3Net;
                     else if (noOfHoles < 3)
-                        compare = a.holeScoreLast1 - b.holeScoreLast1;
+                        compare = a.holeScoreLast1Net - b.holeScoreLast1Net;
 
                     if (compare != 0) {
                         return compare;

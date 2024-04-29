@@ -66,6 +66,10 @@ export const LeaderboardSubscription = gql`
             holeScoreLast6
             holeScoreLast3
             holeScoreLast1
+            holeScoreLast9Net
+            holeScoreLast6Net
+            holeScoreLast3Net
+            holeScoreLast1Net
             pointsRound1
             pointsRound2
             pointsRound3
@@ -1109,6 +1113,18 @@ export const UndoTournamentRoundMutation = gql`
             _set: { activeRound: $resetRound, cutOffCriteria: $cut }
         ) {
             AffectedRowsQL: affected_rows
+        }
+        update_flight(
+            where: { 
+                _and: [
+                    {
+                        tournamentId: { _eq: $tournamentId } 
+                        flightRound: { _eq: $resetRound }
+                    }
+                ]            
+            },_set: {closed:false }
+        ) {
+            AffectedRowsQLi: affected_rows
         }
     }
 `;

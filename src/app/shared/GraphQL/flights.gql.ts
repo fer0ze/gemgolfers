@@ -567,12 +567,26 @@ export const closeActiveRound = gql`
     mutation markPlayerAttendance(
         $where: tournament_bool_exp!
         $set: tournament_set_input!
+        $tournamentId: String!
+        $activeRound: Int!
     ) {
         update_tournament(where: $where, _set: $set) {
             affected_rows
             returning {
                 id
             }
+        }
+        update_flight(
+            where: { 
+                _and: [
+                    {
+                        tournamentId: { _eq: $tournamentId } 
+                        flightRound: { _eq: $activeRound }
+                    }
+                ]            
+            },_set: {closed:true }
+        ) {
+            AffectedRowsQLi: affected_rows
         }
     }
 `;
