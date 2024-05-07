@@ -140,17 +140,17 @@ export class MatchplayComponent implements OnInit {
                                 this.showRound2 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0].courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId??this.courseID;
                             } else if (this.activeRound == 3) {
                                 this.showRound3 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0].courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId??this.courseID;
                             } else if (this.activeRound == 4) {
                                 this.showRound4 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0].courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId??this.courseID;
                             } else this.showRound4 = true;
                         }
 
