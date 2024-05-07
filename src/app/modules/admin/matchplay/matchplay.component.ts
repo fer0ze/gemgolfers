@@ -77,6 +77,8 @@ export class MatchplayComponent implements OnInit {
 
     ngOnInit() {
         try {
+            console.log(this.courseID);
+            
             this.logger.log('Admin comes to Tournament Score Page', "info");
             this.logger.log('Getting Tournament Score Data', "info", this.tournamentID);
 
@@ -437,7 +439,7 @@ export class MatchplayComponent implements OnInit {
                 let courseHoleSetTitle;
                 let flightHeader = await this.setupMatchplayHeader(
                     flightData.tee_id,
-                    this.noOfRounds > 1 ? this.matchPlayData['CoursesQL'] : this.matchPlayData['CourseQL'],
+                    this.noOfRounds > 1 ? this.matchPlayData['CourseQL'] : this.matchPlayData['CourseQL'],
                     flightData.courseHoleSets !== 0 ? flightData.courseHoleSets : 3,
                     flightData.courseHoleSetsInverted
                 );

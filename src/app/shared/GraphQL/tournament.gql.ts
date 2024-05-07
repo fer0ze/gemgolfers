@@ -279,7 +279,7 @@ export const tournamentDashBoard = gql`
     }
     ${TournamentMemberStatusQL}
     ${TournamentMemberCategoryQL}
-    ${ CourseQL}${HoleQL}
+    ${CourseQL}${HoleQL}
 `;
 
 export const LeaderboardSubscriptions = gql`
@@ -892,7 +892,7 @@ export const GetTournamentByID = gql`
             }
         }
     }
-    ${TournamentQL} ${ CourseQL}${HoleQL}
+    ${TournamentQL} ${CourseQL}${HoleQL}
 `;
 
 export const GetFlightSettings = gql`
@@ -2440,6 +2440,16 @@ export const getAllAdmin = gql`
                     playerCategory
                 }
             }
+        }
+        Tours:tour_aggregate{
+            aggregate {
+                count
+            } 
+        }
+        Leagues:league_aggregate{
+            aggregate {
+                count
+            } 
         }
     }
 `;

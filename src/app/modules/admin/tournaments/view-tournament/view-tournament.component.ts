@@ -314,7 +314,7 @@ export class ViewTournamentComponent implements OnInit {
                 this.url = 'golfcourse.jpg';
                 this.dataFullTournament =
                     await this.facadeService.tournamentDashBoard(this.tournamentID);
-                //console.log(this.dataFullTournament);
+                console.log(this.dataFullTournament);
                 // this.getTournamentMembers();
                 console.log(this.tournamentCourses);
                 this.memberStatusesQLs =

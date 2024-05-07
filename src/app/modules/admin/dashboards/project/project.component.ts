@@ -53,6 +53,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     yesterdayFlightCounts: any = 20;
     playerAddedTodayCounts: any = 2;
     playerCounts: any = 0;
+    tourCounts: any = 0;
+    leagueCounts: any = 0;
     showdata: Promise<boolean>;
     loading: boolean = false;
     _labels: any = labels;
@@ -127,6 +129,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         //console.log(this.flightCounts);
 
                         this.playerCounts = getall.AggregateQL.aggregate.totalCount;
+                        this.tourCounts = getall.Tours.aggregate.count;
+                        this.leagueCounts = getall.Leagues.aggregate.count;
                         //console.log(this.playerCounts);
                         //console.log('a');
 
