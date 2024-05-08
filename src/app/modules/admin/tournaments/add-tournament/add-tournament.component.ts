@@ -140,6 +140,7 @@ export class AddTournamentComponent implements OnInit {
     showTexas: boolean = false;
     showMatchPlay: boolean = false;
     showMultipleCourses: boolean = false;
+    multiCourse: boolean = false;
     showShambles: boolean = false;
     showBest: boolean = false;
     clubTitle: string;
@@ -520,7 +521,7 @@ export class AddTournamentComponent implements OnInit {
                     this.currentTournament.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                     this.showCat = false;
                     this.showTexas = true;
-                } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD || this.currentTournament.matchFormat==matchFormat.MODIFIED_STABLEFORD ||this.currentTournament.matchFormat==matchFormat.SPLIT_SIXES) {
+                } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD || this.currentTournament.matchFormat == matchFormat.MODIFIED_STABLEFORD || this.currentTournament.matchFormat == matchFormat.SPLIT_SIXES) {
                     this.showCat = false;
                 } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE ||
                     this.currentTournament.matchFormat == matchFormat.BEST_TWO) {
@@ -574,7 +575,7 @@ export class AddTournamentComponent implements OnInit {
                 if (this.tournamentCourses.length > 0) {
                     this.showMultipleCourses = true;
                     for (let course of this.tournamentCourses) {
-                        const chkArray = this.formArray.get([0]).get('courses')as FormArray;
+                        const chkArray = this.formArray.get([0]).get('courses') as FormArray;
                         chkArray.push(
                             this._formBuilder.group({
                                 courseName: [course.course, Validators.required],
@@ -784,7 +785,7 @@ export class AddTournamentComponent implements OnInit {
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TWO_Ball_SCRAMBLE) {
                 playersperFlight = '2'
 
-            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SPLIT_SIXES ) {
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SPLIT_SIXES) {
                 playersperFlight = '3'
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                 playersperFlight = '4'
@@ -1605,7 +1606,16 @@ export class AddTournamentComponent implements OnInit {
         }
         return ''; // Return an empty string if the member is not found in any team
     }
-
+    multiCourseChange(value) {
+        if (value) {
+            const control = this.formArray.get([0]).get('courses') as FormArray;
+            control.clear();
+            for (let i = 1; i <= Number(this.formArray.get([0]).value.numOfRounds); i++) {
+                this.addCourseField(i);
+            }
+        }
+        value ? this.showMultipleCourses = true : this.showMultipleCourses = false;
+    }
 
 
 
@@ -1909,20 +1919,24 @@ export class AddTournamentComponent implements OnInit {
         //const tc:TournamenCategory = [];
         if (!this.tournamentID)
             this.tournamentID = UniqueIdGenerator.generate();
-        if (this.formArray.get([0]).value.numOfRounds > 1) {
-            for (let index in this.formArray.get([0]).value.courses) {
-                console.log(this.formArray.get([0]).value.courses[index]);
-                let course = this.formArray.get([0]).value.courses[index];
-                let courseHoleSet = course.courseHolSet?.split('_');
 
-                let obj: TournamentRoundCourses = {
-                    round: course.round,
-                    courseId: course?.courseName?.id ?? '',
-                    courseHoleSets: courseHoleSet ? Number(courseHoleSet[0]) : 3,
-                    inverted: courseHoleSet[1] == 'false' ? false : true,
+        if (this.showMultipleCourses) {
+            if (this.formArray.get([0]).value.numOfRounds > 1) {
+                for (let index in this.formArray.get([0]).value.courses) {
+                    console.log(this.formArray.get([0]).value.courses[index]);
+                    let course = this.formArray.get([0]).value.courses[index];
+                    let courseHoleSet = course.courseHolSet?.split('_');
+
+                    let obj: TournamentRoundCourses = {
+                        round: course.round,
+                        courseId: course?.courseName?.id ?? '',
+                        courseHoleSets: courseHoleSet ? Number(courseHoleSet[0]) : 3,
+                        inverted: courseHoleSet[1] == 'false' ? false : true,
+                    }
+                    tournamentRoundCourses.push(obj);
                 }
-                tournamentRoundCourses.push(obj);
             }
+
         }
         console.log(tournamentRoundCourses);
 
@@ -2166,6 +2180,7 @@ export class AddTournamentComponent implements OnInit {
                 if (result) {
 
                     // this.valid2.reset();
+                    this.setState(this.valid1, false);
                     this.setState(this.valid2, false);
 
                     if (
@@ -2173,11 +2188,11 @@ export class AddTournamentComponent implements OnInit {
                     ) {
                         this.createSubtournament(this.tournamentID);
                     }
+                    this.valid1.reset();
                     this.valid2.reset();
                     this.snackBar.open('Tournament has been created.', 'x', {
                         duration: 3000,
                     });
-                    //this.valid1.reset();
                     // this.valid2.reset();
 
                     if (this.formArray.get([0]).value.clubsFormCtrl) {
@@ -2231,8 +2246,7 @@ export class AddTournamentComponent implements OnInit {
                         this.syncClubMembers();
 
                         stepper.next();
-
-                        ////console.log(this.clubMembers);
+                        console.log(this.clubMembers);
 
                         //this.dataSource = new MatTableDataSource(this.clubMembers);
                     } else {
@@ -3296,16 +3310,7 @@ export class AddTournamentComponent implements OnInit {
         });
     }
     roundChange(event) {
-        if (Number(event.value) > 1) {
-            const control = this.formArray.get([0]).get('courses') as FormArray;
-            control.clear();
-            for (let i = 1; i <= Number(event.value); i++) {
-                this.addCourseField(i);
-            }
-            this.showMultipleCourses = true;
-        } else {
-            this.showMultipleCourses = false;
-        }
+        this.multiCourse = Number(event.value) > 1;
     }
     movePlayer(flight: number, cplayer: number) {
         ////console.log(flight + "<- ->" + player);
@@ -3736,7 +3741,7 @@ export class AddTournamentComponent implements OnInit {
                 "STABLEFORD",
                 "MODIFIED_STABLEFORD",
                 "SPLIT_SIXES",
-                
+
             ]
             this.showCat = true;
             this.formGroup.get('formArray')!

@@ -112,7 +112,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((res) => {
                     let getall = res.data;
-                    //console.log(getall);
+                    console.log(getall);
 
                     if (this.loggedInuser.userRole == 2 || this.loggedInuser.userRole == 1) {
 
@@ -122,20 +122,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         } else {
                             this.tournaments = getall.TournamentQL;
                         }
-
-                        //console.log(this.tournamentCounts);
-
                         this.flightCounts = getall.Count.aggregate.count;
-                        //console.log(this.flightCounts);
-
                         this.playerCounts = getall.AggregateQL.aggregate.totalCount;
-                        this.tourCounts = getall.Tours.aggregate.count;
-                        this.leagueCounts = getall.Leagues.aggregate.count;
-                        //console.log(this.playerCounts);
-                        //console.log('a');
-
-                        //console.log(res.data);
-
                         let myData: any[] = [];
                         let prevDate = null;
                         let memCounter = 0;
@@ -208,6 +196,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.membersCountsCal = distinctMembers.size;
                         let dataMembers: any[] = [];
                         let dataFlight: any[] = [];
+                        let dataPlayers: any[] = [];
+                        let dataPlayersCount: any[] = [];
                         for (let obj of myData) {
                             this._labels.push(General.getdate(obj.date));
                             dataMembers.push(obj.membersCount);
@@ -240,17 +230,24 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                         // //console.log(players);
                         if (this.loggedInuser.userRole == 1) {
-                            this._seriesPlayers['all'] = [
-                                getall.Amateurs.aggregate['count'],
-
-                                getall.Senior_Amateurs.aggregate['count'],
-
-                                getall.Veterans.aggregate['count'],
-
-                                getall.Ladies.aggregate['count'],
+                            dataPlayers.push(getall.MobileAggregateQL.aggregate.count)
+                            dataPlayers.push(getall.ClubAggregateQL.aggregate.count)
+                            dataPlayers.push(getall.TrialAggregateQL.aggregate.count)
+                            dataPlayers.push(getall.PremiumAggregateQL.aggregate.count)
+                            dataPlayersCount.push(getall.MobileAggregateQL.aggregate.count)
+                            dataPlayersCount.push(getall.ClubAggregateQL.aggregate.count)
+                            dataPlayersCount.push(getall.TrialAggregateQL.aggregate.count)
+                            dataPlayersCount.push(getall.PremiumAggregateQL.aggregate.count)
+                            this._seriesPlayers = [
+                                {
+                                    data: dataPlayersCount,
+                                    name: 'Players',
+                                },
                             ];
+                            this.tourCounts = getall.Tours.aggregate.count;
+                            this.leagueCounts = getall.Leagues.aggregate.count;
                         } else {
-                            this._seriesPlayers['all'] = [
+                            this._seriesPlayers = [
                                 getall.club[0].Amateurs.aggregate['count'],
 
                                 getall.club[0].Senior_Amateurs.aggregate['count'],
@@ -540,7 +537,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 fontFamily: 'inherit',
                 foreColor: 'inherit',
                 height: '100%',
-                type: 'polarArea',
+                type: 'bar',
                 toolbar: {
                     show: false,
                 },
@@ -548,18 +545,22 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                     enabled: false,
                 },
             },
+            colors: [ "#008FFB","#FF4560","#FEB019","#00E396"],
+            dataLabels: {
+                enabled: true,
+            },
+            grid: {
+                borderColor: 'var(--fuse-border)',
+            },
             labels: this._labelsPlayers,
             legend: {
-                position: 'bottom',
+                show: false,
             },
             plotOptions: {
-                polarArea: {
-                    spokes: {
-                        connectorColors: 'var(--fuse-border)',
-                    },
-                    rings: {
-                        strokeColor: 'var(--fuse-border)',
-                    },
+                bar: {
+                    columnWidth: '50%',
+                    distributed: true,
+                    borderRadius:1,
                 },
             },
             series: this._seriesPlayers,
@@ -572,22 +573,38 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
             },
             stroke: {
-                width: 2,
-            },
-            theme: {
-                monochrome: {
-                    enabled: true,
-                    color: '#93C5FD',
-                    shadeIntensity: 0.75,
-                    shadeTo: 'dark',
-                },
+                width: [1, 0],
             },
             tooltip: {
                 followCursor: true,
                 theme: 'dark',
             },
+            xaxis: {
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    color: 'var(--fuse-border)',
+                },
+                labels: {
+                    style: {
+                        colors: [
+                            "#008FFB","#FF4560",
+                            
+                            "#FEB019","#00E396",
+                            
+                        ],
+                        fontSize: "12px",
+                        fontWeight:"bold",
+                    }
+                },
+                tooltip: {
+                    enabled: false,
+                },
+            },
             yaxis: {
                 labels: {
+                    offsetX: -16,
                     style: {
                         colors: 'var(--fuse-text-secondary)',
                     },
@@ -598,27 +615,27 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     async addnewTour() {
         const dialogRef = this.dialog.open(DialogAddTourMainComponent);
         dialogRef.afterClosed().subscribe(async (result) => {
-          //console.log(result);
-          if (result) {
-            let tour = {
-              id: UniqueIdGenerator.generate(),
-              adminId: this.loggedInuser.id,
-              name: result.title,
-              logo: null,
-              dateCreated:new Date().toISOString(),
-              startDate:result.startDate,
-              endDate:result.endDate,
+            //console.log(result);
+            if (result) {
+                let tour = {
+                    id: UniqueIdGenerator.generate(),
+                    adminId: this.loggedInuser.id,
+                    name: result.title,
+                    logo: null,
+                    dateCreated: new Date().toISOString(),
+                    startDate: result.startDate,
+                    endDate: result.endDate,
+                }
+                this._facadeService.addTour(tour, result.file).subscribe((result) => {
+                    //console.log(result);
+                    if (result) {
+
+                    }
+                })
+
             }
-            this._facadeService.addTour(tour, result.file).subscribe((result) => {
-              //console.log(result);
-              if (result) {
-                
-              }
-            })
-    
-          }
-    
+
         })
-    
-      }
+
+    }
 }

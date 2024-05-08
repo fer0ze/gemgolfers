@@ -76,7 +76,23 @@
                                     <mat-option [value]="'4'">4</mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <mat-checkbox *ngIf="this.multiCourse" (change)="multiCourseChange($event.checked)">Multi Course</mat-checkbox>
                         </div>
+                        <!-- <div class="sm:col-span-1">
+                            <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
+                                <mat-label>No. of Rounds</mat-label>
+                                <mat-icon class="icon-size-5" [svgIcon]="
+                                        'heroicons_solid:office-building'
+                                    " matPrefix></mat-icon>
+                                <mat-select formControlName="numOfRounds" (selectionChange)="roundChange($event)"
+                                    class="w-full" placeholder="Pick one">
+                                    <mat-option [value]="'1'">1</mat-option>
+                                    <mat-option [value]="'2'">2</mat-option>
+                                    <mat-option [value]="'3'">3</mat-option>
+                                    <mat-option [value]="'4'">4</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
                         <div class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>Match Type</mat-label>

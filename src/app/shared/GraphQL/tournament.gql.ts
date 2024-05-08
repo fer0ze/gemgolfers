@@ -2385,7 +2385,9 @@ export const getAllAdmin = gql`
                 count
             }
         }
-        Count: flight_aggregate {
+        Count: flight_aggregate(
+            where: { flightRound: { _eq : 0 } }
+        ) {
             aggregate {
                 count
             }
@@ -2395,32 +2397,24 @@ export const getAllAdmin = gql`
                 totalCount: count
             }
         }
-
-        Amateurs: player_aggregate(
-            where: { playerCategory: { _eq: "Amateurs" } }
-        ) {
+        MobileAggregateQL: player_aggregate(where:{firebaseUid:{_is_null:false}}) {
             aggregate {
-                count
+                 count
             }
         }
-        Senior_Amateurs: player_aggregate(
-            where: { playerCategory: { _eq: "Senior Amateurs" } }
-        ) {
+        ClubAggregateQL: player_aggregate(where:{firebaseUid:{_is_null:true}}) {
             aggregate {
-                count
+                 count
             }
         }
-
-        Veterans: player_aggregate(
-            where: { playerCategory: { _eq: "Veterans" } }
-        ) {
+        PremiumAggregateQL:player_subscription_aggregate(where:{subscription:{_eq:"PREMIUM"}}) {
             aggregate {
-                count
+                 count
             }
         }
-        Ladies: player_aggregate(where: { playerCategory: { _eq: "Ladies" } }) {
+        TrialAggregateQL:player_subscription_aggregate(where:{subscription:{_eq:"TRIAL"}}) {
             aggregate {
-                count
+                 count
             }
         }
         TournamentsQLs: flight(
