@@ -230,12 +230,12 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                         // //console.log(players);
                         if (this.loggedInuser.userRole == 1) {
-                            dataPlayers.push(getall.MobileAggregateQL.aggregate.count)
                             dataPlayers.push(getall.ClubAggregateQL.aggregate.count)
+                            dataPlayers.push(getall.MobileAggregateQL.aggregate.count)
                             dataPlayers.push(getall.TrialAggregateQL.aggregate.count)
                             dataPlayers.push(getall.PremiumAggregateQL.aggregate.count)
-                            dataPlayersCount.push(getall.MobileAggregateQL.aggregate.count)
                             dataPlayersCount.push(getall.ClubAggregateQL.aggregate.count)
+                            dataPlayersCount.push(getall.MobileAggregateQL.aggregate.count)
                             dataPlayersCount.push(getall.TrialAggregateQL.aggregate.count)
                             dataPlayersCount.push(getall.PremiumAggregateQL.aggregate.count)
                             this._seriesPlayers = [

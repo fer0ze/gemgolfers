@@ -1155,6 +1155,27 @@ export const DeleteTournamentMember = gql`
         }
     }
 `;
+export const DeleteTournaments = gql`
+    mutation DeleteTournaments($where: tournament_bool_exp!) {
+        delete_tournament(where: $where) {
+            affected_rows
+        }
+    }
+`;
+export const DeleteLeagues = gql`
+    mutation DeleteLeagues($where: league_bool_exp!) {
+        delete_league(where: $where) {
+            affected_rows
+        }
+    }
+`;
+export const DeleteTour = gql`
+    mutation DeleteTour($where: tour_bool_exp!) {
+        delete_tour(where: $where) {
+            affected_rows
+        }
+    }
+`;
 export const DeleteTourGuide = gql`
     mutation DeleteTournamentMember($where: tour_guide_bool_exp!) {
         delete_tour_guide(where: $where) {

@@ -133,7 +133,7 @@
             <div class="sm:col-span-2 lg:col-span-1 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        This month Leaguess
+                        This month Leagues
                     </div>
                     <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/Leagues']">
@@ -166,7 +166,7 @@
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Last month Leaguess
+                        Last month Leagues
                     </div>
                     <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/league']">
@@ -199,7 +199,7 @@
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Previous Leaguess
+                        Previous Leagues
                     </div>
                     <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/tour']">
@@ -301,10 +301,21 @@
                             [placeholder]="'Search'" />
                     </mat-form-field>
 
-                    <button (click)="exportToExcel()" class="bg-accent" mat-flat-button [color]="'accent'">
+                    <button [disabled]="selection.selected.length === 0" class="hidden sm:inline-flex ml-3"
+                    mat-flat-button [color]="'primary'" [matMenuTriggerFor]="impressionsMenu">
+                    <span class="ml-2">Actions</span>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                </button>
+                <mat-menu class="overflow-hidden max-w-52" #impressionsMenu="matMenu">
+                    <button (click)="exportToExcel()" class="hidden sm:inline-flex " mat-flat-button>
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
-                        <span class="ml-2 ">Export Selected</span>
+                        <span class="ml-2">Export Selected</span>
                     </button>
+                    <button class="hidden sm:inline-flex" (click)="deleteLeagues()" mat-flat-button>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:delete'"></mat-icon>
+                        <span class="ml-2">Delete Selected</span>
+                    </button>
+                </mat-menu>
                 </div>
                 <div class="flex flex-col flex-auto mt-6">
                     <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>

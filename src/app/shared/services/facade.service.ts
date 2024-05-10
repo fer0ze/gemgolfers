@@ -457,6 +457,15 @@ export class FacadeService {
   getTournamentListByDate(fromDate?: any, toDate?: any) {
     return this.tournamentService.getTournamentListByDate(fromDate, toDate);
   }
+  deleteTournaments(deletedtournaments :any[]): Promise<boolean> {
+    return this.tournamentService.deleteTournaments(deletedtournaments);
+  }
+  deleteLeagues(deleteLeagues :any[]): Promise<boolean> {
+    return this.tournamentService.deleteLeagues(deleteLeagues);
+  }
+  deleteTours(deleteTours :any[]): Promise<boolean> {
+    return this.tournamentService.deleteTours(deleteTours);
+  }
   getLeagues() {
     return this.tournamentService.getLeagues();
   }

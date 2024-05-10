@@ -53,31 +53,20 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
     scheduleForm: FormGroup;
     male: number = 0;
     female: number = 0;
-    series: any[] = [];
-    seriesA: any[] = [];
-    seriesB: any[] = [];
-    seriesC: any[] = [];
-    seriesD: any[] = [];
     _seriesE: any[] = [];
     labelsE: any[] = [];
     selectedPlayer = null;
     showFlight: boolean = false;
-    dataMembers: any[] = [];
-    dataMembersA: any[] = [];
-    dataMembersB: any[] = [];
-    dataMembersC: any[] = [];
     dataMembersE: any[] = [];
     Players: any = [];
-    thisMonth: number = 0;
-    MonthLabels: any[] = ['01 - 08', '09 - 16', '17 - 24'];
-    genderLabels: any[] = ['Male', 'Female'];
-    lastMonth: number = 0;
     clubPlayers: number = 0;
     mobilePlayers: number = 0;
+    trailPlayers: number = 0;
+    premiuimPlayers: number = 0;
     SecondLastMonth: number = 0;
     dataSource: MatTableDataSource<any>;
     dataSourcePlayer: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'date', 'email', 'phone','countryCode','club', 'flights'];
+    displayedColumns = ['id', 'name', 'date', 'email', 'phone', 'countryCode', 'club', 'subscription', 'flights',];
     displayedPlayersColumns = ['dailyRound', 'tournament', 'league', 'tour'];
     monthName = [
         'January',
@@ -139,7 +128,10 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                     d.setMonth(d.getMonth() - 1);
                 }
                 //console.log(this.labelsE);
-
+                this.mobilePlayers = this.data.MobileAggregateQL.aggregate.count
+                this.clubPlayers = this.data.ClubAggregateQL.aggregate.count
+                this.trailPlayers = this.data.TrialAggregateQL.aggregate.count
+                this.premiuimPlayers = this.data.PremiumAggregateQL.aggregate.count
                 this.sorts();
                 // this.series[0] = [
                 //     {
@@ -147,25 +139,25 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 //         name: 'New Users',
                 //     },
                 // ];
-                this.seriesA = [
-                    {
-                        data: this.dataMembersA,
-                        name: 'Tournaments',
-                    },
-                ];
-                this.seriesB = [
-                    {
-                        data: this.dataMembersB,
-                        name: 'Leagues',
-                    },
-                ];
-                this.seriesC = [
-                    {
-                        data: this.dataMembersC,
-                        name: 'Tours',
-                    },
-                ];
-                this.seriesD = [this.male, this.female];
+                // this.seriesA = [
+                //     {
+                //         data: this.dataMembersA,
+                //         name: 'Tournaments',
+                //     },
+                // ];
+                // this.seriesB = [
+                //     {
+                //         data: this.dataMembersB,
+                //         name: 'Leagues',
+                //     },
+                // ];
+                // this.seriesC = [
+                //     {
+                //         data: this.dataMembersC,
+                //         name: 'Tours',
+                //     },
+                // ];
+                // this.seriesD = [this.male, this.female];
 
                 this._seriesE[0] = [
                     {
@@ -208,7 +200,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 if (SplitDate[0] == prevPlayerDate) {
                     playerCounter++;
                     prevPlayerDate = SplitDate[0];
-                    this.dataMembers[this.dataMembers.length - 1]['y'] = playerCounter;
+                    // this.dataMembers[this.dataMembers.length - 1]['y'] = playerCounter;
                 } else {
                     playerCounter = 0;
                     playerCounter++;
@@ -217,15 +209,9 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                         x: new Date(item.createdAt),
                         y: playerCounter,
                     };
-                    this.dataMembers.push(dateObj);
+                    //   this.dataMembers.push(dateObj);
                 }
 
-                if (item.gender == 'male') {
-                    this.male++;
-                }
-                if (item.gender == 'female') {
-                    this.female++;
-                }
                 let obj = {
                     id: item.id,
                     count: ++count,
@@ -234,8 +220,9 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                     email: item.email,
                     phone: item.phone,
                     flights: 0,
-                    club:item.membership[0]?.club?.name,
-                    countryCode:item.countryCode,
+                    club: item.membership[0]?.club?.name,
+                    subscription: item.subscription?.subscription,
+                    countryCode: item.countryCode,
                 };
                 let date = new Date(item?.createdAt).toLocaleString('default', {
                     month: 'long',
@@ -258,42 +245,40 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                     } else if (countA == undefined) {
                         flag = false;
                     }
-                } else {
-                    break;
                 }
                 rows.push(obj);
             }
         }
-        this.clubPlayers = (5000 * 100) / this.data.player.length;
-        this.mobilePlayers = (4000 * 100) / this.data.player.length;
+        // this.clubPlayers = (5000 * 100) / this.data.player.length;
+        // this.mobilePlayers = (4000 * 100) / this.data.player.length;
         this.dataSource = new MatTableDataSource(rows);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         //console.log(this.dataMembers);
 
-        for (let items of this.dataMembers) {
-            if (items.x.toString().includes('Apr')) {
-                if (this.dataMembersA.length < 3 && items.y > 0) {
-                    this.dataMembersA.push(items.y);
-                }
-                this.thisMonth++;
-            } else if (items.x.toString().includes('Mar')) {
-                this.lastMonth++;
-                if (this.dataMembersB.length < 3 && items.y > 0) {
-                    this.dataMembersB.push(items.y);
-                }
-            } else if (
-                items.x.toString().includes('Jan') ||
-                items.x.toString().includes('Feb') ||
-                items.x.toString().includes('Dec')
-            ) {
-                this.SecondLastMonth++;
-                if (this.dataMembersC.length < 3 && items.y > 0) {
-                    this.dataMembersC.push(items.y);
-                }
-                //  this.dataMembersC.push(items.y);
-            }
-        }
+        // for (let items of this.dataMembers) {
+        //     if (items.x.toString().includes('Apr')) {
+        //         if (this.dataMembersA.length < 3 && items.y > 0) {
+        //             this.dataMembersA.push(items.y);
+        //         }
+        //         this.thisMonth++;
+        //     } else if (items.x.toString().includes('Mar')) {
+        //         this.lastMonth++;
+        //         if (this.dataMembersB.length < 3 && items.y > 0) {
+        //             this.dataMembersB.push(items.y);
+        //         }
+        //     } else if (
+        //         items.x.toString().includes('Jan') ||
+        //         items.x.toString().includes('Feb') ||
+        //         items.x.toString().includes('Dec')
+        //     ) {
+        //         this.SecondLastMonth++;
+        //         if (this.dataMembersC.length < 3 && items.y > 0) {
+        //             this.dataMembersC.push(items.y);
+        //         }
+        //         //  this.dataMembersC.push(items.y);
+        //     }
+        // }
         //console.log(this.dataMembers);
     }
     async toggleDetails(productId: string) {
@@ -335,7 +320,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
             if (obj.flight.tournament.league) {
                 leagueCount++;
             }
-            
+
         }
         let item = {
             id: '1',
@@ -365,120 +350,6 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         this.selectedPlayer = productId;
     }
     private _prepareChartData(): void {
-
-        // Conversions
-        this.chartConversions = {
-            chart: {
-                animations: {
-                    enabled: false,
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'area',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#38BDF8'],
-            fill: {
-                colors: ['#38BDF8'],
-                opacity: 0.5,
-            },
-            series: this.seriesA,
-            stroke: {
-                curve: 'smooth',
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark',
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.MonthLabels,
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => val.toString(),
-                },
-            },
-        };
-
-        // Impressions
-        this.chartImpressions = {
-            chart: {
-                animations: {
-                    enabled: false,
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'area',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#34D399'],
-            fill: {
-                colors: ['#34D399'],
-                opacity: 0.5,
-            },
-            series: this.seriesB,
-            stroke: {
-                curve: 'smooth',
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark',
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.MonthLabels,
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => val.toString(),
-                },
-            },
-        };
-
-        // Visits
-        this.chartVisits = {
-            chart: {
-                animations: {
-                    enabled: false,
-                },
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'area',
-                sparkline: {
-                    enabled: true,
-                },
-            },
-            colors: ['#FB7185'],
-            fill: {
-                colors: ['#FB7185'],
-                opacity: 0.5,
-            },
-            series: this.seriesC,
-            stroke: {
-                curve: 'smooth',
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark',
-            },
-            xaxis: {
-                type: 'category',
-                categories: this.MonthLabels,
-            },
-            yaxis: {
-                labels: {
-                    formatter: (val): string => val.toString(),
-                },
-            },
-        };
 
         // Visitors vs Page Views
         this.chartVisitorsVsPageViews = {
@@ -565,7 +436,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
             },
             yaxis: {
                 labels: {
-                    offsetX: -16,
+                    offsetX: 8,
                     style: {
                         colors: 'var(--fuse-text-secondary)',
                     },
@@ -688,7 +559,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
 
         const data = this.selection.selected.map((item) => {
             // Create a new object without the 'Details' column
-            const { Select, id, Details,count,flights, ...filteredItem } = item;
+            const { Select, id, Details, count, flights, ...filteredItem } = item;
             return filteredItem;
         });
 

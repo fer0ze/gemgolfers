@@ -51,4 +51,16 @@ export class TourService {
             })
         );
     }
+
+    /**
+     * Get data
+     */
+    deleteTours(deletedtournaments: any[]): Promise<boolean> {
+        return this.facadeService.deleteTours(deletedtournaments).then(res => {
+            return true;
+        }).catch((error) => {
+            console.error('Deletion failed:', error);
+            return false; // Return false when there's an error during deletion
+        });
+    }
 }

@@ -27,6 +27,8 @@ import { DialogTournamentComponent } from '../../dialogs/dialog-tournament/dialo
 import { Constants, General } from 'app/shared/classes/general';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FuseConfirmationDialogComponent } from '@fuse/services/confirmation/dialog/dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
     selector: 'app-signUp-report',
     templateUrl: './tournament-report.component.html',
@@ -109,6 +111,7 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
         private apollo: Apollo,
         private _data: TournamentService, private _projectService: ProjectService,
         public dialog: MatDialog,
+        public snackBar: MatSnackBar,
     ) { }
 
     ngOnInit(): void {
@@ -749,5 +752,65 @@ export class TournamentReportComponent implements OnInit, AfterViewInit {
         // Export the Excel file
         XLSX.writeFile(wb, 'Tournaments_report.xlsx');
         this.selection.clear();
+    }
+    deleteTournaments(): void {
+        const data = this.selection.selected;
+        const dialogRef = this.dialog.open(FuseConfirmationDialogComponent, {
+            data: {
+                title: 'Delete Tournament(s)',
+                message:
+                    'Are you sure you want to delete the selected tournament(s)? This action cannot be undone!',
+                icon: {
+                    show: true,
+                    name: 'heroicons_outline:exclamation',
+                    color: 'warn'
+                },
+                actions: {
+                    confirm: {
+                        show: true,
+                        label: 'Delete',
+                        color: 'warn'
+                    },
+                    cancel: {
+                        show: true,
+                        label: 'Cancel'
+                    }
+                },
+                dismissible: false
+            }, panelClass: 'fuse-confirmation-dialog-panel'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // this.logger.info("Dialog for confirmation is close", result);
+            if (result === 'confirmed') {
+                const deletedtournaments = data.map(element => element.id);
+                this._data.deleteTournaments(deletedtournaments).then(res => {
+                    if (res) {
+                        for (let index in data) {
+                            const leadSourceIndex =
+                                this.dataSource.data.findIndex(
+                                    (dataItem) =>
+                                        dataItem.id === data[index].id
+                                );
+                            if (leadSourceIndex !== -1) {
+                                this.dataSource.data.splice(
+                                    leadSourceIndex,
+                                    1
+                                );
+                            }
+                        }
+                        this.snackBar.open("Tournaments have been deleted.", "x", {
+                            duration: 3000,
+                        });
+                        this.dataSource._updateChangeSubscription();
+                        this.selection.clear();
+                    } else {
+                        this.snackBar.open("Error!Please try again later.", "close", {
+                            duration: 5 * 3000,
+                        });
+                    }
+                })
+            }
+        })
     }
 }

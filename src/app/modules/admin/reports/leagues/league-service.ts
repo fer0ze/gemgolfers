@@ -50,4 +50,15 @@ export class LeagueService {
             })
         );
     }
+    /**
+     * Get data
+     */
+    deleteLeagues(deleteLeagues: any[]): Promise<boolean> {
+        return this.facadeService.deleteLeagues(deleteLeagues).then(res => {
+            return true;
+        }).catch((error) => {
+            console.error('Deletion failed:', error);
+            return false; // Return false when there's an error during deletion
+        });
+    }
 }

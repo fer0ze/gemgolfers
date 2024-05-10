@@ -41,7 +41,7 @@ export class TournamentService {
         );
     }
 
-    
+
     /**
      * Get data
      */
@@ -51,5 +51,16 @@ export class TournamentService {
                 this._data.next(response);
             })
         );
+    }
+    /**
+     * Get data
+     */
+    deleteTournaments(deletedtournaments: any[]): Promise<boolean> {
+        return this.facadeService.deleteTournaments(deletedtournaments).then(res => {
+            return true;
+        }).catch((error) => {
+            console.error('Deletion failed:', error);
+            return false; // Return false when there's an error during deletion
+        });
     }
 }

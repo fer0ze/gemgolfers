@@ -34,7 +34,12 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where: { firstName: { _neq: "" } }
+            where: { 
+                _and: [
+                    { firstName: { _neq: "" } },
+                    { firebaseUid: { _is_null: false } }
+                ]
+            }
             order_by: { createdAt: desc }
         ) {
             id
@@ -43,27 +48,42 @@ export const getPlayersListReport = gql`
             createdAt
             phone
             countryCode
+            firebaseUid
             membership{
                 club{
                     name
                 }
             }
-        }
-        tournament_aggregate(where: { singleRound: { _eq: false } }) {
-            aggregate {
-                count
+            subscription{
+                subscription
             }
         }
-        tour_aggregate {
+        AggregateQL: player_aggregate {
             aggregate {
-                count
+                totalCount: count
             }
         }
-        league_aggregate {
+        MobileAggregateQL: player_aggregate(where:{firebaseUid:{_is_null:false}}) {
             aggregate {
-                count
+                 count
             }
         }
+        ClubAggregateQL: player_aggregate(where:{firebaseUid:{_is_null:true}}) {
+            aggregate {
+                 count
+            }
+        }
+        PremiumAggregateQL:player_subscription_aggregate(where:{subscription:{_eq:"PREMIUM"}}) {
+            aggregate {
+                 count
+            }
+        }
+        TrialAggregateQL:player_subscription_aggregate(where:{subscription:{_eq:"TRIAL"}}) {
+            aggregate {
+                 count
+            }
+        }
+
     }
 `;
 export const getPlayersListReportDateWise = gql`

@@ -681,14 +681,14 @@ export class TournamentsService {
         });
     }
     public getLeaguesReport(): Observable<any> {
-        return  this.apollo
+        return this.apollo
             .subscribe({
                 query: Query.getLeagues,
             })
             .pipe(map((item) => item.data))
     }
     public getToursListByDate(fromDate?: any, toDate?: any): Observable<any> {
-        return  this.apollo
+        return this.apollo
             .subscribe({
                 query: Query.getToursListByDate,
                 variables: {
@@ -699,7 +699,7 @@ export class TournamentsService {
             .pipe(map((item) => item.data))
     }
     public getToursReport(): Observable<any> {
-        return  this.apollo
+        return this.apollo
             .subscribe({
                 query: Query.getToursReport,
             })
@@ -1113,7 +1113,7 @@ export class TournamentsService {
                                     data: tmnt.members,
                                 },
                                 tournament_round_courses: {
-                                    data: tmnt.tournament_round_courses? tmnt.tournament_round_courses : [],
+                                    data: tmnt.tournament_round_courses ? tmnt.tournament_round_courses : [],
                                 },
                             },
                         ],
@@ -1205,6 +1205,81 @@ export class TournamentsService {
                                     },
                                 },
                             ],
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could delete add due to ' + error);
+                    }
+                );
+        });
+    }
+    deleteTournaments(deletedtournaments: any[]): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteTournaments,
+                    variables: {
+                        where: {
+                            id: {
+                                _in: deletedtournaments,
+                            },
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could delete add due to ' + error);
+                    }
+                );
+        });
+    }
+    deleteLeagues(deleteLeagues: any[]): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteLeagues,
+                    variables: {
+                        where: {
+                            id: {
+                                _in: deleteLeagues,
+                            },
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could delete add due to ' + error);
+                    }
+                );
+        });
+    }
+    deleteTours(deleteTours: any[]): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteTour,
+                    variables: {
+                        where: {
+                            id: {
+                                _in: deleteTours,
+                            },
                         },
                     },
                 })
