@@ -132,6 +132,42 @@ export class ProjectService {
             throw error;
         }
     }
+    // getPlayerDataDashbaord(label: any): Observable<any> {
+    //     try {
+    //         let query;
+    //         if (label == 'Club') {
+    //             query = Query.getClubPlayer;
+    //         } else if (label == 'Mobile') {
+    //             query = Query.getMobilePlayer;
+    //         } else if (label == 'Trail') {
+    //             query = Query.getTrailPlayer;
+    //         } else {
+    //             query = Query.getPremiumPlayer;
+    //         }
+    //         return this.apollo
+    //             .subscribe<any>({
+    //                 query: query
+    //             })
+    //             .pipe(
+    //                 tap((response: any) => {
+    //                     this.logger.log(
+    //                         'Getting Player Data Successfull',
+    //                         'info'
+    //                     );
+    //                     this._data.next(response);
+    //                 })
+    //             );
+    //     } catch (error) {
+    //         // Handle the error here or re-throw it if necessary
+    //         console.error('An error occurred:', error);
+    //         this.logger.log(
+    //             'Getting Player Data Failed',
+    //             'error',
+    //             error.toString()
+    //         );
+    //         throw error;
+    //     }
+    // }
 
     getTourData(id: String, fromDate?: any, toDate?: any): Observable<any> {
         return this.apollo

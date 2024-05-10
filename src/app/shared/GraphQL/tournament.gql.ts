@@ -2246,6 +2246,72 @@ export const getPlayer = gql`
         }
     }
 `;
+export const getClubPlayer = gql`
+    query getClubPlayer {
+        club_member {
+            player{
+                id
+                createdAt
+                firstName
+                lastName
+                playerCategory
+                handicap
+                handicapWhsIndex
+                phone
+                email
+            }
+        }
+    }
+`;
+export const getMobilePlayer = gql`
+    query getMobilePlayer {
+        player(where:{firebaseUid:{_is_null:false}}) {
+            id
+            createdAt
+            firstName
+            lastName
+            playerCategory
+            handicap
+            handicapWhsIndex
+            phone
+            email
+        }
+    }
+`;
+export const getTrailPlayer = gql`
+    query getTrailPlayer {
+        player_subscription(where:{subscription:{_eq:"TRIAL"}}) {
+            player{
+                id
+                createdAt
+                firstName
+                lastName
+                playerCategory
+                handicap
+                handicapWhsIndex
+                phone
+                email
+            }
+        }
+    }
+`;
+export const getPremiumPlayer = gql`
+    query getPremiumPlayer {
+        player_subscription(where:{subscription:{_eq:"PREMIUM"}}) {
+            player{
+                id
+                createdAt
+                firstName
+                lastName
+                playerCategory
+                handicap
+                handicapWhsIndex
+                phone
+                email
+            }
+        }
+    }
+`;
 
 export const getTourDashboard = gql`
     query getTourDashboard(

@@ -26,6 +26,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
+import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 
 @Component({
     selector: 'project',
@@ -544,6 +545,20 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 zoom: {
                     enabled: false,
                 },
+                // events: {
+                //     dataPointSelection: (e, chart, options) => {
+                //         // console.log(options);
+                //         // console.log(this._labelsPlayers);
+                //         console.log(this._labelsPlayers[options.dataPointIndex]);
+                //         this._projectService.getPlayerDataDashbaord(this._labelsPlayers[options.dataPointIndex]).
+                //             subscribe((res) => {
+                //                 console.log(res);
+                //                 const dialogRef = this.dialog.open(DialogPlayersComponent, {
+                //                     data: { players: res.data?.player ?? res.data?.player_subscription, key: 'all', date: "" },
+                //                 });
+                //             })
+                //     },
+                // },
             },
             colors: [ "#008FFB","#FF4560","#FEB019","#00E396"],
             dataLabels: {
@@ -556,6 +571,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
             legend: {
                 show: false,
             },
+           
             plotOptions: {
                 bar: {
                     columnWidth: '50%',
