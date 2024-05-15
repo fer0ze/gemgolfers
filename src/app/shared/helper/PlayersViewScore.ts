@@ -50,7 +50,7 @@ export class PlayersScoreLoader {
             } else if (tournamentQL.matchFormat === matchFormat.TEXAS_SCRAMBLE) {
                 let calResult = this.texasscrambleCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.FOUR_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_Ball_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
+            } else if (tournamentQL.matchFormat === matchFormat.FOUR_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
                 let calResult = this.scrambleCalculation(tournamentQL);
 
             } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES) {
@@ -571,7 +571,7 @@ export class PlayersScoreLoader {
             membersQLs.map((member, index) => {
                 let percentage = 80;
                 if (tournamentQL.matchFormat !== matchFormat.SHAMBLES) {
-                    if (index === 0 && tournamentQL.matchFormat == matchFormat.TWO_Ball_SCRAMBLE) {
+                    if (index === 0 && tournamentQL.matchFormat == matchFormat.TWO_BALL_SCRAMBLE) {
                         percentage = 35;
                     } else if (index === 0) {
                         percentage = 20;

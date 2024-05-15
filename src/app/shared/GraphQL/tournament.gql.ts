@@ -1578,7 +1578,6 @@ export const getDailyCardSingleAdmin = gql`
         ) {
             id
             startDate
-
             FlightsQL: flights {
                 id
                 ended
@@ -1599,6 +1598,12 @@ export const getDailyCardSingleAdmin = gql`
                         handicapWhsIndex
                         membershipNumber
                         email
+                        membership{
+                            club{
+                                id
+                                name
+                            }
+                        }
                     }
                 }
             }
@@ -2462,6 +2467,8 @@ export const getAllAdmin = gql`
             title
             matchFormat
             noOfRounds
+            startDate
+            endDate
             admin {
                 firstName
                 lastName
@@ -2514,6 +2521,7 @@ export const getAllAdmin = gql`
         ) {
             date
             ended
+            
             MembersQL: members {
                 playerId
                 attendance

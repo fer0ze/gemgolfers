@@ -516,7 +516,7 @@ export class AddTournamentComponent implements OnInit {
                     this.showMatchPlay = true;
                     this.showCat = false;
                 } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.THREE_BALL_SCRAMBLE
-                    || this.currentTournament.matchFormat == matchFormat.TWO_Ball_SCRAMBLE ||
+                    || this.currentTournament.matchFormat == matchFormat.TWO_BALL_SCRAMBLE ||
                     this.currentTournament.matchFormat == matchFormat.SHAMBLES ||
                     this.currentTournament.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                     this.showCat = false;
@@ -782,7 +782,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE) {
                 playersperFlight = '4'
-            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TWO_Ball_SCRAMBLE) {
+            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TWO_BALL_SCRAMBLE) {
                 playersperFlight = '2'
 
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SPLIT_SIXES) {
@@ -2060,7 +2060,7 @@ export class AddTournamentComponent implements OnInit {
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.TWO_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.FOUR_BALL_SCRAMBLE
         ) {
@@ -2385,7 +2385,7 @@ export class AddTournamentComponent implements OnInit {
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.TWO_Ball_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.TWO_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.THREE_BALL_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
             matchFormat.FOUR_BALL_SCRAMBLE
 

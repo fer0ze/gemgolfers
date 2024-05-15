@@ -387,7 +387,7 @@ export class ScrambleComponent implements OnInit, OnChanges {
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
         if (this.Leaderboard.matchFormat == matchFormat.TEXAS_SCRAMBLE ||
-            this.Leaderboard.matchFormat == matchFormat.TWO_Ball_SCRAMBLE ||
+            this.Leaderboard.matchFormat == matchFormat.TWO_BALL_SCRAMBLE ||
             this.Leaderboard.matchFormat == matchFormat.THREE_BALL_SCRAMBLE ||
             this.Leaderboard.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
             scoreResult = ScoreLoader.getTexasScrambleScore(playerId);

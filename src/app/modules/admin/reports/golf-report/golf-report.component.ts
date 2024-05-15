@@ -14,6 +14,7 @@ import {
     General,
 } from '../../../../shared/classes/general';
 import * as jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 import 'jspdf-autotable';
 // import { UserDetailsDilogueComponent } from "../../material-components/user-details-dilogue/user-details-dilogue.component";
 import { MatDialog } from '@angular/material/dialog';
@@ -63,11 +64,15 @@ export class GolfReportComponent implements OnInit {
     dataSource: MatTableDataSource<any>;
     displayedColumnsCongu = [
         'id',
-        'memebrshipNo',
         'name',
+        'email',
         'category',
+        'memebrship#',
         'handicap',
-        'totalROunds',
+        'totalRounds',
+        'totalLeagues',
+        'totalTournament',
+        'clubName',
         'details',
     ];
 
@@ -99,7 +104,7 @@ export class GolfReportComponent implements OnInit {
         try {
 
             this.logger.log('Admin Come to Player Round Page', "info");
-            this.logger.log('Getting Player Round Data', "info", "Yesterday");
+            this.logger.log('Getting Player Round Data', "info", "Today");
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.isLoading = false;
             this.refresh = true;
@@ -107,11 +112,11 @@ export class GolfReportComponent implements OnInit {
                 startDate: ['', [Validators.required]],
                 endDate: ['', [Validators.required]],
             });
-            let yesterdayDate = this.yesterday();
+            let todayDate = this.today();
 
-            this.getTotalReport(yesterdayDate, yesterdayDate);
+            this.getTotalReport(todayDate, todayDate);
         } catch (error) {
-            this.logger.log('Getting Player Round Data Failed', "error", error.toString());    
+            this.logger.log('Getting Player Round Data Failed', "error", error.toString());
         }
     }
 
@@ -144,7 +149,7 @@ export class GolfReportComponent implements OnInit {
                 )
             );
         }
-        //console.log(players);
+        console.log(players);
 
         this.Players = [];
         this.dailyStats = [];
@@ -156,8 +161,16 @@ export class GolfReportComponent implements OnInit {
                 name: obj.firstName + ' ' + obj.lastName,
                 category: obj.playerCategory,
                 handicap: obj.handicap,
-                totalROunds: obj.AggregateQL
-                    ? obj.AggregateQL['aggregate'].count
+                email: obj.email,
+                clubName: obj.membershipQL.length > 0? obj.membershipQL[0]?.club?.name : '-',
+                totalRounds: obj.DailyRoundAggregateQL
+                    ? obj.DailyRoundAggregateQL['aggregate'].count
+                    : 1,
+                totalLeagues: obj.LeagueAggregateQL
+                    ? obj.LeagueAggregateQL['aggregate'].count
+                    : 1,
+                totalTournament: obj.TournamentAggregateQL
+                    ? obj.TournamentAggregateQL['aggregate'].count
                     : 1,
             };
             this.dailyStats.push(newobj);
@@ -198,7 +211,7 @@ export class GolfReportComponent implements OnInit {
     };
 
     applyFilter(filterValue: string) {
-        
+
         //console.log(this.dataSource.data);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -214,40 +227,56 @@ export class GolfReportComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    public downloadAsPDF() {
-        this.logger.log('Admin Click Download Pdf Daily Player Report', "info");
-        let doc = new jsPDF();
-        let res = doc.autoTableHtmlToJson(document.getElementById('a'));
-        let columns = [
-            res.columns[0],
-            res.columns[1],
-            res.columns[2],
-            res.columns[3],
-            res.columns[4],
-            res.columns[5],
-        ];
-        doc.setFontSize(30);
-        doc.text('KGC Golf Detail:', 15, 15);
-        doc.setFontSize(13);
-        doc.setTextColor(100);
+    // public downloadAsPDF() {
+    //     this.logger.log('Admin Click Download Pdf Daily Player Report', "info");
+    //     let doc = new jsPDF();
+    //     let res = doc.autoTableHtmlToJson(document.getElementById('a'));
+    //     let columns = [
+    //         res.columns[0],
+    //         res.columns[1],
+    //         res.columns[2],
+    //         res.columns[3],
+    //         res.columns[4],
+    //         res.columns[5],
+    //     ];
+    //     doc.setFontSize(30);
+    //     doc.text('KGC Golf Detail:', 15, 15);
+    //     doc.setFontSize(13);
+    //     doc.setTextColor(100);
 
-        // From HTML
-        // doc.autoTable({
-        //   html: "#pdfTable",
-        //   startY: 35,
-        //   theme: "grid",
-        // });
-        doc.autoTable(columns, res.data, { startY: 25, theme: 'grid' });
+    //     // From HTML
+    //     // doc.autoTable({
+    //     //   html: "#pdfTable",
+    //     //   startY: 35,
+    //     //   theme: "grid",
+    //     // });
+    //     doc.autoTable(columns, res.data, { startY: 25, theme: 'grid' });
 
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
+    //     // Open PDF document in new tab
+    //     doc.output('dataurlnewwindow');
 
-        // Download PDF document
-        //doc.save('flights.pdf');
+    //     // Download PDF document
+    //     //doc.save('flights.pdf');
+    // }
+    exportToExcel(): void {
+
+        const data = this.dataSource.data.map((item) => {
+            // Create a new object without the 'Details' column
+            const { id, details, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Players_report.xlsx');
+
     }
     onDatePick() {
         const combinedData = `StartDate=${this.scheduleForm.value.startDate}, EndDate=${this.scheduleForm.value.endDate}`;
-        this.logger.log('Getting Daily starter Data By date', "info",combinedData);
+        this.logger.log('Getting Daily starter Data By date', "info", combinedData);
         //console.log(this.scheduleForm.value.startDate);
         //console.log(this.scheduleForm.value.endDate);
         if (this.scheduleForm.value.startDate) {
@@ -267,9 +296,13 @@ export class GolfReportComponent implements OnInit {
         let date = new Date();
         return new Date(date.setDate(date.getDate() - 1));
     }
+    today() {
+        let date = new Date();
+        return date;
+    }
     Dailysetup(selectedValue) {
         this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
-        
+
         //console.log(selectedValue);
         this.isLoading = false;
         this.refresh = true;
@@ -338,8 +371,8 @@ export class GolfReportComponent implements OnInit {
         return new Date(date.setDate(date.getDate() - 29));
     }
     Comparator(a, b) {
-        if (a.totalROunds > b.totalROunds) return -1;
-        if (a.totalROunds < b.totalROunds) return 1;
+        if (a.totalRounds > b.totalRounds) return -1;
+        if (a.totalRounds < b.totalRounds) return 1;
 
         return 0;
     }

@@ -386,7 +386,7 @@
                                         class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
                                         <ng-container>
                                             <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{
-                                                    'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500':
+                                                    'text-orange-800 bg-orange-100 dark:text-orange-50 dark:bg-orange-500':
                                                         scheduleItem.matchFormat ===
                                                         'STROKE_PLAY',
                                                     'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500':
@@ -400,7 +400,16 @@
                                                         'MATCH_PLAY',
                                                     'text-red-800 bg-red-100 dark:text-red-50 dark:bg-red-500':
                                                         scheduleItem.matchFormat ===
-                                                        'TWO_BALL_BEST_BALL'
+                                                        'THREE_BALL_SCRAMBLE',
+                                                    'text-blue-800 bg-blue-100 dark:text-red-50 dark:bg-red-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'TWO_BALL_SCRAMBLE',
+                                                    'text-cyan-800 bg-cyan-100 dark:text-red-50 dark:bg-red-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'SHAMBLES',
+                                                    'text-lime-800 bg-lime-100 dark:text-lime-50 dark:bg-lime-500':
+                                                        scheduleItem.matchFormat ===
+                                                        'NASSAU' 
                                                 }">
                                                 {{ scheduleItem.matchFormat }}
                                             </div>
@@ -427,6 +436,15 @@
                                                     scheduleItem.noOfRounds
                                                     }}
                                                     Rounds
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container >
+                                            <div class="flex items-center">
+                                                <mat-icon class="icon-size-5 text-hint"
+                                                [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                                <div class="ml-1.5 text-md text-secondary">
+                                                    {{ scheduleItem.startDate}} 
                                                 </div>
                                             </div>
                                         </ng-container>

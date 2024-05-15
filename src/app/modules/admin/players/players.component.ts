@@ -58,6 +58,8 @@ export class PlayersComponent implements OnInit {
         'MembershipNo',
         'Category',
         'Handicap',
+        'club',
+        'createdAt',
         'Status',
         'view',
         'Edit',
@@ -153,6 +155,7 @@ export class PlayersComponent implements OnInit {
                                 Name: Fname + ' ' + Lname,
                                 Phone: obj.phone,
                                 Email: obj.email,
+                                createdAt: obj.createdAt,
                                 MembershipNo: obj.membershipNumber,
                                 Category:
                                     obj.playerCategory == 'Senior'
@@ -160,6 +163,7 @@ export class PlayersComponent implements OnInit {
                                         : obj.playerCategory,
                                 Handicap: obj.handicap,
                                 Status: obj.membershipQL,
+                                club: obj.membershipQL[0]?.club?.name ?? '-',
                             };
                             this.TablePlayers.push(newobj);
                         }
@@ -188,6 +192,7 @@ export class PlayersComponent implements OnInit {
                     Name: Fname + ' ' + Lname,
                     Phone: obj.phone,
                     Email: obj.email,
+                    createdAt: obj.createdAt,
                     MembershipNo: obj.membershipNumber,
                     Category:
                         obj.playerCategory == 'Senior'
@@ -195,6 +200,7 @@ export class PlayersComponent implements OnInit {
                             : obj.playerCategory,
                     Handicap: obj.handicap,
                     Status: obj.membershipQL,
+                    club: obj.membershipQL[0]?.club?.name ?? '-',
                 };
                 this.TablePlayers.push(newobj);
             }
@@ -220,6 +226,7 @@ export class PlayersComponent implements OnInit {
                     Name: Fname + ' ' + Lname,
                     Phone: obj.player.phone,
                     Email: obj.player.email,
+                    createdAt: obj.player.createdAt,
                     MembershipNo: obj.player.membershipNumber,
                     Category:
                         obj.player.playerCategory == 'Senior'
@@ -227,6 +234,7 @@ export class PlayersComponent implements OnInit {
                             : obj.player.playerCategory,
                     Handicap: obj.player.handicap,
                     Status: obj.player.membershipQL,
+                    club: obj.player.membershipQL[0]?.club?.name ?? '-',
                 };
                 this.TablePlayers.push(newobj);
             }
@@ -396,6 +404,22 @@ export class PlayersComponent implements OnInit {
 
     }
 
+    exportToExcel(): void {
+
+        const data = this.playersDataSource.data.map((item) => {
+            // Create a new object without the 'Details' column
+            const { id, Status, Sr, view, Edit, Delete, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Players_report.xlsx');
+
+    }
     public onSortChanged(e) {
         this.sorting = e.direction;
         this.name = e.active;

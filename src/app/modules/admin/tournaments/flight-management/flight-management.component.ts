@@ -217,7 +217,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
 
-            matchFormat.TWO_Ball_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
+            matchFormat.TWO_BALL_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.THREE_BALL_SCRAMBLE  || this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.FOUR_BALL_SCRAMBLE
 

@@ -551,7 +551,7 @@ export class TourReportComponent implements OnInit, AfterViewInit {
             },
             yaxis: {
                 labels: {
-                    offsetX: -16,
+                    offsetX: 5,
                     style: {
                         colors: 'var(--fuse-text-secondary)',
                     },

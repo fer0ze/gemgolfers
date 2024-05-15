@@ -44,21 +44,16 @@ import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialo
 })
 export class SignUpReportComponent implements OnInit, AfterViewInit {
 
-
-    chartConversions: ApexOptions;
-    chartImpressions: ApexOptions;
-    chartVisits: ApexOptions;
     chartVisitorsVsPageViews: ApexOptions;
     data: any;
     scheduleForm: FormGroup;
-    male: number = 0;
-    female: number = 0;
     _seriesE: any[] = [];
     labelsE: any[] = [];
     selectedPlayer = null;
     showFlight: boolean = false;
     dataMembersE: any[] = [];
     Players: any = [];
+    copyPlayers: any = [];
     clubPlayers: number = 0;
     mobilePlayers: number = 0;
     trailPlayers: number = 0;
@@ -101,14 +96,6 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit(): void {
-        this.fecthData();
-    }
-    ngAfterViewInit(): void {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
-
-    fecthData() {
         this.scheduleForm = this.fb.group({
             startDate: ['', [Validators.required]],
             endDate: ['', [Validators.required]],
@@ -120,7 +107,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 console.log(data);
                 let d = new Date();
                 d.setDate(1);
-                for (let i = 0; i <= 18; i++) {
+                for (let i = 0; i <= 12; i++) {
                     // //console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
                     this.labelsE.push(
                         this.monthName[d.getMonth()] + ' ' + d.getFullYear()
@@ -133,31 +120,6 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 this.trailPlayers = this.data.TrialAggregateQL.aggregate.count
                 this.premiuimPlayers = this.data.PremiumAggregateQL.aggregate.count
                 this.sorts();
-                // this.series[0] = [
-                //     {
-                //         data: this.dataMembers,
-                //         name: 'New Users',
-                //     },
-                // ];
-                // this.seriesA = [
-                //     {
-                //         data: this.dataMembersA,
-                //         name: 'Tournaments',
-                //     },
-                // ];
-                // this.seriesB = [
-                //     {
-                //         data: this.dataMembersB,
-                //         name: 'Leagues',
-                //     },
-                // ];
-                // this.seriesC = [
-                //     {
-                //         data: this.dataMembersC,
-                //         name: 'Tours',
-                //     },
-                // ];
-                // this.seriesD = [this.male, this.female];
 
                 this._seriesE[0] = [
                     {
@@ -175,13 +137,18 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 this._prepareChartData();
             })
     }
+    ngAfterViewInit(): void {
+        this.dataSource = new MatTableDataSource(this.copyPlayers);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
     }
     sorts() {
-        let rows = [];
         let myData: any[] = [];
         //let flights = [...this.data.flight_member];
         let memCounter = 0;
@@ -191,7 +158,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         let prevPlayerDate = null;
         let count = 0;
         let match = [];
-        //console.log(match);
+        console.log("match");
         let flag: boolean = true;
 
         for (let item of this.data.player) {
@@ -232,7 +199,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                     let countA = this.labelsE.find((a) => {
                         return a == date;
                     });
-                    //console.log(countA);
+                    console.log(countA);
                     if (countA !== undefined && prevDate == countA) {
                         memCounter++;
                         prevDate = countA;
@@ -246,40 +213,15 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                         flag = false;
                     }
                 }
-                rows.push(obj);
+                this.Players.push(obj);
             }
         }
-        // this.clubPlayers = (5000 * 100) / this.data.player.length;
-        // this.mobilePlayers = (4000 * 100) / this.data.player.length;
-        this.dataSource = new MatTableDataSource(rows);
+        this.copyPlayers=[...this.Players];
+        this.dataSource = new MatTableDataSource(this.Players.splice(0,20));
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        //console.log(this.dataMembers);
-
-        // for (let items of this.dataMembers) {
-        //     if (items.x.toString().includes('Apr')) {
-        //         if (this.dataMembersA.length < 3 && items.y > 0) {
-        //             this.dataMembersA.push(items.y);
-        //         }
-        //         this.thisMonth++;
-        //     } else if (items.x.toString().includes('Mar')) {
-        //         this.lastMonth++;
-        //         if (this.dataMembersB.length < 3 && items.y > 0) {
-        //             this.dataMembersB.push(items.y);
-        //         }
-        //     } else if (
-        //         items.x.toString().includes('Jan') ||
-        //         items.x.toString().includes('Feb') ||
-        //         items.x.toString().includes('Dec')
-        //     ) {
-        //         this.SecondLastMonth++;
-        //         if (this.dataMembersC.length < 3 && items.y > 0) {
-        //             this.dataMembersC.push(items.y);
-        //         }
-        //         //  this.dataMembersC.push(items.y);
-        //     }
-        // }
-        //console.log(this.dataMembers);
+       
+        console.log("end-match");
     }
     async toggleDetails(productId: string) {
         let dailyRoundCount = 0;
@@ -443,6 +385,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
                 },
             },
         };
+console.log('end');
 
 
     }

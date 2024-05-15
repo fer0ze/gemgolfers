@@ -236,7 +236,7 @@ export class DailyStarterReportComponent implements OnInit {
                 this.dailyStats.push(dailyStat);
                 this.dailyStats = this.dailyStats.sort(this.Comparator);
             }
-            //console.log(this.dailyStats);
+            console.log(this.dailyStats);
 
             for (let stats of this.dailyStats) {
                 if (stats.date == prevDate) {

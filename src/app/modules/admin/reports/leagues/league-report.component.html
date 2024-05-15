@@ -1,5 +1,9 @@
 <div class="flex flex-col flex-auto w-full">
-    <div class="flex items-center justify-center p-12 bg-card">
+
+    <div class="text-5xl font-extrabold bg-card py-8 px-6 md:px-8">
+        Leagues Reports
+     </div>
+    <div class="flex items-center justify-center pb-12 bg-card">
         <div class="w-90">
             <form [formGroup]="scheduleForm">
                 <div class="flex">
@@ -133,7 +137,7 @@
             <div class="sm:col-span-2 lg:col-span-1 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        This month Leagues
+                        {{this.labelsE[0]}} Leagues
                     </div>
                     <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/Leagues']">
@@ -166,7 +170,7 @@
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Last month Leagues
+                        {{this.labelsE[1]}} Leagues
                     </div>
                     <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/league']">
@@ -199,7 +203,7 @@
             <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between m-6 mb-0">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        Previous Leagues
+                        {{this.labelsE[2]}} Leagues
                     </div>
                     <!-- <div class="ml-2">
                         <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [routerLink]="['/reports/tour']">

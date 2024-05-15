@@ -23,10 +23,13 @@ export const GetPlayers = gql`
             handicapWhsIndex
             phone
             email
-            homeClubId
             membershipNumber
+            createdAt
             membershipQL: membership {
                 suspended
+                club{
+                    name
+                }
             }
         }
     }
@@ -51,10 +54,12 @@ export const getPlayersListReport = gql`
             firebaseUid
             membership{
                 club{
+                    id
                     name
                 }
             }
             subscription{
+                playerId
                 subscription
             }
         }
@@ -353,13 +358,17 @@ export const GetPlayersByClub = gql`
             lastName
             playerCategory
             handicap
-            homeClubId
+            createdAt
             handicapWhsIndex
             phone
             email
             membershipNumber
             membershipQL: membership {
                 suspended
+                club{
+                    id
+                    name
+                }
             }
         }
     }
@@ -380,13 +389,17 @@ export const GetPlayersByTour = gql`
                 lastName
                 playerCategory
                 handicap
-                homeClubId
+                createdAt
                 handicapWhsIndex
                 phone
                 email
                 membershipNumber
                 membershipQL: membership {
                     suspended
+                    club{
+                        id
+                        name
+                    }
                 }
             }
         }
@@ -501,12 +514,48 @@ export const GetTotalFLightPlayed = gql`
             lastName
             playerCategory
             handicap
+            email
             membershipNumber
-            AggregateQL: flights_played_aggregate(
+            membershipQL: membership {
+                clubId
+                suspended
+                club{
+                    id
+                    name
+                }
+            }
+            DailyRoundAggregateQL: flights_played_aggregate(
                 where: {
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
+                        { flight: {tournament:{singleRound:{_eq:true}}}}
+                    ]
+                }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+            TournamentAggregateQL: flights_played_aggregate(
+                where: {
+                    _and: [
+                        { flight: { date: { _gte: $sdate } } }
+                        { flight: { date: { _lte: $date } } }
+                        { flight: {tournament:{singleRound:{_eq:false}}}}
+                    ]
+                }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+            LeagueAggregateQL: flights_played_aggregate(
+                where: {
+                    _and: [
+                        { flight: { date: { _gte: $sdate } } }
+                        { flight: { date: { _lte: $date } } }
+                        { flight: { tournament: {leagueId:{_is_null:false}}}}
                     ]
                 }
             ) {
@@ -525,12 +574,46 @@ export const getTotalFlightPlayedAdmin = gql`
             lastName
             playerCategory
             handicap
+            email
             membershipNumber
-            AggregateQL: flights_played_aggregate(
+            membershipQL: membership {
+                suspended
+                club{
+                    name
+                }
+            }
+            DailyRoundAggregateQL: flights_played_aggregate(
                 where: {
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
+                        { flight: {tournament:{singleRound:{_eq:true}}}}
+                    ]
+                }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+            TournamentAggregateQL: flights_played_aggregate(
+                where: {
+                    _and: [
+                        { flight: { date: { _gte: $sdate } } }
+                        { flight: { date: { _lte: $date } } }
+                        { flight: {tournament:{singleRound:{_eq:false}}}}
+                    ]
+                }
+            ) {
+                aggregate {
+                    count
+                }
+            }
+            LeagueAggregateQL: flights_played_aggregate(
+                where: {
+                    _and: [
+                        { flight: { date: { _gte: $sdate } } }
+                        { flight: { date: { _lte: $date } } }
+                        { flight: { tournament: {leagueId:{_is_null:false}}}}
                     ]
                 }
             ) {
