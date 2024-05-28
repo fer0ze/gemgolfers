@@ -337,6 +337,9 @@ export class AddTournamentComponent implements OnInit {
                     numOfRounds: ['1', Validators.required],
                     typeFormCtrl: ['2', Validators.required],
                     handicapAllocations: ['AS_IS', Validators.required],
+                    strokeAllocations: ['AT_START', Validators.required],
+                    pointsFormats: ['BOTH', Validators.required],
+                    pointValue: ['1', Validators.required],
                     startDateFormCtrl: ['', Validators.required],
                     endDateFormCtrl: ['', Validators.required],
                     teamMatch: ['1', Validators.required],
@@ -2055,6 +2058,9 @@ export class AddTournamentComponent implements OnInit {
             handicapAllocation: this.formArray.get([0]).value
                 .handicapAllocations,
         };
+        let pointsFormats = {
+            pointsFormats: this.formArray.get([0]).value.pointsFormats,
+        };
         //console.log(handicapAllocations);
 
         if (
@@ -2112,9 +2118,9 @@ export class AddTournamentComponent implements OnInit {
                     'SINGLE'
                     ? false
                     : true,
-            pointsFormats: null,
+            pointsFormats: pointsFormats,
             subTournament: false,
-            pointsValues: null,
+            pointsValues: this.formArray.get([0]).value.pointValue,
             handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
             marshalsStartWith: this.formArray.get([0]).value.marshalStart,
@@ -2134,6 +2140,7 @@ export class AddTournamentComponent implements OnInit {
             sponsorName: '',
             sponsorLogo: '',
             mobileLogoUrl: '',
+            strokeAllocations:this.formArray.get([0]).value.strokeAllocations,
             webLogoUrl: '',
             courseHoleSetsInverted:
                 courseHoleSetsData.length > 0
@@ -3732,10 +3739,12 @@ export class AddTournamentComponent implements OnInit {
         } else {
             this.showCat = false;
         }
+        event.value == matchFormat.MATCH_PLAY ? this.showMatchPlay = true : this.showMatchPlay = false;
     }
     teamMatchChange(event) {
         this.matchFormats = []
         if (event.value == '1') {
+            this.showMatchPlay = false
             this.matchFormats = [
                 "STROKE_PLAY",
                 "STABLEFORD",
@@ -3751,6 +3760,7 @@ export class AddTournamentComponent implements OnInit {
                 .get('matchFormat')!
                 .setValue("STROKE_PLAY");
         } else {
+            this.showMatchPlay = true;
             this.matchFormats = [
                 "MATCH_PLAY",
                 "TEXAS_SCRAMBLE",

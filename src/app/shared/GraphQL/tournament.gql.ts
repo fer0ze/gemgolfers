@@ -79,6 +79,10 @@ export const LeaderboardSubscription = gql`
             completed2
             completed3
             completed4
+            playerHandicapDoublesRound1
+            playerHandicapDoublesRound2
+            playerHandicapDoublesRound3
+            playerHandicapDoublesRound4
         }
         TournamentQL: tournament(
             where: {
@@ -94,6 +98,7 @@ export const LeaderboardSubscription = gql`
             courseHoleSetsInverted
             cutOffCriteria
             activeRound
+            pointsFormats
             handicapAllocations
             noOfRounds
             webLogoUrl
@@ -102,24 +107,48 @@ export const LeaderboardSubscription = gql`
             CategoriesQL: categories {
                 ...TournamentMemberCategoryQL
             }
+            flights{
+                id
+                flightRound
+                flightNo
+                members{
+                    flightId
+                    playerId
+                    player{
+                        id
+                        firstName
+                        lastName
+                        handicap
+                    }
+                    scores(order_by: { hole: { holeNo: asc } }){
+                        playerId
+                        flightId
+                        holeId
+                        grossScore
+                        netScore
+                        playerHandicap
+                    }
+                }
+            }
+            OpponentsQL: opponents {
+                id
+                flightId
+                team1Id
+                team2Id
+                team1MemberId
+                team2MemberId
+                tournamentId
+            }
             TeamQL: teams {
                 id
                 tournamentId
                 name
                 color
-                OpponentsQL: opponentsTeam1 {
-                    id
-                    team1Id
-                    team2Id
-                    team1MemberId
-                    team2MemberId
-                    tournamentId
-                    playerTeam1 {
-                        firstName
-                        lastName
-                        handicap
-                    }
-                    playerTeam2 {
+                membersQL{
+                    teamId
+                    playerId
+                    player{
+                        id
                         firstName
                         lastName
                         handicap
@@ -136,6 +165,7 @@ export const LeaderboardSubscription = gql`
             TeamResultDoublesQL: team_match_result_doubles {
                 tournamentId
                 finalResult
+                flightId
                 upScore
                 remainingHoles
                 round

@@ -21,6 +21,7 @@ import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialo
 import { of } from 'rxjs';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-matchplay',
@@ -78,7 +79,7 @@ export class MatchplayComponent implements OnInit {
     ngOnInit() {
         try {
             console.log(this.courseID);
-            
+
             this.logger.log('Admin comes to Tournament Score Page', "info");
             this.logger.log('Getting Tournament Score Data', "info", this.tournamentID);
 
@@ -135,22 +136,22 @@ export class MatchplayComponent implements OnInit {
                                 this.showRound1 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0]?.courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else if (this.activeRound == 2) {
                                 this.showRound2 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0]?.courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else if (this.activeRound == 3) {
                                 this.showRound3 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0]?.courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else if (this.activeRound == 4) {
                                 this.showRound4 = true;
                                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
-                                this.courseID = roundCourse[0]?.courseId??this.courseID;
+                                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else this.showRound4 = true;
                         }
 
@@ -238,29 +239,29 @@ export class MatchplayComponent implements OnInit {
                 this.showRound1 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId??this.courseID;
+                this.courseID = roundCourse[0].courseId ?? this.courseID;
             } else if (this.flightRound == 2) {
                 this.showRound2 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId??this.courseID;
+                this.courseID = roundCourse[0].courseId ?? this.courseID;
             } else if (this.flightRound == 3) {
                 this.showRound3 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId??this.courseID;
+                this.courseID = roundCourse[0].courseId ?? this.courseID;
             } else if (this.flightRound == 4) {
                 this.showRound4 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId??this.courseID;
+                this.courseID = roundCourse[0].courseId ?? this.courseID;
             } else this.showRound4 = true;
             let selectedCourseHoleSet =
-                            await this.facadeService.getCourseHoleSetsForCourse(
-                                this.courseID
-                            );
-                        this.courseHoleSetNames =
-                            selectedCourseHoleSet['course_hole_sets'];
+                await this.facadeService.getCourseHoleSetsForCourse(
+                    this.courseID
+                );
+            this.courseHoleSetNames =
+                selectedCourseHoleSet['course_hole_sets'];
             this.ddSelectedFlight = '0';
             this.roundFlights = [];
             //this.scoreHeader = [];
@@ -538,7 +539,7 @@ export class MatchplayComponent implements OnInit {
                         }
                         let LeaderGross: any = {
                             flightId: flightData.id,
-                            courseId:  flightData.courseId,
+                            courseId: flightData.courseId,
                             playerId: player.id,
                             name: player.firstName + ' ' + player.lastName,
                             picture: player.picture,
@@ -718,7 +719,7 @@ export class MatchplayComponent implements OnInit {
                 course = selectedCourse[0].course;
             }
             this.isLoading = false;
-            if (course.length <= 0) return;
+            // if (course.length <= 0) return;
 
             let flightHeader: any[] = [];
             this.isLoading = false;
@@ -1104,7 +1105,7 @@ export class MatchplayComponent implements OnInit {
                                 );
                         }
                     }
-                    //console.log(playerScores);
+                    
                     //console.log(playerScoresIds);
                     //console.log(playerEmptyScoresIds);
 
@@ -1360,7 +1361,7 @@ export class MatchplayComponent implements OnInit {
                     }
                 }
             }
-
+            console.log(playerScores);
             let result = <any>(
                 await this.facadeService.SaveScoresMutation(playerScores)
             );

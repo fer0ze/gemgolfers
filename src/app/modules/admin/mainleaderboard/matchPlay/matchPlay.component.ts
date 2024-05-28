@@ -21,17 +21,18 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     LeaderboardPlayers: any[] = [];
     allLeadersCutOffGross: any[] = [];
     allLeadersCutOffNet: any[] = [];
+    flightResults: any[] = [];
     Team1: any[] = [];
     Team2: any[] = [];
     selectedCategory: any;
     signleWinColour: any = '21ACB5';
     doubleWinColour: any = '21ACB5';
-    team1PointS: any = 0;
-    team2PointS: any = 0;
+    team1Point: any = 0;
+    team2Point: any = 0;
     team1PointD: any = 0;
     team2PointD: any = 0;
     selectedIndex: any = 0;
-    flightRound: any = 0;
+    flightRound: any = 1;
     activeRound: any = 1;
     totalRounds: any = 1;
     lastActiveTab: any = 1;
@@ -54,7 +55,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     isDoubleWonA: boolean = false;
     isDoubleWonB: boolean = false;
     doubleScore = 0;
-
+    dropdownOptions: { value: string, label: string }[] = [];
     selectedCategoryValue: string = '';
     eventCategories: string[] = [];
     tRounds: any[] = [];
@@ -64,193 +65,15 @@ export class MatchPlayComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit(): void {
-        //console.log(this.data);
+        console.log(this.data);
         this.Leaderboard = this.data.TournamentQL[0];
         this.LeaderboardScore = this.data.LeaderBoardQL;
         this.activeRound = this.Leaderboard.activeRound;
         this.totalRounds = this.Leaderboard.noOfRounds;
+        this.flightRound = this.activeRound;
         this.Team1 = [];
         this.Team2 = [];
         let count = 1;
-        this.Leaderboard.TeamQL.forEach(element => {
-            let obj = {
-                id: element.id,
-                name: element.name,
-                color: element.color,
-                members: this.getMembers(element.tournamentId, element.id, this.Leaderboard.TeamQL[0], count),
-            }
-            count++;
-            if (count == 2) {
-                this.Team1.push(obj);
-            } else {
-                this.Team2.push(obj);
-
-            }
-        });
-
-        this.team1PointD = 0;
-        this.team2PointD = 0;
-        if (this.Leaderboard.TeamResultDoublesQL.length > 0) {
-            for (let obj of this.Leaderboard.TeamResultDoublesQL) {
-                let score = obj.upScore;
-                let finalResult = obj.finalResult;
-                let remainingHoles = obj.remainingHoles;
-                let round = obj.round;
-                if (score > 0) {
-                    if (finalResult == 'A_WON') {
-                        this.isDoubleWonA = true;
-                        this.doubleWinColour = this.Team1[0]['color'];
-                        this.team1PointD++;
-                        // this.team2PointD = 0;
-                        this.Team2[0]['scoreR' + round] = 0;
-                        this.Team2[0]['tiedR' + round] = false;
-                        this.Team1[0]['scoreR' + round] = score;
-                        this.Team1[0]['tiedR' + round] = false;
-                        this.Team1[0]['holesR' + round] = score > remainingHoles ? remainingHoles : 1000;
-                        this.Team2[0]['holesR' + round] = score > remainingHoles ? remainingHoles : 1000;
-
-                    } else if (finalResult == 'B_WON') {
-                        this.isDoubleWonB = true;
-                        this.doubleWinColour = this.Team2[0]['color'];
-                        // this.team1PointD = 0;
-                        this.team2PointD++;
-                        this.Team1[0]['scoreR' + round] = 0;
-                        this.Team2[0]['scoreR' + round] = score;
-                        this.Team2[0]['tiedR' + round] = false;
-                        this.Team1[0]['tiedR' + round] = false;
-                        this.Team2[0]['holesR' + round] = score > remainingHoles ? remainingHoles : 1000;
-                        this.Team1[0]['holesR' + round] = score > remainingHoles ? remainingHoles : 1000;
-
-                    }
-                    // if (score > remainingHoles) {
-                    //     if (finalResult == 'A_WON') {
-
-                    //     }
-                    // }
-                    // this.doubleScore = score;
-
-                } else {
-
-                    this.Team1[0]['tiedR' + round] = true;
-                    this.Team2[0]['tiedR' + round] = true;
-                }
-            }
-        }
-        //console.log(this.Team1);
-        //console.log(this.Team2);
-        // //console.log('a');
-        this.LeaderboardAllPlayers = [];
-        this.team1PointS = 0;
-        this.team2PointS = 0;
-        let matchResult = [];
-        if (this.Leaderboard.TeamQL[0].OpponentsQL.length > 0) {
-            let members = this.Leaderboard.TeamQL[0].OpponentsQL;
-            let upScore = 0;
-            let color = '';
-            let end: boolean = false;
-            let id = '';
-            for (let mem of members) {
-                end = false;
-                let team1MemberId = mem.team1MemberId;
-                let team2MemberId = mem.team2MemberId;
-                let Score1 = this.LeaderboardScore.filter(a => { return a.playerId == team1MemberId });
-                let Score2 = this.LeaderboardScore.filter(a => { return a.playerId == team2MemberId });
-                if (Score1.length > 0 && Score2.length > 0) {
-                    for (let i = 1; i <= this.totalRounds; i++) {
-                        let score1 = Score1[0][`scoreR` + i];
-                        let score2 = Score2[0][`scoreR` + i];
-                        let hole1 = Score1[0][`holesPlayedR` + i];
-                        let hole2 = Score2[0][`holesPlayedR` + i];
-                        let holes = 18 - Score1[0][`holesPlayedR` + i];
-                        if (score1 > score2) {
-                            color = this.getcolor(this.Team1[0], Score1[0].playerId);
-                            upScore = score1;
-                            this.team1PointS += 1;
-                            id = Score1[0].playerId;
-                        } else if ((score1 < score2)) {
-                            color = this.getcolor(this.Team2[0], Score2[0].playerId);
-                            upScore = score2;
-                            this.team2PointS += 1;
-                            id = Score2[0].playerId;
-                        } else if (hole1 !== 0 || hole2 !== 0) {
-                            id = Score2[0].playerId;
-                            upScore = 0;
-                            color = '#818181';
-
-                            if (id in matchResult) {
-                                matchResult[id]['upScore' + i] = upScore;
-                                matchResult[id]['holes' + i] = holes;
-                                matchResult[id]['end' + i] = end;
-                            } else {
-                                matchResult[id] = [];
-                                matchResult[id]['upScore' + i] = upScore;
-                                matchResult[id]['holes' + i] = holes;
-                                matchResult[id]['color'] = color;
-                                matchResult[id]['id'] = id;
-                                matchResult[id]['end' + i] = end;
-                            }
-                            id = Score1[0].playerId;
-                        } else {
-                            id = Score2[0].playerId;
-                            upScore = 0;
-                            color = this.getcolor(this.Team2[0], Score2[0].playerId);
-                            if (id in matchResult) {
-                                matchResult[id]['upScore' + i] = upScore;
-                                matchResult[id]['holes' + i] = holes;
-                                matchResult[id]['end' + i] = end;
-                            } else {
-                                matchResult[id] = [];
-                                matchResult[id]['upScore' + i] = upScore;
-                                matchResult[id]['holes' + i] = holes;
-                                matchResult[id]['color'] = color;
-                                matchResult[id]['id'] = id;
-                                matchResult[id]['end' + i] = end;
-                            }
-                            id = Score1[0].playerId;
-                        }
-                        if (upScore > holes) {
-                            end = true;
-                        }
-                        if (id in matchResult) {
-                            matchResult[id]['upScore' + i] = upScore;
-                            matchResult[id]['holes' + i] = holes;
-                            matchResult[id]['end' + i] = end;
-                        } else {
-                            matchResult[id] = [];
-                            matchResult[id]['upScore' + i] = upScore;
-                            matchResult[id]['holes' + i] = holes;
-                            matchResult[id]['color'] = color;
-                            matchResult[id]['id'] = id;
-                            matchResult[id]['end' + i] = end;
-                        }
-                        upScore = 0;
-                        holes = 0;
-                        end = false;
-
-                        //this.LeaderboardAllPlayers.push(obj)
-                    }
-
-                } else {
-                    let obj = {
-                        holes: 0,
-                        id: id,
-                        color: '#818181',
-                        end: false,
-                    }
-                    obj[`upScoreR1`] = 0;
-                    this.LeaderboardAllPlayers.push(obj);
-                }
-
-            }
-            //console.log(matchResult);
-            this.LeaderboardAllPlayers = Object.values(matchResult);
-            // //console.log(this.LeaderboardAllPlayers);
-
-        }
-
-        /// //console.log(this.allTeams);
-
-        // this.LeaderboardAllPlayers = this.data.LeaderBoardQL;
         this.tRounds = [];
         if (this.tRounds.length >= 0) {
             for (
@@ -265,72 +88,287 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 this.tRounds.push(r);
             }
         }
-        // this.getPlayers(this.LeaderboardAllPlayers, 0, 1)
+        this.dropdownOptions = this.getFormats(this.Leaderboard.pointsFormats);
+        this.getRoundFormat();
+
 
     }
+    getFormats(pointFormats) {
+        const format = this.flightRound === 1 ? pointFormats['pointsFormat'] : pointFormats[`pointsFormat${this.flightRound}`];
+        return this.getDropdownOptions(format);
+    }
+    getDropdownOptions(pointsFormat: string) {
+        switch (pointsFormat) {
+            case 'BOTH':
+                return [
+                    { value: '1', label: 'FOUR BALL' },
+                    { value: '2', label: 'SINGLES' }
+                ];
+            case 'SINGLES':
+                return [{ value: '2', label: 'SINGLES' }];
+            case 'DOUBLES':
+                return [{ value: '1', label: 'FOUR BALL' }];
+            default:
+                return [];
+        }
+    }
+    getRoundFormat() {
+        if (this.dropdownOptions.length > 1) {
+            this.getSinglesResult(this.flightRound);
+            this.getDoublesResult(this.flightRound);
+            this.isDoubles = true;
+            this.isSingles = false;
+        } else if (this.dropdownOptions[0].value == '1') {
+            this.isDoubles = true;
+            this.isSingles = false;
+            this.getDoubleResult(this.flightRound);
+        } else if (this.dropdownOptions[0].value == '2') {
+            this.isDoubles = false;
+            this.isSingles = true;
+            this.getSinglesResult(this.flightRound);
+        }
+    }
+    getSinglesResult(flightRound) {
+        this.team1Point = 0;
+        this.team2Point = 0;
+        let team1Id = this.data.TournamentQL[0].OpponentsQL[0].team1Id;
+        let team2Id = this.data.TournamentQL[0].OpponentsQL[0].team2Id;
+        this.flightResults = [];
+        let processedPlayers = new Set();
+        let flights = this.Leaderboard.flights.filter((fli => {
+            return fli.flightRound == flightRound
+        }))
+        for (let flightData of flights) {
+            let membersQLs = flightData.members;
+            let flightId = flightData.id;
+            let round = flightData.flightRound;
+            let flightResult = { flightId, matches: [] };
+            for (let membersQL of membersQLs) {
+                let player = membersQL.player;
+                let name = player.firstName + " " + player.lastName;
+                let playerId = membersQL.playerId;
+                let score = membersQL.scores;
+                if (processedPlayers.has(playerId)) {
+                    continue;
+                }
+                let { opponentId, opponentTeamId, playerTeamId, playerTeamMemberId } = this.findOpponentFlightWise(playerId, this.Leaderboard, flightId);
+                if (opponentId) {
+                    let playerScore = this.getPlayerScore(playerId, round);
+                    let opponentScore = this.getPlayerScore(opponentId, round);
+                    let holesPlayed = this.getHolePlayed(playerId, round);
+                    let opponentScores = membersQLs.filter((mem => { return mem.playerId == opponentId }))
+                    if (playerScore !== null && opponentScore !== null) {
+                        let playerWon = playerScore > opponentScore;
+                        let tied = playerScore == opponentScore;
+                        let color = this.getcolor(playerTeamId)
+                        let matchResult = {
+                            playerId,
+                            opponentId: opponentId,
+                            playerScore,
+                            opponentScore,
+                            flightNo: flightData.flightNo,
+                            round: round,
+                            score: playerWon && !tied ? playerScore : opponentScore,
+                            winnerId: playerWon && !tied ? playerId : opponentId,
+                            thru: holesPlayed,
+                            playerColor: playerWon && !tied ? color : tied ? '#dfdfdf' : '',
+                            opponentColor: !playerWon && !tied ? this.getcolor(opponentTeamId) : tied ? '#dfdfdf' : '',
+                            playerName: name,
+                            opponentName: this.getPlayerName(membersQLs, opponentId),
+                            winningColor: !playerWon && !tied ? this.getcolor(opponentTeamId) : color,
+                            holes: this.getHoles(score, color, this.getcolor(opponentTeamId), opponentScores[0]?.scores),
+                            playerHandicap: this.getHandicap(playerId),
+                            opponentHandicap: this.getHandicap(opponentId),
+                        };
+                        if (playerWon && playerTeamId == team1Id) {
+                            this.team1Point++;
+                        } else if (playerWon && playerTeamId == team2Id) {
+                            this.team2Point++;
+                        } else if (tied) {
+                            this.team1Point += .5;
+                            this.team2Point += .5;
+                        } else if (!playerWon && playerTeamId == team1Id) {
+                            this.team2Point++;
+                        } else {
+                            this.team1Point++;
+                        }
 
-    getMembers(tournamentId, teamId, element, count) {
-        let players = [];
-        element.OpponentsQL.forEach(obj => {
-            if (obj.tournamentId == tournamentId) {
-                if (count == 1) {
-                    let play = {
-                        name: obj.playerTeam1.firstName + " " + obj.playerTeam1.lastName,
-                        handicap: obj.playerTeam1.handicap,
-                        id: obj.team1MemberId,
-                        teamId: teamId,
+                        // Assuming membersQL is the original member object with additional properties
+                        membersQL.isWinner = playerWon;
+                        processedPlayers.add(playerId);
+                        processedPlayers.add(opponentId);
+                        flightResult.matches.push(matchResult);
                     }
-                    players.push(play)
-                } else {
-                    let play = {
-                        name: obj.playerTeam2.firstName + " " + obj.playerTeam2.lastName,
-                        handicap: obj.playerTeam2.handicap,
-                        id: obj.team2MemberId,
-                        teamId: teamId,
-                    }
-                    players.push(play)
                 }
             }
-        });
-        return players;
-
-    }
-
-    getSinglesBG(item: any): { [key: string]: string } {
-        ////console.log(item);
-        const underValue = this.LeaderboardAllPlayers.filter((a) => { return a.id == item.id })
-        // //console.log(underValue);
-        const style = {};
-        if (underValue.length > 0) {
-            style['background-color'] = underValue[0]['color']; // Set the 'color' property to 'red'
+            this.flightResults.push(flightResult);
         }
-        return style;
+        console.log(this.flightResults);
+
     }
-    getSinglePlayerScore(item: any, round: any): string {
-        ////console.log(item);
-        const underValue = this.LeaderboardAllPlayers.filter((a) => { return a.id == item.id })
-        if (underValue.length > 0) {
-            if (underValue[0]['upScore' + round] != undefined && underValue[0]['upScore' + round] > 0) {
-                if (underValue[0]['upScore' + round] > underValue[0]['holes' + round]) {
-                    return `WINS ${underValue[0]['upScore' + round]} UP & ${underValue[0]['holes' + round]}`;
+    getDoublesResult(flightRound) {
+        let team1Id = this.data.TournamentQL[0].OpponentsQL[0].team1Id;
+        let team2Id = this.data.TournamentQL[0].OpponentsQL[0].team2Id;
+        let flights = this.Leaderboard.flights.filter((fli => {
+            return fli.flightRound == flightRound
+        }))
+        this.flightResults = [];
+        let processedPlayers = new Set();
+        for (let flightData of this.Leaderboard.flights) {
+            let membersQLs = flightData.members;
+            let flightId = flightData.id;
+            let round = flightData.flightRound;
+            let flightResult = { flightId, matches: [] };
+            let color;
+            let teamAResult;
+            let doublesResult = this.getDoubleResult(flightId);
+            if (doublesResult) {
+                let team1Members = this.getFlightTeamMember(membersQLs, team1Id);
+                let team2Members = this.getFlightTeamMember(membersQLs, team2Id);
+                if (doublesResult.upScore > 0) {
+                    if (doublesResult.finalResult == 'B_WON') {
+                        color = this.getcolor(team2Id)
+                        teamAResult = false;
+                    } else {
+                        color = this.getcolor(team1Id)
+                        teamAResult = true;
+                    }
+
+                    let matchResult = {
+                        flightNo: flightData.flightNo,
+                        round: round,
+                        score: doublesResult.upScore,
+                        thru: 18 - doublesResult.remainingHoles,
+                        playerColor: teamAResult ? color : '',
+                        opponentColor: !teamAResult ? color : '',
+                        playerName1: team1Members[0].name,
+                        playerName2: team1Members[1].name,
+                        player1Handicap: this.getHandicapDoubles(team1Members[0].id, round),
+                        player2Handicap: this.getHandicapDoubles(team1Members[1].id, round),
+                        opponentName1: team2Members[0].name,
+                        opponentName2: team2Members[1].name,
+                        winningColor: color,
+                        opponent1Handicap: this.getHandicapDoubles(team2Members[0].id, round),
+                        opponent2Handicap: this.getHandicapDoubles(team1Members[0].id, round),
+                    };
+                    flightResult.matches.push(matchResult);
                 } else {
-                    return `WINS ${underValue[0]['upScore' + round]} UP `;
-                }
-            } else if (underValue[0]['upScore' + round] != undefined && underValue[0]['upScore' + round] == 0) {
-                return 'TIED';
-            } else {
-                return '';
-            }
-        }
-        return '';
-    }
-    getcolor(team, id) {
+                    color = '#dfdfdf'
+                    let matchResult = {
+                        flightNo: flightData.flightNo,
+                        round: round,
+                        score: doublesResult.upScore,
+                        thru: 18 - doublesResult.remainingHoles,
+                        playerColor: '#dfdfdf',
+                        player1Handicap: this.getHandicapDoubles(team1Members[0].id, round),
+                        player2Handicap: this.getHandicapDoubles(team1Members[1].id, round),
+                        opponentColor: '#dfdfdf',
+                        playerName1: team1Members[0].name,
+                        playerName2: team1Members[1].name,
+                        opponentName1: team2Members[0].name,
+                        opponentName2: team2Members[1].name,
+                        winningColor: color,
+                        opponent1Handicap: this.getHandicapDoubles(team2Members[0].id, round),
+                        opponent2Handicap: this.getHandicapDoubles(team1Members[0].id, round),
+                    };
 
-        let find = team.members.filter(a => { return a.id == id });
+                    flightResult.matches.push(matchResult);
+                };
+            }
+            this.flightResults.push(flightResult);
+        }
+        console.log(this.flightResults);
+    }
+
+    getcolor(teamId) {
+
+        let find = this.Leaderboard.TeamQL.filter(a => a.id === teamId);
+        if (find.length > 0) {
+            let color = find[0].color;
+            // Check if the color string already includes '#'
+            if (!color.startsWith('#')) {
+                color = `#${color}`;
+            }
+            return color;
+        } else {
+            // Handle case where no matching team is found, if necessary
+            return null; // or any default value
+        }
+
+
+    }
+
+    getPlayerName(members, playerId) {
+        let find = members.filter(a => { return a.playerId == playerId });
         if (find) {
-            return team.color;
+            let player = find[0]?.player;
+            let name = player?.firstName + " " + player?.lastName;
+            return name ? name : '';
+        }
+    }
+
+    getDoubleResult(flightId) {
+        let find = this.Leaderboard.TeamResultDoublesQL.filter((team => { return team.flightId == flightId }))
+        if (find.length > 0) {
+            return find[0];
+        }
+        return null;
+    }
+    getFlightTeamMember(membersQLs, teamId) {
+        const result = [];
+        let find = this.Leaderboard.TeamQL.filter(team => team.id === teamId);
+
+        if (find.length > 0) {
+            let teamMember = find[0].membersQL;
+
+            teamMember.forEach(element => {
+                let check = membersQLs.filter(mem => mem.playerId === element.playerId);
+
+                if (check.length > 0) {
+                    let player = check[0].player;
+
+                    if (player && player.id && player.firstName && player.lastName) {
+                        let name = { id: player.id, name: `${player.firstName} ${player.lastName}` };
+                        result.push(name);
+                    } else {
+                        // console.error('Player object is missing id, firstName, or lastName:', player);
+                    }
+                } else {
+                    // c//onsole.error('No matching member found for playerId:', element.playerId);
+                }
+            });
+        } else {
+            // consol//e.error('No matching team found for teamId:', teamId);
         }
 
+        return result;
+    }
+
+    getHoles(score, playerId, opponentId, opponentScore) {
+        const result = [];
+        for (let i = 0; i < 18; i++) {
+            const playerHoleScore = score[i]?.netScore;
+            const opponentHoleScore = opponentScore[i]?.netScore;
+
+            let winnerId;
+
+            if (playerHoleScore < opponentHoleScore) {
+                winnerId = playerId;
+            } else if (opponentHoleScore < playerHoleScore) {
+                winnerId = opponentId;
+            } else if (opponentHoleScore != null && opponentHoleScore == playerHoleScore) {
+                winnerId = '#dfdfdf'; // It's a tie
+            } else {
+                winnerId = null;
+            }
+
+            result.push({
+                holeNo: i + 1,
+                winnerId: winnerId
+            });
+        }
+
+        return result;
     }
     ngOnChanges(changes: SimpleChanges): void {
         //console.log(changes);
@@ -402,65 +440,8 @@ export class MatchPlayComponent implements OnInit, OnChanges {
 
     changeRound(item) {
         this.flightRound = item.value;
-        if (item.value == '0') {
-            if (this.lastActiveTab == 1) {
-                this.isGross = false;
-                this.isNet = false;
-                this.allRoundGrossScore = true;
-                this.allRoundCutOff = true;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else if (this.lastActiveTab == 2) {
-                this.isNet = false;
-                this.isGross = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = true;
-                this.allRoundCutOffNet = true;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else {
-                this.isGross = false;
-                this.isNet = false;
-                this.allRoundGrossScore = true;
-                this.allRoundCutOff = true;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            }
-        } else {
-            if (this.lastActiveTab == 1) {
-                this.isGross = true;
-                this.isNet = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else if (this.lastActiveTab == 2) {
-                this.isNet = true;
-                this.isGross = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            } else {
-                this.isGross = true;
-                this.isNet = false;
-                this.allRoundGrossScore = false;
-                this.allRoundCutOff = false;
-
-                this.allRoundNetScore = false;
-                this.allRoundCutOffNet = false;
-                this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 1)
-            }
-        }
+        this.dropdownOptions = this.getFormats(this.Leaderboard.pointsFormats);
+        this.getRoundFormat();
     }
     selectionChanged(item) {
         // this.activeRound = this.Leaderboard.activeRound;
@@ -522,10 +503,13 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         if (item.value == '1') {
             this.isDoubles = true;
             this.isSingles = false;
+            this.getDoublesResult(this.flightRound);
         } else {
             this.isDoubles = false;
             this.isSingles = true;
+            this.getSinglesResult(this.flightRound);
         }
+
 
     }
     filterByQuery(query) {
@@ -912,5 +896,50 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         //if (a["position"] > b["position"]) return 1;
 
         return 0;
+    }
+    findOpponentFlightWise(playerId, TournamentQL, flightId) {
+        if (TournamentQL.OpponentsQL.length > 0) {
+            let opponentId;
+            let opponentTeamId;
+            let playerTeamId;
+            let playerTeamMemberId;
+            for (let data of TournamentQL.OpponentsQL) {
+                if (data.team1MemberId == playerId && data.flightId == flightId) {
+                    opponentId = data.team2MemberId;
+                    opponentTeamId = data.team2Id;
+                    playerTeamId = data.team1Id;
+                } else if (data.team2MemberId == playerId && data.flightId == flightId) {
+                    opponentId = data.team1MemberId;
+                    opponentTeamId = data.team1Id;
+                    playerTeamId = data.team2Id;
+                }
+            }
+            for (let data of TournamentQL.OpponentsQL) {
+                if (data.team1MemberId !== playerId && data.team2MemberId !== playerId && data.flightId == flightId) {
+                    if (playerTeamId && playerTeamId == data.team1Id) {
+                        playerTeamMemberId = data.team1MemberId;
+                    } else if (playerTeamId && playerTeamId == data.team2Id) {
+                        playerTeamMemberId = data.team2MemberId;
+                    }
+                }
+            }
+            return { opponentId, opponentTeamId, playerTeamId, playerTeamMemberId };
+        }
+    }
+    getPlayerScore(playerId, round) {
+        const playerScore = this.LeaderboardScore.find(score => score.playerId === playerId);
+        return playerScore ? playerScore[`scoreR${round}`] : null;
+    }
+    getHolePlayed(playerId, round) {
+        const playerScore = this.LeaderboardScore.find(score => score.playerId === playerId);
+        return playerScore ? playerScore[`holesPlayedR${round}`] : null;
+    }
+    getHandicap(playerId) {
+        const playerScore = this.LeaderboardScore.find(score => score.playerId === playerId);
+        return playerScore ? playerScore[`handicap`] : null;
+    }
+    getHandicapDoubles(playerId, round) {
+        const playerScore = this.LeaderboardScore.find(score => score.playerId === playerId);
+        return playerScore ? playerScore[`playerHandicapDoublesRound${round}`] : null;
     }
 }
