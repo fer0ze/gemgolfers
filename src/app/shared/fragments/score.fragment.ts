@@ -16,6 +16,7 @@ fragment ScoreQL on score {
     updatedAt
     updaterId
     updaterName
+    netScore
 }`;
 
 export const ScoreDetailQL = gql`

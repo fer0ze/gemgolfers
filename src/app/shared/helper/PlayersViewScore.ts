@@ -955,9 +955,14 @@ export class PlayersScoreLoader {
                             score.grossScore
                         );
                         let gross = score.grossScore;
-                        let currentNet = objScore.getNetScore(
-                            tournamentQL.handicapAllocations
-                        );
+                        let currentNet;
+                        if (score.netScore == null) {
+                            currentNet = objScore.getNetScore(
+                                tournamentQL.handicapAllocations
+                            );
+                        } else {
+                            currentNet = score.netScore;
+                        }
                         score['netScore'] = currentNet;
                         // holesPlayed++;
                         if (gross <= 0) {
@@ -979,9 +984,14 @@ export class PlayersScoreLoader {
                                             newScore.HoleIPQL.par,
                                             newScore.grossScore
                                         );
-                                        let newCurrentNet = newObjScore.getNetScore(
-                                            tournamentQL.handicapAllocations
-                                        );
+                                        let newCurrentNet;
+                                        if (score.netScore == null) {
+                                            newCurrentNet = newObjScore.getNetScore(
+                                                tournamentQL.handicapAllocations
+                                            );
+                                        } else {
+                                            newCurrentNet = score.netScore;
+                                        }
                                         newScore['netScore'] = newCurrentNet;
                                         if (newScore.holeId == score.holeId) {
                                             let newplayer = newMembersQL.PlayerQL;
@@ -1022,27 +1032,6 @@ export class PlayersScoreLoader {
                                                 result[playerId]["score"] = scores;
                                             }
 
-                                            // if (newCurrentNet < currentNet) {
-                                            //     if (result[newPlayerId]["score" + round] === 0 && result[playerId]["score" + round] === 0) {
-                                            //         result[newPlayerId]["score" + round] += 1;
-
-                                            //     } else if (result[newPlayerId]["score" + round] > 0 && result[playerId]["score" + round] === 0) {
-                                            //         result[newPlayerId]["score" + round] += 1;
-
-                                            //     } else if (result[newPlayerId]["score" + round] === 0 && result[playerId]["score" + round] > 0) {
-                                            //         result[playerId]["score" + round] -= 1;
-                                            //     }
-                                            // } else if (newCurrentNet > currentNet) {
-                                            //     if (result[newPlayerId]["score" + round] === 0 && result[playerId]["score" + round] === 0) {
-                                            //         result[playerId]["score" + round] += 1;
-
-                                            //     } else if (result[playerId]["score" + round] > 0 && result[newPlayerId]["score" + round] === 0) {
-                                            //         result[playerId]["score" + round] += 1;
-
-                                            //     } else if (result[playerId]["score" + round] === 0 && result[newPlayerId]["score" + round] > 0) {
-                                            //         result[newPlayerId]["score" + round] -= 1;
-                                            //     }
-                                            // }
                                         }
 
                                     }

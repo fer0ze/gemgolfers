@@ -52,7 +52,7 @@
                             </div>
                             <div *ngIf="player.score>0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
-                                <span>
+                                <span class="text-md w-20 sm:w-full md:w-full text-center">
                                     Group - {{player.flightNo}}
                                 </span>
                                 <span class="pt-2 font-bold text-3xl" [ngStyle]="{'color':player.winningColor}">
@@ -64,7 +64,7 @@
                             </div>
                             <div *ngIf="player.score==0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
-                                <span>
+                                <span class="text-md w-20 sm:w-full md:w-full text-center">
                                     Group - {{player.flightNo}}
                                 </span>
                                 <span class="pt-2 font-bold text-3xl">
@@ -116,7 +116,7 @@
                     </div>
                 </div>
                 <div *ngFor="let item of flightResults; let last = last">
-                    <div *ngFor="let player of item?.matches" class=" text-lg flex flex-col justify-between  max-h-28 border-b font-semibold bg-card mb-10 rounded-xl
+                    <div *ngFor="let player of item?.matches" class=" text-lg flex flex-col justify-between  max-h-28 border-b font-semibold bg-card mb-20 rounded-xl
                     ">
                         <div class="flex flex-row max-h-28">
                             <div class="flex justify-center rounded-r-full w-50 border-l-4"
@@ -130,25 +130,25 @@
                             </div>
                             <div *ngIf="player.score>0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
-                                <span>
+                                <span class="text-md w-20 sm:w-full md:w-full text-center">
                                     Group - {{player.flightNo}}
                                 </span>
-                                <span class="pt-2 font-bold text-3xl" [ngStyle]="{'color':player.winningColor}">
+                                <span class="pt-2 font-bold text-3xl sm:text-sm  md:text-3xl " [ngStyle]="{'color':player.winningColor}">
                                     {{player.score}} Up
                                 </span>
-                                <span class="pt-2 text-lg text-gray-400">
+                                <span class="pt-2 text-lg text-gray-400  sm:text-sm">
                                     Thru - {{player.thru}}
                                 </span>
                             </div>
                             <div *ngIf="player.score==0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
-                                <span>
+                                <span class="text-md w-20 sm:w-full md:w-full text-center">
                                     Group - {{player.flightNo}}
                                 </span>
-                                <span class="pt-2 font-bold text-3xl">
+                                <span class="pt-2 font-bold text-3xl sm:text-sm">
                                     Tied
                                 </span>
-                                <span class="pt-2 text-lg text-gray-400">
+                                <span class="pt-2 text-lg text-gray-400 sm:text-sm">
                                     Thru - {{player.thru}}
                                 </span>
                             </div>
@@ -164,14 +164,82 @@
 
                             </div>
                         </div>
-                        <div class="flex justify-center items-center bg-card p-1">
-                            <div *ngFor="let hole of player?.holes" class="px-2 rounded-full mx-1"
+                        <div class="flex justify-center items-center bg-card py-1 sm:p-1 md:p-1 w-min sm:w-full md:w-full">
+                            <div *ngFor="let hole of player?.holes" class="px-1 rounded-full mr-1 sm:mx-1 md:mx-1 sm:px-1 md:px-1"
                                 [ngStyle]="{ 'background': hole.winnerId}">
-                                <div class="text-sm font-bold " [ngClass]="{ 'line-through': hole.winnerId==null}">
+                                <div class="text-sm font-bold" [ngClass]="{ 'line-through': hole.winnerId==null}">
                                     {{hole.holeNo}}
                                 </div>
                             </div>
 
+                        </div>
+                        <div class="flex w-full bg-card justify-center cursor-pointer py-1 ">
+                            <span class="text-md hover:text-sky-800" (click)="viewPlayerScore(
+                                player.playerName,
+                                player.opponentName,
+                                player.playerId,
+                                player.opponentId,
+                                item.holeSets,
+                                item.holeSetsInverted
+                            )">
+                                View Score
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf=" !isSingles && !isDoubles"
+                class="sm:col-span-1 md:col-span-1 lg:col-span-1  flex flex-col rounded-xl flex-auto">
+                <div class="flex justify-between">
+                    <div class="text-3xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                        {{team1Point}}
+                    </div>
+                    <div class="text-3xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                        {{team2Point}}
+                    </div>
+                </div>
+                <div *ngFor="let item of flightResults; let last = last">
+                    <div *ngFor="let player of item?.matches; let i = index" class=" text-lg flex flex-col justify-between  max-h-28 border-b font-semibold bg-card mb-10 rounded-xl
+                    ">
+                        <div class="flex flex-row max-h-28">
+                            <div class="flex justify-center rounded-r-full w-50 border-l-4"
+                                [ngStyle]="{ 'background': player.team1Color,'border-color':player.team1Color }">
+                                <div class="flex justify-center items-start flex-col ">
+                                    {{ player.team1Name }}
+                                    <span class="text-md">
+                                        Points:{{player.team1Points}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div *ngIf="player.score>0"
+                                class="flex justify-center items-center p-10 flex-auto flex-col">
+                                <span class="text-md w-20 sm:w-full md:w-full text-center">
+                                    Round - {{i}}
+                                </span>
+                                <span class="pt-2 font-bold text-3xl" [ngStyle]="{'color':player.winningColor}">
+                                    {{player.score}} Up
+                                </span>
+                            </div>
+                            <div *ngIf="player.score==0"
+                                class="flex justify-center items-center p-10 flex-auto flex-col">
+                                <span class="text-md w-20 sm:w-full md:w-full text-center">
+                                    Round - {{i}}
+                                </span>
+                                <span class="pt-2 font-bold text-3xl">
+                                    Tied
+                                </span>
+                            </div>
+                            <div class="flex justify-center  rounded-l-full w-50 border-r-4"
+                                [ngStyle]="{ 'background': player.team2Color,'border-color':player.team2Color }">
+                                <div class="flex justify-center items-end flex-col ">
+                                    {{ player.team2Name }}
+                                    <span class="text-md">
+                                        Points:{{player.team2Points}}
+                                    </span>
+                                </div>
+
+
+                            </div>
                         </div>
                     </div>
                 </div>

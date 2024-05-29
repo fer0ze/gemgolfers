@@ -111,6 +111,8 @@ export const LeaderboardSubscription = gql`
                 id
                 flightRound
                 flightNo
+                courseHoleSets
+                courseHoleSetsInverted
                 members{
                     flightId
                     playerId
