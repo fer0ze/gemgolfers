@@ -12,9 +12,10 @@ import { StrokePlayComponent } from './strokePlay/strokePlay.component';
 import { StableFordComponent } from './stableFord/stableFord.component';
 import { MatchPlayComponent } from './matchPlay/matchPlay.component';
 import { ScrambleComponent } from './texasScramble/texasScramble.component';
+import { NassauComponent } from './nassau/nassau.component';
 
 @NgModule({
-    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent,ScrambleComponent],
+    declarations: [MainLeaderboardComponent, StrokePlayComponent,StableFordComponent,MatchPlayComponent,ScrambleComponent,NassauComponent],
     imports: [
         CommonModule,
         MainleaderboardRoutingModule,

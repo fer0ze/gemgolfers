@@ -49,6 +49,9 @@
             <ng-container *ngSwitchCase="'BEST_TWO'">
                 <app-stroke-play [data]="Leaderboard"></app-stroke-play>
             </ng-container>
+            <ng-container *ngSwitchCase="'BEST_THREE'">
+                <app-stroke-play [data]="Leaderboard"></app-stroke-play>
+            </ng-container>
             <ng-container *ngSwitchCase="'STABLEFORD'">
                 <app-stable-ford [data]="Leaderboard"></app-stable-ford>
             </ng-container>
@@ -60,6 +63,9 @@
             </ng-container>
             <ng-container *ngSwitchCase="'MATCH_PLAY'">
                 <app-match-play [data]="Leaderboard"></app-match-play>
+            </ng-container>
+            <ng-container *ngSwitchCase="'NASSAU'">
+                <app-nassau [data]="Leaderboard"></app-nassau>
             </ng-container>
             <ng-container *ngSwitchCase="'TEXAS_SCRAMBLE'">
                 <app-scramble [data]="Leaderboard"></app-scramble>

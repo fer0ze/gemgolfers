@@ -157,13 +157,6 @@ export const LeaderboardSubscription = gql`
                     }
                 }
             }
-            TeamResultQL: team_match_result_singles {
-                tournamentId
-                teamOpponentId
-                finalResult
-                upScore
-                remainingHoles
-            }
             TeamResultDoublesQL: team_match_result_doubles {
                 tournamentId
                 finalResult
@@ -171,6 +164,20 @@ export const LeaderboardSubscription = gql`
                 upScore
                 remainingHoles
                 round
+            }
+            nassau_singles_result{
+                tournamentId
+                flightId
+                playerId
+                opponentId
+                upScore
+                remainingHoles
+                front9Score
+                back9Score
+                playerHandicap
+                opponentHandicap
+                playerHandicapDoubles
+                opponentHandicapDoubles
             }
         }
     }
