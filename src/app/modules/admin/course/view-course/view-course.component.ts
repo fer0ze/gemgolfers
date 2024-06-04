@@ -177,21 +177,24 @@ export class ViewCourseComponent implements OnInit {
         // let obj = Country.getCity(event);
 
         const city = new getCity().getCity(event?.name || event);
-        for (let objs of city['cities']) {
-            this.cities = objs.split("|");
+        if (city) {
+            for (let objs of city['cities']) {
+                this.cities = objs.split("|");
+            }
+            // this.courseForm.get('city').setValue(this.cities[1]);
+            console.log(this.cities);
+            this.listCity = this.courseForm
+                .get('city')!
+                .valueChanges.pipe(
+                    startWith(''),
+                    map((value) =>
+                        typeof value === 'string' ? value : value ? value.name : ''
+                    ),
+                    map((name) => (name ? this._filterCity(name) : this.cities.slice()))
+                );
+        } else {
+            this.courseForm.get('city').setValue(event?.name || event);
         }
-        // this.courseForm.get('city').setValue(this.cities[1]);
-        console.log(this.cities);
-        this.listCity = this.courseForm
-            .get('city')!
-            .valueChanges.pipe(
-                startWith(''),
-                map((value) =>
-                    typeof value === 'string' ? value : value ? value.name : ''
-                ),
-                map((name) => (name ? this._filterCity(name) : this.cities.slice()))
-            );
-
     }
 
     private _filter(value: string) {
