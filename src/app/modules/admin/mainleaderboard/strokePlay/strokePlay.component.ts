@@ -369,7 +369,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         this.activeRound = this.Leaderboard.activeRound;
         if (this.flightRound == 0) {
             if (item.value == LeaderTypeValue.GROSS) {
-                //////console.log("Selected value: " + item.value);
+                console.log("Selected value: " + item.value);
                 this.allRoundGrossScore = true;
                 this.allRoundCutOff = true;
 
@@ -415,7 +415,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundGrossScore = false;
                 this.allRoundCutOff = false;
 
-                this.allRoundNetScore = true;
+                this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
                 this.lastActiveTab = 2;
                 this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, 2)

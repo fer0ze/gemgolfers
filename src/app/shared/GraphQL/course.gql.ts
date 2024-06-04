@@ -4,7 +4,7 @@ import { CourseQL, CourseHoleSetsQL } from '../fragments/course.fragment';
 
 export const GetCourses = gql`
     query PostsGetQuery {
-        course(order_by: { createdAt: desc }) {
+        course(order_by: { name: asc }) {
             id
             clubId
             name

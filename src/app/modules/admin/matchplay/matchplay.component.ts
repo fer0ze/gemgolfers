@@ -239,22 +239,22 @@ export class MatchplayComponent implements OnInit {
                 this.showRound1 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId ?? this.courseID;
+                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
             } else if (this.flightRound == 2) {
                 this.showRound2 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId ?? this.courseID;
+                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
             } else if (this.flightRound == 3) {
                 this.showRound3 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId ?? this.courseID;
+                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
             } else if (this.flightRound == 4) {
                 this.showRound4 = true;
                 roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
                 console.log(roundCourse);
-                this.courseID = roundCourse[0].courseId ?? this.courseID;
+                this.courseID = roundCourse[0]?.courseId ?? this.courseID;
             } else this.showRound4 = true;
             let selectedCourseHoleSet =
                 await this.facadeService.getCourseHoleSetsForCourse(
