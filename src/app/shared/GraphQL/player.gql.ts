@@ -25,12 +25,6 @@ export const GetPlayers = gql`
             email
             membershipNumber
             createdAt
-            membershipQL: membership {
-                suspended
-                club{
-                    name
-                }
-            }
         }
     }
 `;
@@ -44,6 +38,7 @@ export const getPlayersListReport = gql`
                 ]
             }
             order_by: { createdAt: desc }
+            limit:4000
         ) {
             id
             fullName
@@ -1067,7 +1062,7 @@ export const PlayerFlightScoresQuery = gql`
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
-            limit: 80
+            limit: 20
         ) {
             playingTee
             FlightQL: flight {
@@ -1083,6 +1078,10 @@ export const PlayerFlightScoresQuery = gql`
                         index
                         par
                     }
+                }
+                course{
+                    id
+                    name
                 }
             }
         }

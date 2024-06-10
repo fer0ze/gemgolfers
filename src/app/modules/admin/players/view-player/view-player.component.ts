@@ -73,9 +73,9 @@ export class ViewPlayerComponent implements OnInit {
     playerWHSHistory: any;
     palyerWHSHandDif: number;
     CONGUgrossSource: MatTableDataSource<any>;
-    CONGUgrossColumns = ['id', 'updatedAt', 'score'];
+    CONGUgrossColumns = ['id', 'updatedAt','courseName', 'score'];
     CONGUnetSource: MatTableDataSource<any>;
-    CONGUnetColumns = ['id', 'updatedAt', 'score'];
+    CONGUnetColumns = ['id', 'updatedAt','courseName', 'score'];
     dataSource: MatTableDataSource<any>;
     totalRounds: any = 0;
     ConguScoreLength: any = 0;
@@ -353,7 +353,7 @@ export class ViewPlayerComponent implements OnInit {
 
                 let playerscore: any =
                     await this.facadeService.getPlayerFlightScores(this.playerID);
-                //console.log(playerscore);
+                console.log(playerscore);
                 this.currentPlayer = playerscore.PlayerQL;
                 this.totalRounds = playerscore.Aggegate.aggregate.totalCount;
                 let memberQLs: any = playerscore.MemberQL;
@@ -419,6 +419,7 @@ export class ViewPlayerComponent implements OnInit {
                 let newScore: any[] = [];
                 for (let memberQL of memberQLs) {
                     let flightQL: any = memberQL.FlightQL;
+                    let { name  }: any = flightQL.course;
 
                     let scoresQLs: any = flightQL.ScoresQL;
                     if (scoresQLs.length == 0) {
@@ -476,6 +477,7 @@ export class ViewPlayerComponent implements OnInit {
                         date: flightQL.date,
                         gross: grossScore,
                         net: netScore,
+                        courseName:name,
                     };
                     if (newScores.length <= 20) {
                         newScores.push(recentScores);

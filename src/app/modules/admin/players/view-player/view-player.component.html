@@ -901,6 +901,14 @@
                                             {{ row.date }}
                                         </td>
                                     </ng-container>
+                                    <ng-container matColumnDef="courseName">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Course
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.courseName }}
+                                        </td>
+                                    </ng-container>
 
                                     <!-- Phone Column -->
                                     <ng-container matColumnDef="score">
@@ -984,6 +992,14 @@
                                             </th>
                                             <td mat-cell *matCellDef="let row">
                                                 {{ row.net }}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="courseName">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                Course
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.courseName }}
                                             </td>
                                         </ng-container>
 

@@ -50,6 +50,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
     _seriesE: any[] = [];
     labelsE: any[] = [];
     selectedPlayer = null;
+    expandedElement: any | null;
     showFlight: boolean = false;
     dataMembersE: any[] = [];
     Players: any = [];
@@ -227,6 +228,7 @@ export class SignUpReportComponent implements OnInit, AfterViewInit {
         let dailyRoundCount = 0;
         let tournamentCount = 0;
         let leagueCount = 0;
+        this.expandedElement = this.expandedElement === productId ? null : productId;
         let rows = [];
         // If the product is already selected...
         if (this.selectedPlayer != null && this.selectedPlayer == productId) {

@@ -58,9 +58,9 @@ export class PlayersComponent implements OnInit {
         'MembershipNo',
         'Category',
         'Handicap',
-        'club',
+        // 'club',
         'createdAt',
-        'Status',
+        // 'Status',
         'view',
         'Edit',
         'Delete',
@@ -162,8 +162,8 @@ export class PlayersComponent implements OnInit {
                                         ? 'Senior Amateurs'
                                         : obj.playerCategory,
                                 Handicap: obj.handicap,
-                                Status: obj.membershipQL,
-                                club: obj.membershipQL[0]?.club?.name ?? '-',
+                                // Status: obj.membershipQL,
+                                // club: obj.membershipQL[0]?.club?.name ?? '-',
                             };
                             this.TablePlayers.push(newobj);
                         }
@@ -199,8 +199,8 @@ export class PlayersComponent implements OnInit {
                             ? 'Senior Amateurs'
                             : obj.playerCategory,
                     Handicap: obj.handicap,
-                    Status: obj.membershipQL,
-                    club: obj.membershipQL[0]?.club?.name ?? '-',
+                    // Status: obj.membershipQL,
+                    // club: obj.membershipQL[0]?.club?.name ?? '-',
                 };
                 this.TablePlayers.push(newobj);
             }
@@ -233,8 +233,8 @@ export class PlayersComponent implements OnInit {
                             ? 'Senior Amateurs'
                             : obj.player.playerCategory,
                     Handicap: obj.player.handicap,
-                    Status: obj.player.membershipQL,
-                    club: obj.player.membershipQL[0]?.club?.name ?? '-',
+                    // Status: obj.player.membershipQL,
+                    // club: obj.player.membershipQL[0]?.club?.name ?? '-',
                 };
                 this.TablePlayers.push(newobj);
             }
