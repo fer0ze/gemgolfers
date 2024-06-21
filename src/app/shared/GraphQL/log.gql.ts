@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const    LogQL = gql`
+export const LogQL = gql`
     query cloudLoggingAction($request: RequestInput!) {
         googleCloudLogging(request: $request) {
             message
@@ -8,3 +8,4 @@ export const    LogQL = gql`
         }
     }
 `;
+

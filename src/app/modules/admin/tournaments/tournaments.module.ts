@@ -46,7 +46,7 @@ import { DialogMarshalComponent } from '../dialogs/dialog-marshal/dialog-marshal
 import { DialogPlayingCategoryComponent } from '../dialogs/dialog-playing-category/dialog-playing-category.component';
 import { DialogCourseDetailsComponent } from '../dialogs/dialog-course-details/dialog-course-details.component';
 import { DialogCloseRoundComponent } from '../dialogs/dialog-close-round/dialog-close-round.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
+//import { FlexLayoutModule } from '@angular/flex-layout';
 // import { TopPlayerModule } from 'app/shared/modules/top-player-section/top-player.module';
 import { BlockWhiteSectionComponent } from 'app/shared/modules/block-white-section/block-white-section.component';
 import { BlockWhiteSectionModule } from 'app/shared/modules/block-white-section/block-white-section.module';
@@ -116,7 +116,7 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         MatAutocompleteModule,
         MatSidenavModule,
         AmazingTimePickerModule,
-        FlexLayoutModule,
+
     ],
     entryComponents: [DialogHanidcapListComponent],
     providers: [FlightManagementComponent],

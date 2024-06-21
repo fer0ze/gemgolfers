@@ -276,6 +276,9 @@ export class FacadeService {
   getPlayerByEmailLogin(email: string) {
     return this.playerService.getPlayerByEmailLogin(email);
   }
+  verifyUserEmails(emails: string[]) {
+    return this.playerService.verifyUserEmails(emails);
+  }
 
   getPlayerByMembershipNumberForSearch(
     clubID: string,

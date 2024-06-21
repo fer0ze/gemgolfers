@@ -34,6 +34,7 @@ import { DialogOverviewComponent } from '../dialogs/dialog-overview/dialog-overv
 import { MatDialog } from '@angular/material/dialog';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
     selector: 'app-players',
@@ -47,11 +48,12 @@ export class PlayersComponent implements OnInit {
     drawerMode: 'side' | 'over';
     playersDataSource: MatTableDataSource<any>;
     searchInputControl: UntypedFormControl = new UntypedFormControl();
+    selection = new SelectionModel<any>(true, []);
     displayNoRecords: boolean = true;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     Players: any = [];
     playersTableColumns: string[] = [
-        'Sr',
+        'id',
         'Name',
         'Phone',
         'Email',
@@ -404,6 +406,35 @@ export class PlayersComponent implements OnInit {
 
     }
 
+    isAllSelected() {
+        ////console.log(this.dataSource);
+        if (this.playersDataSource) {
+            const numSelected = this.selection.selected.length;
+            const numRows = this.playersDataSource.data.length;
+            return numSelected === numRows;
+        }
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
+        this.isAllSelected()
+            ? this.selection.clear()
+            : this.playersDataSource.data.forEach((row) =>
+                this.selection.select(row)
+            );
+    }
+
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
+    }
+
     exportToExcel(): void {
 
         const data = this.playersDataSource.data.map((item) => {
@@ -418,6 +449,28 @@ export class PlayersComponent implements OnInit {
 
         // Export the Excel file
         XLSX.writeFile(wb, 'Players_report.xlsx');
+
+    }
+
+    async verifyUserEmails() {
+        const data = this.selection.selected.map((item) => {
+            // Create a new object without the 'Details' column
+            const { Email } = item;
+            return Email;
+        });
+        console.log(data);
+        let res = await this._facadeService.verifyUserEmails(data);
+        if (res) {
+            this.snackBar.open('Player emails have been verified.', 'x', {
+                duration: 5000,
+            });
+            this.selection.clear();
+        } else {
+            this.snackBar.open('Error! Try Again later.', 'x', {
+                duration: 5000,
+            });
+        }
+
 
     }
     public onSortChanged(e) {

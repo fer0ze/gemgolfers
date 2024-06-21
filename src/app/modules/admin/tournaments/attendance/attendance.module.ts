@@ -3,7 +3,7 @@ import {  CommonModule } from '@angular/common';
 import {  ReactiveFormsModule } from '@angular/forms';
 import {  MatTableModule } from '@angular/material';
 import {  MatDatepickerModule } from '@angular/material/datepicker';
-import { FlexLayoutModule } from '@angular/flex-layout';
+//import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +45,6 @@ import { AttendanceComponent } from './attendance.component';
     DragDropModule,
     FormsModule,
     AmazingTimePickerModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false})
   ]
 })
 export class AttendanceModule { }

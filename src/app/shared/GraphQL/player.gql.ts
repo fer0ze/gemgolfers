@@ -810,6 +810,15 @@ export const GetPlayerByFirstName = gql`
     ${PlayerQL}
 `;
 
+export const verifyUserEmailQL = gql`
+    mutation verifyUserEmailsAction($request: SampleInput!) {
+        verifyUserEmails(request: $request) {
+            email
+            status
+        }
+    }
+`;
+
 export const GetPlayerByClub = gql`
     query PostsGetQuery($where: club_member_bool_exp!) {
         AggregateQL: club_member_aggregate(where: $where) {

@@ -32,8 +32,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FlexFillDirective, FlexLayoutModule } from '@angular/flex-layout';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { GoogleMapsModule } from '@angular/google-maps';
 @NgModule({
     declarations: [CourseComponent,ViewCourseComponent],
     imports: [
@@ -57,11 +57,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         MatDatepickerModule,
         MatRadioModule,
         MatTabsModule,
-        // WhiteSectionModule,
+        GoogleMapsModule,
         MatProgressSpinnerModule,
         MatAutocompleteModule,
         MatToolbarModule,
-        FlexLayoutModule,
     ],
 })
 export class CourseModule {}

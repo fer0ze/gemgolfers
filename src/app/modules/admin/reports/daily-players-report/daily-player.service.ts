@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import * as Query from '../../../../shared/GraphQL/tournament.gql';
-import { from } from 'apollo-link';
 import { mapDashboardData } from 'app/shared/helper/dashboardmapper';
 
 @Injectable({
@@ -15,7 +13,7 @@ export class DailyReportService {
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient, private apollo: Apollo) { }
+    constructor(private apollo: Apollo) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors

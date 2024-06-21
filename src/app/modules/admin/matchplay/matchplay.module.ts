@@ -22,7 +22,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+//import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatchplayRoutingModule } from './matchplay-routing.module';
 import { MatchplayComponent } from './matchplay.component';

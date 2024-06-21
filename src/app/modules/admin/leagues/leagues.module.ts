@@ -30,10 +30,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { GraphQLModule } from 'app/graphql.module';
 import { ApolloModule } from 'apollo-angular';
 import { LeaguesRoutingModule } from './leagues-routing.module';
 import { LeaguesComponent } from './leagues.component';
@@ -50,7 +48,6 @@ import { LeaguesComponent } from './leagues.component';
         MatInputModule,
         LeaguesRoutingModule,
         MatButtonModule,
-        GraphQLModule,
         MatIconModule,
         MatSortModule,
         MatStepperModule,
@@ -74,7 +71,6 @@ import { LeaguesComponent } from './leagues.component';
         MatAutocompleteModule,
         MatSidenavModule,
         AmazingTimePickerModule,
-        FlexLayoutModule,
     ],
 })
 export class LeaguesModule {}

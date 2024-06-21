@@ -63,6 +63,12 @@
                     <span class="ml-2">Export to Excel</span>
                    
                 </button>
+                <button (click)="verifyUserEmails()" class="ml-4" mat-flat-button [color]="'primary'">
+                    
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                    <span class="ml-2">Verify Users</span>
+                   
+                </button>
             </div>
         </div>
         <div class="xl:col-span-2 flex flex-col flex-auto bg-card overflow-x-auto">
@@ -71,14 +77,39 @@
                     [dataSource]="playersDataSource" (matSortChange)="onSortChanged($event)" #event>
                     <!-- Serial -->
 
-                    <ng-container matColumnDef="Sr">
-                        <th mat-header-cell mat-sort-header *matHeaderCellDef
-                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
-                            Sr.
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="
+                                        $event ? masterToggle() : null
+                                    " [checked]="
+                                        selection.hasValue() &&
+                                        isAllSelected()
+                                    " [indeterminate]="
+                                        selection.hasValue() &&
+                                        !isAllSelected()
+                                    " [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
                         </th>
-                        <td mat-cell *matCellDef="let transaction; let i = index">
-                            <span class="pr-6 font-medium text-sm text-secondary whitespace-nowrap">
-                                {{ i + 1 }}
+                        <td mat-cell *matCellDef="let assessment">
+                            <span class="pr-6 whitespace-nowrap">
+                                <mat-checkbox (click)="
+                                                $event.stopPropagation()
+                                            " (change)="
+                                                $event
+                                                    ? selection.toggle(
+                                                          assessment
+                                                      )
+                                                    : null
+                                            " [checked]="
+                                                selection.isSelected(
+                                                    assessment
+                                                )
+                                            " [aria-label]="
+                                                checkboxLabel(
+                                                    assessment
+                                                )
+                                            ">
+                                </mat-checkbox>
                             </span>
                         </td>
                     </ng-container>

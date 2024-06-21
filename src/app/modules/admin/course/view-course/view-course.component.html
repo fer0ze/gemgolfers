@@ -235,7 +235,16 @@
                         </ng-container>
                         <!-- Security -->
                         <ng-container *ngSwitchCase="'2'">
+
                             <div class="flex flex-col">
+                                <google-map height="400px" width="100%" [center]="center" [zoom]="zoom"
+                                    (mapClick)="onMapClick($event)">
+                                    <map-marker [position]="center"></map-marker>
+                                </google-map>
+                                <div>
+                                    <p>Latitude: {{ center.lat }}</p>
+                                    <p>Longitude: {{ center.lng }}</p>
+                                </div>
                                 <div class="center">
                                     <mat-radio-group fxLayoutAlign="start center"
                                         (change)="selectionChange($event.value)" [value]="0">
@@ -342,7 +351,8 @@
                                                         let hole of holeSetfor9;
                                                         let i = index
                                                     ">
-                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput" (input)="
+                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput"
+                                                                (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
@@ -478,7 +488,8 @@
                                                         let hole of holeSetfor18;
                                                         let i = index
                                                     ">
-                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput" (input)="
+                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput"
+                                                                (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
@@ -507,7 +518,6 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                               
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
                                                                 maxlength="3" />
                                                         </span>
@@ -613,7 +623,8 @@
                                                         let hole of holeSetfor27;
                                                         let i = index
                                                     ">
-                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput" (input)="
+                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput"
+                                                                (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
@@ -642,7 +653,6 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
                                                                 maxlength="3" />
                                                         </span>
@@ -748,7 +758,8 @@
                                                         let hole of holeSetfor36;
                                                         let i = index
                                                     ">
-                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput" (input)="
+                                                        <span id="index_{{hole.holeNo}}"><input class="holeInput"
+                                                                (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
@@ -777,7 +788,6 @@
                                                         <span>
                                                             <input class="holeInput"
                                                                 [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                
                                                                 (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
                                                                 maxlength="3" />
                                                         </span>

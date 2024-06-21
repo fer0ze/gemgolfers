@@ -22,7 +22,7 @@ import {
     PlayerHandicapQL,
     PlayerHandicapWhsQL,
     PlayerHandicapLogQL,
-} from '../fragments/player.fragment';
+} from '../fragments/player.fragment'; 
 
 export const LeaderboardSubscription = gql`
     query LeaderboardSimpleSubscription($tournamentPrefix: String!) {

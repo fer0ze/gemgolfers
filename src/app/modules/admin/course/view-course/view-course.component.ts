@@ -10,10 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { countries, getCity } from 'app/shared/classes/country';
 import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/general';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { GoogleMapsApiService } from 'app/shared/services/google-map.service';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import e from 'express';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, map, shareReplay, startWith } from 'rxjs';
 
 @Component({
     selector: 'app-view-course',
@@ -21,6 +22,9 @@ import { Observable, map, startWith } from 'rxjs';
     styleUrls: ['./view-course.component.scss'],
 })
 export class ViewCourseComponent implements OnInit {
+    center: any = { lat: 51.678418, lng: 7.809007 };
+    zoom = 8;
+
 
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
@@ -86,12 +90,14 @@ export class ViewCourseComponent implements OnInit {
     countries: any;
     cities: any;
     listCountries: Observable<any[]>;
+    public googleMapsApiLoaded$: Observable<boolean>;
     listCity: Observable<any[]>;
     constructor(
         // private datePipe: DatePipe,
         private router: Router,
         private _localStorage: LocalStorageService,
         private route: ActivatedRoute,
+        private googleMapsApiSerivce: GoogleMapsApiService,
         private _cityService: HandicapService,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
@@ -101,6 +107,7 @@ export class ViewCourseComponent implements OnInit {
     }
 
     async ngOnInit() {
+        // this.googleMapsApiLoaded$ = this.googleMapsApiSerivce.loadApi().pipe(shareReplay());
         this.countries = countries;
         //console.log(this.listCountries);
         this.route.paramMap.subscribe((params) => {
@@ -197,6 +204,14 @@ export class ViewCourseComponent implements OnInit {
         }
     }
 
+    onMapClick(event: any) {
+        console.log(event);
+
+        if (event.latLng != null) {
+            this.center = event.latLng.toJSON();
+            console.log('Coordinates:', this.center.lat, this.center.lng);
+        }
+    }
     private _filter(value: string) {
         if (value) {
             const filterValue = value.toLowerCase();

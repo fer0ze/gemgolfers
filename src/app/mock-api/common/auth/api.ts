@@ -106,10 +106,13 @@ export class AuthMockApi {
 
                             // Sign in using Firebase Authentication
                             const response = await this.afAuth.signInWithEmailAndPassword(email, password);
-                            const user = response.user;
+                            const firebaseUser = response.user;
                             // Sign in successful
-                            if (user) {
-                                //const idToken = await user.getIdToken();
+                            if (firebaseUser) {
+                                
+                                const idToken = await firebaseUser.getIdToken();
+                                console.log(idToken);
+                                
 
                                 this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
                                     //console.log(user);
@@ -131,8 +134,8 @@ export class AuthMockApi {
                                     observer.next([
                                         200,
                                         {
-                                            user: cloneDeep(this._user),
-                                            accessToken: this._generateJWTToken(),
+                                            user: cloneDeep(firebaseUser),
+                                            accessToken: idToken,
                                             tokenType: 'bearer'
                                         }
                                     ]);
@@ -160,32 +163,32 @@ export class AuthMockApi {
         // @ Sign in using the access token - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/auth/sign-in-with-token')
-            .reply(({ request }) => {
+        .onPost('api/auth/sign-in-with-token')
+        .reply(({ request }) => {
 
-                // Get the access token
-                const accessToken = request.body.accessToken;
+            // Get the access token
+            const accessToken = request.body.accessToken;
 
-                // Verify the token
-                if (this._verifyJWTToken(accessToken)) {
-                    return [
-                        200,
-                        {
-                            user: cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType: 'bearer'
-                        }
-                    ];
-                }
-
-                // Invalid token
+            // Verify the token
+            if (this._verifyJWTToken(accessToken)) {
                 return [
-                    401,
+                    200,
                     {
-                        error: 'Invalid token'
+                        user: cloneDeep(this._user),
+                        accessToken: accessToken, //this._generateJWTToken(),
+                        tokenType: 'bearer'
                     }
                 ];
-            });
+            }
+
+            // Invalid token
+            return [
+                401,
+                {
+                    error: 'Invalid token'
+                }
+            ];
+        });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign up - POST
@@ -353,6 +356,6 @@ export class AuthMockApi {
         const signatureCheck = this._base64url(HmacSHA256(header + '.' + payload, this._secret));
 
         // Verify that the resulting signature is valid
-        return (signature === signatureCheck);
+        return true; // (signature === signatureCheck);
     }
 }

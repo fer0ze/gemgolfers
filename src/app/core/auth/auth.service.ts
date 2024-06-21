@@ -6,6 +6,7 @@ import { UserService } from 'app/core/user/user.service';
 import { user as userData } from 'app/mock-api/common/user/data';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Constants } from 'app/shared/classes/general';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 
 @Injectable()
@@ -19,7 +20,8 @@ export class AuthService {
     constructor(
         private _httpClient: HttpClient,
         private _userService: UserService,
-        private _localStorage: LocalStorageService
+        private _localStorage: LocalStorageService,
+        private afAuth: AngularFireAuth,
     ) {
     }
 
@@ -130,16 +132,24 @@ export class AuthService {
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
-        this._localStorage.remove('accessToken');
-        this._localStorage.remove(Constants.LOGGED_IN_USER);
-        this._localStorage.clear();
-
-        // Set the authenticated flag to false
-        this._authenticated = false;
-
-        // Return the observable
-        return of(true);
+        try {
+            // Remove the access token from the local storage
+            this.afAuth.signOut().then(() => {
+                this._localStorage.remove('accessToken');
+                this._localStorage.remove(Constants.LOGGED_IN_USER);
+                this._localStorage.clear();
+                this._authenticated = false;
+                this._localStorage.remove('accessToken');
+                // Return the observable
+                return of(true);
+            });
+            // Set the authenticated flag to false
+        }
+        catch (error) {
+            //window.alert('Error in Logged out!');
+            this._authenticated = false;
+            return of(true);
+        }
     }
 
     /**
@@ -176,6 +186,13 @@ export class AuthService {
 
         // Check the access token expire date
         if (AuthUtils.isTokenExpired(this.accessToken)) {
+            return of(false);
+        }
+
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
+        if(!this.loggedInuser) {
+            this.signOut();
             return of(false);
         }
 

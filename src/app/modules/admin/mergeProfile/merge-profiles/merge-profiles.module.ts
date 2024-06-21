@@ -2,7 +2,7 @@ import {  NgModule } from '@angular/core';
 import {  CommonModule } from '@angular/common';
 import {  ReactiveFormsModule } from '@angular/forms';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+//import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -66,7 +66,7 @@ import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-to
     MatDialogModule,
     DragDropModule,
     FormsModule,
-    FlexLayoutModule.withConfig({addFlexToParent: false})
+
   ],
 })
 export class MergeProfilesModule { }

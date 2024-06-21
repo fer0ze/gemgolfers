@@ -58,7 +58,7 @@ import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dial
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
 import { DialogMoveFlightComponent } from '../../dialogs/dialog-move-flight/dialog-move-flight.component';
 import { ViewTournamentComponent } from '../view-tournament/view-tournament.component';
-import { isNumber } from 'lodash';
+
 import { MatDrawer } from '@angular/material/sidenav';
 import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog-add-member.component';
 import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
@@ -755,7 +755,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
     changeRound(item) {
         ////console.log("Selected value: " + item.value);
-        if (isNumber(item.index)) {
+        if ((item.index)) {
             this.flightRound = item.index + 1;
         } else {
             this.flightRound = item;

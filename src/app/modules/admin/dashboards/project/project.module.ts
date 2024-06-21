@@ -24,7 +24,6 @@ import { MatInputModule } from '@angular/material/input';
 import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
 import { MatCardActions, MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
@@ -51,7 +50,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         NgApexchartsModule,
         TranslocoModule,MatDialogModule,
         SharedModule,
-        FormsModule,FlexLayoutModule,
+        FormsModule,
     ],
     providers: [ProjectResolver, DatePipe],
 })

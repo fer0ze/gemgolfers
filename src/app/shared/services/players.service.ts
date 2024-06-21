@@ -46,7 +46,7 @@ export class PlayersService {
         return this.apollo
             .subscribe({
                 query: Query.getPlayersListReportDateWise,
-                variables:{
+                variables: {
                     fromDate: fromDate,
                     toDate: toDate,
                 }
@@ -1354,5 +1354,27 @@ export class PlayersService {
         ]
 
         return CLUB_CATEGORIES;
+    }
+
+    public verifyUserEmails(userEmails: string[]) {
+        return new Promise((resolve) => {
+            this.apollo.mutate({
+                mutation: Query.verifyUserEmailQL,
+                variables: {
+                    request: {
+                        emails: userEmails
+                    }
+                }
+            }).subscribe(
+                ({ data }) => {
+                    resolve(true);
+                },
+                (error) => {
+                    //console.log('Could not delete due to: ' + error);
+                    //console.log(error);
+                    resolve(false);
+                }
+            );
+        });
     }
 }

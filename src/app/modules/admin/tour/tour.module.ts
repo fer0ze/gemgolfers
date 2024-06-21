@@ -30,11 +30,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FlexLayoutModule } from '@angular/flex-layout';
+//import { FlexLayoutModule } from '@angular/flex-layout';
 // import { TopPlayerModule } from 'app/shared/modules/top-player-section/top-player.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { GraphQLModule } from 'app/graphql.module';
 import { ApolloModule } from 'apollo-angular';
 import { TourComponent } from './tour.component';
 import { playerRoutes } from '../players/players.routing';
@@ -74,7 +73,7 @@ import { QuillModule } from 'ngx-quill';
         MatDialogModule,
         RouterModule.forChild(tourRoutes),
         FormsModule,
-        FlexLayoutModule,
+  
     ],
 })
 export class TourModule {}

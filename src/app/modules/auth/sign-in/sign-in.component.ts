@@ -72,7 +72,7 @@ export class AuthSignInComponent implements OnInit {
 
         // Hide the alert
         this.showAlert = false;
-        this.logger.log('User Logging In', "info");
+        // this.logger.log('User Logging In', "info");
 
         // Sign in
         this._authService.signIn(this.signInForm.value)
@@ -87,7 +87,7 @@ export class AuthSignInComponent implements OnInit {
                     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
                     // Navigate to the redirect url\
 
-                    this.logger.log('User Logged In Succesfully', "info");
+                    // this.logger.log('User Logged In Succesfully', "info");
 
                     if (this.loggedInuser.userRole === 8) {
                         this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {

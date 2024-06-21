@@ -1,20 +1,20 @@
 <div mat-dialog-content>
   <h3>Add Schedule</h3>
   <form [formGroup]="scheduleForm">
-  <div  fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+  <div  >
     <!-- <div [fxFlex]="33.33">
       <mat-label>Players/Flight:</mat-label>
       <mat-form-field>
         <input matInput formControlName="courseId">
       </mat-form-field>
     </div> -->
-    <div [fxFlex]="50">
+    <div >
       <mat-form-field appearance="outline">
       <input matInput formControlName="tournamentTitle" placeholder="Tournament Title" required>
         <mat-error>The input is required.</mat-error>
       </mat-form-field>
     </div>
-    <div [fxFlex]="50">
+    <div >
       <mat-form-field appearance="outline">
         <mat-select placeholder="Course" formControlName="courseId">
           <mat-option *ngFor="let course of Courses" [value]='course.id'>{{course.name}}</mat-option>
@@ -23,8 +23,8 @@
       </mat-form-field>
     </div>
   </div>
-  <div  fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
-    <div [fxFlex]="50">
+  <div >
+    <div >
       <mat-form-field appearance="outline">
         <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" formControlName="date" placeholder="Schedule Date" required>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -32,7 +32,7 @@
         <mat-error>This field is required</mat-error>
       </mat-form-field>
     </div>
-    <div [fxFlex]="50">
+    <div >
       <mat-form-field appearance="outline">
         <mat-select placeholder="Match Format" formControlName="matchFormat">
           <mat-option value="MATCH_PLAY">MATCH_PLAY</mat-option>
@@ -44,8 +44,8 @@
     
   </div>
 
-  <div  fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
-    <div [fxFlex]="100">
+  <div >
+    <div >
       <mat-form-field appearance="outline">
         <textarea matInput placeholder="Description" formControlName="description"></textarea>
         <mat-error>The input is required.</mat-error>

@@ -6,6 +6,7 @@ export const environment = {
   wsUrl: 'wss://proddb.gemgolfers.com/v1/graphql',
   apiKey: 'fercjqjjpgcngydvqoze',
   logName: 'Gemgolfers-WebApp-Prod',
+  googleMapsApiKey:"AIzaSyBCBlexCU_5DOhvdyi-__ML37-CFi-TjFI",
   defaultRole: 'admin',
   firebase: {
     apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
