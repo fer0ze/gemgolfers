@@ -1692,16 +1692,16 @@ export class ViewDailyRoundComponent implements OnInit {
                 //     document.getElementById(hole.id + '&' + playerId)
                 // )).value
                 // );
-            total9 +=
-                (<HTMLInputElement>(
-                    document.getElementById(hole.id + '&' + playerId)
-                )).value != ''
-                    ? parseFloat(
-                        (<HTMLInputElement>(
-                            document.getElementById(hole.id + '&' + playerId)
-                        )).value
-                    )
-                    : 0;
+                total9 +=
+                    (<HTMLInputElement>(
+                        document.getElementById(hole.id + '&' + playerId)
+                    )).value != ''
+                        ? parseFloat(
+                            (<HTMLInputElement>(
+                                document.getElementById(hole.id + '&' + playerId)
+                            )).value
+                        )
+                        : 0;
         }
 
         // var hole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_" + playerId)).value);
@@ -2132,7 +2132,7 @@ export class ViewDailyRoundComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe(async (result) => {
-                //console.log(result);
+                console.log(result);
                 if (result) {
                     ////console.log(result);
                     //console.log(result);
@@ -2152,16 +2152,6 @@ export class ViewDailyRoundComponent implements OnInit {
                     let fMember: any = [];
                     if (result.members) {
                         for (let members in result.members) {
-                            //let playerTeeId: any = General.getPlayersTe(result.members[members].playingTee?result.members[members].playingTee:result.members[members].playerCategory);
-                            let playerTeeId: any = General.getCourseTeeId(
-                                result.members[members].playingTee
-                                    ? result.members[members].playingTee
-                                    : result.members[
-                                        members
-                                    ].playerCategory.toUpperCase()
-                            );
-                            //console.log(playerTeeId);
-
                             flightMember = {
                                 flightId: result.members[members].flightId
                                     ? result.members[members].flightId
@@ -2174,8 +2164,8 @@ export class ViewDailyRoundComponent implements OnInit {
                                     : false,
                                 playingTee: result.members[members].playingTee
                                     ? result.members[members].playingTee
-                                    : result.roundTee,
-                                tee_id: playerTeeId.id,
+                                    : 'White',
+                                tee_id: result.members[members].tee_id ? result.members[members].tee_id : 1,
                                 guest: result.members[members].guest
                                     ? result.members[members].guest
                                     : null,

@@ -1,22 +1,12 @@
-<div
-    class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden"
->
+<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <!-- Edit mode -->
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Contact form -->
-        <mat-drawer
-            class="sm:w-96 dark:bg-gray-900"
-            [autoFocus]="false"
-            [mode]="drawerMode"
-            [opened]="true"
-            #drawer
-        >
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="true" #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
-                <div
-                    class="text-4xl font-extrabold tracking-tight leading-none"
-                >
+                <div class="text-4xl font-extrabold tracking-tight leading-none">
                     Setup Daily Round
                 </div>
                 <!-- Close button -->
@@ -28,17 +18,11 @@
             </div>
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container>
-                    <div
-                        class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50"
-                    >
-                        <mat-icon
-                            class="text-primary dark:text-primary-500"
-                            [svgIcon]="'heroicons_outline:user-circle'"
-                        ></mat-icon>
+                    <div class="flex px-8 py-5 cursor-pointer hover:bg-gray-100 'bg-primary-50">
+                        <mat-icon class="text-primary dark:text-primary-500"
+                            [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
                         <div class="ml-3">
-                            <div
-                                class="font-medium leading-6 text-primary dark:text-primary-500"
-                            >
+                            <div class="font-medium leading-6 text-primary dark:text-primary-500">
                                 Daily Rounds
                             </div>
                             <div class="mt-0.5 text-secondary">
@@ -57,9 +41,7 @@
                 </button>
 
                 <!-- Panel title -->
-                <div
-                    class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none"
-                >
+                <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
                     Setup
                 </div>
             </div>
@@ -71,58 +53,31 @@
                 <form [formGroup]="starterForm" autocomplete="off" novalidate>
                     <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
                         <div class="sm:col-span-4">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <mat-select
-                                    (selectionChange)="changeFlight($event)"
-                                    placeholder="Select Course Holeset"
-                                    formControlName="holeSets"
-                                >
-                                    <mat-option
-                                        *ngFor="
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-select (selectionChange)="changeFlight($event)" placeholder="Select Course Holeset"
+                                    formControlName="holeSets">
+                                    <mat-option *ngFor="
                                             let course of courseHoleSetNames
-                                        "
-                                        [value]="
+                                        " [value]="
                                             course.holeSets +
                                             '_' +
                                             course.inverted
-                                        "
-                                        >{{ course.displayName }}</mat-option
-                                    >
+                                        ">{{ course.displayName }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <input
-                                    type="time"
-                                    matInput
-                                    atp-time-picker
-                                    value="{{ selectedTime }}"
-                                    formControlName="startingTime"
-                                    placeholder="Select Time"
-                                />
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <input type="time" matInput atp-time-picker value="{{ selectedTime }}"
+                                    formControlName="startingTime" placeholder="Select Time" />
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <input
-                                    matInput
-                                    [matDatepicker]="picker"
-                                    formControlName="roundDate"
-                                    placeholder="Start Date"
-                                    required
-                                />
-                                <mat-datepicker-toggle
-                                    matSuffix
-                                    [for]="picker"
-                                ></mat-datepicker-toggle>
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <input matInput [matDatepicker]="picker" formControlName="roundDate"
+                                    placeholder="Start Date" required />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                                 <mat-error>This field is required</mat-error>
                             </mat-form-field>
@@ -154,13 +109,8 @@
                             </mat-form-field>
                         </div> -->
                         <div class="sm:col-span-2">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <mat-select
-                                    placeholder="Handicap System.."
-                                    formControlName="handicapSystem"
-                                >
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-select placeholder="Handicap System.." formControlName="handicapSystem">
                                     <mat-option value="true">WHS</mat-option>
                                     <mat-option value="false">CONGU</mat-option>
                                 </mat-select>
@@ -174,15 +124,9 @@
             </mat-form-field> -->
 
                         <div class="sm:col-span-3">
-                            <mat-form-field
-                                class="fuse-mat-no-subscript w-full"
-                            >
-                                <input
-                                    matInput
-                                    #query
-                                    placeholder="Search Players"
-                                    (keyup.enter)="searchPlayer(query.value)"
-                                />
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <input matInput #query placeholder="Search Players"
+                                    (keyup.enter)="searchPlayer(query.value)" />
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-1 flex items-center">
@@ -195,11 +139,7 @@
                                         data-mat-icon-type="font"
                                         >search</mat-icon
                                     > -->
-                            <button
-                                mat-raised-button
-                                color="primary"
-                                (click)="searchPlayer(query.value)"
-                            >
+                            <button mat-raised-button color="primary" (click)="searchPlayer(query.value)">
                                 Search Player
                             </button>
                             <!-- <button type="button" mat-raised-button color="primary" (click)="searchPlayer(query.value)" [disabled]="query.value.length == 0" style="margin-top: 13px;">Search</button> &nbsp; -->
@@ -224,20 +164,10 @@
                         </div>
 
                         <div class="sm:col-span-4 p-6  bg-card shadow rounded-2xl" *ngIf="membersSource">
-                            <table
-                                mat-table
-                                #msort="matSort"
-                                [dataSource]="membersSource"
-                                matSort
-                               
-                            >
+                            <table mat-table #msort="matSort" [dataSource]="membersSource" matSort>
                                 <!-- Name Column -->
                                 <ng-container matColumnDef="name">
-                                    <th
-                                        mat-header-cell
-                                        *matHeaderCellDef
-                                        mat-sort-header
-                                    >
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                         Name
                                     </th>
                                     <td mat-cell *matCellDef="let element">
@@ -248,11 +178,7 @@
 
                                 <!-- Handicap Column -->
                                 <ng-container matColumnDef="handicap">
-                                    <th
-                                        mat-header-cell
-                                        *matHeaderCellDef
-                                        mat-sort-header
-                                    >
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                         Handicap
                                     </th>
                                     <td mat-cell *matCellDef="let element">
@@ -262,117 +188,66 @@
 
                                 <!-- Category Column -->
                                 <ng-container matColumnDef="category">
-                                    <th
-                                        mat-header-cell
-                                        *matHeaderCellDef
-                                        mat-sort-header
-                                    >
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                         Category
                                     </th>
                                     <td mat-cell *matCellDef="let element">
                                         {{
-                                            element.playerCategory == "Seniors"
-                                                ? "Senior Amateurs"
-                                                : element.playerCategory
+                                        element.playerCategory == "Seniors"
+                                        ? "Senior Amateurs"
+                                        : element.playerCategory
                                         }}
                                     </td>
                                 </ng-container>
 
                                 <!-- Player Tee -->
                                 <ng-container matColumnDef="tee">
-                                    <th
-                                        mat-header-cell
-                                        *matHeaderCellDef
-                                        mat-sort-header
-                                    >
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                         Tee
                                     </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <mat-select
-                                            placeholder="Player Tee"
-                                            (selectionChange)="
+                                        <mat-select placeholder="Player Tee" (selectionChange)="
                                                 selectedTee($event, element.id)
-                                            "
-                                            [(value)]="element.playingTee"
-                                            style="width: 130px"
-                                        >
-                                            <mat-option value="AMATEURS"
-                                                >Amateurs</mat-option
-                                            >
-                                            <mat-option value="LADIES"
-                                                >Ladies</mat-option
-                                            >
-                                            <mat-option value="SENIORS"
-                                                >Seniors</mat-option
-                                            >
-                                            <mat-option value="PROFESSIONALS"
-                                                >Professionals</mat-option
-                                            >
-                                            <mat-option value="VETERANS"
-                                                >Veterans</mat-option
-                                            >
+                                            " [(value)]="element.tee_id" style="width: 130px">
+                                            <mat-option *ngFor="let tee of tees" [value]="tee.tee_id">
+                                                <span class="flex items-center">
+                                                    <span class="ml-5">{{
+                                                        tee.name
+                                                        }}</span>
+                                                </span>
+                                            </mat-option>
                                         </mat-select>
                                     </td>
                                 </ng-container>
 
                                 <!-- Checkbox Column -->
                                 <ng-container matColumnDef="delete">
-                                    <th
-                                        [ngStyle]="{ 'text-align': 'right' }"
-                                        mat-header-cell
-                                        *matHeaderCellDef
-                                    >
+                                    <th [ngStyle]="{ 'text-align': 'right' }" mat-header-cell *matHeaderCellDef>
                                         Remove
                                     </th>
-                                    <td
-                                        mat-cell
-                                        *matCellDef="let row"
-                                        [ngStyle]="{ 'text-align': 'right' }"
-                                    >
-                                        <span
-                                            ><mat-icon
-                                                aria-hidden="false"
-                                                aria-label="Dragable"
+                                    <td mat-cell *matCellDef="let row" [ngStyle]="{ 'text-align': 'right' }">
+                                        <span><mat-icon aria-hidden="false" aria-label="Dragable"
                                                 class="remove primary-foreground"
-                                                (click)="removePlayer(row.id)"
-                                                >delete_forever</mat-icon
-                                            >
+                                                (click)="removePlayer(row.id)">delete_forever</mat-icon>
                                         </span>
                                     </td>
                                 </ng-container>
 
-                                <tr
-                                    mat-header-row
-                                    *matHeaderRowDef="membersColumns"
-                                ></tr>
-                                <tr
-                                    mat-row
-                                    *matRowDef="
+                                <tr mat-header-row *matHeaderRowDef="membersColumns"></tr>
+                                <tr mat-row *matRowDef="
                                         let row;
                                         columns: membersColumns
-                                    "
-                                ></tr>
+                                    "></tr>
                             </table>
                         </div>
                     </div>
                     <div class="my-4 border-t"></div>
                     <div class="flex items-center justify-end">
-                        <button
-                            type="button"
-                            mat-raised-button
-                            color="accent"
-                            (click)="onCancel()"
-                        >
+                        <button type="button" mat-raised-button color="accent" (click)="onCancel()">
                             Cancel
                         </button>
-                        <button
-                            class="ml-2"
-                            type="button"
-                            mat-raised-button
-                            color="primary"
-                            [disabled]="!starterForm.valid"
-                            (click)="createStarter(starterForm.value)"
-                        >
+                        <button class="ml-2" type="button" mat-raised-button color="primary"
+                            [disabled]="!starterForm.valid" (click)="createStarter(starterForm.value)">
                             Save
                         </button>
                     </div>

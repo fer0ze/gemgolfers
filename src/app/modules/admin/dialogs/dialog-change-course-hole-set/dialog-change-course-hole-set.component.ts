@@ -44,7 +44,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     currentHoleSet: string;
     courseHoleSetNames;
     protected totalFlights: any[] = [];
-
+    tees: any = [];
     public starterForm: FormGroup;
     public frmTitle: string;
     private playerID: string;
@@ -100,12 +100,13 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        //console.log(this.data);
+        console.log(this.data);
         this.currentHoleSet =
             this.data.currentHoleSet + '_' + this.data.courseHoleSetsInverted;
         this.selectedCourseHoleSet =
             this.data.currentHoleSet + '_' + this.data.courseHoleSetsInverted;
         this.getSelectedCourse(this.data.course);
+        this.getCourseTees(this.data.course);
         this.tournamentID = this.data.tournament;
         //console.log(this.currentHoleSet);
         //console.log(General.getPlayersTee(this.data.course));
@@ -186,13 +187,21 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         let target = event.source.selected._element.nativeElement;
         let selectedData = {
             value: event.value,
-            text: target.innerText.trim().toUpperCase(),
+            text: target.innerText.trim(),
         };
 
         this.playerTees.set(playerId, selectedData);
         //console.log(this.playerTees);
 
-        this.starterForm.value.playingTee.push(this.playerTees.get(playerId));
+        this.starterForm.value.members = this.starterForm.value.members.map(member => {
+            if (member.playerId === playerId) {
+                return {
+                    ...member,
+                    playingTee: selectedData.text
+                };
+            }
+            return member;
+        });
         //console.log(this.playTee);
         //console.log(this.starterForm);
     }
@@ -215,6 +224,20 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                     //this.showCourseHole = false;
                 }
             });
+    }
+    async getCourseTees(course) {
+        let tee = await this.facadeService.getTeesOfCourse(course);
+        if (tee['course_tees'].length > 0) {
+            for (let obj of tee['course_tees']) {
+                let tee = {
+                    name: obj.name_by_club,
+                    color: obj.color,
+                    tee_id: obj.tee_id,
+                };
+                this.tees.push(tee);
+            }
+        }
+
     }
 
     public hasError = (controlName: string, errorName: string) => {

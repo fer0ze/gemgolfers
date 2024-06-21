@@ -277,7 +277,7 @@ export class PlayerHandicapComponent implements OnInit {
             );
 
             //console.log(this.playerWHS);
-            //console.log(this.playerWHSRound);
+            console.log(this.playerWHSRound);
             let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
             let rating = this.playerWHSRound['course_rating'];
             for (let item of rating) {
@@ -509,14 +509,22 @@ export class PlayerHandicapComponent implements OnInit {
         //doc.save('flights.pdf');
     }
     playingTee(id: string) {
-        // //console.log(id);
+        console.log(id);
         let used = this.memberQLs.find((handicap) => {
             return handicap.FlightQL.tournamentId == id;
         });
-        return used
-            ? General.getPlayersTeesColour(used.playingTee)
-            : used
-                ? used.FlightQL.tee
-                : 'White';
+        if (used) {
+            let tee = this.playerWHSRound['course_tees'].filter(tee => { return tee.tee_id == used.tee_id });
+            if (tee) {
+                return tee[0].name_by_club ?? 'White';
+            }
+
+        }
+        return 'White';
+        // return used
+        //     ? General.getPlayersTeesColour(used.playingTee)
+        //     : used
+        //         ? used.FlightQL.tee
+        //         : 'White';
     }
 }

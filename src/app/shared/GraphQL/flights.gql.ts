@@ -614,6 +614,7 @@ export const singleRoundFlightsQueryQL = gql`
                 attendance
                 guest
                 playingTee
+                tee_id
                 PlayerQL: player {
                     id
                     adminClubId

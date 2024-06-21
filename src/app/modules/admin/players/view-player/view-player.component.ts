@@ -73,9 +73,9 @@ export class ViewPlayerComponent implements OnInit {
     playerWHSHistory: any;
     palyerWHSHandDif: number;
     CONGUgrossSource: MatTableDataSource<any>;
-    CONGUgrossColumns = ['id', 'updatedAt','courseName', 'score'];
+    CONGUgrossColumns = ['id', 'updatedAt', 'courseName', 'score'];
     CONGUnetSource: MatTableDataSource<any>;
-    CONGUnetColumns = ['id', 'updatedAt','courseName', 'score'];
+    CONGUnetColumns = ['id', 'updatedAt', 'courseName', 'score'];
     dataSource: MatTableDataSource<any>;
     totalRounds: any = 0;
     ConguScoreLength: any = 0;
@@ -419,7 +419,7 @@ export class ViewPlayerComponent implements OnInit {
                 let newScore: any[] = [];
                 for (let memberQL of memberQLs) {
                     let flightQL: any = memberQL.FlightQL;
-                    let { name  }: any = flightQL.course;
+                    let { name }: any = flightQL.course;
 
                     let scoresQLs: any = flightQL.ScoresQL;
                     if (scoresQLs.length == 0) {
@@ -477,7 +477,7 @@ export class ViewPlayerComponent implements OnInit {
                         date: flightQL.date,
                         gross: grossScore,
                         net: netScore,
-                        courseName:name,
+                        courseName: name,
                     };
                     if (newScores.length <= 20) {
                         newScores.push(recentScores);
@@ -782,9 +782,15 @@ export class ViewPlayerComponent implements OnInit {
         let used = this.memberQLs.find((handicap) => {
             return handicap.FlightQL.tournamentId == id;
         });
-        return used
-            ? General.getPlayersTeesColour(used.playingTee != null ? used.playingTee : used.FlightQL.tee)
-            : General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
+        if (used) {
+            let tee = this.playerWHSRound['course_tees'].filter(tee => { return tee.tee_id == used.tee_id });
+            if (tee) {
+                return tee[0].name_by_club ?? General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory);
+            }
+        } else {
+            General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
+        }
+
     }
     isPanelty(flight) {
         ////console.log(this.usedForHandicap);

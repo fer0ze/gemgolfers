@@ -1071,9 +1071,10 @@ export const PlayerFlightScoresQuery = gql`
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
-            limit: 20
+            limit:200
         ) {
             playingTee
+            tee_id
             FlightQL: flight {
                 date
                 tournamentId
@@ -1108,9 +1109,10 @@ export const getPlayerFlightsQuery = gql`
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
-            limit: 80
+            limit: 200
         ) {
             playingTee
+            tee_id
             FlightQL: flight {
                 tournamentId
             }
@@ -1260,6 +1262,20 @@ export const PlayerHandicapRoundQuery = gql`
             coursePar
             tee_id
             tee_name {
+                id
+                name
+                key
+            }
+        }
+        course_tees(
+            where: {course_id: { _eq: $courseId }}
+        ) {
+            course_id
+            tee_id
+            name_by_club
+            color
+            tee_order
+            tee_name{
                 id
                 name
                 key

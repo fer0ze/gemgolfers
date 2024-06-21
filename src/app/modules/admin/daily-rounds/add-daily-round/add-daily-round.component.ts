@@ -65,6 +65,7 @@ export class AddDailyRoundComponent implements OnInit {
     playerStatus: Boolean = false;
     currentTournament: Tournament;
     selectedMembers: any = [];
+    tees: any = [];
     tournamentMembers: Player[] = [];
     flightMembers: FlightMembers[] = [];
     playerTees: Map<string, any> = new Map<string, any>();
@@ -133,6 +134,11 @@ export class AddDailyRoundComponent implements OnInit {
                     ? this.clubID.courses[0].id
                     : '-LUFS3FCQKOGpJ2IEHmf'
             );
+            this.getCourseTees(
+                this.clubID.courses.length > 0
+                    ? this.clubID.courses[0].id
+                    : '-LUFS3FCQKOGpJ2IEHmf'
+            )
 
             this.starterForm = new FormGroup({
                 holeSets: new FormControl('', [Validators.required]),
@@ -180,6 +186,21 @@ export class AddDailyRoundComponent implements OnInit {
                     //this.showCourseHole = false;
                 }
             });
+    }
+
+    async getCourseTees(course) {
+        let tee = await this.facadeService.getTeesOfCourse(course);
+        if (tee['course_tees'].length > 0) {
+            for (let obj of tee['course_tees']) {
+                let tee = {
+                    name: obj.name_by_club,
+                    color: obj.color,
+                    tee_id: obj.tee_id,
+                };
+                this.tees.push(tee);
+            }
+        }
+
     }
 
     public hasError = (controlName: string, errorName: string) => {
@@ -247,26 +268,12 @@ export class AddDailyRoundComponent implements OnInit {
 
         for (let member of this.flightMembers) {
             let playerTee: any = this.playerTees.get(member.playerId);
-            //console.log(playerTee);
-            let Tee;
-            if (playerTee == undefined) {
-                Tee = starterFormValue.roundTee
-                    ? starterFormValue.roundTee
-                    : 'AMATEURS';
-            } else {
-                Tee = 'AMATEURS';
-            }
-            let playerTeeId: any = General.getCourseTeeId(Tee);
-            let playerTeeName = playerTee
-                ? playerTee.value
-                : starterFormValue.roundTee;
+
             let flightMember = {
                 playerId: member.playerId,
                 attendance: false,
-                playingTee: playerTeeName,
-                tee_id: General.getCourseTeeId(playerTeeName)
-                    ? General.getCourseTeeId(playerTeeName).id
-                    : 1,
+                playingTee: playerTee?.text ?? 'White',
+                tee_id: playerTee?.value ?? 1,
                 guest: null,
             };
             //console.log(flightMember);
