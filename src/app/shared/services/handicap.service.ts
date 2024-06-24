@@ -10,32 +10,37 @@ export class HandicapService {
     constructor(private $http: HttpClient) { }
     private apiUrl = 'https://api.countrystatecity.in/v1';
     calculateHandicap(obj): Promise<any> {
-        return this.$http.post(
-            'https://gemgolfers-api.herokuapp.com/handicap/revertAndReCalculateHcCongo',
+        return this.$http.post(`${environment.handicapApiURL}/handicap/revertAndReCalculateHcCongo`,
             obj
         ).toPromise();
     }
     calculatePlayerHandicap(obj): Promise<any> {
         return this.$http.post(
-            'https://gemgolfers-api.herokuapp.com/handicap/calculateHandicapForPlayer',
+            `${environment.handicapApiURL}/handicap/calculateHandicapForPlayer`,
             obj
         ).toPromise();
     }
     calculateHandicapWHS(obj): Promise<any> {
         return this.$http.post(
-            'https://gemgolfers-api.herokuapp.com/handicap/revertAndReCalculateHcWHS',
+            `${environment.handicapApiURL}/handicap/revertAndReCalculateHcWHS`,
             obj
         ).toPromise();
     }
     adjustHandicapWHS(obj): Promise<any> {
         return this.$http.post(
-            'https://gemgolfers-api.herokuapp.com/handicap/adjustSelectedHcDiff',
+            `${environment.handicapApiURL}/handicap/adjustSelectedHcDiff`,
             obj
         ).toPromise();
     }
     flightEndedTrigger(obj): Promise<any> {
         return this.$http.post(
-            'https://gemgolfers-api.herokuapp.com/triggers/updateFlightEndedField',
+            `${environment.handicapApiURL}/triggers/updateFlightEndedField`,
+            obj
+        ).toPromise();
+    }
+    updatePlayerHandicapTee(obj): Promise<any> {
+        return this.$http.post(
+            `${environment.handicapApiURL}/handicap/calculateHandicapForPlayerBulk`,
             obj
         ).toPromise();
     }

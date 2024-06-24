@@ -576,7 +576,7 @@ export class HandicapsComponent implements OnInit {
     }
 
     openTeeChangeDailog(player) {
-        console.log(player);
+        // console.log(player);
 
         const dialogRef = this.dialog.open(DialogTeeComponent, {
             data: {

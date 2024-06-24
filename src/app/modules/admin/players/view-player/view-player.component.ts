@@ -784,8 +784,10 @@ export class ViewPlayerComponent implements OnInit {
         });
         if (used) {
             let tee = this.playerWHSRound['course_tees'].filter(tee => { return tee.tee_id == used.tee_id });
-            if (tee) {
+            if (tee && tee.length > 0) {
                 return tee[0].name_by_club ?? General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory);
+            }else{
+                General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
             }
         } else {
             General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)

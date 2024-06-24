@@ -31,14 +31,14 @@ export const GetPlayers = gql`
 export const getPlayersListReport = gql`
     query PostsGetQuery {
         player(
-            where: { 
+            where: {
                 _and: [
-                    { firstName: { _neq: "" } },
+                    { firstName: { _neq: "" } }
                     { firebaseUid: { _is_null: false } }
                 ]
             }
             order_by: { createdAt: desc }
-            limit:4000
+            limit: 4000
         ) {
             id
             fullName
@@ -47,13 +47,13 @@ export const getPlayersListReport = gql`
             phone
             countryCode
             firebaseUid
-            membership{
-                club{
+            membership {
+                club {
                     id
                     name
                 }
             }
-            subscription{
+            subscription {
                 playerId
                 subscription
             }
@@ -63,27 +63,34 @@ export const getPlayersListReport = gql`
                 totalCount: count
             }
         }
-        MobileAggregateQL: player_aggregate(where:{firebaseUid:{_is_null:false}}) {
+        MobileAggregateQL: player_aggregate(
+            where: { firebaseUid: { _is_null: false } }
+        ) {
             aggregate {
-                 count
+                count
             }
         }
-        ClubAggregateQL: player_aggregate(where:{firebaseUid:{_is_null:true}}) {
+        ClubAggregateQL: player_aggregate(
+            where: { firebaseUid: { _is_null: true } }
+        ) {
             aggregate {
-                 count
+                count
             }
         }
-        PremiumAggregateQL:player_subscription_aggregate(where:{subscription:{_eq:"PREMIUM"}}) {
+        PremiumAggregateQL: player_subscription_aggregate(
+            where: { subscription: { _eq: "PREMIUM" } }
+        ) {
             aggregate {
-                 count
+                count
             }
         }
-        TrialAggregateQL:player_subscription_aggregate(where:{subscription:{_eq:"TRIAL"}}) {
+        TrialAggregateQL: player_subscription_aggregate(
+            where: { subscription: { _eq: "TRIAL" } }
+        ) {
             aggregate {
-                 count
+                count
             }
         }
-
     }
 `;
 export const getPlayersListReportDateWise = gql`
@@ -104,8 +111,8 @@ export const getPlayersListReportDateWise = gql`
             createdAt
             phone
             countryCode
-            membership{
-                club{
+            membership {
+                club {
                     name
                 }
             }
@@ -360,7 +367,7 @@ export const GetPlayersByClub = gql`
             membershipNumber
             membershipQL: membership {
                 suspended
-                club{
+                club {
                     id
                     name
                 }
@@ -391,7 +398,7 @@ export const GetPlayersByTour = gql`
                 membershipNumber
                 membershipQL: membership {
                     suspended
-                    club{
+                    club {
                         id
                         name
                     }
@@ -514,7 +521,7 @@ export const GetTotalFLightPlayed = gql`
             membershipQL: membership {
                 clubId
                 suspended
-                club{
+                club {
                     id
                     name
                 }
@@ -524,7 +531,11 @@ export const GetTotalFLightPlayed = gql`
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
-                        { flight: {tournament:{singleRound:{_eq:true}}}}
+                        {
+                            flight: {
+                                tournament: { singleRound: { _eq: true } }
+                            }
+                        }
                     ]
                 }
             ) {
@@ -537,7 +548,11 @@ export const GetTotalFLightPlayed = gql`
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
-                        { flight: {tournament:{singleRound:{_eq:false}}}}
+                        {
+                            flight: {
+                                tournament: { singleRound: { _eq: false } }
+                            }
+                        }
                     ]
                 }
             ) {
@@ -550,7 +565,11 @@ export const GetTotalFLightPlayed = gql`
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
-                        { flight: { tournament: {leagueId:{_is_null:false}}}}
+                        {
+                            flight: {
+                                tournament: { leagueId: { _is_null: false } }
+                            }
+                        }
                     ]
                 }
             ) {
@@ -573,7 +592,7 @@ export const getTotalFlightPlayedAdmin = gql`
             membershipNumber
             membershipQL: membership {
                 suspended
-                club{
+                club {
                     name
                 }
             }
@@ -582,7 +601,11 @@ export const getTotalFlightPlayedAdmin = gql`
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
-                        { flight: {tournament:{singleRound:{_eq:true}}}}
+                        {
+                            flight: {
+                                tournament: { singleRound: { _eq: true } }
+                            }
+                        }
                     ]
                 }
             ) {
@@ -595,7 +618,11 @@ export const getTotalFlightPlayedAdmin = gql`
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
-                        { flight: {tournament:{singleRound:{_eq:false}}}}
+                        {
+                            flight: {
+                                tournament: { singleRound: { _eq: false } }
+                            }
+                        }
                     ]
                 }
             ) {
@@ -608,7 +635,11 @@ export const getTotalFlightPlayedAdmin = gql`
                     _and: [
                         { flight: { date: { _gte: $sdate } } }
                         { flight: { date: { _lte: $date } } }
-                        { flight: { tournament: {leagueId:{_is_null:false}}}}
+                        {
+                            flight: {
+                                tournament: { leagueId: { _is_null: false } }
+                            }
+                        }
                     ]
                 }
             ) {
@@ -1004,9 +1035,11 @@ export const UpdateHandicapMutation = gql`
     }
 `;
 export const UpdatePlayerTeeMutation = gql`
-    mutation updateMutation($id: String!, $tee: String!, $teeId: Int!) {
+    mutation updateMutation($id: String!,$tournamentId:String!, $tee: String!, $teeId: Int!) {
         PlayerUpdateQL: update_flight_member(
-            where: { playerId: { _eq: $id } }
+            where: {
+                _and: [{ playerId: { _eq: $id } }, {flight:{tournamentId:{_eq:$tournamentId}}}]
+            }
             _set: { playingTee: $tee, tee_id: $teeId }
         ) {
             AffectedRowsQL: affected_rows
@@ -1071,7 +1104,7 @@ export const PlayerFlightScoresQuery = gql`
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
-            limit:200
+            limit: 200
         ) {
             playingTee
             tee_id
@@ -1089,7 +1122,7 @@ export const PlayerFlightScoresQuery = gql`
                         par
                     }
                 }
-                course{
+                course {
                     id
                     name
                 }
@@ -1216,6 +1249,7 @@ export const PlayerHandicapQuery = gql`
             is_combined
             tee
             panelty
+            playerId
             tournamentId
             adjustmentScore
             adjustedPanelty
@@ -1267,15 +1301,13 @@ export const PlayerHandicapRoundQuery = gql`
                 key
             }
         }
-        course_tees(
-            where: {course_id: { _eq: $courseId }}
-        ) {
+        course_tees(where: { course_id: { _eq: $courseId } }) {
             course_id
             tee_id
             name_by_club
             color
             tee_order
-            tee_name{
+            tee_name {
                 id
                 name
                 key

@@ -304,8 +304,8 @@ export class FacadeService {
   AddPlayer(club: Player) {
     return this.playerService.AddPlayer(club);
   }
-  changePlayerTee(id: String, tee: string, teeId) {
-    return this.playerService.changePlayerTee(id, tee, teeId);
+  changePlayerTee(id: string,tournamentId:string, tee: string, teeId) {
+    return this.playerService.changePlayerTee(id,tournamentId, tee, teeId);
   }
   AddTourPlayer(club: Player, tourMember: any) {
     return this.playerService.AddTourPlayer(club, tourMember);

@@ -1075,13 +1075,14 @@ export class PlayersService {
                 );
         });
     }
-    changePlayerTee(id, tee, teeId): Promise<boolean> {
+    changePlayerTee(id,tournamentId, tee, teeId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.UpdatePlayerTeeMutation,
                     variables: {
                         id: id,
+                        tournamentId:tournamentId,
                         tee: tee,
                         teeId: teeId,
                     },

@@ -45,19 +45,21 @@ export class DialogTeeComponent implements OnInit {
         console.log(this.form.getRawValue());
         try {
             let formValue = this.form.getRawValue();
-            let response = await this.facadeService.changePlayerTee(this.data.player.id, formValue?.tee?.tee_name?.key, formValue?.tee?.tee_id);
+            let response = await this.facadeService.changePlayerTee(this.data.player.playerId, this.data.player.tournamentId, formValue?.tee?.tee_name?.key, formValue?.tee?.tee_id);
             if (response) {
                 let newObj = {
-                    playerId: this.data.player.id,
-                    count: 8,
+                    playerId: this.data.player.playerId,
+                    tournamentIds: [this.data.player.tournamentId]
                 };
                 await this.handicapService
-                    .calculateHandicapWHS(newObj)
-                    .then((response) => {
-                        this.snackBar.open('Tees Changed successfully!.', 'x', {
-                            duration: 2000,
-                        });
-                        this.dialogRef.close();
+                    .updatePlayerHandicapTee(newObj)
+                    .then(async (response) => {
+                        await this.handicapService.calculateHandicapWHS({ playerId: this.data.player.playerId, count: 1 }).then((res) => {
+                            this.snackBar.open('Tees Changed successfully!.', 'x', {
+                                duration: 2000,
+                            });
+                            this.dialogRef.close(true);
+                        })
                     })
                     .catch((err) => {
                         //console.log('error' + err);

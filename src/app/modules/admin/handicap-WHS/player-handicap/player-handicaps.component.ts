@@ -42,6 +42,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { HandicapsComponent } from '../WHS/handicaps.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { DialogTeeComponent } from '../../dialogs/dialog-tee-change/dialog-tee.component';
 @Component({
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
@@ -57,7 +58,8 @@ export class PlayerHandicapComponent implements OnInit {
         'adjustedScore',
         'handicapDifferential',
         'handicapIndex',
-        'tee'
+        'tee',
+        'handicapChange'
     ];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -509,7 +511,7 @@ export class PlayerHandicapComponent implements OnInit {
         //doc.save('flights.pdf');
     }
     playingTee(id: string) {
-        console.log(id);
+        // console.log(id);
         let used = this.memberQLs.find((handicap) => {
             return handicap.FlightQL.tournamentId == id;
         });
@@ -526,5 +528,22 @@ export class PlayerHandicapComponent implements OnInit {
         //     : used
         //         ? used.FlightQL.tee
         //         : 'White';
+    }
+
+    openTeeChangeDailog(player) {
+        console.log(player);
+
+        const dialogRef = this.dialog.open(DialogTeeComponent, {
+            data: {
+                player: player,
+                loggedInUser: this.loggedInuser
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.WHSSource = null;
+                this.fecthData()
+            }
+        })
     }
 }
