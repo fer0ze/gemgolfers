@@ -53,7 +53,7 @@ export class HandicapsComponent implements OnInit {
         'membershipNumber',
         'category',
         'handicapWhsIndex',
-        'handicapChange',
+        // 'handicapChange',
         'details',
     ];
     count: any = 0;
