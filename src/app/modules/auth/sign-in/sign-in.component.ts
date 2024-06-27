@@ -94,7 +94,7 @@ export class AuthSignInComponent implements OnInit {
                             console.error('Navigation error:', error);
                         });
                     } else {
-                        this._router.navigateByUrl('/dashboard').catch((error) => {
+                        this._router.navigateByUrl(redirectURL).catch((error) => {
                             console.error('Navigation error:', error);
                         });
                     }

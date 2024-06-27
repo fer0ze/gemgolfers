@@ -244,18 +244,19 @@ export class General {
         return ID;
     }
 
-    public static getTeeYards(teeDistance, tee, courseId, holeId) {
+    public static getTeeYards(teeDistance, tee, courseId, holeId, latLong) {
         console.log(teeDistance);
         let teeYards = [];
         for (const [key, value] of Object.entries(teeDistance)) {
             console.log(`Key: ${key}, Value: ${value}`);
             let teeId = this.getPlayersTe(key);
             console.log(teeId);
+            const [lat, lng] = latLong[key].split(',').map(parseFloat);
             if (teeId) {
                 let obj = {
                     tee_distance: value,
-                    tee_lat: null,
-                    tee_long: null,
+                    tee_lat: lat,
+                    tee_long: lng,
                     tee_id: Number(teeId?.id),
                     course_id: courseId,
                     hole_id: holeId,
@@ -265,6 +266,23 @@ export class General {
         }
         console.log(tee);
         return teeYards;
+    }
+    public static getHoleLatLong(greenStart: string | number, greenCenter: string | number, greenEnd: string | number): [number, number, number, number, number, number] {
+        const parseLatLong = (latLong: string | number): [number, number] => {
+
+            if (typeof latLong === 'string') {
+                const [lat, lng] = latLong.split(',').map(parseFloat);
+                return [lat, lng];
+            } else {
+                return [0, 0];
+            }
+        };
+
+        const [startLat, startLng] = parseLatLong(greenStart);
+        const [centerLat, centerLng] = parseLatLong(greenCenter);
+        const [endLat, endLng] = parseLatLong(greenEnd);
+
+        return [startLat, startLng, centerLat, centerLng, endLat, endLng];
     }
 
     public static getPhonePrefix(phone) {

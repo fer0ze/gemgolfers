@@ -37,7 +37,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 @NgModule({
     declarations: [CourseComponent,ViewCourseComponent],
     imports: [
-        CommonModule,
+        CommonModule,MatTooltipModule,
         MatSidenavModule,
         CourseRoutingModule,
         MatTableModule,

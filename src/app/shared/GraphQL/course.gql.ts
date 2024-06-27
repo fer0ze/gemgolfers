@@ -262,10 +262,18 @@ export const getCourseHole = gql`
                 par
                 index
                 holeSetId
+                greenStartLat
+                greenStartLong
+                greenCenterLat
+                greenCenterLong
+                greenEndLat
+                greenEndLong
                 meta {
                     hole_id
                     tee_distance
                     tee_id
+                    tee_lat
+                    tee_long
                     tee_name {
                         name
                     }
@@ -319,6 +327,12 @@ export const saveHolesANDholeSets = gql`
                     teeDistances
                     indexWomen
                     holeSetId
+                    greenStartLat
+                    greenStartLong
+                    greenCenterLat
+                    greenCenterLong
+                    greenEndLat
+                    greenEndLong
                 ]
             }
         ) {
@@ -337,7 +351,7 @@ export const saveHolesANDholeSets = gql`
             objects: $holesYardages
             on_conflict: {
                 constraint: hole_tee_meta_pkey
-                update_columns: [tee_distance,tee_id,hole_id]
+                update_columns: [tee_distance,tee_id,hole_id,tee_lat,tee_long]
             }
         ) {
             AffectedRowsQLi: affected_rows

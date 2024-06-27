@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { GoogleMap } from '@angular/google-maps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,18 +25,21 @@ import { Observable, map, shareReplay, startWith } from 'rxjs';
 export class ViewCourseComponent implements OnInit {
     center: any = { lat: 51.678418, lng: 7.809007 };
     zoom = 8;
-
+    @ViewChild('googleMap', { static: false }) googleMapElement: GoogleMap;
+    @ViewChild('googleMap', { static: false, read: ElementRef }) googleMapContainer: ElementRef;
 
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
-
     panels: any[] = [];
     selectedPanel: string = '0';
     courseID: any;
     courseData: any;
     courseTitle: any;
-
+    currentHoleNo: number | null = null;
+    currentGreen: number | null = null;
+    currentTee: number | null = null;
+    currentLatLong: boolean = true;
     countryName: any;
     cityName: any;
     NoOfHoles: any;
@@ -107,6 +111,8 @@ export class ViewCourseComponent implements OnInit {
     }
 
     async ngOnInit() {
+        console.log(this.googleMapElement);
+
         // this.googleMapsApiLoaded$ = this.googleMapsApiSerivce.loadApi().pipe(shareReplay());
         this.countries = countries;
         //console.log(this.listCountries);
@@ -206,10 +212,87 @@ export class ViewCourseComponent implements OnInit {
 
     onMapClick(event: any) {
         console.log(event);
-
         if (event.latLng != null) {
             this.center = event.latLng.toJSON();
             console.log('Coordinates:', this.center.lat, this.center.lng);
+        }
+        var clickedHole = undefined;
+        if (this.currentHoleNo !== null && this.currentLatLong) {
+            if (this.currentHoleNo < 10) {
+                clickedHole = this.holeSetfor9.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 9 && this.currentHoleNo <= 18) {
+                clickedHole = this.holeSetfor18.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 18 && this.currentHoleNo <= 27) {
+                clickedHole = this.holeSetfor27.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 27 && this.currentHoleNo <= 36) {
+                clickedHole = this.holeSetfor36.find(hole => hole.holeNo === this.currentHoleNo);
+            }
+            if (clickedHole) {
+                if (this.currentGreen == 1) {
+                    clickedHole.greenStartLatLong = `${event.latLng.lat()}, ${event.latLng.lng()}`;
+                } else if (this.currentGreen == 2) {
+                    clickedHole.greenCenterLatLong = `${event.latLng.lat()}, ${event.latLng.lng()}`;
+                } else {
+                    clickedHole.greenEndLatLong = `${event.latLng.lat()}, ${event.latLng.lng()}`;
+                }
+            }
+        } else if (this.currentHoleNo !== null && !this.currentLatLong) {
+            if (this.currentHoleNo < 10) {
+                clickedHole = this.holeSetfor9.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 9 && this.currentHoleNo <= 18) {
+                clickedHole = this.holeSetfor18.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 18 && this.currentHoleNo <= 27) {
+                clickedHole = this.holeSetfor27.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 27 && this.currentHoleNo <= 36) {
+                clickedHole = this.holeSetfor36.find(hole => hole.holeNo === this.currentHoleNo);
+            }
+            if (clickedHole) {
+                clickedHole['tee_lat_long'][this.currentTee] = `${event.latLng.lat()}, ${event.latLng.lng()}`;
+            }
+        }
+    }
+
+    onGreenStartLat(holeNo: number, latLong): void {
+        this.currentHoleNo = holeNo;
+        this.currentGreen = 1;
+        this.currentLatLong = true;
+        if (typeof (latLong) == 'string') {
+            const [lat, lng] = latLong.split(',').map(Number);
+            if (lat !== 0 && lng !== 0) {
+                this.center = { lat, lng };
+            }
+        }
+        this.focusMap();
+    }
+    onGreenCenterLat(holeNo: number, latLong): void {
+        this.currentHoleNo = holeNo;
+        this.currentGreen = 2;
+        if (typeof (latLong) == 'string') {
+            const [lat, lng] = latLong.split(',').map(Number);
+            if (lat !== 0 && lng !== 0) {
+                this.center = { lat, lng };
+            }
+        }
+        this.focusMap();
+    }
+    onGreenEndLat(holeNo: number, latLong): void {
+        this.currentHoleNo = holeNo;
+        this.currentGreen = 3;
+        if (typeof (latLong) == 'string') {
+            const [lat, lng] = latLong.split(',').map(Number);
+            if (lat !== 0 && lng !== 0) {
+                this.center = { lat, lng };
+            }
+        }
+        this.focusMap();
+    }
+    focusMap(): void {
+        if (this.googleMapContainer && this.googleMapContainer.nativeElement) {
+            const mapDiv = this.googleMapContainer.nativeElement.querySelector('div');
+            if (mapDiv) {
+                mapDiv.tabIndex = -1; // Make the div focusable
+                mapDiv.focus();
+            }
         }
     }
     private _filter(value: string) {
@@ -512,10 +595,15 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
+                        greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
+                        greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
+                        greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
                     };
                     for (let meta of holes['HolesQL'][0]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
                     }
                     this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
@@ -534,10 +622,15 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
+                        greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
+                        greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
+                        greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
                     };
                     for (let meta of holes['HolesQL'][1]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
                     }
                     this.eighteenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor18.push(hole);
@@ -556,10 +649,15 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
+                        greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
+                        greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
+                        greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
                     };
                     for (let meta of holes['HolesQL'][2]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
                     }
                     this.twentysevenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor27.push(hole);
@@ -578,10 +676,15 @@ export class ViewCourseComponent implements OnInit {
                         par: holeCount[index].par,
                         index: holeCount[index].index,
                         holeSetId: holeCount[index].holeSetId,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
+                        greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
+                        greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
+                        greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
                     };
                     for (let meta of holes['HolesQL'][3]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
                     }
                     this.thirtySixHoleTotalPar += parseInt(hole.par);
 
@@ -598,7 +701,8 @@ export class ViewCourseComponent implements OnInit {
                         displayName: 'Front-9',
                         par: null,
                         index: null,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
                     };
 
                     this.holeSetfor9.push(hole);
@@ -615,7 +719,8 @@ export class ViewCourseComponent implements OnInit {
                         displayName: 'Back-9',
                         par: null,
                         index: null,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
                     };
 
                     this.holeSetfor18.push(hole);
@@ -632,7 +737,8 @@ export class ViewCourseComponent implements OnInit {
                         displayName: null,
                         par: null,
                         index: null,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
                     };
 
                     this.holeSetfor27.push(hole);
@@ -648,7 +754,8 @@ export class ViewCourseComponent implements OnInit {
                         displayName: null,
                         par: null,
                         index: null,
-                        teeDistances: {}
+                        teeDistances: {},
+                        tee_lat_long: {},
                     };
 
                     this.holeSetfor36.push(hole);
@@ -720,6 +827,28 @@ export class ViewCourseComponent implements OnInit {
             hole[0]['teeDistances'][tee_id] = dist;
         }
     }
+    /**
+     * onTeeInput
+     */
+    public onTeeLatLong(dist: any, tee_id: any, hole_id: any, holeSet: any) {
+        this.currentHoleNo = hole_id.holeNo;
+        this.currentLatLong = false;
+        this.currentTee = tee_id;
+        // if (holeSet == 9) {
+        //     let hole = this.holeSetfor9.filter((hole) => { return hole.id == hole_id.id });
+        //     hole[0]['tee_lat_long'][tee_id] = dist;
+        // } else if (holeSet == 18) {
+        //     let hole = this.holeSetfor18.filter((hole) => { return hole.id == hole_id.id });
+        //     hole[0]['tee_lat_long'][tee_id] = dist;
+        // } else if (holeSet == 27) {
+        //     let hole = this.holeSetfor27.filter((hole) => { return hole.id == hole_id.id });
+        //     hole[0]['tee_lat_long'][tee_id] = dist;
+        // } else if (holeSet == 36) {
+        //     let hole = this.holeSetfor36.filter((hole) => { return hole.id == hole_id.id });
+        //     hole[0]['tee_lat_long'][tee_id] = dist;
+        // }
+        this.focusMap();
+    }
     private isIndexUnique(val: any, holes): boolean {
         // Extract index values from holeSetfor9
         const indexValues = holes.map(obj => obj['index']);
@@ -750,7 +879,7 @@ export class ViewCourseComponent implements OnInit {
         let index = 0;
         if (holeNo <= 9) {
             const isUnique = this.isIndexUnique(val, this.holeSetfor9);
-            const spanElement = document.getElementById(`index_${holeNo}`);
+            const spanElement = document.getElementById(`index_${holeNo} `);
             if (!isUnique && spanElement) {
                 spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
             }
@@ -764,7 +893,7 @@ export class ViewCourseComponent implements OnInit {
 
         } else if (holeNo <= 18) {
             const isUnique = this.isIndexUnique(val, this.holeSetfor18);
-            const spanElement = document.getElementById(`index_${holeNo}`);
+            const spanElement = document.getElementById(`index_${holeNo} `);
             if (!isUnique && spanElement) {
                 spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
             }
@@ -778,7 +907,7 @@ export class ViewCourseComponent implements OnInit {
 
         } else if (holeNo <= 27) {
             const isUnique = this.isIndexUnique(val, this.holeSetfor27);
-            const spanElement = document.getElementById(`index_${holeNo}`);
+            const spanElement = document.getElementById(`index_${holeNo} `);
             if (!isUnique && spanElement) {
                 spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
             }
@@ -792,7 +921,7 @@ export class ViewCourseComponent implements OnInit {
 
         } else if (holeNo <= 36) {
             const isUnique = this.isIndexUnique(val, this.holeSetfor36);
-            const spanElement = document.getElementById(`index_${holeNo}`);
+            const spanElement = document.getElementById(`index_${holeNo} `);
             if (!isUnique && spanElement) {
                 spanElement.style.backgroundColor = isUnique ? 'white' : 'red';
             }
@@ -963,7 +1092,8 @@ event   */
                 let number = 0;
                 let counter = 0;
                 for (let obj of holeObj) {
-                    let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id)
+                    let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id,obj.tee_lat_long);
+                    const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
                     let tee = {
                         id: obj.id,
                         courseId: this.courseID,
@@ -974,6 +1104,12 @@ event   */
                         par: obj.par ? obj.par : 0,
                         index: obj.index ? obj.index : 0,
                         holeSetId: this.id[counter],
+                        greenStartLat: startLat,
+                        greenStartLong: startLng,
+                        greenCenterLat: centerLat,
+                        greenCenterLong: centerLng,
+                        greenEndLat: endLat,
+                        greenEndLong: endLng,
                         // meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
                     };
 
@@ -1591,6 +1727,9 @@ event   */
             this.Tee = [];
             this.addIntialsTees();
         } else if (panel == '2') {
+            console.log(this.googleMapElement);
+            this.initializeGoogleMapElement();
+            console.log(this.googleMapElement);
             this.setHoles(this.NoOfHoles);
         } else if (panel == '3') {
             //this.setCoursRating();
@@ -1607,5 +1746,23 @@ event   */
         if (this.drawerMode === 'over') {
             this.drawer.close();
         }
+    }
+
+    initializeGoogleMapElement(): void {
+        if (!this.googleMapElement) {
+            setTimeout(() => {
+                this.googleMapElement = this.googleMapElement || this.getGoogleMapElement();
+                if (this.googleMapElement) {
+                    console.log('Google Map element initialized:', this.googleMapElement);
+                } else {
+                    console.error('Google Map element could not be initialized.');
+                }
+            }, 100); // Adjust the timeout as needed
+        }
+    }
+
+    getGoogleMapElement(): GoogleMap {
+        const mapEl = document.querySelector('google-map');
+        return mapEl ? (mapEl as unknown as GoogleMap) : null;
     }
 }

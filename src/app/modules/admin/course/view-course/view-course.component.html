@@ -237,8 +237,8 @@
                         <ng-container *ngSwitchCase="'2'">
 
                             <div class="flex flex-col">
-                                <google-map height="400px" width="100%" [center]="center" [zoom]="zoom"
-                                    (mapClick)="onMapClick($event)">
+                                <google-map #googleMap height="400px" width="100%" [center]="center" [zoom]="zoom"
+                                    [mapTypeId]="satellite" (mapClick)="onMapClick($event)">
                                     <map-marker [position]="center"></map-marker>
                                 </google-map>
                                 <div>
@@ -364,28 +364,88 @@
                                                             }}" type="text" maxlength="2" /></span>
                                                     </td>
                                                 </tr>
-                                                <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr">
-                                                        <div class="flex justify-center gap-2">
-                                                            {{tee.name_by_club}} Tee (Yards)
-                                                            <div class="flex justify-center">
-                                                                <div class="flex-0 w-6 h-6 rounded-full"
-                                                                    [style.backgroundColor]="tee.color"></div>
-                                                            </div>
-                                                        </div>
-                                                    </th>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Start(Lat,Long)</th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor9;
                                                         let i = index
                                                     ">
-                                                        <span>
-                                                            <input class="holeInput"
-                                                                [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                (input)="onTeeInput($event.target.value,tee.tee_id,hole,9)"
-                                                                maxlength="3" />
-                                                        </span>
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenStartLatLong']}}"
+                                                                [matTooltip]="hole['greenStartLatLong']" type="text"
+                                                                (click)="onGreenStartLat(hole.holeNo,hole['greenStartLatLong'])" /></span>
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Center(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor9;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenCenterLatLong']}}"
+                                                                [matTooltip]="hole['greenCenterLatLong']" type="text"
+                                                                (click)="onGreenCenterLat(hole.holeNo,hole['greenCenterLatLong'])" /></span>
                                                     </td>
                                                 </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green End(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor9;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenEndLatLong']}}"
+                                                                [matTooltip]="hole['greenEndLatLong']" type="text"
+                                                                (click)="onGreenEndLat(hole.holeNo,hole['greenEndLatLong'])" /></span>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngFor="let tee of Tee;">
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Yards)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="
+                                                        let hole of holeSetfor9;
+                                                        let i = index
+                                                    ">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.teeDistances[tee.tee_id] || 0"
+                                                                    type="text"
+                                                                    (input)="onTeeInput($event.target.value,tee.tee_id,hole,9)"
+                                                                    maxlength="3" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Lat,Long)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="let hole of holeSetfor9;let i = index">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.tee_lat_long[tee.tee_id] || 0"
+                                                                    [matTooltip]="hole.tee_lat_long[tee.tee_id]"
+                                                                    type="text"
+                                                                    (click)="onTeeLatLong($event.target.value,tee.tee_id,hole,9)" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                                 <tr *ngIf="showholeindexforWomen" class="topheader">
                                                     <th class="holehr">
                                                         Index For Women
@@ -501,28 +561,88 @@
                                                             }}" type="text" maxlength="2" /></span>
                                                     </td>
                                                 </tr>
-                                                <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr">
-                                                        <div class="flex justify-center gap-2">
-                                                            {{tee.name_by_club}} Tee (Yards)
-                                                            <div class="flex justify-center">
-                                                                <div class="flex-0 w-6 h-6 rounded-full"
-                                                                    [style.backgroundColor]="tee.color"></div>
-                                                            </div>
-                                                        </div>
-                                                    </th>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Start(Lat,Long)</th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor18;
                                                         let i = index
                                                     ">
-                                                        <span>
-                                                            <input class="holeInput"
-                                                                [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
-                                                                maxlength="3" />
-                                                        </span>
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenStartLatLong']}}"
+                                                                [matTooltip]="hole['greenStartLatLong']" type="text"
+                                                                (click)="onGreenStartLat(hole.holeNo,hole['greenStartLatLong'])" /></span>
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Center(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor18;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenCenterLatLong']}}"
+                                                                [matTooltip]="hole['greenCenterLatLong']" type="text"
+                                                                (click)="onGreenCenterLat(hole.holeNo,hole['greenCenterLatLong'])" /></span>
                                                     </td>
                                                 </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green End(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor18;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenEndLatLong']}}"
+                                                                [matTooltip]="hole['greenEndLatLong']" type="text"
+                                                                (click)="onGreenEndLat(hole.holeNo,hole['greenEndLatLong'])" /></span>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngFor="let tee of Tee;">
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Yards)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="
+                                                        let hole of holeSetfor18;
+                                                        let i = index
+                                                    ">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.teeDistances[tee.tee_id] || 0"
+                                                                    type="text"
+                                                                    (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
+                                                                    maxlength="3" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Lat,Long)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="let hole of holeSetfor18;let i = index">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.tee_lat_long[tee.tee_id] || 0"
+                                                                    [matTooltip]="hole.tee_lat_long[tee.tee_id]"
+                                                                    type="text"
+                                                                    (click)="onTeeLatLong($event.target.value,tee.tee_id,hole,18)" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                                 <tr *ngIf="showholeindexforWomen" class="topheader">
                                                     <th class="holehr">
                                                         Index For Women
@@ -636,28 +756,88 @@
                                                             }}" type="text" maxlength="2" /></span>
                                                     </td>
                                                 </tr>
-                                                <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr">
-                                                        <div class="flex justify-center gap-2">
-                                                            {{tee.name_by_club}} Tee (Yards)
-                                                            <div class="flex justify-center">
-                                                                <div class="flex-0 w-6 h-6 rounded-full"
-                                                                    [style.backgroundColor]="tee.color"></div>
-                                                            </div>
-                                                        </div>
-                                                    </th>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Start(Lat,Long)</th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor27;
                                                         let i = index
                                                     ">
-                                                        <span>
-                                                            <input class="holeInput"
-                                                                [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
-                                                                maxlength="3" />
-                                                        </span>
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenStartLatLong']}}"
+                                                                [matTooltip]="hole['greenStartLatLong']" type="text"
+                                                                (click)="onGreenStartLat(hole.holeNo,hole['greenStartLatLong'])" /></span>
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Center(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor27;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenCenterLatLong']}}"
+                                                                [matTooltip]="hole['greenCenterLatLong']" type="text"
+                                                                (click)="onGreenCenterLat(hole.holeNo,hole['greenCenterLatLong'])" /></span>
                                                     </td>
                                                 </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green End(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor27;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenEndLatLong']}}"
+                                                                [matTooltip]="hole['greenEndLatLong']" type="text"
+                                                                (click)="onGreenEndLat(hole.holeNo,hole['greenEndLatLong'])" /></span>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngFor="let tee of Tee;">
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Yards)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="
+                                                        let hole of holeSetfor27;
+                                                        let i = index
+                                                    ">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.teeDistances[tee.tee_id] || 0"
+                                                                    type="text"
+                                                                    (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
+                                                                    maxlength="3" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Lat,Long)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="let hole of holeSetfor27;let i = index">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.tee_lat_long[tee.tee_id] || 0"
+                                                                    [matTooltip]="hole.tee_lat_long[tee.tee_id]"
+                                                                    type="text"
+                                                                    (click)="onTeeLatLong($event.target.value,tee.tee_id,hole,27)" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                                 <tr *ngIf="showholeindexforWomen" class="topheader">
                                                     <th class="holehr">
                                                         Index For Women
@@ -771,28 +951,88 @@
                                                             }}" type="text" maxlength="2" /></span>
                                                     </td>
                                                 </tr>
-                                                <tr *ngFor="let tee of Tee;" class="topheader">
-                                                    <th class="holehr">
-                                                        <div class="flex justify-center gap-2">
-                                                            {{tee.name_by_club}} Tee (Yards)
-                                                            <div class="flex justify-center">
-                                                                <div class="flex-0 w-6 h-6 rounded-full"
-                                                                    [style.backgroundColor]="tee.color"></div>
-                                                            </div>
-                                                        </div>
-                                                    </th>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Start(Lat,Long)</th>
                                                     <td *ngFor="
                                                         let hole of holeSetfor36;
                                                         let i = index
                                                     ">
-                                                        <span>
-                                                            <input class="holeInput"
-                                                                [value]="hole.teeDistances[tee.tee_id] || 0" type="text"
-                                                                (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
-                                                                maxlength="3" />
-                                                        </span>
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenStartLatLong']}}"
+                                                                [matTooltip]="hole['greenStartLatLong']" type="text"
+                                                                (click)="onGreenStartLat(hole.holeNo,hole['greenStartLatLong'])" /></span>
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green Center(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor36;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenCenterLatLong']}}"
+                                                                [matTooltip]="hole['greenCenterLatLong']" type="text"
+                                                                (click)="onGreenCenterLat(hole.holeNo,hole['greenCenterLatLong'])" /></span>
                                                     </td>
                                                 </tr>
+                                                <tr class="topheader">
+                                                    <th class="holehr">Hole Green End(Lat,Long)</th>
+                                                    <td *ngFor="
+                                                        let hole of holeSetfor36;
+                                                        let i = index
+                                                    ">
+                                                        <span><input class="holeInput"
+                                                                value="{{hole['greenEndLatLong']}}"
+                                                                [matTooltip]="hole['greenEndLatLong']" type="text"
+                                                                (click)="onGreenEndLat(hole.holeNo,hole['greenEndLatLong'])" /></span>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngFor="let tee of Tee;">
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Yards)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="
+                                                        let hole of holeSetfor36;
+                                                        let i = index
+                                                    ">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.teeDistances[tee.tee_id] || 0"
+                                                                    type="text"
+                                                                    (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
+                                                                    maxlength="3" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                {{tee.name_by_club}} Tee (Lat,Long)
+                                                                <div class="flex justify-center">
+                                                                    <div class="flex-0 w-6 h-6 rounded-full"
+                                                                        [style.backgroundColor]="tee.color"></div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="let hole of holeSetfor36;let i = index">
+                                                            <span>
+                                                                <input class="holeInput"
+                                                                    [value]="hole.tee_lat_long[tee.tee_id] || 0"
+                                                                    [matTooltip]="hole.tee_lat_long[tee.tee_id]"
+                                                                    type="text"
+                                                                    (click)="onTeeLatLong($event.target.value,tee.tee_id,hole,36)" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                                 <tr *ngIf="showholeindexforWomen" class="topheader">
                                                     <th class="holehr">
                                                         Index For Women
