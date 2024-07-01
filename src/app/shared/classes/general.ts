@@ -247,11 +247,16 @@ export class General {
     public static getTeeYards(teeDistance, tee, courseId, holeId, latLong) {
         console.log(teeDistance);
         let teeYards = [];
+        let lat, lng;
         for (const [key, value] of Object.entries(teeDistance)) {
-            console.log(`Key: ${key}, Value: ${value}`);
+            // console.log(`Key: ${key}, Value: ${value}`);
             let teeId = this.getPlayersTe(key);
-            console.log(teeId);
-            const [lat, lng] = latLong[key].split(',').map(parseFloat);
+            // console.log(teeId);
+            if (latLong[key]) {
+                [lat, lng] = latLong[key].split(',').map(parseFloat);
+            } else {
+                lat = lng = null;
+            }
             if (teeId) {
                 let obj = {
                     tee_distance: value,
@@ -264,7 +269,7 @@ export class General {
                 teeYards.push(obj)
             }
         }
-        console.log(tee);
+        // console.log(tee);
         return teeYards;
     }
     public static getHoleLatLong(greenStart: string | number, greenCenter: string | number, greenEnd: string | number): [number, number, number, number, number, number] {

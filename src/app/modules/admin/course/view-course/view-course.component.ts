@@ -603,7 +603,7 @@ export class ViewCourseComponent implements OnInit {
                     };
                     for (let meta of holes['HolesQL'][0]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
-                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat ?? 0},${meta.tee_long ?? 0}`;
                     }
                     this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
@@ -630,7 +630,7 @@ export class ViewCourseComponent implements OnInit {
                     };
                     for (let meta of holes['HolesQL'][1]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
-                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat ?? 0},${meta.tee_long ?? 0}`;
                     }
                     this.eighteenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor18.push(hole);
@@ -657,7 +657,7 @@ export class ViewCourseComponent implements OnInit {
                     };
                     for (let meta of holes['HolesQL'][2]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
-                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat ?? 0},${meta.tee_long ?? 0}`;
                     }
                     this.twentysevenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor27.push(hole);
@@ -684,7 +684,7 @@ export class ViewCourseComponent implements OnInit {
                     };
                     for (let meta of holes['HolesQL'][3]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
-                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat},${meta.tee_long}`;
+                        hole.tee_lat_long[(meta['tee_name'].name).toUpperCase()] = `${meta.tee_lat ?? 0},${meta.tee_long ?? 0}`;
                     }
                     this.thirtySixHoleTotalPar += parseInt(hole.par);
 
@@ -699,10 +699,13 @@ export class ViewCourseComponent implements OnInit {
                         id: UniqueIdGenerator.generate(),
                         holeNo: index,
                         displayName: 'Front-9',
-                        par: null,
-                        index: null,
+                        par: 0,
+                        index: 0,
                         teeDistances: {},
                         tee_lat_long: {},
+                        greenStartLatLong: `${0},${0} `,
+                        greenCenterLatLong: `${0},${0} `,
+                        greenEndLatLong: `${0},${0} `,
                     };
 
                     this.holeSetfor9.push(hole);
@@ -717,10 +720,13 @@ export class ViewCourseComponent implements OnInit {
                         id: UniqueIdGenerator.generate(),
                         holeNo: index,
                         displayName: 'Back-9',
-                        par: null,
-                        index: null,
+                        par: 0,
+                        index: 0,
                         teeDistances: {},
                         tee_lat_long: {},
+                        greenStartLatLong: `${0},${0} `,
+                        greenCenterLatLong: `${0},${0} `,
+                        greenEndLatLong: `${0},${0} `,
                     };
 
                     this.holeSetfor18.push(hole);
@@ -735,10 +741,13 @@ export class ViewCourseComponent implements OnInit {
                         id: UniqueIdGenerator.generate(),
                         holeNo: index,
                         displayName: null,
-                        par: null,
-                        index: null,
+                        par: 0,
+                        index: 0,
                         teeDistances: {},
                         tee_lat_long: {},
+                        greenStartLatLong: `${0},${0} `,
+                        greenCenterLatLong: `${0},${0} `,
+                        greenEndLatLong: `${0},${0} `,
                     };
 
                     this.holeSetfor27.push(hole);
@@ -752,10 +761,13 @@ export class ViewCourseComponent implements OnInit {
                         id: UniqueIdGenerator.generate(),
                         holeNo: index,
                         displayName: null,
-                        par: null,
-                        index: null,
+                        par: 0,
+                        index: 0,
                         teeDistances: {},
                         tee_lat_long: {},
+                        greenStartLatLong: `${0},${0} `,
+                        greenCenterLatLong: `${0},${0} `,
+                        greenEndLatLong: `${0},${0} `,
                     };
 
                     this.holeSetfor36.push(hole);
@@ -1092,7 +1104,7 @@ event   */
                 let number = 0;
                 let counter = 0;
                 for (let obj of holeObj) {
-                    let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id,obj.tee_lat_long);
+                    let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id, obj.tee_lat_long);
                     const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
                     let tee = {
                         id: obj.id,
