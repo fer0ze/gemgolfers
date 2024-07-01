@@ -166,8 +166,8 @@ export class FacadeService {
     return this.courseService.deleteTeeColor(courseID, tee);
   }
 
-  saveCourseHoles(holes: any[], holeSets: any[],holesYardages:any[]) {
-    return this.courseService.saveHolesANDholeSets(holes, holeSets,holesYardages);
+  saveCourseHoles(holes: any[], holeSets: any[],holesYardages:any[],holeHazardsToSave:any[]) {
+    return this.courseService.saveHolesANDholeSets(holes, holeSets,holesYardages,holeHazardsToSave);
   }
   saveCourseHolesSet(holeSets: any[]) {
     return this.courseService.saveholeSets(holeSets);

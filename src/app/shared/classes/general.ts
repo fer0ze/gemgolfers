@@ -272,6 +272,7 @@ export class General {
         // console.log(tee);
         return teeYards;
     }
+
     public static getHoleLatLong(greenStart: string | number, greenCenter: string | number, greenEnd: string | number): [number, number, number, number, number, number] {
         const parseLatLong = (latLong: string | number): [number, number] => {
 
@@ -289,6 +290,34 @@ export class General {
 
         return [startLat, startLng, centerLat, centerLng, endLat, endLng];
     }
+
+    public static getHazardsById(data, holeId) {
+        let result = [];
+
+        data.forEach(item => {
+            if (item.hazards && item.hazards.length > 0) {
+                item.hazards.forEach(hazardArray => {
+                    hazardArray.forEach(hazard => {
+                        if (hazard.id === holeId) {
+                            if (typeof(hazard.lat_long) == 'string') {
+                                const [lat, long] = hazard.lat_long.split(',').map(parseFloat);
+                                result.push({
+                                    holeId: holeId,
+                                    hazardId: hazard.hazardId,
+                                    lat: lat,
+                                    lng: long,
+                                    hazardNo:hazard.hazardNo,
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+        return result;
+    }
+
 
     public static getPhonePrefix(phone) {
         if (phone.toString().indexOf('+92') === 0) {

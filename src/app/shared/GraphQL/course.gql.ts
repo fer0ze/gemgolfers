@@ -256,7 +256,7 @@ export const getCourseHole = gql`
             displayName
             noOfHoles
             id
-            holes(order_by:{holeNo:asc}) {
+            holes(order_by: { holeNo: asc }) {
                 id
                 holeNo
                 par
@@ -277,6 +277,13 @@ export const getCourseHole = gql`
                     tee_name {
                         name
                     }
+                }
+                hazards {
+                    holeId
+                    hazardId
+                    lat
+                    lng
+                    hazardNo
                 }
             }
         }
@@ -315,6 +322,7 @@ export const saveHolesANDholeSets = gql`
         $holes: [hole_insert_input!]!
         $holeSets: [course_hole_sets_insert_input!]!
         $holesYardages: [hole_tee_meta_insert_input!]!
+        $holeHazardsToSave: [hole_hazards_insert_input!]!
     ) {
         CourseHolesToUpdateQLi: insert_hole(
             objects: $holes
@@ -351,7 +359,22 @@ export const saveHolesANDholeSets = gql`
             objects: $holesYardages
             on_conflict: {
                 constraint: hole_tee_meta_pkey
-                update_columns: [tee_distance,tee_id,hole_id,tee_lat,tee_long]
+                update_columns: [
+                    tee_distance
+                    tee_id
+                    hole_id
+                    tee_lat
+                    tee_long
+                ]
+            }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+        HoleHazardsToUpdateQLi: insert_hole_hazards(
+            objects: $holeHazardsToSave
+            on_conflict: {
+                constraint: hole_hazards_pkey
+                update_columns: [lat, lng, hazardNo]
             }
         ) {
             AffectedRowsQLi: affected_rows

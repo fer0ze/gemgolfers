@@ -455,6 +455,25 @@
                                                         </td>
                                                     </tr>
                                                 </ng-container>
+                                                <ng-container *ngFor="let hzrd of holeSetfor9Hazards;">
+                                                    <tr class="topheader">
+                                                        <th class="holehr">
+                                                            <div class="flex justify-center gap-2">
+                                                                Hazards
+                                                            </div>
+                                                        </th>
+                                                        <td *ngFor="
+                                                        let hole of hzrd.hazards[0];
+                                                        let i = index
+                                                    ">
+                                                            <span>
+                                                                <input class="holeInput" [value]="hole.lat_long || 0" [matTooltip]="hole.lat_long"
+                                                                    type="text"
+                                                                    (click)="onHazardsChange($event.target.value,hzrd,hole)" />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                                 <tr *ngIf="showholeindexforWomen" class="topheader">
                                                     <th class="holehr">
                                                         Index For Women

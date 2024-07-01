@@ -37,6 +37,8 @@ export class ViewCourseComponent implements OnInit {
     courseData: any;
     courseTitle: any;
     currentHoleNo: number | null = null;
+    currentHzd: any | null = null;
+    currentHoleId: string | null = null;
     currentGreen: number | null = null;
     currentTee: number | null = null;
     currentLatLong: boolean = true;
@@ -49,6 +51,7 @@ export class ViewCourseComponent implements OnInit {
     Hole = [];
     TEES = ['AMATEURS', 'LADIES', 'SENIORS', 'PROFESSIONAL', 'VETERANS'];
     holeSetfor9 = [];
+    holeSetfor9Hazards = [];
     coursRating = [];
     coursRatingfor18 = [];
     coursRatingfor27 = [];
@@ -265,6 +268,9 @@ export class ViewCourseComponent implements OnInit {
             if (clickedHole) {
                 clickedHole['tee_lat_long'][this.currentTee] = `${event.latLng.lat()}, ${event.latLng.lng()}`;
             }
+        } else if (this.currentHoleId != null) {
+            clickedHole = this.currentHzd.hazards[0].find(hzd => hzd.id === this.currentHoleId)
+            clickedHole['lat_long'] = `${event.latLng.lat()}, ${event.latLng.lng()}`;;
         }
     }
 
@@ -598,13 +604,14 @@ export class ViewCourseComponent implements OnInit {
         //console.log(Number);
         let holes = await this.facadeService.getCourseHole(this.courseID);
         console.log(holes['HolesQL']);
-
+        let hazards = [];
         if (holes['HolesQL'].length > 0) {
             let holeCount = holes['HolesQL'][0].holes;
             if (this.NoOfHoles > 8) {
                 this.holeSetfor9 = [];
                 this.setName9 = holes['HolesQL'][0].displayName;
                 for (let index = 0; index <= 8; index++) {
+                    hazards.push(holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][0].displayName,
                         id: holeCount[index].id,
@@ -625,6 +632,8 @@ export class ViewCourseComponent implements OnInit {
                     this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
                 }
+                this.addHazards(this.holeSetfor9, [].concat(...hazards))
+                //this.getHoleHazards(this.holeSetfor9, 1, hazards)
             }
             if (this.NoOfHoles > 9) {
                 this.setName18 = holes['HolesQL'][1].displayName
@@ -901,8 +910,52 @@ export class ViewCourseComponent implements OnInit {
         return true;
     }
 
-    addHazards(holeSet: any) {
+    addHazards(holeSet: any, hazards = []) {
         console.log(holeSet);
+        // holeSet.map(hole => ({
+        //     ...hole,
+        //     hazards: {}
+        // }));
+        this.holeSetfor9Hazards.push({
+            name: `Hazards${this.holeSetfor9Hazards.length + 1}`,
+            hazards: [this.getHoleHazards(holeSet, this.holeSetfor9Hazards.length + 1), hazards]
+        });
+        console.log(this.holeSetfor9Hazards);
+
+
+    }
+    getHoleHazards(holeSet, length, hazards = []) {
+
+        const updatedHoles = holeSet.map(hole => {
+
+            const existingHazard = hazards.find(hazard => hazard.holeId === hole.id);
+
+            // Use the existing hazard's lat_long if found, otherwise use 0
+            const lat_long = existingHazard ? existingHazard.lat_long : 0;
+            return {
+                id: hole.id,
+                holeNo: hole.holeNo,
+                hazardId: UniqueIdGenerator.generate(),
+                hazardNo: length,
+                lat_long: lat_long,
+            };
+        });
+        return updatedHoles;
+    }
+
+    public onHazardsChange(val: any, hzrds: any, hole: any) {
+        console.log(val);
+        console.log(hzrds);
+        // console.log(holeId);
+        this.currentHzd = hzrds;
+        this.currentHoleId = hole.id;
+        if (typeof (hole.lat_long) == 'string') {
+            const [lat, lng] = hole.lat_long.split(',').map(Number);
+            if (lat !== 0 && lng !== 0) {
+                this.center = { lat, lng };
+            }
+        }
+        this.focusMap();
 
     }
     /**
@@ -1071,6 +1124,7 @@ event   */
         let holeObj = [];
         let holesToSave = [];
         let holesYardageToSave = [];
+        let holeHazardsToSave = [];
         let holesSet = [];
         const holeSets = [this.holeSetfor9, this.holeSetfor18, this.holeSetfor27, this.holeSetfor36];
         const isUnique = this.areIndexesUnique(...holeSets);
@@ -1127,6 +1181,7 @@ event   */
                 let counter = 0;
                 for (let obj of holeObj) {
                     let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id, obj.tee_lat_long);
+                    let holeHazards = General.getHazardsById(this.holeSetfor9Hazards, obj.id);
                     const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
                     let tee = {
                         id: obj.id,
@@ -1153,6 +1208,7 @@ event   */
                     }
                     holesToSave.push(tee);
                     holesYardageToSave.push(holeYards);
+                    holeHazardsToSave.push(holeHazards);
                 }
             } else {
                 let count = holeObj.length / 9;
@@ -1210,12 +1266,13 @@ event   */
             //console.log(holesSet);
             console.log(holesYardageToSave);
             const mergedArray = [].concat(...holesYardageToSave);
+            const mergedHazards = [].concat(...holeHazardsToSave);
 
             // Output the merged array
             console.log(mergedArray);
 
             let succees = <boolean>(
-                await this.facadeService.saveCourseHoles(holesToSave, holesSet, mergedArray)
+                await this.facadeService.saveCourseHoles(holesToSave, holesSet, mergedArray, mergedHazards)
             );
             if (succees) {
                 this.snackBar.open('Course Holes are Saves!', 'x', {
