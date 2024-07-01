@@ -240,6 +240,7 @@
                                 <google-map #googleMap height="400px" width="100%" [center]="center" [zoom]="zoom"
                                     [mapTypeId]="satellite" (mapClick)="onMapClick($event)">
                                     <map-marker [position]="center"></map-marker>
+
                                 </google-map>
                                 <div>
                                     <p>Latitude: {{ center.lat }}</p>
@@ -302,6 +303,14 @@
                                                     </th>
                                                     <th class="holeNum">
                                                         Out
+                                                    </th>
+                                                    <th class="p-0">
+                                                        <button mat-flat-button (click)="addHazards(holeSetfor9)"
+                                                            [color]="'primary'" class="ml-2">
+                                                            <mat-icon class="icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                                            Add Hazards
+                                                        </button>
                                                     </th>
                                                 </tr>
                                                 <tr class="topheader">
@@ -498,6 +507,14 @@
                                                     </th>
                                                     <th class="holeNum">
                                                         In
+                                                    </th>
+                                                    <th class="p-0">
+                                                        <button mat-flat-button (click)="addHazards(holeSetfor18)"
+                                                            [color]="'primary'" class="ml-2">
+                                                            <mat-icon class="icon-size-5"
+                                                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                                            Add Hazards
+                                                        </button>
                                                     </th>
                                                 </tr>
 

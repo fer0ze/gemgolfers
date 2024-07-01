@@ -113,6 +113,7 @@ export class ViewCourseComponent implements OnInit {
     async ngOnInit() {
         console.log(this.googleMapElement);
 
+
         // this.googleMapsApiLoaded$ = this.googleMapsApiSerivce.loadApi().pipe(shareReplay());
         this.countries = countries;
         //console.log(this.listCountries);
@@ -168,7 +169,8 @@ export class ViewCourseComponent implements OnInit {
             // this.setHoles(this.NoOfHoles);
             this.panels = (General.getGolfCourseFeatures(this.loggedInuser.userRole));
             //console.log(this.panels);
-
+            const country = this.countries.find(country => country.name === this.countryName);
+            this.getLatLng(country?.code ?? '');
 
         } else {
 
@@ -185,6 +187,20 @@ export class ViewCourseComponent implements OnInit {
             );
 
     }
+    getLatLng(address: string) {
+        this.googleMapsApiSerivce.getLatLng(address).subscribe(
+            (response) => {
+                // console.log(response);
+                this.center = {
+                    lat: response.lat,
+                    lng: response.lng
+                };
+            },
+            (error) => {
+                console.error('Error fetching location', error);
+            }
+        );
+    }
     ////*******************************************************************COURSE CREATE**************************************************************************************** */
     countrySelected(event) {
         // let obj = Country.getCity(event);
@@ -195,7 +211,7 @@ export class ViewCourseComponent implements OnInit {
                 this.cities = objs.split("|");
             }
             // this.courseForm.get('city').setValue(this.cities[1]);
-            console.log(this.cities);
+            // console.log(this.cities);
             this.listCity = this.courseForm
                 .get('city')!
                 .valueChanges.pipe(
@@ -211,10 +227,10 @@ export class ViewCourseComponent implements OnInit {
     }
 
     onMapClick(event: any) {
-        console.log(event);
+        //  console.log(event);
         if (event.latLng != null) {
             this.center = event.latLng.toJSON();
-            console.log('Coordinates:', this.center.lat, this.center.lng);
+            // console.log('Coordinates:', this.center.lat, this.center.lng);
         }
         var clickedHole = undefined;
         if (this.currentHoleNo !== null && this.currentLatLong) {
@@ -335,6 +351,8 @@ export class ViewCourseComponent implements OnInit {
             createdBy: this.loggedInuser?.id,
             status: 'In Review',
         };
+        const country = this.countries.find(country => country.name === course.country);
+        this.getLatLng(country?.code ?? '');
         if (this.courseID) {
             let courses = {
                 id: this.courseID,
@@ -348,7 +366,6 @@ export class ViewCourseComponent implements OnInit {
                 cityGeonameId: 787878,
                 city: playerFormValue.city,
                 createdBy: this.loggedInuser?.id,
-
             };
 
             const isSuccess = <boolean>(
@@ -402,7 +419,7 @@ export class ViewCourseComponent implements OnInit {
      */
     async addIntialsTees() {
         let tee = await this.facadeService.getTeesOfCourse(this.courseID);
-        //console.log(tee);
+        console.log(tee);
 
         if (tee['course_tees'].length > 0) {
             for (let obj of tee['course_tees']) {
@@ -449,7 +466,7 @@ export class ViewCourseComponent implements OnInit {
     addNewTee() {
         this.Tee[this.Tee.length] = [];
         this.Tee[this.Tee.length - 1]['id'] = UniqueIdGenerator.generate();
-        this.Tee[this.Tee.length - 1]['tee_id'] = '';
+        this.Tee[this.Tee.length - 1]['tee_id'] = General.addNewTee(this.Tee);
         this.Tee[this.Tee.length - 1]['name_by_club'] = '';
         this.Tee[this.Tee.length - 1]['color'] = '';
         //console.log(this.Tee);
@@ -882,6 +899,11 @@ export class ViewCourseComponent implements OnInit {
 
         // If all sets of holes have unique indexes, return true
         return true;
+    }
+
+    addHazards(holeSet: any) {
+        console.log(holeSet);
+
     }
     /**
      * onIndexInput

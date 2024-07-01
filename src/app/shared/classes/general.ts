@@ -266,7 +266,7 @@ export class General {
                     course_id: courseId,
                     hole_id: holeId,
                 }
-                teeYards.push(obj)
+                teeYards.push(obj);
             }
         }
         // console.log(tee);
@@ -322,6 +322,23 @@ export class General {
         ];
 
         return Course_Tee.find((element) => element.id == Id);
+    }
+    public static addNewTee(tees) {
+        const Course_Tee = [
+            { id: 0, name: 'Professionals', tee_id: 'PROFESSIONALS', color: '#000000' },
+            { id: 1, name: 'Ladies', tee_id: 'LADIES', color: '#FF0000' },
+            { id: 2, name: 'Seniors', tee_id: 'SENIORS', color: '#FFFFFF' },
+            { id: 3, name: 'Amateurs', tee_id: 'AMATEURS', color: '#0000FF' },
+            { id: 4, name: 'Veterans', tee_id: 'VETERANS', color: '#FFFF00' },
+        ];
+        let tee_id;
+        Course_Tee.map(tee => {
+            const foundItem = tees.find(item => item.name_by_club === tee.name);
+            if (!foundItem) {
+                tee_id = tee.tee_id;
+            }
+        });
+        return tee_id;
     }
 
     public static getGolfCourseFeatures(number) {
