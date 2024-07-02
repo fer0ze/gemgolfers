@@ -16,6 +16,8 @@ import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import e from 'express';
 import { Observable, map, shareReplay, startWith } from 'rxjs';
+import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 
 @Component({
     selector: 'app-view-course',
@@ -25,9 +27,12 @@ import { Observable, map, shareReplay, startWith } from 'rxjs';
 export class ViewCourseComponent implements OnInit {
     center: any = { lat: 51.678418, lng: 7.809007 };
     zoom = 8;
+    file: File;
+    cordinatesData = [];
     @ViewChild('googleMap', { static: false }) googleMapElement: GoogleMap;
     @ViewChild('googleMap', { static: false, read: ElementRef }) googleMapContainer: ElementRef;
-
+    @ViewChild('fileInput') fileInputVariable: ElementRef;
+    arrayBuffer: any;
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -50,8 +55,10 @@ export class ViewCourseComponent implements OnInit {
     id = [];
     Hole = [];
     TEES = ['AMATEURS', 'LADIES', 'SENIORS', 'PROFESSIONAL', 'VETERANS'];
-    holeSetfor9 = [];
     holeSetfor9Hazards = [];
+    holeSetfor18Hazards = [];
+    holeSetfor27Hazards = [];
+    holeSetfor36Hazards = [];
     coursRating = [];
     coursRatingfor18 = [];
     coursRatingfor27 = [];
@@ -59,12 +66,13 @@ export class ViewCourseComponent implements OnInit {
     stepTitle: string = 'Course Setup Form';
     coursRatingHeader = [];
     showCourseTees = [];
+    holeSetfor9 = [];
     holeSetfor18 = [];
+    holeSetfor27 = [];
+    holeSetfor36 = [];
     holeSetforSelect = [];
     showholeSetfor18: boolean = false;
-    holeSetfor27 = [];
     showholeSetfor27: boolean = false;
-    holeSetfor36 = [];
     showholeSetfor36: boolean = false;
     holeMeta = [];
     holeMetafor18 = [];
@@ -632,15 +640,23 @@ export class ViewCourseComponent implements OnInit {
                     this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
                 }
-                this.addHazards(this.holeSetfor9, [].concat(...hazards))
+                const finalHazards = [].concat(...hazards);
+                console.log(finalHazards);
+                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+
+                for (let i = 1; i <= maxHazardNo; i++) {
+                    this.addHazards(this.holeSetfor9Hazards, this.holeSetfor9, finalHazards, i);
+                }
                 //this.getHoleHazards(this.holeSetfor9, 1, hazards)
             }
             if (this.NoOfHoles > 9) {
+                hazards = [];
                 this.setName18 = holes['HolesQL'][1].displayName
                 let holeCount = holes['HolesQL'][1].holes;
                 this.showholeSetfor18 = true;
                 this.holeSetfor18 = [];
                 for (let index = 0; index <= 8; index++) {
+                    hazards.push(holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][1].displayName,
                         id: holeCount[index].id,
@@ -661,13 +677,22 @@ export class ViewCourseComponent implements OnInit {
                     this.eighteenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor18.push(hole);
                 }
+                const finalHazards = [].concat(...hazards);
+                console.log(finalHazards);
+                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+
+                for (let i = 1; i <= maxHazardNo; i++) {
+                    this.addHazards(this.holeSetfor18Hazards, this.holeSetfor18, finalHazards, i);
+                }
             }
             if (this.NoOfHoles > 18) {
+                hazards = [];
                 this.setName27 = holes['HolesQL'][2].displayName
                 let holeCount = holes['HolesQL'][2].holes;
                 this.showholeSetfor27 = true;
                 this.holeSetfor27 = [];
                 for (let index = 0; index <= 8; index++) {
+                    hazards.push(holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][2].displayName,
                         id: holeCount[index].id,
@@ -688,13 +713,22 @@ export class ViewCourseComponent implements OnInit {
                     this.twentysevenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor27.push(hole);
                 }
+                const finalHazards = [].concat(...hazards);
+                console.log(finalHazards);
+                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+
+                for (let i = 1; i <= maxHazardNo; i++) {
+                    this.addHazards(this.holeSetfor18Hazards, this.holeSetfor18, finalHazards, i);
+                }
             }
             if (this.NoOfHoles > 27) {
+                hazards = [];
                 this.setName36 = holes['HolesQL'][3].displayName
                 let holeCount = holes['HolesQL'][3].holes;
                 this.showholeSetfor36 = true;
                 this.holeSetfor36 = [];
                 for (let index = 0; index <= 8; index++) {
+                    hazards.push(holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][3].displayName,
                         id: holeCount[index].id,
@@ -715,6 +749,13 @@ export class ViewCourseComponent implements OnInit {
                     this.thirtySixHoleTotalPar += parseInt(hole.par);
 
                     this.holeSetfor36.push(hole);
+                }
+                const finalHazards = [].concat(...hazards);
+                console.log(finalHazards);
+                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+
+                for (let i = 1; i <= maxHazardNo; i++) {
+                    this.addHazards(this.holeSetfor36Hazards, this.holeSetfor36, finalHazards, i);
                 }
             }
         } else {
@@ -910,28 +951,27 @@ export class ViewCourseComponent implements OnInit {
         return true;
     }
 
-    addHazards(holeSet: any, hazards = []) {
+    addHazards(holeSetHazards: any, holeSet: any, hazard = [], index = 0) {
         console.log(holeSet);
-        // holeSet.map(hole => ({
-        //     ...hole,
-        //     hazards: {}
-        // }));
-        this.holeSetfor9Hazards.push({
-            name: `Hazards${this.holeSetfor9Hazards.length + 1}`,
-            hazards: [this.getHoleHazards(holeSet, this.holeSetfor9Hazards.length + 1), hazards]
+        holeSetHazards.push({
+            name: `Hazards${holeSetHazards.length + 1}`,
+            hazards: [this.getHoleHazards(holeSet, holeSetHazards.length + 1, hazard, index)]
         });
-        console.log(this.holeSetfor9Hazards);
-
-
     }
-    getHoleHazards(holeSet, length, hazards = []) {
-
+    getHoleHazards(holeSet, length, hazards = [], index) {
         const updatedHoles = holeSet.map(hole => {
+            // Find the hazard in the hazards array that matches the hole ID
+            const hazardIndex = hazards.findIndex(hazard => hazard.holeId === hole.id && hazard.hazardNo === index);
 
-            const existingHazard = hazards.find(hazard => hazard.holeId === hole.id);
+            let lat_long = '0,0';
+            if (hazardIndex !== -1) {
+                // If a matching hazard is found, get its lat and lng
+                const existingHazard = hazards[hazardIndex];
+                lat_long = `${existingHazard.lat ?? 0},${existingHazard.lng ?? 0}`;
+                // Remove the found hazard from the hazards array
+                hazards.splice(hazardIndex, 1);
+            }
 
-            // Use the existing hazard's lat_long if found, otherwise use 0
-            const lat_long = existingHazard ? existingHazard.lat_long : 0;
             return {
                 id: hole.id,
                 holeNo: hole.holeNo,
@@ -942,7 +982,6 @@ export class ViewCourseComponent implements OnInit {
         });
         return updatedHoles;
     }
-
     public onHazardsChange(val: any, hzrds: any, hole: any) {
         console.log(val);
         console.log(hzrds);
@@ -1181,7 +1220,7 @@ event   */
                 let counter = 0;
                 for (let obj of holeObj) {
                     let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id, obj.tee_lat_long);
-                    let holeHazards = General.getHazardsById(this.holeSetfor9Hazards, obj.id);
+                    let holeHazards = General.getHazardsById(obj.holeNo < 10 ? this.holeSetfor9Hazards : obj.holeNo < 19 ? this.holeSetfor18Hazards : obj.holeNo < 28 ? this.holeSetfor27Hazards : this.holeSetfor36Hazards, obj.id);
                     const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
                     let tee = {
                         id: obj.id,
@@ -1340,8 +1379,7 @@ event   */
         } else {
             for (let index = 0; index < 1; index++) {
                 this.Hole[this.Hole.length] = [];
-                this.Hole[this.Hole.length - 1]['id'] =
-                    UniqueIdGenerator.generate();
+                this.Hole[this.Hole.length - 1]['id'] = UniqueIdGenerator.generate();
                 this.Hole[this.Hole.length - 1]['displayName'] = '';
                 this.Hole[this.Hole.length - 1]['frontId'] = '';
                 this.Hole[this.Hole.length - 1]['backId'] = '';
@@ -1855,5 +1893,104 @@ event   */
     getGoogleMapElement(): GoogleMap {
         const mapEl = document.querySelector('google-map');
         return mapEl ? (mapEl as unknown as GoogleMap) : null;
+    }
+
+    downloadSample() {
+        // Create sample data
+
+        const data = [
+            { 'Holes': 'Hole 1', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056' },
+            { 'Holes': 'Hole 2', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056'},
+            { 'Holes': 'Hole 3', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056' },
+            // Add more rows as needed
+        ];
+
+        // Create worksheet
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+        // Create workbook
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        // Save file
+        XLSX.writeFile(wb, 'sample_file.xlsx');
+    }
+
+    parseFlightsData(event) {
+        let fileReader = new FileReader();
+        this.cordinatesData = [];
+        if (event.target.files.length > 0) {
+            this.file = event.target.files[0];
+            // this.logger.log(this.file);
+        }
+        fileReader.onload = (e) => {
+            this.arrayBuffer = fileReader.result;
+            var data = new Uint8Array(this.arrayBuffer);
+            var arr = new Array();
+            for (var i = 0; i != data.length; ++i)
+                arr[i] = String.fromCharCode(data[i]);
+            var bstr = arr.join('');
+            var workbook = read(bstr, { type: 'binary' });
+            var first_sheet_name = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[first_sheet_name];
+            this.cordinatesData = utils.sheet_to_json(worksheet, {
+                raw: true,
+                defval: '',
+            });
+
+            // this.logger.log(this.playersData);
+            console.log(this.cordinatesData);
+
+            this.importExcelData();
+            //this.providerservice.importexcel(this.exceljsondata).subscribe(data=>{
+            //})
+        };
+        fileReader.readAsArrayBuffer(this.file);
+    }
+
+    importExcelData() {
+        try {
+            for (let p of this.cordinatesData) {
+                // Find the corresponding hole in holesArray based on the hole number
+                const keys = Object.keys(p);
+                let matchedHole;
+                matchedHole = this.holeSetfor9.find(hole => hole.holeNo === parseInt(p.Holes.split(' ')[1], 10));
+                if (!matchedHole) {
+                    matchedHole = this.holeSetfor18.find(hole => hole.holeNo === parseInt(p.Holes.split(' ')[1], 10));
+                }
+                if (!matchedHole) {
+                    matchedHole = this.holeSetfor27.find(hole => hole.holeNo === parseInt(p.Holes.split(' ')[1], 10));
+                }
+                if (!matchedHole) {
+                    matchedHole = this.holeSetfor36.find(hole => hole.holeNo === parseInt(p.Holes.split(' ')[1], 10));
+                }
+
+                if (matchedHole) {
+                    // Update properties of the matched hole object
+                    // matchedHole.id = p.id;  // Assuming 'id' is directly from the data
+                    // this.Tee.find(tee=>tee.name_by_club==p)
+                    matchedHole.tee_lat_long = {}
+                    keys.forEach(key => {
+                        let matchingTee = this.Tee.find(tee => tee.name_by_club.toUpperCase() === key.toUpperCase());
+                        if (matchingTee) {
+                            matchedHole.tee_lat_long[matchingTee.tee_id] = p[key];
+                        } else {
+                            // const match = key.match(/(Hazard (Start|End))(_\d+)?/);
+                            // if (match) {
+                            //     console.log(match); 
+
+                            // }
+                        }
+                    });
+
+                    matchedHole.greenStartLatLong = p['Green Start'];
+                    matchedHole.greenCenterLatLong = p['Green Center'];  // Correcting the spelling mistake
+                    matchedHole.greenEndLatLong = p['Green End'];
+                }
+            }
+
+        } catch {
+            // this.importingList = false;
+        }
     }
 }

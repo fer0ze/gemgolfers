@@ -248,25 +248,49 @@ export class General {
         console.log(teeDistance);
         let teeYards = [];
         let lat, lng;
-        for (const [key, value] of Object.entries(teeDistance)) {
-            // console.log(`Key: ${key}, Value: ${value}`);
-            let teeId = this.getPlayersTe(key);
-            // console.log(teeId);
-            if (latLong[key]) {
-                [lat, lng] = latLong[key].split(',').map(parseFloat);
-            } else {
-                lat = lng = null;
-            }
-            if (teeId) {
-                let obj = {
-                    tee_distance: value,
-                    tee_lat: lat,
-                    tee_long: lng,
-                    tee_id: Number(teeId?.id),
-                    course_id: courseId,
-                    hole_id: holeId,
+        if (Object.keys(teeDistance).length != 0) {
+            for (const [key, value] of Object.entries(teeDistance)) {
+                // console.log(`Key: ${key}, Value: ${value}`);
+                let teeId = this.getPlayersTe(key);
+                // console.log(teeId);
+                if (latLong[key]) {
+                    [lat, lng] = latLong[key].split(',').map(parseFloat);
+                } else {
+                    lat = lng = null;
                 }
-                teeYards.push(obj);
+                if (teeId) {
+                    let obj = {
+                        tee_distance: value,
+                        tee_lat: lat,
+                        tee_long: lng,
+                        tee_id: Number(teeId?.id),
+                        course_id: courseId,
+                        hole_id: holeId,
+                    }
+                    teeYards.push(obj);
+                }
+            }
+        } else {
+            for (const [key, value] of Object.entries(latLong)) {
+                // console.log(`Key: ${key}, Value: ${value}`);
+                let teeId = this.getPlayersTe(key);
+                // console.log(teeId);
+                if (latLong[key]) {
+                    [lat, lng] = latLong[key].split(',').map(parseFloat);
+                } else {
+                    lat = lng = null;
+                }
+                if (teeId) {
+                    let obj = {
+                        tee_distance: 0,
+                        tee_lat: lat,
+                        tee_long: lng,
+                        tee_id: Number(teeId?.id),
+                        course_id: courseId,
+                        hole_id: holeId,
+                    }
+                    teeYards.push(obj);
+                }
             }
         }
         // console.log(tee);
@@ -299,14 +323,14 @@ export class General {
                 item.hazards.forEach(hazardArray => {
                     hazardArray.forEach(hazard => {
                         if (hazard.id === holeId) {
-                            if (typeof(hazard.lat_long) == 'string') {
+                            if (typeof (hazard.lat_long) == 'string') {
                                 const [lat, long] = hazard.lat_long.split(',').map(parseFloat);
                                 result.push({
                                     holeId: holeId,
                                     hazardId: hazard.hazardId,
                                     lat: lat,
                                     lng: long,
-                                    hazardNo:hazard.hazardNo,
+                                    hazardNo: hazard.hazardNo,
                                 });
                             }
                         }
