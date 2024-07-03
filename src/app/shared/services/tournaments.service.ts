@@ -1082,7 +1082,7 @@ export class TournamentsService {
                                 pointsFormats: tmnt.pointsFormats,
                                 pointsValues: tmnt.pointsValues,
                                 handicapAllocations: tmnt.handicapAllocations,
-                                strokeAllocations: tmnt.strokeAllocations,
+                                strokeAllocation: tmnt.strokeAllocation,
                                 tee: tmnt.tee,
                                 scoreManagement: tmnt.scoreManagement,
                                 startDate: tmnt.startDate,

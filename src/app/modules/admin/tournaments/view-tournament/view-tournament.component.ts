@@ -337,8 +337,7 @@ export class ViewTournamentComponent implements OnInit {
                     this.isLoading = false;
                     return false;
                 }
-                this.matchFormat =
-                    this.dataFullTournament['TournamentQL'][0]['matchFormat'];
+                this.matchFormat = this.dataFullTournament['TournamentQL'][0]['matchFormat'];
                 if (
                     this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
                     matchFormat.TEXAS_SCRAMBLE
@@ -350,15 +349,7 @@ export class ViewTournamentComponent implements OnInit {
                     this.showCloseBtn = false;
                     this.tournamentPlayersAdd = true;
                 }
-                if (
-                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] == matchFormat.MATCH_PLAY ||
-                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] == matchFormat.BEST_THREE ||
-                    this.dataFullTournament['TournamentQL'][0]['matchFormat'] == matchFormat.BEST_TWO
-                ) {
-                    this.showMatchPlay = true;
-                }
-
-
+                this.dataFullTournament['TournamentQL'][0]['teamMatch'] == true ? this.showMatchPlay = true : false;
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
 
@@ -999,15 +990,10 @@ export class ViewTournamentComponent implements OnInit {
                     this.showMainTab2 = false;
                     this.showMainTab3 = false;
                     this.showMainTab4 = false;
-                    this.showMainTab5 = true;
                     this.getTournamentMembers();
+                    this.showMainTab5 = true;
                 } else if (tab.index == 4) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.getTournamentMembers();
-                    this.showMainTab5 = true;
+
                 }
             } else {
                 if (tab.index == 0) {
@@ -1050,17 +1036,12 @@ export class ViewTournamentComponent implements OnInit {
                     this.showMainTab1 = false;
                     this.showMainTab2 = false;
                     this.showMainTab3 = false;
-                    this.showMainTab4 = true;
-                    this.showMainTab5 = false;
-                    this.showMainTab6 = false;
-                } else {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
                     this.showMainTab4 = false;
                     this.getTournamentMembers();
                     this.showMainTab5 = true;
                     this.showMainTab6 = false;
+                } else {
+
 
                 }
             }
@@ -1638,7 +1619,7 @@ export class ViewTournamentComponent implements OnInit {
                         await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
-                            this.fullTournament.cutOffCriteria,this.activeRound
+                            this.fullTournament.cutOffCriteria, this.activeRound
                         );
                         window.location.reload();
                     } else {
@@ -1882,7 +1863,7 @@ export class ViewTournamentComponent implements OnInit {
                         let response = await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
-                            jObject,this.activeRound
+                            jObject, this.activeRound
                         );
                         if (response) {
                             window.location.reload();
@@ -2112,7 +2093,7 @@ export class ViewTournamentComponent implements OnInit {
                         tournamentId: this.tournamentID,
                         courseId: this.noOfRounds > 1 ? selectedCourse[0].courseId : this.fullTournament.courseId,
                         adminId: this.loggedInUser.id,
-                        courseHoleSets: this.noOfRounds > 1  ? selectedCourse[0].courseHoleSets :this.fullTournament.courseHoleSets,
+                        courseHoleSets: this.noOfRounds > 1 ? selectedCourse[0].courseHoleSets : this.fullTournament.courseHoleSets,
                         flightNo: this.runningFlights,
                         flightRound: this.activeRound + 1,
                         startingHole: teeBox,

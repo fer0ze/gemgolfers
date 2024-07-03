@@ -2140,7 +2140,7 @@ export class AddTournamentComponent implements OnInit {
             sponsorName: '',
             sponsorLogo: '',
             mobileLogoUrl: '',
-            strokeAllocations:this.formArray.get([0]).value.strokeAllocations,
+            strokeAllocation:this.formArray.get([0]).value.strokeAllocations,
             webLogoUrl: '',
             courseHoleSetsInverted:
                 courseHoleSetsData.length > 0

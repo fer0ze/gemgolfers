@@ -218,7 +218,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             matchFormat.TEXAS_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
 
             matchFormat.TWO_BALL_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
-            matchFormat.THREE_BALL_SCRAMBLE  || this.tournamentInfo[0]['matchFormat'] ==
+            matchFormat.THREE_BALL_SCRAMBLE || this.tournamentInfo[0]['matchFormat'] ==
             matchFormat.FOUR_BALL_SCRAMBLE
 
         ) {
@@ -391,7 +391,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         category = obj.name;
                         let tempSelMembers: any[] = [];
                         // let index = 0;
-                        
+
                         for (let index in this.selectedMembers) {
                             if (indexA < this.selectedMembers.length) {
                                 this.teetime++;
@@ -754,16 +754,14 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         }
     }
     changeRound(item) {
-        ////console.log("Selected value: " + item.value);
+        // console.log("Selected value: " + item.value);
         if ((item.index)) {
             this.flightRound = item.index + 1;
-        } else {
-            this.flightRound = item;
-        }
-        this.roundFlights = [];
-        this.selectedMembers = [];
+            this.roundFlights = [];
+            this.selectedMembers = [];
 
-        this.getSelectedPlayers();
+            this.getSelectedPlayers();
+        }
     }
 
     isAllSelected() {
@@ -1022,7 +1020,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         )).value;
                     }
                     //console.log(this.teamName);
-     
+
 
 
                     //let stTime: Time;
@@ -1758,34 +1756,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //this.selectedMembers[this.selectedMembers.length - 1].push(player);
         ////console.log(this.selectedMembers);
     }
-    public async closedrawer(id) {
-        //console.log(id);
-        //console.log(this.selectedMembers);
-        let dataFullTournament = await this.facadeService.getTournamentsFlights(
-            id
-        );
-        this.tournamentInfo = dataFullTournament.TournamentQL;
 
-        // this.roundFlights = this.tournamentInfo[0].FlightManagerQLi.filter(
-        //     (a) => {
-        //         return a.flightRound == this.flightRound;
-        //     }
-        // );
-        //this.selectedMembers[1] = [];
-        this.changeRound(2);
-        // this.getSelectedPlayers();
-        // let found = this.selectedMembers.filter((a) => {
-        //     return a['id'] == id;
-        // });
-        // if (found.length>0) {
-        //     // let newflight = await this.facadeService.singleRoundFlightQuery(id);
-        //     // //console.log(newflight);
-
-        // } else {
-        //   let newflight = await this.facadeService.singleRoundFlightQuery(id);
-        //   //console.log(newflight);
-        // }
-    }
     saveFlight(index: number) {
         ////console.log(index);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {

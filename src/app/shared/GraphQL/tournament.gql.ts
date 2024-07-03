@@ -205,6 +205,7 @@ export const tournamentDashBoard = gql`
             activeRound
             webLogoUrl
             startDate
+            teamMatch
             endDate
             handicapAllocations
             adminId
