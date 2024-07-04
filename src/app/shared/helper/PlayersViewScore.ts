@@ -38,7 +38,7 @@ export class PlayersScoreLoader {
         let tournamentQL = tournamentScoresQuery.TournamentQL;
         ////console.log(tournamentQL);
         if (tournamentQL != null) {
-            if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY) {
+            if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY || tournamentQL.matchFormat === matchFormat.LIV) {
                 let calResult = this.strokePlayCalculation(tournamentQL);
 
             } else if (tournamentQL.matchFormat === matchFormat.STABLEFORD || tournamentQL.matchFormat === matchFormat.MODIFIED_STABLEFORD || tournamentQL.matchFormat === matchFormat.SPLIT_SIXES) {

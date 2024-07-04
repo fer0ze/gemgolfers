@@ -113,6 +113,7 @@ export enum matchFormat {
     COMBINE_ALL = "COMBINE_ALL",
     BESTBALL = "BESTBALL",
     SHAMBLES = "SHAMBLES",
+    LIV = "LIV",
 }
 
 export enum TexasScrampleTeamSize {

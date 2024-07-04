@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { ScoreQL } from '../fragments/score.fragment';
 
 export const TeamTournamentQL = gql`
 fragment TeamTournamentQL on tournament {
@@ -76,23 +77,6 @@ fragment TeamFlightQL on flight {
     ended
 }`;
 
-export const ScoreQL = gql`
-fragment ScoreQL on score {
-    playerId
-    flightId
-    holeId
-    detailId
-    playerHandicap
-    HoleIPQL: hole {
-        holeNo
-        index
-        par
-    }
-    grossScore
-    updatedAt
-    updaterId
-    updaterName
-}`;
 
 export const TournamentOpponentQL = gql`
 fragment TournamentOpponentQL on tournament_team_opponent {

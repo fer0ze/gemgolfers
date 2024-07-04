@@ -483,7 +483,7 @@ export class ViewTournamentComponent implements OnInit {
             // this.FlightsQL.slice(0,6);
             let totalPlayers =
                 this.dataFullTournament['TournamentQL'][0]['members'];
-            //console.log(totalPlayers);
+            console.log(totalPlayers);
 
             totalPlayers.sort(this.ComparatorHandicap);
             //console.log(totalPlayers);

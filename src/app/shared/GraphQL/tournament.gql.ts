@@ -58,6 +58,7 @@ export const LeaderboardSubscription = gql`
             netScoreR3
             netScoreR4
             underNet
+            matchFormat
             underNet1
             underNet2
             underNet3

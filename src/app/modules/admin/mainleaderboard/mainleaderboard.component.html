@@ -52,9 +52,6 @@
             <ng-container *ngSwitchCase="'BEST_THREE'">
                 <app-stroke-play [data]="Leaderboard"></app-stroke-play>
             </ng-container>
-            <ng-container *ngSwitchCase="'LIV'">
-                <app-stroke-play [data]="Leaderboard"></app-stroke-play>
-            </ng-container>
             <ng-container *ngSwitchCase="'STABLEFORD'">
                 <app-stable-ford [data]="Leaderboard"></app-stable-ford>
             </ng-container>
@@ -85,9 +82,10 @@
             <ng-container *ngSwitchCase="'SHAMBLES'">
                 <app-scramble [data]="Leaderboard"></app-scramble>
             </ng-container>
+            <ng-container *ngSwitchCase="'LIV'">
+                <app-stroke-play [data]="Leaderboard"></app-stroke-play>
+            </ng-container>
         </ng-container>
-
-   
     </div>
 
     <div class="outer-spinner" *ngIf="isLoading">
