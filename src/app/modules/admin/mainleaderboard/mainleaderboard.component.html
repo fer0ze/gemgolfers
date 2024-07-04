@@ -52,6 +52,9 @@
             <ng-container *ngSwitchCase="'BEST_THREE'">
                 <app-stroke-play [data]="Leaderboard"></app-stroke-play>
             </ng-container>
+            <ng-container *ngSwitchCase="'LIV'">
+                <app-stroke-play [data]="Leaderboard"></app-stroke-play>
+            </ng-container>
             <ng-container *ngSwitchCase="'STABLEFORD'">
                 <app-stable-ford [data]="Leaderboard"></app-stable-ford>
             </ng-container>
