@@ -513,6 +513,7 @@ export class AddTournamentComponent implements OnInit {
                         "SHAMBLES",
                         "BEST_THREE",
                         "BEST_TWO",
+                        "LIV"
                     ]
                 }
                 if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
@@ -526,7 +527,7 @@ export class AddTournamentComponent implements OnInit {
                     this.showTexas = true;
                 } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD || this.currentTournament.matchFormat == matchFormat.MODIFIED_STABLEFORD || this.currentTournament.matchFormat == matchFormat.SPLIT_SIXES) {
                     this.showCat = false;
-                } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE ||
+                } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE || this.currentTournament.matchFormat == matchFormat.LIV ||
                     this.currentTournament.matchFormat == matchFormat.BEST_TWO) {
                     this.showBest = true;
                     this.showCat = false;
@@ -1502,7 +1503,7 @@ export class AddTournamentComponent implements OnInit {
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
                 this.showMatchPlay = true;
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE
-                || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO) {
+                || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.LIV || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO) {
                 this.showBest = true;
             }
             FilteredPL = [...this.tournamentMembers];
@@ -2078,7 +2079,7 @@ export class AddTournamentComponent implements OnInit {
         }
         if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
             this.showMatchPlay = true;
-        } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE
+        } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_THREE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.LIV
             || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.BEST_TWO) {
             this.showBest = true;
         }
@@ -2140,7 +2141,7 @@ export class AddTournamentComponent implements OnInit {
             sponsorName: '',
             sponsorLogo: '',
             mobileLogoUrl: '',
-            strokeAllocation:this.formArray.get([0]).value.strokeAllocations,
+            strokeAllocation: this.formArray.get([0]).value.strokeAllocations,
             webLogoUrl: '',
             courseHoleSetsInverted:
                 courseHoleSetsData.length > 0
@@ -3770,6 +3771,7 @@ export class AddTournamentComponent implements OnInit {
                 "SHAMBLES",
                 "BEST_THREE",
                 "BEST_TWO",
+                "LIV"
             ]
             this.showCat = false;
             this.formGroup.get('formArray')!
