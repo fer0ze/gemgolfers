@@ -254,7 +254,7 @@
 
                             <div class="flex flex-col">
                                 <google-map #googleMap height="400px" width="100%" [center]="center" [zoom]="zoom"
-                                    [mapTypeId]="satellite" (mapClick)="onMapClick($event)">
+                                [mapTypeId]="mapTypeId" (mapClick)="onMapClick($event)">
                                     <map-marker [position]="center"></map-marker>
 
                                 </google-map>

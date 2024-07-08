@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
@@ -17,6 +17,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import e from 'express';
 import { Observable, map, shareReplay, startWith } from 'rxjs';
 import * as XLSX from 'xlsx';
+import { MapMarker } from '@angular/google-maps';
 import { read, utils } from 'xlsx';
 
 @Component({
@@ -25,14 +26,15 @@ import { read, utils } from 'xlsx';
     styleUrls: ['./view-course.component.scss'],
 })
 export class ViewCourseComponent implements OnInit {
-    center: any = { lat: 51.678418, lng: 7.809007 };
-    zoom = 8;
+    center: google.maps.LatLngLiteral = { lat: 51.678418, lng: 7.809007 };
+    zoom = 16;
     file: File;
     cordinatesData = [];
-    @ViewChild('googleMap', { static: false }) googleMapElement: GoogleMap;
+    @ViewChild('googleMap', { static: false }) googleMapElement!: GoogleMap;
     @ViewChild('googleMap', { static: false, read: ElementRef }) googleMapContainer: ElementRef;
     @ViewChild('fileInput') fileInputVariable: ElementRef;
     arrayBuffer: any;
+    mapTypeId: google.maps.MapTypeId = google.maps.MapTypeId.TERRAIN;
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -91,6 +93,7 @@ export class ViewCourseComponent implements OnInit {
     setName36: string;
     tees: any;
     courseHoleSet: any;
+    markers: any[] = [];
     showratingforwomen: boolean = false;
     tee: any;
     deleteTsee: any[];
@@ -122,9 +125,6 @@ export class ViewCourseComponent implements OnInit {
     }
 
     async ngOnInit() {
-        console.log(this.googleMapElement);
-
-
         // this.googleMapsApiLoaded$ = this.googleMapsApiSerivce.loadApi().pipe(shareReplay());
         this.countries = countries;
         //console.log(this.listCountries);
@@ -181,7 +181,7 @@ export class ViewCourseComponent implements OnInit {
             this.panels = (General.getGolfCourseFeatures(this.loggedInuser.userRole));
             //console.log(this.panels);
             const country = this.countries.find(country => country.name === this.countryName);
-            this.getLatLng(country?.code ?? '');
+          //  this.getLatLng(country?.code ?? '');
 
         } else {
 
@@ -197,6 +197,48 @@ export class ViewCourseComponent implements OnInit {
                 map((name) => (name ? this._filter(name) : this.countries.slice()))
             );
 
+    }
+    // ngAfterViewInit() {
+    //     this.searchPlace();
+    // }
+
+    searchPlace() {
+        const request = {
+            query: this.courseTitle,
+            fields: ["name", "geometry"],
+        };
+
+        // Access the native Google Maps object
+        const map = this.googleMapElement.googleMap;
+
+        const service = new google.maps.places.PlacesService(map)
+        console.log(service);
+        
+        service.findPlaceFromQuery(
+            request,
+            (results: google.maps.places.PlaceResult[] | null, status: google.maps.places.PlacesServiceStatus) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                    for (let i = 0; i < results.length; i++) {
+                        console.log(results);
+                    }
+                    // Use the location from the result to center the map
+                    if (results[0].geometry?.location) {
+                        this.center = {
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng(),
+                        };
+                        this.markers = [{
+                            position: {
+                                lat: results[0].geometry.location.lat(),
+                                lng: results[0].geometry.location.lng(),
+                            },
+                            title: results[0].name,
+                        }];
+                        map.setCenter(this.center);
+                    }
+                }
+            }
+        );
     }
     getLatLng(address: string) {
         this.googleMapsApiSerivce.getLatLng(address).subscribe(
@@ -366,7 +408,7 @@ export class ViewCourseComponent implements OnInit {
             status: 'In Review',
         };
         const country = this.countries.find(country => country.name === course.country);
-        this.getLatLng(country?.code ?? '');
+      //  this.getLatLng(country?.code ?? '');
         if (this.courseID) {
             let courses = {
                 id: this.courseID,
@@ -1882,6 +1924,7 @@ event   */
             setTimeout(() => {
                 this.googleMapElement = this.googleMapElement || this.getGoogleMapElement();
                 if (this.googleMapElement) {
+                    this.searchPlace();
                     console.log('Google Map element initialized:', this.googleMapElement);
                 } else {
                     console.error('Google Map element could not be initialized.');
@@ -1900,7 +1943,7 @@ event   */
 
         const data = [
             { 'Holes': 'Hole 1', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056' },
-            { 'Holes': 'Hole 2', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056'},
+            { 'Holes': 'Hole 2', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056' },
             { 'Holes': 'Hole 3', 'Black': '31.536615, 74.356104', 'Blue': '31.536615, 74.356104', 'White': '31.536489, 74.356056', 'Green Start': '31.536489, 74.356056', 'Green Center': '31.536489, 74.356056', 'Green End': '31.536489, 74.356056', 'Hazard Start': '31.536489, 74.356056' },
             // Add more rows as needed
         ];
