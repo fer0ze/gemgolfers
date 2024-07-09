@@ -412,7 +412,7 @@ export class General {
             {
                 id: '2',
                 icon: 'heroicons_outline:lock-closed',
-                title: 'Holes',
+                title: 'Holes ',
                 description: 'Manage your course holes, par, and index',
             },
             {
@@ -430,14 +430,14 @@ export class General {
             {
                 id: '5',
                 icon: 'heroicons_outline:user-group',
-                title: 'Tee Meta',
-                description: 'Manage your course lat, long and dist',
+                title: 'Holes Coordinates',
+                description: 'Manage your hole lat, long',
             },
         ];
 
-        if (number != 1) {
-            return features.filter(feature => feature.id !== '5');
-        }
+        // if (number != 1) {
+        //     return features.filter(feature => feature.id !== '5');
+        // }
 
         return features;
     }

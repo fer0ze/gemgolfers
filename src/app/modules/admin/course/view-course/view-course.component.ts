@@ -33,6 +33,7 @@ export class ViewCourseComponent implements OnInit {
     @ViewChild('googleMap', { static: false }) googleMapElement!: GoogleMap;
     @ViewChild('googleMap', { static: false, read: ElementRef }) googleMapContainer: ElementRef;
     @ViewChild('fileInput') fileInputVariable: ElementRef;
+    @ViewChild('pacInput', { static: false }) searchBoxRef!: ElementRef;
     arrayBuffer: any;
     mapTypeId: google.maps.MapTypeId = google.maps.MapTypeId.TERRAIN;
     @ViewChild('drawer') drawer: MatDrawer;
@@ -181,7 +182,7 @@ export class ViewCourseComponent implements OnInit {
             this.panels = (General.getGolfCourseFeatures(this.loggedInuser.userRole));
             //console.log(this.panels);
             const country = this.countries.find(country => country.name === this.countryName);
-          //  this.getLatLng(country?.code ?? '');
+            //  this.getLatLng(country?.code ?? '');
 
         } else {
 
@@ -207,13 +208,12 @@ export class ViewCourseComponent implements OnInit {
             query: this.courseTitle,
             fields: ["name", "geometry"],
         };
-
         // Access the native Google Maps object
         const map = this.googleMapElement.googleMap;
 
         const service = new google.maps.places.PlacesService(map)
         console.log(service);
-        
+
         service.findPlaceFromQuery(
             request,
             (results: google.maps.places.PlaceResult[] | null, status: google.maps.places.PlacesServiceStatus) => {
@@ -239,6 +239,41 @@ export class ViewCourseComponent implements OnInit {
                 }
             }
         );
+    }
+    searchBox() {
+
+        const input = document.getElementById('pac-input') as HTMLInputElement;
+        const searchBox = new google.maps.places.Autocomplete(input);
+
+        searchBox.bindTo('bounds', this.googleMapElement.googleMap as google.maps.Map);
+
+        searchBox.addListener('place_changed', () => {
+            const place = searchBox.getPlace();
+            if (!place.geometry || !place.geometry.location) {
+                console.error('Returned place contains no geometry');
+                return;
+            }
+
+            // Center the map on the selected place
+            this.center = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+
+            // Update the markers array to include the selected place
+            this.markers = [{
+                position: {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                },
+                title: place.name
+            }];
+
+            // Center the map on the selected place
+            this.googleMapElement.googleMap?.setCenter(this.center);
+            this.googleMapElement.googleMap?.setZoom(15); // Optional: zoom in to the place
+        });
+
     }
     getLatLng(address: string) {
         this.googleMapsApiSerivce.getLatLng(address).subscribe(
@@ -408,7 +443,7 @@ export class ViewCourseComponent implements OnInit {
             status: 'In Review',
         };
         const country = this.countries.find(country => country.name === course.country);
-      //  this.getLatLng(country?.code ?? '');
+        //  this.getLatLng(country?.code ?? '');
         if (this.courseID) {
             let courses = {
                 id: this.courseID,
@@ -476,7 +511,8 @@ export class ViewCourseComponent implements OnInit {
     async addIntialsTees() {
         let tee = await this.facadeService.getTeesOfCourse(this.courseID);
         console.log(tee);
-
+        this.tees = [];
+        this.Tee = [];
         if (tee['course_tees'].length > 0) {
             for (let obj of tee['course_tees']) {
                 let tee = {
@@ -488,8 +524,6 @@ export class ViewCourseComponent implements OnInit {
                 this.Tee.push(tee);
             }
             console.log(this.Tee);
-
-            this.tees = [];
             this.tees =
                 await this.facadeService.getCourseInformationForForm(
                     this.courseID
@@ -1201,7 +1235,7 @@ event   */
     /**
      * saveHoles
      */
-    public saveHoles = async (control: FormControl, state: boolean) => {
+    public saveHoles = async (control: FormControl, state: boolean,panelNo:number) => {
         let holeObj = [];
         let holesToSave = [];
         let holesYardageToSave = [];
@@ -1359,7 +1393,7 @@ event   */
                 this.snackBar.open('Course Holes are Saves!', 'x', {
                     duration: 2000,
                 });
-                this.goToPanel('3')
+                this.goToPanel(panelNo.toString())
                 // if (this.NoOfHoles <= 18) {
                 //     this.goToPanel('4')
                 // } else {
@@ -1894,13 +1928,8 @@ event   */
         this.twentysevenHoleTotalPar = 0
         this.thirtySixHoleTotalPar = 0
         this.selectedPanel = panel;
-        if (panel == '1') {
-            this.Tee = [];
-            this.addIntialsTees();
-        } else if (panel == '2') {
-            console.log(this.googleMapElement);
-            this.initializeGoogleMapElement();
-            console.log(this.googleMapElement);
+        this.addIntialsTees();
+        if (panel == '2') {
             this.setHoles(this.NoOfHoles);
         } else if (panel == '3') {
             //this.setCoursRating();
@@ -1911,7 +1940,8 @@ event   */
             this.getCourseHoleSets();
             this.setCoursRating();
         } else if (panel == '5') {
-            this.getTeeMeta();
+            this.initializeGoogleMapElement();
+            this.setHoles(this.NoOfHoles);
         }
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
@@ -1925,6 +1955,7 @@ event   */
                 this.googleMapElement = this.googleMapElement || this.getGoogleMapElement();
                 if (this.googleMapElement) {
                     this.searchPlace();
+                    this.searchBox();
                     console.log('Google Map element initialized:', this.googleMapElement);
                 } else {
                     console.error('Google Map element could not be initialized.');
