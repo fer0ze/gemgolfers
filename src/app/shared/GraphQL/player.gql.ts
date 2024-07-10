@@ -1263,6 +1263,7 @@ export const PlayerHandicapQuery = gql`
                 tournamentId
                 adjustedScore
                 combined_handicap_id
+                playerId
                 adjustmentScore
                 adjustedPanelty
                 tournamentQL: tournament {
