@@ -109,13 +109,13 @@ export class AuthMockApi {
                             const firebaseUser = response.user;
                             // Sign in successful
                             if (firebaseUser) {
-                                
+
                                 const idToken = await firebaseUser.getIdToken();
                                 console.log(idToken);
-                                
+
 
                                 this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
-                                    //console.log(user);
+                                    console.log(user);
                                     this._user.name = user[0].firstName + " " + user[0].lastName;
                                     this._user.email = user[0].email;
                                     let clubInfo: any =
@@ -127,8 +127,15 @@ export class AuthMockApi {
                                             ? clubInfo.logo
                                             : 'e2esp.png';
                                     this._user.avatar = 'assets/images/logo/' + logo + '';
-                                    user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
+                                    // user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
                                     //this._user.role = user[0].role[0].length > 0 ? user[0].role[0].id : null;
+                                    if (user[0].permissions?.leagueAdmin && user[0].permissions?.tourAdmin) {
+                                        user[0].userRole = 13;
+                                    } else if (user[0].permissions?.tourAdmin) {
+                                        user[0].userRole = 4;
+                                    } else if (user[0].permissions?.leagueAdmin) {
+                                        user[0].userRole = 9;
+                                    }
 
                                     this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
                                     observer.next([
@@ -163,32 +170,32 @@ export class AuthMockApi {
         // @ Sign in using the access token - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-        .onPost('api/auth/sign-in-with-token')
-        .reply(({ request }) => {
+            .onPost('api/auth/sign-in-with-token')
+            .reply(({ request }) => {
 
-            // Get the access token
-            const accessToken = request.body.accessToken;
+                // Get the access token
+                const accessToken = request.body.accessToken;
 
-            // Verify the token
-            if (this._verifyJWTToken(accessToken)) {
+                // Verify the token
+                if (this._verifyJWTToken(accessToken)) {
+                    return [
+                        200,
+                        {
+                            user: cloneDeep(this._user),
+                            accessToken: accessToken, //this._generateJWTToken(),
+                            tokenType: 'bearer'
+                        }
+                    ];
+                }
+
+                // Invalid token
                 return [
-                    200,
+                    401,
                     {
-                        user: cloneDeep(this._user),
-                        accessToken: accessToken, //this._generateJWTToken(),
-                        tokenType: 'bearer'
+                        error: 'Invalid token'
                     }
                 ];
-            }
-
-            // Invalid token
-            return [
-                401,
-                {
-                    error: 'Invalid token'
-                }
-            ];
-        });
+            });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign up - POST
@@ -204,7 +211,7 @@ export class AuthMockApi {
                         try {
                             let res = await this.afAuth.createUserWithEmailAndPassword(email, password);
                             if (res) {
-                                let user = General.createUser(request.body,res?.user?.uid);
+                                let user = General.createUser(request.body, res?.user?.uid);
                                 this._facadeService.AddPlayer(user).then((res) => {
                                     if (res) {
                                         observer.next([200, true]);
@@ -219,7 +226,7 @@ export class AuthMockApi {
                                 observer.complete();
                             }
                             // Password reset email sent successfully
-                           // //console.log('Password reset email sent successfully');
+                            // //console.log('Password reset email sent successfully');
 
                             // observer.next([200, true]);
                             // observer.complete();

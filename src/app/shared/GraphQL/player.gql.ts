@@ -763,13 +763,11 @@ export const getPlayerByEmailLogin = gql`
                     }
                 }
             }
-            role {
-                id
-                name
-            }
-            tour_admin {
-                id
-                adminId
+            permissions {
+                userId
+                qrScanAllowed
+                leagueAdmin
+                tourAdmin
             }
         }
     }
@@ -1035,10 +1033,18 @@ export const UpdateHandicapMutation = gql`
     }
 `;
 export const UpdatePlayerTeeMutation = gql`
-    mutation updateMutation($id: String!,$tournamentId:String!, $tee: String!, $teeId: Int!) {
+    mutation updateMutation(
+        $id: String!
+        $tournamentId: String!
+        $tee: String!
+        $teeId: Int!
+    ) {
         PlayerUpdateQL: update_flight_member(
             where: {
-                _and: [{ playerId: { _eq: $id } }, {flight:{tournamentId:{_eq:$tournamentId}}}]
+                _and: [
+                    { playerId: { _eq: $id } }
+                    { flight: { tournamentId: { _eq: $tournamentId } } }
+                ]
             }
             _set: { playingTee: $tee, tee_id: $teeId }
         ) {

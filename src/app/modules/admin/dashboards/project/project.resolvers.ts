@@ -77,7 +77,7 @@ export class ProjectResolver implements Resolve<any> {
                 this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
                     console.error('Navigation error:', error);
                 });
-            } else if (this.loggedInuser.userRole == 4) {
+            } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
                 return this._projectService.getTourData(
                     this.loggedInuser.id,
                     this._datePipe.transform(

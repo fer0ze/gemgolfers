@@ -13,7 +13,9 @@ import { UserService } from 'app/core/user/user.service';
 import { Constants } from 'app/shared/classes/general';
 import {
     defaultNavigation, userNavigation,
-    defaultNavigationSuperAdmin, sectaryNavigation, tourNavigation
+    defaultNavigationSuperAdmin, sectaryNavigation, tourNavigation,
+    leagueNavigation,
+    tourLeagueNavigation
 } from 'app/mock-api/common/navigation/data';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
@@ -85,6 +87,12 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             this.navigation['default'] = sectaryNavigation;
         } else if (this.loggedInuser.userRole == 4) {
             this.navigation['default'] = tourNavigation;
+            this.user.avatar = 'assets/images/logo/e2esp.png';
+        } else if (this.loggedInuser.userRole == 9) {
+            this.navigation['default'] = leagueNavigation;
+            this.user.avatar = 'assets/images/logo/e2esp.png';
+        } else if (this.loggedInuser.userRole == 13) {
+            this.navigation['default'] = tourLeagueNavigation;
             this.user.avatar = 'assets/images/logo/e2esp.png';
         } else {
             this.navigation['default'] = userNavigation;
