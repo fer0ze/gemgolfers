@@ -32,6 +32,19 @@
                         Tour Members
                     </div>
                 </div>
+                <div>
+                    <a *ngIf="this.loggedInuser.userRole==9" class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/league', tourID]">
+                        <span class="inline-flex items-center">
+                            <mat-icon class="icon-size-5 text-current"
+                                [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                            <span class="ml-1.5 font-medium leading-5">Back to League</span>
+                        </span>
+                    </a>
+                    <div *ngIf="this.loggedInuser.userRole==4"
+                        class="text-6xl font-extrabold tracking-tight leading-none mt-3">
+                        League Members
+                    </div>
+                </div>
                 <div class="ml-0.5 font-medium text-secondary">
                     <ng-container *ngIf="this.count > 0">
                         {{ this.count }} Total Players

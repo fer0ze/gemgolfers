@@ -291,37 +291,37 @@ export const leagueNavigation: FuseNavigationItem[] = [
         type: 'group',
         icon: 'heroicons_outline:view-boards',
         children: [
-            {
-                id: 'leagues.newleagues',
-                title: 'New League',
-                type: 'basic',
-                icon: 'heroicons_outline:academic-cap',
-                link: '/leagues/new',
-            },
+            // {
+            //     id: 'leagues.newleagues',
+            //     title: 'New League',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/leagues/new',
+            // },
             {
                 id: 'leagues.viewleagues',
                 title: 'All Leagues',
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
-                link: '/leagues/view',
+                link: '/leagues',
             },
         ],
     },
-    {
-        id: 'players',
-        title: 'Members',
-        type: 'group',
-        icon: 'heroicons_outline:menu-alt-2',
-        children: [
-            {
-                id: 'players.viewplayers',
-                title: 'All Members',
-                type: 'basic',
-                icon: 'heroicons_outline:user-group',
-                link: '/players',
-            },
-        ],
-    },
+    // {
+    //     id: 'players',
+    //     title: 'Members',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:menu-alt-2',
+    //     children: [
+    //         {
+    //             id: 'players.viewplayers',
+    //             title: 'All Members',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:user-group',
+    //             link: '/players',
+    //         },
+    //     ],
+    // },
 ];
 export const tourLeagueNavigation: FuseNavigationItem[] = [
     {
@@ -391,37 +391,37 @@ export const tourLeagueNavigation: FuseNavigationItem[] = [
         type: 'group',
         icon: 'heroicons_outline:view-boards',
         children: [
-            {
-                id: 'leagues.newleagues',
-                title: 'New League',
-                type: 'basic',
-                icon: 'heroicons_outline:academic-cap',
-                link: '/leagues/new',
-            },
+            // {
+            //     id: 'leagues.newleagues',
+            //     title: 'New League',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/leagues/new',
+            // },
             {
                 id: 'leagues.viewleagues',
                 title: 'All Leagues',
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
-                link: '/leagues/view',
+                link: '/leagues',
             },
         ],
     },
-    {
-        id: 'players',
-        title: 'Members',
-        type: 'group',
-        icon: 'heroicons_outline:menu-alt-2',
-        children: [
-            {
-                id: 'players.viewplayers',
-                title: 'All Members',
-                type: 'basic',
-                icon: 'heroicons_outline:user-group',
-                link: '/players',
-            },
-        ],
-    },
+    // {
+    //     id: 'players',
+    //     title: 'Members',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:menu-alt-2',
+    //     children: [
+    //         {
+    //             id: 'players.viewplayers',
+    //             title: 'All Members',
+    //             type: 'basic',
+    //             icon: 'heroicons_outline:user-group',
+    //             link: '/players',
+    //         },
+    //     ],
+    // },
 ];
 export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
     {

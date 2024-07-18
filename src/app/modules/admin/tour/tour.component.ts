@@ -84,4 +84,7 @@ export class TourComponent implements OnInit {
 
   }
 
+
+  filterByQuery(query) {}
+
 }

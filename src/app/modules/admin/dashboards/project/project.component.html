@@ -41,6 +41,13 @@
                         <span class="ml-2">New Member</span>
                     </button>
                 </div>
+                <div *ngIf="this.loggedInuser.userRole == 9 || this.loggedInuser.userRole ==13" class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <button class="bg-accent" mat-flat-button (click)="addnewTour()" [color]="'accent'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                        <span class="ml-2">New League</span>
+                    </button>
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -75,14 +82,42 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                            Tours
+                        </div>
+
+                        <div class="ml-2 -mt-2 -mr-3">
+                            <button mat-icon-button [matMenuTriggerFor]="toursMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                            </button>
+                            <mat-menu #toursMenu="matMenu">
+                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/tour']">
+                                    <button mat-menu-item>View Details</button>
+                                </a>
+                            </mat-menu>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center mt-8">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-rose-900">
+
+                            {{ this.tourCounts ?? 0 }}
+                        </div>
+                        <div class="text-lg font-medium text-rose-900 dark:text-green-900">
+                            Created
+                        </div>
+                       
+                    </div>
+                </div>
                 <!-- Overdue -->
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div *ngIf="this.loggedInuser.userRole == 1 || this.loggedInuser.userRole == 2" class="text-lg font-medium tracking-tight leading-6 truncate">
                             Daily Rounds
                         </div>
-                        <div *ngIf="this.loggedInuser.userRole == 4" class="text-lg font-medium tracking-tight leading-6 truncate">
-                            Tours
+                        <div *ngIf="this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13" class="text-lg font-medium tracking-tight leading-6 truncate">
+                            Tours Members
                         </div>
                         <div class="ml-2 -mt-2 -mr-3">
                             <button mat-icon-button [matMenuTriggerFor]="overdueMenu">
@@ -112,44 +147,6 @@
                         </div> -->
                     </div>
                 </div>
-                <!-- Issues -->
-                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                    <div class="flex items-start justify-between">
-                        <div *ngIf="this.loggedInuser.userRole == 1 || this.loggedInuser.userRole == 2" class="text-lg font-medium tracking-tight leading-6 truncate">
-                            Total Players
-                        </div>
-                        <div *ngIf="this.loggedInuser.userRole == 4" class="text-lg font-medium tracking-tight leading-6 truncate">
-                            Tour Members
-                        </div>
-                        <div class="ml-2 -mt-2 -mr-3">
-                            <button mat-icon-button [matMenuTriggerFor]="issuesMenu">
-                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                            </button>
-                            <mat-menu #issuesMenu="matMenu">
-                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/signUpPlayers']">
-                                    <button mat-menu-item>View Details</button>
-                                </a>
-                            </mat-menu>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-center mt-8">
-                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
-                            {{ this.playerCounts ?? 0 }}
-                        </div>
-                        <div class="text-lg font-medium text-amber-600 dark:text-amber-500">
-                            Total
-                        </div>
-                        <!-- <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                            <div class="text-md font-medium truncate">
-                                Added today:
-                            </div>
-                            <div class="ml-1.5 text-lg font-semibold">
-                                {{ playerAddedTodayCounts }}
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
-                <!-- Features -->
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">
@@ -182,39 +179,49 @@
                         </div> -->
                     </div>
                 </div>
+                <!-- Issues -->
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
-                        <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                            Tours
+                        <div *ngIf="this.loggedInuser.userRole == 1 || this.loggedInuser.userRole == 2" class="text-lg font-medium tracking-tight leading-6 truncate">
+                            Total Players
+                        </div>  
+                        <div *ngIf="this.loggedInuser.userRole == 4" class="text-lg font-medium tracking-tight leading-6 truncate">
+                            Tour Members
                         </div>
-
+                        <div *ngIf="this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13" class="text-lg font-medium tracking-tight leading-6 truncate">
+                            League Members
+                        </div>
                         <div class="ml-2 -mt-2 -mr-3">
-                            <button mat-icon-button [matMenuTriggerFor]="toursMenu">
+                            <button mat-icon-button [matMenuTriggerFor]="issuesMenu">
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
-                            <mat-menu #toursMenu="matMenu">
-                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/tour']">
+                            <mat-menu #issuesMenu="matMenu">
+                                <a [routerLinkActive]="'active'" [routerLink]="['/reports/signUpPlayers']">
                                     <button mat-menu-item>View Details</button>
                                 </a>
                             </mat-menu>
                         </div>
                     </div>
                     <div class="flex flex-col items-center mt-8">
-                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-rose-500">
-
-                            {{ this.tourCounts ?? 0 }}
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
+                            {{ this.playerCounts ?? 0 }}
                         </div>
-                        <div class="text-lg font-medium text-rose-600 dark:text-green-500">
-                            Created
+                        <div class="text-lg font-medium text-amber-600 dark:text-amber-500">
+                            Total
                         </div>
-                        <!--<div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                        <!-- <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                             <div class="text-md font-medium truncate">
-                                Implemented:
+                                Added today:
                             </div>
-                            <div class="ml-1.5 text-lg font-semibold">16</div>
+                            <div class="ml-1.5 text-lg font-semibold">
+                                {{ playerAddedTodayCounts }}
+                            </div>
                         </div> -->
                     </div>
                 </div>
+                <!-- Features -->
+                
+               
                 <!-- Github issues summary -->
                 <div
                     class="sm:col-span-2 md:col-span-5 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
@@ -222,7 +229,7 @@
                         <div *ngIf="this.loggedInuser.userRole == 1 || this.loggedInuser.userRole == 2" class="text-lg font-medium tracking-tight leading-6 truncate">
                             Daily Rounds Summary
                         </div>
-                        <div *ngIf="this.loggedInuser.userRole == 4" class="text-lg font-medium tracking-tight leading-6 truncate">
+                        <div *ngIf="this.loggedInuser.userRole == 4 || this.loggedInuser.userRole ==9||this.loggedInuser.userRole == 13" class="text-lg font-medium tracking-tight leading-6 truncate">
                             Tournaments Summary
                         </div>
                         <button class="rounded-full bg-hover" mat-button>

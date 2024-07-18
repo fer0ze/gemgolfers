@@ -43,7 +43,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     chartYearlyExpenses: ApexOptions = {};
     data: any;
     tournamentCounts: any;
-    flightCounts: any;
+    flightCounts: any=0;
     flightCountsCal: any = 0;
     membersCountsCal: any = 0;
     flightCountsNotCal: any = 0;
@@ -258,7 +258,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                                 getall.club[0].Ladies.aggregate['count'],
                             ];
                         }
-                    } else if (this.loggedInuser.userRole == 4 && getall.tour.length > 0) {
+                    } else if ((this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) && getall.tour.length > 0) {
 
                         // this.tournamentCounts = getall.TournamentsQLs.length;
                         const membersCatCounts = {
@@ -275,7 +275,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             for (let tournament of tour.tournaments) {
                                 latestTournament.push(tournament);
                             }
-                            this.playerCounts += tour.members.length;
+                      
+                            this.flightCounts += tour.members.length;
                             for (let member of tour.members) {
 
                                 if (member.player && member.player.playerCategory) {
@@ -286,17 +287,33 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
 
                         }
+                        for (let tour of getall.league) {
+                            // for (let tournament of tour.tournaments) {
+                            //     latestTournament.push(tournament);
+                            // }
+                            this.playerCounts += tour.members.length;
+                            // for (let member of tour.members) {
+
+                            //     if (member.player && member.player.playerCategory) {
+                            //         // Increment the count for the corresponding player category
+                            //         membersCatCounts[member.player.playerCategory]++;
+                            //     }
+
+                            // }
+
+                        }
                         if (this.tournamentCounts > 6) {
                             this.tournaments = latestTournament.splice(0, 6);
                         } else {
                             this.tournaments = latestTournament;
                         }
-                        this.flightCounts = getall.tour.length;
+                        //this.flightCounts = getall.tour.length;
                         let myData: any[] = [];
                         let prevDate = null;
                         let memCounter = 0;
                         let totalFlights = 0;
-
+                        this.tourCounts =  getall.tour.length;
+                        this.leagueCounts = getall.league.length;
                         let data = getall.TournamentsQLs.sort(this.ComparatorDate);
                         //let data = dataPlayers.TournamentsQL;
                         let i = 0;
@@ -560,7 +577,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 //     },
                 // },
             },
-            colors: [ "#008FFB","#FF4560","#FEB019","#00E396"],
+            colors: ["#008FFB", "#FF4560", "#FEB019", "#00E396"],
             dataLabels: {
                 enabled: true,
             },
@@ -571,12 +588,12 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
             legend: {
                 show: false,
             },
-           
+
             plotOptions: {
                 bar: {
                     columnWidth: '50%',
                     distributed: true,
-                    borderRadius:1,
+                    borderRadius: 1,
                 },
             },
             series: this._seriesPlayers,
@@ -605,13 +622,13 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                 labels: {
                     style: {
                         colors: [
-                            "#008FFB","#FF4560",
-                            
-                            "#FEB019","#00E396",
-                            
+                            "#008FFB", "#FF4560",
+
+                            "#FEB019", "#00E396",
+
                         ],
                         fontSize: "12px",
-                        fontWeight:"bold",
+                        fontWeight: "bold",
                     }
                 },
                 tooltip: {

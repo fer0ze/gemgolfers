@@ -62,6 +62,8 @@ export class LeaguesComponent implements OnInit {
             clubs = await this.facadeService.getLeagues();
         } else if (this.loggedInuser.userRole == 2) {
             clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.adminClubId);
+        }else if(this.loggedInuser.userRole==9 || this.loggedInuser.userRole==13){
+            clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.id);
         }
         // //console.log(clubs.league);
         this.clubs = clubs.league;

@@ -2410,6 +2410,17 @@ export const getTourDashboard = gql`
                 }
             }
         }
+        league(where: { adminId: { _eq: $adminId } }) {
+            id
+            name
+            dateCreated
+            members {
+                playerId
+            }
+            tournaments {
+                id
+            }
+        }
     }
 `;
 export const getTours = gql`

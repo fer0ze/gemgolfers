@@ -210,7 +210,7 @@ export class PlayersComponent implements OnInit {
             this.playersDataSource = new MatTableDataSource(this.TablePlayers);
             this.playersDataSource.paginator = this.paginator;
             this.playersDataSource.sort = this.sort;
-        } else if (this.loggedInuser.userRole == 4) {
+        } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 13) {
             this.tourID = this._localStorage.get(Constants.TOUR_ID);
             data = await this._facadeService.getPlayersListByTour(
                 this.tourID
