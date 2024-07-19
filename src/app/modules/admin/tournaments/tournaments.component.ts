@@ -162,44 +162,45 @@ export class TournamentsComponent implements OnInit {
 
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
-            } else if (this.loggedInuser.userRole == 4) {
-                this.tourId = this._localStorage.get(Constants.TOUR_ID);
-                if (this.tourId) {
-                    let dataTournamentsForCompleted =
-                        await this.facadeService.getTournamentsListByTourForCompleted(
-                            this.tourId
-                        );
+            } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+                let state = this._localStorage.get(Constants.STATE);
+                if (state == Constants.TOUR) {
+                    this.tourId = this._localStorage.get(Constants.TOUR_ID);
+                    if (this.tourId) {
+                        let dataTournamentsForCompleted =
+                            await this.facadeService.getTournamentsListByTourForCompleted(
+                                this.tourId
+                            );
 
-                    this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
-                    this.copiedcompletedTournaments = this.Tournaments;
-                    this.isIncompletedLoading = false;
-                    this.isLoading = false;
-                    //console.log(this.Tournaments);
-                    this.dataSource = new MatTableDataSource(this.Tournaments);
+                        this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
+                        this.copiedcompletedTournaments = this.Tournaments;
+                        this.isIncompletedLoading = false;
+                        this.isLoading = false;
+                        //console.log(this.Tournaments);
+                        this.dataSource = new MatTableDataSource(this.Tournaments);
 
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }
+                } else if (state == Constants.LEAGUE) {
+                    this.tourId = this._localStorage.get(Constants.LEAGUE_ID);
+                    if (this.tourId) {
+                        let dataTournamentsForCompleted =
+                            await this.facadeService.getTournamentsListByLeague(
+                                this.tourId
+                            );
+
+                        this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
+                        this.copiedcompletedTournaments = this.Tournaments;
+                        this.isIncompletedLoading = false;
+                        this.isLoading = false;
+                        //console.log(this.Tournaments);
+                        this.dataSource = new MatTableDataSource(this.Tournaments);
+
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }
                 }
-
-            } else if (this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
-                this.tourId = this._localStorage.get(Constants.LEAGUE_ID);
-                if (this.tourId) {
-                    let dataTournamentsForCompleted =
-                        await this.facadeService.getTournamentsListByLeague(
-                            this.tourId
-                        );
-
-                    this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
-                    this.copiedcompletedTournaments = this.Tournaments;
-                    this.isIncompletedLoading = false;
-                    this.isLoading = false;
-                    //console.log(this.Tournaments);
-                    this.dataSource = new MatTableDataSource(this.Tournaments);
-
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }
-
             }
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());

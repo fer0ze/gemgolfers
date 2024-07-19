@@ -20,15 +20,18 @@ export class DetailTourComponent implements OnInit {
     });
   }
   viewTournaments() {
-    this._localStorage.setTourId(Constants.TOUR_ID, this.tourId);
+    this._localStorage.set(Constants.TOUR_ID, this.tourId);
+    this._localStorage.set(Constants.STATE, Constants.TOUR);
     this.route.navigate(['/tournaments/']);
   }
   viewMembers() {
-    this._localStorage.setTourId(Constants.TOUR_ID, this.tourId);
+    this._localStorage.set(Constants.TOUR_ID, this.tourId);
+    this._localStorage.set(Constants.STATE, Constants.TOUR);
     this.route.navigate(['/players/']);
   }
   viewGuides() {
-    this._localStorage.setTourId(Constants.TOUR_ID, this.tourId);
+    this._localStorage.set(Constants.TOUR_ID, this.tourId);
+    this._localStorage.set(Constants.STATE, Constants.TOUR);
     this.route.navigate(['/tours/guides/', this.tourId]);
   }
 }

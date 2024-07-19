@@ -197,65 +197,68 @@ export class PlayersComponent implements OnInit {
                 };
                 this.TablePlayers.push(newobj);
             }
-        } else if (this.loggedInuser.userRole == 4) {
-            this.tourID = this._localStorage.get(Constants.TOUR_ID);
-            data = await this._facadeService.getPlayersListByTour(
-                this.tourID
-            );
-            //console.log(data);
-            this.count = data.tour_member.length;
-            this.Players = data.tour_member;
-            for (let obj of this.Players) {
-                let Fname = obj.player.firstName
-                    ? obj.player.firstName.trim()
-                    : obj.player.firstName;
-                let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
-                let newobj = {
-                    id: obj.player.id,
-                    Name: Fname + ' ' + Lname,
-                    Phone: obj.player.phone,
-                    Email: obj.player.email,
-                    createdAt: obj.player.createdAt,
-                    MembershipNo: obj.player.membershipNumber,
-                    Category:
-                        obj.player.playerCategory == 'Senior'
-                            ? 'Senior Amateurs'
-                            : obj.player.playerCategory,
-                    Handicap: obj.player.handicap,
-                    // Status: obj.player.membershipQL,
-                    // club: obj.player.membershipQL[0]?.club?.name ?? '-',
-                };
-                this.TablePlayers.push(newobj);
-            }
-        } else if (this.loggedInuser.userRole == 13 || this.loggedInuser.userRole == 9) {
-            this.tourID = this._localStorage.get(Constants.LEAGUE_ID);
-            data = await this._facadeService.getPlayersListByLeague(
-                this.tourID
-            );
-            //console.log(data);
-            this.count = data.league_member.length;
-            this.Players = data.league_member;
-            for (let obj of this.Players) {
-                let Fname = obj.player.firstName
-                    ? obj.player.firstName.trim()
-                    : obj.player.firstName;
-                let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
-                let newobj = {
-                    id: obj.player.id,
-                    Name: Fname + ' ' + Lname,
-                    Phone: obj.player.phone,
-                    Email: obj.player.email,
-                    createdAt: obj.player.createdAt,
-                    MembershipNo: obj.player.membershipNumber,
-                    Category:
-                        obj.player.playerCategory == 'Senior'
-                            ? 'Senior Amateurs'
-                            : obj.player.playerCategory,
-                    Handicap: obj.player.handicap,
-                    // Status: obj.player.membershipQL,
-                    // club: obj.player.membershipQL[0]?.club?.name ?? '-',
-                };
-                this.TablePlayers.push(newobj);
+        } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+            let state = this._localStorage.get(Constants.STATE);
+            if (state == Constants.TOUR) {
+                this.tourID = this._localStorage.get(Constants.TOUR_ID);
+                data = await this._facadeService.getPlayersListByTour(
+                    this.tourID
+                );
+                //console.log(data);
+                this.count = data.tour_member.length;
+                this.Players = data.tour_member;
+                for (let obj of this.Players) {
+                    let Fname = obj.player.firstName
+                        ? obj.player.firstName.trim()
+                        : obj.player.firstName;
+                    let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
+                    let newobj = {
+                        id: obj.player.id,
+                        Name: Fname + ' ' + Lname,
+                        Phone: obj.player.phone,
+                        Email: obj.player.email,
+                        createdAt: obj.player.createdAt,
+                        MembershipNo: obj.player.membershipNumber,
+                        Category:
+                            obj.player.playerCategory == 'Senior'
+                                ? 'Senior Amateurs'
+                                : obj.player.playerCategory,
+                        Handicap: obj.player.handicap,
+                        // Status: obj.player.membershipQL,
+                        // club: obj.player.membershipQL[0]?.club?.name ?? '-',
+                    };
+                    this.TablePlayers.push(newobj);
+                }
+            } else if (state == Constants.LEAGUE) {
+                this.tourID = this._localStorage.get(Constants.LEAGUE_ID);
+                data = await this._facadeService.getPlayersListByLeague(
+                    this.tourID
+                );
+                //console.log(data);
+                this.count = data.league_member.length;
+                this.Players = data.league_member;
+                for (let obj of this.Players) {
+                    let Fname = obj.player.firstName
+                        ? obj.player.firstName.trim()
+                        : obj.player.firstName;
+                    let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
+                    let newobj = {
+                        id: obj.player.id,
+                        Name: Fname + ' ' + Lname,
+                        Phone: obj.player.phone,
+                        Email: obj.player.email,
+                        createdAt: obj.player.createdAt,
+                        MembershipNo: obj.player.membershipNumber,
+                        Category:
+                            obj.player.playerCategory == 'Senior'
+                                ? 'Senior Amateurs'
+                                : obj.player.playerCategory,
+                        Handicap: obj.player.handicap,
+                        // Status: obj.player.membershipQL,
+                        // club: obj.player.membershipQL[0]?.club?.name ?? '-',
+                    };
+                    this.TablePlayers.push(newobj);
+                }
             }
         }
         this.playersDataSource = new MatTableDataSource(this.TablePlayers);

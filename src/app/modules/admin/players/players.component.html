@@ -29,7 +29,7 @@
                     </a>
                     <div *ngIf="this.loggedInuser.userRole==4"
                         class="text-6xl font-extrabold tracking-tight leading-none mt-3">
-                        Tour Members
+                        All Players
                     </div>
                 </div>
                 <div>
@@ -40,9 +40,9 @@
                             <span class="ml-1.5 font-medium leading-5">Back to League</span>
                         </span>
                     </a>
-                    <div *ngIf="this.loggedInuser.userRole>8"
+                    <div *ngIf="this.loggedInuser.userRole==4"
                         class="text-6xl font-extrabold tracking-tight leading-none mt-3">
-                        League Members
+                        All Players
                     </div>
                 </div>
                 <div class="ml-0.5 font-medium text-secondary">

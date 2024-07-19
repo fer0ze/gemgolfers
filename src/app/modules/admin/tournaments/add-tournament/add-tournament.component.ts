@@ -2088,11 +2088,11 @@ export class AddTournamentComponent implements OnInit {
             : (courseHoleSetsData = []);
 
         console.log(this.formArray);
-
+        let state = this._localStorage.get(Constants.STATE);
         let tournament = {
             id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
             clubId: this.loggedInuser.userRole > 2 ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
-            leagueId: this.loggedInuser.userRole > 8 ? this._localStorage.get(Constants.LEAGUE_ID) : null,
+            leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
             courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id,
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
@@ -2151,7 +2151,7 @@ export class AddTournamentComponent implements OnInit {
             marshals: marshalsData,
             flights: [],
             members: [],
-            tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
+            tourId: state == Constants.TOUR ? this._localStorage.get(Constants.TOUR_ID) : null,
             tournament_round_courses: tournamentRoundCourses,
         };
 
@@ -2212,37 +2212,40 @@ export class AddTournamentComponent implements OnInit {
                     //     this.formArray.get([0]).get('clubctgies').value
                     // );
 
-                    if (this.loggedInuser.userRole == 4) {
-                        selectedClubId = this._localStorage.get(Constants.TOUR_ID);
-                        let clubMembersData: any =
-                            await this.facadeService.getPlayersListByTour(
-                                selectedClubId
-                            );
+                    if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
 
-                        for (
-                            let i = 0;
-                            i < clubMembersData.tour_member.length;
-                            i++
-                        ) {
-                            this.clubMembers.push(
-                                clubMembersData.tour_member[i].player
-                            );
-                        }
-                    } else if (this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
-                        selectedClubId = this._localStorage.get(Constants.LEAGUE_ID);
-                        let clubMembersData: any =
-                            await this.facadeService.getPlayersListByLeague(
-                                selectedClubId
-                            );
+                        if (state == Constants.TOUR) {
+                            selectedClubId = this._localStorage.get(Constants.TOUR_ID);
+                            let clubMembersData: any =
+                                await this.facadeService.getPlayersListByTour(
+                                    selectedClubId
+                                );
 
-                        for (
-                            let i = 0;
-                            i < clubMembersData.league_member.length;
-                            i++
-                        ) {
-                            this.clubMembers.push(
-                                clubMembersData.league_member[i].player
-                            );
+                            for (
+                                let i = 0;
+                                i < clubMembersData.tour_member.length;
+                                i++
+                            ) {
+                                this.clubMembers.push(
+                                    clubMembersData.tour_member[i].player
+                                );
+                            }
+                        } else if (state == Constants.LEAGUE) {
+                            selectedClubId = this._localStorage.get(Constants.LEAGUE_ID);
+                            let clubMembersData: any =
+                                await this.facadeService.getPlayersListByLeague(
+                                    selectedClubId
+                                );
+
+                            for (
+                                let i = 0;
+                                i < clubMembersData.league_member.length;
+                                i++
+                            ) {
+                                this.clubMembers.push(
+                                    clubMembersData.league_member[i].player
+                                );
+                            }
                         }
                     } else {
                         let clubMembersData: any =

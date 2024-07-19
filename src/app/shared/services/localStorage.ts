@@ -10,13 +10,10 @@ export class LocalStorageService {
 
     constructor(private router: Router) { }
 
-    public set(key: string, value: object) {
+    public set(key: string, value: any) {
         localStorage.setItem(key, Crypto.encryptData(value));
     }
-    public setTourId(key: string, value: any) {
-        localStorage.setItem(key, Crypto.encryptData(value));
-    }
-
+    
     get(key: string): any {
         return Crypto.decryptData(localStorage.getItem(key));
     }

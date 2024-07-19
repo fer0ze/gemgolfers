@@ -20,11 +20,13 @@ export class DetailLeagueComponent implements OnInit {
     });
   }
   viewTournaments() {
-    this._localStorage.setTourId(Constants.LEAGUE_ID, this.leagueId);
+    this._localStorage.set(Constants.LEAGUE_ID, this.leagueId);
+    this._localStorage.set(Constants.STATE, Constants.LEAGUE);
     this.route.navigate(['/tournaments/']);
   }
   viewMembers() {
-    this._localStorage.setTourId(Constants.LEAGUE_ID, this.leagueId);
+    this._localStorage.set(Constants.LEAGUE_ID, this.leagueId);
+    this._localStorage.set(Constants.STATE, Constants.LEAGUE);
     this.route.navigate(['/players/']);
   }
 }

@@ -797,6 +797,9 @@ export class Constants {
     // Sessions
     static readonly LOGGED_IN_USER = 'aXNMb2dnZWRJbg';
     static readonly TOUR_ID = 'ToUr_Id';
+    static readonly TOUR = 'TOUR';
+    static readonly LEAGUE = 'LEAGUE';
+    static readonly STATE = 'STATE';
     static readonly LEAGUE_ID = 'League_Id';
 
     //Daily Rounds
