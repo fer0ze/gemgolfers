@@ -115,7 +115,7 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.SignUpFormModule)
             },
             {
-                path: 'submitCourse',
+                path: 'addmycourse',
                 loadChildren: () =>
                     import(
                         'app/modules/auth/sign-in-course/sign-in.module'
