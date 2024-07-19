@@ -35,8 +35,10 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ApolloModule } from 'apollo-angular';
 import { LeaguesRoutingModule } from './leagues-routing.module';
 import { LeaguesComponent } from './leagues.component';
+import { DialogAddLeagueComponent } from '../dialogs/dialog-add-league/dialog-add-league.component';
+import { DetailLeagueComponent } from './detail/detail-league.component';
 @NgModule({
-    declarations: [LeaguesComponent],
+    declarations: [LeaguesComponent,DialogAddLeagueComponent,DetailLeagueComponent],
     imports: [
         CommonModule,
         NgApexchartsModule,

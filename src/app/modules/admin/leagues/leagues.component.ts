@@ -8,8 +8,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
-import { Constants } from 'app/shared/classes/general';
+import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogAddLeagueComponent } from '../dialogs/dialog-add-league/dialog-add-league.component';
 @Component({
     selector: 'app-leagues',
     templateUrl: './leagues.component.html',
@@ -29,6 +31,7 @@ export class LeaguesComponent implements OnInit {
         'members',
         'tournament',
         'details',
+        'table'
     ];
     loggedInuser: any;
     chartBudgetDistribution: ApexOptions = {};
@@ -43,7 +46,8 @@ export class LeaguesComponent implements OnInit {
         private facadeService: FacadeService,
         private route: ActivatedRoute,
         private apollo: Apollo,
-        private _localStorage: LocalStorageService
+        private _localStorage: LocalStorageService,
+        public dialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
@@ -62,7 +66,7 @@ export class LeaguesComponent implements OnInit {
             clubs = await this.facadeService.getLeagues();
         } else if (this.loggedInuser.userRole == 2) {
             clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.adminClubId);
-        }else if(this.loggedInuser.userRole==9 || this.loggedInuser.userRole==13){
+        } else if (this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
             clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.id);
         }
         // //console.log(clubs.league);
@@ -185,70 +189,6 @@ export class LeaguesComponent implements OnInit {
                 },
             },
         };
-
-        // this.chartBudgetDistribution = {
-        //     chart: {
-        //         fontFamily: 'inherit',
-        //         foreColor: 'inherit',
-        //         height: '100%',
-        //         type: 'radar',
-        //         sparkline: {
-        //             enabled: true,
-        //         },
-        //     },
-        //     colors: ['#818CF8'],
-        //     dataLabels: {
-        //         enabled: true,
-        //         formatter: (val: number): string | number => `${val}%`,
-        //         textAnchor: 'start',
-        //         style: {
-        //             fontSize: '13px',
-        //             fontWeight: 500,
-        //         },
-        //         background: {
-        //             borderWidth: 0,
-        //             padding: 4,
-        //         },
-        //         offsetY: -15,
-        //     },
-        //     markers: {
-        //         strokeColors: '#818CF8',
-        //         strokeWidth: 4,
-        //     },
-        //     plotOptions: {
-        //         radar: {
-        //             polygons: {
-        //                 strokeColors: 'var(--fuse-border)',
-        //                 connectorColors: 'var(--fuse-border)',
-        //             },
-        //         },
-        //     },
-        //     series: this._HolesSetsseries,
-        //     stroke: {
-        //         width: 2,
-        //     },
-        //     tooltip: {
-        //         theme: 'dark',
-        //         y: {
-        //             formatter: (val: number): string => `${val}%`,
-        //         },
-        //     },
-        //     xaxis: {
-        //         labels: {
-        //             show: true,
-        //             style: {
-        //                 fontSize: '12px',
-        //                 fontWeight: '500',
-        //             },
-        //         },
-        //         categories: this.courseholesets,
-        //     },
-        //     yaxis: {
-        //         max: (max: number): number =>
-        //             parseInt((max + 10).toFixed(0), 10),
-        //         tickAmount: 7,
-        //     },
-        // };
     }
 
     toggleDetails(productId: string): void {
@@ -262,5 +202,31 @@ export class LeaguesComponent implements OnInit {
             return a.id == productId;
         });
         this.showLeaderBoards = true;
+    }
+
+    addNewLeague() {
+        const dialogRef = this.dialog.open(DialogAddLeagueComponent);
+        dialogRef.afterClosed().subscribe(async (result) => {
+            //console.log(result);
+            if (result) {
+                let league: any = {
+                    id: UniqueIdGenerator.generate(),
+                    adminId: this.loggedInuser.id,
+                    name: result.title,
+                    logo: null,
+                    dateCreated: new Date().toISOString(),
+                }
+                this.facadeService.addLeague(league, result.file).subscribe((result) => {
+                    console.log(result);
+                    if (result) {
+                        league.tournaments = []
+                        league.members = []
+                        this.dataSource.data = [...this.dataSource.data, league];
+                    }
+                })
+
+            }
+
+        })
     }
 }

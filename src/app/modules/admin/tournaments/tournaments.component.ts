@@ -181,11 +181,11 @@ export class TournamentsComponent implements OnInit {
                     this.dataSource.sort = this.sort;
                 }
 
-            } else if (this.loggedInuser.userRole == 13) {
-                this.tourId = this._localStorage.get(Constants.TOUR_ID);
+            } else if (this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+                this.tourId = this._localStorage.get(Constants.LEAGUE_ID);
                 if (this.tourId) {
                     let dataTournamentsForCompleted =
-                        await this.facadeService.getTournamentsListByTourForCompleted(
+                        await this.facadeService.getTournamentsListByLeague(
                             this.tourId
                         );
 

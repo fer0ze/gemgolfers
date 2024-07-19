@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddLeagueComponent } from './add-league.component';
+import { AddLeagueComponent } from './detail-league.component';
 
 describe('AddLeagueComponent', () => {
   let component: AddLeagueComponent;

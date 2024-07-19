@@ -110,7 +110,7 @@
                             </mat-form-field>
                         </div>
 
-                        <div class="sm:col-span-1">
+                        <div *ngIf="this.loggedInuser.userRole <= 2" class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>Club</mat-label>
                                 <input type="text" matInput formControlName="clubsFormCtrl" [matAutocomplete]="auto"
@@ -139,6 +139,7 @@
                                 </mat-form-field>
                             </div>
                         </div>
+                        <div *ngIf="this.loggedInuser.userRole > 2" class="sm:col-span-1"></div>
                         <!-- <mat-radio-group class="ml-10" formControlName="numOfRounds"
                                     fxLayoutAlign="start center">
                                     <mat-radio-button [checked]="
@@ -445,7 +446,8 @@
                                 <mat-label>Points Value</mat-label>
                                 <mat-icon class="icon-size-5" [svgIcon]="
                                 'heroicons_solid:office-building'" matPrefix></mat-icon>
-                                <input type="number" matInput formControlName="pointValue" placeholder="Points Value" required />
+                                <input type="number" matInput formControlName="pointValue" placeholder="Points Value"
+                                    required />
                                 <mat-error>This field is required</mat-error>
                             </mat-form-field>
                         </div>

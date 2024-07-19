@@ -155,7 +155,7 @@ export class FacadeService {
   updateCourse(course: any, holesToSave: any) {
     return this.courseService.updateCourse(course, holesToSave);
   }
-  updateCourseStatus(id:any) {
+  updateCourseStatus(id: any) {
     return this.courseService.updateCourseStatus(id);
   }
 
@@ -166,8 +166,8 @@ export class FacadeService {
     return this.courseService.deleteTeeColor(courseID, tee);
   }
 
-  saveCourseHoles(holes: any[], holeSets: any[],holesYardages:any[],holeHazardsToSave:any[]) {
-    return this.courseService.saveHolesANDholeSets(holes, holeSets,holesYardages,holeHazardsToSave);
+  saveCourseHoles(holes: any[], holeSets: any[], holesYardages: any[], holeHazardsToSave: any[]) {
+    return this.courseService.saveHolesANDholeSets(holes, holeSets, holesYardages, holeHazardsToSave);
   }
   saveCourseHolesSet(holeSets: any[]) {
     return this.courseService.saveholeSets(holeSets);
@@ -215,6 +215,9 @@ export class FacadeService {
   }
   getPlayersListByTour(id: string) {
     return this.playerService.getPlayersListByTour(id);
+  }
+  getPlayersListByLeague(id: string) {
+    return this.playerService.getPlayersListByLeague(id);
   }
   getPlayersListForTournament(id: string) {
     return this.playerService.getPlayersListForTournament(id);
@@ -304,11 +307,14 @@ export class FacadeService {
   AddPlayer(club: Player) {
     return this.playerService.AddPlayer(club);
   }
-  changePlayerTee(id: string,tournamentId:string, tee: string, teeId) {
-    return this.playerService.changePlayerTee(id,tournamentId, tee, teeId);
+  changePlayerTee(id: string, tournamentId: string, tee: string, teeId) {
+    return this.playerService.changePlayerTee(id, tournamentId, tee, teeId);
   }
   AddTourPlayer(club: Player, tourMember: any) {
     return this.playerService.AddTourPlayer(club, tourMember);
+  }
+  AddLeaguePlayer(club: Player, leagueMember: any) {
+    return this.playerService.AddLeaguePlayer(club, leagueMember);
   }
 
   AddHandicapRemarks(handicap_change_log: handicap_change_log) {
@@ -460,13 +466,13 @@ export class FacadeService {
   getTournamentListByDate(fromDate?: any, toDate?: any) {
     return this.tournamentService.getTournamentListByDate(fromDate, toDate);
   }
-  deleteTournaments(deletedtournaments :any[]): Promise<boolean> {
+  deleteTournaments(deletedtournaments: any[]): Promise<boolean> {
     return this.tournamentService.deleteTournaments(deletedtournaments);
   }
-  deleteLeagues(deleteLeagues :any[]): Promise<boolean> {
+  deleteLeagues(deleteLeagues: any[]): Promise<boolean> {
     return this.tournamentService.deleteLeagues(deleteLeagues);
   }
-  deleteTours(deleteTours :any[]): Promise<boolean> {
+  deleteTours(deleteTours: any[]): Promise<boolean> {
     return this.tournamentService.deleteTours(deleteTours);
   }
   getLeagues() {
@@ -516,6 +522,11 @@ export class FacadeService {
   }
   getTournamentsListByTourForCompleted(tourId: string) {
     return this.tournamentService.getTournamentsListByTourForCompleted(
+      tourId
+    );
+  }
+  getTournamentsListByLeague(tourId: string) {
+    return this.tournamentService.getTournamentsListByLeague(
       tourId
     );
   }
@@ -607,6 +618,9 @@ export class FacadeService {
   }
   addTour(tour: any, file: any) {
     return this.tournamentService.addTour(tour, file);
+  }
+  addLeague(league: any, file: any) {
+    return this.tournamentService.addLeague(league, file);
   }
   addSubTournament(obj: any) {
     return this.tournamentService.addSubTournament(obj);
@@ -874,7 +888,7 @@ export class FacadeService {
     return this.flightsService.markPlayerAttendance(flightId, playerId, status);
   }
 
-  closeActiveRound(tournamentId: string, round: number, cutOffCriteria: any,activeRound:number) {
+  closeActiveRound(tournamentId: string, round: number, cutOffCriteria: any, activeRound: number) {
     return this.flightsService.closeActiveRound(
       tournamentId,
       round,

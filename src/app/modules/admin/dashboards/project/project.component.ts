@@ -302,7 +302,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             // }
 
                         }
-                        if (this.tournamentCounts > 6) {
+                        if (latestTournament.length > 6) {
                             this.tournaments = latestTournament.splice(0, 6);
                         } else {
                             this.tournaments = latestTournament;

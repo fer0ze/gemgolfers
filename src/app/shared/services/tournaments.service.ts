@@ -197,6 +197,26 @@ export class TournamentsService {
                 });
         });
     }
+    public getTournamentsListByLeague(
+        tourId: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTournamentsListByLeague,
+                    variables: {
+                        tourId: tourId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getTournamentsListForLive(
         endDate: Date,
         clubId: string
@@ -1043,6 +1063,36 @@ export class TournamentsService {
                         mutation: Query.insertTourQL,
                         variables: {
                             tour: tour
+                        },
+                    })
+                    .pipe(
+                        map((response: any) => {
+                            // Return the download URL
+                            return downloadUrl;
+                        })
+                    );
+            })
+        );
+    }
+    public addLeague(league: any, file: File): Observable<string> {
+        const fileName = 'league/' + league.id + '.png';
+        const ref = this.storage.ref(fileName);
+        const task = ref.put(file);
+
+        return from(task).pipe(
+            switchMap((snapshot: any) => {
+                return ref.getDownloadURL();
+            }),
+            switchMap((downloadUrl: string) => {
+                // Update the picture URL in the account object
+                league.logo = downloadUrl;
+
+                // Perform the mutation using Apollo client
+                return this.apollo
+                    .mutate<any>({
+                        mutation: Query.insertLeagueQL,
+                        variables: {
+                            league: league
                         },
                     })
                     .pipe(

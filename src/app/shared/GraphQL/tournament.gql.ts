@@ -693,6 +693,29 @@ export const getTournamentsListByTourForCompleted = gql`
         }
     }
 `;
+export const getTournamentsListByLeague = gql`
+    query PostsGetQuery($tourId: String!) {
+        CompletedRecently: league(where: { id: { _eq: $tourId } }) {
+            id
+            tournaments {
+                id
+                title
+                startDate
+                endDate
+                matchFormat
+                noOfRounds
+                admin {
+                    firstName
+                    lastName
+                }
+                HandicapCalculated: player_handicaps(limit: 1) {
+                    playerId
+                    tournamentId
+                }
+            }
+        }
+    }
+`;
 export const GetTournamnetListForLive = gql`
     query PostsGetQuery($endDate: date!, $clubId: String!) {
         ActiveTournaments: tournament(
@@ -1330,6 +1353,16 @@ export const insertTourQL = gql`
         insert_tour(
             objects: $tour
             on_conflict: { constraint: tour_pkey, update_columns: [name] }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
+export const insertLeagueQL = gql`
+    mutation insertLeagueQL($league: [league_insert_input!]!) {
+        insert_league(
+            objects: $league
+            on_conflict: { constraint: league_pkey, update_columns: [name] }
         ) {
             AffectedRowsQL: affected_rows
         }

@@ -325,7 +325,7 @@ export class AddTournamentComponent implements OnInit {
                     ? this.loggedInuser.membership[0].club
                     : null;
 
-            this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
+            this.hideClubs = this.loggedInuser.userRole == 2 ? true : false;
             this.clubTitle = clubInfo ? clubInfo.name : '';
         }
 
@@ -344,7 +344,7 @@ export class AddTournamentComponent implements OnInit {
                     endDateFormCtrl: ['', Validators.required],
                     teamMatch: ['1', Validators.required],
                     clubsFormCtrl: [
-                        this.loggedInuser.userRole > 1
+                        this.loggedInuser.userRole == 2
                             ? this.loggedInuser.membership.length > 0
                                 ? this.loggedInuser.membership[0].club.name
                                 : this.loggedInuser.adminClubId
@@ -2091,11 +2091,8 @@ export class AddTournamentComponent implements OnInit {
 
         let tournament = {
             id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
-            clubId:
-                this.loggedInuser.userRole > 1
-                    ? this.loggedInuser.adminClubId
-                    : this.formArray.get([0]).value.clubsFormCtrl.id,
-            leagueId: null,
+            clubId: this.loggedInuser.userRole > 2 ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
+            leagueId: this.loggedInuser.userRole > 8 ? this._localStorage.get(Constants.LEAGUE_ID) : null,
             courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id,
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
@@ -2203,63 +2200,77 @@ export class AddTournamentComponent implements OnInit {
                     });
                     // this.valid2.reset();
 
-                    if (this.formArray.get([0]).value.clubsFormCtrl) {
-                        let selectedClubId: string =
-                            this.loggedInuser.userRole > 1
-                                ? this.loggedInuser.adminClubId
-                                : this.formArray.get([0]).value.clubsFormCtrl
-                                    .id;
-                        this.clubMembers = [];
-                        //console.log(selectedClubId);
-                        //console.log(
-                        //     this.formArray.get([0]).get('clubctgies').value
-                        // );
 
-                        if (this.loggedInuser.userRole == 4) {
-                            selectedClubId = this._localStorage.get(Constants.TOUR_ID);
-                            let clubMembersData: any =
-                                await this.facadeService.getPlayersListByTour(
-                                    selectedClubId
-                                );
+                    let selectedClubId: string =
+                        this.loggedInuser.userRole > 1
+                            ? this.loggedInuser.adminClubId
+                            : this.formArray.get([0]).value.clubsFormCtrl
+                                .id;
+                    this.clubMembers = [];
+                    //console.log(selectedClubId);
+                    //console.log(
+                    //     this.formArray.get([0]).get('clubctgies').value
+                    // );
 
-                            for (
-                                let i = 0;
-                                i < clubMembersData.tour_member.length;
-                                i++
-                            ) {
-                                this.clubMembers.push(
-                                    clubMembersData.tour_member[i].player
-                                );
-                            }
-                        } else {
-                            let clubMembersData: any =
-                                await this.facadeService.getPlayerByClub(
-                                    selectedClubId
-                                );
+                    if (this.loggedInuser.userRole == 4) {
+                        selectedClubId = this._localStorage.get(Constants.TOUR_ID);
+                        let clubMembersData: any =
+                            await this.facadeService.getPlayersListByTour(
+                                selectedClubId
+                            );
 
-                            for (
-                                let i = 0;
-                                i < clubMembersData.club_member.length;
-                                i++
-                            ) {
-                                this.clubMembers.push(
-                                    clubMembersData.club_member[i].player
-                                );
-                            }
+                        for (
+                            let i = 0;
+                            i < clubMembersData.tour_member.length;
+                            i++
+                        ) {
+                            this.clubMembers.push(
+                                clubMembersData.tour_member[i].player
+                            );
                         }
+                    } else if (this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+                        selectedClubId = this._localStorage.get(Constants.LEAGUE_ID);
+                        let clubMembersData: any =
+                            await this.facadeService.getPlayersListByLeague(
+                                selectedClubId
+                            );
 
-
-                        //console.log(this.clubMembers);
-
-                        this.syncClubMembers();
-
-                        stepper.next();
-                        console.log(this.clubMembers);
-
-                        //this.dataSource = new MatTableDataSource(this.clubMembers);
+                        for (
+                            let i = 0;
+                            i < clubMembersData.league_member.length;
+                            i++
+                        ) {
+                            this.clubMembers.push(
+                                clubMembersData.league_member[i].player
+                            );
+                        }
                     } else {
-                        alert('Select Club');
+                        let clubMembersData: any =
+                            await this.facadeService.getPlayerByClub(
+                                selectedClubId
+                            );
+
+                        for (
+                            let i = 0;
+                            i < clubMembersData.club_member.length;
+                            i++
+                        ) {
+                            this.clubMembers.push(
+                                clubMembersData.club_member[i].player
+                            );
+                        }
                     }
+
+
+                    //console.log(this.clubMembers);
+
+                    this.syncClubMembers();
+
+                    stepper.next();
+                    console.log(this.clubMembers);
+
+                    //this.dataSource = new MatTableDataSource(this.clubMembers);
+
                 }
                 // if (result) {
 

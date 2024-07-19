@@ -432,13 +432,29 @@ export class ContactsDetailsComponent implements OnInit {
                         this.reset();
                         this._router.navigate(['/players']);
                     }
-                } else {
+                } else if (this.loggedInuser.userRole == 4) {
                     let tourMember = {
                         tourId: this._localStorage.get(Constants.TOUR_ID),
                         playerId: UniqueId,
                     }
                     const isSuccess = <boolean>(
                         await this._facadeService.AddTourPlayer(player, tourMember)
+                    );
+                    if (isSuccess) {
+                        this.save = true;
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 1000,
+                        });
+                        this.reset();
+                        this._router.navigate(['/players']);
+                    }
+                }else if( this.loggedInuser.userRole==9|| this.loggedInuser.userRole==13){
+                    let leagueMember = {
+                        leagueId: this._localStorage.get(Constants.LEAGUE_ID),
+                        playerId: UniqueId,
+                    }
+                    const isSuccess = <boolean>(
+                        await this._facadeService.AddLeaguePlayer(player, leagueMember)
                     );
                     if (isSuccess) {
                         this.save = true;

@@ -133,6 +133,28 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListByLeague(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.GetPlayersListByLeague,
+                    variables: {
+                        where: {
+                            leagueId: {
+                                _eq: id,
+                            }
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getPlayersListForTournament(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -929,6 +951,49 @@ export class PlayersService {
                             },
                         ],
                         tourMember: tourMember,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+    public AddLeaguePlayer(player: Player, leagueMember: any): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.AddLeagueMemberMutation,
+                    variables: {
+                        objects: [
+                            {
+                                id: player.id,
+                                adminClubId: null,
+                                firebaseUid: player.firebaseUid,
+                                fcmToken: player.fcmToken,
+                                gemId: player.gemId,
+                                firstName: player.firstName,
+                                lastName: player.lastName,
+                                gender: player.gender,
+                                dob: player.dob,
+                                picture: player.picture,
+                                email: player.email,
+                                phone: player.phone,
+                                playerCategory: player.playerCategory,
+                                handicap: player.handicap,
+                                online: player.online,
+                                extraData: player.extraData,
+                                countryCode: player.countryCode,
+                                userRole: player.userRole,
+                                membershipNumber: player.membershipNumber,
+                            },
+                        ],
+                        leagueMember: leagueMember,
                     },
                 })
                 .subscribe(
