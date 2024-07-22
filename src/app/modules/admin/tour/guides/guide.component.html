@@ -3,7 +3,8 @@
     <!-- Main -->
     <div class="flex flex-col items-center p-6 sm:p-10">
         <div class="flex w-full justify-start">
-            <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/tours', tourID]">
+            <a class="inline-flex items-center leading-6 text-primary hover:underline"
+                [routerLink]="['/tours', tourID]">
                 <span class="inline-flex items-center">
                     <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
                     <span class="ml-1.5 font-medium leading-5">Back to Tour</span>
@@ -29,7 +30,20 @@
                         </mat-expansion-panel-header>
                         <div class="flex flex-col">
                             <div>
-                                <form [formGroup]="guideForm">
+                                <form class="flex flex-col flex-auto" [formGroup]="guideForm">
+                                    <div class="flex flex-row gap-4">
+                                        <mat-form-field class="mt-4 w-full">
+                                            <mat-label>Title</mat-label>
+                                            <input matInput [formControlName]="'title'">
+                                        </mat-form-field>
+                                        <mat-form-field class="mt-4 w-full">
+                                            <mat-label>Date</mat-label>
+                                            <input matInput [matDatepicker]="picker" (focus)="picker.open()"
+                                                formControlName="date" placeholder="start date" required />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
                                     <quill-editor class="mt-2 w-full" [formControlName]="'script'" [bounds]="'self'"
                                         [modules]="quillModules"></quill-editor>
                                 </form>

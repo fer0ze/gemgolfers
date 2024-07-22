@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
+import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/general';
 import { Player } from 'app/shared/models/player.model';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -42,17 +42,22 @@ export class TourGuideComponent implements OnInit {
         private _fuseConfirmationService: FuseConfirmationService,
     ) { }
 
-    async ngOnInit() {
+    ngOnInit(): void {
         this.router.paramMap.subscribe((params) => {
             this.tourID = params.get('id');
         });
         this.guideForm = this._formBuilder.group({
-            script: ['', Validators.maxLength(250)],
+            title: [''],
+            script: [''],
+            date: ['']
         });
         if (this.tourID) {
-            let guides = await this.facadeService.getTourGuide(this.tourID);
+            this.facadeService.getTourGuide(this.tourID).then((res) => {
+                console.log(res);
+                this.guides = res['tour_guide'];
+
+            })
             //console.log(guides['tour_guide']);
-            this.guides = guides['tour_guide'];
 
         }
     }
@@ -94,8 +99,9 @@ export class TourGuideComponent implements OnInit {
         let obj = {
             id: id,
             tourId: this.tourID,
-            date: new Date().toISOString(),
+            date: General.parseToDate(this.guideForm.get('date').getRawValue()),
             details: this.guideForm.get('script').getRawValue(),
+            title: this.guideForm.get('title').getRawValue(),
         }
         newGuide.push(obj);
         let response = await this.facadeService.insertTourGuide(newGuide);
@@ -103,15 +109,22 @@ export class TourGuideComponent implements OnInit {
             this.snackBar.open('Guide is added.', 'x', {
                 duration: 2000,
             });
+            let guide = this.guides.find(a => a.id === id);
+            guide.title = obj.title;
+            guide.details = obj.details;
+            guide.date = obj.date;
             this.myPanel.close();
         }
 
     }
-    onPanelOpened(id) {
-        //console.log(id);
-        let guide = this.guides.find(a => { return a.id == id });
+    onPanelOpened(id: string) {
+        let guide = this.guides.find(a => a.id === id);
         if (guide) {
-            this.guideForm.get('script').setValue(guide.details);
+            this.guideForm.patchValue({
+                title: guide?.title,
+                script: guide?.details,
+                date: guide?.date,
+            });
         }
     }
     addNewGuide() {
