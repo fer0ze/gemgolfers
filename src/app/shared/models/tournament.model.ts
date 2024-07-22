@@ -18,8 +18,8 @@ export class Tournament {
     noOfRounds: number;
     activeRound: number;
     matchFormat: string;
-    pointsFormats: string; // null
-    pointsValues: string; // null
+    pointsFormats: string | any; // null
+    pointsValues: string |any; // null
     handicapAllocations: string; // null
     tee: string; // BLUE
     scoreManagement: string;

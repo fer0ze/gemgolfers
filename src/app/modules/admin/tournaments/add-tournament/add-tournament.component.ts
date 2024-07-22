@@ -2062,6 +2062,8 @@ export class AddTournamentComponent implements OnInit {
         let pointsFormats = {
             pointsFormats: this.formArray.get([0]).value.pointsFormats,
         };
+        // let pointsFormats { "pointsFormat": "BOTH" },
+        let pointsValues = { pointsValue: this.formArray.get([0]).value.pointValue };
         //console.log(handicapAllocations);
 
         if (
@@ -2118,7 +2120,7 @@ export class AddTournamentComponent implements OnInit {
                     : true,
             pointsFormats: pointsFormats,
             subTournament: false,
-            pointsValues: this.formArray.get([0]).value.pointValue,
+            pointsValues: pointsValues,
             handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
             marshalsStartWith: this.formArray.get([0]).value.marshalStart,
@@ -2484,8 +2486,8 @@ export class AddTournamentComponent implements OnInit {
                     'SINGLE'
                     ? false
                     : true,
-            pointsFormats: null,
-            pointsValues: null,
+            pointsFormats: { "pointsFormat": "BOTH" },
+            pointsValues: { "pointsValue": 1 },
             handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
             tee_id: 1,

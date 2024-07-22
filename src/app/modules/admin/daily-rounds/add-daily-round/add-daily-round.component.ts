@@ -12,6 +12,7 @@ import {
     handicap_change_log,
 } from '../../../../shared/models/player.model';
 import {
+    HandicapAllocation,
     Tournament,
     TournamentMember,
 } from '../../../../shared/models/tournament.model';
@@ -352,9 +353,9 @@ export class AddDailyRoundComponent implements OnInit {
             playingOnWhs:
                 this.starterForm.value.handicapSystem == 'true' ? true : false,
             matchFormat: 'STROKE_PLAY',
-            pointsFormats: null,
-            pointsValues: null,
-            handicapAllocations: null,
+            pointsFormats: { "pointsFormat": "BOTH" },
+            pointsValues: { "pointsValue": 1},
+            handicapAllocations: HandicapAllocation.AS_IS,
             tee: roundTee,
             tee_id: roundTeeId,
             scoreManagement: 'ONLY_PLAYERS',
