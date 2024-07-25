@@ -18,20 +18,20 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 export class TourGuideComponent implements OnInit {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    file: any;
     guides: any[];
     tourID: string = '';
     loggedInuser: Player;
     guideForm: FormGroup;
     @ViewChild('myPanel') myPanel: MatExpansionPanel;
 
-    quillModules: any = {
-        toolbar: [
-            ['bold', 'italic', 'underline'],
-            [{ align: [] }, { list: 'ordered' }, { list: 'bullet' }],
-            ['clean']
-        ]
-    };
+    // quillModules: any = {
+    //     toolbar: [
+    //         ['bold', 'italic', 'underline'],
+    //         [{ align: [] }, { list: 'ordered' }, { list: 'bullet' }],
+    //         ['clean']
+    //     ]
+    // };
 
     constructor(
         private router: ActivatedRoute,
@@ -49,7 +49,8 @@ export class TourGuideComponent implements OnInit {
         this.guideForm = this._formBuilder.group({
             title: [''],
             script: [''],
-            date: ['']
+            date: [''],
+            bg_image: ['']
         });
         if (this.tourID) {
             this.facadeService.getTourGuide(this.tourID).then((res) => {
@@ -93,8 +94,8 @@ export class TourGuideComponent implements OnInit {
             }
         })
     }
-    async save(id) {
-
+    save(id) {
+        let guide = this.guides.find(a => a.id === id);
         let newGuide = [];
         let obj = {
             id: id,
@@ -102,24 +103,28 @@ export class TourGuideComponent implements OnInit {
             date: General.parseToDate(this.guideForm.get('date').getRawValue()),
             details: this.guideForm.get('script').getRawValue(),
             title: this.guideForm.get('title').getRawValue(),
+            bg_image: guide.bg_image,
         }
         newGuide.push(obj);
-        let response = await this.facadeService.insertTourGuide(newGuide);
-        if (response) {
-            this.snackBar.open('Guide is added.', 'x', {
-                duration: 2000,
-            });
-            let guide = this.guides.find(a => a.id === id);
-            guide.title = obj.title;
-            guide.details = obj.details;
-            guide.date = obj.date;
-            this.myPanel.close();
-        }
+        this.facadeService.insertTourGuide(newGuide, this.file).subscribe((response) => {
+            if (response) {
+                this.snackBar.open('Guide is added.', 'x', {
+                    duration: 2000,
+                });
+
+                guide.title = obj.title;
+                guide.details = obj.details;
+                guide.date = obj.date;
+                this.myPanel.close();
+                // this.file = null;
+            }
+        })
 
     }
     onPanelOpened(id: string) {
         let guide = this.guides.find(a => a.id === id);
         if (guide) {
+            this.file = null;
             this.guideForm.patchValue({
                 title: guide?.title,
                 script: guide?.details,
@@ -129,6 +134,62 @@ export class TourGuideComponent implements OnInit {
     }
     addNewGuide() {
         this.guides.push({ id: UniqueIdGenerator.generate() })
+    }
+
+    removeImage(guide: any): void {
+        guide.bg_image = null;
+    }
+    /**
+    * Upload image to given note
+    *
+    * @param note
+    * @param fileList
+    */
+    uploadImage(id: any, fileList: FileList): void {
+        let guide = this.guides.find(a => a.id === id);
+        // Return if canceled
+        if (!fileList.length) {
+            return;
+        }
+
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        this.file = fileList[0];
+
+        // Return if the file is not allowed
+        if (!allowedTypes.includes(this.file.type)) {
+            return;
+        }
+
+        this._readAsDataURL(this.file).then((data) => {
+
+            // Update the image
+            guide.bg_image = data;
+            guide.file = this.file;
+
+            // Update the note
+            //   this.noteChanged.next(note);
+        });
+    }
+    private _readAsDataURL(file: File): Promise<any> {
+        // Return a new promise
+        return new Promise((resolve, reject) => {
+
+            // Create a new reader
+            const reader = new FileReader();
+
+            // Resolve the promise on success
+            reader.onload = (): void => {
+                resolve(reader.result);
+            };
+
+            // Reject the promise on error
+            reader.onerror = (e): void => {
+                reject(e);
+            };
+
+            // Read the file as the
+            reader.readAsDataURL(file);
+        });
     }
 
 }

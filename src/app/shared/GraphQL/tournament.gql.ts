@@ -344,6 +344,7 @@ export const getTourGuides = gql`
             date
             details
             title
+            bg_image
         }
     }
 `;
@@ -1293,7 +1294,7 @@ export const insertTourGuideQL = gql`
             objects: $tourGuide
             on_conflict: {
                 constraint: tour_guide_pkey
-                update_columns: [details,title,date]
+                update_columns: [details,title,date,bg_image]
             }
         ) {
             AffectedRowsQL: affected_rows

@@ -1535,28 +1535,50 @@ export class TournamentsService {
                 );
         });
     }
-    public insertTourGuide(
-        tourGuide: any[]
-    ): Promise<any> {
-        return new Promise((resolve) => {
-            this.apollo
+    public insertTourGuide(tourGuide: any, file: File): Observable<string> {
+        if (file) {
+            const fileName = 'tour_bg/' + tourGuide[0].id + '.png';
+            const ref = this.storage.ref(fileName);
+            const task = ref.put(file);
+            return from(task).pipe(
+                switchMap((snapshot: any) => {
+                    return ref.getDownloadURL();
+                }),
+                switchMap((downloadUrl: string) => {
+                    if (file) {
+                        tourGuide[0].bg_image = downloadUrl;
+                    }
+                    return this.apollo
+                        .mutate<any>({
+                            mutation: Query.insertTourGuideQL,
+                            variables: {
+                                tourGuide: tourGuide,
+                            },
+                        })
+                        .pipe(
+                            map((response: any) => {
+                                // Return the download URL
+                                return downloadUrl;
+                            })
+                        );
+
+                })
+            );
+        } else {
+            return this.apollo
                 .mutate<any>({
                     mutation: Query.insertTourGuideQL,
                     variables: {
                         tourGuide: tourGuide,
                     },
                 })
-                .subscribe(
-                    ({ data }) => {
-                        ////console.log(data);
-                        resolve(true);
-                    },
-                    (error) => {
-                        resolve(false);
-                        ////console.log('Could not add due to ' + error);
-                    }
+                .pipe(
+                    map((response: any) => {
+                        // Return the download URL
+                        return response;
+                    })
                 );
-        });
+        }
     }
     public insertTournamentTeam(
         teamsToSave: Team[], tournamentId, teamsMembersToRemove: any[] = []

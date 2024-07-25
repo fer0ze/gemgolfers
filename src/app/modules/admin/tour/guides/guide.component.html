@@ -46,9 +46,35 @@
                                     </div>
                                     <quill-editor class="mt-2 w-full" [formControlName]="'script'" [bounds]="'self'"
                                         [modules]="quillModules"></quill-editor>
+                                    <!-- <mat-form-field class="mt-4 w-full">
+                                        <mat-label>Background Image</mat-label>
+                                        <input class="hidden" matInput [formControlName]="'bg_image'">
+                                    </mat-form-field> -->
+                                    <ng-container *ngIf="faq.bg_image">
+                                        <div class="relative w-full pt-2">
+                                            <div class="absolute right-0 bottom-0 p-4">
+                                                <button mat-icon-button (click)="removeImage(faq)">
+                                                    <mat-icon class="text-white"
+                                                        [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                                </button>
+                                            </div>
+                                            <img class="w-full object-cover rounded-2xl " [src]="faq.bg_image">
+                                        </div>
+                                    </ng-container>
                                 </form>
                             </div>
                             <div class="flex flex-col sm:flex-row sm:items-center justify-end mt-4 sm:mt-6">
+                                <div class="absolute left-0 px-6">
+                                    <input id="image-file-input-{{faq.id}}"
+                                        class="absolute h-0 w-0 opacity-0 invisible pointer-events-none" type="file"
+                                        [accept]="'image/jpeg, image/png'"
+                                        (change)="uploadImage(faq.id, $event.target.files)" #imageFileInput>
+                                    <label
+                                        class="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-gray-400 hover:bg-opacity-20"
+                                        for="image-file-input-{{faq.id}}">
+                                        <mat-icon [svgIcon]="'heroicons_outline:photograph'"></mat-icon>
+                                    </label>
+                                </div>
                                 <div class="flex items-center mt-4 sm:mt-0">
                                     <button class="sm:mx-3" mat-stroked-button (click)="delete(faq.id)">
                                         <span>Delete</span>
@@ -60,9 +86,7 @@
                                     </button>
                                 </div>
                             </div>
-
                         </div>
-
                     </mat-expansion-panel>
                 </ng-container>
             </mat-accordion>
