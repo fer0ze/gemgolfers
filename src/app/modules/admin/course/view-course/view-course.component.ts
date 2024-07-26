@@ -27,7 +27,7 @@ import { read, utils } from 'xlsx';
 })
 export class ViewCourseComponent implements OnInit {
     center: google.maps.LatLngLiteral = { lat: 51.678418, lng: 7.809007 };
-    zoom = 24;
+    zoom = 18;
     file: File;
     cordinatesData = [];
     @ViewChild('googleMap', { static: false }) googleMapElement!: GoogleMap;
@@ -235,6 +235,9 @@ export class ViewCourseComponent implements OnInit {
                             title: results[0].name,
                         }];
                         map.setCenter(this.center);
+                        this.filterByHole(1);
+                    } else {
+                        this.filterByHole(1);
                     }
                 }
             }
@@ -707,7 +710,7 @@ export class ViewCourseComponent implements OnInit {
     ////*******************************************************************TEE HOLES SAVE**************************************************************************************** */
 
     async setHoles(Number: number) {
-        //console.log(Number);
+        console.log(Number);
         let holes = await this.facadeService.getCourseHole(this.courseID);
         console.log(holes['HolesQL']);
         let hazards = [];
@@ -939,6 +942,7 @@ export class ViewCourseComponent implements OnInit {
                 }
             }
         }
+
     }
     /**
      * onParInput
@@ -1011,19 +1015,6 @@ export class ViewCourseComponent implements OnInit {
         this.currentHoleNo = hole_id.holeNo;
         this.currentLatLong = false;
         this.currentTee = tee_id;
-        // if (holeSet == 9) {
-        //     let hole = this.holeSetfor9.filter((hole) => { return hole.id == hole_id.id });
-        //     hole[0]['tee_lat_long'][tee_id] = dist;
-        // } else if (holeSet == 18) {
-        //     let hole = this.holeSetfor18.filter((hole) => { return hole.id == hole_id.id });
-        //     hole[0]['tee_lat_long'][tee_id] = dist;
-        // } else if (holeSet == 27) {
-        //     let hole = this.holeSetfor27.filter((hole) => { return hole.id == hole_id.id });
-        //     hole[0]['tee_lat_long'][tee_id] = dist;
-        // } else if (holeSet == 36) {
-        //     let hole = this.holeSetfor36.filter((hole) => { return hole.id == hole_id.id });
-        //     hole[0]['tee_lat_long'][tee_id] = dist;
-        // }
         this.focusMap();
     }
     private isIndexUnique(val: any, holes): boolean {
@@ -1415,7 +1406,9 @@ event   */
                 this.snackBar.open('Course Holes are Saves!', 'x', {
                     duration: 2000,
                 });
-                this.goToPanel(panelNo.toString())
+                if (state) {
+                    this.goToPanel(panelNo.toString())
+                }
                 // if (this.NoOfHoles <= 18) {
                 //     this.goToPanel('4')
                 // } else {
@@ -1964,7 +1957,7 @@ event   */
         } else if (panel == '5') {
             this.initializeGoogleMapElement();
             this.setHoles(this.NoOfHoles);
-            this.filterByHole(1);
+
         }
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
@@ -1979,7 +1972,7 @@ event   */
                 if (this.googleMapElement) {
                     this.searchPlace();
                     this.searchBox();
-                    
+
                     console.log('Google Map element initialized:', this.googleMapElement);
                 } else {
                     console.error('Google Map element could not be initialized.');
