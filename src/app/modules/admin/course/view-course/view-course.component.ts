@@ -46,7 +46,7 @@ export class ViewCourseComponent implements OnInit {
     courseTitle: any;
     currentHoleNo: number | null = 1;
     currentHzd: any | null = null;
-    currentHoleId: string | null = null;
+    currentHzdId: string | null = null;
     currentGreen: number | null = null;
     currentTee: number | null = null;
     currentLatLong: boolean = true;
@@ -324,7 +324,7 @@ export class ViewCourseComponent implements OnInit {
             // console.log('Coordinates:', this.center.lat, this.center.lng);
         }
         var clickedHole = undefined;
-        if (this.currentHoleNo !== null && this.currentLatLong) {
+        if (this.currentHoleNo !== null && this.currentLatLong && this.currentHzd == null) {
             if (this.currentHoleNo < 10) {
                 clickedHole = this.holeSetfor9.find(hole => hole.holeNo === this.currentHoleNo);
             } else if (this.currentHoleNo > 9 && this.currentHoleNo <= 18) {
@@ -343,7 +343,7 @@ export class ViewCourseComponent implements OnInit {
                     clickedHole.greenEndLatLong = `${event.latLng.lat()}, ${event.latLng.lng()}`;
                 }
             }
-        } else if (this.currentHoleNo !== null && !this.currentLatLong) {
+        } else if (this.currentHoleNo !== null && !this.currentLatLong && this.currentHzd == null) {
             if (this.currentHoleNo < 10) {
                 clickedHole = this.holeSetfor9.find(hole => hole.holeNo === this.currentHoleNo);
             } else if (this.currentHoleNo > 9 && this.currentHoleNo <= 18) {
@@ -356,9 +356,18 @@ export class ViewCourseComponent implements OnInit {
             if (clickedHole) {
                 clickedHole['tee_lat_long'][this.currentTee] = `${event.latLng.lat()}, ${event.latLng.lng()}`;
             }
-        } else if (this.currentHoleId != null) {
-            clickedHole = this.currentHzd.hazards[0].find(hzd => hzd.id === this.currentHoleId)
-            clickedHole['lat_long'] = `${event.latLng.lat()}, ${event.latLng.lng()}`;;
+        } else if (this.currentHzd != null) {
+            if (this.currentHoleNo < 10) {
+                clickedHole = this.holeSetfor9.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 9 && this.currentHoleNo <= 18) {
+                clickedHole = this.holeSetfor18.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 18 && this.currentHoleNo <= 27) {
+                clickedHole = this.holeSetfor27.find(hole => hole.holeNo === this.currentHoleNo);
+            } else if (this.currentHoleNo > 27 && this.currentHoleNo <= 36) {
+                clickedHole = this.holeSetfor36.find(hole => hole.holeNo === this.currentHoleNo);
+            }
+            let hzard = clickedHole.hazards.find(hole => hole.hazardId === this.currentHzdId);
+            hzard['lat_long'] = `${event.latLng.lat()}, ${event.latLng.lng()}`;;
         }
     }
 
@@ -713,14 +722,14 @@ export class ViewCourseComponent implements OnInit {
         console.log(Number);
         let holes = await this.facadeService.getCourseHole(this.courseID);
         console.log(holes['HolesQL']);
-        let hazards = [];
+
         if (holes['HolesQL'].length > 0) {
             let holeCount = holes['HolesQL'][0].holes;
             if (this.NoOfHoles > 8) {
                 this.holeSetfor9 = [];
                 this.setName9 = holes['HolesQL'][0].displayName;
                 for (let index = 0; index <= 8; index++) {
-                    hazards.push(holeCount[index].hazards)
+                    let hazards = holeCount[index].hazards;
                     let hole: any = {
                         displayName: holes['HolesQL'][0].displayName,
                         id: holeCount[index].id,
@@ -733,6 +742,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
                         greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
                         greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
+                        hazards: this.getHoleHazards(hazards),
                     };
                     for (let meta of holes['HolesQL'][0]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
@@ -741,23 +751,23 @@ export class ViewCourseComponent implements OnInit {
                     this.nineHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor9.push(hole);
                 }
-                const finalHazards = [].concat(...hazards);
-                console.log(finalHazards);
-                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+                // const finalHazards = [].concat(...hazards);
+                // console.log(finalHazards);
+                // const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
 
-                for (let i = 1; i <= maxHazardNo; i++) {
-                    this.addHazards(this.holeSetfor9Hazards, this.holeSetfor9, finalHazards, i);
-                }
+                // for (let i = 1; i <= maxHazardNo; i++) {
+                //     this.addHazards(this.holeSetfor9Hazards, this.holeSetfor9, finalHazards, i);
+                // }
                 //this.getHoleHazards(this.holeSetfor9, 1, hazards)
             }
             if (this.NoOfHoles > 9) {
-                hazards = [];
+
                 this.setName18 = holes['HolesQL'][1].displayName
                 let holeCount = holes['HolesQL'][1].holes;
                 this.showholeSetfor18 = true;
                 this.holeSetfor18 = [];
                 for (let index = 0; index <= 8; index++) {
-                    hazards.push(holeCount[index].hazards)
+                    let hazards = (holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][1].displayName,
                         id: holeCount[index].id,
@@ -770,6 +780,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
                         greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
                         greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
+                        hazards: this.getHoleHazards(hazards),
                     };
                     for (let meta of holes['HolesQL'][1]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
@@ -778,22 +789,22 @@ export class ViewCourseComponent implements OnInit {
                     this.eighteenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor18.push(hole);
                 }
-                const finalHazards = [].concat(...hazards);
-                console.log(finalHazards);
-                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+                //     const finalHazards = [].concat(...hazards);
+                //     console.log(finalHazards);
+                //     const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
 
-                for (let i = 1; i <= maxHazardNo; i++) {
-                    this.addHazards(this.holeSetfor18Hazards, this.holeSetfor18, finalHazards, i);
-                }
+                //     for (let i = 1; i <= maxHazardNo; i++) {
+                //         this.addHazards(this.holeSetfor18Hazards, this.holeSetfor18, finalHazards, i);
+                //     }
             }
             if (this.NoOfHoles > 18) {
-                hazards = [];
+
                 this.setName27 = holes['HolesQL'][2].displayName
                 let holeCount = holes['HolesQL'][2].holes;
                 this.showholeSetfor27 = true;
                 this.holeSetfor27 = [];
                 for (let index = 0; index <= 8; index++) {
-                    hazards.push(holeCount[index].hazards)
+                    let hazards = (holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][2].displayName,
                         id: holeCount[index].id,
@@ -806,6 +817,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
                         greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
                         greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
+                        hazards: this.getHoleHazards(hazards),
                     };
                     for (let meta of holes['HolesQL'][2]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
@@ -814,22 +826,22 @@ export class ViewCourseComponent implements OnInit {
                     this.twentysevenHoleTotalPar += parseInt(hole.par);
                     this.holeSetfor27.push(hole);
                 }
-                const finalHazards = [].concat(...hazards);
-                console.log(finalHazards);
-                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+                // const finalHazards = [].concat(...hazards);
+                // console.log(finalHazards);
+                // const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
 
-                for (let i = 1; i <= maxHazardNo; i++) {
-                    this.addHazards(this.holeSetfor18Hazards, this.holeSetfor18, finalHazards, i);
-                }
+                // for (let i = 1; i <= maxHazardNo; i++) {
+                //     this.addHazards(this.holeSetfor18Hazards, this.holeSetfor18, finalHazards, i);
+                // }
             }
             if (this.NoOfHoles > 27) {
-                hazards = [];
+
                 this.setName36 = holes['HolesQL'][3].displayName
                 let holeCount = holes['HolesQL'][3].holes;
                 this.showholeSetfor36 = true;
                 this.holeSetfor36 = [];
                 for (let index = 0; index <= 8; index++) {
-                    hazards.push(holeCount[index].hazards)
+                    let hazards = (holeCount[index].hazards)
                     let hole: any = {
                         displayName: holes['HolesQL'][3].displayName,
                         id: holeCount[index].id,
@@ -842,6 +854,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${holeCount[index].greenStartLat ?? 0},${holeCount[index].greenStartLong ?? 0} `,
                         greenCenterLatLong: `${holeCount[index].greenCenterLat ?? 0},${holeCount[index].greenCenterLong ?? 0} `,
                         greenEndLatLong: `${holeCount[index].greenEndLat ?? 0},${holeCount[index].greenEndLong ?? 0} `,
+                        hazards: this.getHoleHazards(hazards),
                     };
                     for (let meta of holes['HolesQL'][3]['holes'][index].meta) {
                         hole.teeDistances[(meta['tee_name'].name).toUpperCase()] = meta.tee_distance;
@@ -851,13 +864,13 @@ export class ViewCourseComponent implements OnInit {
 
                     this.holeSetfor36.push(hole);
                 }
-                const finalHazards = [].concat(...hazards);
-                console.log(finalHazards);
-                const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
+                // const finalHazards = [].concat(...hazards);
+                // console.log(finalHazards);
+                // const maxHazardNo = finalHazards.reduce((max, hazard) => (hazard.hazardNo > max ? hazard.hazardNo : max), 0);
 
-                for (let i = 1; i <= maxHazardNo; i++) {
-                    this.addHazards(this.holeSetfor36Hazards, this.holeSetfor36, finalHazards, i);
-                }
+                // for (let i = 1; i <= maxHazardNo; i++) {
+                //     this.addHazards(this.holeSetfor36Hazards, this.holeSetfor36, finalHazards, i);
+                // }
             }
         } else {
             if (Number > 8) {
@@ -1040,45 +1053,47 @@ export class ViewCourseComponent implements OnInit {
         return true;
     }
 
-    addHazards(holeSetHazards: any, holeSet: any, hazard = [], index = 0) {
+    addHazards(holeSet: any, holeNo: any) {
         console.log(holeSet);
-        holeSetHazards.push({
-            name: `Hazards${holeSetHazards.length + 1}`,
-            hazards: [this.getHoleHazards(holeSet, holeSetHazards.length + 1, hazard, index)]
-        });
-    }
-    getHoleHazards(holeSet, length, hazards = [], index) {
-        const updatedHoles = holeSet.map(hole => {
-            // Find the hazard in the hazards array that matches the hole ID
-            const hazardIndex = hazards.findIndex(hazard => hazard.holeId === hole.id && hazard.hazardNo === index);
-
-            let lat_long = '0,0';
-            if (hazardIndex !== -1) {
-                // If a matching hazard is found, get its lat and lng
-                const existingHazard = hazards[hazardIndex];
-                lat_long = `${existingHazard.lat ?? 0},${existingHazard.lng ?? 0}`;
-                // Remove the found hazard from the hazards array
-                hazards.splice(hazardIndex, 1);
-            }
-
-            return {
-                id: hole.id,
-                holeNo: hole.holeNo,
+        let holeHazards;
+        if (holeNo < 10) {
+            holeHazards = this.holeSetfor9.find(hole => hole.holeNo === holeNo);
+        } else if (holeNo > 9 && holeNo <= 18) {
+            holeHazards = this.holeSetfor18.find(hole => hole.holeNo === holeNo);
+        } else if (holeNo > 18 && holeNo <= 27) {
+            holeHazards = this.holeSetfor27.find(hole => hole.holeNo === holeNo);
+        } else if (holeNo > 27 && holeNo <= 36) {
+            holeHazards = this.holeSetfor36.find(hole => hole.holeNo === holeNo);
+        }
+        if (holeHazards) {
+            holeHazards.hazards.push({
                 hazardId: UniqueIdGenerator.generate(),
-                hazardNo: length,
-                lat_long: lat_long,
-            };
-        });
+                hazardNo: holeHazards.hazards.length + 1,
+                lat_long: `${0},${0}`,
+                holeId: holeHazards.id,
+            });
+        }
+    }
+    getHoleHazards(hazards = []) {
+        let updatedHoles = [];
+        for (let hzd of hazards) {
+            let obj = {
+                hazardId: hzd.hazardId,
+                hazardNo: hzd.hazardNo,
+                lat_long: `${hzd.lat},${hzd.lng}`,
+                holeId: hzd.holeId,
+            }
+            updatedHoles.push(obj)
+        }
         return updatedHoles;
     }
-    public onHazardsChange(val: any, hzrds: any, hole: any) {
+    public onHazardsChange(val: any, hzrd: any) {
         console.log(val);
-        console.log(hzrds);
-        // console.log(holeId);
-        this.currentHzd = hzrds;
-        this.currentHoleId = hole.id;
-        if (typeof (hole.lat_long) == 'string') {
-            const [lat, lng] = hole.lat_long.split(',').map(Number);
+        console.log(hzrd);
+        this.currentHzd = hzrd;
+        this.currentHzdId = hzrd.hazardId;
+        if (typeof (hzrd.lat_long) == 'string') {
+            const [lat, lng] = hzrd.lat_long.split(',').map(Number);
             if (lat !== 0 && lng !== 0) {
                 this.center = { lat, lng };
             }
@@ -1309,7 +1324,7 @@ event   */
                 let counter = 0;
                 for (let obj of holeObj) {
                     let holeYards: any = General.getTeeYards(obj.teeDistances, this.Tee, this.courseID, obj.id, obj.tee_lat_long);
-                    let holeHazards = General.getHazardsById(obj.holeNo < 10 ? this.holeSetfor9Hazards : obj.holeNo < 19 ? this.holeSetfor18Hazards : obj.holeNo < 28 ? this.holeSetfor27Hazards : this.holeSetfor36Hazards, obj.id);
+                    // let holeHazards = obj.hazards;
                     const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
                     let tee = {
                         id: obj.id,
@@ -1336,7 +1351,7 @@ event   */
                     }
                     holesToSave.push(tee);
                     holesYardageToSave.push(holeYards);
-                    holeHazardsToSave.push(holeHazards);
+                    holeHazardsToSave.push(General.getHazards(obj.hazards));
                 }
             } else {
                 let count = holeObj.length / 9;
@@ -1397,7 +1412,7 @@ event   */
             const mergedHazards = [].concat(...holeHazardsToSave);
 
             // Output the merged array
-            console.log(mergedArray);
+            console.log(mergedHazards);
 
             let succees = <boolean>(
                 await this.facadeService.saveCourseHoles(holesToSave, holesSet, mergedArray, mergedHazards)

@@ -1184,8 +1184,7 @@
                                         <map-marker [position]="center"></map-marker>
                                     </google-map>
                                     <div style="display: grid; flex-wrap: wrap">
-                                        <div *ngIf="currentHoleNo < 10" class="table-Tee"
-                                            style="display: grid">
+                                        <div *ngIf="currentHoleNo < 10" class="table-Tee" style="display: grid">
                                             <div class="center">
                                                 <table>
                                                     <tr class="topheader">
@@ -1199,7 +1198,7 @@
 
                                                         <th class="p-0">
                                                             <button mat-flat-button
-                                                                (click)="addHazards(holeSetfor9Hazards,holeSetfor9)"
+                                                                (click)="addHazards(holeSetfor9,this.currentHoleNo)"
                                                                 [color]="'primary'" class="ml-2">
                                                                 <mat-icon class="icon-size-5"
                                                                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
@@ -1275,26 +1274,28 @@
                                                             </td>
                                                         </tr>
                                                     </ng-container>
-                                                    <ng-container *ngFor="let hzrd of holeSetfor9Hazards;">
-                                                        <tr class="topheader">
-                                                            <th class="holehr">
-                                                                <div class="flex justify-center gap-2">
-                                                                    Hazards
-                                                                </div>
-                                                            </th>
-                                                            <td *ngFor=" let hole of hzrd.hazards[0]; let i = index"
-                                                                [ngClass]="{'visible': hole.holeNo === currentHoleNo, 'hidden': hole.holeNo !== currentHoleNo}">
-                                                                <span *ngIf="hole.holeNo === currentHoleNo">
-                                                                    <input
-                                                                        class="bg-card border-black-100 rounded-xl w-80"
-                                                                        [value]="hole.lat_long || 0"
-                                                                        [matTooltip]="hole.lat_long" type="text"
-                                                                        (click)="onHazardsChange($event.target.value,hzrd,hole)" />
-                                                                </span>
-                                                            </td>
-                                                        </tr>
+                                                    <ng-container *ngFor="let hole of holeSetfor9; let i = index">
+                                                        <ng-container *ngIf="hole.holeNo === currentHoleNo">
+                                                            <ng-container *ngFor="let hzd of hole.hazards">
+                                                                <tr class="topheader">
+                                                                    <th class="holehr">
+                                                                        <div class="flex justify-center gap-2">
+                                                                            Hazards
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span>
+                                                                            <input
+                                                                                class="bg-card border-black-100 rounded-xl w-80"
+                                                                                [value]="hzd.lat_long || 0"
+                                                                                [matTooltip]="hzd.lat_long" type="text"
+                                                                                (click)="onHazardsChange($event.target.value, hzd)" />
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </ng-container>
                                                     </ng-container>
-
                                                 </table>
                                             </div>
                                         </div>
@@ -1313,7 +1314,7 @@
 
                                                         <th class="p-0">
                                                             <button mat-flat-button
-                                                                (click)="addHazards(holeSetfor18Hazards,holeSetfor18)"
+                                                                (click)="addHazards(holeSetfor18,this.currentHoleNo)"
                                                                 [color]="'primary'" class="ml-2">
                                                                 <mat-icon class="icon-size-5"
                                                                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
@@ -1389,7 +1390,7 @@
                                                             </td>
                                                         </tr>
                                                     </ng-container>
-                                                    <ng-container *ngFor="let hzrd of holeSetfor18Hazards;">
+                                                    <!-- <ng-container *ngFor="let hzrd of holeSetfor18Hazards;">
                                                         <tr class="topheader">
                                                             <th class="holehr">
                                                                 <div class="flex justify-center gap-2">
@@ -1408,7 +1409,7 @@
                                                                 </span>
                                                             </td>
                                                         </tr>
-                                                    </ng-container>
+                                                    </ng-container> -->
 
                                                 </table>
                                             </div>
@@ -1426,7 +1427,7 @@
                                                         </th>
                                                         <th class="p-0">
                                                             <button mat-flat-button
-                                                                (click)="addHazards(holeSetfor27Hazards,holeSetfor27)"
+                                                                (click)="addHazards(holeSetfor27,this.currentHoleNo)"
                                                                 [color]="'primary'" class="ml-2">
                                                                 <mat-icon class="icon-size-5"
                                                                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
@@ -1501,7 +1502,7 @@
                                                             </td>
                                                         </tr>
                                                     </ng-container>
-                                                    <ng-container *ngFor="let hzrd of holeSetfor27Hazards;">
+                                                    <!-- <ng-container *ngFor="let hzrd of holeSetfor27Hazards;">
                                                         <tr class="topheader">
                                                             <th class="holehr">
                                                                 <div class="flex justify-center gap-2">
@@ -1520,7 +1521,7 @@
                                                                 </span>
                                                             </td>
                                                         </tr>
-                                                    </ng-container>
+                                                    </ng-container> -->
 
                                                 </table>
                                             </div>
@@ -1538,7 +1539,7 @@
                                                         </th>
                                                         <th class="p-0">
                                                             <button mat-flat-button
-                                                                (click)="addHazards(holeSetfor36Hazards,holeSetfor36)"
+                                                                (click)="addHazards(holeSetfor36,this.currentHoleNo)"
                                                                 [color]="'primary'" class="ml-2">
                                                                 <mat-icon class="icon-size-5"
                                                                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
@@ -1613,7 +1614,7 @@
                                                             </td>
                                                         </tr>
                                                     </ng-container>
-                                                    <ng-container *ngFor="let hzrd of holeSetfor36Hazards;">
+                                                    <!-- <ng-container *ngFor="let hzrd of holeSetfor36Hazards;">
                                                         <tr class="topheader">
                                                             <th class="holehr">
                                                                 <div class="flex justify-center gap-2">
@@ -1632,7 +1633,7 @@
                                                                 </span>
                                                             </td>
                                                         </tr>
-                                                    </ng-container>
+                                                    </ng-container> -->
 
                                                 </table>
                                             </div>
