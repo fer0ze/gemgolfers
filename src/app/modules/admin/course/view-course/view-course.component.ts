@@ -27,7 +27,7 @@ import { read, utils } from 'xlsx';
 })
 export class ViewCourseComponent implements OnInit {
     center: google.maps.LatLngLiteral = { lat: 51.678418, lng: 7.809007 };
-    zoom = 16;
+    zoom = 24;
     file: File;
     cordinatesData = [];
     @ViewChild('googleMap', { static: false }) googleMapElement!: GoogleMap;
@@ -44,7 +44,7 @@ export class ViewCourseComponent implements OnInit {
     courseID: any;
     courseData: any;
     courseTitle: any;
-    currentHoleNo: number | null = null;
+    currentHoleNo: number | null = 1;
     currentHzd: any | null = null;
     currentHoleId: string | null = null;
     currentGreen: number | null = null;
@@ -399,8 +399,30 @@ export class ViewCourseComponent implements OnInit {
             if (mapDiv) {
                 mapDiv.tabIndex = -1; // Make the div focusable
                 mapDiv.focus();
+                this.mapTypeId = google.maps.MapTypeId.SATELLITE;
             }
         }
+    }
+    filterByHole(holeNo) {
+        this.currentHoleNo = holeNo;
+        let greenStartLatLong;
+        if (this.currentHoleNo < 10) {
+            greenStartLatLong = this.holeSetfor9.find(hole => hole.holeNo === this.currentHoleNo);
+        } else if (this.currentHoleNo > 9 && this.currentHoleNo <= 18) {
+            greenStartLatLong = this.holeSetfor18.find(hole => hole.holeNo === this.currentHoleNo);
+        } else if (this.currentHoleNo > 18 && this.currentHoleNo <= 27) {
+            greenStartLatLong = this.holeSetfor27.find(hole => hole.holeNo === this.currentHoleNo);
+        } else if (this.currentHoleNo > 27 && this.currentHoleNo <= 36) {
+            greenStartLatLong = this.holeSetfor36.find(hole => hole.holeNo === this.currentHoleNo);
+        }
+        if (greenStartLatLong) {
+            const [lat, lng] = greenStartLatLong.greenCenterLatLong.split(',').map(Number);
+            if (lat !== 0 && lng !== 0) {
+                this.center = { lat, lng };
+            }
+            // this.center = greenStartLatLong.greenCenterLatLong
+        }
+        this.focusMap();
     }
     private _filter(value: string) {
         if (value) {
@@ -1235,7 +1257,7 @@ event   */
     /**
      * saveHoles
      */
-    public saveHoles = async (control: FormControl, state: boolean,panelNo:number) => {
+    public saveHoles = async (control: FormControl, state: boolean, panelNo: number) => {
         let holeObj = [];
         let holesToSave = [];
         let holesYardageToSave = [];
@@ -1942,6 +1964,7 @@ event   */
         } else if (panel == '5') {
             this.initializeGoogleMapElement();
             this.setHoles(this.NoOfHoles);
+            this.filterByHole(1);
         }
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
@@ -1956,6 +1979,7 @@ event   */
                 if (this.googleMapElement) {
                     this.searchPlace();
                     this.searchBox();
+                    
                     console.log('Google Map element initialized:', this.googleMapElement);
                 } else {
                     console.error('Google Map element could not be initialized.');
