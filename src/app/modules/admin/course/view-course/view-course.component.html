@@ -1390,6 +1390,28 @@
                                                             </td>
                                                         </tr>
                                                     </ng-container>
+                                                    <ng-container *ngFor="let hole of holeSetfor18; let i = index">
+                                                        <ng-container *ngIf="hole.holeNo === currentHoleNo">
+                                                            <ng-container *ngFor="let hzd of hole.hazards">
+                                                                <tr class="topheader">
+                                                                    <th class="holehr">
+                                                                        <div class="flex justify-center gap-2">
+                                                                            Hazards
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span>
+                                                                            <input
+                                                                                class="bg-card border-black-100 rounded-xl w-80"
+                                                                                [value]="hzd.lat_long || 0"
+                                                                                [matTooltip]="hzd.lat_long" type="text"
+                                                                                (click)="onHazardsChange($event.target.value, hzd)" />
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ng-container>
                                                     <!-- <ng-container *ngFor="let hzrd of holeSetfor18Hazards;">
                                                         <tr class="topheader">
                                                             <th class="holehr">
@@ -1502,6 +1524,28 @@
                                                             </td>
                                                         </tr>
                                                     </ng-container>
+                                                    <ng-container *ngFor="let hole of holeSetfor27; let i = index">
+                                                        <ng-container *ngIf="hole.holeNo === currentHoleNo">
+                                                            <ng-container *ngFor="let hzd of hole.hazards">
+                                                                <tr class="topheader">
+                                                                    <th class="holehr">
+                                                                        <div class="flex justify-center gap-2">
+                                                                            Hazards
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span>
+                                                                            <input
+                                                                                class="bg-card border-black-100 rounded-xl w-80"
+                                                                                [value]="hzd.lat_long || 0"
+                                                                                [matTooltip]="hzd.lat_long" type="text"
+                                                                                (click)="onHazardsChange($event.target.value, hzd)" />
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ng-container>
                                                     <!-- <ng-container *ngFor="let hzrd of holeSetfor27Hazards;">
                                                         <tr class="topheader">
                                                             <th class="holehr">
@@ -1613,6 +1657,28 @@
                                                                 </span>
                                                             </td>
                                                         </tr>
+                                                    </ng-container>
+                                                    <ng-container *ngFor="let hole of holeSetfor36; let i = index">
+                                                        <ng-container *ngIf="hole.holeNo === currentHoleNo">
+                                                            <ng-container *ngFor="let hzd of hole.hazards">
+                                                                <tr class="topheader">
+                                                                    <th class="holehr">
+                                                                        <div class="flex justify-center gap-2">
+                                                                            Hazards
+                                                                        </div>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span>
+                                                                            <input
+                                                                                class="bg-card border-black-100 rounded-xl w-80"
+                                                                                [value]="hzd.lat_long || 0"
+                                                                                [matTooltip]="hzd.lat_long" type="text"
+                                                                                (click)="onHazardsChange($event.target.value, hzd)" />
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </ng-container>
                                                     </ng-container>
                                                     <!-- <ng-container *ngFor="let hzrd of holeSetfor36Hazards;">
                                                         <tr class="topheader">
