@@ -37,11 +37,7 @@
                             "crypto-js/enc-base64",
                             "flat",
                             "moment",
-                            "quill",
-                            "jspdf",
-                            "jspdf-autotable",
-                            "xlsx",
-                            "crypto-js"
+                            "quill"
                         ],
                         "assets": [
                             "src/favicon-16x16.png",

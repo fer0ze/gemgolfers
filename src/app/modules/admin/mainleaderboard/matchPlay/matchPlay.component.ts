@@ -78,6 +78,10 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 return [{ value: '2', label: 'SINGLES' }];
             case 'DOUBLES':
                 return [{ value: '1', label: 'FOUR BALL' }];
+            case 'GREENSOME':
+                return [{ value: '1', label: 'GREENSOME' }];
+            case 'FOURSOME':
+                return [{ value: '1', label: 'FOURSOME' }];
             default:
                 return [];
         }
@@ -91,7 +95,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         } else if (this.dropdownOptions[0].value == '1') {
             this.isDoubles = true;
             this.isSingles = false;
-            this.getDoubleResult(this.flightRound);
+            this.getDoublesResult(this.flightRound);
         } else if (this.dropdownOptions[0].value == '2') {
             this.isDoubles = false;
             this.isSingles = true;

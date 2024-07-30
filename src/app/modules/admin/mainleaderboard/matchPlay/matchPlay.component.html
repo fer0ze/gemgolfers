@@ -1,7 +1,7 @@
 <div class="flex flex-auto px-6 sm:px-10">
     <div class="flex flex-col flex-auto w-full max-w-2xl sm:max-w-2xl mx-auto">
         <div class="mt-3 flex flex-col sm:flex-row items-center justify-end sm:mt-0 sm:ml-2">
-            <mat-form-field class="fuse-mat-no-subscript pb-2 w-full sm:w-36 mx-2">
+            <mat-form-field *ngIf="flightRound > 0" class="fuse-mat-no-subscript pb-2 w-full sm:w-36 mx-2">
                 <mat-select (selectionChange)="selectionChanged($event)" [value]="dropdownOptions[0]?.value">
                     <mat-option *ngFor="let option of dropdownOptions" [value]="option.value">
                         {{ option.label }}
@@ -214,7 +214,7 @@
                             <div *ngIf="player.score>0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
                                 <span class="text-md w-20 sm:w-full md:w-full text-center">
-                                    Round - {{i}}
+                                   All Round
                                 </span>
                                 <span class="pt-2 font-bold text-3xl" [ngStyle]="{'color':player.winningColor}">
                                     {{player.score}} Up
