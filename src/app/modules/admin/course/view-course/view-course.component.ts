@@ -887,6 +887,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${0},${0} `,
                         greenCenterLatLong: `${0},${0} `,
                         greenEndLatLong: `${0},${0} `,
+                        hazards: [],
                     };
 
                     this.holeSetfor9.push(hole);
@@ -908,6 +909,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${0},${0} `,
                         greenCenterLatLong: `${0},${0} `,
                         greenEndLatLong: `${0},${0} `,
+                        hazards: [],
                     };
 
                     this.holeSetfor18.push(hole);
@@ -929,6 +931,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${0},${0} `,
                         greenCenterLatLong: `${0},${0} `,
                         greenEndLatLong: `${0},${0} `,
+                        hazards: [],
                     };
 
                     this.holeSetfor27.push(hole);
@@ -949,6 +952,7 @@ export class ViewCourseComponent implements OnInit {
                         greenStartLatLong: `${0},${0} `,
                         greenCenterLatLong: `${0},${0} `,
                         greenEndLatLong: `${0},${0} `,
+                        hazards: [],
                     };
 
                     this.holeSetfor36.push(hole);
