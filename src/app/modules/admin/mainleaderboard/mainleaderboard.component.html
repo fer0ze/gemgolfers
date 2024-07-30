@@ -64,6 +64,12 @@
             <ng-container *ngSwitchCase="'MATCH_PLAY'">
                 <app-match-play [data]="Leaderboard"></app-match-play>
             </ng-container>
+            <ng-container *ngSwitchCase="'GREENSOME'">
+                <app-scramble [data]="Leaderboard"></app-scramble>
+            </ng-container>
+            <ng-container *ngSwitchCase="'FOURSOME'">
+                <app-scramble [data]="Leaderboard"></app-scramble>
+            </ng-container>
             <ng-container *ngSwitchCase="'NASSAU'">
                 <app-nassau [data]="Leaderboard"></app-nassau>
             </ng-container>
