@@ -438,7 +438,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         this.ngOnInit();
     }
 
-    changeRound(item) {
+    changeRound(item) { 
         this.team1PointD = 0;
         this.team2PointD = 0;
         this.flightRound = item.value;
