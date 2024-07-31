@@ -199,6 +199,13 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.SignUpReportModule),
             },
             {
+                path: 'reports/UserActivity',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/userActivityReport/userActivityReport.module'
+                    ).then((m) => m.UserActivityModule),
+            },
+            {
                 path: 'reports/players',
                 loadChildren: () =>
                     import(

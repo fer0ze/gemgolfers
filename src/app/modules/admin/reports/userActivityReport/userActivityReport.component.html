@@ -1,0 +1,387 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="text-5xl font-extrabold bg-card py-8 px-6 md:px-8">
+        User Daily Activity
+    </div>
+    <div class="flex items-center justify-center pb-12 bg-card">
+        <div class="w-90">
+            <form [formGroup]="scheduleForm">
+                <div class="flex">
+                    <mat-form-field appearance="fill" class="fuse-mat-no-subscript flex-auto">
+                        <mat-select placeholder="Today" (selectionChange)="Dailysetup($event)" class="mr-1.5">
+                            <mat-option value="Today">Today</mat-option>
+                            <mat-option value="Yesterday">Yesterday</mat-option>
+                            <mat-option value="Last_Week">Last Week</mat-option>
+                            <mat-option value="Last_Month">Last Month</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+        <div class=" mx-7 w-90">
+            <form [formGroup]="scheduleForm">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                        [svgIcon]="'heroicons_solid:cake'"></mat-icon>
+                    <input matInput [matDatepicker]="startDate" formControlName="startDate"
+                        [placeholder]="'Enter Start Date'" />
+                    <mat-datepicker-toggle matSuffix [for]="startDate">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #startDate></mat-datepicker>
+                </mat-form-field>
+            </form>
+        </div>
+
+        <div class=" mx-5 w-90">
+            <form [formGroup]="scheduleForm">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                        [svgIcon]="'heroicons_solid:cake'"></mat-icon>
+                    <input matInput [matDatepicker]="endDate" formControlName="endDate"
+                        [placeholder]="'Enter End Date'" />
+                    <mat-datepicker-toggle matSuffix [for]="endDate">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #endDate></mat-datepicker>
+                </mat-form-field>
+            </form>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" (click)="onDatePick()">
+                Search Round
+            </button>
+            <!-- <button mat-raised-button color="primary" (click)="showDuplicates()" >Duplicates</button> -->
+        </div>
+
+    </div>
+
+    <div class="flex flex-wrap w-full max-w-screen-xl mx-auto px-6 md:px-8">
+
+        <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-8 w-full mt-8">
+
+            <!-- Conversions -->
+            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex items-start justify-between">
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                        Login Users
+                    </div>
+                    <div class="ml-2 -mt-2 -mr-3">
+
+
+                    </div>
+                </div>
+                <div class="flex flex-col items-center mt-8">
+                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
+                        {{ this.clubPlayers ?? 0 }}
+                    </div>
+                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">
+                        Total
+                    </div>
+                </div>
+            </div>
+            <!-- Impressions -->
+            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex items-start justify-between">
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                        New SignUps
+                    </div>
+                    <div class="ml-2 -mt-2 -mr-3">
+
+
+                    </div>
+                </div>
+                <div class="flex flex-col items-center mt-8">
+                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">
+                        {{ this.mobilePlayers ?? 0 }}
+                    </div>
+                    <div class="text-lg font-medium text-red-600 dark:text-blue-500">
+                        Total
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex items-start justify-between">
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                       New Tournaments
+                    </div>
+                    <div class="ml-2 -mt-2 -mr-3">
+
+
+                    </div>
+                </div>
+                <div class="flex flex-col items-center mt-8">
+                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
+                        {{ this.trailPlayers ?? 0 }}
+                    </div>
+                    <div class="text-lg font-medium text-amber-600 dark:text-blue-500">
+                        Total
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex items-start justify-between">
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                        New Tours
+                    </div>
+                    <div class="ml-2 -mt-2 -mr-3">
+
+
+                    </div>
+                </div>
+                <div class="flex flex-col items-center mt-8">
+                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">
+                        {{ this.premiuimPlayers ?? 0 }}
+                    </div>
+                    <div class="text-lg font-medium text-green-600 dark:text-blue-500">
+                        Total
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex items-start justify-between">
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                        New League
+                    </div>
+                    <div class="ml-2 -mt-2 -mr-3">
+
+
+                    </div>
+                </div>
+                <div class="flex flex-col items-center mt-8">
+                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-purple-600">
+                        {{ this.premiuimPlayers ?? 0 }}
+                    </div>
+                    <div class="text-lg font-medium text-purple-600">
+                        Total
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitors vs. Page Views -->
+        <!-- <div class="flex flex-col flex-auto mt-8 bg-card shadow rounded-2xl overflow-hidden">
+            <div class="flex items-start justify-between m-6 mb-0">
+                <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                    Players Sign-up vs monthly basis
+                </div>
+                <div class="ml-2">
+                    <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button
+                        [matMenuTriggerFor]="conversionMenu">
+                        <span class="font-medium text-sm text-secondary">20 months</span>
+                    </button>
+                    <mat-menu #conversionMenu="matMenu">
+                        <button mat-menu-item>20 months</button>
+                    </mat-menu>
+                </div>
+            </div>
+            <div class="flex items-start mt-6 mx-6">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
+                    <div class="flex flex-col">
+                        <div class="flex items-center">
+                            <div class="font-medium text-secondary leading-5">
+                                Overall Mobile Players
+                            </div>
+                            <mat-icon class="ml-1.5 icon-size-4 text-hint"
+                                [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+                        </div>
+                        <div class="flex items-start mt-2">
+                            <div class="text-4xl font-bold tracking-tight leading-none">
+                                {{ this.mobilePlayers ?? 0 }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto h-80 mt-3">
+                <apx-chart class="flex-auto w-full h-full" [chart]="chartVisitorsVsPageViews.chart"
+                    [colors]="chartVisitorsVsPageViews.colors" [dataLabels]="chartVisitorsVsPageViews.dataLabels"
+                    [grid]="chartVisitorsVsPageViews.grid" [labels]="chartVisitorsVsPageViews.labels"
+                    [legend]="chartVisitorsVsPageViews.legend" [plotOptions]="chartVisitorsVsPageViews.plotOptions"
+                    [series]="chartVisitorsVsPageViews.series[0]" [states]="chartVisitorsVsPageViews.states"
+                    [stroke]="chartVisitorsVsPageViews.stroke" [tooltip]="chartVisitorsVsPageViews.tooltip"
+                    [xaxis]="chartVisitorsVsPageViews.xaxis" [yaxis]="chartVisitorsVsPageViews.yaxis"></apx-chart>
+            </div>
+        </div> -->
+
+        <!-- Section title -->
+        <div class="w-full mt-12">
+            <!-- <div class="text-2xl font-semibold tracking-tight leading-6">
+                Your Audience
+            </div>
+            <div class="font-medium tracking-tight text-secondary">
+                Demographic properties of your users
+            </div> -->
+        </div>
+        <div class="grid grid-cols-4 gap-8 w-full mt-6 md:mt-8">
+            <!-- New vs. Returning -->
+            <div class="flex flex-col col-span-4 flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
+                <div>
+                    <div class="flex flex-auto w-full justify-between">
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-80">
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                            <input matInput (keyup)="applyFilter($event.target.value)" [autocomplete]="'off'"
+                                [placeholder]="'Search'" />
+                        </mat-form-field>
+
+                        <button (click)="exportToExcel()" class="bg-accent" mat-flat-button [color]="'accent'">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
+                            <span class="ml-2 ">Export Selected</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto mt-6">
+                    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox (change)="
+                                            $event ? masterToggle() : null
+                                        " [checked]="
+                                            selection.hasValue() &&
+                                            isAllSelected()
+                                        " [indeterminate]="
+                                            selection.hasValue() &&
+                                            !isAllSelected()
+                                        " [aria-label]="checkboxLabel()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let assessment">
+                                <span class="pr-6 whitespace-nowrap">
+                                    <mat-checkbox (click)="
+                                                    $event.stopPropagation()
+                                                " (change)="
+                                                    $event
+                                                        ? selection.toggle(
+                                                              assessment
+                                                          )
+                                                        : null
+                                                " [checked]="
+                                                    selection.isSelected(
+                                                        assessment
+                                                    )
+                                                " [aria-label]="
+                                                    checkboxLabel(
+                                                        assessment
+                                                    )
+                                                ">
+                                    </mat-checkbox>
+                                </span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                <a [routerLinkActive]="'active'" [routerLink]="[
+                                '/players/viewProfile/' + row.id
+                            ]">
+                                    <span class=" underline underline-offset-1 cursor-pointer">
+                                        {{ row.name }}
+                                    </span>
+                                </a>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef>Date</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.date | date: 'MMM d, y'}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef>Email</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.email }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="phone">
+                            <th mat-header-cell *matHeaderCellDef>Phone</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.phone }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="countryCode">
+                            <th mat-header-cell *matHeaderCellDef>Country</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.countryCode?row.countryCode:'-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="club">
+                            <th mat-header-cell *matHeaderCellDef>Club</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.club?row.club:'-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="subscription">
+                            <th mat-header-cell *matHeaderCellDef>Subscription</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{ row.subscription?row.subscription:'-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="flights">
+                            <th mat-header-cell *matHeaderCellDef>Rounds Played</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                                    (click)="toggleDetails(row.id)">
+                                    <mat-icon class="icon-size-5" [svgIcon]="
+                                            selectedPlayer?.id === row.id
+                                                ? 'heroicons_solid:chevron-up'
+                                                : 'heroicons_solid:chevron-down'
+                                        "></mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="expandedDetail">
+                            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                                <div class="example-element-detail" [@detailExpand]="
+                                        element == expandedElement
+                                            ? 'expanded'
+                                            : 'collapsed'
+                                    ">
+                                    <div
+                                        class="flex flex-col col-span-4 flex-auto bg-card shadow rounded-2xl border-gray-300 overflow-hidden m-4">
+
+                                        <table mat-table [dataSource]="dataSourcePlayer" matSort>
+
+                                            <ng-container matColumnDef="dailyRound">
+                                                <th mat-header-cell *matHeaderCellDef>Daily Rounds</th>
+                                                <td mat-cell *matCellDef="let row; let i = index">
+                                                    {{ row.dailyRoundCount }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="tournament">
+                                                <th mat-header-cell *matHeaderCellDef>Tournaments</th>
+                                                <td mat-cell *matCellDef="let row; let i = index">
+                                                    {{ row.tournamentCount }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="league">
+                                                <th mat-header-cell *matHeaderCellDef>League</th>
+                                                <td mat-cell *matCellDef="let row; let i = index">
+                                                    {{ row.leagueCount }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="tour">
+                                                <th mat-header-cell *matHeaderCellDef>Tours</th>
+                                                <td mat-cell *matCellDef="let row; let i = index">
+                                                    {{ row.tourCount }}
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="displayedPlayersColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedPlayersColumns"></tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="example-element-row"
+                            [class.example-expanded-row]="expandedElement === row"
+                            (click)="expandedElement = expandedElement === row ? null : row"></tr>
+                        <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" [attr.id]="element.id"
+                            class="example-detail-row warn"></tr>
+                    </table>
+                    <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 100,200,500]"></mat-paginator>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

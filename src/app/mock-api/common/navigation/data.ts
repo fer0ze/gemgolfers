@@ -612,6 +612,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 link: '/reports/signUpPlayers',
             },
             {
+                id: 'reports.UserActivity',
+                title: 'User Activity',
+                type: 'basic',
+                icon: 'heroicons_outline:chip',
+                link: '/reports/UserActivity',
+            },
+            {
                 id: 'reports.leagues',
                 title: 'Leagues',
                 type: 'basic',
