@@ -93,6 +93,28 @@ export const getPlayersListReport = gql`
         }
     }
 `;
+export const getPlayersActivityReportDateWise = gql`
+    query getPlayersActivityReportDateWise($fromDate: timestamptz!, $toDate: timestamptz!) {
+        user_activity_log(
+            where: {
+                _and: [
+                    { dateTime: { _gte: $fromDate } }
+                    { dateTime: { _lte: $toDate } }
+                ]
+            }
+                order_by: { dateTime: asc }
+        ) {
+            id
+            activityType
+            userId
+            name
+            email
+            dateTime
+            description
+            ipAddress
+        }
+    }
+`;
 export const getPlayersListReportDateWise = gql`
     query PostsGetQuery($fromDate: timestamptz!, $toDate: timestamptz!) {
         player(

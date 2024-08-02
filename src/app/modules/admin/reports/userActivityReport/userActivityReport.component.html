@@ -46,7 +46,7 @@
         </div>
         <div>
             <button mat-raised-button color="primary" (click)="onDatePick()">
-                Search Round
+                Search
             </button>
             <!-- <button mat-raised-button color="primary" (click)="showDuplicates()" >Duplicates</button> -->
         </div>
@@ -100,7 +100,7 @@
             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                       New Tournaments
+                        New Tournaments
                     </div>
                     <div class="ml-2 -mt-2 -mr-3">
 
@@ -138,7 +138,7 @@
             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex items-start justify-between">
                     <div class="text-lg font-medium tracking-tight leading-6 truncate">
-                        New League
+                        New Leagues
                     </div>
                     <div class="ml-2 -mt-2 -mr-3">
 
@@ -147,7 +147,7 @@
                 </div>
                 <div class="flex flex-col items-center mt-8">
                     <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-purple-600">
-                        {{ this.premiuimPlayers ?? 0 }}
+                        {{ this.leaguePlayers ?? 0 }}
                     </div>
                     <div class="text-lg font-medium text-purple-600">
                         Total
@@ -211,7 +211,7 @@
                 Demographic properties of your users
             </div> -->
         </div>
-        <div class="grid grid-cols-4 gap-8 w-full mt-6 md:mt-8">
+        <div class="grid grid-cols-4 gap-8 w-full">
             <!-- New vs. Returning -->
             <div class="flex flex-col col-span-4 flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
                 <div>
@@ -222,66 +222,28 @@
                                 [placeholder]="'Search'" />
                         </mat-form-field>
 
-                        <button (click)="exportToExcel()" class="bg-accent" mat-flat-button [color]="'accent'">
+                        <!-- <button (click)="exportToExcel()" class="bg-accent" mat-flat-button [color]="'accent'">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
                             <span class="ml-2 ">Export Selected</span>
-                        </button>
+                        </button> -->
                     </div>
                 </div>
                 <div class="flex flex-col flex-auto mt-6">
-                    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+                    <table mat-table [dataSource]="dataSource" matSort>
                         <ng-container matColumnDef="id">
-                            <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox (change)="
-                                            $event ? masterToggle() : null
-                                        " [checked]="
-                                            selection.hasValue() &&
-                                            isAllSelected()
-                                        " [indeterminate]="
-                                            selection.hasValue() &&
-                                            !isAllSelected()
-                                        " [aria-label]="checkboxLabel()">
-                                </mat-checkbox>
-                            </th>
-                            <td mat-cell *matCellDef="let assessment">
-                                <span class="pr-6 whitespace-nowrap">
-                                    <mat-checkbox (click)="
-                                                    $event.stopPropagation()
-                                                " (change)="
-                                                    $event
-                                                        ? selection.toggle(
-                                                              assessment
-                                                          )
-                                                        : null
-                                                " [checked]="
-                                                    selection.isSelected(
-                                                        assessment
-                                                    )
-                                                " [aria-label]="
-                                                    checkboxLabel(
-                                                        assessment
-                                                    )
-                                                ">
-                                    </mat-checkbox>
-                                </span>
+                            <th mat-header-cell *matHeaderCellDef>Sr.</th>
+                            <td mat-cell *matCellDef="let row; let i = index">
+                                {{i+1}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef>Name</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                <a [routerLinkActive]="'active'" [routerLink]="[
-                                '/players/viewProfile/' + row.id
-                            ]">
+                                <a [routerLinkActive]="'active'" [routerLink]="['/players/viewProfile/' + row.id]">
                                     <span class=" underline underline-offset-1 cursor-pointer">
                                         {{ row.name }}
                                     </span>
                                 </a>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="date">
-                            <th mat-header-cell *matHeaderCellDef>Date</th>
-                            <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.date | date: 'MMM d, y'}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="email">
@@ -290,93 +252,23 @@
                                 {{ row.email }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="phone">
-                            <th mat-header-cell *matHeaderCellDef>Phone</th>
+                        <ng-container matColumnDef="totalActivity">
+                            <th mat-header-cell *matHeaderCellDef>Total Activity</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.phone }}
+                                {{ row.count }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="countryCode">
-                            <th mat-header-cell *matHeaderCellDef>Country</th>
+                        <ng-container matColumnDef="details">
+                            <th mat-header-cell *matHeaderCellDef>Details</th>
                             <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.countryCode?row.countryCode:'-' }}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="club">
-                            <th mat-header-cell *matHeaderCellDef>Club</th>
-                            <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.club?row.club:'-' }}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="subscription">
-                            <th mat-header-cell *matHeaderCellDef>Subscription</th>
-                            <td mat-cell *matCellDef="let row; let i = index">
-                                {{ row.subscription?row.subscription:'-' }}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="flights">
-                            <th mat-header-cell *matHeaderCellDef>Rounds Played</th>
-                            <td mat-cell *matCellDef="let row; let i = index">
-                                <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
-                                    (click)="toggleDetails(row.id)">
-                                    <mat-icon class="icon-size-5" [svgIcon]="
-                                            selectedPlayer?.id === row.id
-                                                ? 'heroicons_solid:chevron-up'
-                                                : 'heroicons_solid:chevron-down'
-                                        "></mat-icon>
+                                <button [disabled]="row.totalROunds == 0" mat-icon-button color="primary">
+                                    <mat-icon (click)="openDetailDialogs(row.userId)" class="mat-18">reorder</mat-icon>
                                 </button>
-                            </td>
+                            </td>   
                         </ng-container>
-                        <ng-container matColumnDef="expandedDetail">
-                            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-                                <div class="example-element-detail" [@detailExpand]="
-                                        element == expandedElement
-                                            ? 'expanded'
-                                            : 'collapsed'
-                                    ">
-                                    <div
-                                        class="flex flex-col col-span-4 flex-auto bg-card shadow rounded-2xl border-gray-300 overflow-hidden m-4">
 
-                                        <table mat-table [dataSource]="dataSourcePlayer" matSort>
-
-                                            <ng-container matColumnDef="dailyRound">
-                                                <th mat-header-cell *matHeaderCellDef>Daily Rounds</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.dailyRoundCount }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="tournament">
-                                                <th mat-header-cell *matHeaderCellDef>Tournaments</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.tournamentCount }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="league">
-                                                <th mat-header-cell *matHeaderCellDef>League</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.leagueCount }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container matColumnDef="tour">
-                                                <th mat-header-cell *matHeaderCellDef>Tours</th>
-                                                <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.tourCount }}
-                                                </td>
-                                            </ng-container>
-                                            <tr mat-header-row *matHeaderRowDef="displayedPlayersColumns"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: displayedPlayersColumns"></tr>
-
-                                        </table>
-                                    </div>
-                                </div>
-                            </td>
-                        </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="example-element-row"
-                            [class.example-expanded-row]="expandedElement === row"
-                            (click)="expandedElement = expandedElement === row ? null : row"></tr>
-                        <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" [attr.id]="element.id"
-                            class="example-detail-row warn"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                     </table>
                     <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 100,200,500]"></mat-paginator>
                 </div>

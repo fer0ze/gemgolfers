@@ -33,8 +33,9 @@ export class UserActivityService {
     /**
      * Get data
      */
-    getData(): Observable<any> {
-        return this.facadeService.getPlayersListReport().pipe(
+    getData(todayStart,todayEnd): Observable<any> {
+
+        return this.facadeService.getPlayersActivityReport(todayStart,todayEnd).pipe(
             tap((response: any) => {
                 this._data.next(response);
             })
@@ -46,7 +47,7 @@ export class UserActivityService {
      * Get data
      */
     getFilterData(currentDate, lastDate): Observable<any> {
-        return this.facadeService.getPlayersListReportDateWise(currentDate, lastDate).pipe(
+        return this.facadeService.getPlayersActivityReport(currentDate, lastDate).pipe(
             tap((response: any) => {
                 this._data.next(response);
             })

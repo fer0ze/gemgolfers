@@ -54,6 +54,18 @@ export class PlayersService {
             .pipe(map((item) => item.data))
 
     }
+    public getPlayersActivityReport(fromDate?: any, toDate?: any): Observable<any> {
+        return this.apollo
+            .subscribe({
+                query: Query.getPlayersActivityReportDateWise,
+                variables: {
+                    fromDate: fromDate,
+                    toDate: toDate,
+                }
+            })
+            .pipe(map((item) => item.data))
+
+    }
     public getPlayersListByAdminCONGU(): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

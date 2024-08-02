@@ -28,6 +28,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 import { UserActivityReport } from './userActivityReport.component';
 import { Resolver } from './userActivityReport.resolver.component';
+import { DialogUserActivityComponent } from '../../dialogs/dialog-user-activity/dialog-user-activity.component';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
@@ -39,7 +40,7 @@ const ClubReportRoutes: Route[] = [
 ];
 
 @NgModule({
-    declarations: [UserActivityReport],
+    declarations: [UserActivityReport,DialogUserActivityComponent],
     imports: [
         RouterModule.forChild(ClubReportRoutes),
         MatButtonModule,
@@ -67,6 +68,6 @@ const ClubReportRoutes: Route[] = [
         MatInputModule,
         MatDatepickerModule,
     ],
-    providers: [DatePipe],
+    providers: [DatePipe,Resolver],
 })
 export class UserActivityModule { }

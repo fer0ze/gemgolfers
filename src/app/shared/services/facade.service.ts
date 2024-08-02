@@ -200,6 +200,9 @@ export class FacadeService {
   getPlayersListReport() {
     return this.playerService.getPlayersListReport();
   }
+  getPlayersActivityReport(currentDate, lastDate) {
+    return this.playerService.getPlayersActivityReport(currentDate, lastDate);
+  }
   getPlayersListReportDateWise(currentDate, lastDate) {
     return this.playerService.getPlayersListReportDateWise(currentDate, lastDate);
   }

@@ -27,6 +27,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Constants, General } from 'app/shared/classes/general';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
+import { DialogUserActivityComponent } from '../../dialogs/dialog-user-activity/dialog-user-activity.component';
 @Component({
     selector: 'userActivityReport',
     templateUrl: './userActivityReport.component.html',
@@ -57,12 +58,13 @@ export class UserActivityReport implements OnInit, AfterViewInit {
     copyPlayers: any = [];
     clubPlayers: number = 0;
     mobilePlayers: number = 0;
+    leaguePlayers: number = 0;
     trailPlayers: number = 0;
     premiuimPlayers: number = 0;
     SecondLastMonth: number = 0;
     dataSource: MatTableDataSource<any>;
     dataSourcePlayer: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'date', 'email', 'phone', 'countryCode', 'club', 'subscription', 'flights',];
+    displayedColumns = ['id', 'name', 'email', 'totalActivity', 'details'];
     displayedPlayersColumns = ['dailyRound', 'tournament', 'league', 'tour'];
     monthName = [
         'January',
@@ -106,36 +108,37 @@ export class UserActivityReport implements OnInit, AfterViewInit {
             .subscribe((data: any) => {
                 this.data = data;
                 console.log(data);
-                let d = new Date();
-                d.setDate(1);
-                for (let i = 0; i <= 12; i++) {
-                    // //console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
-                    this.labelsE.push(
-                        this.monthName[d.getMonth()] + ' ' + d.getFullYear()
-                    );
-                    d.setMonth(d.getMonth() - 1);
-                }
-                //console.log(this.labelsE);
-                this.mobilePlayers = this.data.MobileAggregateQL.aggregate.count
-                this.clubPlayers = this.data.ClubAggregateQL.aggregate.count
-                this.trailPlayers = this.data.TrialAggregateQL.aggregate.count
-                this.premiuimPlayers = this.data.PremiumAggregateQL.aggregate.count
-                this.sorts();
+                // let d = new Date();
+                // d.setDate(1);
+                // for (let i = 0; i <= 12; i++) {
+                //     // //console.log(this.monthName[d.getMonth()] + ' ' + d.getFullYear());
+                //     this.labelsE.push(
+                //         this.monthName[d.getMonth()] + ' ' + d.getFullYear()
+                //     );
+                //     d.setMonth(d.getMonth() - 1);
+                // }
+                // //console.log(this.labelsE);
+                // this.mobilePlayers = this.data.MobileAggregateQL.aggregate.count
+                // this.clubPlayers = this.data.ClubAggregateQL.aggregate.count
+                // this.trailPlayers = this.data.TrialAggregateQL.aggregate.count
+                // this.premiuimPlayers = this.data.PremiumAggregateQL.aggregate.count
+                // this.sorts();
 
-                this._seriesE[0] = [
-                    {
-                        data: this.dataMembersE,
-                        name: 'Players',
-                        type: 'line',
-                    },
-                    {
-                        data: this.dataMembersE,
-                        name: 'Players',
-                        type: 'column',
-                    },
-                ];
+                // this._seriesE[0] = [
+                //     {
+                //         data: this.dataMembersE,
+                //         name: 'Players',
+                //         type: 'line',
+                //     },
+                //     {
+                //         data: this.dataMembersE,
+                //         name: 'Players',
+                //         type: 'column',
+                //     },
+                // ];
 
-                this._prepareChartData();
+                // this._prepareChartData();
+                this.groupDataByUserId(this.data.user_activity_log)
             })
     }
     ngAfterViewInit(): void {
@@ -144,253 +147,147 @@ export class UserActivityReport implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
 
+    groupDataByUserId(data: any[]) {
+        this.mobilePlayers, this.leaguePlayers, this.premiuimPlayers, this.trailPlayers, this.clubPlayers = 0;
+        const grouped = data.reduce((acc, item) => {
+            if (!acc[item.userId]) {
+                acc[item.userId] = {
+                    userId: item.userId,
+                    name: item.name,
+                    email: item.email,
+                    activities: [],
+                    count: 0
+                };
+                this.clubPlayers++;
+            }
+            if (item.activityType == 'NEW_USER_SIGNED_UP') {
+                this.mobilePlayers++;
+            }
+            if (item.activityType == 'CREATED_NEW_LEAGUE') {
+                this.leaguePlayers++;
+            }
+            if (item.activityType == 'CREATED_NEW_TOUR') {
+                this.premiuimPlayers++;
+            }
+            if (item.activityType == 'CREATED_TOURNAMENT') {
+                this.trailPlayers++;
+            }
+            acc[item.userId].activities.push({ date: item.dateTime, description: item.description });
+            acc[item.userId].count++;
+            return acc;
+        }, {});
+
+        this.copyPlayers = Object.values(grouped);
+        // this.totalCount = data.length;
+        this.dataSource = new MatTableDataSource(this.copyPlayers);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
     }
-    sorts() {
-        let myData: any[] = [];
-        //let flights = [...this.data.flight_member];
-        let memCounter = 0;
-        let playerCounter = 0;
-        let flightCounter = 0;
-        let prevDate = null;
-        let prevPlayerDate = null;
-        let count = 0;
-        let match = [];
-        console.log("match");
-        let flag: boolean = true;
-
-        for (let item of this.data.player) {
-            if (item.createdAt != null) {
-                let SplitDate = item.createdAt?.split('T');
-                if (SplitDate[0] == prevPlayerDate) {
-                    playerCounter++;
-                    prevPlayerDate = SplitDate[0];
-                    // this.dataMembers[this.dataMembers.length - 1]['y'] = playerCounter;
-                } else {
-                    playerCounter = 0;
-                    playerCounter++;
-                    prevPlayerDate = SplitDate[0];
-                    let dateObj = {
-                        x: new Date(item.createdAt),
-                        y: playerCounter,
-                    };
-                    //   this.dataMembers.push(dateObj);
-                }
-
-                let obj = {
-                    id: item.id,
-                    count: ++count,
-                    name: item.fullName,
-                    date: item.createdAt?.substring(0, 10),
-                    email: item.email,
-                    phone: item.phone,
-                    flights: 0,
-                    club: item.membership[0]?.club?.name,
-                    subscription: item.subscription?.subscription,
-                    countryCode: item.countryCode,
-                };
-                let date = new Date(item?.createdAt).toLocaleString('default', {
-                    month: 'long',
-                    year: 'numeric',
-                });
-                if (flag) {
-                    let countA = this.labelsE.find((a) => {
-                        return a == date;
-                    });
-                    console.log(countA);
-                    if (countA !== undefined && prevDate == countA) {
-                        memCounter++;
-                        prevDate = countA;
-                        this.dataMembersE[this.dataMembersE.length - 1] = memCounter;
-                    } else if (countA !== undefined) {
-                        memCounter = 0;
-                        memCounter++;
-                        prevDate = countA;
-                        this.dataMembersE.push(memCounter);
-                    } else if (countA == undefined) {
-                        flag = false;
-                    }
-                }
-                this.Players.push(obj);
-            }
-        }
-        this.copyPlayers=[...this.Players];
-        this.dataSource = new MatTableDataSource(this.Players.splice(0,20));
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-       
-        console.log("end-match");
-    }
-    async toggleDetails(productId: string) {
-        let dailyRoundCount = 0;
-        let tournamentCount = 0;
-        let leagueCount = 0;
-        this.expandedElement = this.expandedElement === productId ? null : productId;
-        let rows = [];
-        // If the product is already selected...
-        if (this.selectedPlayer != null && this.selectedPlayer == productId) {
-            // Close the details
-            //document.getElementById(productId).classList.add('warn');
-            const selectedPlayerElement = document.getElementById(productId);
-            if (selectedPlayerElement) {
-                selectedPlayerElement.classList.add('warn');
-            }
-            this.selectedPlayer = null;
-            return;
-        } else if (
-            this.selectedPlayer != null &&
-            this.selectedPlayer != productId
-        ) {
-            const selectedPlayerElement = document.getElementById(this.selectedPlayer);
-            if (selectedPlayerElement) {
-                selectedPlayerElement.classList.add('warn');
-            }
-        }
-        let count = await this.facadeService.getTotalFlightsPlayedByPlayer(
-            productId
-        );
-        console.log(count);
-
-        this.flightCount = count['flight_member'];
-        for (let obj of this.flightCount) {
-            if (obj.flight.tournament.singleRound) {
-                dailyRoundCount++;
-            } else {
-                tournamentCount++;
-            }
-            if (obj.flight.tournament.league) {
-                leagueCount++;
-            }
-
-        }
-        let item = {
-            id: '1',
-            dailyRoundCount: dailyRoundCount,
-            tournamentCount: tournamentCount,
-            leagueCount: leagueCount,
-            tourCount: 0,
-        }
-        rows.push(item);
-        if (rows.length == 0) {
-            let item = {
-                id: '1',
-                dailyRoundCount: 0,
-                tournamentCount: 0,
-                leagueCount: 0,
-                tourCount: 0,
-            }
-            rows.push(item);
-        }
-        this.dataSourcePlayer = new MatTableDataSource(rows);
-        this.dataSourcePlayer.paginator = this.paginator;
-        this.dataSourcePlayer.sort = this.sort;
-        const selectedPlayerElement = document.getElementById(productId);
-        if (selectedPlayerElement) {
-            selectedPlayerElement.classList.remove('warn');
-        }
-        this.selectedPlayer = productId;
-    }
-    private _prepareChartData(): void {
-
-        // Visitors vs Page Views
-        this.chartVisitorsVsPageViews = {
-            chart: {
-                fontFamily: 'inherit',
-                foreColor: 'inherit',
-                height: '100%',
-                type: 'line',
-                toolbar: {
-                    show: false,
-                },
-                zoom: {
-                    enabled: false,
-                },
-                events: {
-                    dataPointSelection: (e, chart, options) => {
-
-                        //console.log(options);
-                        //console.log(this.labelsE[options.dataPointIndex]);
-                        const { startDate, endDate } = General.getMonthDates(this.labelsE[options.dataPointIndex]);
-                        this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
-                            subscribe((res) => {
-                                //console.log(res);
-                                const dialogRef = this.dialog.open(DialogPlayersComponent, {
-                                    data: { players: res.data?.player, key: 'all', date: startDate },
-                                });
-                            })
-                    },
-                },
-            },
-            colors: ['#64748B', '#94A3B8'],
-            dataLabels: {
-                enabled: true,
-                enabledOnSeries: [0],
-                background: {
-                    borderWidth: 0,
-                },
-            },
-            grid: {
-                borderColor: 'var(--fuse-border)',
-            },
-            labels: this.labelsE,
-            legend: {
-                show: false,
-            },
-            plotOptions: {
-                bar: {
-                    columnWidth: '50%',
-
-                },
-
-            },
-            series: this._seriesE,
-            states: {
-                hover: {
-                    filter: {
-                        type: 'darken',
-                        value: 0.75,
-                    },
-                },
-            },
-            stroke: {
-                width: [3, 0],
-            },
-            tooltip: {
-                followCursor: true,
-                theme: 'dark',
-            },
-            xaxis: {
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    color: 'var(--fuse-border)',
-                },
-                labels: {
-                    style: {
-                        colors: 'var(--fuse-text-secondary)',
-                    },
-                },
-                tooltip: {
-                    enabled: false,
-                },
-            },
-            yaxis: {
-                labels: {
-                    offsetX: 8,
-                    style: {
-                        colors: 'var(--fuse-text-secondary)',
-                    },
-                },
-            },
-        };
-console.log('end');
 
 
-    }
+    // private _prepareChartData(): void {
+
+    //     // Visitors vs Page Views
+    //     this.chartVisitorsVsPageViews = {
+    //         chart: {
+    //             fontFamily: 'inherit',
+    //             foreColor: 'inherit',
+    //             height: '100%',
+    //             type: 'line',
+    //             toolbar: {
+    //                 show: false,
+    //             },
+    //             zoom: {
+    //                 enabled: false,
+    //             },
+    //             events: {
+    //                 dataPointSelection: (e, chart, options) => {
+
+    //                     //console.log(options);
+    //                     //console.log(this.labelsE[options.dataPointIndex]);
+    //                     const { startDate, endDate } = General.getMonthDates(this.labelsE[options.dataPointIndex]);
+    //                     this._projectService.getPlayerData(startDate.toString(), endDate.toString()).
+    //                         subscribe((res) => {
+    //                             //console.log(res);
+    //                             const dialogRef = this.dialog.open(DialogPlayersComponent, {
+    //                                 data: { players: res.data?.player, key: 'all', date: startDate },
+    //                             });
+    //                         })
+    //                 },
+    //             },
+    //         },
+    //         colors: ['#64748B', '#94A3B8'],
+    //         dataLabels: {
+    //             enabled: true,
+    //             enabledOnSeries: [0],
+    //             background: {
+    //                 borderWidth: 0,
+    //             },
+    //         },
+    //         grid: {
+    //             borderColor: 'var(--fuse-border)',
+    //         },
+    //         labels: this.labelsE,
+    //         legend: {
+    //             show: false,
+    //         },
+    //         plotOptions: {
+    //             bar: {
+    //                 columnWidth: '50%',
+
+    //             },
+
+    //         },
+    //         series: this._seriesE,
+    //         states: {
+    //             hover: {
+    //                 filter: {
+    //                     type: 'darken',
+    //                     value: 0.75,
+    //                 },
+    //             },
+    //         },
+    //         stroke: {
+    //             width: [3, 0],
+    //         },
+    //         tooltip: {
+    //             followCursor: true,
+    //             theme: 'dark',
+    //         },
+    //         xaxis: {
+    //             axisBorder: {
+    //                 show: false,
+    //             },
+    //             axisTicks: {
+    //                 color: 'var(--fuse-border)',
+    //             },
+    //             labels: {
+    //                 style: {
+    //                     colors: 'var(--fuse-text-secondary)',
+    //                 },
+    //             },
+    //             tooltip: {
+    //                 enabled: false,
+    //             },
+    //         },
+    //         yaxis: {
+    //             labels: {
+    //                 offsetX: 8,
+    //                 style: {
+    //                     colors: 'var(--fuse-text-secondary)',
+    //                 },
+    //             },
+    //         },
+    //     };
+    //     console.log('end');
+
+
+    // }
 
     Dailysetup(selectedValue) {
         ////console.log(selectedValue)
@@ -398,7 +295,7 @@ console.log('end');
         if (selectedValue.value == Constants.DR_TODAY) {
             this.customValue = false;
             let currentDate = new Date();
-            this._data.getFilterData(currentDate, currentDate).subscribe();
+            this._data.getFilterData(this.datePipe.transform(currentDate, 'yyyy-MM-ddT00:00:00.000'), this.datePipe.transform(currentDate, 'yyyy-MM-ddT23:59:59.999')).subscribe();
         } else if (selectedValue.value == Constants.DR_YESTERDAY) {
             this.customValue = false;
             let currentDate = new Date();
@@ -406,23 +303,23 @@ console.log('end');
             ////console.log(currentDate)
             ////console.log(lastDate)
 
-            this._data.getFilterData(currentDate, lastDate).subscribe();
+            this._data.getFilterData(this.datePipe.transform(lastDate, 'yyyy-MM-ddT00:00:00.000'), this.datePipe.transform(currentDate, 'yyyy-MM-ddT00:00:00.000')).subscribe();
         } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfWeek();
             ////console.log(currentDate)
             ////console.log(lastDate)
-
-            this._data.getFilterData(currentDate, lastDate).subscribe();
+            this._data.getFilterData(this.datePipe.transform(lastDate, 'yyyy-MM-ddT00:00:00.000'), this.datePipe.transform(currentDate, 'yyyy-MM-ddT23:59:59.999')).subscribe();
+            // this._data.getFilterData(currentDate, lastDate).subscribe();
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
             this.customValue = false;
             let currentDate = new Date();
             let lastDate = this.endOfMonth();
             ////console.log(currentDate)
             ////console.log(lastDate)
-
-            this._data.getFilterData(currentDate, lastDate).subscribe();
+            this._data.getFilterData(this.datePipe.transform(lastDate, 'yyyy-MM-ddT00:00:00.000'), this.datePipe.transform(currentDate, 'yyyy-MM-ddT23:59:59.999')).subscribe();
+            // this._data.getFilterData(currentDate, lastDate).subscribe();
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;
@@ -468,52 +365,18 @@ console.log('end');
 
             //console.log(lastDate);
             //console.log(startDate);
-            this._data.getFilterData(lastDate, startDate).subscribe();
+            this._data.getFilterData(this.datePipe.transform(startDate, 'yyyy-MM-ddT00:00:00.000'), this.datePipe.transform(lastDate, 'yyyy-MM-ddT23:59:59.999')).subscribe();
+            // this._data.getFilterData(lastDate, startDate).subscribe();
         } else {
         }
     }
-    isAllSelected() {
-        ////console.log(this.dataSource);
-        if (this.dataSource) {
-            const numSelected = this.selection.selected.length;
-            const numRows = this.dataSource.data.length;
-            return numSelected === numRows;
-        }
-    }
 
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-        //console.log(this.selection);
-        //console.log(this.selection.selected.length);
-        this.isAllSelected()
-            ? this.selection.clear()
-            : this.dataSource.data.forEach((row) =>
-                this.selection.select(row)
-            );
-    }
+    openDetailDialogs(userId: string) {
+        let user = this.copyPlayers.filter((play) => { return play.userId == userId });
 
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: any): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-        }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
-            } player ${row.firstName} ${row.lastName}`;
-    }
-    exportToExcel(): void {
-
-        const data = this.selection.selected.map((item) => {
-            // Create a new object without the 'Details' column
-            const { Select, id, Details, count, flights, ...filteredItem } = item;
-            return filteredItem;
+        const dialogRef = this.dialog.open(DialogUserActivityComponent, {
+            data: { activities: user[0]?.activities },
         });
 
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Report');
-
-        // Export the Excel file
-        XLSX.writeFile(wb, 'Players_report.xlsx');
-        this.selection.clear();
     }
 }

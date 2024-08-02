@@ -7,6 +7,7 @@ import {
 import { FacadeService } from 'app/shared/services/facade.service';
 import { BehaviorSubject, Observable, catchError, throwError, } from 'rxjs';
 import { UserActivityService } from './userActivityReport.service';
+import { DatePipe } from '@angular/common';
 @Injectable({
     providedIn: 'root'
 })
@@ -15,7 +16,7 @@ export class Resolver implements Resolve<any> {
     /**
      * Constructor
      */
-    constructor( private _projectService: UserActivityService) {
+    constructor(private _projectService: UserActivityService,private datePipe: DatePipe) {
     }
 
     /**
@@ -25,6 +26,9 @@ export class Resolver implements Resolve<any> {
      * @param state
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        return this._projectService.getData();
+        var currentDate = new Date();
+        const todayStart = this.datePipe.transform(currentDate, 'yyyy-MM-ddT00:00:00.000');
+        const todayEnd = this.datePipe.transform(currentDate, 'yyyy-MM-ddT23:59:59.999');
+        return this._projectService.getData(todayStart,todayEnd);
     }
 }
