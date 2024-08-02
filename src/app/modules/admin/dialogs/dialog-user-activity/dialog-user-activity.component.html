@@ -12,9 +12,25 @@
 
             <!-- First Name Column -->
             <ng-container matColumnDef="desc">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripiton</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
                 <td mat-cell *matCellDef="let row">
-                    {{ row.description }}
+                    <ng-container *ngIf="row.description; else noDescription">
+                        <span *ngIf="extractId(row.description); else noId">
+                            <ng-container *ngFor="let part of row.description.split(extractId(row.description))">
+                                {{ part }}
+                                <a *ngIf="part === row.description.split(extractId(row.description))[0]"
+                                    [routerLink]="['/tournaments/view', extractId(row.description)]">
+                                    {{ extractId(row.description) }}
+                                </a>
+                            </ng-container>
+                        </span>
+                        <ng-template #noId>
+                            {{ row.description }}
+                        </ng-template>
+                    </ng-container>
+                    <ng-template #noDescription>
+                        No Description
+                    </ng-template>
                 </td>
             </ng-container>
             <!-- First Name Column -->

@@ -54,6 +54,11 @@ export class DialogUserActivityComponent implements OnInit {
         }
     }
 
+    extractId(description: string): string {
+        const match = description.match(/\((-Y[A-Za-z0-9_]+)\)/);
+        return match ? match[1] : '';
+    }
+
     onNoClick(): void {
         this.dialogRef.close();
     }
