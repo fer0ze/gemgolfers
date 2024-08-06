@@ -311,7 +311,7 @@ export class AddDailyRoundComponent implements OnInit {
             flightRound: 0,
             startingHole: 1,
             tee_id: roundTeeId,
-            tee: roundTee,
+            tee: roundTee, 
             category: null,
             date: this.starterForm.value.roundDate,
             time: addRound.startingTime,
