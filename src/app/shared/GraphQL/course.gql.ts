@@ -240,10 +240,14 @@ export const getCourseHoleSetsForCourseForm = gql`
 export const getTeesOfCourse = gql`
     query getTeesOfCourse($where: course_tees_bool_exp!) {
         course_tees(where: $where) {
+       course_id
             tee_id
             name_by_club
             color
+            tee_order
             tee_name {
+            id
+            name
                 key
             }
         }

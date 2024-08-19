@@ -361,7 +361,7 @@ export class ViewPlayerComponent implements OnInit {
                 this.playerWHSRound = await this.facadeService.getPlayerWHSRound(
                     courseRating
                 );
-                // //console.log(this.playerWHS);
+                console.log(this.playerWHS);
                 //console.log(this.playerWHSRound);
                 let handicapIndex = this.currentPlayer[0]['handicapWhsIndex'];
                 let rating = this.playerWHSRound['course_rating'];
@@ -410,7 +410,7 @@ export class ViewPlayerComponent implements OnInit {
                 //this.barChartDataGross = [];
                 //this.barChartDataNet = [];
                 this.playerHandiData = playerscore['HandicapQL'];
-                const slicedCongu = this.playerHandiData.slice(0, 20);
+                const slicedCongu = this.playerHandiData
 
                 this.dataSource = new MatTableDataSource(slicedCongu);
                 this.dataSource.paginator = this.paginatorConguHistory;

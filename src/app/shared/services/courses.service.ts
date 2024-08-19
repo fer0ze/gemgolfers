@@ -519,8 +519,8 @@ export class CoursesService {
             resolve(data);
           },
           (error) => {
+            console.log("Could not add due to " + error);
             resolve(false);
-            //console.log("Could not add due to " + error);
           }
         );
     });
