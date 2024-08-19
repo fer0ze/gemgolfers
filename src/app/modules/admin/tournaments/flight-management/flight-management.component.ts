@@ -226,6 +226,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             // else this.flightRound = this.tournamentInfo[0].activeRound;
             this.showTeams = true;
         }
+        this.flightRound = this.tournamentInfo[0].activeRound;
         this.getSelectedPlayers();
 
         //this.syncTournamentMembers();
