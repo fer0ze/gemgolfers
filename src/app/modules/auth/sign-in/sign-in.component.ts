@@ -113,7 +113,7 @@ export class AuthSignInComponent implements OnInit {
                         type: 'error',
                         message: 'Wrong email or password'
                     };
-                    this.logger.log('User Logging In Failed', "error", "Wrong email or password");
+                    this.logger.log('User Logging In Failed', "error", response);
 
 
                     // Show the alert
