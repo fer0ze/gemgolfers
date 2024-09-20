@@ -913,6 +913,7 @@ export class PlayersService {
                                 online: player.online,
                                 extraData: player.extraData,
                                 countryCode: player.countryCode,
+                                homeClubId: player.homeClubId,
                                 userRole: player.userRole,
                                 membershipNumber: player.membershipNumber,
                                 membership: {
@@ -1109,6 +1110,7 @@ export class PlayersService {
                             online: player.online,
                             extraData: player.extraData,
                             countryCode: player.countryCode,
+                            homeClubId: player.homeClubId,
                             userRole: player.userRole,
                             membershipNumber: player.membershipNumber,
                         },

@@ -163,7 +163,7 @@ export class ContactsDetailsComponent implements OnInit {
                 dataClubs = await this._facadeService.getClubByID(
                     this.loggedInuser.adminClubId
                 );
-                this.golfClubs = dataClubs.club;
+                this.golfClubs = dataClubs;
                 this.filteredClubOptions = this.contactForm
                     .get('club')!
                     .valueChanges.pipe(
@@ -416,6 +416,7 @@ export class ContactsDetailsComponent implements OnInit {
                 userRole: 3,
                 membership: clubMember,
                 membershipNumber: contact.membershipNo,
+                homeClubId: clubMember[0].clubId ?? '',
             };
             //console.log(contact);
 

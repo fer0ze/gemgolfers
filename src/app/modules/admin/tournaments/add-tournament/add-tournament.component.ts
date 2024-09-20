@@ -346,9 +346,9 @@ export class AddTournamentComponent implements OnInit {
                     clubsFormCtrl: [
                         this.loggedInuser.userRole == 2
                             ? this.loggedInuser.membership.length > 0
-                                ? this.loggedInuser.membership[0].club.name
-                                : this.loggedInuser.adminClubId
-                            : this.loggedInuser.adminClubId,
+                                ? this.loggedInuser.membership[0].club
+                                : ''
+                            : '',
                         [Validators.required, RequireMatch],
                     ],
                     courseInfo: this._formBuilder.array([
@@ -703,9 +703,9 @@ export class AddTournamentComponent implements OnInit {
                 map((value) =>
                     typeof value === 'string' ? value : value ? value.name : ''
                 ),
-                map((name) => (name ? this._filter(name) : this.Clubs.slice()))
+                map((name) => (name != undefined ? this._filter(name) : this.Clubs.slice()))
             );
-        //console.log(this.filteredClubOptions);
+        console.log(this.filteredClubOptions);
 
         // this.formArray
         // .get([0])
