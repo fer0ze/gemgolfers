@@ -117,6 +117,8 @@ export const LeaderboardSubscription = gql`
                 members{
                     flightId
                     playerId
+                    playingHandicap
+                    playingHandicapWhs
                     player{
                         id
                         firstName
@@ -147,7 +149,7 @@ export const LeaderboardSubscription = gql`
                 tournamentId
                 name
                 color
-                membersQL{
+                teamMembers{
                     teamId
                     playerId
                     player{

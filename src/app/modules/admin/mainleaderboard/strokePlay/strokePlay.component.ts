@@ -8,6 +8,7 @@ import { Score } from 'app/shared/classes/score';
 import { LeaderTypeValue } from 'app/shared/classes/leader';
 import { PlayersScoreLoader } from 'app/shared/helper/PlayersViewScore';
 import { FacadeService } from 'app/shared/services/facade.service';
+import { matchFormat } from 'app/shared/models/tournament.model';
 
 @Component({
     selector: 'app-stroke-play', // This is the selector for the component
@@ -105,7 +106,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             }
         }
         if (this.totalRounds > 1) {
-            this.getPlayers([...this.LeaderboardAllPlayers], 0, 1,this.currentFormat == 2 ? 'format' : 'LIV')
+            this.getPlayers([...this.LeaderboardAllPlayers], 0, 1, this.currentFormat == 2 ? 'format' : 'LIV')
         } else {
             this.flightRound = 1;
             if (this.lastActiveTab == 1) {
@@ -187,7 +188,10 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.LeaderboardPlayers = newArray
             }
         } else {
-            leaders=leaders.filter((lead) => lead.matchFormat == matchFormat);
+            leaders = leaders.filter((lead) => lead.matchFormat == matchFormat);
+            if (this.Leaderboard.matchFormat == 'BEST_TWO') {
+                this.getPlayerHandicap(leaders, this.Leaderboard.TeamQL);
+            }
             this.getPlayersByRound(leaders, round, lastTab);
         }
     }
@@ -216,6 +220,50 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 }
             }
         }
+    }
+    getPlayerHandicap(leaders, teams) {
+
+        let firstPlayer = null;
+        let secondPlayer = null;
+
+        for (const player of leaders) {
+            for (const team of teams) {
+                const matchingIndex = team.teamMembers.findIndex(member => member.playerId === player.playerId);
+                // If a matching member is found
+                if (matchingIndex !== -1) {
+                    firstPlayer = team.teamMembers[matchingIndex].playerId; // Store first playerId
+
+                    // Select the other player based on the index
+                    if (matchingIndex === 0) {
+                        secondPlayer = team.teamMembers[1].playerId; // Select the second member if the first is matched
+                    } else if (matchingIndex === 1) {
+                        secondPlayer = team.teamMembers[0].playerId; // Select the first member if the second is matched
+                    }
+                    break; // Exit the loop once both are set
+                }
+            }
+            // Output the two found player IDs
+            console.log('First Player ID:', firstPlayer);
+            console.log('Second Player ID:', secondPlayer);
+            if (firstPlayer) {
+                this.Leaderboard.flights.forEach(element => {
+                    const play = element.members.find((mem) => mem.playerId == firstPlayer);
+                    if (play) {
+                        player.handicap1 = play.playingHandicap;
+                    }
+                });
+            }
+            if (secondPlayer) {
+                this.Leaderboard.flights.forEach(element => {
+                    const play = element.members.find((mem) => mem.playerId == secondPlayer);
+                    if (play) {
+                        player.handicap2 = play.playingHandicap;
+                        player.playerId2 = secondPlayer;
+                    }
+                });
+            }
+        }
+
     }
     getPlayersByRound(leaders: any[], round: number, lastTab: any) {
         this.LeaderboardPlayers = [];
@@ -325,7 +373,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = true;
                 this.allRoundCutOffNet = true;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : 'LIV')
             } else {
                 this.isGross = false;
                 this.isNet = false;
@@ -334,7 +382,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
             }
         } else {
             if (this.lastActiveTab == 1) {
@@ -345,7 +393,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
             } else if (this.lastActiveTab == 2) {
                 this.isNet = true;
                 this.isGross = false;
@@ -354,7 +402,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : 'LIV')
             } else {
                 this.isGross = true;
                 this.isNet = false;
@@ -363,7 +411,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
             }
         }
     }
@@ -381,7 +429,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.isGross = false;
                 this.isNet = false;
                 this.lastActiveTab = 1;
-                this.getPlayers([...this.LeaderboardAllPlayers], 0, 1,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], 0, 1, this.currentFormat == 2 ? 'format' : 'LIV')
 
             } else if (item.value == LeaderTypeValue.NET) {
                 //////console.log("Selected value: " + item.value);
@@ -393,7 +441,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.isNet = false;
                 this.isGross = false;
                 this.lastActiveTab = 2;
-                this.getPlayers([...this.LeaderboardAllPlayers], 0, 2,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], 0, 2, this.currentFormat == 2 ? 'format' : 'LIV')
 
             }
 
@@ -408,7 +456,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
                 this.lastActiveTab = 1;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
 
             } else if (item.value == LeaderTypeValue.NET) {
                 //////console.log("Selected value: " + item.value);
@@ -420,7 +468,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
                 this.lastActiveTab = 2;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2,this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : 'LIV')
 
             }
         }
@@ -663,6 +711,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         courseId: string,
         courseHoleSets: string,
         playerId: string,
+        playerId2: string,
         holeSetsInverted: string,
         scoreType: string
     ) {
@@ -673,10 +722,15 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         let removed: string[] = [];
         let scores: any[];
         let scoresArray: any[] = [];
+        let scoreResult: any;
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
-        let scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound);
-        //console.log(scoreResult);
+        if (this.Leaderboard.matchFormat = matchFormat.BEST_TWO) {
+            scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound, playerId2);
+        } else {
+            scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound);
+        }
+        console.log(scoreResult);
 
         const dialogRef = this.dialog.open(DialogPlayerScoreComponent, {
             data: {
@@ -696,6 +750,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 team: team,
                 removed: removed,
             },
+            autoFocus: false,
         });
     }
     sortCategory(a, b) {

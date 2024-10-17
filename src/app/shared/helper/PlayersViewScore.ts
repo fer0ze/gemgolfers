@@ -38,7 +38,7 @@ export class PlayersScoreLoader {
         let tournamentQL = tournamentScoresQuery.TournamentQL;
         ////console.log(tournamentQL);
         if (tournamentQL != null) {
-            if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY || tournamentQL.matchFormat === matchFormat.LIV) {
+            if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY || tournamentQL.matchFormat === matchFormat.LIV || tournamentQL.matchFormat === matchFormat.BEST_TWO) {
                 let calResult = this.strokePlayCalculation(tournamentQL);
 
             } else if (tournamentQL.matchFormat === matchFormat.STABLEFORD || tournamentQL.matchFormat === matchFormat.MODIFIED_STABLEFORD || tournamentQL.matchFormat === matchFormat.SPLIT_SIXES) {
@@ -55,11 +55,13 @@ export class PlayersScoreLoader {
 
             } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES) {
                 let calResult = this.shamblesCalculation(tournamentQL);
+
             }
+
 
         }
     }
-    public getStrokePlayScore(playerId: string, round: any) {
+    public getStrokePlayScore(playerId: string, round: any, teamMemberId?: string) {
         let playerGrossScore: any[] = [];
         let playerNetScore: any[] = [];
         if (round == 0) {
@@ -70,6 +72,15 @@ export class PlayersScoreLoader {
             playerNetScore = this.netscores.filter((g) => {
                 return g.playerId == playerId;
             });
+            if (teamMemberId) {
+                playerGrossScore.push(this.grossscores.filter((g) => {
+                    return g.playerId == teamMemberId;
+                }));
+
+                playerNetScore.push(this.netscores.filter((g) => {
+                    return g.playerId == teamMemberId;
+                }));
+            }
         } else {
             playerGrossScore = this.grossscores.filter((g) => {
                 return g.playerId == playerId && g.playingRound == round;
@@ -78,6 +89,15 @@ export class PlayersScoreLoader {
             playerNetScore = this.netscores.filter((g) => {
                 return g.playerId == playerId && g.playingRound == round;
             });
+            if (teamMemberId) {
+                playerGrossScore.push(this.grossscores.filter((g) => {
+                    return g.playerId == teamMemberId && g.playingRound == round;
+                })?.[0]);
+
+                playerNetScore.push(this.netscores.filter((g) => {
+                    return g.playerId == teamMemberId && g.playingRound == round;
+                })?.[0]);
+            }
         }
         return {
             grossScore: playerGrossScore,
@@ -179,9 +199,9 @@ export class PlayersScoreLoader {
                 //////console.log(membersQL);
                 let playerId: String = membersQL.playerId;
                 //let playerQL:Player = membersQL.PlayerQL;
-                if (playerId !== this.playerId) {
-                    continue;
-                }
+                // if (playerId !== this.playerId) {
+                //     continue;
+                // }
                 //this.players.push(playerQL);
 
                 let player: Player = membersQL.PlayerQL;
@@ -1477,6 +1497,7 @@ export class PlayersScoreLoader {
             }
         }
     }
+
     findOpponent(playerId, TournamentQL) {
         if (TournamentQL.OpponentsQL.length > 0) {
             let oppoentId;

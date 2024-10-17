@@ -76,7 +76,7 @@
                 </mat-select>
             </mat-form-field> -->
 
-            
+
             <!-- <mat-form-field class="fuse-mat-no-subscript pb-2 w-full sm:w-48 sm:inline md:hidden">
                 <input (input)="filterByQuery(query.value)" placeholder="Search by Name" matInput #query />
             </mat-form-field> -->
@@ -253,6 +253,9 @@
                                         <span *ngIf="item.handicap > 0">
                                             HC:{{ item.handicap }}
                                         </span>
+                                        <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
+                                            HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
+                                        </span>
 
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
@@ -261,6 +264,7 @@
                                                                 item.courseId,
                                                                 item.holeSets,
                                                                 item.playerId,
+                                                                item?.playerId2,
                                                                 item.holeSetsInverted,
                                                                 item.type
                                                             )
@@ -300,6 +304,9 @@
                                         <span *ngIf="item.handicap > 0">
                                             HC:{{ item.handicap }}
                                         </span>
+                                        <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
+                                            HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
+                                        </span>
 
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
@@ -308,6 +315,7 @@
                                                                 item.courseId,
                                                                 item.holeSets,
                                                                 item.playerId,
+                                                                item?.playerId2,
                                                                 item.holeSetsInverted,
                                                                 item.type
                                                             )
