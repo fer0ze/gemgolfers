@@ -20,7 +20,9 @@
                     All Players
                 </div>
                 <div>
-                    <a *ngIf="this.loggedInuser.userRole==4" class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/tours', tourID]">
+                    <a *ngIf="this.loggedInuser.userRole==4"
+                        class="inline-flex items-center leading-6 text-primary hover:underline"
+                        [routerLink]="['/tours', tourID]">
                         <span class="inline-flex items-center">
                             <mat-icon class="icon-size-5 text-current"
                                 [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
@@ -33,7 +35,9 @@
                     </div>
                 </div>
                 <div>
-                    <a *ngIf="this.loggedInuser.userRole==9" class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['/league', tourID]">
+                    <a *ngIf="this.loggedInuser.userRole==9"
+                        class="inline-flex items-center leading-6 text-primary hover:underline"
+                        [routerLink]="['/league', tourID]">
                         <span class="inline-flex items-center">
                             <mat-icon class="icon-size-5 text-current"
                                 [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
@@ -70,17 +74,25 @@
                         <span class="ml-2 mr-1">Add</span>
                     </a>
                 </button>
+                <!-- <input id="file-upload" class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
+                    (change)="parseFlightsData()" type="file" [multiple]="false" [accept]="'.xls, .xlsx'" #fileInput>
+                <label
+                    class="flex items-center justify-center ml-auto h-10 w-36 rounded-full cursor-pointer bg-primary text-gray-50"
+                    for="file-upload" matRipple>
+                    <mat-icon class="icon-size-5 text-gray-50 mr-2" [svgIcon]="'heroicons_solid:save'"></mat-icon>
+                    Bulk Import
+                </label> -->
                 <button (click)="exportToExcel()" class="ml-4" mat-flat-button [color]="'accent'">
-                    
+
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
                     <span class="ml-2">Export to Excel</span>
-                   
+
                 </button>
                 <button (click)="verifyUserEmails()" class="ml-4" mat-flat-button [color]="'primary'">
-                    
+
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                     <span class="ml-2">Verify Users</span>
-                   
+
                 </button>
             </div>
         </div>
@@ -171,7 +183,7 @@
                             </span>
                         </td>
                     </ng-container>
-                  
+
 
                     <!-- Membership -->
                     <ng-container matColumnDef="MembershipNo">

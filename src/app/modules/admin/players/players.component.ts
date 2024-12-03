@@ -566,10 +566,13 @@ export class PlayersComponent implements OnInit {
         }
     }
 
-    parseFlightsData() {
+    parseFlightsData(event) {
         let fileReader = new FileReader();
         this.playersData = [];
-
+        if (event.target.files.length > 0) {
+            this.file = event.target.files[0];
+            // this.logger.log(this.file);
+        }
         fileReader.onload = (e) => {
             this.arrayBuffer = fileReader.result;
             var data = new Uint8Array(this.arrayBuffer);
@@ -732,11 +735,11 @@ export class PlayersComponent implements OnInit {
                     email: p.email ? p.email : null,
                     phone: p.phone ? p.phone : null,
                     playerCategory: p.category ? p.category : null,
-                    handicap: p.handicap ? p.handicap : 0,
+                    handicap: p.hc ? p.hc : 0,
                     online: false,
                     countryCode: p.code ? p.code : null,
                     extraData: p.extra ? p.extra : null,
-                    membershipNumber: null,
+                    membershipNumber: p.membershipNumber,
                     userRole: 3,
                     membership: null,
                 };
