@@ -1,0 +1,29 @@
+table {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 290px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td,
+th {
+  span {
+    text-align: center;
+  }
+
+  .textLink {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+th.mat-header-cell {
+  text-align: left;
+  max-width: 300px;
+  font-weight: bold;
+}

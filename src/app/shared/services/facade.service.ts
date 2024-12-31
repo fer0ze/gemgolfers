@@ -61,6 +61,9 @@ export class FacadeService {
   getAllFeedback() {
     return this.clubService.getAllFeedback();
   }
+  getAllCoursesRequest() {
+    return this.clubService.getAllCoursesRequest();
+  }
   updateClub(club: Club) {
     return this.clubService.updateClub(club);
   }

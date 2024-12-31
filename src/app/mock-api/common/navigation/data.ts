@@ -662,6 +662,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 link: '/feedback',
             },
             {
+                id: 'feedback.coursesRequest',
+                title: 'Courses Request',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-list',
+                link: '/coursesRequest',
+            },
+            {
                 id: 'feedback.allCourses',
                 title: 'Courses',
                 type: 'basic',

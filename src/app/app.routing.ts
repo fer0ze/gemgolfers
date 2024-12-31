@@ -227,6 +227,13 @@ export const appRoutes: Route[] = [
                     ),
             },
             {
+                path: 'coursesRequest',
+                loadChildren: () =>
+                    import('app/modules/admin/coursesRequest/coursesRequest.module').then(
+                        (m) => m.CoursesRequestModule
+                    ),
+            },
+            {
                 path: 'banner',
                 loadChildren: () =>
                     import('app/modules/admin/news/news.module').then(

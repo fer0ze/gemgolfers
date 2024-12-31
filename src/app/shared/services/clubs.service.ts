@@ -298,6 +298,22 @@ export class ClubsService {
         });
     });
   }
+  public getAllCoursesRequest(): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .subscribe({
+          query: Query.getAllCoursesRequest,
+        })
+        .subscribe(({ data }) => {
+          if (!data) {
+            resolve(null);
+          } else {
+            ////console.log(data.club);
+            resolve(data);
+          }
+        });
+    });
+  }
   /*
   public getClubsList(): any {
     const clubsObservable = new Observable(observer => {
