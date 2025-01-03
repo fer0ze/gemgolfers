@@ -5,6 +5,7 @@ import {
     ElementRef,
     ChangeDetectorRef,
 } from '@angular/core';
+import * as XLSX from 'xlsx';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -18,6 +19,7 @@ import {
     Player,
     ClubMembership,
     PlayerWHSHanidcap,
+    PlayerCategory,
 } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 
@@ -29,7 +31,7 @@ import {
 } from '../../../../shared/classes/general';
 import { of, Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -44,7 +46,7 @@ export class HandicapsComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    searchInputControl: UntypedFormControl = new UntypedFormControl();
+    itemForm: UntypedFormGroup;
     WHSSource: MatTableDataSource<any>;
     WHSColumns = [
         'id',
@@ -56,6 +58,7 @@ export class HandicapsComponent implements OnInit {
         // 'handicapChange',
         'details',
     ];
+    playerCategories: PlayerCategory[] = [];
     count: any = 0;
     showTable: Promise<any>;
     clubItems: Promise<Player[]>;
@@ -96,6 +99,7 @@ export class HandicapsComponent implements OnInit {
         private _router: ActivatedRoute,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
+        private _formBuilder: UntypedFormBuilder,
         private _facadeService: FacadeService,
         private datepipe: DatePipe,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
@@ -115,7 +119,11 @@ export class HandicapsComponent implements OnInit {
             this.currentDate = new Date();
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.Players = [];
-
+            this.itemForm = this._formBuilder.group({
+                cat: ['', Validators.required],
+                lowerHandicap: [''],
+                higherHandicap: [''],
+            });
             this._router.paramMap.subscribe((params) => {
                 this.filterCategory = params.get('category');
             });
@@ -138,6 +146,7 @@ export class HandicapsComponent implements OnInit {
                     courseRating
                 );
             }
+            this.playerCategories = this._facadeService.getPlayerCategoriesKGC();
             this.logger.log('Getting WHS Handicap Data', "info");
             if (this.loggedInuser.userRole > 1) {
                 if (this.filterCategory)
@@ -262,6 +271,79 @@ export class HandicapsComponent implements OnInit {
         if (e.active == 'handicap') {
             this.sorting = e.direction;
         }
+    }
+    applyFilters() {
+        this.syncHandicapWHS();
+        const filters = this.itemForm.getRawValue(); // Assuming itemForm contains the filter form
+        const { lowerHandicap, higherHandicap, cat } = filters; // Extracting filter values
+
+        // Apply filter on WHSSource data
+        const filteredData = this.WHSSource.data.map((player: any) => {
+            // Calculate handicap index
+            let handicapIndex =
+                player.handicapWhsIndex != null
+                    ? player.handicapWhsIndex
+                    : player.handicap;
+            if (player.id === '-MPn9llt470he1qOULgW') {
+                console.log(player);
+
+            }
+            // Calculate ratings and determine teeHandicap
+            let ratings = this.getTeesRating(handicapIndex);
+            let teeHandicap = 0;
+            if (cat === 'Amateurs') {
+                teeHandicap = ratings['BLUE'];
+            } else if (cat === 'Senior') {
+                teeHandicap = ratings['WHITE'];
+            } else if (cat === 'Veterans') {
+                teeHandicap = ratings['Black-Veterans'];
+            } else if (cat === 'Ladies') {
+                teeHandicap = ratings['RED'];
+            }
+
+            // Add the new property to the player object
+            return {
+                ...player,
+                teeHandicap,
+            };
+        }).filter((player: any) => {
+            // Apply filters3
+            if (player.id === '-MPn9llt470he1qOULgW') {
+                console.log(player);
+
+            }
+            const isHandicapInRange =
+                (!lowerHandicap || player.teeHandicap >= lowerHandicap) &&
+                (!higherHandicap || player.teeHandicap <= higherHandicap);
+            const isCategoryMatch = !cat || (player?.playerCategory && player.playerCategory.includes(cat));
+
+
+            return isHandicapInRange && isCategoryMatch;
+        });
+
+        // Update the MatTableDataSource
+        this.WHSSource.data = filteredData;
+
+        console.log('Filtered Data with Tee Handicap:', this.WHSSource.data);
+    }
+
+
+
+    exportToExcel(): void {
+
+        const data = this.WHSSource.data.map((item) => {
+            // Create a new object without the 'Details' column
+            const { id, Status, Sr, view, Edit, Delete, ...filteredItem } = item;
+            return filteredItem;
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Report');
+
+        // Export the Excel file
+        XLSX.writeFile(wb, 'Players_report.xlsx');
+
     }
     Comparatordsc(a, b) {
         let handicapA =

@@ -1154,14 +1154,14 @@ export class PlayersService {
                 );
         });
     }
-    changePlayerTee(id,tournamentId, tee, teeId): Promise<boolean> {
+    changePlayerTee(id, tournamentId, tee, teeId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.UpdatePlayerTeeMutation,
                     variables: {
                         id: id,
-                        tournamentId:tournamentId,
+                        tournamentId: tournamentId,
                         tee: tee,
                         teeId: teeId,
                     },
@@ -1433,6 +1433,15 @@ export class PlayersService {
             // ];
         ]
 
+        return CLUB_CATEGORIES;
+    }
+    public getPlayerCategoriesKGC(): Array<PlayerCategory> {
+        const CLUB_CATEGORIES: PlayerCategory[] = [
+            { id: 1, name: 'Amateurs' },
+            { id: 2, name: 'Senior' },
+            { id: 7, name: 'Veterans' },
+            { id: 9, name: 'Ladies' },
+        ]
         return CLUB_CATEGORIES;
     }
 

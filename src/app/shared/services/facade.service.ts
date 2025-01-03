@@ -358,6 +358,9 @@ export class FacadeService {
   getPlayerCategories() {
     return this.playerService.getPlayerCategories();
   }
+  getPlayerCategoriesKGC() {
+    return this.playerService.getPlayerCategoriesKGC();
+  }
 
   getPlayerFlightScores(id: string) {
     return this.playerService.getPlayerFlightScores(id);
