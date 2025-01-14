@@ -252,14 +252,21 @@
 }
 
 .catCount {
-  background: #f66d00;
+  border: 1px solid;
   padding: 10px;
   border-radius: 5px;
   margin: 5px;
-  color: #fff;
   font-size: 14px;
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Adds spacing between the icon, name, and count */
 }
+
+.cat-name,
+.cat-value {
+  display: inline;
+}
+
 
 .mat-table {
   width: 100% !important;

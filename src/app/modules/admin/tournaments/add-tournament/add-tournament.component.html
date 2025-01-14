@@ -545,7 +545,7 @@
                             </button> -->
                         </div>
                         <div>
-                            <button class="mr-8" mat-raised-button color="warn" (click)="
+                            <button class="mr-8" mat-raised-button color="primary" (click)="
                                     saveTournamentMembers(
                                         linearVerticalStepper,
                                         true
@@ -558,16 +558,31 @@
                     </div>
 
                     <div class="mt-4 mb-2 flex">
-                        <div class="flex justify-start" style="width: 50%">
-                            <span *ngFor="let catCount of categoryCounts"><span class="catCount"
-                                    *ngIf="catCount.value > 0"><mat-icon>emoji_people</mat-icon>{{ catCount.name }} :
-                                    {{ catCount.value }}</span></span>
+                        <div class="flex flex-wrap justify-start" style="width: 50%">
+                            <span *ngFor="let catCount of categoryCounts">
+                                <span class="catCount" *ngIf="catCount.value > 0">
+                                    <mat-icon >emoji_people</mat-icon>
+                                    <span class="cat-name font-medium">{{ catCount.name }}</span> :
+                                    <span class="cat-value font-medium">{{ catCount.value }}</span>
+                                </span>
+                            </span>
                         </div>
 
-                        <div class="flex justify-end" style="width: min-content">
+
+                        <!-- <div class="flex justify-end" style="width: min-content">
                             <span *ngFor="let catCount of TMcategoryCounts"><span class="catCount"
-                                    *ngIf="catCount.value > 0"><mat-icon>emoji_people</mat-icon>{{ catCount.name }} :
+                                    *ngIf="catCount.value > 0"><mat-icon >emoji_people</mat-icon>{{
+                                    catCount.name }} :
                                     {{ catCount.value }}</span></span>
+                        </div> -->
+                        <div class="flex flex-wrap justify-start" style="width: 50%">
+                            <span *ngFor="let catCount of TMcategoryCounts">
+                                <span class="catCount" *ngIf="catCount.value > 0">
+                                    <mat-icon >emoji_people</mat-icon>
+                                    <span class="cat-name font-medium">{{ catCount.name }}</span> :
+                                    <span class="cat-value font-medium">{{ catCount.value }}</span>
+                                </span>
+                            </span>
                         </div>
                     </div>
 
