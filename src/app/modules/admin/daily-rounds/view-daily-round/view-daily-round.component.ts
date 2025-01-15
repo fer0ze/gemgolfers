@@ -2106,7 +2106,7 @@ export class ViewDailyRoundComponent implements OnInit {
             let updatedData = await this.facadeService.singleRoundFlightsQuery(
                 flightId
             );
-            //console.log(updatedData);
+            console.log(updatedData);
 
             if (!updatedData) return;
             else {
@@ -2216,10 +2216,11 @@ export class ViewDailyRoundComponent implements OnInit {
 
                                 let courseQLs: any = dataLeaderboard.course[0];
                                 let holesQLs: any = courseQLs.HolesQL;
-                                let newHoles = this.getCourseHoles(
+                                let newHoles = this.getHolesSets(
                                     holeSetsSelection,
+                                    holesQLs,
                                     holeSetsInverted,
-                                    holesQLs
+                                    this.courseHoleSetNames
                                 );
                                 //console.log(newHoles);
 

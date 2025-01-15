@@ -629,10 +629,13 @@ export const singleRoundFlightsQueryQL = gql`
                     homeClubId
                     handicapWhsIndex
                 }
+                ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
+                    ...ScoreQL
+                }
             }
         }
     }
-    ${FlightsQL}
+    ${FlightsQL}${ScoreQL}
 `;
 export const updatedFlightsQueryQueryQL = gql`
     query ClubSingleRoundFlightsQuery($where: flight_bool_exp!) {
