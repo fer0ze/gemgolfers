@@ -835,7 +835,7 @@ export class ViewDailyRoundComponent implements OnInit {
         ////console.log(this.coursesList)
         holesQLs = holesQLs.sort(this.Comparator);
 
-        //console.log(holesQLs);
+        console.log(holesQLs);
         //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
         // this.getSelectedCourse("-LUFS3FCQKOGpJ2IEHmf");
         // //console.log(this.courseHoleSetNames);
