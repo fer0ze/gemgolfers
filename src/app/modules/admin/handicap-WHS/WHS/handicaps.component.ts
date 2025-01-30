@@ -275,7 +275,7 @@ export class HandicapsComponent implements OnInit {
     applyFilters() {
         this.syncHandicapWHS();
         const filters = this.itemForm.getRawValue(); // Assuming itemForm contains the filter form
-        const { lowerHandicap, higherHandicap, cat } = filters; // Extracting filter values
+        let { lowerHandicap, higherHandicap, cat } = filters; // Extracting filter values
 
         // Apply filter on WHSSource data
         const filteredData = this.WHSSource.data.map((player: any) => {
@@ -307,18 +307,21 @@ export class HandicapsComponent implements OnInit {
                 teeHandicap,
             };
         }).filter((player: any) => {
-            // Apply filters3
-            if (player.id === '-MPn9llt470he1qOULgW') {
-                console.log(player);
 
+            if (cat == 'Amateurs') {
+                const isHandicapInRange =
+                    (!lowerHandicap || player.teeHandicap >= lowerHandicap) &&
+                    (!higherHandicap || player.teeHandicap <= higherHandicap);
+                const isCategoryMatch = !cat || (player?.playerCategory && player.playerCategory == cat);
+                return isHandicapInRange && isCategoryMatch;
+            } else {
+                const isHandicapInRange =
+                    (!lowerHandicap || player.teeHandicap >= lowerHandicap) &&
+                    (!higherHandicap || player.teeHandicap <= higherHandicap);
+                const isCategoryMatch = !cat || (player?.playerCategory && player.playerCategory.includes(cat));
+                return isHandicapInRange && isCategoryMatch;
             }
-            const isHandicapInRange =
-                (!lowerHandicap || player.teeHandicap >= lowerHandicap) &&
-                (!higherHandicap || player.teeHandicap <= higherHandicap);
-            const isCategoryMatch = !cat || (player?.playerCategory && player.playerCategory.includes(cat));
 
-
-            return isHandicapInRange && isCategoryMatch;
         });
 
         // Update the MatTableDataSource
