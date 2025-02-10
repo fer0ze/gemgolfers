@@ -508,18 +508,7 @@
                     </td>
                 </tr>
             </tbody>
-            <!-- <tbody>
-      <tr *ngFor="let item of flight" class="scorebody">
-        <td>{{item.name}}</td>
-        <td *ngFor="let score of item.Hole9Scores; let i = index;"><span>{{score}}</span></td>
-        <td><span id="gross9total_{{item.playerId}}">{{item.gross9Total}}</span></td>
-        <td *ngFor="let score of item.Hole18Scores; let i = index;"><span>{{score}}</span></td>
-        <td><span id="gross18total_{{item.playerId}}">{{item.gross18Total}}</span></td>
-        <td><span id="grosstotal_{{item.playerId}}">{{item.grossTotal}}</span></td>
-        <td><mat-icon matSuffix color="primary" title="{{item.name}}" *ngIf="flightRound==activeRound" (click)="savePlayerScore(flight.flightId, item.playerId)">save</mat-icon></td>
-      </tr>
-      <tr><td><button mat-raised-button color="primary" *ngIf="flightRound==activeRound" (click)="saveFlightScore(flight.flightId)">Save Score</button></td></tr>
-   </tbody> -->
+            
         </table>
     </div>
     <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 30, 40, 50]" [length]="this.lenght"
