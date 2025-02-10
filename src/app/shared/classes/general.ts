@@ -186,6 +186,7 @@ export class General {
             { id: '1', name: 'BLUE', result: 'AMATEURS' },
             { id: '1', name: 'Blue', result: 'AMATEURS' },
             { id: '1', name: 'AMATEURS', result: 'AMATEURS' },
+            { id: '1', name: 'Masters', result: 'AMATEURS' },
             { id: '5', name: 'VETERANS', result: 'VETERANS' },
             { id: '5', name: 'Veterans', result: 'VETERANS' },
             { id: '5', name: 'Veterans ', result: 'VETERANS' },

@@ -957,10 +957,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                     'attendance'
                                     ]
                                     : false,
-                                playingTee: roundTeeId.result
-                                    ? roundTeeId.result
+                                playingTee: roundTeeId?.result
+                                    ? roundTeeId?.result
                                     : 'AMATEURS',
-                                tee_id: roundTeeId.id,
+                                tee_id: roundTeeId?.id ?? '1',
                             };
                             tournamentFlightMembers.push(FM);
                             flightMembersToSave.push(FM);

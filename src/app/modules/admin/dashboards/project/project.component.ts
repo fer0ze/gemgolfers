@@ -455,7 +455,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     addNewPlayer() {
         this._router.navigate([
-            '/players/view/' + UniqueIdGenerator.generate(),
+            '/players/add'
         ]);
     }
 
