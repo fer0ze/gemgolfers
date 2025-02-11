@@ -2053,6 +2053,48 @@ export class ViewDailyRoundComponent implements OnInit {
 
         }
     }
+    async UndoSingleFlightHandicap(flightId) {
+        try {
+            // const combinedData = `flightId=${flightId}, playerId=${playerId}`;
+            this.logger.log('Admin click undo Handicap on Daily Round Page', "info", flightId);
+            //console.log(flightId);
+            const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                width: '350px',
+                data: 'Do you want to Undo Handicap?',
+            });
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    const isSuccess = <boolean>(
+                        await this.facadeService.UndoSingleFlightHandicap(
+                            flightId
+                        )
+                    );
+                    if (isSuccess) {
+                        for (let i = 0; i < this.flightPlayers.length; i++) {
+                            let obj = this.flightPlayers[i];
+                            if (obj.flightId == flightId) {
+                                this.flightPlayers[i].ended = false;
+                                this.flightPlayers[i].categoryRound = 2;
+                                this.flightPlayers[i].forEach((a) => {
+
+                                    a.undoHandicap = true;
+
+                                });
+                                break;
+                            }
+                        }
+
+                        this.snackBar.open('Handicap Calculation Reverted', 'x', {
+                            duration: 2000,
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            this.logger.log('Undo Calculated on Daily Round Data Failed', "error", error.toString());
+
+        }
+    }
 
     keytab(e) {
         var code = e.keyCode || e.which;

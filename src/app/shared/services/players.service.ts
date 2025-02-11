@@ -1081,6 +1081,29 @@ export class PlayersService {
         });
     }
 
+    public insertClubMember(
+        clubMembers: any[]
+    ): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertClubMember,
+                    variables: {
+                        clubmembers: clubMembers,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log("Could not add due to " + error);
+                    }
+                );
+        });
+    }
+
     updatePlayer(player: Player): Promise<boolean> {
         //console.log(player.id);
         return new Promise((resolve) => {

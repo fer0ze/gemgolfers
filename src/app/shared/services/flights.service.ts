@@ -714,6 +714,24 @@ export class FlightsService {
                 });
         });
     }
+    public UndoSingleFlightHandicap(flightId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.UndoSingleFlightHandicapQL,
+                    variables: {
+                        flightId: flightId
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public undoHandicapPlayer(flightId: string, playerId: string): Promise<any> {
         return new Promise((resolve) => {

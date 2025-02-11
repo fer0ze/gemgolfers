@@ -315,7 +315,7 @@ export class ContactsDetailsComponent implements OnInit {
                         )
                     );
 
-                //console.log(checkEmail);
+                console.log(checkEmail);
                 if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
 
                 if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
@@ -327,13 +327,32 @@ export class ContactsDetailsComponent implements OnInit {
                 ) {
                     const confirmation = this._fuseConfirmationService.open({
                         title: 'Duplicate Email',
-                        message: 'Email alreday exist!',
+                        message: 'Player already exist!. Do you want to add this player to your club?',
                         actions: {
                             confirm: {
-                                label: 'Close',
+                                label: 'Yes',
                             },
                         },
+                    }).afterClosed().subscribe(async (result) => {
+                        if (result === 'confirmed') {
+                            let clubMember: any[] = [];
+                            clubMember.push({
+                                clubId: this.loggedInuser.adminClubId,
+                                suspended: false,
+                                playerId: checkEmail[0].id
+                            })
+                            let response = await this._facadeService.insertClubMember(clubMember);
+                            if (response) {
+                                this.save = true;
+                                this.snackBar.open('Player has been added.', 'x', {
+                                    duration: 1000,
+                                });
+                                this.reset();
+                                this._router.navigate(['/players']);
+                            }
+                        }
                     });
+
 
                     return;
                 } else if (
@@ -343,12 +362,30 @@ export class ContactsDetailsComponent implements OnInit {
                 ) {
                     const confirmation = this._fuseConfirmationService.open({
                         title: 'Duplicate Number',
-                        message: 'Number alreday exist!',
+                        message: 'Player already exist!. Do you want to add this player to your club?',
                         actions: {
                             confirm: {
-                                label: 'Close',
+                                label: 'Yes',
                             },
                         },
+                    }).afterClosed().subscribe(async (result) => {
+                        if (result === 'confirmed') {
+                            let clubMember: any[] = [];
+                            clubMember.push({
+                                clubId: this.loggedInuser.adminClubId,
+                                suspended: false,
+                                playerId: checkEmail[0].id
+                            })
+                            let response = await this._facadeService.insertClubMember(clubMember);
+                            if (response) {
+                                this.save = true;
+                                this.snackBar.open('Player has been added.', 'x', {
+                                    duration: 1000,
+                                });
+                                this.reset();
+                                this._router.navigate(['/players']);
+                            }
+                        }
                     });
 
                     return;

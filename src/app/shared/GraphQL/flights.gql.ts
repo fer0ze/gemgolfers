@@ -726,6 +726,30 @@ export const undoFlightHandicapQL = gql`
         }
     }
 `;
+export const UndoSingleFlightHandicapQL = gql`
+    mutation ClubSingleRoundFlightQuery(
+        $flightId: String!
+    ) {
+        flightEndedQl: update_flight(
+            where: { id: { _eq: $flightId } }
+            _set: { categoryRound: 2 , ended:false}
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+        flightEndedQlA: update_flight_member(
+            where: {
+                _and: [
+                    {
+                        flightId: { _eq: $flightId }
+                    }
+                ]
+            }
+            _set: { undoHandicap: 1 }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+    }
+`;
 export const undoHandicapPlayerQL = gql`
     mutation ClubSingleRoundFlightQuery(
         $flightId: String!

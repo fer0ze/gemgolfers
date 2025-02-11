@@ -330,6 +330,9 @@ export class FacadeService {
   importPlayerList(players: any[], clubMembers: any[]) {
     return this.playerService.importPlayerList(players, clubMembers);
   }
+  insertClubMember( clubMembers: any[]) {
+    return this.playerService.insertClubMember(clubMembers);
+  }
 
   updatePlayer(club: Player) {
     return this.playerService.updatePlayer(club);
@@ -921,6 +924,9 @@ export class FacadeService {
   }
   undoFlightHandicap(flightId: string, playerId: string) {
     return this.flightsService.undoFlightHandicap(flightId, playerId);
+  }
+  UndoSingleFlightHandicap(flightId: string) {
+    return this.flightsService.UndoSingleFlightHandicap(flightId);
   }
   undoHandicapPlayer(flightId: string, playerId: string) {
     return this.flightsService.undoHandicapPlayer(flightId, playerId);

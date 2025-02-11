@@ -1043,6 +1043,20 @@ export const SavePlayersList = gql`
         }
     }
 `;
+export const insertClubMember = gql`
+    mutation insertClubMember(
+        $clubmembers: [club_member_insert_input!]!
+    ) {
+        insert_club_member(
+            objects: $clubmembers
+            on_conflict: { constraint: club_member_pkey, update_columns: [] }
+        ) {
+            returning {
+                playerId
+            }
+        }
+    }
+`;
 
 export const UpdateMutation = gql`
     mutation updateMutation(

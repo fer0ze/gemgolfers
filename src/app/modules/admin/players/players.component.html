@@ -74,14 +74,14 @@
                         <span class="ml-2 mr-1">Add</span>
                     </a>
                 </button>
-                <input id="file-upload" class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
+                <!-- <input id="file-upload" class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
                     (change)="parseFlightsData($event)" type="file" [multiple]="false" [accept]="'.xls, .xlsx'" #fileInput>
                 <label
                     class="flex items-center justify-center ml-auto h-10 w-36 rounded-full cursor-pointer bg-primary text-gray-50"
                     for="file-upload" matRipple>
                     <mat-icon class="icon-size-5 text-gray-50 mr-2" [svgIcon]="'heroicons_solid:save'"></mat-icon>
                     Bulk Import
-                </label>
+                </label> -->
                 <button (click)="exportToExcel()" class="ml-4" mat-flat-button [color]="'accent'">
 
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-report'"></mat-icon>

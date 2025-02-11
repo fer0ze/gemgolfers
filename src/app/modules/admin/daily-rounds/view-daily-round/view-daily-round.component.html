@@ -100,27 +100,41 @@
 
             <div class="flex mr-3">
                 <div fxFlexFill fxLayoutAlign="end center">
-                    <div style="text-align: right; margin: 10px 0">
+                    <div style="text-align: right; margin: 10px 0" class="flex items-center">
                         <!-- <label *ngIf="flight.ended"
                             >Handicap has been calculated for this round.</label
                         > -->
 
                         <span *ngIf="flight.ended"
                             class="mat-button-wrapper bg-card text-cyan-500 p-4 rounded-xl font-bold">Handicap
-                            Calculated</span>
+                            Calculated</span>&nbsp;
+                        <button mat-mini-fab color="primary" matTooltip="Change Settings" matTooltipPosition="above"
+                            matTooltipClass="tooltipStyle" *ngIf="flight.ended"
+                            (click)="
+                            UndoSingleFlightHandicap(
+                                        flight.flightId
+                                    )
+                                ">
+                            <span class="mat-button-wrapper"><mat-icon _ngcontent-c10="" class="mat-icon material-icons"
+                                    matsuffix="" role="img" aria-hidden="true">settings_backup_restore</mat-icon></span>
+                        </button>
 
                         <a mat-mini-fab color="primary" matTooltip="Calculate Handicap" matTooltipPosition="above"
                             matTooltipClass="tooltipStyle" target="_blank" *ngIf="!flight.ended"
-                            (click)="redirectCalculation(flight.flightId)"><span class="mat-button-wrapper"><mat-icon
-                                    _ngcontent-c10="" class="mat-icon material-icons" matsuffix="" role="img"
-                                    aria-hidden="true">calculate</mat-icon></span></a>&nbsp;<button mat-mini-fab
-                            color="primary" matTooltip="Change Settings" matTooltipPosition="above"
+                            (click)="redirectCalculation(flight.flightId)">
+                            <span class="mat-button-wrapper">
+                                <mat-icon _ngcontent-c10="" class="mat-icon material-icons" matsuffix="" role="img"
+                                    aria-hidden="true">calculate</mat-icon>
+                            </span>
+                        </a>&nbsp;
+                        <button mat-mini-fab color="primary" matTooltip="Change Settings" matTooltipPosition="above"
                             matTooltipClass="tooltipStyle" *ngIf="flightRound == activeRound && !flight.ended"
                             (click)="changeCourseHoleset(flight.flightId)">
                             <span class="mat-button-wrapper"><mat-icon _ngcontent-c10="" class="mat-icon material-icons"
-                                    matsuffix="" role="img"
-                                    aria-hidden="true">settings</mat-icon></span></button>&nbsp;<button mat-mini-fab
-                            color="primary" matTooltip="Save All Score" matTooltipPosition="above"
+                                    matsuffix="" role="img" aria-hidden="true">settings</mat-icon></span>
+                        </button>
+                        &nbsp;
+                        <button mat-mini-fab color="primary" matTooltip="Save All Score" matTooltipPosition="above"
                             matTooltipClass="tooltipStyle" *ngIf="flightRound == activeRound && !flight.ended"
                             (click)="saveFlightScore(flight.flightId)">
                             <span class="mat-button-wrapper"><mat-icon _ngcontent-c10="" class="mat-icon material-icons"
@@ -508,7 +522,7 @@
                     </td>
                 </tr>
             </tbody>
-            
+
         </table>
     </div>
     <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 30, 40, 50]" [length]="this.lenght"
