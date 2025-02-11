@@ -43,7 +43,7 @@
                         <div class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>Start Date</mat-label>
-                                <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate"
+                                <input matInput [matDatepicker]="picker"  [max]="maxDate"
                                     (focus)="picker.open()" (dateChange)="datechange($event)"
                                     formControlName="startDateFormCtrl" placeholder="start date" required />
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -54,7 +54,7 @@
                         <div class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>End Date</mat-label>
-                                <input matInput [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
+                                <input matInput [matDatepicker]="picker2"  [max]="maxDate"
                                     (focus)="picker2.open()" (onChange)="datechange($event)"
                                     formControlName="endDateFormCtrl" placeholder="end date" required />
                                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
