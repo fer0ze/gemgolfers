@@ -507,9 +507,9 @@ export class AddTournamentComponent implements OnInit {
                     this.matchFormats = [
                         "MATCH_PLAY",
                         "TEXAS_SCRAMBLE",
-                        "2_BALL_SCRAMBLE",
-                        "3_BALL_SCRAMBLE",
-                        "4_BALL_SCRAMBLE",
+                        "TWO_BALL_SCRAMBLE",
+                        "THREE_BALL_SCRAMBLE",
+                        "FOUR_BALL_SCRAMBLE",
                         "SHAMBLES",
                         "BEST_THREE",
                         "BEST_TWO",
@@ -3756,7 +3756,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             this.showCat = false;
         }
-        event.value == matchFormat.MATCH_PLAY ? this.showMatchPlay = true : this.showMatchPlay = false;
+        // event.value == matchFormat.MATCH_PLAY ? this.showMatchPlay = true : this.showMatchPlay = false;
     }
     teamMatchChange(event) {
         this.matchFormats = []

@@ -167,7 +167,7 @@ export class MainLeaderboardComponent implements OnInit {
                 if (!data) {
                     ////console.log(data);
                 } else {
-                    //console.log(data);
+                    console.log(data);
                     this.Leaderboard = data;
                     this.matchFormat = this.Leaderboard.TournamentQL[0].matchFormat;
                     this.isLoading = false;

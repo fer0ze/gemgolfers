@@ -134,22 +134,22 @@ export class MatchplayComponent implements OnInit {
                         } else {
                             if (this.activeRound == 1) {
                                 this.showRound1 = true;
-                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                roundCourse = tournamentData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
                                 this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else if (this.activeRound == 2) {
                                 this.showRound2 = true;
-                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                roundCourse = tournamentData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
                                 this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else if (this.activeRound == 3) {
                                 this.showRound3 = true;
-                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                roundCourse = tournamentData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
                                 this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else if (this.activeRound == 4) {
                                 this.showRound4 = true;
-                                roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
+                                roundCourse = tournamentData['CoursesQL'].filter((course) => { return course.round == this.activeRound });
                                 console.log(roundCourse);
                                 this.courseID = roundCourse[0]?.courseId ?? this.courseID;
                             } else this.showRound4 = true;
@@ -693,7 +693,7 @@ export class MatchplayComponent implements OnInit {
 
                 findex++;
             }
-            //console.log(this.flightPlayers);
+            console.log(this.flightPlayers);
             this.logger.log('Getting Tournament Score Data Successfully.', "info",);
             this.active = true;
         } catch (error) {
