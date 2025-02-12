@@ -671,6 +671,24 @@ export class FlightsService {
                 });
         });
     }
+    public calculateHandicap(tournamentId: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.calculateHandicapQueryQL,
+                    variables: {
+                        tournamentId: tournamentId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public deletePlayerHandiCal(
         tournamnetId,
         PlayersIds: any

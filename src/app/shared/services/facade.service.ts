@@ -919,6 +919,9 @@ export class FacadeService {
   singleRoundFlightQuery(flightId: string) {
     return this.flightsService.singleRoundFlightQuery(flightId);
   }
+  calculateHandicap(tournamentId: string) {
+    return this.flightsService.calculateHandicap(tournamentId);
+  }
   deletePlayerHandiCal(tournamnetId: string, PlayersIds: any[]) {
     return this.flightsService.deletePlayerHandiCal(tournamnetId, PlayersIds);
   }

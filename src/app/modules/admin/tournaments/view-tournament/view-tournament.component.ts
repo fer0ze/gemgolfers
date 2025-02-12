@@ -2555,8 +2555,29 @@ export class ViewTournamentComponent implements OnInit {
     redirectToAttendance() {
         this.router.navigate(['/tournaments/attendance/' + this.tournamentID]);
     }
-    redirectToHandicap() {
-        // this.router.navigate(['/tournaments/handicap/' + this.tournamentID]);
+    async calculateHandicap() {
+        //console.log(player);
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to calculate the handicap for this Tournament?',
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                ////console.log("record deleted.");
+                let result = this.facadeService.calculateHandicap(
+                    this.tournamentID
+                );
+                if (result) {
+                    this.snackBar.open('Handicap has been calculated.', 'x', {
+                        duration: 3000,
+                        panelClass: ['orange-snackbar'],
+                    });
+                }
+            } else {
+                ////console.log("cancel delete action");
+            }
+        });
     }
 
     redirectToTournamentSetup() {
