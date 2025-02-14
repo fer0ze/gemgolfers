@@ -233,7 +233,7 @@ export class MatchplayComponent implements OnInit {
     async changeRound(item) {
         ////console.log("Selected value: " + item.value);
         let roundCourse;
-        if (this.active) {
+        // if (this.active) {
             this.flightRound = item.index + 1;
             if (this.flightRound == 1) {
                 this.showRound1 = true;
@@ -270,7 +270,7 @@ export class MatchplayComponent implements OnInit {
             //this.currentRoundFlights = [];
 
             this.parseSubscriptionResponse();
-        }
+        // }
     }
 
     private parseSubscriptionResponse(): boolean {
@@ -413,6 +413,7 @@ export class MatchplayComponent implements OnInit {
 
                 ////console.log(this.roundFlights);
                 if (filteredArray) {
+                    this.active = true;
                     this.setupMatchplayData(filteredArray, 2, true);
                 } else if (this.roundFlights.length > 0) {
                     ////console.log("not null");
@@ -430,7 +431,7 @@ export class MatchplayComponent implements OnInit {
     ) {
         try {
 
-
+            this.active = true;
             let findex = 0;
             for (let flightData of flightsQLs) {
                 ////console.log(flightData);

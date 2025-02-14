@@ -479,144 +479,54 @@ export class HandicapsComponent implements OnInit {
 
         }
     }
-    public downloadAsPDF() {
-        const doc = new jsPDF('portrait'); // Portrait mode for better layout
-
-        // Title
-        doc.setFontSize(16);
+    generatePDF() {
+        const doc = new jsPDF('l', 'mm', 'a4'); // Landscape mode
+      
+        // **Header 1: Tournament Title**
+        doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
-        doc.text('14TH PAKISTAN AMATEUR GOLF CHAMPIONSHIP', 35, 15);
-        doc.setFontSize(12);
-        doc.text('DAY 2 - 06 FEBRUARY 2025 - THURSDAY', 60, 25);
-
-        // Sample flight data (Two flights per row)
-        const flights: any[][] = [
-            [
-                { time: '9:00', flightNumber: 'Flight 1', players: ['Saad Habib Malik', 'Abdul Moez Khan', 'M Abdullah Khan'] },
-                { time: '9:00', flightNumber: 'Flight 26', players: ['M Sami Tahir', 'Myle Sheikh', 'Shayan Zia','Shayan Zia'] }
-            ],
-            [
-                { time: '9:10', flightNumber: 'Flight 2', players: ['M Larib ur Rehman', 'M Irtaza Hussain', 'M Darmal'] },
-                { time: '9:10', flightNumber: 'Flight 10', players: ['M Ozair Bin Abbas', 'Abu Bukhari', 'Hayder Bilal'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
-            [
-                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
-                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
-            ],
+        doc.text("14TH PAKISTAN JUNIOR AMATEUR GOLF CHAMPIONSHIP", 148, 10, { align: "center" });
+      
+        doc.setFontSize(10);
+        doc.text("04 - 07 FEBRUARY 2025", 148, 16, { align: "center" });
+      
+        // **Header 2: Category Title**
+        doc.setFillColor(41, 128, 185); // Blue background
+        doc.rect(14, 22, 269, 7, "F"); // Full-width rectangle
+        doc.setTextColor(255, 255, 255); // White text
+        doc.setFontSize(9);
+        doc.text("ALL CATEGORIES HOLE-WISE SCORE - 07 FEBRUARY 2025 FINAL DAY 3", 148, 27, { align: "center" });
+      
+        // Reset text color for table
+        doc.setTextColor(0, 0, 0);
+      
+        // **Multi-Row Header**
+        const headers = [
+          ["PAR", "", "", "", "", "", "", "", "", "", "36", "", "", "", "", "", "", "", "", "", "36", "", "", "", "", ""],
+          ["S.No", "Name", "Club", "1", "2", "3", "4", "5", "6", "7", "8", "9", "OUT",
+           "10", "11", "12", "13", "14", "15", "16", "17", "18", "IN", "RD 1", "RD 2", "RD 3", "Total", "Par"]
         ];
-
-        let startY = 30; // Start position for blocks
-
-        flights.forEach((row) => {
-            let startX = 10; // Reset X position for each row
-
-            row.forEach((flight) => {
-                // Draw Rectangle (Block)
-                doc.rect(startX, startY, 90, 35); // (x, y, width, height)
-
-                // Draw Header Background (Blue)
-                doc.setFillColor(41, 128, 185); // Blue background
-                doc.rect(startX, startY, 90, 8, 'F'); // 'F' fills the rectangle
-
-                // Header Text (White, Bold)
-                doc.setTextColor(255, 255, 255); // White text
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'bold');
-                doc.text('Time', startX + 5, startY + 5);
-                doc.text('Flight', startX + 17, startY + 5);
-                doc.text('Players', startX + 33, startY + 5);
-                doc.text('Hc.', startX + 75, startY + 5);
-
-                // Reset text color for content
-                doc.setTextColor(0, 0, 0);
-                doc.setFont('helvetica', 'bold');
-
-                // Time (Column 1)
-                doc.setFontSize(9);
-                doc.text(flight.time, startX + 5, startY + 14);
-
-                // Flight Number (Column 2)
-                doc.text(flight.flightNumber, startX + 17, startY + 14);
-
-                // Players (Column 3 - Vertical with padding)
-                flight.players.forEach((player, index) => {
-                    doc.text(player, startX + 33, startY + 14 + (index * 6)); // Added padding
-                    doc.text('4', startX + 75, startY + 14 + (index * 6)); // Added padding
-                });
-
-                startX += 92; // Shift to the right for the second block
-            });
-
-            startY += 38; // Move down for the next row
+      
+        // **Example Data**
+        const data = [
+          [1, "Saad Habib Malik", "DHA", 4, 4, 5, 3, 4, 5, 3, 4, 2, 37, 4, 4, 3, 6, 4, 5, 3, 4, 3, 37, 66, 66, 71, 203, -13],
+          [2, "Shahmeer Maajid", "DRG", 4, 4, 4, 5, 5, 3, 4, 4, 4, 36, 4, 4, 3, 4, 4, 4, 4, 4, 3, 34, 73, 69, 70, 212, -4]
+        ];
+      
+        // **Generate Table**
+        doc.autoTable({
+          startY: 30, // Adjust position after second header
+          head: headers,
+          body: data,
+          theme: "grid",
+          headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 8, halign: "center" },
+          bodyStyles: { fontSize: 7, halign: "center" },
+          columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } } // Align Name & Club to the left
         });
-
-        // Save the PDF
-        doc.save('Golf_Draws.pdf');
-    }
+      
+        // **Save PDF**
+        doc.save("Golf_ScoreSheet.pdf");
+      }
     getPlayerInformationByName(filterValue: string) {
         //console.log(filterValue);
         this.logger.log('Search in Handicap WHS', "info", filterValue);
