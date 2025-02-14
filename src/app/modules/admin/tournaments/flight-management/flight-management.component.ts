@@ -42,6 +42,8 @@ import {
 } from '../../../../shared/classes/general';
 import { SelectionModel } from '@angular/cdk/collections';
 import { of } from 'rxjs';
+import 'jspdf-autotable';
+import * as jsPDF from 'jspdf';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -64,6 +66,7 @@ import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog
 import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { isObject } from 'lodash';
 
 @Component({
     selector: 'app-flight-management',
@@ -545,6 +548,130 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //console.log(this.dataSource);
     }
 
+    public downloadAsPDF(noOfRounds) {
+        const doc = new jsPDF('portrait');
+        console.log(this.tournamentInfo[0]);
+        const pageHeight = doc.internal.pageSize.height; // Get page height
+        const pageWidth = doc.internal.pageSize.width;
+        // Title
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(this.tournamentInfo[0].club?.name, pageWidth / 2, 15, { align: "center" });
+        doc.text(this.tournamentInfo[0].title, pageWidth / 2, 22, { align: "center" });
+
+        doc.setFontSize(12);
+        doc.text(`DAY ${this.tournamentInfo[0].activeRound} DRAWS`, pageWidth / 2, 27, { align: "center" });
+
+        // Group players by flightNo and time
+        const groupedFlights = this.selectedMembers.reduce((acc, member) => {
+            const key = `${member['time']}_${member['flightNo']}`;
+
+            if (!acc[key]) {
+                acc[key] = {
+                    time: member['time'],
+                    flightNumber: `No. ${member['flightNo']}`,
+                    players: []
+                };
+            }
+
+            // Loop through the players array inside the member object
+            if (Array.isArray(member)) {
+                member.forEach((player: any) => {
+                    if (isObject(player)) {
+                        acc[key].players.push({
+                            fullName: `${player['firstName']} ${player['lastName']}`,
+                            handicap: player['handicap']
+                        });
+                    }
+                });
+            }
+
+            return acc;
+        }, {});
+
+
+        // Convert to array of flight pairs (Two flights per row)
+        const flightsArray = Object.values(groupedFlights);
+        const flightPairs = [];
+        for (let i = 0; i < flightsArray.length; i += 2) {
+            flightPairs.push(flightsArray.slice(i, i + 2));
+        }
+
+        let startY = 30; // Start position for blocks
+
+        const blockHeight = 42; // Each row height
+        const blockWidth = 92; // Block width
+
+        flightPairs.forEach((row) => {
+            let startX = 10; // Reset X position for each row
+
+            // Check if we need a new page before drawing the row
+            if (startY + blockHeight > pageHeight - 10) {
+                doc.addPage(); // Add new page
+                startY = 30; // Reset Y position
+            }
+
+            row.forEach((flight) => {
+                // Draw Rectangle (Block)
+                doc.rect(startX, startY, 90, 40);
+
+                // Draw Header Background (Blue)
+                doc.setFillColor(41, 128, 185);
+                doc.rect(startX, startY, 90, 8, 'F');
+
+                // Header Text
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Time', startX + 4, startY + 5);
+                doc.text('Flight', startX + 15, startY + 5);
+                doc.text('Players', startX + 29, startY + 5);
+                doc.text('Hc.', startX + 77, startY + 5);
+
+                // Reset text color for content
+                doc.setTextColor(0, 0, 0);
+                doc.setFont('helvetica', 'bold');
+
+                // Time
+                doc.setFontSize(8);
+                doc.text(General.formatTime(flight.time), startX + 4, startY + 14);
+
+                // Flight Number
+                doc.text(flight.flightNumber, startX + 15, startY + 14);
+
+                // Players (Vertical with padding)
+                const maxLineWidth = 44; // Adjust based on PDF width constraints
+                const lineHeight = 6; // Line spacing
+
+                let currentY = startY + 14; // Start Y position for players
+
+                flight.players.forEach((player) => {
+                    let fullName = player.fullName;
+                    let handicap = player.handicap.toString();
+
+                    // Split name into multiple lines if too long
+                    let splitName = doc.splitTextToSize(fullName, maxLineWidth);
+
+                    // Draw each line separately with adjusted Y-position
+                    splitName.forEach((line, lineIndex) => {
+                        doc.text(line, startX + 29, currentY + (lineIndex * lineHeight));
+                    });
+
+                    // Handicap (aligning with the first line of the name)
+                    doc.text(handicap, startX + 77, currentY);
+
+                    // Move currentY down based on the number of lines occupied
+                    currentY += splitName.length * lineHeight;
+                });
+
+                startX += blockWidth; // Shift to the right for the second block
+            });
+
+            startY += blockHeight; // Move down for the next row
+        });
+        doc.save('Golf_Draws.pdf');
+    }
+
     tabClicked(tab: any) {
         if (tab.index == 1) {
             this.syncTournamentMembers();
@@ -756,13 +883,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
     changeRound(item) {
         // console.log("Selected value: " + item.value);
-        if ((item.index)) {
-            this.flightRound = item.index + 1;
-            this.roundFlights = [];
-            this.selectedMembers = [];
 
-            this.getSelectedPlayers();
-        }
+        this.flightRound = item.index + 1;
+        this.roundFlights = [];
+        this.selectedMembers = [];
+
+        this.getSelectedPlayers();
+
     }
 
     isAllSelected() {

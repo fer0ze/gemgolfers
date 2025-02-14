@@ -5,21 +5,18 @@
             <mat-tab label="Round 1" *ngIf="noOfRounds >= 1">
                 <div class="flex justify-end mx-32">
 
-                    <button
-                        *ngIf="selectedMembers.length == 0"
-                        class="mx-2"
-                        mat-raised-button
-                        color="accent"
-                        (click)="createAutoFlights()"
-                    >
+                    <button *ngIf="selectedMembers.length == 0" class="mx-2" mat-raised-button color="accent"
+                        (click)="createAutoFlights()">
                         Create Auto-Groups
                     </button>
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        (click)="addFlight(1)"
-                    >
+                    <button mat-raised-button color="primary" (click)="addFlight(1)">
                         Add New Group
+
+                    </button>
+                    <button (click)="downloadAsPDF(1)" class="ml-4" mat-flat-button [color]="'warn'">
+
+                        <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                        <span class="ml-2">Export to PDF</span>
 
                     </button>
                 </div>
@@ -41,22 +38,14 @@
                                         class="flightHeader primary-background sm:col-span-2 md:col-span-1 lg:col-span-1 bg-blue-200 flex rounded-l-lg flex-col flex-auto p-6">
                                         <ng-container>
 
-                                            <mat-form-field
-                                                class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                                [floatLabel]="'always'"
-                                            >
-                                                <span
-                                                    *ngIf="!this.showTeams"
-                                                    class="text-base font-black text-gray-400 min-w-max"
-                                                    >Group No:</span
-                                                >
-                                                <span
-                                                    *ngIf="this.showTeams"
-                                                    class="text-base font-black text-gray-400 min-w-max"
-                                                    >Team No:</span
-                                                >
-                                                <input
-                                                    value="{{
+                                            <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
+                                                [floatLabel]="'always'">
+                                                <span *ngIf="!this.showTeams"
+                                                    class="text-base font-black text-gray-400 min-w-max">Group
+                                                    No:</span>
+                                                <span *ngIf="this.showTeams"
+                                                    class="text-base font-black text-gray-400 min-w-max">Team No:</span>
+                                                <input value="{{
 
                                                         items['flightNo']
                                                     }}" matInput id="flight_{{ j }}_number" #query />
@@ -249,6 +238,12 @@
                     <button mat-raised-button color="primary" (click)="addFlight(2)">
                         Add New Group
                     </button>
+                    <button (click)="downloadAsPDF(2)" class="ml-4" mat-flat-button [color]="'warn'">
+
+                        <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                        <span class="ml-2">Export to PDF</span>
+
+                    </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
@@ -268,26 +263,12 @@
                         <span *ngIf="this.showTeams"
                             >Team: {{ i + 1 }}</span
                         > -->
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        *ngIf="!this.showTeams"
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Group No:</span
-                                    >
-                                    <span
-                                        *ngIf="this.showTeams"
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Team No:</span
-                                    >
-                                    <input
-                                        value="{{ items['flightNo'] }}"
-                                        id="flight_{{ j }}_number"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span *ngIf="!this.showTeams"
+                                        class="text-base font-black text-gray-400 min-w-max">Group No:</span>
+                                    <span *ngIf="this.showTeams"
+                                        class="text-base font-black text-gray-400 min-w-max">Team No:</span>
+                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
 
                                 </mat-form-field>
                                 <mat-form-field *ngIf="this.showTeams" class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
@@ -470,6 +451,12 @@
                     <button mat-raised-button color="primary" (click)="addFlight(3)">
                         Add New Group
                     </button>
+                    <button (click)="downloadAsPDF(3)" class="ml-4" mat-flat-button [color]="'warn'">
+
+                        <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                        <span class="ml-2">Export to PDF</span>
+
+                    </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
@@ -491,20 +478,9 @@
                         > -->
 
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Group No:</span
-                                    >
-                                    <input
-                                        value="{{ items['flightNo'] }}"
-                                        id="flight_{{ j }}_number"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Group No:</span>
+                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
 
                                 </mat-form-field>
 
@@ -682,6 +658,12 @@
                     <button mat-raised-button color="primary" (click)="addFlight(4)">
                         Add New Group
                     </button>
+                    <button (click)="downloadAsPDF(4)" class="ml-4" mat-flat-button [color]="'warn'">
+
+                        <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                        <span class="ml-2">Export to PDF</span>
+
+                    </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
@@ -703,20 +685,9 @@
                         > -->
 
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Group No:</span
-                                    >
-                                    <input
-                                        value="{{ items['flightNo'] }}"
-                                        id="flight_{{ j }}_number"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Group No:</span>
+                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
 
                                 </mat-form-field>
 
@@ -894,6 +865,12 @@
                     <button mat-raised-button color="primary" (click)="addFlight(5)">
                         Add New Group
                     </button>
+                    <button (click)="downloadAsPDF(5)" class="ml-4" mat-flat-button [color]="'warn'">
+
+                        <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                        <span class="ml-2">Export to PDF</span>
+
+                    </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
@@ -915,20 +892,9 @@
                         > -->
 
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Group No:</span
-                                    >
-                                    <input
-                                        value="{{ items['flightNo'] }}"
-                                        id="flight_{{ j }}_number"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Group No:</span>
+                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
 
                                 </mat-form-field>
 
@@ -1106,6 +1072,12 @@
                     <button mat-raised-button color="primary" (click)="addFlight(5)">
                         Add New Group
                     </button>
+                    <button (click)="downloadAsPDF(6)" class="ml-4" mat-flat-button [color]="'warn'">
+
+                        <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                        <span class="ml-2">Export to PDF</span>
+
+                    </button>
                 </div>
                 <div *ngIf="selectedMembers.length > 0">
                     <div cdkDropListGroup id="manageFlights" class="mx-32 m-4">
@@ -1127,20 +1099,9 @@
                         > -->
 
 
-                                <mat-form-field
-                                    class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0"
-                                    [floatLabel]="'always'"
-                                >
-                                    <span
-                                        class="text-base font-black text-gray-400 min-w-max"
-                                        >Group No:</span
-                                    >
-                                    <input
-                                        value="{{ items['flightNo'] }}"
-                                        id="flight_{{ j }}_number"
-                                        matInput
-                                        #query
-                                    />
+                                <mat-form-field class="fuse-mat-no-subscript mb-2 mt-4 sm:mt-0" [floatLabel]="'always'">
+                                    <span class="text-base font-black text-gray-400 min-w-max">Group No:</span>
+                                    <input value="{{ items['flightNo'] }}" id="flight_{{ j }}_number" matInput #query />
 
                                 </mat-form-field>
 

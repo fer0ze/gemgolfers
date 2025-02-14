@@ -177,7 +177,11 @@ export class General {
 
         return ID ? ID.id : teeName;
     }
-
+    public static formatTime(timeString: string): string {
+        const [hours, minutes] = timeString.split(':').map(Number);
+        const formattedHours = ((hours + 11) % 12) + 1; // Convert to 12-hour format
+        return `${formattedHours}:${minutes.toString().padStart(2, '0')}`;
+    }
     public static getPlayersTe(teeName: String) {
         const Course_Tee = [
             { id: '1', name: 'Amateurs', result: 'AMATEURS' },

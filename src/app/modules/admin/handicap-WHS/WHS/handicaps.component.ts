@@ -479,7 +479,144 @@ export class HandicapsComponent implements OnInit {
 
         }
     }
+    public downloadAsPDF() {
+        const doc = new jsPDF('portrait'); // Portrait mode for better layout
 
+        // Title
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('14TH PAKISTAN AMATEUR GOLF CHAMPIONSHIP', 35, 15);
+        doc.setFontSize(12);
+        doc.text('DAY 2 - 06 FEBRUARY 2025 - THURSDAY', 60, 25);
+
+        // Sample flight data (Two flights per row)
+        const flights: any[][] = [
+            [
+                { time: '9:00', flightNumber: 'Flight 1', players: ['Saad Habib Malik', 'Abdul Moez Khan', 'M Abdullah Khan'] },
+                { time: '9:00', flightNumber: 'Flight 26', players: ['M Sami Tahir', 'Myle Sheikh', 'Shayan Zia','Shayan Zia'] }
+            ],
+            [
+                { time: '9:10', flightNumber: 'Flight 2', players: ['M Larib ur Rehman', 'M Irtaza Hussain', 'M Darmal'] },
+                { time: '9:10', flightNumber: 'Flight 10', players: ['M Ozair Bin Abbas', 'Abu Bukhari', 'Hayder Bilal'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+            [
+                { time: '9:20', flightNumber: 'Flight 3', players: ['Sharaan Ali Khan', 'Shahmeer Majid', 'Ahmed Murad Ghumman'] },
+                { time: '9:20', flightNumber: 'Flight 9', players: ['Shahvez Abbas Niazi', 'Hassan Raza', 'Sami Sohail'] }
+            ],
+        ];
+
+        let startY = 30; // Start position for blocks
+
+        flights.forEach((row) => {
+            let startX = 10; // Reset X position for each row
+
+            row.forEach((flight) => {
+                // Draw Rectangle (Block)
+                doc.rect(startX, startY, 90, 35); // (x, y, width, height)
+
+                // Draw Header Background (Blue)
+                doc.setFillColor(41, 128, 185); // Blue background
+                doc.rect(startX, startY, 90, 8, 'F'); // 'F' fills the rectangle
+
+                // Header Text (White, Bold)
+                doc.setTextColor(255, 255, 255); // White text
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Time', startX + 5, startY + 5);
+                doc.text('Flight', startX + 17, startY + 5);
+                doc.text('Players', startX + 33, startY + 5);
+                doc.text('Hc.', startX + 75, startY + 5);
+
+                // Reset text color for content
+                doc.setTextColor(0, 0, 0);
+                doc.setFont('helvetica', 'bold');
+
+                // Time (Column 1)
+                doc.setFontSize(9);
+                doc.text(flight.time, startX + 5, startY + 14);
+
+                // Flight Number (Column 2)
+                doc.text(flight.flightNumber, startX + 17, startY + 14);
+
+                // Players (Column 3 - Vertical with padding)
+                flight.players.forEach((player, index) => {
+                    doc.text(player, startX + 33, startY + 14 + (index * 6)); // Added padding
+                    doc.text('4', startX + 75, startY + 14 + (index * 6)); // Added padding
+                });
+
+                startX += 92; // Shift to the right for the second block
+            });
+
+            startY += 38; // Move down for the next row
+        });
+
+        // Save the PDF
+        doc.save('Golf_Draws.pdf');
+    }
     getPlayerInformationByName(filterValue: string) {
         //console.log(filterValue);
         this.logger.log('Search in Handicap WHS', "info", filterValue);

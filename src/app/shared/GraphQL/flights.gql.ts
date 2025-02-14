@@ -428,6 +428,7 @@ export const FlightManagersQuery = gql`
             noOfRounds
             matchFormat
             activeRound
+            title
             startDate
 
             FlightManagerQLi: flights(
@@ -473,6 +474,10 @@ export const FlightManagersQuery = gql`
                 default
                 flightSettings
             }
+                club{
+                id 
+                name
+                }
         }
     }
 `;
