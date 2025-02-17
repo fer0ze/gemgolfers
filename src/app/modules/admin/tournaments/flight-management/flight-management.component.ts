@@ -550,10 +550,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     public downloadAsPDF(noOfRounds) {
         const doc = new jsPDF('portrait');
-        console.log(this.tournamentInfo[0]);
-        const pageHeight = doc.internal.pageSize.height; // Get page height
+        const pageHeight = doc.internal.pageSize.height;
         const pageWidth = doc.internal.pageSize.width;
-        // Title
+
+        // **Title**
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
         doc.text(this.tournamentInfo[0].club?.name, pageWidth / 2, 15, { align: "center" });
@@ -562,7 +562,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         doc.setFontSize(12);
         doc.text(`DAY ${this.tournamentInfo[0].activeRound} DRAWS`, pageWidth / 2, 27, { align: "center" });
 
-        // Group players by flightNo and time
+        // **Group Players by FlightNo and Time**
         const groupedFlights = this.selectedMembers.reduce((acc, member) => {
             const key = `${member['time']}_${member['flightNo']}`;
 
@@ -570,11 +570,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 acc[key] = {
                     time: member['time'],
                     flightNumber: `No. ${member['flightNo']}`,
+                    startingHole: member['startingHole'], // Store starting hole
                     players: []
                 };
             }
 
-            // Loop through the players array inside the member object
             if (Array.isArray(member)) {
                 member.forEach((player: any) => {
                     if (isObject(player)) {
@@ -589,88 +589,82 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             return acc;
         }, {});
 
-
-        // Convert to array of flight pairs (Two flights per row)
+        // **Sort Flights into Left & Right Columns**
         const flightsArray = Object.values(groupedFlights);
-        const flightPairs = [];
-        for (let i = 0; i < flightsArray.length; i += 2) {
-            flightPairs.push(flightsArray.slice(i, i + 2));
-        }
+        const leftFlights = flightsArray.filter(flight => flight['startingHole'] === 1);
+        const rightFlights = flightsArray.filter(flight => flight['startingHole'] === 10);
 
-        let startY = 30; // Start position for blocks
+        // **Ensure Both Arrays Have Equal Length**
+        const maxFlights = Math.max(leftFlights.length, rightFlights.length);
+        while (leftFlights.length < maxFlights) leftFlights.push(null);
+        while (rightFlights.length < maxFlights) rightFlights.push(null);
 
-        const blockHeight = 42; // Each row height
-        const blockWidth = 92; // Block width
+        let startY = 30;
+        const blockHeight = 42;
+        const blockWidth = 92;
 
-        flightPairs.forEach((row) => {
-            let startX = 10; // Reset X position for each row
+        for (let i = 0; i < maxFlights; i++) {
+            let startX = 10; // Left column position
 
-            // Check if we need a new page before drawing the row
             if (startY + blockHeight > pageHeight - 10) {
-                doc.addPage(); // Add new page
+                doc.addPage(); // Add a new page
                 startY = 30; // Reset Y position
             }
 
-            row.forEach((flight) => {
-                // Draw Rectangle (Block)
-                doc.rect(startX, startY, 90, 40);
+            // **Left Column (Starting Hole 1)**
+            if (leftFlights[i]) {
+                this.drawFlightBlock(doc, leftFlights[i], startX, startY);
+            }
 
-                // Draw Header Background (Blue)
-                doc.setFillColor(41, 128, 185);
-                doc.rect(startX, startY, 90, 8, 'F');
-
-                // Header Text
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'bold');
-                doc.text('Time', startX + 4, startY + 5);
-                doc.text('Flight', startX + 15, startY + 5);
-                doc.text('Players', startX + 29, startY + 5);
-                doc.text('Hc.', startX + 77, startY + 5);
-
-                // Reset text color for content
-                doc.setTextColor(0, 0, 0);
-                doc.setFont('helvetica', 'bold');
-
-                // Time
-                doc.setFontSize(8);
-                doc.text(General.formatTime(flight.time), startX + 4, startY + 14);
-
-                // Flight Number
-                doc.text(flight.flightNumber, startX + 15, startY + 14);
-
-                // Players (Vertical with padding)
-                const maxLineWidth = 44; // Adjust based on PDF width constraints
-                const lineHeight = 6; // Line spacing
-
-                let currentY = startY + 14; // Start Y position for players
-
-                flight.players.forEach((player) => {
-                    let fullName = player.fullName;
-                    let handicap = player.handicap.toString();
-
-                    // Split name into multiple lines if too long
-                    let splitName = doc.splitTextToSize(fullName, maxLineWidth);
-
-                    // Draw each line separately with adjusted Y-position
-                    splitName.forEach((line, lineIndex) => {
-                        doc.text(line, startX + 29, currentY + (lineIndex * lineHeight));
-                    });
-
-                    // Handicap (aligning with the first line of the name)
-                    doc.text(handicap, startX + 77, currentY);
-
-                    // Move currentY down based on the number of lines occupied
-                    currentY += splitName.length * lineHeight;
-                });
-
-                startX += blockWidth; // Shift to the right for the second block
-            });
+            // **Right Column (Starting Hole 10)**
+            if (rightFlights[i]) {
+                this.drawFlightBlock(doc, rightFlights[i], startX + blockWidth, startY);
+            }
 
             startY += blockHeight; // Move down for the next row
-        });
+        }
+
         doc.save('Golf_Draws.pdf');
     }
+
+    // **Reusable Function to Draw Flight Block**
+    private drawFlightBlock(doc, flight, startX, startY) {
+        if (!flight) return; // Skip if flight is null
+
+        doc.rect(startX, startY, 90, 40);
+        doc.setFillColor(41, 128, 185);
+        doc.rect(startX, startY, 90, 8, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Time', startX + 4, startY + 5);
+        doc.text('Flight', startX + 15, startY + 5);
+        doc.text('Players', startX + 29, startY + 5);
+        doc.text('Hc.', startX + 77, startY + 5);
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text(General.formatTime(flight.time), startX + 4, startY + 14);
+        doc.text(flight.flightNumber, startX + 15, startY + 14);
+
+        const maxLineWidth = 44;
+        const lineHeight = 6;
+        let currentY = startY + 14;
+
+        flight.players.forEach((player) => {
+            let splitName = doc.splitTextToSize(player.fullName, maxLineWidth);
+
+            splitName.forEach((line, lineIndex) => {
+                doc.text(line, startX + 29, currentY + (lineIndex * lineHeight));
+            });
+
+            doc.text(player.handicap.toString(), startX + 77, currentY);
+            currentY += splitName.length * lineHeight;
+        });
+    }
+
 
     tabClicked(tab: any) {
         if (tab.index == 1) {

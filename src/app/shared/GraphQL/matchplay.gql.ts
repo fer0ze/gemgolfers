@@ -17,6 +17,7 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
         courseId
         noOfRounds
         activeRound
+        title
         matchFormat
         SubTournamentsQL: sub_tournaments {
             SubTournamentQL: sub_tournament {
@@ -41,6 +42,7 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                     firstName
                     lastName
                     fullName
+                    membershipNumber
                     handicap
                     id
                 }
@@ -78,6 +80,9 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                 }
             }}
         }
+            club{
+            id
+            name}
     }
 }${PlayerQL}${TournamentQL}${FlightsQL}${ScoreQL}${ScoreDetailQL}${CourseQL}${HoleQL}${TournamentRoleManagerQL}`;
 
