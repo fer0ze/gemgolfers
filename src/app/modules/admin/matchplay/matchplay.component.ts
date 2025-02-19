@@ -275,99 +275,129 @@ export class MatchplayComponent implements OnInit {
         // }
     }
     async generatePDF() {
-        const doc = new jsPDF('l', 'mm', 'a4'); // Landscape mode
+        const doc = new jsPDF("l", "mm", "a4"); // Landscape mode
         const pageWidth = doc.internal.pageSize.width;
-
+    
         // **Header 1: Tournament Title**
         doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text(this.matchPlayData['club']?.name, pageWidth / 2, 15, { align: "center" });
-        doc.text(this.matchPlayData['title'], pageWidth / 2, 22, { align: "center" });
+        doc.setFont("helvetica", "bold");
+        doc.text(this.matchPlayData["club"]?.name, pageWidth / 2, 15, { align: "center" });
+        doc.text(this.matchPlayData["title"], pageWidth / 2, 22, { align: "center" });
         doc.setFontSize(12);
-        doc.text(`Day ${this.matchPlayData['activeRound']} Score`, pageWidth / 2, 27, { align: "center" });
-
+        doc.text(`Day ${this.matchPlayData["activeRound"]} Score`, pageWidth / 2, 27, { align: "center" });
+    
         // **Header 2: Category Title**
         doc.setFillColor(41, 128, 185); // Blue background
         doc.rect(14, 30, 269, 7, "F"); // Full-width rectangle
         doc.setTextColor(255, 255, 255); // White text
         doc.setFontSize(9);
         doc.text("ALL CATEGORIES HOLE-WISE SCORE", 148, 35, { align: "center" });
-
+    
         // Reset text color for table
         doc.setTextColor(0, 0, 0);
-
-        // Fetch the first flight's course par data (assuming structure is consistent)
-        let pars9 = this.flightPlayers[0]?.header.courseHoles9.map(a => a.par) || [];
-        let pars18 = this.flightPlayers[0]?.header.courseHoles18.map(a => a.par) || [];
-
+    
+        // Fetch the first flight's course par data
+        let pars9 = this.flightPlayers[0]?.header.courseHoles9.map((a) => a.par) || [];
+        let pars18 = this.flightPlayers[0]?.header.courseHoles18.map((a) => a.par) || [];
+    
         // **Multi-Row Header**
         const headers = [
             ["PAR", "", "", ...pars9, "36", ...pars18, "36", "", "", "", "", "72"],
-            ["S.No", "Name", "MemNo.", "1", "2", "3", "4", "5", "6", "7", "8", "9", "OUT",
-                "10", "11", "12", "13", "14", "15", "16", "17", "18", "IN", "RD 1", "RD 2", "RD 3", "Total", "Par"]
+            [
+                "S.No",
+                "Name",
+                "MemNo.",
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "OUT",
+                "10", "11", "12", "13", "14", "15", "16", "17", "18", "IN",
+                "RD 1", "RD 2", "RD 3", "Total", "Par"
+            ]
         ];
-
+    
         // **Step 1: Fetch Data for All Rounds**
-        let playerScores = {}; // To store player scores across rounds
-
+        let playerScores = {}; // Store player scores grouped by category
+    
         for (let round = 1; round <= this.activeRound; round++) {
             await this.changeRound({ index: round - 1 }); // Change round data
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+    
             this.flightPlayers.flatMap((flight) =>
-                flight.filter(player => typeof player === "object" && player !== null) // Ensure it's an object
+                flight
+                    .filter((player) => typeof player === "object" && player !== null) // Ensure it's an object
                     .forEach((player) => {
-                        if (!playerScores[player.playerId]) {
-                            playerScores[player.playerId] = {
+                        const category = player.playerCategory || "Uncategorized"; // Fallback category
+                        if (!playerScores[category]) {
+                            playerScores[category] = {}; // Create category if not exists
+                        }
+                        if (!playerScores[category][player.playerId]) {
+                            playerScores[category][player.playerId] = {
                                 name: player.name,
                                 membershipNumber: player.membershipNumber,
                                 Hole9Scores: [...player.Hole9Scores], // Clone scores to avoid reference issues
                                 gross9Total: player.gross9Total,
                                 Hole18Scores: [...player.Hole18Scores],
                                 gross18Total: player.gross18Total,
-                                rounds: [null, null, null] // Placeholder for RD1, RD2, RD3
+                                rounds: [null, null, null], // Placeholder for RD1, RD2, RD3
                             };
                         }
-                        playerScores[player.playerId].rounds[round - 1] = player.grossTotal; // Store round score
+                        playerScores[category][player.playerId].rounds[round - 1] = player.grossTotal; // Store round score
                     })
             );
         }
-
-        // **Step 2: Convert Data into Table Format**
-        let count = 0;
-        const dataA = Object.values(playerScores).map((player) => {
-            let totalScore = player['rounds'].reduce((sum, score) => sum + (score || 0), 0);
-            count++;
-
-            return [
-                count, // S.No
-                player['name'], // Player Name
-                player['membershipNumber'], // Membership Number
-                ...player['Hole9Scores'], // Front 9 Scores
-                player['gross9Total'], // OUT Score (Sum of Hole9Scores)
-                ...player['Hole18Scores'], // Back 9 Scores
-                player['gross18Total'], // IN Score (Sum of Hole18Scores)
-                ...player['rounds'], // RD 1, RD 2, RD 3 values
-                totalScore, // Total of all rounds
-                "-13" // Par (static value for now)
-            ];
+    
+        // **Step 2: Convert Data into Table Format with Categories**
+        let startY = 38;
+        let categoryIndex = 0;
+    
+        Object.keys(playerScores).forEach((category) => {
+            const players = Object.values(playerScores[category]);
+    
+            // **Step 2.1: Add Category Header**
+            if (categoryIndex > 0) startY += 10; // Add spacing between categories
+            doc.setFillColor(200, 200, 200);
+            doc.rect(14, startY, 269, 6, "F"); // Gray background for category
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            doc.text(category.toUpperCase(), 148, startY + 4, { align: "center" });
+            startY += 8; // Move position down for table
+    
+            let count = 0;
+            const dataA = players.map((player) => {
+                let totalScore = player["rounds"].reduce((sum, score) => sum + (score || 0), 0);
+                count++;
+    
+                return [
+                    count, // S.No
+                    player["name"], // Player Name
+                    player["membershipNumber"], // Membership Number
+                    ...player["Hole9Scores"], // Front 9 Scores
+                    player["gross9Total"], // OUT Score (Sum of Hole9Scores)
+                    ...player["Hole18Scores"], // Back 9 Scores
+                    player["gross18Total"], // IN Score (Sum of Hole18Scores)
+                    ...player["rounds"], // RD 1, RD 2, RD 3 values
+                    totalScore, // Total of all rounds
+                    "-13", // Par (static value for now)
+                ];
+            });
+    
+            // **Step 3: Generate Table for Current Category**
+            doc.autoTable({
+                startY: startY,
+                head: headers,
+                body: dataA,
+                theme: "grid",
+                headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 8, halign: "center" },
+                bodyStyles: { fontSize: 7, halign: "center" },
+                columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } }, // Align Name & Club to the left
+            });
+    
+            startY = doc.lastAutoTable.finalY + 10; // Move startY below the table
+            categoryIndex++;
         });
-
-        console.log(dataA); // Debugging
-
-        // **Step 3: Generate Table**
-        doc.autoTable({
-            startY: 38,
-            head: headers,
-            body: dataA,
-            theme: "grid",
-            headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 8, halign: "center" },
-            bodyStyles: { fontSize: 7, halign: "center" },
-            columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } } // Align Name & Club to the left
-        });
-
+    
         // **Save PDF**
         doc.save("Golf_ScoreSheet.pdf");
     }
+    
 
     private parseSubscriptionResponse(): boolean {
         try {
@@ -638,6 +668,7 @@ export class MatchplayComponent implements OnInit {
                             name: player.firstName + ' ' + player.lastName,
                             picture: player.picture,
                             membershipNumber: player.membershipNumber,
+                            playerCategory: player.playerCategory,
                             handicap: player.handicap,
                             Hole9Scores: playerHole9Score,
                             Hole18Scores: playerHole18Score,
@@ -750,6 +781,7 @@ export class MatchplayComponent implements OnInit {
                             Hole18Scores: playerHole18Score,
                             gross9Total: gross9Total,
                             membershipNumber: player.membershipNumber,
+                            playerCategory: player.playerCategory,
                             gross18Total: gross18Total,
                             grossTotal: grossTotal,
                             holesPlayed: holePlayed,

@@ -42,6 +42,7 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                     firstName
                     lastName
                     fullName
+                    playerCategory
                     membershipNumber
                     handicap
                     id

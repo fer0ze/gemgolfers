@@ -562,74 +562,90 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         doc.setFontSize(12);
         doc.text(`DAY ${this.tournamentInfo[0].activeRound} DRAWS`, pageWidth / 2, 27, { align: "center" });
 
-        // **Group Players by FlightNo and Time**
-        const groupedFlights = this.selectedMembers.reduce((acc, member) => {
+        // **Group flights by playerCategory**
+        const groupedByCategory = this.selectedMembers.reduce((acc, member) => {
             const key = `${member['time']}_${member['flightNo']}`;
 
-            if (!acc[key]) {
-                acc[key] = {
+            // Extract the playerCategory from the first player in the flight
+            const firstPlayer = member?.[0];
+            const category = firstPlayer ? firstPlayer.playerCategory : 'Unknown Category';
+
+            if (!acc[category]) acc[category] = {};
+            if (!acc[category][key]) {
+                acc[category][key] = {
                     time: member['time'],
                     flightNumber: `No. ${member['flightNo']}`,
-                    startingHole: member['startingHole'], // Store starting hole
-                    players: []
-                };
-            }
-
-            if (Array.isArray(member)) {
-                member.forEach((player: any) => {
-                    if (isObject(player)) {
-                        acc[key].players.push({
+                    startingHole: member['startingHole'],
+                    players: member
+                        .filter(player => typeof player === 'object' && player !== null) // Ensure player is an object
+                        .map(player => ({
                             fullName: `${player['firstName']} ${player['lastName']}`,
                             handicap: player['handicap']
-                        });
-                    }
-                });
+                        })),
+
+                    playerCategory: category
+                };
             }
 
             return acc;
         }, {});
 
-        // **Sort Flights into Left & Right Columns**
-        const flightsArray = Object.values(groupedFlights);
-        const leftFlights = flightsArray.filter(flight => flight['startingHole'] === 1);
-        const rightFlights = flightsArray.filter(flight => flight['startingHole'] === 10);
-
-        // **Ensure Both Arrays Have Equal Length**
-        const maxFlights = Math.max(leftFlights.length, rightFlights.length);
-        while (leftFlights.length < maxFlights) leftFlights.push(null);
-        while (rightFlights.length < maxFlights) rightFlights.push(null);
-
         let startY = 30;
         const blockHeight = 42;
         const blockWidth = 92;
 
-        for (let i = 0; i < maxFlights; i++) {
-            let startX = 10; // Left column position
-
-            if (startY + blockHeight > pageHeight - 10) {
-                doc.addPage(); // Add a new page
-                startY = 30; // Reset Y position
+        // **Loop through categories**
+        Object.keys(groupedByCategory).forEach((category) => {
+            // **Show category header before flights**
+            if (startY + 10 > pageHeight - 10) {
+                doc.addPage();
+                startY = 30;
             }
 
-            // **Left Column (Starting Hole 1)**
-            if (leftFlights[i]) {
-                this.drawFlightBlock(doc, leftFlights[i], startX, startY);
-            }
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(41, 128, 185);
+            doc.text(category, pageWidth / 2, startY+5, { align: "center" });
+            startY += 10;
 
-            // **Right Column (Starting Hole 10)**
-            if (rightFlights[i]) {
-                this.drawFlightBlock(doc, rightFlights[i], startX + blockWidth, startY);
-            }
+            // **Sort flights into left and right columns**
+            const flightsArray = Object.values(groupedByCategory[category]);
+            const leftFlights = flightsArray.filter(flight => flight['startingHole'] === 1);
+            const rightFlights = flightsArray.filter(flight => flight['startingHole'] === 10);
 
-            startY += blockHeight; // Move down for the next row
-        }
+            // **Ensure both columns have equal length**
+            const maxFlights = Math.max(leftFlights.length, rightFlights.length);
+            while (leftFlights.length < maxFlights) leftFlights.push(null);
+            while (rightFlights.length < maxFlights) rightFlights.push(null);
+
+            for (let i = 0; i < maxFlights; i++) {
+                let startX = 10; // Left column position
+
+                if (startY + blockHeight > pageHeight - 10) {
+                    doc.addPage();
+                    startY = 30;
+                }
+
+                // **Left Column (Starting Hole 1)**
+                if (leftFlights[i]) {
+                    this.drawFlightBlock(doc, leftFlights[i], startX, startY);
+                }
+
+                // **Right Column (Starting Hole 10)**
+                if (rightFlights[i]) {
+                    this.drawFlightBlock(doc, rightFlights[i], startX + blockWidth, startY);
+                }
+
+                startY += blockHeight;
+            }
+        });
 
         doc.save('Golf_Draws.pdf');
     }
 
     // **Reusable Function to Draw Flight Block**
     private drawFlightBlock(doc, flight, startX, startY) {
-        if (!flight) return; // Skip if flight is null
+        if (!flight) return;
 
         doc.rect(startX, startY, 90, 40);
         doc.setFillColor(41, 128, 185);
@@ -664,6 +680,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             currentY += splitName.length * lineHeight;
         });
     }
+
+
 
 
     tabClicked(tab: any) {
