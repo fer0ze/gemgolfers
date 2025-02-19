@@ -219,6 +219,9 @@ export class FacadeService {
   getPlayersListByClub(id: string) {
     return this.playerService.getPlayersListByClub(id);
   }
+  getPlayersListMergeClub(id: string) {
+    return this.playerService.getPlayersListMergeClub(id);
+  }
   getPlayersListByTour(id: string) {
     return this.playerService.getPlayersListByTour(id);
   }

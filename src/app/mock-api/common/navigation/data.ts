@@ -180,6 +180,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:newspaper',
                 link: '/reports/teeTime',
             },
+            {
+                id: 'reports.mergreProfiles',
+                title: 'Merge-Profile',
+                type: 'basic',
+                icon: 'heroicons_outline:table',
+                link: '/mergeProfile',
+            },
         ],
     }
 ];

@@ -183,6 +183,24 @@ export const GetPlayersMerge = gql`
         }
     }
 `;
+export const getPlayersListMergeClub = gql`
+    query PostsGetQuery($where: player_bool_exp!) {
+        player(where: $where, order_by: { firstName: asc }) {
+            id
+            firstName
+            lastName
+            handicap
+            phone
+            email
+            membershipNumber
+            membership {
+                club {
+                    name
+                }
+            }
+        }
+    }
+`;
 
 export const MergePlayers = gql`
     mutation MergeProfiles($oldPlayerId: String!, $newPlayerId: String!) {

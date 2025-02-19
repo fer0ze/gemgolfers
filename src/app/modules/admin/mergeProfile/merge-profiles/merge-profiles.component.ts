@@ -10,6 +10,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Player } from 'app/shared/models/player.model';
 import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Constants } from 'app/shared/classes/general';
+import { LocalStorageService } from 'app/shared/services/localStorage';
 @Component({
     selector: 'app-merge-profiles',
     templateUrl: './merge-profiles.component.html',
@@ -26,38 +28,44 @@ export class MergeProfilesComponent implements OnInit {
     selectionA = new SelectionModel<Player>(true, []);
     selectionB = new SelectionModel<Player>(true, []);
     DataSourceBColumns: string[] = [
+        'select',
         'Name',
         'Phone',
         'Email',
         'Membership',
         'Handicap',
         'Club',
-        'select',
         // 'Delete',
     ];
     DataSourceAColumns: string[] = [
+        'select',
         'Name',
         'Phone',
         'Email',
         'Membership',
         'Handicap',
         'Club',
-        'select',
         // 'Delete',
     ];
+    loggedInuser: Player;
     constructor(
         private handicapService: HandicapService,
         private _facadeService: FacadeService,
         public snackBar: MatSnackBar,
-        public dialog: MatDialog
-    ) {}
+        public dialog: MatDialog, private _localStorage: LocalStorageService,
+    ) { }
     async ngOnInit() {
         let rows = [];
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         of(this.Players)
             .pipe()
             .subscribe(
                 async (data) => {
-                    data = await this._facadeService.getPlayersListMerge();
+                    if (this.loggedInuser.userRole == 1) {
+                        data = await this._facadeService.getPlayersListMerge();
+                    } else if (this.loggedInuser.userRole == 2) {
+                       data = await this._facadeService.getPlayersListMergeClub(this.loggedInuser.adminClubId);
+                    }
                     //console.log(data);
                     this.Players = data.player;
 
@@ -72,11 +80,11 @@ export class MergeProfilesComponent implements OnInit {
                             Club:
                                 obj.membership.length > 0
                                     ? obj.membership[0].club.name.substring(
-                                          0,
-                                          obj.membership[0].club.name.indexOf(
-                                              ' '
-                                          )
-                                      )
+                                        0,
+                                        obj.membership[0].club.name.indexOf(
+                                            ' '
+                                        )
+                                    )
                                     : '-',
                         };
                         rows.push(newobj);

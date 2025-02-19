@@ -123,6 +123,30 @@ export class PlayersService {
                 });
         });
     }
+    public getPlayersListMergeClub(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersListMergeClub,
+                    variables: {
+                        where: {
+                            membership: {
+                                clubId: {
+                                    _eq: id,
+                                },
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getPlayersListByTour(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -903,6 +927,7 @@ export class PlayersService {
                                 gemId: player.gemId,
                                 firstName: player.firstName,
                                 lastName: player.lastName,
+                                handicapWhsIndex: player.handicapWhsIndex,
                                 gender: player.gender,
                                 dob: player.dob,
                                 picture: player.picture,
