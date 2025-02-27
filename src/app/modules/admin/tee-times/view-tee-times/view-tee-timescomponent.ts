@@ -517,7 +517,7 @@ export class ViewTeeTimeComponent implements OnInit {
                         duration: 5000,
                     }
                 );
-
+                this.flightMembers = [];
                 return;
             }
         }
