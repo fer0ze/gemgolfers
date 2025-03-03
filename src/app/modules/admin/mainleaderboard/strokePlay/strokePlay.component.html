@@ -98,8 +98,7 @@
                                 <div class="col col-2">
                                     {{ item.name }}
                                     <div class="text-xs flex items-center">
-                                        <span *ngIf="item.handicap > 0">
-                                            HC:{{ item.handicap }}</span>
+                                        <span > HC: {{ formatHandicap(item?.handicap) }}</span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(
@@ -250,11 +249,11 @@
                                 <div class="col col-2">
                                     {{ item.name }}
                                     <div class="text-xs flex items-center">
-                                        <span *ngIf="item.handicap > 0">
-                                            HC:{{ item.handicap }}
+                                        <span >
+                                            HC: {{ formatHandicap(item?.handicap) }}
                                         </span>
                                         <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
-                                            HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
+                                            HCa:{{ item.handicap1 }} / HC:{{item.handicap2}}
                                         </span>
 
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
@@ -301,8 +300,8 @@
                                 <div class="col col-2">
                                     {{ item.name }}
                                     <div class="text-xs flex items-center">
-                                        <span *ngIf="item.handicap > 0">
-                                            HC:{{ item.handicap }}
+                                        <span >
+                                            HC: {{ formatHandicap(item?.handicap) }}
                                         </span>
                                         <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
                                             HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
@@ -365,8 +364,8 @@
                                 <div class="col col-2">
                                     {{ item.name }}
                                     <div class="text-xs flex items-center">
-                                        <span *ngIf="item.handicap > 0">
-                                            HC:{{ item.handicap }}</span>
+                                        <span >
+                                            HC: {{ formatHandicap(item?.handicap) }}</span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(
@@ -488,8 +487,8 @@
                                 <div class="col col-1">-</div>
                                 <div class="col col-2">
                                     {{ item.name }}
-                                    <div *ngIf="item.handicap > 0" class="text-xs">
-                                        HC:{{ item.handicap }}
+                                    <div  class="text-xs">
+                                        HC: {{ formatHandicap(item?.handicap) }}
                                     </div>
                                 </div>
                                 <div class="col col-3">
@@ -571,7 +570,7 @@
                                 <div class="col col-2">
                                     {{ item.name }}
                                     <div class="text-xs flex items-center">
-                                        HC:{{ item.handicap }}
+                                        HC: {{ formatHandicap(item?.handicap) }}
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(
@@ -678,8 +677,8 @@
                                 <div class="col col-1">-</div>
                                 <div class="col col-2">
                                     {{ item.name }}
-                                    <div *ngIf="item.handicap > 0" class="text-xs flex items-center">
-                                        HC:{{ item.handicap }}
+                                    <div  class="text-xs flex items-center">
+                                        HC: {{ formatHandicap(item?.handicap) }}
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(

@@ -1088,7 +1088,11 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         //console.log(leaderList);
         return leaderList;
     }
-
+    formatHandicap(handicap: number | null | undefined): string {
+        if (handicap == null) return '-';
+        return handicap < 0 ? `+${Math.abs(handicap)}` : handicap.toString();
+    }
+    
     getFlightRound(round): any {
         return round;
     }
