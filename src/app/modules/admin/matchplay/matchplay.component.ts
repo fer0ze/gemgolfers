@@ -302,14 +302,14 @@ export class MatchplayComponent implements OnInit {
     
         // **Multi-Row Header**
         const headers = [
-            ["PAR", "", "", ...pars9, "36", ...pars18, "36", "", "", "", "", "72"],
+            ["PAR", "", "", ...pars9, "36", ...pars18, "36", "", "", "", ""],
             [
                 "S.No",
                 "Name",
                 "MemNo.",
                 "1", "2", "3", "4", "5", "6", "7", "8", "9", "OUT",
                 "10", "11", "12", "13", "14", "15", "16", "17", "18", "IN",
-                "RD 1", "RD 2", "RD 3", "Total", "Par"
+                "RD 1", "RD 2", "RD 3", "Total"
             ]
         ];
     
@@ -375,7 +375,7 @@ export class MatchplayComponent implements OnInit {
                     player["gross18Total"], // IN Score (Sum of Hole18Scores)
                     ...player["rounds"], // RD 1, RD 2, RD 3 values
                     totalScore, // Total of all rounds
-                    "-13", // Par (static value for now)
+                     // Par (static value for now)
                 ];
             });
     
