@@ -208,9 +208,18 @@ export class CoursesService {
         query: Query.getCourseHoleSets,
         variables: {
           where: {
-            courseId: {
-              _eq: id,
-            },
+            _and: [
+              {
+                courseId: {
+                  _eq: id,
+                },
+              },
+              {
+                isActive: {
+                  _eq: true,
+                },
+              }
+            ]
           },
         },
       })
@@ -343,7 +352,7 @@ export class CoursesService {
         .mutate<any>({
           mutation: Query.UpdateCourseStatus,
           variables: {
-            id:id
+            id: id
           },
         })
         .subscribe(
@@ -414,7 +423,7 @@ export class CoursesService {
         );
     });
   }
-  public saveHolesANDholeSets(holes: any[], holeSets: any[],holesYardages:any[],holeHazardsToSave:any[]): Promise<boolean> {
+  public saveHolesANDholeSets(holes: any[], holeSets: any[], holesYardages: any[], holeHazardsToSave: any[]): Promise<boolean> {
     clearInterval;
 
     return new Promise((resolve) => {
@@ -425,7 +434,7 @@ export class CoursesService {
             holes: holes,
             holeSets: holeSets,
             holesYardages: holesYardages,
-            holeHazardsToSave:holeHazardsToSave
+            holeHazardsToSave: holeHazardsToSave
           },
         })
         .subscribe(
