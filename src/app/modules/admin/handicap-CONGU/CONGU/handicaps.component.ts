@@ -186,7 +186,7 @@ export class HandicapsComponent implements OnInit {
                 });
         } catch (error) {
             this.logger.log('Getting All Congu Handicap Data Failed', "error", error.toString());
-       
+
         }
 
         //this.fecthData();
@@ -265,96 +265,94 @@ export class HandicapsComponent implements OnInit {
     }
     public downloadAsPDFCongu() {
         try {
-            
+
             this.logger.log('Download Handicap Congu Button Click', "info");
-        let holeObj = document.getElementById('a');
-        //console.log(holeObj);
+            let holeObj = document.getElementById('a');
+            //console.log(holeObj);
 
-        let doc = new jsPDF();
-        let res = doc.autoTableHtmlToJson(document.getElementById('a'));
-        let columns = [
-            res.columns[0],
-            res.columns[1],
-            res.columns[2],
-            res.columns[3],
-            res.columns[4],
-            res.columns[5],
-            res.columns[6],
-            res.columns[7],
-        ];
+            let doc = new jsPDF();
+            let res = doc.autoTableHtmlToJson(document.getElementById('a'));
+            let columns = [
+                res.columns[0],
+                res.columns[1],
+                res.columns[2],
+                res.columns[3],
+                res.columns[4],
+                res.columns[5],
+                res.columns[6],
+                res.columns[7],
+            ];
 
-        let col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
-        var rows = [];
-        doc.setFontSize(30);
-        doc.text('Congu Handicap List', 15, 15);
-        doc.setFontSize(15);
-        doc.text('W.E.F:', 143, 15);
-        doc.text(
-            this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
-            160,
-            15
-        );
-        doc.setFontSize(15);
-        doc.setTextColor(100);
-        var sortarray = [...this.dataPlayers.player];
-        // if (this.sorting == 'desc') {
-        //     sortarray.sort(this.Comparatordsc);
-        // } else if (this.sorting == 'asc') {
-        //     sortarray.sort(this.Comparatorasc);
-        // }
-        //console.log(this.dataPlayers);
+            let col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
+            var rows = [];
+            const pageWidth = doc.internal.pageSize.width;
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text(this.loggedInuser.membership[0].club.name, pageWidth / 2, 15, { align: "center" });
+            doc.text('Congu Handicap List',  pageWidth / 2, 27, { align: "center" });
+            doc.setFontSize(10);
+            doc.text('W.E.F:', 165, 27);
+            doc.text(
+                this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
+                177,
+                27
+            );
+            doc.setFontSize(15);
+            doc.setTextColor(100);
+            var sortarray = [...this.dataPlayers.player].sort((a, b) => a.handicap - b.handicap);
+            //console.log(this.dataPlayers);
 
-        let count = 0;
-        sortarray.forEach((element) => {
-            if (
-                element.membershipNumber != null &&
-                element.membershipNumber != ''
-            ) {
+            let count = 0;
+            sortarray.forEach((element) => {
                 if (
-                    element.handicapQL.length > 0 ||
-                    (element.playerCategory == 'Professionals' &&
-                        element.handicapQL.length == 0) ||
-                    element.handicapWhsIndex != null ||
-                    (element.handicap != null && element.handicap > 0)
+                    element.membershipNumber != null &&
+                    element.membershipNumber != ''
                 ) {
-                    count++;
-                    let hand: any = element.handicap;
-                    if (element.handicapQL.length > 0) {
-                        if (
-                            element.handicap !==
-                            element.handicapQL[element.handicapQL.length - 1]
-                                .handicap
-                        ) {
-                            hand = '*' + element.handicap;
+                    if (
+                        element.handicapQL.length > 0 ||
+                        (element.playerCategory == 'Professionals' &&
+                            element.handicapQL.length == 0) ||
+                        element.handicapWhsIndex != null ||
+                        (element.handicap != null && element.handicap > 0)
+                    ) {
+                        count++;
+                        let hand: any = element.handicap;
+                        if (element.handicapQL.length > 0) {
+                            if (
+                                element.handicap !==
+                                element.handicapQL[element.handicapQL.length - 1]
+                                    .handicap
+                            ) {
+                                hand = '*' + element.handicap;
+                            }
                         }
+                        var temp = [
+                            count,
+                            element.membershipNumber,
+                            element.firstName + ' ' + element.lastName,
+                            hand,
+                            Math.round(element.handicap),
+                        ];
+                        rows.push(temp);
                     }
-                    var temp = [
-                        count,
-                        element.membershipNumber,
-                        element.firstName + ' ' + element.lastName,
-                        hand,
-                        Math.round(element.handicap),
-                    ];
-                    rows.push(temp);
                 }
-            }
-        });
-        // From HTML
-        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
-        //  doc.autoTable(columns, res.data, { startY: 25, theme: "grid" });
+            });
+            // From HTML
+            doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
+            //  doc.autoTable(columns, res.data, { startY: 25, theme: "grid" });
 
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
-    } catch (error) {
-        this.logger.log('Downloading Congu Handicap Data Failed', "error", error.toString());
-         
-    }
+            // Open PDF document in new tab
+            doc.output('dataurlnewwindow');
+        } catch (error) {
+            this.logger.log('Downloading Congu Handicap Data Failed', "error", error.toString());
+
+        }
         // Download PDF document
         //doc.save('flights.pdf');
     }
 
     redirectToHandicapDetails = (id: string) => {
-        this.logger.log('View Player Handicap Congu Button Click', "info",id);
+        this.logger.log('View Player Handicap Congu Button Click', "info", id);
         this.location.navigate(['./', id], {
             relativeTo: this._activatedRoute,
         });
@@ -366,7 +364,7 @@ export class HandicapsComponent implements OnInit {
     };
 
     getPlayerInformationByName(filterValue: string) {
-        this.logger.log('Search in Handicap Congu', "info",filterValue);
+        this.logger.log('Search in Handicap Congu', "info", filterValue);
         //console.log(filterValue);
         if (filterValue == '') {
             this.syncHandicapCongu();
