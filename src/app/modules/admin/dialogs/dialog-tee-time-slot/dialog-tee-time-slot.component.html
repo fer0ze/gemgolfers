@@ -38,7 +38,7 @@
                             </th>
                             <td mat-cell *matCellDef="let account">
                                 <span class="pr-6 whitespace-nowrap">
-                                    {{account.firstName}}
+                                    {{account.firstName| uppercase}}
                                 </span>
                             </td>
                         </ng-container>
@@ -48,7 +48,7 @@
                             </th>
                             <td mat-cell *matCellDef="let account">
                                 <span class="pr-6 whitespace-nowrap">
-                                    {{account.lastName}}
+                                    {{account.lastName| uppercase}}
                                 </span>
                             </td>
                         </ng-container>

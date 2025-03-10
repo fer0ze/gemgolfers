@@ -96,7 +96,7 @@
                                     {{ item.position }}
                                 </div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
                                         <span > HC: {{ formatHandicap(item?.handicap) }}</span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
@@ -200,7 +200,7 @@
                                     {{ item.position }}
                                 </div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
 
                                         <div class="cursor-pointer py-0.5 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
@@ -247,7 +247,7 @@
                                     {{ item.position }}
                                 </div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
                                         <span >
                                             HC: {{ formatHandicap(item?.handicap) }}
@@ -298,7 +298,7 @@
                                     {{ item.position }}
                                 </div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
                                         <span >
                                             HC: {{ formatHandicap(item?.handicap) }}
@@ -362,7 +362,7 @@
                                     {{ item.position }}
                                 </div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
                                         <span >
                                             HC: {{ formatHandicap(item?.handicap) }}</span>
@@ -486,7 +486,7 @@
                             <li class="table-row" *ngFor="let item of allLeadersCutOffGross">
                                 <div class="col col-1">-</div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div  class="text-xs">
                                         HC: {{ formatHandicap(item?.handicap) }}
                                     </div>
@@ -568,7 +568,7 @@
                                     {{ item.position }}
                                 </div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
                                         HC: {{ formatHandicap(item?.handicap) }}
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
@@ -676,7 +676,7 @@
                             <li class="table-row" *ngFor="let item of allLeadersCutOffNet">
                                 <div class="col col-1">-</div>
                                 <div class="col col-2">
-                                    {{ item.name }}
+                                    {{ item.name | uppercase}}
                                     <div  class="text-xs flex items-center">
                                         HC: {{ formatHandicap(item?.handicap) }}
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"

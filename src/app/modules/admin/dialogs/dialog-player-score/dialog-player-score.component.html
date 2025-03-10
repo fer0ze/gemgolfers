@@ -15,7 +15,7 @@
                     border-color: white;
                     font-size: 17px;
                 ">
-                {{ t.firstName }} {{ t.lastName }} ({{ t.handicap }})
+                {{ t.firstName | uppercase}} {{ t.lastName | uppercase}} ({{ t.handicap }})
             </button>
         </div>
     </div>
@@ -35,7 +35,7 @@
                     border-color: white;
                     font-size: 17px;
                 ">
-                {{ t.firstName }}
+                {{ t.firstName | uppercase}}
             </button>
         </div>
     </div>

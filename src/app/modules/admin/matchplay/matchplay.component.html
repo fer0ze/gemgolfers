@@ -45,10 +45,16 @@
                                         filterPlayerFlight($event.target.value)
                                     " />
                             </mat-form-field>
-                            <button (click)="generatePDF()" class="ml-4" mat-flat-button [color]="'warn'">
+                            <button (click)="generatePDFGross()" class="ml-4" mat-flat-button [color]="'warn'">
 
                                 <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
-                                <span class="ml-2">Export to PDF</span>
+                                <span class="ml-2">Export to PDF(GROSS)</span>
+
+                            </button>
+                            <button (click)="generatePDFNet()" class="ml-4" mat-flat-button [color]="'warn'">
+
+                                <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                                <span class="ml-2">Export to PDF(NET)</span>
 
                             </button>
                         </form>
@@ -412,7 +418,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of flight" class="scorebody">
                                         <td>
-                                            {{ item.name }} ({{
+                                            {{ item.name | uppercase}} ({{
                                             item.handicap
                                             | number : "1.0-0"
                                             }})
@@ -1084,10 +1090,16 @@
                                         filterPlayerFlight($event.target.value)
                                     " />
                             </mat-form-field>
-                            <button (click)="generatePDF()" class="ml-4" mat-flat-button [color]="'warn'">
+                            <button (click)="generatePDFGross()" class="ml-4" mat-flat-button [color]="'warn'">
 
                                 <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
-                                <span class="ml-2">Export to PDF</span>
+                                <span class="ml-2">Export to PDF(GROSS)</span>
+
+                            </button>
+                            <button (click)="generatePDFNet()" class="ml-4" mat-flat-button [color]="'warn'">
+
+                                <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                                <span class="ml-2">Export to PDF(NET)</span>
 
                             </button>
                         </form>
@@ -1452,7 +1464,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of flight" class="scorebody">
                                         <td>
-                                            {{ item.name }} ({{
+                                            {{ item.name | uppercase}} ({{
                                             item.handicap
                                             | number : "1.0-0"
                                             }})
@@ -1657,10 +1669,16 @@
                                         filterPlayerFlight($event.target.value)
                                     " />
                             </mat-form-field>
-                            <button (click)="generatePDF()" class="ml-4" mat-flat-button [color]="'warn'">
+                            <button (click)="generatePDFGross()" class="ml-4" mat-flat-button [color]="'warn'">
 
                                 <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
-                                <span class="ml-2">Export to PDF</span>
+                                <span class="ml-2">Export to PDF(GROSS)</span>
+
+                            </button>
+                            <button (click)="generatePDFNet()" class="ml-4" mat-flat-button [color]="'warn'">
+
+                                <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                                <span class="ml-2">Export to PDF(NET)</span>
 
                             </button>
                         </form>
@@ -2025,7 +2043,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of flight" class="scorebody">
                                         <td>
-                                            {{ item.name }} ({{
+                                            {{ item.name | uppercase}} ({{
                                             item.handicap
                                             | number : "1.0-0"
                                             }})
@@ -2231,10 +2249,16 @@
                                         filterPlayerFlight($event.target.value)
                                     " />
                             </mat-form-field>
-                            <button (click)="generatePDF()" class="ml-4" mat-flat-button [color]="'warn'">
+                            <button (click)="generatePDFGross()" class="ml-4" mat-flat-button [color]="'warn'">
 
                                 <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
-                                <span class="ml-2">Export to PDF</span>
+                                <span class="ml-2">Export to PDF(GROSS)</span>
+
+                            </button>
+                            <button (click)="generatePDFNet()" class="ml-4" mat-flat-button [color]="'warn'">
+
+                                <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                                <span class="ml-2">Export to PDF(NET)</span>
 
                             </button>
                         </form>
@@ -2599,7 +2623,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of flight" class="scorebody">
                                         <td>
-                                            {{ item.name }} ({{
+                                            {{ item.name | uppercase}} ({{
                                             item.handicap
                                             | number : "1.0-0"
                                             }})
@@ -2861,10 +2885,16 @@
                                     filterPlayerFlight($event.target.value)
                                 " />
                             </mat-form-field>
-                            <button (click)="generatePDF()" class="ml-4" mat-flat-button [color]="'warn'">
+                            <button (click)="generatePDFGross()" class="ml-4" mat-flat-button [color]="'warn'">
 
                                 <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
-                                <span class="ml-2">Export to PDF</span>
+                                <span class="ml-2">Export to PDF(GROSS)</span>
+
+                            </button>
+                            <button (click)="generatePDFNet()" class="ml-4" mat-flat-button [color]="'warn'">
+
+                                <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                                <span class="ml-2">Export to PDF(NET)</span>
 
                             </button>
                         </form>
@@ -3229,7 +3259,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of flight" class="scorebody">
                                         <td>
-                                            {{ item.name }} ({{
+                                            {{ item.name | uppercase}} ({{
                                             item.handicap
                                             | number : "1.0-0"
                                             }})
@@ -3491,10 +3521,16 @@
                                 filterPlayerFlight($event.target.value)
                             " />
                             </mat-form-field>
-                            <button (click)="generatePDF()" class="ml-4" mat-flat-button [color]="'warn'">
+                            <button (click)="generatePDFGross()" class="ml-4" mat-flat-button [color]="'warn'">
 
                                 <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
-                                <span class="ml-2">Export to PDF</span>
+                                <span class="ml-2">Export to PDF(GROSS)</span>
+
+                            </button>
+                            <button (click)="generatePDFNet()" class="ml-4" mat-flat-button [color]="'warn'">
+
+                                <mat-icon class="icon-size-5">picture_as_pdf</mat-icon>
+                                <span class="ml-2">Export to PDF(NET)</span>
 
                             </button>
                         </form>
@@ -3859,7 +3895,7 @@
                                 <tbody>
                                     <tr *ngFor="let item of flight" class="scorebody">
                                         <td>
-                                            {{ item.name }} ({{
+                                            {{ item.name | uppercase}} ({{
                                             item.handicap
                                             | number : "1.0-0"
                                             }})

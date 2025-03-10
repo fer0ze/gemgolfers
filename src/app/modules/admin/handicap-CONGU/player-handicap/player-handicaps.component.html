@@ -34,9 +34,9 @@
 
                     <div  *ngIf="showTable | async" class="mt-4 text-4xl font-bold truncate">
                         {{
-                            currentPlayer[0].firstName +
+                            (currentPlayer[0].firstName +
                                 " " +
-                                currentPlayer[0].lastName
+                                currentPlayer[0].lastName)| uppercase
                         }}
                     </div>
 

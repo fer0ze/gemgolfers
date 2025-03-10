@@ -401,13 +401,13 @@
                                             <ng-container matColumnDef="firstName">
                                                 <th mat-header-cell *matHeaderCellDef>First Name</th>
                                                 <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.firstName }}
+                                                    {{ row.firstName | uppercase}}
                                                 </td>
                                             </ng-container>
                                             <ng-container matColumnDef="lastName">
                                                 <th mat-header-cell *matHeaderCellDef>Last Name</th>
                                                 <td mat-cell *matCellDef="let row; let i = index">
-                                                    {{ row.lastName }}
+                                                    {{ row.lastName | uppercase}}
                                                 </td>
                                             </ng-container>
                                             <ng-container matColumnDef="email">

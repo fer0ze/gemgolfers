@@ -141,7 +141,7 @@
                                 <td mat-cell *matCellDef="let row">
                                     <span
                                         class="pr-6 font-medium whitespace-nowrap underline underline-offset-1 cursor-pointer">{{
-                                        row.firstName + " " + row.lastName
+                                        (row.firstName + " " + row.lastName)| uppercase
                                         }}</span>
                                     <!-- <img
                                         *ngIf="row.subscriptionQL"

@@ -171,8 +171,8 @@
                                         Name
                                     </th>
                                     <td mat-cell *matCellDef="let element">
-                                        {{ element.firstName }}
-                                        {{ element.lastName }}
+                                        {{ element.firstName | uppercase }}
+                                        {{ element.lastName | uppercase}}
                                     </td>
                                 </ng-container>
 
