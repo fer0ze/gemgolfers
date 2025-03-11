@@ -291,7 +291,7 @@ export class MatchplayComponent implements OnInit {
         doc.rect(14, 30, 269, 7, "F"); // Full-width rectangle
         doc.setTextColor(255, 255, 255); // White text
         doc.setFontSize(9);
-        doc.text("ALL CATEGORIES HOLE-WISE SCORE", 148, 35, { align: "center" });
+        doc.text("ALL CATEGORIES HOLE-WISE SCORE(GROSS)", 148, 35, { align: "center" });
 
         // Reset text color for table
         doc.setTextColor(0, 0, 0);
@@ -420,7 +420,7 @@ export class MatchplayComponent implements OnInit {
         doc.rect(14, 30, 269, 7, "F"); // Full-width rectangle
         doc.setTextColor(255, 255, 255); // White text
         doc.setFontSize(9);
-        doc.text("ALL CATEGORIES HOLE-WISE SCORE", 148, 35, { align: "center" });
+        doc.text("ALL CATEGORIES HOLE-WISE SCORE(NET)", 148, 35, { align: "center" });
 
         // Reset text color for table
         doc.setTextColor(0, 0, 0);
@@ -461,14 +461,14 @@ export class MatchplayComponent implements OnInit {
                             playerScores[category][player.playerId] = {
                                 name: player.name,
                                 membershipNumber: player.membershipNumber,
-                                Hole9Scores: [...player.Hole9Scores], // Clone scores to avoid reference issues
-                                gross9Total: player.gross9Total,
-                                Hole18Scores: [...player.Hole18Scores],
-                                gross18Total: player.gross18Total,
+                                Hole9NetScores: [...player.Hole9NetScores], // Clone scores to avoid reference issues
+                                net9Total: player.net9Total,
+                                Hole18NetScores: [...player.Hole18NetScores],
+                                net18Total: player.net18Total,
                                 rounds: [null, null, null], // Placeholder for RD1, RD2, RD3
                             };
                         }
-                        playerScores[category][player.playerId].rounds[round - 1] = player.grossTotal; // Store round score
+                        playerScores[category][player.playerId].rounds[round - 1] = player.netTotal; // Store round score
                     })
             );
         }
@@ -498,10 +498,10 @@ export class MatchplayComponent implements OnInit {
                         playerData: [
                             player["name"], // Player Name
                             player["membershipNumber"], // Membership Number
-                            ...player["Hole9Scores"], // Front 9 Scores
-                            player["gross9Total"], // OUT Score
-                            ...player["Hole18Scores"], // Back 9 Scores
-                            player["gross18Total"], // IN Score
+                            ...player["Hole9NetScores"], // Front 9 Scores
+                            player["net9Total"], // OUT Score
+                            ...player["Hole18NetScores"], // Back 9 Scores
+                            player["net18Total"], // IN Score
                             ...player["rounds"], // RD 1, RD 2, RD 3 values
                             totalScore, // Total of all rounds
                         ],
@@ -720,8 +720,12 @@ export class MatchplayComponent implements OnInit {
 
                         let playerHole9Score: any = [];
                         let playerHole18Score: any[] = [];
+                        let playerHole9NetScore: any = [];
+                        let playerHole18NetScore: any[] = [];
                         let gross9Total = 0;
                         let gross18Total = 0;
+                        let net9Total = 0;
+                        let net18Total = 0;
                         let holePlayed: number = 0;
 
                         for (let i = 0; i < 9; i++) {
@@ -743,9 +747,14 @@ export class MatchplayComponent implements OnInit {
 
                             if (hole) {
                                 playerHole9Score[i] = hole.grossScore;
+                                playerHole9NetScore[i] = hole.netScore;
                                 gross9Total += hole.grossScore;
+                                net9Total += hole.netScore;
                                 holePlayed++;
-                            } else playerHole9Score[i] = '';
+                            } else {
+                                playerHole9Score[i] = '';
+                                playerHole9NetScore[i] = '';
+                            }
                         }
 
                         for (let i = 0; i < 9; i++) {
@@ -774,13 +783,19 @@ export class MatchplayComponent implements OnInit {
 
                                 if (hole) {
                                     playerHole18Score[i] = hole.grossScore;
+                                    playerHole18NetScore[i] = hole.netScore;
                                     gross18Total += hole.grossScore;
+                                    net18Total += hole.netScore;
                                     holePlayed++;
-                                } else playerHole18Score[i] = '';
+                                } else {
+                                    playerHole18Score[i] = '';
+                                    playerHole18NetScore[i] = '';
+                                }
                             }
                         }
 
                         let grossTotal: number = gross9Total + gross18Total;
+                        let netTotal: number = net9Total + net18Total;
 
                         ////console.log(playerHole9Score);
                         ////console.log(playerHole18Score);
@@ -807,9 +822,14 @@ export class MatchplayComponent implements OnInit {
                             handicap: player.handicap,
                             Hole9Scores: playerHole9Score,
                             Hole18Scores: playerHole18Score,
+                            Hole9NetScores: playerHole9Score,
+                            Hole18NetScores: playerHole18NetScore,
                             gross9Total: gross9Total,
                             gross18Total: gross18Total,
+                            net9Total: net9Total,
+                            net18Total: net18Total,
                             grossTotal: grossTotal,
+                            netTotal: netTotal,
                             holesPlayed: holePlayed,
                         };
 
@@ -829,8 +849,12 @@ export class MatchplayComponent implements OnInit {
 
                         let playerHole9Score: any = [];
                         let playerHole18Score: any[] = [];
+                        let playerHole9NetScore: any = [];
+                        let playerHole18NetScore: any[] = [];
                         let gross9Total = 0;
                         let gross18Total = 0;
+                        let net9Total = 0;
+                        let net18Total = 0;
                         let holePlayed: number = 0;
 
                         for (let i = 0; i < 9; i++) {
@@ -852,9 +876,14 @@ export class MatchplayComponent implements OnInit {
 
                             if (hole) {
                                 playerHole9Score[i] = hole.grossScore;
+                                playerHole9NetScore[i] = hole.netScore;
                                 gross9Total += hole.grossScore;
+                                net9Total += hole.netScore;
                                 holePlayed++;
-                            } else playerHole9Score[i] = '';
+                            } else {
+                                playerHole9Score[i] = '';
+                                playerHole9NetScore[i] = '';
+                            }
                         }
 
                         for (let i = 0; i < 9; i++) {
@@ -882,12 +911,18 @@ export class MatchplayComponent implements OnInit {
 
                             if (hole) {
                                 playerHole18Score[i] = hole.grossScore;
+                                playerHole18NetScore[i] = hole.netScore;
                                 gross18Total += hole.grossScore;
+                                net18Total += hole.netScore;
                                 holePlayed++;
-                            } else playerHole18Score[i] = '';
+                            } else {
+                                playerHole18Score[i] = '';
+                                playerHole18NetScore[i] = '';
+                            }
                         }
 
                         let grossTotal: number = gross9Total + gross18Total;
+                        let netTotal: number = net9Total + net18Total;
 
                         ////console.log(playerHole9Score);
                         ////console.log(playerHole18Score);
@@ -914,11 +949,16 @@ export class MatchplayComponent implements OnInit {
                             handicap: player.handicap,
                             Hole9Scores: playerHole9Score,
                             Hole18Scores: playerHole18Score,
+                            Hole9NetScores: playerHole9Score,
+                            Hole18NetScores: playerHole18NetScore,
                             gross9Total: gross9Total,
                             membershipNumber: player.membershipNumber,
                             playerCategory: player.playerCategory,
                             gross18Total: gross18Total,
                             grossTotal: grossTotal,
+                            net9Total: net9Total,
+                            net18Total: net18Total,
+                            netTotal: netTotal,
                             holesPlayed: holePlayed,
                         };
 

@@ -51,6 +51,7 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                     {hole: {holeNo: asc}}
                 ) {
                     grossScore
+                    netScore
                     holeId
                 }
             }
