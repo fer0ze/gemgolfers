@@ -548,7 +548,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         //console.log(this.dataSource);
     }
 
-    public downloadAsPDF(noOfRounds) {
+    public downloadAsPDFCat(noOfRounds) {
         const doc = new jsPDF('portrait');
         const pageHeight = doc.internal.pageSize.height;
         const pageWidth = doc.internal.pageSize.width;
@@ -605,13 +605,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             doc.setFontSize(12);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(41, 128, 185);
-            doc.text(category, pageWidth / 2, startY+5, { align: "center" });
+            doc.text(category, pageWidth / 2, startY + 5, { align: "center" });
             startY += 10;
 
             // **Sort flights into left and right columns**
             const flightsArray = Object.values(groupedByCategory[category]);
-            const leftFlights = flightsArray.filter(flight => flight['startingHole'] === 1);
-            const rightFlights = flightsArray.filter(flight => flight['startingHole'] === 10);
+            const leftFlights = flightsArray.filter(flight => flight['startingHole'] < 10);
+            const rightFlights = flightsArray.filter(flight => flight['startingHole'] >= 10);
 
             // **Ensure both columns have equal length**
             const maxFlights = Math.max(leftFlights.length, rightFlights.length);
@@ -639,6 +639,82 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 startY += blockHeight;
             }
         });
+
+        doc.save('Golf_Draws.pdf');
+    }
+    public downloadAsPDF(noOfRounds) {
+        const doc = new jsPDF('portrait');
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+
+        // **Title**
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(this.tournamentInfo[0].club?.name, pageWidth / 2, 15, { align: "center" });
+        doc.text(this.tournamentInfo[0].title, pageWidth / 2, 22, { align: "center" });
+
+        doc.setFontSize(12);
+        doc.text(`DAY ${this.tournamentInfo[0].activeRound} DRAWS`, pageWidth / 2, 27, { align: "center" });
+
+        // **Group flights by playerCategory**
+        const groupedByFlight = this.selectedMembers.reduce((acc, member) => {
+            const key = `${member['time']}_${member['flightNo']}`;
+            const firstPlayer = member?.[0];
+            const category = firstPlayer ? firstPlayer.playerCategory : 'Unknown Category';
+            if (!acc[key]) {
+                acc[key] = {
+                    time: member['time'],
+                    flightNumber: `No. ${member['flightNo']}`,
+                    startingHole: member['startingHole'],
+                    players: member
+                        .filter(player => typeof player === 'object' && player !== null) // Ensure valid players
+                        .map(player => ({
+                            fullName: `${player['firstName']} ${player['lastName']}`,
+                            handicap: player['handicap']
+                        })),
+                    playerCategory: category
+                };
+            }
+
+            return acc;
+        }, {});
+
+        // Convert grouped flights into an array
+        const flightsArray = Object.values(groupedByFlight);
+
+        // **Sort into Left & Right Columns**
+        const leftFlights = flightsArray.filter(flight => flight['startingHole'] < 10);
+        const rightFlights = flightsArray.filter(flight => flight['startingHole'] >= 10);
+
+        // **Ensure both columns have equal length**
+        const maxFlights = Math.max(leftFlights.length, rightFlights.length);
+        while (leftFlights.length < maxFlights) leftFlights.push(null);
+        while (rightFlights.length < maxFlights) rightFlights.push(null);
+
+        let startY = 30;
+        const blockHeight = 42;
+        const blockWidth = 92;
+
+        for (let i = 0; i < maxFlights; i++) {
+            let startX = 10; // Left column position
+
+            if (startY + blockHeight > pageHeight - 10) {
+                doc.addPage();
+                startY = 30;
+            }
+
+            // **Left Column (Starting Hole 1)**
+            if (leftFlights[i]) {
+                this.drawFlightBlock(doc, leftFlights[i], startX, startY);
+            }
+
+            // **Right Column (Starting Hole 10)**
+            if (rightFlights[i]) {
+                this.drawFlightBlock(doc, rightFlights[i], startX + blockWidth, startY);
+            }
+
+            startY += blockHeight;
+        }
 
         doc.save('Golf_Draws.pdf');
     }

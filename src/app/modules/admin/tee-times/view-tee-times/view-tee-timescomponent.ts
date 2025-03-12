@@ -311,7 +311,8 @@ export class ViewTeeTimeComponent implements OnInit {
                         selectedCourseHoleSet.course_hole_sets.filter(
                             (holeSet) => holeSet.isActive == true
                         );
-                    // this.courseHoleSetNames.unshift({ holeSets: 0, inverted: false, displayName: 'All' });
+                    this.courseHoleSetNames.unshift({ holeSets: 0, inverted: false, displayName: 'All' });
+                    this.selectedCourseHoleSet = this.courseHoleSetNames[0]
                     //this.showCourseHole = true;
                 } else {
                     //this.showCourseHole = false;
@@ -391,10 +392,13 @@ export class ViewTeeTimeComponent implements OnInit {
     }
     filterByHoleSet(event: MatSelectChange): void {
         const filterOption = event.value;
-
-        this.teeTimes = this.copyTeeTimes.filter(event =>
-            (event.courseHoleSets) == filterOption.holeSets && event.courseHoleSetsInverted == filterOption.inverted
-        );
+        if (event.value.displayName == 'All') {
+            this.teeTimes = this.copyTeeTimes;
+        } else {
+            this.teeTimes = this.copyTeeTimes.filter(event =>
+                (event.courseHoleSets) == filterOption.holeSets && event.courseHoleSetsInverted == filterOption.inverted
+            );
+        }
     }
     applyFilter(query: string) {
         if (query.length > 2) {

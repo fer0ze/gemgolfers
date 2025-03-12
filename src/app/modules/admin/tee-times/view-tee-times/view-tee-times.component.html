@@ -41,7 +41,7 @@
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
-                    <mat-select [value]="0" (selectionChange)="filterByHoleSet($event)">
+                    <mat-select [(value)]="selectedCourseHoleSet" (selectionChange)="filterByHoleSet($event)">
                         <ng-container *ngFor="
                                 let category of courseHoleSetNames;
                             ">
