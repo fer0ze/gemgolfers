@@ -2181,7 +2181,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     ////console.log(result);
                     //console.log(result);
                     const resultString = JSON.stringify(result);
-                    this.logger.log('Rsult from Dailog change Hole Set on Daily Round Page', "info", resultString);
+                    // this.logger.log('Rsult from Dailog change Hole Set on Daily Round Page', "info", resultString);
 
                     //console.log(this.flightPlayers);
                     let splited = result.holeSets.split('_', 2);
@@ -2396,13 +2396,7 @@ export class ViewDailyRoundComponent implements OnInit {
 
                                 if (result) {
                                     this.logger.log('Hole Set Change on Daily Round Page Sucessfully', "info");
-                                    this.snackBar.open(
-                                        'Flight has been updated.',
-                                        'x',
-                                        {
-                                            duration: 5000,
-                                        }
-                                    );
+
 
                                     // await new Promise((f) => setTimeout(f, 5000));
                                 }
@@ -2445,17 +2439,102 @@ export class ViewDailyRoundComponent implements OnInit {
 
                             if (result) {
                                 this.logger.log('Hole Set Change on Daily Round Page Sucessfully', "info");
-                                this.snackBar.open(
-                                    'Flight has been updated.',
-                                    'x',
-                                    {
-                                        duration: 5000,
-                                    }
-                                );
+
                             }
                         }
                     }
+                    setTimeout(async() => {
+                        let updatedFlight =
+                            await this.facadeService.updatedFlightsQuery(flightId);
+                        //console.log(updatedFlight);
 
+                        // let getCurrentFlight = currentFlight;
+                        // getCurrentFlight.time = time;
+                        // getCurrentFlight.tee = tee;
+                        // getCurrentFlight.courseHoleSets = holeSetsSelection;
+                        // getCurrentFlight.courseHoleSetsInverted = holeSetsInverted;
+                        // for(let mem in getCurrentFlight.MembersQL){
+
+                        //   getCurrentFlight.MembersQL[mem].playingTee = fMember[mem].playingTee;
+
+                        // }
+
+                        // //console.log(getCurrentFlight);
+
+                        ////console.log(flightData)
+
+                        let courseHoleSetTitle;
+                        if (
+                            updatedFlight.FlightsQL[0].CourseQL &&
+                            updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL
+                        ) {
+                            courseHoleSetTitle =
+                                updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL.find(
+                                    (a) => {
+                                        return (
+                                            a.holeSets ==
+                                            updatedFlight.FlightsQL[0]
+                                                .courseHoleSets &&
+                                            a.inverted ==
+                                            updatedFlight.FlightsQL[0]
+                                                .courseHoleSetsInverted
+                                        );
+                                    }
+                                );
+                        }
+                        //console.log(courseHoleSetTitle);
+
+                        let flightHeader = await this.setupMatchplayHeader(
+                            updatedFlight.FlightsQL[0].courseId,
+                            updatedFlight.FlightsQL[0].courseHoleSets,
+                            updatedFlight.FlightsQL[0].courseHoleSetsInverted,
+                            updatedFlight.FlightsQL[0].CourseQL
+                        );
+                        //console.log(flightHeader);
+                        let singleFlight = this.setupSingleFlight(
+                            updatedFlight.FlightsQL[0],
+                            flightHeader,
+                            []
+                        );
+                        //console.log(singleFlight);
+
+                        //this.flightPlayers.push(singleFlight);
+                        ////console.log(this.flightPlayers)
+
+                        let flightIndex = this.flightPlayers.findIndex(
+                            (a) => a.flightId == flightId
+                        );
+
+                        this.flightPlayers[flightIndex] = singleFlight;
+                        this.flightPlayers[flightIndex]['header'] = flightHeader;
+                        this.flightPlayers[flightIndex]['flightId'] =
+                            updatedData.FlightsQL[0].id;
+                        this.flightPlayers[flightIndex]['tournamentId'] =
+                            updatedData.id;
+                        this.flightPlayers[flightIndex]['flightTime'] = time;
+                        this.flightPlayers[flightIndex]['courseHoleSetTitle'] =
+                            courseHoleSetTitle.displayName;
+                        this.flightPlayers[flightIndex]['courseHoleSetKey'] =
+                            updatedFlight.FlightsQL[0]
+                                ? updatedFlight.FlightsQL[0].courseHoleSets +
+                                '_' +
+                                updatedFlight.FlightsQL[0].courseHoleSetsInverted
+                                : '';
+                        this.flightPlayers[flightIndex]['courseTee'] =
+                            courseHoleSetTitle ? updatedFlight.FlightsQL[0].tee : '';
+                        this.flightPlayers[this.flightPlayers.length - 1][
+                            'membersCount'
+                        ] = singleFlight ? singleFlight.length : 0;
+
+                        // window.location.reload();
+                        this.snackBar.open(
+                            'Flight has been updated.',
+                            'x',
+                            {
+                                duration: 5000,
+                            }
+                        );
+                    }, 10000);
                     //console.log(flightId);
 
                     // let getCurrentFlight = this.flightPlayers.find((f) => {
@@ -2484,87 +2563,6 @@ export class ViewDailyRoundComponent implements OnInit {
                     // let ourFlight = currentFlight.FlightsQL[0];
                     // //console.log(ourFlight)
 
-                    let updatedFlight =
-                        await this.facadeService.updatedFlightsQuery(flightId);
-                    //console.log(updatedFlight);
-
-                    // let getCurrentFlight = currentFlight;
-                    // getCurrentFlight.time = time;
-                    // getCurrentFlight.tee = tee;
-                    // getCurrentFlight.courseHoleSets = holeSetsSelection;
-                    // getCurrentFlight.courseHoleSetsInverted = holeSetsInverted;
-                    // for(let mem in getCurrentFlight.MembersQL){
-
-                    //   getCurrentFlight.MembersQL[mem].playingTee = fMember[mem].playingTee;
-
-                    // }
-
-                    // //console.log(getCurrentFlight);
-
-                    ////console.log(flightData)
-
-                    let courseHoleSetTitle;
-                    if (
-                        updatedFlight.FlightsQL[0].CourseQL &&
-                        updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL
-                    ) {
-                        courseHoleSetTitle =
-                            updatedFlight.FlightsQL[0].CourseQL.CourseHoleSetsQL.find(
-                                (a) => {
-                                    return (
-                                        a.holeSets ==
-                                        updatedFlight.FlightsQL[0]
-                                            .courseHoleSets &&
-                                        a.inverted ==
-                                        updatedFlight.FlightsQL[0]
-                                            .courseHoleSetsInverted
-                                    );
-                                }
-                            );
-                    }
-                    //console.log(courseHoleSetTitle);
-
-                    let flightHeader = await this.setupMatchplayHeader(
-                        updatedFlight.FlightsQL[0].courseId,
-                        updatedFlight.FlightsQL[0].courseHoleSets,
-                        updatedFlight.FlightsQL[0].courseHoleSetsInverted,
-                        updatedFlight.FlightsQL[0].CourseQL
-                    );
-                    //console.log(flightHeader);
-                    let singleFlight = this.setupSingleFlight(
-                        updatedFlight.FlightsQL[0],
-                        flightHeader,
-                        []
-                    );
-                    //console.log(singleFlight);
-
-                    //this.flightPlayers.push(singleFlight);
-                    ////console.log(this.flightPlayers)
-
-                    let flightIndex = this.flightPlayers.findIndex(
-                        (a) => a.flightId == flightId
-                    );
-
-                    this.flightPlayers[flightIndex] = singleFlight;
-                    this.flightPlayers[flightIndex]['header'] = flightHeader;
-                    this.flightPlayers[flightIndex]['flightId'] =
-                        updatedData.FlightsQL[0].id;
-                    this.flightPlayers[flightIndex]['tournamentId'] =
-                        updatedData.id;
-                    this.flightPlayers[flightIndex]['flightTime'] = time;
-                    this.flightPlayers[flightIndex]['courseHoleSetTitle'] =
-                        courseHoleSetTitle.displayName;
-                    this.flightPlayers[flightIndex]['courseHoleSetKey'] =
-                        updatedFlight.FlightsQL[0]
-                            ? updatedFlight.FlightsQL[0].courseHoleSets +
-                            '_' +
-                            updatedFlight.FlightsQL[0].courseHoleSetsInverted
-                            : '';
-                    this.flightPlayers[flightIndex]['courseTee'] =
-                        courseHoleSetTitle ? updatedFlight.FlightsQL[0].tee : '';
-                    this.flightPlayers[this.flightPlayers.length - 1][
-                        'membersCount'
-                    ] = singleFlight ? singleFlight.length : 0;
 
                     //this.flightPlayers = this.flightPlayers.sort(this.flightComparator);
                     //console.log(this.flightPlayers);
