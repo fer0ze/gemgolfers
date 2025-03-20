@@ -1889,6 +1889,7 @@ export const getTeeTimesSlots = gql`
                 slotTime
                 courseHoleSets
                 courseHoleSetsInverted
+                available
                 FlightsQL: flight {
                     id
                     courseId
@@ -1954,6 +1955,7 @@ export const getTeeTimesSlotsAdmin = gql`
                 startingHole
                 slotTime
                 courseHoleSets
+                available
                 courseHoleSetsInverted
                 FlightsQL: flight {
                     id

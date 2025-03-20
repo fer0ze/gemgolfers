@@ -273,7 +273,7 @@ export class ViewTeeTimeComponent implements OnInit {
         if (dataPlayers) {
             for (let slot of dataPlayers.TournamentsQL[0].slots) {
                 let membersTable = new MatTableDataSource(this.getMembers(slot.FlightsQL));
-                console.log(membersTable);
+                // console.log(membersTable);
 
                 membersTable.paginator = this.paginator;
                 membersTable.sort = this.sort;
@@ -287,6 +287,7 @@ export class ViewTeeTimeComponent implements OnInit {
                     noOfPlayers: dataPlayers.TournamentsQL[0].noOfPlayers,
                     status: this.getStatus(dataPlayers.TournamentsQL[0].noOfPlayers, slot.joinedMembers),
                     courseHoleSets: slot.courseHoleSets,
+                    available: slot.available,
                     courseHoleSetsInverted: slot.courseHoleSetsInverted,
                     displayName: this.getSelectedHoleSet(slot.courseHoleSets, slot.courseHoleSetsInverted),
                     // status:this.getStatus(dataPlayers.TournamentQL[0].noOfPlayers,slot.joinedMembers)
@@ -294,6 +295,8 @@ export class ViewTeeTimeComponent implements OnInit {
                 this.teeTimes.push(teeTimeObj)
                 this.copyTeeTimes = this.teeTimes;
             }
+            console.log(this.teeTimes);
+
         }
 
 

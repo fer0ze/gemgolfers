@@ -51,8 +51,7 @@
                         </ng-container>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0"
-                    [floatLabel]="'always'">
+                <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0" [floatLabel]="'always'">
                     <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
                     <input (keyup)="applyFilter($event.target.value)" placeholder="Search by title" matInput #query />
                 </mat-form-field>
@@ -103,7 +102,7 @@
                                         {{ event.joinedMembers}}/ {{ event.noOfPlayers}}
                                     </div>
                                 </div>
-                               
+
                             </div>
                             <!-- Footer -->
                             <div class="flex flex-col w-full mt-auto">
@@ -185,8 +184,13 @@
                                         <div
                                             class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow overflow-hidden items-center justify-center dark:bg-transparent">
 
-                                            <div class="mt-2 text-xl font-semibold tracking-tight text-secondary">
+                                            <div *ngIf="event.available"
+                                                class="mt-2 text-xl font-semibold tracking-tight text-secondary">
                                                 No Member Added!
+                                            </div>
+                                            <div *ngIf="!event.available"
+                                                class="mt-2 text-xl font-semibold tracking-tight text-secondary">
+                                                This Tee is Reserved for a Full 18-Hole Round
                                             </div>
                                         </div>
                                     </ng-template>
@@ -195,7 +199,7 @@
                                 <!-- Course launch button -->
                                 <div
                                     class="flex justify-end items-center px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button *ngIf="event.joinedMembers < 4" mat-flat-button
+                                    <button *ngIf="event.available && event.joinedMembers < 4" mat-flat-button
                                         [color]="'primary'" (click)="openAddPlayersDialog(event)">
                                         <mat-icon svgIcon="heroicons_outline:plus-user"></mat-icon>
                                         <span class="ml-2 mr-1"> Add</span>
