@@ -281,10 +281,10 @@ export class MatchplayComponent implements OnInit {
         // **Header 1: Tournament Title**
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text(this.matchPlayData["club"]?.name, pageWidth / 2, 15, { align: "center" });
-        doc.text(this.matchPlayData["title"], pageWidth / 2, 22, { align: "center" });
+        doc.text(this.matchPlayData["club"]?.name.toString().toUpperCase(), pageWidth / 2, 15, { align: "center" });
+        doc.text(this.matchPlayData["title"].toString().toUpperCase(), pageWidth / 2, 22, { align: "center" });
         doc.setFontSize(12);
-        doc.text(`Day ${this.matchPlayData["activeRound"]} Score`, pageWidth / 2, 27, { align: "center" });
+        // doc.text(`Day ${this.matchPlayData["activeRound"]} Score`, pageWidth / 2, 27, { align: "center" });
 
         // **Header 2: Category Title**
         doc.setFillColor(41, 128, 185); // Blue background
@@ -330,7 +330,7 @@ export class MatchplayComponent implements OnInit {
                         }
                         if (!playerScores[category][player.playerId]) {
                             playerScores[category][player.playerId] = {
-                                name: player.name,
+                                name: player.name.toString().toUpperCase(),
                                 membershipNumber: player.membershipNumber,
                                 Hole9Scores: [...player.Hole9Scores], // Clone scores to avoid reference issues
                                 gross9Total: player.gross9Total,
@@ -348,11 +348,15 @@ export class MatchplayComponent implements OnInit {
         let startY = 38;
         let categoryIndex = 0;
 
-        Object.keys(playerScores).forEach((category) => {
+        Object.keys(playerScores).forEach((category, index) => {
             const players = Object.values(playerScores[category]);
 
+            if (index > 0) {
+                doc.addPage(); // Add a new page for each new category
+                startY = 38; // Reset start position for new page
+            }
             // **Step 2.1: Add Category Header**
-            if (categoryIndex > 0) startY += 10; // Add spacing between categories
+            // if (categoryIndex > 0) startY += 10; // Add spacing between categories
             doc.setFillColor(200, 200, 200);
             doc.rect(14, startY, 269, 6, "F"); // Gray background for category
             doc.setTextColor(0, 0, 0);

@@ -216,9 +216,9 @@ export class PlayerHandicapComponent implements OnInit {
             doc.setFontSize(17);
             doc.text(
                 'CONGU-Handicap Change-Log of ' +
-                this.currentPlayer[0].firstName +
+                this.currentPlayer[0].firstName.toString().toUpperCase() +
                 ' ' +
-                this.currentPlayer[0].lastName,
+                this.currentPlayer[0].lastName.toString().toUpperCase(),
                 14,
                 15
             );

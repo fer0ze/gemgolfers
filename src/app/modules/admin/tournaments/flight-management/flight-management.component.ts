@@ -746,7 +746,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         let currentY = startY + 14;
 
         flight.players.forEach((player) => {
-            let splitName = doc.splitTextToSize(player.fullName, maxLineWidth);
+            let splitName = doc.splitTextToSize(player.fullName.toString().toUpperCase(), maxLineWidth);
 
             splitName.forEach((line, lineIndex) => {
                 doc.text(line, startX + 29, currentY + (lineIndex * lineHeight));

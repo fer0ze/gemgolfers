@@ -329,7 +329,7 @@ export class HandicapsComponent implements OnInit {
                         var temp = [
                             count,
                             element.membershipNumber,
-                            element.firstName + ' ' + element.lastName,
+                            element.firstName.toString().toUpperCase() + ' ' + element.lastName.toString().toUpperCase(),
                             hand,
                             Math.round(element.handicap),
                         ];
