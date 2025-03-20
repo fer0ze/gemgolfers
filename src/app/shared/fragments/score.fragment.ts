@@ -50,6 +50,11 @@ fragment HoleQL on hole {
     poleLat
     poleLong
     holeSetId
+    meta{
+    course_id
+    hole_id
+    tee_distance
+    }
 }`;
 export const CourseTeesQL = gql`
 fragment CourseTeesQL on hole {

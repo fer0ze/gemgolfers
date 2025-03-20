@@ -850,23 +850,23 @@ export class ViewDailyRoundComponent implements OnInit {
         //console.log(holes);
         for (let holeQL of holes) {
             //let teeDistance = JSON.parse(holeQL.teeDistances);
-            let teeDistance = holeQL.teeDistances;
+            let teeDistance = holeQL?.meta[0]?.tee_distance ?? 0;
 
             if (holeQL.holeNo < 10) {
-                yardage9Total += parseInt(teeDistance.blue);
+                yardage9Total += parseInt(teeDistance);
                 par9 += holeQL.par;
-                yardage9.push(parseInt(teeDistance.blue));
+                yardage9.push(parseInt(teeDistance));
 
                 courseHoles9.push(holeQL);
             } else if (holeQL.holeNo > 9 && holeQL.holeNo < 19) {
                 courseHoles18.push(holeQL);
 
-                yardage18.push(parseInt(teeDistance.blue));
-                yardage18Total += parseInt(teeDistance.blue);
+                yardage18.push(parseInt(teeDistance));
+                yardage18Total += parseInt(teeDistance);
                 par18 += holeQL.par;
             } else if (holeQL.holeNo > 18 && holeQL.holeNo < 28) {
-                yardage27.push(parseInt(teeDistance.blue));
-                yardage27Total += parseInt(teeDistance.blue);
+                yardage27.push(parseInt(teeDistance));
+                yardage27Total += parseInt(teeDistance);
                 par27 += holeQL.par;
 
                 courseHoles27.push(holeQL);
@@ -1057,6 +1057,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 par: i.par,
                                 index: i.index,
                                 teeDistances: i.teeDistances,
+                                meta: i.meta,
                                 holeSetId: i.holeSetId,
                             };
                             arrayOfHoleSet.push(singleHole);
@@ -1082,6 +1083,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 par: i.par,
                                 index: i.index,
                                 teeDistances: i.teeDistances,
+                                meta: i.meta,
                                 holeSetId: i.holeSetId,
                             };
                             arrayOfHoleSet.push(singleHole);
@@ -1098,6 +1100,7 @@ export class ViewDailyRoundComponent implements OnInit {
                                 par: i.par,
                                 index: i.index,
                                 teeDistances: i.teeDistances,
+                                meta: i.meta,
                                 holeSetId: i.holeSetId,
                             };
                             arrayOfHoleSet.push(singleHole);
@@ -2443,7 +2446,7 @@ export class ViewDailyRoundComponent implements OnInit {
                             }
                         }
                     }
-                    setTimeout(async() => {
+                    setTimeout(async () => {
                         let updatedFlight =
                             await this.facadeService.updatedFlightsQuery(flightId);
                         //console.log(updatedFlight);
