@@ -265,91 +265,98 @@ export class HandicapsComponent implements OnInit {
     }
     public downloadAsPDFCongu() {
         try {
-
             this.logger.log('Download Handicap Congu Button Click', "info");
-            let holeObj = document.getElementById('a');
-            //console.log(holeObj);
-
             let doc = new jsPDF();
-            let res = doc.autoTableHtmlToJson(document.getElementById('a'));
-            let columns = [
-                res.columns[0],
-                res.columns[1],
-                res.columns[2],
-                res.columns[3],
-                res.columns[4],
-                res.columns[5],
-                res.columns[6],
-                res.columns[7],
-            ];
-
-            let col = ['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C'];
-            var rows = [];
             const pageWidth = doc.internal.pageSize.width;
+    
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
-            doc.text(this.loggedInuser.membership[0].club.name, pageWidth / 2, 15, { align: "center" });
-            doc.text('Congu Handicap List',  pageWidth / 2, 27, { align: "center" });
+            doc.text(this.loggedInuser.membership[0].club.name.toString().toUpperCase(), pageWidth / 2, 15, { align: "center" });
+            doc.text('Congu Handicap List', pageWidth / 2, 27, { align: "center" });
             doc.setFontSize(10);
             doc.text('W.E.F:', 165, 27);
-            doc.text(
-                this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'),
-                177,
-                27
-            );
-            doc.setFontSize(15);
-            doc.setTextColor(100);
-            var sortarray = [...this.dataPlayers.player].sort((a, b) => a.handicap - b.handicap);
-            //console.log(this.dataPlayers);
-
-            let count = 0;
-            sortarray.forEach((element) => {
-                if (
-                    element.membershipNumber != null &&
-                    element.membershipNumber != ''
-                ) {
-                    if (
-                        element.handicapQL.length > 0 ||
-                        (element.playerCategory == 'Professionals' &&
-                            element.handicapQL.length == 0) ||
-                        element.handicapWhsIndex != null ||
-                        (element.handicap != null && element.handicap > 0)
-                    ) {
-                        count++;
-                        let hand: any = element.handicap;
-                        if (element.handicapQL.length > 0) {
-                            if (
-                                element.handicap !==
-                                element.handicapQL[element.handicapQL.length - 1]
-                                    .handicap
-                            ) {
-                                hand = '*' + element.handicap;
-                            }
-                        }
-                        var temp = [
-                            count,
-                            element.membershipNumber,
-                            element.firstName.toString().toUpperCase() + ' ' + element.lastName.toString().toUpperCase(),
-                            hand,
-                            Math.round(element.handicap),
-                        ];
-                        rows.push(temp);
-                    }
+            doc.text(this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'), 177, 27);
+    
+            // **Step 1: Group Players by Category**
+            let playersByCategory = {};
+            this.dataPlayers.player.forEach((player) => {
+                if (!player.playerCategory) player.playerCategory = "Uncategorized"; // Fallback category
+                if (!playersByCategory[player.playerCategory]) {
+                    playersByCategory[player.playerCategory] = [];
                 }
+                playersByCategory[player.playerCategory].push(player);
             });
-            // From HTML
-            doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
-            //  doc.autoTable(columns, res.data, { startY: 25, theme: "grid" });
-
-            // Open PDF document in new tab
-            doc.output('dataurlnewwindow');
+    
+            let startY = 40; // Start position for first table
+    
+            // **Step 2: Iterate Over Categories**
+            Object.keys(playersByCategory).forEach((category, categoryIndex) => {
+                let players = playersByCategory[category];
+    
+                // **Sort Players within the Category**
+                players.sort((a, b) => a.handicap - b.handicap);
+    
+                // **Step 3: Add Category Header**
+                if (categoryIndex > 0) {
+                    doc.addPage(); // **New Page for Each Category**
+                }
+    
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.setFillColor(200, 200, 200);
+                doc.rect(14, startY - 8, 180, 6, "F"); // Background for category header
+                doc.text(category.toUpperCase(), pageWidth / 2, startY - 3, { align: "center" });
+    
+                // **Step 4: Prepare Table Data**
+                let count = 0;
+                let rows = [];
+                players.forEach((element) => {
+                    if (element.membershipNumber) {
+                        if (
+                            element.handicapQL.length > 0 ||
+                            (element.playerCategory === 'Professionals' && element.handicapQL.length === 0) ||
+                            element.handicapWhsIndex != null ||
+                            (element.handicap != null && element.handicap > 0)
+                        ) {
+                            count++;
+                            let hand: any = element.handicap;
+                            if (element.handicapQL.length > 0) {
+                                if (element.handicap !== element.handicapQL[element.handicapQL.length - 1].handicap) {
+                                    hand = '*' + element.handicap;
+                                }
+                            }
+                            rows.push([
+                                count,
+                                element.membershipNumber,
+                                element.firstName.toString().toUpperCase() + ' ' + element.lastName.toString().toUpperCase(),
+                                hand,
+                                Math.round(element.handicap),
+                            ]);
+                        }
+                    }
+                });
+    
+                // **Step 5: Generate Table for Current Category**
+                doc.autoTable({
+                    startY: startY,
+                    head: [['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C']],
+                    body: rows,
+                    theme: 'grid',
+                    headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10, halign: "center" },
+                    bodyStyles: { fontSize: 9, halign: "center" },
+                    columnStyles: { 2: { halign: "left" } }, // Align Name column to the left
+                });
+    
+                startY = 35; // Reset for next page
+            });
+    
+            // **Save PDF**
+            doc.save("Congu_Handicap_List.pdf");
         } catch (error) {
             this.logger.log('Downloading Congu Handicap Data Failed', "error", error.toString());
-
         }
-        // Download PDF document
-        //doc.save('flights.pdf');
     }
+    
 
     redirectToHandicapDetails = (id: string) => {
         this.logger.log('View Player Handicap Congu Button Click', "info", id);
