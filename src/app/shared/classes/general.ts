@@ -764,6 +764,7 @@ export class Constants {
     static readonly CATEGORY_AMATEURS = 'Amateurs';
     static readonly CATEGORY_AMATEUR = 'Amateur';
     static readonly CATEGORY_SENIORS = 'Seniors';
+    static readonly CATEGORY_SENIORS_AMATEUR = 'Senior Amateurs';
     static readonly CATEGORY_SENIOR = 'Senior';
     static readonly CATEGORY_VETERANS = 'Veterans';
     static readonly CATEGORY_VETERAN = 'Veterans';

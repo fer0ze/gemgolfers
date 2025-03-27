@@ -101,7 +101,7 @@ export class TourGuideComponent implements OnInit {
             id: id,
             tourId: this.tourID,
             date: General.parseToDate(this.guideForm.get('date').getRawValue()),
-            details: this.guideForm.get('script').getRawValue(),
+            details: this.guideForm.get('script').getRawValue() ?? '',
             title: this.guideForm.get('title').getRawValue(),
             bg_image: guide.bg_image,
         }

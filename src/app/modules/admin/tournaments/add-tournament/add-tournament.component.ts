@@ -121,6 +121,7 @@ export class AddTournamentComponent implements OnInit {
     _courseHoles: CourseHoles[] = [];
     Categories: PlayerCategory[] = [];
     isAmateur: boolean;
+    isSAmateur: boolean;
     tournamentMembers: Player[] = [];
     selectedTeams1: any[][] = [];
     selectedTeams2: any[][] = [];
@@ -376,6 +377,8 @@ export class AddTournamentComponent implements OnInit {
                     handicapRatio: [''],
                     prizeCategoryA: [''],
                     prizeCategoryB: [''],
+                    prizeCategoryC: [''],
+                    prizeCategoryD: [''],
                     amateursGT: [''],
                     amateursNT: [''],
                     seniorsGT: [''],
@@ -1045,10 +1048,16 @@ export class AddTournamentComponent implements OnInit {
         }
 
         if (chkArray.controls.findIndex((x) => x.value.id == 1) != -1)
-            this.isAmateur = true;
+            this.selected = this.isAmateur = true;
         else {
             this.isAmateur = false;
-            this.selected = false;
+            this.formArray.get([0]).get('handicapCats').setValue(false);
+        }
+
+        if (chkArray.controls.findIndex((x) => x.value.id == 2) != -1)
+            this.selected = true;
+        else {
+            this.isSAmateur = this.isSAmateur = false;
             this.formArray.get([0]).get('handicapCats').setValue(false);
         }
 
@@ -1344,9 +1353,29 @@ export class AddTournamentComponent implements OnInit {
 
     handicapCategoriesSelection(isChecked) {
         if (isChecked) {
-            this.selected = true;
+            for (let index in this.formArray.get([0]).value.clubctgies) {
+                if (
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_AMATEURS.replace(/\s/g, '').toLowerCase()
+                ) {
+                    this.isAmateur = true;
+                } else if (
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_SENIORS_AMATEUR.replace(/\s/g, '').toLowerCase()
+                ) {
+                    this.isSAmateur = true;
+                }
+            }
         } else {
-            this.selected = false;
+            this.isAmateur = false;
+            this.isSAmateur = false;
+            // this.selected = false;
         }
     }
 
@@ -1962,7 +1991,7 @@ export class AddTournamentComponent implements OnInit {
                     this.formArray.get([0]).value.prizeCategoryB != ''
                 ) {
                     TCdata = {
-                        lowerLimitStart: 1,
+                        lowerLimitStart: -1,
                         lowerLimitEnd: this.formArray.get([0]).value
                             .handicapCats
                             ? this.formArray.get([0]).value.prizeCategoryA
@@ -1970,6 +1999,35 @@ export class AddTournamentComponent implements OnInit {
                         upperLimitStart: this.formArray.get([0]).value
                             .handicapCats
                             ? this.formArray.get([0]).value.prizeCategoryB
+                            : '',
+                        upperLimitEnd: 18,
+                    };
+                }
+            }
+            if (
+                this.formArray
+                    .get([0])
+                    .value.clubctgies[index].name.replace(/\s/g, '')
+                    .toLowerCase() ==
+                Constants.CATEGORY_SENIORS_AMATEUR.replace(/\s/g, '').toLowerCase()
+            ) {
+                //this.TCdata.lowerLimitStart = 1;
+                //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
+
+                if (
+                    this.formArray.get([0]).value.handicapCats &&
+                    this.formArray.get([0]).value.prizeCategoryC != '' &&
+                    this.formArray.get([0]).value.prizeCategoryD != ''
+                ) {
+                    TCdata = {
+                        lowerLimitStart: -1,
+                        lowerLimitEnd: this.formArray.get([0]).value
+                            .handicapCats
+                            ? this.formArray.get([0]).value.prizeCategoryC
+                            : '',
+                        upperLimitStart: this.formArray.get([0]).value
+                            .handicapCats
+                            ? this.formArray.get([0]).value.prizeCategoryD
                             : '',
                         upperLimitEnd: 18,
                     };

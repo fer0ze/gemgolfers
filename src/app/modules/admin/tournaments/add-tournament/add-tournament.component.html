@@ -43,9 +43,9 @@
                         <div class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>Start Date</mat-label>
-                                <input matInput [matDatepicker]="picker"  [max]="maxDate"
-                                    (focus)="picker.open()" (dateChange)="datechange($event)"
-                                    formControlName="startDateFormCtrl" placeholder="start date" required />
+                                <input matInput [matDatepicker]="picker" [max]="maxDate" (focus)="picker.open()"
+                                    (dateChange)="datechange($event)" formControlName="startDateFormCtrl"
+                                    placeholder="start date" required />
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                                 <mat-error>This field is required</mat-error>
@@ -54,9 +54,9 @@
                         <div class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>End Date</mat-label>
-                                <input matInput [matDatepicker]="picker2"  [max]="maxDate"
-                                    (focus)="picker2.open()" (onChange)="datechange($event)"
-                                    formControlName="endDateFormCtrl" placeholder="end date" required />
+                                <input matInput [matDatepicker]="picker2" [max]="maxDate" (focus)="picker2.open()"
+                                    (onChange)="datechange($event)" formControlName="endDateFormCtrl"
+                                    placeholder="end date" required />
                                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                 <mat-datepicker #picker2></mat-datepicker>
                                 <mat-error>This field is required</mat-error>
@@ -383,32 +383,50 @@
                                     Handicap Ratio
                                     <mat-form-field [style.margin-left.px]="30">
                                         <mat-label>Handicap Ratio</mat-label>
-                                        <input matInput formControlName="handicapRatio" type="number" />
+                                        <input matInput formControlNam e="handicapRatio" type="number" />
                                         <mat-icon matSuffix>aspect_ratio</mat-icon>
                                     </mat-form-field>
                                 </div>
-                                <div fxLayout="column" fxLayoutAlign="center stretch" class="row mx-4 pt-4 pl-1"
-                                    *ngIf="isAmateur">
+                                <div fxLayout="column" fxLayoutAlign="center stretch" class="row mx-4 pt-4 "
+                                    *ngIf="selected">
                                     <mat-checkbox formControlName="handicapCats" (change)="
                                             handicapCategoriesSelection(
                                                 $event.checked
                                             )
-                                        ">Handicap Categories</mat-checkbox>
+                                        ">Handicap Categories:</mat-checkbox>
                                 </div>
-                                <div class="flex flex-row -mt-8 px-4 items-center" *ngIf="selected">
+                                <div class="flex flex-row -mt-8 px-4 items-center" *ngIf="selected && isAmateur">
                                     <div class="w-80 font-medium">
-                                        Prize Category A:
+                                        Prize Category Amateurs A:
                                     </div>
                                     <mat-form-field class="mx-3 pt-8">
                                         <input matInput formControlName="prizeCategoryA" type="number" />
                                         <mat-icon matSuffix>golf_course</mat-icon>
-                                        <mat-hint>From 1 to</mat-hint>
+                                        <mat-hint>From -1 to</mat-hint>
                                     </mat-form-field>
                                     <div class="w-80 font-medium">
-                                        Prize Category B:
+                                        Prize Category Amateurs B:
                                     </div>
                                     <mat-form-field class="mx-3 pt-8">
                                         <input matInput formControlName="prizeCategoryB" type="number" />
+                                        <mat-icon matSuffix>golf_course</mat-icon>
+                                        <mat-hint>till 18</mat-hint>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-row -mt-8 px-4 items-center" *ngIf="selected && isSAmateur">
+                                    <div class="w-80 font-medium">
+                                        Prize Category Senior Amateurs A:
+                                    </div>
+                                    <mat-form-field class="mx-3 pt-8">
+                                        <input matInput formControlName="prizeCategoryC" type="number" />
+                                        <mat-icon matSuffix>golf_course</mat-icon>
+                                        <mat-hint>From -1 to</mat-hint>
+                                    </mat-form-field>
+                                    <div class="w-80 font-medium">
+                                        Prize Category Senior Amateurs B:
+                                    </div>
+                                    <mat-form-field class="mx-3 pt-8">
+                                        <input matInput formControlName="prizeCategoryD" type="number" />
                                         <mat-icon matSuffix>golf_course</mat-icon>
                                         <mat-hint>till 18</mat-hint>
                                     </mat-form-field>
@@ -561,7 +579,7 @@
                         <div class="flex flex-wrap justify-start" style="width: 50%">
                             <span *ngFor="let catCount of categoryCounts">
                                 <span class="catCount" *ngIf="catCount.value > 0">
-                                    <mat-icon >emoji_people</mat-icon>
+                                    <mat-icon>emoji_people</mat-icon>
                                     <span class="cat-name font-medium">{{ catCount.name }}</span> :
                                     <span class="cat-value font-medium">{{ catCount.value }}</span>
                                 </span>
@@ -578,7 +596,7 @@
                         <div class="flex flex-wrap justify-start" style="width: 50%">
                             <span *ngFor="let catCount of TMcategoryCounts">
                                 <span class="catCount" *ngIf="catCount.value > 0">
-                                    <mat-icon >emoji_people</mat-icon>
+                                    <mat-icon>emoji_people</mat-icon>
                                     <span class="cat-name font-medium">{{ catCount.name }}</span> :
                                     <span class="cat-value font-medium">{{ catCount.value }}</span>
                                 </span>

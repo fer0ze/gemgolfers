@@ -268,7 +268,7 @@ export class HandicapsComponent implements OnInit {
             this.logger.log('Download Handicap Congu Button Click', "info");
             let doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
-    
+
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
             doc.text(this.loggedInuser.membership[0].club.name.toString().toUpperCase(), pageWidth / 2, 15, { align: "center" });
@@ -276,7 +276,7 @@ export class HandicapsComponent implements OnInit {
             doc.setFontSize(10);
             doc.text('W.E.F:', 165, 27);
             doc.text(this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'), 177, 27);
-    
+            this.dataPlayers.player.sort(((a, b) => Number(a.playerCategory) - Number(b.playerCategory)));
             // **Step 1: Group Players by Category**
             let playersByCategory = {};
             this.dataPlayers.player.forEach((player) => {
@@ -286,27 +286,29 @@ export class HandicapsComponent implements OnInit {
                 }
                 playersByCategory[player.playerCategory].push(player);
             });
-    
+
             let startY = 40; // Start position for first table
-    
+            console.log(playersByCategory);
+            // playersByCategory.sort((a, b) => a - b);
+
             // **Step 2: Iterate Over Categories**
             Object.keys(playersByCategory).forEach((category, categoryIndex) => {
                 let players = playersByCategory[category];
-    
+
                 // **Sort Players within the Category**
                 players.sort((a, b) => a.handicap - b.handicap);
-    
+
                 // **Step 3: Add Category Header**
                 if (categoryIndex > 0) {
                     doc.addPage(); // **New Page for Each Category**
                 }
-    
+
                 doc.setFontSize(12);
                 doc.setTextColor(0, 0, 0);
                 doc.setFillColor(200, 200, 200);
                 doc.rect(14, startY - 8, 180, 6, "F"); // Background for category header
                 doc.text(category.toUpperCase(), pageWidth / 2, startY - 3, { align: "center" });
-    
+
                 // **Step 4: Prepare Table Data**
                 let count = 0;
                 let rows = [];
@@ -335,7 +337,7 @@ export class HandicapsComponent implements OnInit {
                         }
                     }
                 });
-    
+
                 // **Step 5: Generate Table for Current Category**
                 doc.autoTable({
                     startY: startY,
@@ -346,17 +348,17 @@ export class HandicapsComponent implements OnInit {
                     bodyStyles: { fontSize: 9, halign: "center" },
                     columnStyles: { 2: { halign: "left" } }, // Align Name column to the left
                 });
-    
+
                 startY = 35; // Reset for next page
             });
-    
+
             // **Save PDF**
             doc.save("Congu_Handicap_List.pdf");
         } catch (error) {
             this.logger.log('Downloading Congu Handicap Data Failed', "error", error.toString());
         }
     }
-    
+
 
     redirectToHandicapDetails = (id: string) => {
         this.logger.log('View Player Handicap Congu Button Click', "info", id);
