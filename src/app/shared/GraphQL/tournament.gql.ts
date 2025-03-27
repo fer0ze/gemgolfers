@@ -22,7 +22,7 @@ import {
     PlayerHandicapQL,
     PlayerHandicapWhsQL,
     PlayerHandicapLogQL,
-} from '../fragments/player.fragment'; 
+} from '../fragments/player.fragment';
 
 export const LeaderboardSubscription = gql`
     query LeaderboardSimpleSubscription($tournamentPrefix: String!) {
@@ -809,78 +809,44 @@ export const GetTournamnetListForIncomplete = gql`
 `;
 
 export const GetTournamentsByClub = gql`
-    query PostsGetQuery($endDate: date!, $clubId: String!) {
-        ActiveTournaments: tournament(
+    query PostsGetQuery( $clubId: String!) {
+         tournament(
             where: {
                 _and: [
                     {
-                        endDate: { _gte: $endDate }
                         clubId: { _eq: $clubId }
                         singleRound: { _eq: false }
                     }
                 ]
             }
-        ) {
-            id
-        }
-        CompletedRecently: tournament(
-            where: {
-                _and: [
-                    {
-                        endDate: { _lt: $endDate }
-                        clubId: { _eq: $clubId }
-                        singleRound: { _eq: false }
-                    }
-                ]
-            }
-            order_by: { endDate: desc }
-        ) {
-            id
-            startDate
-            endDate
-            noOfRounds
-            HandicapCalculated: player_handicaps {
-                name
-                handicap
-                oldhandicap
-                updatedAt
-            }
-            PlayerHandicapWhs: player_handicaps_whs {
-                name
-                round
-                score
-                adjustedScore
-                handicapDifferential
-                handicapWhsIndex
-                updatedAt
-            }
-        }
-
-        HandicapCalculated: tournament(
-            limit: 3
-            where: {
-                _not: { player_handicaps: {} }
-                clubId: { _eq: $clubId }
-                singleRound: { _eq: false }
-                endDate: { _lt: $endDate }
-            }
-            order_by: { endDate: desc }
         ) {
             ...TournamentQL
-        }
-        Scheduled: club_schedule(
-            where: {
-                _and: [{ date: { _gt: $endDate }, clubId: { _eq: $clubId } }]
-            }
-            order_by: { date: desc }
-        ) {
-            id
-            clubId
-            courseId
-            tournamentTitle
-            date
-            course {
-                name
+            flights{
+                id
+                flightRound
+                flightNo
+                courseHoleSets
+                courseHoleSetsInverted
+                members{
+                    flightId
+                    playerId
+                    playingHandicap
+                    playingHandicapWhs
+                    player{
+                        id
+                        firstName
+                        lastName
+                        handicap
+                    }
+                    scores(order_by: { hole: { holeNo: asc } }){
+                        playerId
+                        flightId
+                        holeId
+                        grossScore
+                        netScore
+                        playerHandicap
+                    }
+                }
             }
         }
     }

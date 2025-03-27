@@ -17,7 +17,7 @@ import { FacadeService } from 'app/shared/services/facade.service';
 })
 export class DialogTournamentComponent implements OnInit {
     dataSource: MatTableDataSource<Player>;
-    displayedColumns = ['id', 'name', 'date', 'noOfRounds', 'noOfFlights', 'matchFormat', 'startDate', 'endDate', 'owner'];
+    displayedColumns = ['select', 'name', 'date', 'noOfRounds', 'noOfFlights', 'matchFormat', 'startDate', 'endDate', 'owner'];
     monthName = [
         'Monday',
         'Tuesday',
@@ -33,12 +33,13 @@ export class DialogTournamentComponent implements OnInit {
     @ViewChild('MatPaginatorA') paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
+
     constructor(
         public dialogRef: MatDialogRef<DialogTournamentComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private facadeService: FacadeService,
-      
-    ) {}
+
+    ) { }
 
     ngOnInit() {
         //console.log(this.data);
@@ -62,19 +63,19 @@ export class DialogTournamentComponent implements OnInit {
 
     public downloadAsPDF() {
         var doc = new jsPDF();
-        let date=new Date(this.data.date).getDate() +'/'+(new Date(this.data.date).getMonth()+1) +'/'+new Date(this.data.date).getFullYear(); 
-        var day=new Date(this.data.date).getDay()-1;
+        let date = new Date(this.data.date).getDate() + '/' + (new Date(this.data.date).getMonth() + 1) + '/' + new Date(this.data.date).getFullYear();
+        var day = new Date(this.data.date).getDay() - 1;
         // day=this.monthName[day];
         doc.setFontSize(18);
-        if(this.data.key=='non'){
-            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
+        if (this.data.key == 'non') {
+            doc.text("Date: " + date + "-" + this.monthName[day], 74, 15);
             doc.text("Round's Non-Submitted Cards Detail:", 54, 23);
-        }else if(this.data.key=='all'){      
-            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
+        } else if (this.data.key == 'all') {
+            doc.text("Date: " + date + "-" + this.monthName[day], 74, 15);
             doc.text("All Players Detail:", 68, 23);
-        }else{
-            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
-            doc.text("Round's Submitted Cards Detail:",62, 23);
+        } else {
+            doc.text("Date: " + date + "-" + this.monthName[day], 74, 15);
+            doc.text("Round's Submitted Cards Detail:", 62, 23);
         }
         doc.setFontSize(11);
         doc.setTextColor(100);
@@ -98,8 +99,39 @@ export class DialogTournamentComponent implements OnInit {
         this.dialogRef.close();
     }
 
-   
+
     close() {
         this.dialogRef.close();
+    }
+
+    isAllSelected() {
+        ////console.log(this.dataSource);
+        if (this.dataSource) {
+            // //console.log(this.selection);
+            const numSelected = this.selection.selected.length;
+            // //console.log(numSelected);
+            // this.selectPlayer(this.selection.selected);
+            const numRows = this.dataSource.data.length;
+            //console.log(this.dataSource.data);
+
+            // //console.log(numRows);
+
+            return numSelected === numRows;
+        }
+    }
+
+    /** The label for the checkbox on the passed row */
+    checkboxLabel(row?: any): string {
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} player ${row.firstName} ${row.lastName}`;
+    }
+
+    // Function to handle single selection
+    selectSingle(row: any): void {
+        this.selection.clear(); // Deselect any previously selected row
+        this.selection.select(row); // Select the current row
+    }
+
+    save() {
+        this.dialogRef.close(this.selection.selected);
     }
 }

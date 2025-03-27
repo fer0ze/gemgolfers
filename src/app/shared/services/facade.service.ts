@@ -526,8 +526,8 @@ export class FacadeService {
       endDate
     );
   }
-  getTournamentsListByClub(endDate: Date, clubId: string) {
-    return this.tournamentService.getTournamentsListByClub(endDate, clubId);
+  getTournamentsListByClub(clubId: string) {
+    return this.tournamentService.getTournamentsListByClub( clubId);
   }
   getTournamentsListByClubForCompleted(endDate: Date, clubId: string) {
     return this.tournamentService.getTournamentsListByClubForCompleted(

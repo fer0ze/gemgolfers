@@ -133,7 +133,6 @@ export class TournamentsService {
     }
 
     public getTournamentsListByClub(
-        endDate: Date,
         clubId: string
     ): Promise<any> {
         return new Promise((resolve) => {
@@ -141,7 +140,6 @@ export class TournamentsService {
                 .subscribe({
                     query: Query.GetTournamentsByClub,
                     variables: {
-                        endDate: endDate,
                         clubId: clubId,
                     },
                 })

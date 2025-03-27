@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 import { PlayerQL } from './player.fragment';
 import { CourseQL } from '../fragments/course.fragment';
+import { FlightsQL } from './flight.fragment';
 
 // Fragment on Tournament
 

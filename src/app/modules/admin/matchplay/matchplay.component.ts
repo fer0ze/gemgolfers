@@ -24,6 +24,7 @@ import { LogsService } from 'app/shared/services/logs.service';
 import { CommonModule } from '@angular/common';
 import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
+import { DialogTournamentComponent } from '../dialogs/dialog-tournament/dialog-tournament.component';
 
 @Component({
     selector: 'app-matchplay',
@@ -38,7 +39,7 @@ export class MatchplayComponent implements OnInit {
     myPlayer: Player;
     isLoading: Boolean = true;
     loggedInuser: Player;
-    matchPlayData: any[] = [];
+    matchPlayData: any;
     totalRounds: number = 0;
     activeRound: number;
     courseHoleSetNames;
@@ -81,7 +82,7 @@ export class MatchplayComponent implements OnInit {
     ngOnInit() {
         try {
             console.log(this.courseID);
-
+            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.logger.log('Admin comes to Tournament Score Page', "info");
             this.logger.log('Getting Tournament Score Data', "info", this.tournamentID);
 
@@ -1280,7 +1281,7 @@ export class MatchplayComponent implements OnInit {
             //let holesQLs: any = courseQLs.HolesQL;
             let playerScores: Score[] = [];
 
-            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            
 
             let courseQLs = null;
             let courseHoleQLs = null;
@@ -1893,6 +1894,120 @@ export class MatchplayComponent implements OnInit {
             this.logger.log('Saving Tournament Score Data Failed', "error", error.toString());
         }
     }
+
+    copyRoundScore(round) {
+
+        this.facadeService.getTournamentsListByClub(this.matchPlayData.clubId).then((res) => {
+            let rows = [];
+            let count = 0;
+            for (let item of res?.tournament) {
+                let obj = {
+                    id: item.id,
+                    count: ++count,
+                    name: item.title,
+                    date: item.createdAt?.substring(0, 10),
+                    startDate: item.startDate?.substring(0, 10),
+                    endDate: item.endDate?.substring(0, 10),
+                    rounds: item.noOfRounds,
+                    flights: '-',
+                    matchFormat: item.matchFormat,
+                    owner: '-',
+                };
+                rows.push(obj)
+            }
+            const dialogRef = this.dialog.open(DialogTournamentComponent, {
+                data: { tournaments: rows },
+            });
+            dialogRef.afterClosed().subscribe(async (resp) => {
+                console.log(resp);
+                console.log(res);
+                if (resp) {
+                    let selectedTournament = res.tournament.find(a => a.id == resp[0].id);
+                    console.log(selectedTournament);
+                    let roundFlights = [];
+                    for (let flight of selectedTournament.flights) {
+                        if (
+                            round == flight.flightRound
+                        ) {
+                            roundFlights.push(flight);
+                            //subTournamentsFlightMembers.push(playerIds);
+                        }
+                    }
+
+                    let playerScores: Score[] = [];
+                    let today: Date = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+
+                    let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+
+                    for (let flight of this.flightPlayers) {
+                        for (let fligh of flight) {
+                            let flightId = fligh.flightId;
+                            if (fligh && typeof fligh === "object" && fligh.flightId) {
+                                let getPlayerScore = this.getCopyScore(fligh.playerId, roundFlights);
+                                console.log(getPlayerScore);
+                                if (getPlayerScore && getPlayerScore.length > 0) {
+                                    getPlayerScore.forEach((score, index) => {
+                                        let playerScore: Score = {
+                                            playerId: fligh.playerId,
+                                            flightId: fligh.flightId,
+                                            holeId: score.holeId, // Assuming holeId is index-based (adjust if needed)
+                                            playerHandicap: this.precisionRound(fligh.handicap, 0),
+                                            grossScore: score.grossScore, // Assign the actual score
+                                            updatedAt: General.parseToDate(todayDate.toDateString()),
+                                            updaterId: this.loggedInuser.id,
+                                            updaterName: `${this.loggedInuser.firstName} ${this.loggedInuser.lastName}`,
+                                            detailId: null,
+                                        };
+                                        playerScores.push(playerScore);
+                                    });
+                                }
+                            }
+                        }
+
+                    }
+
+                    let result: any;
+
+                    if (playerScores.length > 0) {
+                        result = <any>(
+                            await this.facadeService.SaveScoresMutation(playerScores)
+                        );
+                    }
+
+                    if (result) {
+                        this.snackBar.open('Score has been copied.', 'x', {
+                            duration: 5000,
+                        });
+                    }
+                }
+            })
+        })
+    }
+
+    getCopyScore(playerId, flights) {
+        console.log("Searching for player ID:", playerId);
+        console.log("Flights Data:", flights);
+
+        // Find the flight that contains the playerId
+        const foundFlight = flights.find(flight =>
+            flight.members.some(member => member.playerId === playerId)
+        );
+
+        if (!foundFlight) {
+            console.log(`Player ${playerId} not found in any flight.`);
+            return null; // or return empty scores []
+        }
+
+        // Find the specific member and return their scores
+        const playerData = foundFlight.members.find(member => member.playerId === playerId);
+
+        console.log(`Scores for player ${playerId}:`, playerData.scores);
+        return playerData.scores;
+    }
+
     keytab(e) {
         var code = e.keyCode || e.which;
 
