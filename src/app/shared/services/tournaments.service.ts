@@ -152,6 +152,26 @@ export class TournamentsService {
                 });
         });
     }
+    public getTournamentsListByCourse(
+        courseId: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTournamentsListByCourse,
+                    variables: {
+                        courseId: courseId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
 
     public getTournamentsListByClubForCompleted(
         endDate: Date,

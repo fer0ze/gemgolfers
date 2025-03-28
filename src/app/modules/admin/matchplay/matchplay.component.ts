@@ -1897,9 +1897,10 @@ export class MatchplayComponent implements OnInit {
 
     copyRoundScore(round) {
 
-        this.facadeService.getTournamentsListByClub(this.matchPlayData.clubId).then((res) => {
+        this.facadeService.getTournamentsListByCourse(this.matchPlayData.courseId).then((res) => {
             let rows = [];
             let count = 0;
+            console.log(res);
             for (let item of res?.tournament) {
                 let obj = {
                     id: item.id,
@@ -1920,7 +1921,7 @@ export class MatchplayComponent implements OnInit {
             });
             dialogRef.afterClosed().subscribe(async (resp) => {
                 console.log(resp);
-                console.log(res);
+               
                 if (resp) {
                     let selectedTournament = res.tournament.find(a => a.id == resp[0].id);
                     console.log(selectedTournament);
