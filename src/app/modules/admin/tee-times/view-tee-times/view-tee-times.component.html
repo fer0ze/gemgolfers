@@ -88,7 +88,16 @@
                                 <!-- <div class="mt-0.5 line-clamp-2 text-secondary">{{event.description}}</div> -->
                                 <div class="w-12 h-1 my-2 border-t-2"></div>
                                 <!-- event time -->
-                                <div class="flex items-center leading-5 text-md text-secondary">
+
+                                <div *ngIf="event.noOfHoles==18"
+                                    class="flex items-center leading-5 text-md text-secondary">
+                                    <mat-icon class="icon-size-6 text-hint"
+                                        [svgIcon]="'heroicons_solid:switch-vertical'"></mat-icon>
+                                    <div class="ml-1.5">
+                                        {{ event.startingHole}}
+                                    </div>
+                                </div>
+                                <div class="flex items-center mt-2  leading-5 text-md text-secondary">
                                     <mat-icon class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:clock'"></mat-icon>
                                     <div class="ml-1.5">

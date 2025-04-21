@@ -287,6 +287,8 @@ export class ViewTeeTimeComponent implements OnInit {
                     noOfPlayers: dataPlayers.TournamentsQL[0].noOfPlayers,
                     status: this.getStatus(dataPlayers.TournamentsQL[0].noOfPlayers, slot.joinedMembers),
                     courseHoleSets: slot.courseHoleSets,
+                    noOfHoles: slot.noOfHoles,
+                    startingHole: slot.startingHole,
                     available: slot.available,
                     courseHoleSetsInverted: slot.courseHoleSetsInverted,
                     displayName: this.getSelectedHoleSet(slot.courseHoleSets, slot.courseHoleSetsInverted),
