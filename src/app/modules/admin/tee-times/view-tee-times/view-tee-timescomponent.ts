@@ -281,6 +281,7 @@ export class ViewTeeTimeComponent implements OnInit {
                     id: slot.id,
                     title: 'Tee-' + slot.startingHole,
                     slotTime: this.convertToAMPMFormat(slot.slotTime),
+                    slotTimes: (slot.slotTime),
                     joinedMembers: slot.joinedMembers,
                     members: membersTable.data.length > 0 ? membersTable : undefined,
                     flightId: slot.flightId,
@@ -294,9 +295,23 @@ export class ViewTeeTimeComponent implements OnInit {
                     displayName: this.getSelectedHoleSet(slot.courseHoleSets, slot.courseHoleSetsInverted),
                     // status:this.getStatus(dataPlayers.TournamentQL[0].noOfPlayers,slot.joinedMembers)
                 }
-                this.teeTimes.push(teeTimeObj)
-                this.copyTeeTimes = this.teeTimes;
+                this.teeTimes.push(teeTimeObj);
             }
+            this.teeTimes.sort((a, b) => {
+                // Compare slotTime first
+                const timeA = new Date(`1970-01-01T${a.slotTimes}00`);
+                const timeB = new Date(`1970-01-01T${b.slotTimes}00`);
+            
+                if (timeA.getTime() !== timeB.getTime()) {
+                    return timeA.getTime() - timeB.getTime();
+                }
+            
+                // If times are equal, sort by courseHoleSets
+                if (a.courseHoleSets < b.courseHoleSets) return -1;
+                if (a.courseHoleSets > b.courseHoleSets) return 1;
+                return 0;
+            });
+            this.copyTeeTimes = this.teeTimes;
             console.log(this.teeTimes);
 
         }
