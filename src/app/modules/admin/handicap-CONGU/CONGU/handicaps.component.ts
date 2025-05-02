@@ -272,7 +272,7 @@ export class HandicapsComponent implements OnInit {
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
             doc.text(this.loggedInuser.membership[0].club.name.toString().toUpperCase(), pageWidth / 2, 15, { align: "center" });
-            doc.text('Congu Handicap List', pageWidth / 2, 27, { align: "center" });
+            doc.text('Handicap List (Congu)', pageWidth / 2, 27, { align: "center" });
             doc.setFontSize(10);
             doc.text('W.E.F:', 165, 27);
             doc.text(this.datepipe.transform(this.currentDate.toString(), 'MMM d, y'), 177, 27);
@@ -280,12 +280,18 @@ export class HandicapsComponent implements OnInit {
             // **Step 1: Group Players by Category**
             let playersByCategory = {};
             this.dataPlayers.player.forEach((player) => {
-                if (!player.playerCategory) player.playerCategory = "Uncategorized"; // Fallback category
-                if (!playersByCategory[player.playerCategory]) {
-                    playersByCategory[player.playerCategory] = [];
+                const category = player.playerCategory;
+
+                // Skip "PROFESSIONALS" and null/undefined categories
+                if (category === 'Professionals' || category == null) return;
+
+                if (!playersByCategory[category]) {
+                    playersByCategory[category] = [];
                 }
-                playersByCategory[player.playerCategory].push(player);
+
+                playersByCategory[category].push(player);
             });
+
 
             let startY = 40; // Start position for first table
             console.log(playersByCategory);
@@ -304,10 +310,15 @@ export class HandicapsComponent implements OnInit {
                 }
 
                 doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0);
-                doc.setFillColor(200, 200, 200);
-                doc.rect(14, startY - 8, 180, 6, "F"); // Background for category header
-                doc.text(category.toUpperCase(), pageWidth / 2, startY - 3, { align: "center" });
+                if (categoryIndex == 0) {
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFillColor(200, 200, 200);
+                    doc.rect(14, startY - 8, 180, 6, "F"); // Background for category header
+                    doc.text(`${category.toUpperCase()} (${players.length})`, pageWidth / 2, startY - 3, {
+                        align: 'center',
+                    });
+                }
+
 
                 // **Step 4: Prepare Table Data**
                 let count = 0;
@@ -347,6 +358,21 @@ export class HandicapsComponent implements OnInit {
                     headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10, halign: "center" },
                     bodyStyles: { fontSize: 9, halign: "center" },
                     columnStyles: { 2: { halign: "left" } }, // Align Name column to the left
+
+                    didDrawPage: (data) => {
+                        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+                        // Add Category Header on every page
+                        if (currentPage > 1) {
+                            doc.setFontSize(12);
+                            doc.setTextColor(0, 0, 0);
+                            doc.setFillColor(200, 200, 200);
+                            doc.rect(14, data.settings.margin.top - 8, 180, 6, "F");
+                            doc.text(`${category.toUpperCase()} (${players.length})`, pageWidth / 2, data.settings.margin.top - 3, {
+                                align: 'center',
+                            });
+                        }
+
+                    }
                 });
 
                 startY = 35; // Reset for next page
