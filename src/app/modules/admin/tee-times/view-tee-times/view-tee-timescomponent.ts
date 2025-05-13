@@ -301,11 +301,11 @@ export class ViewTeeTimeComponent implements OnInit {
                 // Compare slotTime first
                 const timeA = new Date(`1970-01-01T${a.slotTimes}00`);
                 const timeB = new Date(`1970-01-01T${b.slotTimes}00`);
-            
+
                 if (timeA.getTime() !== timeB.getTime()) {
                     return timeA.getTime() - timeB.getTime();
                 }
-            
+
                 // If times are equal, sort by courseHoleSets
                 if (a.courseHoleSets < b.courseHoleSets) return -1;
                 if (a.courseHoleSets > b.courseHoleSets) return 1;
@@ -647,6 +647,7 @@ export class ViewTeeTimeComponent implements OnInit {
             invited: false,
             singleRound: true,
             sponsorName: '',
+            approved: false,
             sponsorLogo: '',
             mobileLogoUrl: '',
             webLogoUrl: '',

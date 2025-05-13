@@ -1141,6 +1141,7 @@ export class TournamentsService {
                                 teamMatch: tmnt.teamMatch,
                                 pairsMatch: tmnt.pairsMatch,
                                 interLeague: tmnt.interLeague,
+                                approved: tmnt.approved,
                                 publicTournament: tmnt.publicTournament,
                                 confirmParticipants: tmnt.confirmParticipants,
                                 noOfRounds: tmnt.noOfRounds,

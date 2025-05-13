@@ -19,13 +19,13 @@ export class Tournament {
     activeRound: number;
     matchFormat: string;
     pointsFormats: string | any; // null
-    pointsValues: string |any; // null
+    pointsValues: string | any; // null
     handicapAllocations: string; // null
     tee: string; // BLUE
     scoreManagement: string;
     startDate: Date;
     endDate: Date;
-
+    approved?: boolean;
     tee_id: number;
     started: boolean; // true
     invited: boolean; // false
