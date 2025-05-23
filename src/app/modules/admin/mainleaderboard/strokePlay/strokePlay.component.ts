@@ -39,7 +39,8 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     allRoundCutOff: boolean = false;
     searchName: boolean = false;
     allRoundCutOffNet: boolean = false;
-
+    categoryLowerLimt: number = 90;
+    categoryUpperLimt: number = 0;
     isGross: boolean = false;
     isNet: boolean = false;
 
@@ -74,8 +75,17 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                         return a.default == true;
                     });
-                this.selectedCategoryValue =
-                    this.selectedCategory.category;
+                const fullCategory = this.selectedCategory.category;
+                if (this.selectedCategory.lowerHandicap) {
+                    this.categoryLowerLimt = this.selectedCategory.lowerHandicap;
+                }
+                if (this.selectedCategory.higherHandicap) {
+                    this.categoryUpperLimt = this.selectedCategory.higherHandicap;
+                }
+                const match = fullCategory.match(/^([^(]+)/); // Match everything before '(' or entire string
+
+                this.selectedCategoryValue = match ? match[1].trim() : fullCategory;
+                // this.selectedCategoryValue = this.selectedCategory;
             }
             //console.log(this.selectedCategoryValue);
 
@@ -145,7 +155,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             if (leaders.length > 0) {
                 if (this.Leaderboard.CategoriesQL.length > 0) {
                     this.LeaderboardPlayers = leaders.filter(obj => {
-                        return obj.category === this.selectedCategoryValue && obj.matchFormat == matchFormat
+                        return obj.category === this.selectedCategoryValue && obj.matchFormat == matchFormat && obj.handicap <= this.categoryLowerLimt && obj.handicap >= this.categoryUpperLimt;
                     })
                 } else {
                     this.LeaderboardPlayers = leaders.filter((lead) => lead.matchFormat == matchFormat);
@@ -271,7 +281,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             if (this.Leaderboard.CategoriesQL.length > 0) {
                 this.LeaderboardPlayers = leaders.filter(obj => {
                     const propertyName = `holesPlayedR${round}`; // Dynamically construct the property name
-                    return obj.category === this.selectedCategoryValue && obj[propertyName] > 0;
+                    return obj.category === this.selectedCategoryValue && obj[propertyName] > 0 && obj.handicap <= this.categoryLowerLimt && obj.handicap >= this.categoryUpperLimt;;
                 });
             } else {
                 if (this.Leaderboard.noOfRounds == 1) {
@@ -638,7 +648,19 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         this.selectedCategory = this.Leaderboard.CategoriesQL.find(
             (c) => c.category === originalCategory
         );
-        this.selectedCategoryValue = this.selectedCategory.category;
+        const fullCategory = this.selectedCategory.category;
+        if (this.selectedCategory.lowerHandicap) {
+            this.categoryLowerLimt = this.selectedCategory.lowerHandicap;
+        } else {
+            this.categoryLowerLimt = 90
+        }
+        if (this.selectedCategory.higherHandicap) {
+            this.categoryUpperLimt = this.selectedCategory.higherHandicap;
+        } else {
+            this.categoryUpperLimt = 0
+        }
+        const match = fullCategory.match(/^([^(]+)/);
+        this.selectedCategoryValue = match ? match[1].trim() : fullCategory;
         if (this.flightRound == 0) {
             this.selectedCategory = null;
             this.allRoundGrossScore = true;
@@ -1092,7 +1114,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         if (handicap == null) return '-';
         return handicap < 0 ? `+${Math.abs(handicap)}` : handicap.toString();
     }
-    
+
     getFlightRound(round): any {
         return round;
     }

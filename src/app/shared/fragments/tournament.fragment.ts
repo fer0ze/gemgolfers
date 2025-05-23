@@ -170,6 +170,8 @@ export const TournamentMemberCategoryQL = gql`
         handicapLimits
         default
         flightSettings
+        lowerHandicap
+        higherHandicap
     }
 `;
 
