@@ -315,8 +315,37 @@ export class ViewTeeTimeComponent implements OnInit {
             console.log(this.teeTimes);
 
         }
+    }
 
+    async addGuest(item) {
 
+        let guest: any = {
+            flightId: item.flightId,
+            guestId: UniqueIdGenerator.generate(),
+            name: 'Guest A',
+            handicap: '0',
+            email: '',
+            firstName: 'Guest',
+            lastName: 'A',
+        };
+        let count = item.joinedMembers + 1;
+        if (!item.flightId) {
+            this.createTournament(item, [guest], true);
+        } else {
+            let result = <any>await this.facadeService.insertFlightGuest(item.id, [guest], count);
+            console.log(result);
+            if (result) {
+                let members = [];
+                item.joinedMembers = Number(count);
+                members.push(guest)
+                if (item.members) {
+                    item.members.data = [...item.members.data, ...members];
+                } else {
+                    item.members = new MatTableDataSource(members);
+                }
+                item.members._updateChangeSubscription();
+            }
+        }
     }
 
     getSelectedCourse(course) {
@@ -339,6 +368,7 @@ export class ViewTeeTimeComponent implements OnInit {
                 }
             });
     }
+
     getSelectedHoleSet(holeSet, inverted) {
         const name = this.courseHoleSetNames.find((holes) => {
             return holes.holeSets == (holeSet) && holes.inverted == inverted;
@@ -365,6 +395,18 @@ export class ViewTeeTimeComponent implements OnInit {
                     lastName: member.PlayerQL.lastName,
                     email: member.PlayerQL.email,
                     handicap: member.PlayerQL.handicap,
+                    guest: false,
+                }
+                members.push(mem)
+            });
+            flight?.guest.forEach(member => {
+                let mem = {
+                    id: member.guestId,
+                    firstName: member.firstName,
+                    lastName: member.lastName,
+                    email: member.email,
+                    handicap: member.handicap,
+                    guest: true,
                 }
                 members.push(mem)
             });
@@ -500,7 +542,7 @@ export class ViewTeeTimeComponent implements OnInit {
                         this.playerTees.set(result[index].id, selectedData);
                     }
                     if (!item.flightId) {
-                        this.createTournament(item, result);
+                        this.createTournament(item, result, false);
                     } else {
                         this.insertFlightMember(item, this.flightMembers, result);
                     }
@@ -521,7 +563,7 @@ export class ViewTeeTimeComponent implements OnInit {
         });
     }
 
-    async createTournament(item, players) {
+    async createTournament(item, players, guestCheck) {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let clubInfo: any
         if (this.loggedInuser) {
@@ -557,30 +599,48 @@ export class ViewTeeTimeComponent implements OnInit {
         let tournamentFlights: Flight[] = [];
         let fcnter = 0;
         let roundMembers: any[] = [];
+        let guests: any[] = [];
 
-        for (let member of this.flightMembers) {
-            let playerTee: any = this.playerTees.get(member.playerId);
-            //console.log(playerTee);
-            let Tee;
-            if (playerTee == undefined) {
-                Tee = 'AMATEURS';
+        if (!guestCheck) {
+            for (let member of this.flightMembers) {
+                let playerTee: any = this.playerTees.get(member.playerId);
+                //console.log(playerTee);
+                let Tee;
+                if (playerTee == undefined) {
+                    Tee = 'AMATEURS';
+                }
+                let playerTeeId: any = General.getCourseTeeId(Tee);
+                let playerTeeName = playerTee
+                    ? playerTee.value
+                    : Tee;
+                let flightMember = {
+                    playerId: member.playerId,
+                    attendance: false,
+                    playingTee: playerTeeName,
+                    tee_id: General.getCourseTeeId(playerTeeName)
+                        ? General.getCourseTeeId(playerTeeName).id
+                        : 1,
+                    guest: null,
+                };
+                //console.log(flightMember);
+
+                roundMembers.push(flightMember);
             }
-            let playerTeeId: any = General.getCourseTeeId(Tee);
-            let playerTeeName = playerTee
-                ? playerTee.value
-                : Tee;
-            let flightMember = {
-                playerId: member.playerId,
-                attendance: false,
-                playingTee: playerTeeName,
-                tee_id: General.getCourseTeeId(playerTeeName)
-                    ? General.getCourseTeeId(playerTeeName).id
-                    : 1,
-                guest: null,
-            };
-            //console.log(flightMember);
+        }
+        if (guestCheck) {
+            for (let member of players) {
+                let guest: any = {
+                    guestId: UniqueIdGenerator.generate(),
+                    name: 'Guest A',
+                    handicap: '0',
+                    email: '',
+                    firstName: 'Guest',
+                    lastName: 'A',
+                };
+                //console.log(flightMember);
 
-            roundMembers.push(flightMember);
+                guests.push(guest);
+            }
         }
 
         fcnter++;
@@ -606,6 +666,9 @@ export class ViewTeeTimeComponent implements OnInit {
             courseHoleSetsInverted: item.courseHoleSetsInverted ? item.courseHoleSetsInverted : false,
             members: {
                 data: roundMembers,
+            },
+            guest: {
+                data: guests,
             },
         };
 
@@ -672,6 +735,7 @@ export class ViewTeeTimeComponent implements OnInit {
                     lastName: players[index].lastName,
                     email: players[index].email,
                     handicap: players[index].handicap,
+                    guest: guestCheck ? true : false
                 }
                 members.push(mem)
             }
@@ -736,7 +800,7 @@ export class ViewTeeTimeComponent implements OnInit {
             item.members._updateChangeSubscription();
         }
     }
-    deleteUser(id: string, slote: any) {
+    deleteUser(item, slote: any) {
         const confirmation = this._fuseConfirmationService.open({
             title: 'Delete member',
             message:
@@ -753,16 +817,31 @@ export class ViewTeeTimeComponent implements OnInit {
             // If the confirm button pressed...
             if (result === 'confirmed') {
                 const count = slote.joinedMembers - 1;
-                let result = await this.facadeService.DeleteFlightMembers(slote.flightId, id, count);
-                if (result) {
-                    const slot = this.teeTimes.find((slots) => slots.id == slote.id);
-                    slot.joinedMembers--;
-                    const index = slote.members.data.findIndex(member => member.id === id);
-                    // If the item is found, remove it from the array
-                    if (index !== -1) {
-                        slote.members.data.splice(index, 1);
-                        // Update the data source
-                        slote.members._updateChangeSubscription();
+                if (!item.guest) {
+                    let result = await this.facadeService.DeleteFlightMembers(slote.flightId, item.id, count);
+                    if (result) {
+                        const slot = this.teeTimes.find((slots) => slots.id == slote.id);
+                        slot.joinedMembers--;
+                        const index = slote.members.data.findIndex(member => member.id === item.id);
+                        // If the item is found, remove it from the array
+                        if (index !== -1) {
+                            slote.members.data.splice(index, 1);
+                            // Update the data source
+                            slote.members._updateChangeSubscription();
+                        }
+                    }
+                } else {
+                    let result = await this.facadeService.DeleteGuestMembers(slote.flightId, item.id, count);
+                    if (result) {
+                        const slot = this.teeTimes.find((slots) => slots.id == slote.id);
+                        slot.joinedMembers--;
+                        const index = slote.members.data.findIndex(member => member.id === item.id);
+                        // If the item is found, remove it from the array
+                        if (index !== -1) {
+                            slote.members.data.splice(index, 1);
+                            // Update the data source
+                            slote.members._updateChangeSubscription();
+                        }
                     }
                 }
             }

@@ -89,16 +89,41 @@ export class FlightsService {
         });
     }
     public insertFlightMembers(
-        slotId:string, flightMembersToSave: any,count:any
+        slotId: string, flightMembersToSave: any, count: any
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
                 .mutate<any>({
                     mutation: Query.insertFlightMembers,
                     variables: {
-                        slotId:slotId,
+                        slotId: slotId,
                         flightMembersToSave: flightMembersToSave,
-                        count:count
+                        count: count
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+    public insertFlightGuest(
+        slotId: string, flightMembersToSave: any, count: any
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertFlightGuest,
+                    variables: {
+                        slotId: slotId,
+                        flightMembersToSave: flightMembersToSave,
+                        count: count
                     },
                 })
                 .subscribe(
@@ -328,7 +353,7 @@ export class FlightsService {
     }
     public DeleteFlightMembers(
         flightid: any,
-        flightMembersToRemove: any,count=0
+        flightMembersToRemove: any, count = 0
     ): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -349,8 +374,48 @@ export class FlightsService {
                                 },
                             ],
                         },
-                        flightId:flightid,
-                        count:count
+                        flightId: flightid,
+                        count: count
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        ////console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        ////console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+
+    public DeleteGuestMembers(
+        flightid: any,
+        flightMembersToRemove: any, count = 0
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteGuestMembersMutation,
+                    variables: {
+                        membersDeleteExpression: {
+                            _and: [
+                                {
+                                    flightId: {
+                                        _eq: flightid,
+                                    },
+                                },
+                                {
+                                    guestId: {
+                                        _eq: flightMembersToRemove,
+                                    },
+                                },
+                            ],
+                        },
+                        flightId: flightid,
+                        count: count
                     },
                 })
                 .subscribe(
@@ -442,7 +507,7 @@ export class FlightsService {
     public closeActiveRound(
         tournamentId: string,
         round: number,
-        cutOffCriteria: any,activeRound:number
+        cutOffCriteria: any, activeRound: number
     ) {
         return new Promise((resolve) => {
             this.apollo
@@ -458,8 +523,8 @@ export class FlightsService {
                             activeRound: round,
                             cutOffCriteria: cutOffCriteria,
                         },
-                        tournamentId:tournamentId,
-                        activeRound:activeRound
+                        tournamentId: tournamentId,
+                        activeRound: activeRound
                     },
                 })
                 .subscribe(

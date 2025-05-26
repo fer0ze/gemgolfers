@@ -51,7 +51,7 @@ export class DialogPlayerListComponent implements OnInit {
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.playerCategories = this.facadeService.getPlayerCategories();
-        //console.log(this.data);
+        console.log(this.data);
         let dataClubs = await this.facadeService.getClubList();
         this.golfClubs = dataClubs.club;
 

@@ -820,6 +820,14 @@ export class FacadeService {
       flightMembersToSave, count
     );
   }
+  insertFlightGuest(
+    slotId: string, flightMembersToSave: any, count: any
+  ) {
+    return this.flightsService.insertFlightGuest(
+      slotId,
+      flightMembersToSave, count
+    );
+  }
 
   SaveTournamentFlight(
     tournamentId: string,
@@ -893,6 +901,9 @@ export class FacadeService {
   }
   DeleteFlightMembers(flightid: any, flightMembersToRemove: any, count = 0) {
     return this.flightsService.DeleteFlightMembers(flightid, flightMembersToRemove, count);
+  }
+  DeleteGuestMembers(flightid: any, flightMembersToRemove: any, count = 0) {
+    return this.flightsService.DeleteGuestMembers(flightid, flightMembersToRemove, count);
   }
 
   getTournamentsFlights(tournamentId: string) {

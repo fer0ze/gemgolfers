@@ -1946,6 +1946,14 @@ export const getTeeTimesSlots = gql`
                     tee_id
                     time
                     flightNo
+                    guest{
+                        flightId
+                        guestId
+                        firstName
+                        lastName
+                        name
+                        handicap
+                        email}
                     MembersQL: members {
                         flightId
                         playerId
@@ -2014,6 +2022,14 @@ export const getTeeTimesSlotsAdmin = gql`
                     tee_id
                     time
                     flightNo
+                     guest{
+                        flightId
+                        guestId
+                        firstName
+                        lastName
+                        name
+                        handicap
+                        email}
                     MembersQL: members {
                         flightId
                         playerId

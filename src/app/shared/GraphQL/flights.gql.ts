@@ -189,6 +189,34 @@ export const insertFlightMembers = gql`
         }
     }
 `;
+export const insertFlightGuest = gql`
+    mutation insertFlightGuest(
+        $slotId: String!
+        $flightMembersToSave: [flight_guest_insert_input!]!
+        $count:Int!
+    ) {
+        
+        FlightMembersEntryQLi: insert_flight_guest(
+            objects: $flightMembersToSave
+            on_conflict: {
+                constraint: flight_guest_pkey
+                update_columns: [
+                    name
+                ]
+            }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+        update_tee_time_booking_slot(
+            where:{ id:{ _eq :$slotId }}
+            _set:{joinedMembers:$count}
+        ){
+            returning{
+                id
+            }
+        }
+    }
+`;
 export const addFlightName = gql`
     mutation SaveTournamentFlightsMutation(
         $flightNamesToSave: [flight_name_insert_input!]!
@@ -385,6 +413,26 @@ export const DeleteFlightMembersMutation = gql`
         $flightId:String!,$count:Int!
     ) {
         DeleteFlightMembers: delete_flight_member(
+            where: $membersDeleteExpression
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+        update_tee_time_booking_slot(
+            where:{ flightId:{ _eq :$flightId }}
+            _set:{joinedMembers:$count}
+        ){
+            returning{
+                id
+            }
+        }
+    }
+`;
+export const DeleteGuestMembersMutation = gql`
+    mutation DeleteGuestMembersMutation(
+        $membersDeleteExpression: flight_guest_bool_exp!,
+        $flightId:String!,$count:Int!
+    ) {
+        DeleteFlightMembers: delete_flight_guest(
             where: $membersDeleteExpression
         ) {
             AffectedRowsQL: affected_rows

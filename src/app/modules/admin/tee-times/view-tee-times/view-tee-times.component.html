@@ -173,7 +173,7 @@
                                                 <div class="flex">
                                                     <span class="font-medium ml-1 whitespace-nowrap">
                                                         <button [matTooltip]="'Delete User'"
-                                                            (click)="deleteUser(account.id,event)">
+                                                            (click)="deleteUser(account,event)">
                                                             <mat-icon class="icon-size-7"
                                                                 [svgIcon]="'heroicons_solid:delete'"
                                                                 color="warn"></mat-icon>
@@ -207,11 +207,16 @@
 
                                 <!-- Course launch button -->
                                 <div
-                                    class="flex justify-end items-center px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
+                                    class="flex justify-end items-center px-6 gap-x-2 py-4 text-right bg-gray-50 dark:bg-transparent">
                                     <button *ngIf="event.available && event.joinedMembers < 4" mat-flat-button
                                         [color]="'primary'" (click)="openAddPlayersDialog(event)">
                                         <mat-icon svgIcon="heroicons_outline:plus-user"></mat-icon>
-                                        <span class="ml-2 mr-1"> Add</span>
+                                        <span class="ml-2 mr-1"> Add Player</span>
+                                    </button>
+                                    <button *ngIf="event.available && event.joinedMembers < 4" mat-flat-button
+                                        [color]="'accent'" (click)="addGuest(event)">
+                                        <mat-icon svgIcon="heroicons_outline:plus-user"></mat-icon>
+                                        <span class="ml-2 mr-1"> Add Guest</span>
                                     </button>
 
                                 </div>
