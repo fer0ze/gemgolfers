@@ -214,7 +214,7 @@ export class AddTeeTimesComponent implements OnInit {
                     courseHoleSets: Number(slot.courseHoleSets),
                     courseHoleSetsInverted: slot.inverted,
                     flightId: null,
-                    allowGuest: slot.guestHole,
+                    allowGuest: true,
                     noOfHoles: slot.noOfHoles,
                 };
                 teeTimeSlots.push(tee1);
@@ -334,14 +334,14 @@ export class AddTeeTimesComponent implements OnInit {
                 const noOfHoles = form.get('noOfHoles').value;
                 createSlot(courseHoleSets, inverted, startTime, endTime, false, noOfHoles);
             })
-            guestTimingControls?.forEach((form) => {
-                const courseHoleSets = form.get('courseHoleSets').value;
-                const inverted = form.get('inverted').value;
-                const startTime = form.get('startTime').value;
-                const endTime = form.get('endTime').value;
-                const noOfHoles = form.get('noOfHoles').value;
-                createSlot(courseHoleSets, inverted, startTime, endTime, true, noOfHoles);
-            })
+            // guestTimingControls?.forEach((form) => {
+            //     const courseHoleSets = form.get('courseHoleSets').value;
+            //     const inverted = form.get('inverted').value;
+            //     const startTime = form.get('startTime').value;
+            //     const endTime = form.get('endTime').value;
+            //     const noOfHoles = form.get('noOfHoles').value;
+            //     createSlot(courseHoleSets, inverted, startTime, endTime, true, noOfHoles);
+            // })
 
         } catch { }
     }
