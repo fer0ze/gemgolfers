@@ -69,7 +69,7 @@ export class AddTeeTimesComponent implements OnInit {
             courseName: ['', Validators.required],
             club: ['', Validators.required],
             noOfPlayers: ['4', Validators.required],
-            allowGuest: ['0', Validators.required],
+            allowGuest: ['1', Validators.required],
             startingHole: this.fb.array([]),
             guestStartingHole: this.fb.array([]),
             timing: this.fb.array([], Validators.required),
