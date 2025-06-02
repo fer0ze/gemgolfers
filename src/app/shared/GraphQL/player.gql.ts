@@ -94,7 +94,10 @@ export const getPlayersListReport = gql`
     }
 `;
 export const getPlayersActivityReportDateWise = gql`
-    query getPlayersActivityReportDateWise($fromDate: timestamptz!, $toDate: timestamptz!) {
+    query getPlayersActivityReportDateWise(
+        $fromDate: timestamptz!
+        $toDate: timestamptz!
+    ) {
         user_activity_log(
             where: {
                 _and: [
@@ -102,7 +105,7 @@ export const getPlayersActivityReportDateWise = gql`
                     { dateTime: { _lte: $toDate } }
                 ]
             }
-                order_by: { dateTime: asc }
+            order_by: { dateTime: asc }
         ) {
             id
             activityType
@@ -1062,9 +1065,7 @@ export const SavePlayersList = gql`
     }
 `;
 export const insertClubMember = gql`
-    mutation insertClubMember(
-        $clubmembers: [club_member_insert_input!]!
-    ) {
+    mutation insertClubMember($clubmembers: [club_member_insert_input!]!) {
         insert_club_member(
             objects: $clubmembers
             on_conflict: { constraint: club_member_pkey, update_columns: [] }
@@ -1192,7 +1193,7 @@ export const PlayerFlightScoresQuery = gql`
         }
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }
-            order_by: [{ tournament: { startDate: desc } }]
+            order_by: [{ tournament: { startDate: desc } }, { round: desc }]
             limit: 40
         ) {
             tournamentId
@@ -1201,6 +1202,7 @@ export const PlayerFlightScoresQuery = gql`
             handicap
             oldHandicap
             score
+            round
             updatedAt
             grossScore
             adjustedScore
@@ -1210,6 +1212,7 @@ export const PlayerFlightScoresQuery = gql`
                 startDate
             }
         }
+
         MemberQL: flight_member(
             where: { playerId: { _eq: $playerId } }
             order_by: { flight: { date: desc } }
