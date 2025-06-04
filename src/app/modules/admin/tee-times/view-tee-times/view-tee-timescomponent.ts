@@ -246,6 +246,7 @@ export class ViewTeeTimeComponent implements OnInit {
     async getTeeTime(date) {
         this.isLoading = true;
         let dataPlayers: any;
+        this.teeTimes = [];
         let club: any =
             this.loggedInuser.membership.length > 0
                 ? this.loggedInuser.membership[0].club
@@ -656,7 +657,7 @@ export class ViewTeeTimeComponent implements OnInit {
             courseHoleSets: item?.courseHoleSets ? item?.courseHoleSets : 3,
             flightNo: 1,
             flightRound: 0,
-            startingHole: 1,
+            startingHole: item?.startingHole,
             tee_id: roundTeeId,
             tee: roundTee,
             category: null,
@@ -744,6 +745,7 @@ export class ViewTeeTimeComponent implements OnInit {
             } else {
                 item.members = new MatTableDataSource(members);
             }
+            this.getTeeTime(this.routeDate);
             item.members._updateChangeSubscription();
         }
     }
@@ -797,6 +799,7 @@ export class ViewTeeTimeComponent implements OnInit {
             } else {
                 item.members = new MatTableDataSource(members);
             }
+            this.getTeeTime(this.routeDate);
             item.members._updateChangeSubscription();
         }
     }

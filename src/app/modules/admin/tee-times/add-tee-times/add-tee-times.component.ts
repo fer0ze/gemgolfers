@@ -314,7 +314,11 @@ export class AddTeeTimesComponent implements OnInit {
                     if (noOfHoles == 18) {
                         this.teeSlots.push({ courseHoleSets, startingHole: 10, inverted, time, guestHole, noOfHoles });
                     }
-                    this.teeSlots.push({ courseHoleSets, startingHole: 1, inverted, time, guestHole, noOfHoles });
+                    if (courseHoleSets === '2') {
+                        this.teeSlots.push({ courseHoleSets, startingHole: 10, inverted, time, guestHole, noOfHoles });
+                    } else {
+                        this.teeSlots.push({ courseHoleSets, startingHole: 1, inverted, time, guestHole, noOfHoles });
+                    }
                     startLimit.setMinutes(startLimit.getMinutes() + this.scheduleForm.value.interval);
                 }
             };
