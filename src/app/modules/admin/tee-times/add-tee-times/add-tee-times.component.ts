@@ -221,7 +221,7 @@ export class AddTeeTimesComponent implements OnInit {
             }
 
             const schedule: TeeTime = {
-                id: UniqueIdGenerator.generate(),
+                id: UniqueIdGenerator.generate(), 
                 clubId: this.scheduleForm.value?.club.id,
                 courseId: this.scheduleForm.value?.courseName.id,
                 bookingDate: General.parseToDate(this.scheduleForm.value.bookingDate),
