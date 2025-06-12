@@ -9,47 +9,38 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 @Component({
-    selector: 'app-club-report',
-    templateUrl: './club-report.component.html',
-    styleUrls: ['./club-report.component.scss'],
+    selector: 'app-club--member-report',
+    templateUrl: './club-member-report.component.html',
+    styleUrls: ['./club-member-report.component.scss'],
 })
-export class ClubReportComponent implements OnInit {
-    clubs: Club[] = [];
+export class ClubMemberComponent implements OnInit {
+    count: any = 0;
     chartBudgetDistribution: ApexOptions = {};
     chartGithubIssues: ApexOptions = {};
-    dataSource: MatTableDataSource<any>;
-    displayedColumns = ['id', 'name', 'email', 'phone', 'members', 'course'];
-    // public barChartLabels: string[] = [
-    //     '50',
-    //     '100',
-    //     '200',
-    //     '500',
-    //     '700',
-    //     '1000',
-    //     '1200',
-    //     '1500',
-    //     '1700',
-    //     '2000',
-    //     '2500',
-    // ];
+    playersDataSource: MatTableDataSource<any>;
+    playersTableColumns: string[] = [
+        // 'id',
+        // 'view',
+        'Name',
+        'Phone',
+        'Email',
+        'MembershipNo',
+        'Category',
+        'Handicap',
+        // 'club',
+        'createdAt',
+        // 'Status',
+        // 'Edit',
+        // 'Delete',
+    ];
+    clubId: string = '';
     public barChartLabels: string[] = [];
     _series: any = [];
-    barChartData20: any[] = [];
-    barChartData50: any[] = [];
-    barChartData100: any[] = [];
-    barChartData200: any[] = [];
-    barChartData500: any[] = [];
-    barChartData700: any[] = [];
-    barChartData1000: any[] = [];
-    barChartData1200: any[] = [];
-    barChartData1500: any[] = [];
-    barChartData1700: any[] = [];
-    barChartData2000: any[] = [];
-    barChartData2500: any[] = [];
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     showdata: Promise<boolean>;
+    Players: any = [];
+    TablePlayers: any = [];
     constructor(
         private datePipe: DatePipe,
         private location: Router,
@@ -63,88 +54,54 @@ export class ClubReportComponent implements OnInit {
     }
 
     async fecthData() {
-        let dataMembers: any[] = [];
-        let clubName: any[] = [];
-        let clubs = await this.facadeService.getClubList();
-        console.log(clubs);
-        this.clubs = clubs.club;
-        this.dataSource = new MatTableDataSource(clubs.club);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        for (let obj of this.clubs) {
-            if (obj['members'].length > 0) {
-                this.barChartLabels.push(obj.name.match(/\b([A-Z])/g).join(''));
-                dataMembers.push(obj['members'].length)
-            }
-            // if (obj['members'].length <= 20) {
-            //     this.barChartData20.push(obj);
-            // } else if (obj['members'].length <= 50) {
-            //     this.barChartData50.push(obj);
-            //     clubName.push(obj.name);
-            // } else if (obj['members'].length <= 100) {
-            //     this.barChartData100.push(obj);
-            // } else if (obj['members'].length <= 200) {
-            //     this.barChartData200.push(obj);
-            // } else if (obj['members'].length <= 500) {
-            //     this.barChartData500.push(obj);
-            // } else if (obj['members'].length <= 700) {
-            //     this.barChartData700.push(obj);
-            // } else if (obj['members'].length <= 1000) {
-            //     this.barChartData1000.push(obj);
-            // } else if (obj['members'].length <= 1200) {
-            //     this.barChartData1200.push(obj);
-            // } else if (obj['members'].length <= 1500) {
-            //     this.barChartData1500.push(obj);
-            // } else if (obj['members'].length <= 1700) {
-            //     this.barChartData1700.push(obj);
-            // } else if (obj['members'].length <= 2000) {
-            //     this.barChartData2000.push(obj);
-            // } else if (obj['members'].length <= 2500) {
-            //     this.barChartData2500.push(obj);
-            // }
+
+        let data: any;
+        this.route.paramMap.subscribe((params) => {
+            this.clubId = params.get('id');
+        });
+        data = await this.facadeService.getPlayersListByClub(
+            this.clubId
+        );
+        this.count = data.player.length;
+        this.Players = data.player;
+        //console.log(data);
+        for (let obj of this.Players) {
+            let Fname = obj.firstName
+                ? obj.firstName.trim()
+                : obj.firstName;
+            let Lname = obj.lastName ? obj.lastName.trim() : obj.lastName;
+            let newobj = {
+                id: obj.id,
+                Name: Fname + ' ' + Lname,
+                Phone: obj.phone,
+                Email: obj.email,
+                createdAt: obj.createdAt,
+                MembershipNo: obj.membershipNumber,
+                Category:
+                    obj.playerCategory == 'Senior'
+                        ? 'Senior Amateurs'
+                        : obj.playerCategory,
+                Handicap: obj.handicap,
+                // Status: obj.membershipQL,
+                // club: obj.membershipQL[0]?.club?.name ?? '-',
+            };
+            this.TablePlayers.push(newobj);
         }
-        // dataMembers.push(this.barChartData20.length)
-        // dataMembers.push(this.barChartData50.length);
-        // dataMembers.push(this.barChartData100.length);
-        // dataMembers.push(this.barChartData200.length);
-        // dataMembers.push(this.barChartData500.length);
-        // dataMembers.push(this.barChartData700.length);
-        // dataMembers.push(this.barChartData1000.length);
-        // dataMembers.push(this.barChartData1200.length);
-        // dataMembers.push(this.barChartData1500.length);
-        // dataMembers.push(this.barChartData1700.length);
-        // dataMembers.push(this.barChartData2000.length);
-        // dataMembers.push(this.barChartData2500.length);
-        //console.log(this.barChartLabels);
-
-        this._series['0'] = [
-            {
-                data: dataMembers,
-                name: 'Members',
-                type: 'line',
-            },
-            {
-                data: dataMembers,
-                name: "Total",
-                type: 'column',
-            },
-        ];
-
-        this.chart();
-        this.showdata = Promise.resolve(true);
+        this.playersDataSource = new MatTableDataSource(this.TablePlayers);
+        this.playersDataSource.paginator = this.paginator;
+        this.playersDataSource.sort = this.sort;
     }
+
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
+        this.playersDataSource.filter = filterValue;
 
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
+        if (this.playersDataSource.paginator) {
+            this.playersDataSource.paginator.firstPage();
         }
     }
-    goToClub(clubId: string | number) {
-        this.location.navigate([`/reports/club/${clubId}`]);
-    }
+
     chart() {
         this.chartGithubIssues = {
             chart: {

@@ -23,15 +23,20 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ClubReportComponent } from './club-report.component';
+import { ClubMemberComponent } from '../club-member-report/club-member-report.component';
 const ClubReportRoutes: Route[] = [
     {
         path: '',
         component: ClubReportComponent,
     },
+    {
+        path: ':id',
+        component: ClubMemberComponent,
+    },
 ];
 
 @NgModule({
-    declarations: [ClubReportComponent],
+    declarations: [ClubReportComponent, ClubMemberComponent],
     imports: [
         RouterModule.forChild(ClubReportRoutes),
         MatButtonModule,
@@ -60,4 +65,4 @@ const ClubReportRoutes: Route[] = [
     ],
     providers: [DatePipe],
 })
-export class ClubReportModule {}
+export class ClubReportModule { }

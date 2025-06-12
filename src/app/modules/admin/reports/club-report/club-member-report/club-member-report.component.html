@@ -1,0 +1,186 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="text-5xl font-extrabold bg-card py-8 px-6 md:px-8">
+        Club Members
+    </div>
+
+    <div class="gap-8 w-full py-8 px-6 md:px-8 ">
+
+        <div class="flex flex-col mt-8 flex-auto bg-card shadow rounded-2xl overflow-hidden">
+            <div class="p-6 flex flex-row justify-between">
+                <div class="flex flex-col">
+                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">
+                        All Players
+                    </div>
+                    <div class="text-secondary font-medium">
+                        {{ this.count }} Total Players
+                    </div>
+                </div>
+                <div class="w-60">
+                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full">
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        <input matInput (keyup)="applyFilter($event.target.value)" [autocomplete]="'off'"
+                            [placeholder]="'Search members'" />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="overflow-x-auto mx-6">
+                <table mat-table [dataSource]="playersDataSource" matSort>
+                    <ng-container matColumnDef="Name">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Name
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <a [routerLinkActive]="'active'" [routerLink]="[
+                                    '/players/viewProfile/' + transaction.id
+                                ]">
+                                <span
+                                    class="pr-6 font-medium whitespace-nowrap underline underline-offset-1 cursor-pointer">
+                                    {{ transaction.Name | uppercase }}
+                                </span>
+                            </a>
+                        </td>
+                    </ng-container>
+
+                    <!-- Phone -->
+                    <ng-container matColumnDef="Phone">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Phone
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.Phone }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Email -->
+                    <ng-container matColumnDef="Email">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Email
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.Email }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+
+                    <!-- Membership -->
+                    <ng-container matColumnDef="MembershipNo">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Membership#
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.MembershipNo }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- Category -->
+                    <ng-container matColumnDef="Category">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Category
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.Category }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- Handicap -->
+                    <ng-container matColumnDef="Handicap">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Handicap
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.Handicap }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Created At
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.createdAt | date:'dd MMMM yyyy' }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="club">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Club
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                {{ transaction.club }}
+                            </span>
+                        </td>
+                    </ng-container> -->
+                    <!-- Edit -->
+                    <ng-container matColumnDef="Edit">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Edit
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                <a class="flex items-center" [routerLinkActive]="'active'" [routerLink]="[
+                                        '/players/view/' + transaction.id
+                                    ]">
+                                    <mat-icon [svgIcon]="'heroicons_outline:pencil'" color="primary"></mat-icon>
+                                </a>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- view -->
+                    <ng-container matColumnDef="view">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            View
+                        </th>
+                        <td mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 font-medium whitespace-nowrap">
+                                <a [routerLinkActive]="'active'" [routerLink]="[
+                                        '/players/viewProfile/' + transaction.id
+                                    ]">
+                                    <button>
+                                        <mat-icon [svgIcon]="'heroicons_outline:eye'" color="primary"></mat-icon>
+                                    </button>
+                                </a>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- Delete -->
+                    <ng-container matColumnDef="Delete">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef
+                            class="bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                            Delete
+                        </th>
+                        <td mat-cell *matCellDef="let transaction;let i = index">
+                            <span class="pr-6 font-medium whitespace-nowrap cursor-pointer">
+                                <mat-icon [svgIcon]="'heroicons_solid:delete'" color="warn"
+                                    (click)="deletePlayer(transaction,i)"></mat-icon>
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="playersTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: playersTableColumns"></tr>
+                </table>
+                <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>
