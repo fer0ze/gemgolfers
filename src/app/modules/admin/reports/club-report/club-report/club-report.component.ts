@@ -56,7 +56,7 @@ export class ClubReportComponent implements OnInit {
         private facadeService: FacadeService,
         private route: ActivatedRoute,
         private apollo: Apollo
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.fecthData();
@@ -66,7 +66,7 @@ export class ClubReportComponent implements OnInit {
         let dataMembers: any[] = [];
         let clubName: any[] = [];
         let clubs = await this.facadeService.getClubList();
-        //console.log(clubs);
+        console.log(clubs);
         this.clubs = clubs.club;
         this.dataSource = new MatTableDataSource(clubs.club);
         this.dataSource.paginator = this.paginator;
@@ -125,7 +125,7 @@ export class ClubReportComponent implements OnInit {
             },
             {
                 data: dataMembers,
-                name:  "Total",
+                name: "Total",
                 type: 'column',
             },
         ];
@@ -157,7 +157,7 @@ export class ClubReportComponent implements OnInit {
                     enabled: false,
                 },
             },
-            colors: ['#061797', '#0A9928'],
+            colors: ['#64748B', '#94A3B8'],
             dataLabels: {
                 enabled: true,
                 enabledOnSeries: [0],

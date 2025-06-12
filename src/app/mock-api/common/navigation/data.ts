@@ -633,6 +633,13 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 link: '/reports/league',
             },
             {
+                id: 'reports.clubs',
+                title: 'Clubs',
+                type: 'basic',
+                icon: 'heroicons_outline:desktop-computer',
+                link: '/reports/club',
+            },
+            {
                 id: 'reports.tour',
                 title: 'Tours',
                 type: 'basic',
