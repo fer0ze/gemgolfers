@@ -290,6 +290,9 @@ export const GetTeeTimeBookingQL = gql`
                     count
                 }
             }
+                slots{
+                id
+                flightId}
         }
     }
 `;
@@ -317,6 +320,14 @@ export const GetTeeTimeBookingSuperAdminQL = gql`
                     count
                 }
             }
+        }
+    }
+`;
+
+export const DeleteTeeTimeQL = gql`
+    mutation DeleteTeeTimeQL($where: tee_time_booking_bool_exp!) {
+        delete_tee_time_booking(where: $where) {
+            affected_rows
         }
     }
 `;

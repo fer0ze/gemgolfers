@@ -104,6 +104,9 @@
                         <button mat-icon-button color="primary" (click)="redirectToView(row.teeDate)">
                             <mat-icon class="mat-18">reorder</mat-icon>
                         </button>
+                        <button mat-icon-button color="warn" (click)="deleteTeeTime(row)">
+                            <mat-icon [svgIcon]="'heroicons_solid:delete'" color="warn"></mat-icon>
+                        </button>
                     </td>
                 </ng-container>
 

@@ -21,6 +21,7 @@ import { DialogTeeTimeSlotComponent } from '../dialogs/dialog-tee-time-slot/dial
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { DialogAddPlayerComponent } from '../dialogs/dialog-add-player/dialog-add-player.component';
 import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/dialog-player-list.component';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
     selector: 'app-tee-times',
@@ -65,7 +66,8 @@ export class TeeTimesComponent implements OnInit {
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
         private facadeService: FacadeService,
-        private _localStorage: LocalStorageService
+        private _localStorage: LocalStorageService,
+        private _fuseConfirmationService: FuseConfirmationService,
     ) { }
 
     ngAfterViewInit(): void {
@@ -170,5 +172,44 @@ export class TeeTimesComponent implements OnInit {
     redirectToView = (date: string) => {
         this.location.navigate(['/teetimes/view-teetimes/' + date]);
     };
+
+    deleteTeeTime(teeTime) {
+
+        const confirmation = this._fuseConfirmationService.open({
+            title: 'Delete Tee Time',
+            message:
+                'Are you sure you want to delete this tee time? This action cannot be undone!',
+            actions: {
+                confirm: {
+                    label: 'Delete',
+                },
+            },
+        });
+        confirmation.afterClosed().subscribe(async (result) => {
+            // If the confirm button pressed...
+            if (result === 'confirmed') {
+                this.facadeService.deleteTeeTime(teeTime.id).then(
+                    async (result) => {
+                        if (result) {
+                            //remove all flights for this tee time
+                            let flightIds = teeTime.slots.filter((slot: TeeTimeSlot) => slot.flightId != null).map((slot: TeeTimeSlot) => slot.flightId);
+                            for (let id of flightIds) {
+                                await this.facadeService.deleteFlight(id);
+                            }
+                            this.snackBar.open('Tee Time has been deleted.', 'x', {
+                                duration: 5000,
+                            });
+                            this.teeTimes = [];
+                            this.ngOnInit();
+                        } else {
+                            this.snackBar.open('Tee Time could not be deleted.', 'x', {
+                                duration: 5000,
+                            });
+                        }
+                    }
+                );
+            }
+        });
+    }
 
 }

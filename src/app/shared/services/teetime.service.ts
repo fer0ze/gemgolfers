@@ -82,6 +82,27 @@ export class TeeTimeService {
       });
     });
   }
+
+  public deleteTeeTime(id: string): Promise<boolean> {
+    return new Promise(resolve => {
+      this.apollo.mutate<any>({
+        mutation: Query.DeleteTeeTimeQL,
+        variables: {
+          'where': {
+            'id': {
+              '_eq': id
+            }
+          }
+        }
+      }).subscribe(({ data }) => {
+        resolve(true);
+      }, (error) => {
+        resolve(false);
+        //console.log('Could not delete due to ' + error);
+      });
+    });
+  }
+
   public getClubTeeTimeBookingForSuperAdmin(): Promise<any> {
     return new Promise(resolve => {
       this.apollo.subscribe<any>({

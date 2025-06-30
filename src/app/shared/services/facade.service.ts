@@ -333,7 +333,7 @@ export class FacadeService {
   importPlayerList(players: any[], clubMembers: any[]) {
     return this.playerService.importPlayerList(players, clubMembers);
   }
-  insertClubMember( clubMembers: any[]) {
+  insertClubMember(clubMembers: any[]) {
     return this.playerService.insertClubMember(clubMembers);
   }
 
@@ -484,6 +484,9 @@ export class FacadeService {
   deleteTournaments(deletedtournaments: any[]): Promise<boolean> {
     return this.tournamentService.deleteTournaments(deletedtournaments);
   }
+  deleteFlight(deletedFlight: string) {
+    return this.tournamentService.deleteFlight(deletedFlight);
+  }
   deleteLeagues(deleteLeagues: any[]): Promise<boolean> {
     return this.tournamentService.deleteLeagues(deleteLeagues);
   }
@@ -527,10 +530,10 @@ export class FacadeService {
     );
   }
   getTournamentsListByClub(clubId: string) {
-    return this.tournamentService.getTournamentsListByClub( clubId);
+    return this.tournamentService.getTournamentsListByClub(clubId);
   }
   getTournamentsListByCourse(courseId: string) {
-    return this.tournamentService.getTournamentsListByCourse( courseId);
+    return this.tournamentService.getTournamentsListByCourse(courseId);
   }
   getTournamentsListByClubForCompleted(endDate: Date, clubId: string) {
     return this.tournamentService.getTournamentsListByClubForCompleted(
@@ -702,8 +705,8 @@ export class FacadeService {
   insertTournamentMember(tournamentMembers: TournamentMember[]) {
     return this.tournamentService.insertTournamentMember(tournamentMembers);
   }
-  insertTourGuide(tourGuide: any[],file:File) {
-    return this.tournamentService.insertTourGuide(tourGuide,file);
+  insertTourGuide(tourGuide: any[], file: File) {
+    return this.tournamentService.insertTourGuide(tourGuide, file);
   }
   insertTournamentTeam(teamsToSave: Team[], tournamentId, teamsMembersToRemove: any[] = []) {
     return this.tournamentService.insertTournamentTeam(teamsToSave, tournamentId, teamsMembersToRemove);
@@ -969,6 +972,10 @@ export class FacadeService {
     } else {
       return this.TeeTimeService.getClubTeeTimeBookingForSuperAdmin();
     }
+  }
+
+  deleteTeeTime(teeId: string) {
+    return this.TeeTimeService.deleteTeeTime(teeId);
   }
 
   getPlayerWHS(playerId: string) {

@@ -47,6 +47,7 @@ export class AddTeeTimesComponent implements OnInit {
     tee: '1' | '10' = '1';
     guestTee: '1' | '10' = '1';
     hideClubs: boolean = true;
+    isSaving: boolean = false;
     selectedOptions: any[] = [];
     constructor(
         private fb: FormBuilder,
@@ -178,6 +179,7 @@ export class AddTeeTimesComponent implements OnInit {
     async createSchedule() {
         // TODO: Use EventEmitter with form value
         try {
+            this.isSaving = true;
             console.log(this.scheduleForm.value);
             let clubId: string = this.loggedInuser.adminClubId;
             let isExist: TeeTime[] =
@@ -196,6 +198,7 @@ export class AddTeeTimesComponent implements OnInit {
                         duration: 5000,
                     }
                 );
+                this.isSaving = false;
                 return false;
             }
 
@@ -221,7 +224,7 @@ export class AddTeeTimesComponent implements OnInit {
             }
 
             const schedule: TeeTime = {
-                id: UniqueIdGenerator.generate(), 
+                id: UniqueIdGenerator.generate(),
                 clubId: this.scheduleForm.value?.club.id,
                 courseId: this.scheduleForm.value?.courseName.id,
                 bookingDate: General.parseToDate(this.scheduleForm.value.bookingDate),
@@ -243,10 +246,13 @@ export class AddTeeTimesComponent implements OnInit {
                 this.snackBar.open('Tee Time has been created.', 'x', {
                     duration: 2000,
                 });
+                
+                this.isSaving = false;
                 this.reset();
                 this.router.navigate(['/teetimes']);
             }
         } catch {
+            this.isSaving = false;
             this.snackBar.open('Something went wrong. Try again later.', 'x', {
                 duration: 5000,
             });

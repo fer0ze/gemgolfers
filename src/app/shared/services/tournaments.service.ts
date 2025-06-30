@@ -1315,6 +1315,31 @@ export class TournamentsService {
                 );
         });
     }
+    deleteFlight(deletedFlight: string): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.DeleteFlights,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: deletedFlight,
+                            },
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could delete add due to ' + error);
+                    }
+                );
+        });
+    }
     deleteLeagues(deleteLeagues: any[]): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo

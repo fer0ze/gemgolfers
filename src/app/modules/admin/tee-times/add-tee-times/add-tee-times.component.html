@@ -274,7 +274,7 @@
                     </div>
 
                     <div class="flex items-center justify-end">
-                        <button class="mx-2" mat-raised-button color="primary" [disabled]="!scheduleForm.valid">
+                        <button class="mx-2" mat-raised-button color="primary" [disabled]="!scheduleForm.valid || isSaving">
                             Save
                         </button>
                         <button mat-raised-button color="accent" [routerLinkActive]="'active'"

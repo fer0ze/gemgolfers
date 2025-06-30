@@ -1275,6 +1275,13 @@ export const DeleteTournaments = gql`
         }
     }
 `;
+export const DeleteFlights = gql`
+    mutation DeleteFlights($where: flight_bool_exp!) {
+        delete_flight(where: $where) {
+            affected_rows
+        }
+    }
+`;
 export const DeleteLeagues = gql`
     mutation DeleteLeagues($where: league_bool_exp!) {
         delete_league(where: $where) {
