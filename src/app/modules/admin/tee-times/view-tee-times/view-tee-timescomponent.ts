@@ -524,41 +524,41 @@ export class ViewTeeTimeComponent implements OnInit {
             if (result) {
                 let membersCount = Object.keys(result).length;
                 let flag: boolean = this.checkMembersCount(membersCount, item?.noOfPlayers);
-                if (flag) {
-                    for (var index in result) {
-                        let member: any = {
-                            playerId: result[index].id,
-                            attendance: false,
-                        };
-                        this.flightMembers.push(member);
-                        let playerTee = result[index].playerCategory;
-                        if (playerTee == 'Senior Amateurs') {
-                            playerTee = 'Seniors';
-                        }
-                        result[index]['playingTee'] = playerTee.toUpperCase();
-                        let selectedData = {
-                            value: result[index]['playingTee'],
-                            text: result[index]['playingTee'],
-                        };
-                        this.playerTees.set(result[index].id, selectedData);
+                // if (flag) {
+                for (var index in result) {
+                    let member: any = {
+                        playerId: result[index].id,
+                        attendance: false,
+                    };
+                    this.flightMembers.push(member);
+                    let playerTee = result[index].playerCategory;
+                    if (playerTee == 'Senior Amateurs') {
+                        playerTee = 'Seniors';
                     }
-                    if (!item.flightId) {
-                        this.createTournament(item, result, false);
-                    } else {
-                        this.insertFlightMember(item, this.flightMembers, result);
-                    }
-                } else {
-                    this.snackBar.open(
-                        "Incorrect number of members selected. Please choose the correct count."
-                        ,
-                        'x',
-                        {
-                            duration: 5000,
-                        }
-                    );
-
-                    return;
+                    result[index]['playingTee'] = playerTee.toUpperCase();
+                    let selectedData = {
+                        value: result[index]['playingTee'],
+                        text: result[index]['playingTee'],
+                    };
+                    this.playerTees.set(result[index].id, selectedData);
                 }
+                if (!item.flightId) {
+                    this.createTournament(item, result, false);
+                } else {
+                    this.insertFlightMember(item, this.flightMembers, result);
+                }
+                // } else {
+                //     this.snackBar.open(
+                //         "Incorrect number of members selected. Please choose the correct count."
+                //         ,
+                //         'x',
+                //         {
+                //             duration: 5000,
+                //         }
+                //     );
+
+                //     return;
+                // }
             }
             console.log('The dialog was closed');
         });
