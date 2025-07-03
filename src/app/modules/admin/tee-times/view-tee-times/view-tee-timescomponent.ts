@@ -244,6 +244,7 @@ export class ViewTeeTimeComponent implements OnInit {
     }
 
     async getTeeTime(date) {
+        this.flightMembers = [];
         this.isLoading = true;
         let dataPlayers: any;
         this.teeTimes = [];
