@@ -179,7 +179,7 @@ export class AddTeeTimesComponent implements OnInit {
     async createSchedule() {
         // TODO: Use EventEmitter with form value
         try {
-            this.isSaving = true;
+            this.isSaving = true;    
             console.log(this.scheduleForm.value);
             let clubId: string = this.loggedInuser.adminClubId;
             let isExist: TeeTime[] =
@@ -202,7 +202,7 @@ export class AddTeeTimesComponent implements OnInit {
                 return false;
             }
 
-            this.generateTeeTimes();
+            await this.generateTeeTimes();
             console.log(this.teeSlots);
 
             let teeTimeSlots: TeeTimeSlot[] = [];
@@ -222,7 +222,7 @@ export class AddTeeTimesComponent implements OnInit {
                 };
                 teeTimeSlots.push(tee1);
             }
-
+            console.log(teeTimeSlots);
             const schedule: TeeTime = {
                 id: UniqueIdGenerator.generate(),
                 clubId: this.scheduleForm.value?.club.id,
@@ -238,7 +238,7 @@ export class AddTeeTimesComponent implements OnInit {
                 bookingTime: this.scheduleForm.value.teeBookingTime
             };
 
-            //console.log(schedule);
+            console.log(schedule);
 
             let response = await this.facadeService.AddTeeTimeSchedule(schedule);
 
@@ -246,7 +246,7 @@ export class AddTeeTimesComponent implements OnInit {
                 this.snackBar.open('Tee Time has been created.', 'x', {
                     duration: 2000,
                 });
-                
+
                 this.isSaving = false;
                 this.reset();
                 this.router.navigate(['/teetimes']);
@@ -405,8 +405,8 @@ export class AddTeeTimesComponent implements OnInit {
             name: name,
             courseHoleSets: holeSet,
             inverted: inverted,
-            startTime: '09:00',
-            endTime: '16:00',
+            startTime: '06:00',
+            endTime: '18:00',
             noOfHoles: noOfHoles,
         });
     }
