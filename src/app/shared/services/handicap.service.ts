@@ -38,6 +38,9 @@ export class HandicapService {
             obj
         ).toPromise();
     }
+    unFreezePlayerHandicap(obj: { playerId: string }) {
+        return this.$http.post(`${environment.localURL}/triggers/calculateFreezeHandicap`, obj);
+    }
     updatePlayerHandicapTee(obj): Promise<any> {
         return this.$http.post(
             `${environment.handicapApiURL}/handicap/calculateHandicapForPlayerBulk`,

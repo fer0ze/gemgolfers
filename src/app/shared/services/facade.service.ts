@@ -343,6 +343,12 @@ export class FacadeService {
   updateConguHandicap(id: string, newHandicap: any, tournamentId: any) {
     return this.playerService.updateConguHandicap(id, newHandicap, tournamentId);
   }
+  freezePlayerHandicap(playerId: string, startDate: string, endDate: string) {
+    return this.playerService.freezePlayerHandicap(playerId, startDate, endDate);
+  }
+  unFreezePlayerHandicap(playerId: string, startDate: string, ) {
+    return this.playerService.unFreezePlayerHandicap(playerId, startDate);
+  }
   getTotalFlightPlayed(club: any, fromDate: string, toDate: string) {
     return this.playerService.getTotalFlightPlayed(club, fromDate, toDate);
   }

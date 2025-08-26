@@ -1202,6 +1202,55 @@ export class PlayersService {
                 );
         });
     }
+
+    freezePlayerHandicap(playerId: string, startDate: string, endDate: string): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.FreezePlayerHandicapMutation,
+                    variables: {
+                        playerId: playerId,
+                        startDate: startDate,
+                        endDate: endDate
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could update add due to ' + error);
+                    }
+                );
+        });
+    }
+
+    unFreezePlayerHandicap(playerId: string, startDate: string): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.unFreezePlayerHandicapMutation,
+                    variables: {
+                        playerId: playerId,
+                        startDate: startDate
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could update add due to ' + error);
+                    }
+                );
+        });
+    }
+
+
     changePlayerTee(id, tournamentId, tee, teeId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo

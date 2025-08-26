@@ -552,6 +552,7 @@ export const getPlayersListByClubOnlyWHS = gql`
             playerCategory
             handicap
             handicapWhsIndex
+            handicapIndexFreezeTill
             phone
             email
             membershipNumber
@@ -1136,6 +1137,29 @@ export const UpdateHandicapMutation = gql`
         }
     }
 `;
+
+export const FreezePlayerHandicapMutation = gql`
+    mutation FreezePlayerHandicap($playerId: String!, $startDate: date!, $endDate: date!) {
+        update_player(
+            where: { id: { _eq: $playerId } }
+            _set: { handicapIndexFreezeStart: $startDate, handicapIndexFreezeTill: $endDate }
+        ) {
+            affected_rows
+        }
+    }
+`;
+
+export const unFreezePlayerHandicapMutation = gql`
+    mutation unFreezePlayerHandicapMutation($playerId: String!, $startDate: date!) {
+        update_player(
+            where: { id: { _eq: $playerId } }
+            _set: { handicapIndexFreezeTill: $startDate }
+        ) {
+            affected_rows
+        }
+    }
+`;
+
 export const UpdatePlayerTeeMutation = gql`
     mutation updateMutation(
         $id: String!

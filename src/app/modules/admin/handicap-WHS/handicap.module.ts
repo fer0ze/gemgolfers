@@ -34,12 +34,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogTeeComponent } from '../dialogs/dialog-tee-change/dialog-tee.component';
+import { DialoghandicapFreezeComponent } from '../dialogs/dialog-handicap-freeze/dialog-handiicap-freeze.component';
 @NgModule({
     declarations: [
         HandicapComponent,
         // UserWHSDeatilsDialogueComponent,
-        HandicapsComponent,
-        PlayerHandicapComponent,DialogTeeComponent
+        HandicapsComponent, DialoghandicapFreezeComponent,
+        PlayerHandicapComponent, DialogTeeComponent
     ],
     providers: [DatePipe],
     imports: [
@@ -74,4 +75,4 @@ import { DialogTeeComponent } from '../dialogs/dialog-tee-change/dialog-tee.comp
     ],
     // entryComponents: [UserWHSDeatilsDialogueComponent],
 })
-export class HandicapModule {}
+export class HandicapModule { }

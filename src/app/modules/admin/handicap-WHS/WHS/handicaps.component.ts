@@ -38,11 +38,15 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { DialogTeeComponent } from '../../dialogs/dialog-tee-change/dialog-tee.component';
+import { DialoghandicapFreezeComponent } from '../../dialogs/dialog-handicap-freeze/dialog-handiicap-freeze.component';
+import { HandicapService } from 'app/shared/services/handicap.service';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 @Component({
     selector: 'app-handicaps',
     templateUrl: './handicaps.component.html',
 })
 export class HandicapsComponent implements OnInit {
+
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -55,7 +59,7 @@ export class HandicapsComponent implements OnInit {
         'membershipNumber',
         'category',
         'handicapWhsIndex',
-        // 'handicapChange',
+        'handicapFreeze',
         'details',
     ];
     playerCategories: PlayerCategory[] = [];
@@ -102,6 +106,8 @@ export class HandicapsComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _facadeService: FacadeService,
         private datepipe: DatePipe,
+        private _handicapService: HandicapService,
+        private _fuseConfirmationService: FuseConfirmationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _changeDetectorRef: ChangeDetectorRef, private logger: LogsService,
         private _activatedRoute: ActivatedRoute, private _localStorage: LocalStorageService
@@ -218,6 +224,61 @@ export class HandicapsComponent implements OnInit {
         }
         //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
     }
+
+    freezeHandicap(row: any): void {
+        this.logger.log('Freeze Player Handicap WHS Button Click', "info", row.id);
+        // Implement freeze logic here
+        const dialogRef = this.dialog.open(DialoghandicapFreezeComponent, {
+            data: {
+                player: row,
+            }
+        }).afterClosed().subscribe(async (result) => {
+            if (result) {
+                // Handle the result from the dialog
+            }
+        });
+    }
+
+    async unFreezeHandicap(row: any) {
+        const confirmation = this._fuseConfirmationService.open({
+            title: 'Unfreeze Player Handicap',
+            message: 'Are you sure you want to unfreeze this player\'s handicap?',
+            actions: {
+                confirm: {
+                    label: 'Confirm',
+                },
+            },
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        confirmation.afterClosed().subscribe(async (result) => {
+            if (result != 'confirmed') return;
+            let startDate = new Date().toLocaleDateString('en-CA');
+            let response = await this._facadeService.unFreezePlayerHandicap(row.id, startDate);
+            if (response) {
+                let obj = {
+                    playerId: row.id
+                }
+                this._handicapService.unFreezePlayerHandicap({ playerId: row.id }).subscribe({
+                    next: () => {
+                        this.WHSSource.data = this.WHSSource.data.map(player => {
+                            if (player.id === row.id) {
+                                player.handicapIndexFreezeTill = null;
+                            }
+                            return player;
+                        });
+                        this.WHSSource._updateChangeSubscription();
+                        this.snackBar.open('Handicap Unfreeze successfully!.', 'x', { duration: 2000 });
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        this.snackBar.open('Error!.', 'x', { duration: 2000 });
+                    }
+                });
+            }
+        });
+    }
+
 
     onBackdropClicked(): void {
         // Go back to the list
@@ -481,52 +542,52 @@ export class HandicapsComponent implements OnInit {
     }
     generatePDF() {
         const doc = new jsPDF('l', 'mm', 'a4'); // Landscape mode
-      
+
         // **Header 1: Tournament Title**
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
         doc.text("14TH PAKISTAN JUNIOR AMATEUR GOLF CHAMPIONSHIP", 148, 10, { align: "center" });
-      
+
         doc.setFontSize(10);
         doc.text("04 - 07 FEBRUARY 2025", 148, 16, { align: "center" });
-      
+
         // **Header 2: Category Title**
         doc.setFillColor(41, 128, 185); // Blue background
         doc.rect(14, 22, 269, 7, "F"); // Full-width rectangle
         doc.setTextColor(255, 255, 255); // White text
         doc.setFontSize(9);
         doc.text("ALL CATEGORIES HOLE-WISE SCORE - 07 FEBRUARY 2025 FINAL DAY 3", 148, 27, { align: "center" });
-      
+
         // Reset text color for table
         doc.setTextColor(0, 0, 0);
-      
+
         // **Multi-Row Header**
         const headers = [
-          ["PAR", "", "", "", "", "", "", "", "", "", "36", "", "", "", "", "", "", "", "", "", "36", "", "", "", "", ""],
-          ["S.No", "Name", "Club", "1", "2", "3", "4", "5", "6", "7", "8", "9", "OUT",
-           "10", "11", "12", "13", "14", "15", "16", "17", "18", "IN", "RD 1", "RD 2", "RD 3", "Total", "Par"]
+            ["PAR", "", "", "", "", "", "", "", "", "", "36", "", "", "", "", "", "", "", "", "", "36", "", "", "", "", ""],
+            ["S.No", "Name", "Club", "1", "2", "3", "4", "5", "6", "7", "8", "9", "OUT",
+                "10", "11", "12", "13", "14", "15", "16", "17", "18", "IN", "RD 1", "RD 2", "RD 3", "Total", "Par"]
         ];
-      
+
         // **Example Data**
         const data = [
-          [1, "Saad Habib Malik", "DHA", 4, 4, 5, 3, 4, 5, 3, 4, 2, 37, 4, 4, 3, 6, 4, 5, 3, 4, 3, 37, 66, 66, 71, 203, -13],
-          [2, "Shahmeer Maajid", "DRG", 4, 4, 4, 5, 5, 3, 4, 4, 4, 36, 4, 4, 3, 4, 4, 4, 4, 4, 3, 34, 73, 69, 70, 212, -4]
+            [1, "Saad Habib Malik", "DHA", 4, 4, 5, 3, 4, 5, 3, 4, 2, 37, 4, 4, 3, 6, 4, 5, 3, 4, 3, 37, 66, 66, 71, 203, -13],
+            [2, "Shahmeer Maajid", "DRG", 4, 4, 4, 5, 5, 3, 4, 4, 4, 36, 4, 4, 3, 4, 4, 4, 4, 4, 3, 34, 73, 69, 70, 212, -4]
         ];
-      
+
         // **Generate Table**
         doc.autoTable({
-          startY: 30, // Adjust position after second header
-          head: headers,
-          body: data,
-          theme: "grid",
-          headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 8, halign: "center" },
-          bodyStyles: { fontSize: 7, halign: "center" },
-          columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } } // Align Name & Club to the left
+            startY: 30, // Adjust position after second header
+            head: headers,
+            body: data,
+            theme: "grid",
+            headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 8, halign: "center" },
+            bodyStyles: { fontSize: 7, halign: "center" },
+            columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } } // Align Name & Club to the left
         });
-      
+
         // **Save PDF**
         doc.save("Golf_ScoreSheet.pdf");
-      }
+    }
     getPlayerInformationByName(filterValue: string) {
         //console.log(filterValue);
         this.logger.log('Search in Handicap WHS', "info", filterValue);
