@@ -6,8 +6,9 @@ export const environment = {
   apiKey: 'fercjqjjpgcngydvqoze',
   logName: 'Gemgolfers-WebApp-Prod',
   defaultRole: 'admin',
-  handicapApiURL:'https://gemgolfers-api.herokuapp.com',
-  googleMapsApiKey:"AIzaSyBCBlexCU_5DOhvdyi-__ML37-CFi-TjFI",
+  handicapApiURL: 'https://gemgolfers-api.herokuapp.com',
+  localURL: 'http://localhost:18000',
+  googleMapsApiKey: "AIzaSyBCBlexCU_5DOhvdyi-__ML37-CFi-TjFI",
   firebase: {
     apiKey: "AIzaSyB7DBphKLJephwypk0h20r3aA21YAIJsI4",
     authDomain: "gemtour-4c90a.firebaseapp.com",
