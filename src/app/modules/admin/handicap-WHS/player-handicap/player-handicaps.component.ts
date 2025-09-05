@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -47,7 +48,7 @@ import { DialogTeeComponent } from '../../dialogs/dialog-tee-change/dialog-tee.c
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
 })
-export class PlayerHandicapComponent implements OnInit {
+export class PlayerHandicapComponent implements OnInit, AfterViewInit {
     cardsrc = 'assets/images/cards/01-320x200.png';
     WHSSource: MatTableDataSource<any>;
     WHSColumns = [
@@ -61,8 +62,22 @@ export class PlayerHandicapComponent implements OnInit {
         'tee',
         'handicapChange'
     ];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
+    @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+        this.paginator = paginator;
+        if (this.WHSSource) {
+            this.WHSSource.paginator = paginator;
+        }
+    }
+
+    @ViewChild(MatSort) set matSort(sort: MatSort) {
+        this.sort = sort;
+        if (this.WHSSource) {
+            this.WHSSource.sort = sort;
+        }
+    }
+
     clubTitle: any;
     handicapsToUse: number;
     private _tagsPanelOverlayRef: OverlayRef;
@@ -126,6 +141,21 @@ export class PlayerHandicapComponent implements OnInit {
         }
     }
 
+    ngAfterViewInit(): void {
+        // if (this.WHSSource) {
+        //     this.WHSSource.paginator = this.paginator;
+        //     this.WHSSource.sort = this.sort;
+        // }
+
+        // // If WHSSource might be created later (after API call), handle that:
+        // setTimeout(() => {
+        //     if (this.WHSSource) {
+        //         this.WHSSource.paginator = this.paginator;
+        //         this.WHSSource.sort = this.sort;
+        //     }
+        // });
+    }
+
     async fecthData() {
         if (this.loggedInuser) {
             let clubInfo: any =
@@ -139,7 +169,7 @@ export class PlayerHandicapComponent implements OnInit {
         }
 
         if (this.playerID) {
-            this._handicapComponent.matDrawer.open();
+
             // this.currentPlayerHandicap = <Player>(
             //   await this.facadeService.getPlayerByID(this.playerID)
             // );
@@ -161,7 +191,7 @@ export class PlayerHandicapComponent implements OnInit {
             );
             //console.log(playerscore);
 
-            this.playerWHS = await this._facadeService.getPlayerWHS(
+            this.playerWHS = await this._facadeService.getPlayerAllWHS(
                 this.playerID
             );
             let membersQL = await this._facadeService.getPlayerFlights(this.playerID);
@@ -271,9 +301,12 @@ export class PlayerHandicapComponent implements OnInit {
 
             this.WHSSource = new MatTableDataSource(this.personLeads);
 
-            this.WHSSource.paginator = this.paginator;
-            this.WHSSource.sort = this.sort;
+            // if (this.paginator) {
+            //     this.WHSSource.paginator = this.paginator;
+            //     this.WHSSource.sort = this.sort;
+            // }
             this.isLoading = false;
+            this._handicapComponent.matDrawer.open();
             this.playerWHSRound = await this._facadeService.getPlayerWHSRound(
                 courseRating
             );

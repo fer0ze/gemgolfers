@@ -987,6 +987,9 @@ export class FacadeService {
   getPlayerWHS(playerId: string) {
     return this.playerService.getPlayerWHS(playerId);
   }
+  getPlayerAllWHS(playerId: string) {
+    return this.playerService.getPlayerAllWHS(playerId);
+  }
   getPlayerWHSRound(courseRating: string) {
     return this.playerService.getPlayerWHSRound(courseRating);
   }

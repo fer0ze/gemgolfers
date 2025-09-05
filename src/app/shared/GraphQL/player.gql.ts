@@ -1381,6 +1381,47 @@ export const PlayerHandicapQuery = gql`
             adjustedScore
             handicapIndex
             Handicap_id
+            is_combined
+            tee
+            panelty
+            playerId
+            tournamentId
+            adjustmentScore
+            adjustedPanelty
+            combined_handicap {
+                playedAt
+                handicapDifferential
+                Handicap_id
+                handicapIndex
+                score
+                tee
+                tournamentId
+                adjustedScore
+                combined_handicap_id
+                playerId
+                adjustmentScore
+                adjustedPanelty
+            }
+            used_handicaps {
+                id
+                used_handicap_id
+                combine_handicap_id
+            }
+        }
+    }
+`;
+export const PlayerHandicapAllWHSQuery = gql`
+    query PlayerHandicapAllWHSQuery($playerId: String!) {
+        HandicapHistoryWhsQL: player_handicap_whs(
+            where: { playerId: { _eq: $playerId } }
+            order_by: { playedAt: desc }
+        ) {
+            handicapDifferential
+            score
+            playedAt
+            adjustedScore
+            handicapIndex
+            Handicap_id
             combined_handicap_id
             is_combined
             tee

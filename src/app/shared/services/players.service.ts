@@ -1487,6 +1487,20 @@ export class PlayersService {
                 });
         });
     }
+    getPlayerAllWHS(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe<any>({
+                    query: Query.PlayerHandicapAllWHSQuery,
+                    variables: {
+                        playerId: id,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    resolve(data);
+                });
+        });
+    }
     getPlayerWHSRound(courseRating: any): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
