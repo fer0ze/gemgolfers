@@ -1401,11 +1401,17 @@ export const PlayerHandicapQuery = gql`
                 playerId
                 adjustmentScore
                 adjustedPanelty
+                  tournamentQL: tournament {
+                title
+            }
             }
             used_handicaps {
                 id
                 used_handicap_id
                 combine_handicap_id
+            }
+                tournamentQL: tournament {
+                title
             }
         }
     }
@@ -1443,17 +1449,11 @@ export const PlayerHandicapAllWHSQuery = gql`
                 playerId
                 adjustmentScore
                 adjustedPanelty
-                tournamentQL: tournament {
-                    title
-                }
             }
             used_handicaps {
                 id
                 used_handicap_id
                 combine_handicap_id
-            }
-            tournamentQL: tournament {
-                title
             }
         }
     }
