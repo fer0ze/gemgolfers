@@ -332,14 +332,20 @@ export const DeleteTeeTimeQL = gql`
     }
 `;
 
-export const AddTeeTimeQL = gql`
-    mutation AddTeeTimeQL($objects: [tee_time_booking_insert_input!]!) {
-        insert_tee_time_booking(objects: $objects) {
-            returning {
-                id
-            }
-        }
+export const AddTeeTimeParentQL = gql`
+  mutation AddTeeTimeParentQL($object: tee_time_booking_insert_input!) {
+    insert_tee_time_booking_one(object: $object) {
+      id
     }
+  }
+`;
+
+export const AddTeeTimeSlotsQL = gql`
+  mutation AddTeeTimeSlotsQL($objects: [tee_time_booking_slot_insert_input!]!) {
+    insert_tee_time_booking_slot(objects: $objects) {
+      affected_rows
+    }
+  }
 `;
 export const Getfeedbacks = gql`
     query PostsGetQuery {

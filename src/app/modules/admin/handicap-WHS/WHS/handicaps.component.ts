@@ -226,7 +226,7 @@ export class HandicapsComponent implements OnInit {
     }
 
     freezeHandicap(row: any): void {
-        this.logger.log('Freeze Player Handicap WHS Button Click', "info", row.id);
+        this.logger.log('Freeze Player Handicap WHS Button Click', "info", row);
         // Implement freeze logic here
         const dialogRef = this.dialog.open(DialoghandicapFreezeComponent, {
             data: {

@@ -138,37 +138,55 @@ export class TeeTimeService {
     });
   }
 
-  public AddTeeTimeSchedule(teeTime: TeeTime): Promise<boolean> {
-    return new Promise(resolve => {
-      this.apollo.mutate<any>({
-        mutation: Query.AddTeeTimeQL,
+  public async AddTeeTimeSchedule(teeTime: TeeTime): Promise<boolean> {
+    try {
+      // 1️⃣ Insert parent (without slots)
+      const parentResult = await this.apollo.mutate<any>({
+        mutation: Query.AddTeeTimeParentQL,
         variables: {
-          'objects': [{
-            'id': teeTime.id,
-            'clubId': teeTime.clubId,
-            'courseId': teeTime.courseId,
-            'bookingDate': teeTime.bookingDate,
-            'teeDate': teeTime.teeDate,
-            'startTime': teeTime.startTime,
-            'endTime': teeTime.endTime,
-            'interval': teeTime.interval,
-            'noOfPlayers': teeTime.noOfPlayers,
-            'allowNineHole': teeTime.allowNineHole,
-            'bookingTime': teeTime.bookingTime,
-            'slots': {
-              'data': teeTime.teeTimeSlot
-            }
-          }]
+          object: {
+            id: teeTime.id,
+            clubId: teeTime.clubId,
+            courseId: teeTime.courseId,
+            bookingDate: teeTime.bookingDate,
+            teeDate: teeTime.teeDate,
+            startTime: teeTime.startTime,
+            endTime: teeTime.endTime,
+            interval: teeTime.interval,
+            noOfPlayers: teeTime.noOfPlayers,
+            allowNineHole: teeTime.allowNineHole,
+            bookingTime: teeTime.bookingTime,
+          }
         }
-      }).subscribe(({ data }) => {
-        resolve(true);
-      }, (error) => {
-        resolve(false);
-        //console.log('Could not add due to ' + error);
-      });
+      }).toPromise();
 
-    });
+      const parentId = parentResult.data?.insert_tee_time_booking_one?.id;
+      if (!parentId) throw new Error("Failed to create tee_time_booking parent");
+
+      // 2️⃣ Insert slots in patches of 100
+      const slots = teeTime.teeTimeSlot.map(slot => ({
+        ...slot,
+        bookingId: parentId,
+      }));
+
+      const chunkSize = 100;
+      for (let i = 0; i < slots.length; i += chunkSize) {
+        const chunk = slots.slice(i, i + chunkSize);
+        await this.apollo.mutate<any>({
+          mutation: Query.AddTeeTimeSlotsQL,
+          variables: {
+            objects: chunk
+          }
+        }).toPromise();
+      }
+
+      return true;
+    } catch (error) {
+      console.error("AddTeeTimeSchedule failed:", error);
+      return false;
+    }
   }
+
 
 
   updateClub(club: Club): Promise<boolean> {
