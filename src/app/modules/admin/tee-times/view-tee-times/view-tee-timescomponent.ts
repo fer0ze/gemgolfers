@@ -55,6 +55,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list-flight/dialog-player-list.component';
 import { MatSelectChange } from '@angular/material/select';
+import { DialogAddGuestComponent } from '../../dialogs/dialog-add-guest/dialog-add-guest.component';
 // import { DialogChangeCourseHoleSetComponent } from "../../material-components/dialog-change-course-hole-set/dialog-change-course-hole-set.component";
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";
 @Component({
@@ -321,33 +322,42 @@ export class ViewTeeTimeComponent implements OnInit {
 
     async addGuest(item) {
 
-        let guest: any = {
-            flightId: item.flightId,
-            guestId: UniqueIdGenerator.generate(),
-            name: 'Guest A',
-            handicap: '0',
-            email: '',
-            firstName: 'Guest',
-            lastName: 'A',
-        };
-        let count = item.joinedMembers + 1;
-        if (!item.flightId) {
-            this.createTournament(item, [guest], true);
-        } else {
-            let result = <any>await this.facadeService.insertFlightGuest(item.id, [guest], count);
+
+        const dialogRef = this.dialog.open(DialogAddGuestComponent);
+        dialogRef.afterClosed().subscribe(async (result) => {
             console.log(result);
             if (result) {
-                let members = [];
-                item.joinedMembers = Number(count);
-                members.push(guest)
-                if (item.members) {
-                    item.members.data = [...item.members.data, ...members];
+                let guest: any = {
+                    flightId: item.flightId,
+                    guestId: UniqueIdGenerator.generate(),
+                    name: result.firstName + ' ' + result.lastName,
+                    handicap: result.handicap,
+                    email: result.email,
+                    firstName: result.firstName,
+                    lastName: result.lastName,
+                };
+                let count = item.joinedMembers + 1;
+                if (!item.flightId) {
+                    this.createTournament(item, [guest], true);
                 } else {
-                    item.members = new MatTableDataSource(members);
+                    let result = <any>await this.facadeService.insertFlightGuest(item.id, [guest], count);
+                    console.log(result);
+                    if (result) {
+                        let members = [];
+                        item.joinedMembers = Number(count);
+                        members.push(guest)
+                        if (item.members) {
+                            item.members.data = [...item.members.data, ...members];
+                        } else {
+                            item.members = new MatTableDataSource(members);
+                        }
+                        item.members._updateChangeSubscription();
+                    }
                 }
-                item.members._updateChangeSubscription();
+
             }
-        }
+
+        })
     }
 
     getSelectedCourse(course) {

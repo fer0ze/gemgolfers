@@ -37,11 +37,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/dialog-player-list.component';
 import { ViewTeeTimeComponent } from './view-tee-times/view-tee-timescomponent';
+import { DialogAddGuestComponent } from '../dialogs/dialog-add-guest/dialog-add-guest.component';
 
 
 
 @NgModule({
-  declarations: [TeeTimesComponent, AddTeeTimesComponent, DialogTeeTimeSlotComponent,DialogPlayerListComponent,ViewTeeTimeComponent],
+  declarations: [TeeTimesComponent, AddTeeTimesComponent,DialogAddGuestComponent, DialogTeeTimeSlotComponent,DialogPlayerListComponent,ViewTeeTimeComponent],
   imports: [
     CommonModule,
     TeeTimesRoutingModule,
