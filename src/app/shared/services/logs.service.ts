@@ -32,7 +32,7 @@ export class LogsService {
             body: {
               userId: this.loggedInuser && this.loggedInuser.id ? this.loggedInuser.id : '',
               email: this.loggedInuser && this.loggedInuser.email ? this.loggedInuser.email : '',
-              additionalData: additionalData != null ? additionalData : '',
+              additionalData: additionalData != null ? JSON.stringify(additionalData) : '',
               clientSideData: navigator.userAgent,
             },
           },

@@ -240,6 +240,7 @@ export class HandicapsComponent implements OnInit {
     }
 
     async unFreezeHandicap(row: any) {
+        this.logger.log('Unfreeze Player Handicap WHS Button Click', "info", row);
         const confirmation = this._fuseConfirmationService.open({
             title: 'Unfreeze Player Handicap',
             message: 'Are you sure you want to unfreeze this player\'s handicap?',
@@ -252,6 +253,7 @@ export class HandicapsComponent implements OnInit {
 
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe(async (result) => {
+             this.logger.log('Dialog for unfreeze handicap whs closed', "info", result);
             if (result != 'confirmed') return;
             let startDate = new Date().toLocaleDateString('en-CA');
             let response = await this._facadeService.unFreezePlayerHandicap(row.id, startDate);
