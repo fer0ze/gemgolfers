@@ -290,8 +290,9 @@ export const GetTeeTimeBookingQL = gql`
                     count
                 }
             }
-                slots{
+                slots(order_by: { slotTime: asc }){
                 id
+                slotTime
                 flightId}
         }
     }

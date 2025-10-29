@@ -10,7 +10,8 @@
                 <form [formGroup]="scheduleForm" autocomplete="off" novalidate>
                     <div class="flex">
                         <mat-form-field appearance="fill" class="fuse-mat-no-subscript flex-auto">
-                            <mat-select placeholder="Today" appearance="fill" (selectionChange)="Dailysetup($event)">
+                            <mat-select formControlName="options" placeholder="Today" appearance="fill"
+                                (selectionChange)="dailySetup($event)">
                                 <mat-option value="Today">Today</mat-option>
                                 <mat-option value="Yesterday">Yesterday</mat-option>
                                 <mat-option value="Last_Week">Last Week</mat-option>
@@ -68,8 +69,8 @@
         <div class="flex-auto">
             <mat-form-field class="fuse-mat-dense max-w-40 fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                <input matInput [formControl]="searchInputControl" (keyup)="applyFilter($event.target.value)"
-                    [autocomplete]="'off'" [placeholder]="'Search player'" />
+                <input matInput (keyup)="applyFilter($event.target.value)" [autocomplete]="'off'"
+                    [placeholder]="'Search player'" />
             </mat-form-field>
         </div>
         <div class="flex flex-col flex-auto mt-2 overflow-x-auto">

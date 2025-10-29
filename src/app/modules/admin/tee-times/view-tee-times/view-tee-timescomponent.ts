@@ -474,6 +474,11 @@ export class ViewTeeTimeComponent implements OnInit {
             );
         }
     }
+
+    hideResult() {
+        this.router.navigate(['/teetimes']);
+
+    }
     applyFilter(query: string) {
         if (query.length > 2) {
             this.teeTimes = this.teeTimes.filter((teeTime) => {

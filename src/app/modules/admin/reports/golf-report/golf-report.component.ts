@@ -109,6 +109,7 @@ export class GolfReportComponent implements OnInit {
             this.isLoading = false;
             this.refresh = true;
             this.scheduleForm = this.fb.group({
+                options: ['',],
                 startDate: ['', [Validators.required]],
                 endDate: ['', [Validators.required]],
             });
@@ -162,7 +163,7 @@ export class GolfReportComponent implements OnInit {
                 category: obj.playerCategory,
                 handicap: obj.handicap,
                 email: obj.email,
-                clubName: obj.membershipQL.length > 0? obj.membershipQL[0]?.club?.name : '-',
+                clubName: obj.membershipQL.length > 0 ? obj.membershipQL[0]?.club?.name : '-',
                 totalRounds: obj.DailyRoundAggregateQL
                     ? obj.DailyRoundAggregateQL['aggregate'].count
                     : 1,
@@ -300,8 +301,8 @@ export class GolfReportComponent implements OnInit {
         let date = new Date();
         return date;
     }
-    Dailysetup(selectedValue) {
-        this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
+    async dailySetup(selectedValue) {
+        // this.logger.log('Getting Daily starter Data By Dropdown', "info", selectedValue.value.toString());
 
         //console.log(selectedValue);
         this.isLoading = false;
@@ -310,11 +311,11 @@ export class GolfReportComponent implements OnInit {
             this.dataSource = null;
             this.customValue = false;
             let currentDate = new Date();
-            this.getTotalReport(currentDate, currentDate);
+            await this.getTotalReport(currentDate, currentDate);
         } else if (selectedValue.value == Constants.DR_YESTERDAY) {
             this.dataSource = null;
             let yesterdayDate = this.yesterday();
-            this.getTotalReport(yesterdayDate, yesterdayDate);
+            await this.getTotalReport(yesterdayDate, yesterdayDate);
         } else if (selectedValue.value == Constants.DR_LAST_WEEK) {
             this.customValue = false;
             this.dataSource = null;
@@ -323,7 +324,7 @@ export class GolfReportComponent implements OnInit {
             //console.log(currentDate);
             //console.log(lastDate);
 
-            this.getTotalReport(currentDate, lastDate);
+            await this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_MONTH) {
             this.dataSource = null;
             this.customValue = false;
@@ -332,7 +333,7 @@ export class GolfReportComponent implements OnInit {
             //console.log(currentDate);
             //console.log(lastDate);
 
-            this.getTotalReport(currentDate, lastDate);
+            await this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_3_MONTH) {
             this.dataSource = null;
             this.customValue = false;
@@ -341,7 +342,7 @@ export class GolfReportComponent implements OnInit {
             //console.log(currentDate);
             //console.log(lastDate);
 
-            this.getTotalReport(currentDate, lastDate);
+            await this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_LAST_6_MONTH) {
             this.customValue = false;
             this.dataSource = null;
@@ -350,7 +351,7 @@ export class GolfReportComponent implements OnInit {
             //console.log(currentDate);
             //console.log(lastDate);
 
-            this.getTotalReport(currentDate, lastDate);
+            await this.getTotalReport(currentDate, lastDate);
         } else if (selectedValue.value == Constants.DR_CUSTOM) {
             this.customValue = true;
             // let currentDate = this.customDate.value;

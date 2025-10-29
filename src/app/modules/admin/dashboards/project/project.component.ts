@@ -43,7 +43,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     chartYearlyExpenses: ApexOptions = {};
     data: any;
     tournamentCounts: any;
-    flightCounts: any=0;
+    flightCounts: any = 0;
     flightCountsCal: any = 0;
     membersCountsCal: any = 0;
     flightCountsNotCal: any = 0;
@@ -248,14 +248,24 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             this.tourCounts = getall.Tours.aggregate.count;
                             this.leagueCounts = getall.Leagues.aggregate.count;
                         } else {
+                            dataPlayersCount.push(getall.club[0].Amateurs.aggregate['count'])
+                            dataPlayersCount.push(getall.club[0].Senior_Amateurs.aggregate['count'])
+                            dataPlayersCount.push(getall.club[0].Veterans.aggregate['count'])
+                            dataPlayersCount.push(getall.club[0].Ladies.aggregate['count'])
+                            // this._seriesPlayers = [
+                            //     getall.club[0].Amateurs.aggregate['count'],
+
+                            //     getall.club[0].Senior_Amateurs.aggregate['count'],
+
+                            //     getall.club[0].Veterans.aggregate['count'],
+
+                            //     getall.club[0].Ladies.aggregate['count'],
+                            // ];
                             this._seriesPlayers = [
-                                getall.club[0].Amateurs.aggregate['count'],
-
-                                getall.club[0].Senior_Amateurs.aggregate['count'],
-
-                                getall.club[0].Veterans.aggregate['count'],
-
-                                getall.club[0].Ladies.aggregate['count'],
+                                {
+                                    data: dataPlayersCount,
+                                    name: 'Players',
+                                },
                             ];
                         }
                     } else if ((this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) && getall.tour.length > 0) {
@@ -275,7 +285,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             for (let tournament of tour.tournaments) {
                                 latestTournament.push(tournament);
                             }
-                      
+
                             this.flightCounts += tour.members.length;
                             for (let member of tour.members) {
 
@@ -312,7 +322,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         let prevDate = null;
                         let memCounter = 0;
                         let totalFlights = 0;
-                        this.tourCounts =  getall.tour.length;
+                        this.tourCounts = getall.tour.length;
                         this.leagueCounts = getall.league.length;
                         let data = getall.TournamentsQLs.sort(this.ComparatorDate);
                         //let data = dataPlayers.TournamentsQL;
