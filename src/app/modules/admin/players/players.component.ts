@@ -60,7 +60,7 @@ export class PlayersComponent implements OnInit {
         'MembershipNo',
         'Category',
         'Handicap',
-        // 'club',
+        'club',
         'createdAt',
         // 'Status',
         'view',
@@ -156,7 +156,7 @@ export class PlayersComponent implements OnInit {
                                         : obj.playerCategory,
                                 Handicap: obj.handicap,
                                 // Status: obj.membershipQL,
-                                // club: obj.membershipQL[0]?.club?.name ?? '-',
+                                club: obj?.membershipQL[0]?.club?.name ?? '-',
                             };
                             this.TablePlayers.push(newobj);
                         }
@@ -193,7 +193,7 @@ export class PlayersComponent implements OnInit {
                             : obj.playerCategory,
                     Handicap: obj.handicap,
                     // Status: obj.membershipQL,
-                    // club: obj.membershipQL[0]?.club?.name ?? '-',
+                    club: obj.membershipQL[0]?.club?.name ?? '-',
                 };
                 this.TablePlayers.push(newobj);
             }

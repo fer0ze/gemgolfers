@@ -25,6 +25,13 @@ export const GetPlayers = gql`
             email
             membershipNumber
             createdAt
+            membershipQL: membership {
+                suspended
+                club {
+                    id
+                    name
+                }
+            }
         }
     }
 `;
