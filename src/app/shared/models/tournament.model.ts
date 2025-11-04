@@ -42,7 +42,7 @@ export class Tournament {
     members: TournamentMember[];
     flightsCategory: FlightsCategory[];
     createdAt?: string;
-
+    tournamentFlight?: boolean
 }
 
 export class FlightsCategory {

@@ -64,6 +64,7 @@ export class AddDailyRoundComponent implements OnInit {
     updateHandicap: boolean = false;
     handicapLog: any;
     playerStatus: Boolean = false;
+    showTournamentTitle: Boolean = false;
     currentTournament: Tournament;
     selectedMembers: any = [];
     tees: any = [];
@@ -153,7 +154,9 @@ export class AddDailyRoundComponent implements OnInit {
                     ),
                     [Validators.required]
                 ),
-                handicapSystem: new FormControl('', [Validators.required]),
+                handicapSystem: new FormControl('true', [Validators.required]),
+                roundCategory: new FormControl('false', [Validators.required]),
+                title: new FormControl(''),
                 //addPlayer: new FormControl('')
             });
 
@@ -168,6 +171,18 @@ export class AddDailyRoundComponent implements OnInit {
         ////console.log("Selected value: " + item.value);
         this.selectedCourseHoleSet = item.value;
         //console.log(this.selectedCourseHoleSet);
+    }
+
+    changeRound(item) {
+        if (item.value == 'true') {
+            this.starterForm.get('title').setValidators([Validators.required]);
+            this.starterForm.get('title').updateValueAndValidity();
+            this.showTournamentTitle = true;
+        } else {
+            this.starterForm.get('title').clearValidators();
+            this.starterForm.get('title').updateValueAndValidity();
+            this.showTournamentTitle = false;
+        }
     }
 
     getSelectedCourse(course) {
@@ -311,7 +326,7 @@ export class AddDailyRoundComponent implements OnInit {
             flightRound: 0,
             startingHole: 1,
             tee_id: roundTeeId,
-            tee: roundTee, 
+            tee: roundTee,
             category: null,
             date: this.starterForm.value.roundDate,
             time: addRound.startingTime,
@@ -327,6 +342,7 @@ export class AddDailyRoundComponent implements OnInit {
         //console.log(flight);
         tournamentFlights.push(flight);
         //console.log(tournamentFlights);
+        let title = 'Daily Round - ' + this.starterForm.value.title;
 
         let tournament: Tournament = {
             id: this.tournamentID,
@@ -337,8 +353,7 @@ export class AddDailyRoundComponent implements OnInit {
                     ? this.clubID.courses[0].id
                     : '-LUFS3FCQKOGpJ2IEHmf',
             adminId: this.loggedInuser.id,
-            title:
-                this.currentDate.toString().substring(0, 10) +
+            title: this.showTournamentTitle ? title : this.currentDate.toString().substring(0, 10) +
                 ' ' +
                 this.loggedInuser.membership[0].club.name,
             prefix: null,
@@ -354,7 +369,7 @@ export class AddDailyRoundComponent implements OnInit {
                 this.starterForm.value.handicapSystem == 'true' ? true : false,
             matchFormat: 'STROKE_PLAY',
             pointsFormats: { "pointsFormat": "BOTH" },
-            pointsValues: { "pointsValue": 1},
+            pointsValues: { "pointsValue": 1 },
             handicapAllocations: HandicapAllocation.AS_IS,
             tee: roundTee,
             tee_id: roundTeeId,
@@ -375,6 +390,7 @@ export class AddDailyRoundComponent implements OnInit {
             marshals: [],
             flights: tournamentFlights,
             members: [],
+            tournamentFlight: this.starterForm.value.roundCategory == 'true' ? true : false
         };
 
         //console.log(tournament);

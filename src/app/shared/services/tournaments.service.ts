@@ -1156,6 +1156,7 @@ export class TournamentsService {
                                 scoreManagement: tmnt.scoreManagement,
                                 startDate: tmnt.startDate,
                                 endDate: tmnt.endDate,
+                                tournamentFlight: tmnt.tournamentFlight,
                                 started: tmnt.started,
                                 invited: tmnt.invited,
                                 singleRound: tmnt.singleRound,

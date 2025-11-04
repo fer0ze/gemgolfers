@@ -54,6 +54,7 @@
                     <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
                         <div class="sm:col-span-4">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Hole-Set</mat-label>
                                 <mat-select (selectionChange)="changeFlight($event)" placeholder="Select Course Holeset"
                                     formControlName="holeSets">
                                     <mat-option *ngFor="
@@ -67,14 +68,17 @@
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <input type="time" matInput atp-time-picker value="{{ selectedTime }}"
-                                    formControlName="startingTime" placeholder="Select Time" />
+                            <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
+                                <mat-label>Starting Time</mat-label>
+                                <input matInput atp-time-picker formControlName="startingTime"
+                                    placeholder="Select Time" />
+                                <mat-icon class="icon-size-4.5" [svgIcon]="'heroicons_outline:clock'"></mat-icon>
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Date</mat-label>
                                 <input matInput [matDatepicker]="picker" formControlName="roundDate"
                                     placeholder="Start Date" required />
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -110,10 +114,28 @@
                         </div> -->
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Handicap System</mat-label>
                                 <mat-select placeholder="Handicap System.." formControlName="handicapSystem">
                                     <mat-option value="true">WHS</mat-option>
                                     <mat-option value="false">CONGU</mat-option>
                                 </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Round Category</mat-label>
+                                <mat-select (selectionChange)="changeRound($event)" placeholder="Round Category.."
+                                    formControlName="roundCategory">
+                                    <mat-option value="false">Daily Round</mat-option>
+                                    <mat-option value="true">Tournament / League Round</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="showTournamentTitle" class="sm:col-span-2">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Tournament / League Name</mat-label>
+                                <input matInput placeholder="Tournament / League Name" formControlName="title" />
                             </mat-form-field>
                         </div>
 
@@ -125,6 +147,7 @@
 
                         <div class="sm:col-span-3">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>Search Player</mat-label>
                                 <input matInput #query placeholder="Search Players"
                                     (keyup.enter)="searchPlayer(query.value)" />
                             </mat-form-field>
