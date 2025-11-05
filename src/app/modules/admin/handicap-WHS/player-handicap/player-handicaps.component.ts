@@ -204,12 +204,9 @@ export class PlayerHandicapComponent implements OnInit, AfterViewInit {
             //console.log(this.playerWHSHistory);
 
             this.usedForHandicap =
-                this.playerWHSHistory &&
-                    this.playerWHSHistory.length > 0 &&
-                    this.playerWHSHistory[0]
-                    ? this.playerWHSHistory[0].used_handicaps
+                this.playerWHSHistory && this.playerWHSHistory.length > 0
+                    ? (this.playerWHSHistory.find(h => !h.isFreezed)?.used_handicaps || [])
                     : [];
-
             this.playerHandicapWhsList = this.playerWHSHistory.slice(0, 40);
             this.topDiff20 =
                 this.playerHandicapWhsList.length > 0

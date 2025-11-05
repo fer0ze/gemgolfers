@@ -1233,8 +1233,7 @@ export class PlayersService {
                 .mutate<any>({
                     mutation: Query.unFreezePlayerHandicapMutation,
                     variables: {
-                        playerId: playerId,
-                        startDate: startDate
+                        playerId: playerId
                     },
                 })
                 .subscribe(

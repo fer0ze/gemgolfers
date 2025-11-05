@@ -246,10 +246,8 @@ export class ViewPlayerComponent implements OnInit {
                 //console.log(this.playerWHSHistory);
 
                 this.usedForHandicap =
-                    this.playerWHSHistory &&
-                        this.playerWHSHistory.length > 0 &&
-                        this.playerWHSHistory[0]
-                        ? this.playerWHSHistory[0].used_handicaps
+                    this.playerWHSHistory && this.playerWHSHistory.length > 0
+                        ? (this.playerWHSHistory.find(h => !h.isFreezed)?.used_handicaps || [])
                         : [];
 
                 this.playerHandicapWhsList = this.playerWHSHistory;
@@ -786,7 +784,7 @@ export class ViewPlayerComponent implements OnInit {
             let tee = this.playerWHSRound['course_tees'].filter(tee => { return tee.tee_id == used.tee_id });
             if (tee && tee.length > 0) {
                 return tee[0].name_by_club ?? General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory);
-            }else{
+            } else {
                 General.getPlayersTeesColourByCategory(this.currentPlayer[0].playerCategory)
             }
         } else {

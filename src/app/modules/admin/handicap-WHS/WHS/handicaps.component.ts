@@ -253,29 +253,27 @@ export class HandicapsComponent implements OnInit {
 
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe(async (result) => {
-             this.logger.log('Dialog for unfreeze handicap whs closed', "info", result);
+            this.logger.log('Dialog for unfreeze handicap whs closed', "info", result);
             if (result != 'confirmed') return;
             let startDate = new Date().toLocaleDateString('en-CA');
             let response = await this._facadeService.unFreezePlayerHandicap(row.id, startDate);
             if (response) {
                 let obj = {
-                    playerId: row.id
+                    playerId: row.id,
+                    count: 1,
                 }
-                this._handicapService.unFreezePlayerHandicap({ playerId: row.id }).subscribe({
-                    next: () => {
-                        this.WHSSource.data = this.WHSSource.data.map(player => {
-                            if (player.id === row.id) {
-                                player.handicapIndexFreezeTill = null;
-                            }
-                            return player;
-                        });
-                        this.WHSSource._updateChangeSubscription();
-                        this.snackBar.open('Handicap Unfreeze successfully!.', 'x', { duration: 2000 });
-                    },
-                    error: (err) => {
-                        console.error(err);
-                        this.snackBar.open('Error!.', 'x', { duration: 2000 });
-                    }
+                this._handicapService.calculateHandicapWHS(obj).then((response) => {
+
+                    this.WHSSource.data = this.WHSSource.data.map(player => {
+                        if (player.id === row.id) {
+                            player.handicapIndexFreezeTill = null;
+                        }
+                        return player;
+                    });
+                    this.WHSSource._updateChangeSubscription();
+                    this.snackBar.open('Handicap Unfreeze successfully!.', 'x', { duration: 2000 });
+                }).catch((error) => {
+                    this.logger.log('Error Unfreezing Handicap WHS', "error", error);
                 });
             }
         });

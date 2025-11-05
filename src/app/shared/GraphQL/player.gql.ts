@@ -1157,10 +1157,10 @@ export const FreezePlayerHandicapMutation = gql`
 `;
 
 export const unFreezePlayerHandicapMutation = gql`
-    mutation unFreezePlayerHandicapMutation($playerId: String!, $startDate: date!) {
+    mutation unFreezePlayerHandicapMutation($playerId: String!) {
         update_player(
             where: { id: { _eq: $playerId } }
-            _set: { handicapIndexFreezeTill: $startDate }
+            _set: { handicapIndexFreezeTill: null,handicapIndexFreezeStart: null  }
         ) {
             affected_rows
         }
@@ -1392,6 +1392,7 @@ export const PlayerHandicapQuery = gql`
             tee
             panelty
             playerId
+            isFreezed
             tournamentId
             adjustmentScore
             adjustedPanelty
@@ -1399,6 +1400,7 @@ export const PlayerHandicapQuery = gql`
                 playedAt
                 handicapDifferential
                 Handicap_id
+                isFreezed
                 handicapIndex
                 score
                 tee
@@ -1437,6 +1439,7 @@ export const PlayerHandicapAllWHSQuery = gql`
             Handicap_id
             combined_handicap_id
             is_combined
+            isFreezed
             tee
             panelty
             playerId
@@ -1450,6 +1453,7 @@ export const PlayerHandicapAllWHSQuery = gql`
                 handicapIndex
                 score
                 tee
+                isFreezed
                 tournamentId
                 adjustedScore
                 combined_handicap_id
