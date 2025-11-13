@@ -59,6 +59,7 @@ import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialo
 import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-add-member.component';
 import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
 import { TeamManagementComponent } from './team-management/team-management.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -96,6 +97,7 @@ import { TeamManagementComponent } from './team-management/team-management.compo
         BlockWhiteSectionModule,
         MatIconModule,
         MatSortModule,
+        MatSlideToggleModule,
         MatStepperModule,
         MatMenuModule,
         MatCardModule,

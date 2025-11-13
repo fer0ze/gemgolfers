@@ -362,6 +362,29 @@ export class General {
         return Course_Tee.find((element) => element.name == tee);
     }
 
+    public static singleFormats() {
+        return [
+            { name: "Stroke Play", value: "STROKE_PLAY" },
+            { name: "Stable Ford", value: "STABLE_FORD" },
+            { name: "Modified Stableford", value: "MODIFIED_STABLEFORD" },
+            { name: "Split Sixes", value: "SPLIT_SIXES" },
+        ];
+    }
+
+    public static teamFormats() {
+        return [
+            { name: "Match Play", value: "MATCH_PLAY" },
+            { name: "Texas Scramble", value: "TEXAS_SCRAMBLE" },
+            { name: "Two Ball Scramble", value: "TWO_BALL_SCRAMBLE" },
+            { name: "Three Ball Scramble", value: "THREE_BALL_SCRAMBLE" },
+            { name: "Four Ball Scramble", value: "FOUR_BALL_SCRAMBLE" },
+            { name: "Shambles", value: "SHAMBLES" },
+            { name: "Best Three", value: "BEST_THREE" },
+            { name: "Best Two", value: "BEST_TWO" },
+            { name: "LIV", value: "LIV" },
+        ];
+    }
+
     public static getCourseTee(Id: number) {
         const Course_Tee = [
             { id: 0, name: 'Professionals', tee_id: 'PROFESSIONALS', color: '#000000' },

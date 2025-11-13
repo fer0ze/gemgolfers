@@ -116,6 +116,24 @@ export enum matchFormat {
     LIV = "LIV",
 }
 
+export enum matchFormats {
+    MATCH_PLAY = "Match Play",
+    STROKE_PLAY = "Stroke Play",
+    STABLEFORD = "Stableford",
+    MODIFIED_STABLEFORD = "Modified Stableford",
+    SPLIT_SIXES = "Split Sixes",
+    TEXAS_SCRAMBLE = "Texas Scramble",
+    TWO_BALL_SCRAMBLE = "Two Ball Scramble",
+    THREE_BALL_SCRAMBLE = "Three Ball Scramble",
+    FOUR_BALL_SCRAMBLE = "Four Ball Scramble",
+    BEST_THREE = "Best Three",
+    BEST_TWO = "Best Two",
+    COMBINE_ALL = "Combine All",
+    BESTBALL = "Bestball",
+    SHAMBLES = "Shambles",
+    LIV = "LIV",
+}
+
 export enum TexasScrampleTeamSize {
     FOURH = 4,
     THREE = 3,
