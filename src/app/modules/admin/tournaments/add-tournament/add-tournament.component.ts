@@ -122,6 +122,7 @@ export class AddTournamentComponent implements OnInit {
     selectedTeams1: any[][] = [];
     selectedTeams2: any[][] = [];
     selectedTeams: any[] = [];
+    selectedPairs: any[] = [];
     assignedOpponents: Set<string> = new Set<string>();
     teamMembersToSave: any[] = [];
     isSenior: boolean
@@ -1673,8 +1674,35 @@ export class AddTournamentComponent implements OnInit {
                         });
                     }
                 }
-            }
-            else {
+            } else if (this.showShambles) {
+                const validTeams = this.selectedPairs.filter(t => t.members?.length);
+
+                if (validTeams.length === 2) {
+                    const teamA = [...validTeams[0].members]; // clone array
+                    const teamB = [...validTeams[1].members];
+
+                    const perTeam = PperFlight / 2; // players per team in each flight
+
+                    while (teamA.length >= perTeam && teamB.length >= perTeam) {
+
+                        const flightAPlayers = teamA.splice(0, perTeam);
+                        const flightBPlayers = teamB.splice(0, perTeam);
+
+                        selMembers.push({
+                            teamA: {
+                                pairId: validTeams[0].id,
+                                teamName: validTeams[0].name,
+                                members: flightAPlayers
+                            },
+                            teamB: {
+                                pairId: validTeams[1].id,
+                                teamName: validTeams[1].name,
+                                members: flightBPlayers
+                            }
+                        });
+                    }
+                }
+            } else {
                 FilteredPL.forEach((filteredPlayer: any) => {
                     if (cnter == 0) selMembers[outer] = [];
                 });
@@ -1688,29 +1716,30 @@ export class AddTournamentComponent implements OnInit {
                         } else {
                             cnter++;
                         }
-                    } else if (this.showShambles) {
-                        if (cnter == 0 && lanter == 0) {
-                            selMembers[outer] = [];
-                            selMembers[outer][cnter] = [];
-                            selMembers[outer][cnter]['PairName'] = obj.firstName + '/' + obj.lastName;
-                        }
-                        if (cnter == 0 && lanter !== 0) {
-                            selMembers[outer][lanter] = [];
-                            selMembers[outer][lanter]['PairName'] = obj.firstName + '/' + obj.lastName;
-                        }
-                        selMembers[outer][lanter].push(obj);
-                        if (cnter == 1 && lanter == 0 && selMembers[outer].length != 2) {
-                            cnter = 0;
-                            //outer++;
-                            lanter++;
-                        } else if (selMembers[outer][lanter].length == 2) {
-                            cnter = 0;
-                            outer++;
-                            lanter = 0;
-                        } else {
-                            cnter++;
-                        }
-                    }
+                    } 
+                    // else if (this.showShambles) {
+                    //     if (cnter == 0 && lanter == 0) {
+                    //         selMembers[outer] = [];
+                    //         selMembers[outer][cnter] = [];
+                    //         selMembers[outer][cnter]['PairName'] = obj.firstName + '/' + obj.lastName;
+                    //     }
+                    //     if (cnter == 0 && lanter !== 0) {
+                    //         selMembers[outer][lanter] = [];
+                    //         selMembers[outer][lanter]['PairName'] = obj.firstName + '/' + obj.lastName;
+                    //     }
+                    //     selMembers[outer][lanter].push(obj);
+                    //     if (cnter == 1 && lanter == 0 && selMembers[outer].length != 2) {
+                    //         cnter = 0;
+                    //         //outer++;
+                    //         lanter++;
+                    //     } else if (selMembers[outer][lanter].length == 2) {
+                    //         cnter = 0;
+                    //         outer++;
+                    //         lanter = 0;
+                    //     } else {
+                    //         cnter++;
+                    //     }
+                    // }
                 }
 
             }
@@ -2843,6 +2872,8 @@ export class AddTournamentComponent implements OnInit {
             // });
             if (this.showMatchPlay) {
                 this.currentTitle = 'Select Teams';
+            } else if (this.showShambles) {
+                this.currentTitle = 'Select Pairs';
             } else {
                 this.currentTitle = 'Groups Setup';
             }
@@ -3180,6 +3211,28 @@ export class AddTournamentComponent implements OnInit {
         // //console.log(this.selectedTeams);
 
     }
+
+    addPairs() {
+        const teamName = this.teamForm.get('teamName')?.value?.trim();
+        const teamColor = this.teamForm.get('teamColor')?.value;
+
+        this.selectedPairs.push({
+            id: UniqueIdGenerator.generate(),
+            name: teamName,
+            color: teamColor,
+            members: []
+        });
+        if (!teamName) return;
+
+        // Example: print or send to backend
+        console.log('✅ Created team:', { teamName, teamColor });
+
+        // Reset form after creation
+        this.teamForm.reset();
+        this.selectedTeamColor = null;
+        // //console.log(this.selectedTeams);
+
+    }
     onColorChange(event: Event, id: any) {
         const inputElement = event.target as HTMLInputElement;
         const teamToUpdate = this.selectedTeams.find(t => t.id === id);
@@ -3193,6 +3246,30 @@ export class AddTournamentComponent implements OnInit {
         if (!selectedPlayers.length) return;
 
         const team = this.selectedTeams.find(t => t.id === teamId);
+        if (!team) return;
+
+        // ✅ Ensure no duplicates in team.members
+        const existingIds = new Set(team.members.map(m => m.id));
+        const uniqueNewMembers = selectedPlayers.filter(p => !existingIds.has(p.id));
+
+        // ✅ Add only new members
+        team.members = [...team.members, ...uniqueNewMembers];
+
+        // ✅ Remove selected members from the main data source
+        const remainingMembers = this.membersSource.data.filter(
+            (m: any) => !selectedPlayers.some(p => p.id === m.id)
+        );
+        this.membersSource.data = [...remainingMembers];
+
+        // ✅ Clear selection
+        this.memberSelection.clear();
+    }
+
+    addSelectedPlayersToPair(pairId: string) {
+        const selectedPlayers = [...this.memberSelection.selected]; // array of selected players
+        if (!selectedPlayers.length) return;
+
+        const team = this.selectedPairs.find(t => t.id === pairId);
         if (!team) return;
 
         // ✅ Ensure no duplicates in team.members
@@ -3525,28 +3602,28 @@ export class AddTournamentComponent implements OnInit {
                                 //     }
                                 // }
                                 for (let index5 in this.selectedMembers[index][index2][index3][index4].members) {
-                                    let teamOpponent = {
-                                        id: UniqueIdGenerator.generate(),
-                                        team1Id: this.selectedMembers[index][index2][index3][index4].teamId,
-                                        team2Id: this.selectedMembers[index][index2][index3]['teamB'].teamId,
-                                        team1MemberId: this.selectedMembers[index][index2][index3][index4][index5].id,
-                                        team2MemberId: this.selectedMembers[index][index2][index3]['teamB'][index5].id,
-                                        tournamentId: this.tournamentID,
+                                    if (index4 == 'teamA') {
+                                        let teamOpponent = {
+                                            id: UniqueIdGenerator.generate(),
+                                            team1Id: this.selectedMembers[index][index2][index3][index4].teamId,
+                                            team2Id: this.selectedMembers[index][index2][index3]['teamB'].teamId,
+                                            team1MemberId: this.selectedMembers[index][index2][index3][index4].members[index5].id,
+                                            team2MemberId: this.selectedMembers[index][index2][index3]['teamB'].members[index5].id,
+                                            tournamentId: this.tournamentID,
+                                        }
+                                        tournamentTeamOpponents.push(teamOpponent);
                                     }
-                                    tournamentTeamOpponents.push(teamOpponent);
-                                    if (Number.isInteger(Number(index4))) {
-                                        let roundTeeId: any = General.getPlayersTe(this.selectedMembers[index][index2][index3][index4][index5].playerCategory
-                                        );
+                                    let roundTeeId: any = General.getPlayersTe(this.selectedMembers[index][index2][index3][index4].members[index5].playerCategory
+                                    );
 
-                                        let FM: any = {
-                                            playerId:this.selectedMembers[index][index2][index3][index4][index5].id,
-                                            attendance: false,
-                                            playingTee: roundTeeId.result,
-                                            tee_id: roundTeeId.id,
-                                        };
+                                    let FM: any = {
+                                        playerId: this.selectedMembers[index][index2][index3][index4].members[index5].id,
+                                        attendance: false,
+                                        playingTee: roundTeeId.result,
+                                        tee_id: roundTeeId.id,
+                                    };
 
-                                        tournamentFlightMembers.push(FM);
-                                    }
+                                    tournamentFlightMembers.push(FM);
                                 }
                             } else {
                                 if (Number.isInteger(Number(index4))) {
@@ -3698,6 +3775,33 @@ export class AddTournamentComponent implements OnInit {
 
         // Remove the team from the list
         this.selectedTeams = this.selectedTeams.filter(team => team.id !== teamId);
+
+        // If the team existed and had members
+        if (deletedTeam && deletedTeam.members && deletedTeam.members.length > 0) {
+            const existingMembers = this.membersSource?.data || [];
+
+            // Add back team members that are not already in membersSource
+            const updatedMembers = [
+                ...existingMembers,
+                ...deletedTeam.members.filter(
+                    member => !existingMembers.some(m => m.id === member.id)
+                )
+            ];
+
+            // Update the data source
+            this.membersSource.data = updatedMembers;
+
+            // Optional: refresh table visuals (sorting/pagination)
+            this.membersSource._updateChangeSubscription();
+        }
+    }
+
+    deletePair(teamId: string) {
+        // Find the team being deleted
+        const deletedTeam = this.selectedPairs.find(team => team.id === teamId);
+
+        // Remove the team from the list
+        this.selectedPairs = this.selectedPairs.filter(team => team.id !== teamId);
 
         // If the team existed and had members
         if (deletedTeam && deletedTeam.members && deletedTeam.members.length > 0) {
@@ -4225,6 +4329,9 @@ export class AddTournamentComponent implements OnInit {
             this.showCat = false;
         }
         if (event.value == matchFormat.MATCH_PLAY) {
+            this.steps = this.steps.filter(
+                s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
+            );
             this.showMatchPlay = true;
             const hasTeamStep = this.steps.some(s => s.title === 'Select Teams');
             if (!hasTeamStep) {
@@ -4241,8 +4348,30 @@ export class AddTournamentComponent implements OnInit {
                 // 🔹 Renumber all steps after insertion
                 this.steps.forEach((s, index) => (s.number = index + 1));
             }
+        } else if (event.value == matchFormat.SHAMBLES) {
+            this.showShambles = true;
+            this.steps = this.steps.filter(
+                s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
+            );
+            const hasTeamStep = this.steps.some(s => s.title === 'Select Pairs');
+            if (!hasTeamStep) {
+                const teamStep = {
+                    number: 3,
+                    title: 'Select Pairs',
+                    description: 'Create and manage pairs',
+                };
+
+                // Insert before "Groups Setup"
+                const insertIndex = this.steps.findIndex(s => s.title === 'Groups Setup');
+                this.steps.splice(insertIndex, 0, teamStep);
+
+                // 🔹 Renumber all steps after insertion
+                this.steps.forEach((s, index) => (s.number = index + 1));
+            }
         } else {
-            this.steps = this.steps.filter(s => s.title !== 'Select Teams');
+            this.steps = this.steps.filter(
+                s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
+            );
             this.steps.forEach((s, index) => (s.number = index + 1));
             this.showMatchPlay = false;
         }
