@@ -276,22 +276,33 @@ export class AddTournamentComponent implements OnInit {
 
     selectedTeamColor: string | null = null;
 
-    dragDropped(event: CdkDragDrop<string[]>) {
-        const newIndex = event.currentIndex;
+    onPlayerDrop(event: CdkDragDrop<any[]>, team: 'A' | 'B', flightIndex: number) {
+        const teamKey = team === 'A' ? 'teamA' : 'teamB';
+
+        const previousList = event.previousContainer.data;
+        const currentList = event.container.data;
+
         const previousIndex = event.previousIndex;
-        //console.log(newIndex);
-        //console.log(previousIndex);
-        if ((previousIndex % 2 == 0) && (newIndex % 2 == 0)) {
-            this.swapArrayElements(event.container.data, previousIndex, newIndex);
-        } else if ((previousIndex % 2 === 1) && (newIndex % 2 == 1)) {
-            this.swapArrayElements(event.container.data, previousIndex, newIndex);
+        const currentIndex = event.currentIndex;
+
+        // 👉 Case 1: Same list → reorder
+        if (event.previousContainer === event.container) {
+            moveItemInArray(currentList, previousIndex, currentIndex);
+            return;
         }
 
-
-        // Use newIndex to access the correct index where the item was dropped.
-        // For example, you can swap elements in the `items` array using `swapArrayElements`.
-        // Example: swapArrayElements(this.items, event.previousIndex, newIndex);
+        // 👉 Case 2: Different flights of SAME team → transfer
+        if (previousList && currentList) {
+            transferArrayItem(
+                previousList,
+                currentList,
+                previousIndex,
+                currentIndex
+            );
+            return;
+        }
     }
+
 
     /** Returns a FormArray with the name 'formArray'. */
     get formArray(): AbstractControl | null {
@@ -1628,101 +1639,80 @@ export class AddTournamentComponent implements OnInit {
         if (FilteredFlight.length > 0) {
             let PperFlight = FilteredFlight[0].playersperFlight;
             let halfFlight = parseInt(PperFlight) / 2;
-            FilteredPL.forEach((filteredPlayer: any) => {
-                if (cnter == 0) selMembers[outer] = [];
-            });
+
             //console.log(FilteredPL);
 
 
             if (this.showMatchPlay) {
-                const validTeams = this.selectedTeams.filter(t => t.members && t.members.length > 0);
-                for (let i = 0; i < validTeams.length; i += 2) {
-                    const teamA = validTeams[i];
-                    const teamB = validTeams[i + 1];
+                const validTeams = this.selectedTeams.filter(t => t.members?.length);
 
-                    // ✅ Safety check if teams exist
-                    if (!teamA || !teamB) continue;
+                if (validTeams.length === 2) {
+                    const teamA = [...validTeams[0].members]; // clone array
+                    const teamB = [...validTeams[1].members];
 
-                    // ✅ Ensure each team provides half the players for the flight
-                    const teamAPlayers = teamA.members.slice(0, halfFlight);
-                    const teamBPlayers = teamB.members.slice(0, halfFlight);
+                    const perTeam = PperFlight / 2; // players per team in each flight
 
-                    // ✅ Ensure players are also in FilteredPL (optional validation)
-                    const validTeamAPlayers = teamAPlayers.filter(p =>
-                        FilteredPL.some(fp => fp.id === p.id)
-                    );
-                    const validTeamBPlayers = teamBPlayers.filter(p =>
-                        FilteredPL.some(fp => fp.id === p.id)
-                    );
+                    while (teamA.length >= perTeam && teamB.length >= perTeam) {
 
-                    // ✅ Merge into one flight
-                    selMembers.push({
-                        teamA: {
-                            teamId: teamA.id,
-                            teamName: teamA.name,
-                            teamColor: teamA.color,
-                            members: validTeamAPlayers,
-                        },
-                        teamB: {
-                            teamId: teamB.id,
-                            teamName: teamB.name,
-                            teamColor: teamB.color,
-                            members: validTeamBPlayers,
-                        },
+                        const flightAPlayers = teamA.splice(0, perTeam);
+                        const flightBPlayers = teamB.splice(0, perTeam);
 
-                    })
+                        selMembers.push({
+                            teamA: {
+                                teamId: validTeams[0].id,
+                                teamName: validTeams[0].name,
+                                teamColor: validTeams[0].color,
+                                members: flightAPlayers
+                            },
+                            teamB: {
+                                teamId: validTeams[1].id,
+                                teamName: validTeams[1].name,
+                                teamColor: validTeams[1].color,
+                                members: flightBPlayers
+                            }
+                        });
+                    }
                 }
-                // if (this.checkTeamMembers(this.teamMembersToSave, obj.id)) {
-                // if (cnter == 0) selMembers[outer] = [];
-                // selMembers[outer][cnter] = obj;
-                // let oponentId = '';
-                // oponentId = this.getSecondOpponent(this.selectedTeams, obj)
-                // if (oponentId != '') {
-                //     const indexOf = FilteredPL.findIndex(player => player.id === oponentId);
-                //     selMembers[outer][++cnter] = FilteredPL[indexOf];
-                //     FilteredPL.splice(indexOf, 1)
-                //     if (cnter == parseInt(PperFlight) - 1) {
-                //         cnter = 0;
-                //         outer++;
-                //     } else {
-                //         cnter++;
-                //     }
-                // }
-                // }
             }
-            for (let obj of FilteredPL) {
-                if (!this.showShambles) {
+            else {
+                FilteredPL.forEach((filteredPlayer: any) => {
                     if (cnter == 0) selMembers[outer] = [];
-                    selMembers[outer][cnter] = obj;
-                    if (cnter == parseInt(PperFlight) - 1) {
-                        cnter = 0;
-                        outer++;
-                    } else {
-                        cnter++;
-                    }
-                } else if (this.showShambles) {
-                    if (cnter == 0 && lanter == 0) {
-                        selMembers[outer] = [];
-                        selMembers[outer][cnter] = [];
-                        selMembers[outer][cnter]['PairName'] = obj.firstName + '/' + obj.lastName;
-                    }
-                    if (cnter == 0 && lanter !== 0) {
-                        selMembers[outer][lanter] = [];
-                        selMembers[outer][lanter]['PairName'] = obj.firstName + '/' + obj.lastName;
-                    }
-                    selMembers[outer][lanter].push(obj);
-                    if (cnter == 1 && lanter == 0 && selMembers[outer].length != 2) {
-                        cnter = 0;
-                        //outer++;
-                        lanter++;
-                    } else if (selMembers[outer][lanter].length == 2) {
-                        cnter = 0;
-                        outer++;
-                        lanter = 0;
-                    } else {
-                        cnter++;
+                });
+                for (let obj of FilteredPL) {
+                    if (!this.showShambles) {
+                        if (cnter == 0) selMembers[outer] = [];
+                        selMembers[outer][cnter] = obj;
+                        if (cnter == parseInt(PperFlight) - 1) {
+                            cnter = 0;
+                            outer++;
+                        } else {
+                            cnter++;
+                        }
+                    } else if (this.showShambles) {
+                        if (cnter == 0 && lanter == 0) {
+                            selMembers[outer] = [];
+                            selMembers[outer][cnter] = [];
+                            selMembers[outer][cnter]['PairName'] = obj.firstName + '/' + obj.lastName;
+                        }
+                        if (cnter == 0 && lanter !== 0) {
+                            selMembers[outer][lanter] = [];
+                            selMembers[outer][lanter]['PairName'] = obj.firstName + '/' + obj.lastName;
+                        }
+                        selMembers[outer][lanter].push(obj);
+                        if (cnter == 1 && lanter == 0 && selMembers[outer].length != 2) {
+                            cnter = 0;
+                            //outer++;
+                            lanter++;
+                        } else if (selMembers[outer][lanter].length == 2) {
+                            cnter = 0;
+                            outer++;
+                            lanter = 0;
+                        } else {
+                            cnter++;
+                        }
                     }
                 }
+
             }
             let tempSelMembers: any[] = [];
             for (const index in selMembers) {
@@ -3498,34 +3488,58 @@ export class AddTournamentComponent implements OnInit {
                                     }
                                 }
                             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
-                                if (Number.isInteger(Number(index4))) {
-                                    if (ind % 2 == 0) {
-                                        let newIndex = Number(index4) + 1;
-                                        let teamOpponent = {
-                                            id: UniqueIdGenerator.generate(),
-                                            team1Id: this.selectedTeams[0]['id'],
-                                            team2Id: this.selectedTeams[1]['id'],
-                                            team1MemberId: this.selectedMembers[index][index2][index3][index4].id,
-                                            team2MemberId: this.selectedMembers[index][index2][index3][newIndex].id,
-                                            tournamentId: this.tournamentID,
-                                        }
-                                        tournamentTeamOpponents.push(teamOpponent);
+                                // if (Number.isInteger(Number(index4))) {
+                                //     if (ind % 2 == 0) {
+                                //         let newIndex = Number(index4) + 1;
+                                //         let teamOpponent = {
+                                //             id: UniqueIdGenerator.generate(),
+                                //             team1Id: this.selectedTeams[0]['id'],
+                                //             team2Id: this.selectedTeams[1]['id'],
+                                //             team1MemberId: this.selectedMembers[index][index2][index3][index4].id,
+                                //             team2MemberId: this.selectedMembers[index][index2][index3][newIndex].id,
+                                //             tournamentId: this.tournamentID,
+                                //         }
+                                //         tournamentTeamOpponents.push(teamOpponent);
+                                //     }
+                                //     ind++;
+                                //     if (Number.isInteger(Number(index4))) {
+
+
+                                //         let roundTeeId: any = General.getPlayersTe(
+                                //             this.selectedMembers[index][index2][index3][
+                                //                 index4
+                                //             ].playerCategory
+                                //         );
+
+                                //         let FM: any = {
+                                //             playerId:
+                                //                 this.selectedMembers[index][index2][
+                                //                     index3
+                                //                 ][index4].id,
+                                //             attendance: false,
+                                //             playingTee: roundTeeId.result,
+                                //             tee_id: roundTeeId.id,
+                                //         };
+
+                                //         tournamentFlightMembers.push(FM);
+                                //     }
+                                // }
+                                for (let index5 in this.selectedMembers[index][index2][index3][index4].members) {
+                                    let teamOpponent = {
+                                        id: UniqueIdGenerator.generate(),
+                                        team1Id: this.selectedMembers[index][index2][index3][index4].teamId,
+                                        team2Id: this.selectedMembers[index][index2][index3]['teamB'].teamId,
+                                        team1MemberId: this.selectedMembers[index][index2][index3][index4][index5].id,
+                                        team2MemberId: this.selectedMembers[index][index2][index3]['teamB'][index5].id,
+                                        tournamentId: this.tournamentID,
                                     }
-                                    ind++;
+                                    tournamentTeamOpponents.push(teamOpponent);
                                     if (Number.isInteger(Number(index4))) {
-
-
-                                        let roundTeeId: any = General.getPlayersTe(
-                                            this.selectedMembers[index][index2][index3][
-                                                index4
-                                            ].playerCategory
+                                        let roundTeeId: any = General.getPlayersTe(this.selectedMembers[index][index2][index3][index4][index5].playerCategory
                                         );
 
                                         let FM: any = {
-                                            playerId:
-                                                this.selectedMembers[index][index2][
-                                                    index3
-                                                ][index4].id,
+                                            playerId:this.selectedMembers[index][index2][index3][index4][index5].id,
                                             attendance: false,
                                             playingTee: roundTeeId.result,
                                             tee_id: roundTeeId.id,
