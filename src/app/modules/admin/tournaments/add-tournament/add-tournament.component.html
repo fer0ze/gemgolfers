@@ -198,7 +198,8 @@
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="this.showMatchPlay">
-                                        <mat-form-field class="w-full custom-mat-input" appearance="outline" [floatLabel]="'always'">
+                                        <mat-form-field class="w-full custom-mat-input" appearance="outline"
+                                            [floatLabel]="'always'">
                                             <mat-label>Points Value</mat-label>
 
                                             <input type="number" class=" text-gray-700" matInput
@@ -320,7 +321,7 @@
                                             <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                                 [floatLabel]="'always'">
                                                 <mat-label>Match Format</mat-label>
-                                                <mat-select class="w-full text-gray-700"placeholder="Match Format"
+                                                <mat-select class="w-full text-gray-700" placeholder="Match Format"
                                                     formControlName="matchFormat" (selectionChange)="texas($event)">
                                                     <mat-option value="MATCH_PLAY">Match Play</mat-option>
                                                     <mat-option value="STROKE_PLAY">Stroke Play</mat-option>
@@ -403,13 +404,23 @@
 
 
                     </div>
-                    <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end items-center flex-shrink-0">
+                    <div *ngIf="!editTournament"
+                        class="mt-8 pt-6 border-t border-gray-200 flex justify-end items-center flex-shrink-0">
 
                         <div>
                             <button (click)="createTournament()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
+                        </div>
+                    </div>
+                    <div *ngIf="editTournament"
+                        class="mt-8 pt-6 border-t border-gray-200 flex justify-center items-center flex-shrink-0">
+                        <div>
+                            <button (click)="editTournaments()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                font-semibold
+                                shadow-sm hover:bg-emerald-700 transition-colors">
+                                Save Changes</button>
                         </div>
                     </div>
                 </form>

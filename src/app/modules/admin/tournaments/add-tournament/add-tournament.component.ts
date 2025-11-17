@@ -344,6 +344,11 @@ export class AddTournamentComponent implements OnInit {
             this.tournamentID = params.get('id');
         });
 
+        if (this.tournamentID) {
+            this.steps = this.steps.filter((a) => a.title == 'Tournament Setup')
+
+        }
+
         if (this.loggedInuser) {
             let clubInfo: any =
                 this.loggedInuser.membership.length > 0
@@ -444,6 +449,7 @@ export class AddTournamentComponent implements OnInit {
         let dataClubs = await this.facadeService.getClubList();
         this.Clubs = dataClubs.club;
 
+
         let dataCourses = await this.facadeService.getCoursesList();
         this.Courses = dataCourses.course;
 
@@ -495,12 +501,13 @@ export class AddTournamentComponent implements OnInit {
             // this.getSelectedCourse(this.currentTournament['CourseQL']);
 
             if (this.currentTournament) {
+
                 this.formArray.get([0]).patchValue({
                     titleFormCtrl: this.currentTournament.title,
                     prefixFormCtrl: this.currentTournament.prefix,
                     startDateFormCtrl: this.currentTournament.startDate,
                     endDateFormCtrl: this.currentTournament.endDate,
-                    numOfRounds: this.currentTournament.noOfRounds.toString(),
+                    numOfRounds: this.currentTournament.noOfRounds,
                     teamMatch: this.currentTournament.teamMatch == true ? '2' : '1',
                     courseHoleSet:
                         this.currentTournament.courseHoleSets +
@@ -577,18 +584,18 @@ export class AddTournamentComponent implements OnInit {
                 //this.selection = new SelectionModel<Player>(true, this.tournamentMembers);
                 let TM = [];
                 //console.log(this.tournamentMembers);
-                for (let obj of this.tournamentMembers) {
-                    if (this.currentTournament.opponents.length > 0) {
-                        for (let objA of this.currentTournament.opponents) {
-                            if (objA.team1MemberId == obj.id && objA.team1Id == this.selectedTeams1[0]['id']) {
-                                this.selectedTeams1[0].push(obj);
-                            }
-                            if (objA.team2MemberId == obj.id && objA.team2Id == this.selectedTeams2[0]['id']) {
-                                this.selectedTeams2[0].push(obj);
-                            }
-                        }
-                    }
-                }
+                // for (let obj of this.tournamentMembers) {
+                //     if (this.currentTournament.opponents.length > 0) {
+                //         for (let objA of this.currentTournament.opponents) {
+                //             if (objA.team1MemberId == obj.id && objA.team1Id == this.selectedTeams1[0]['id']) {
+                //                 this.selectedTeams1[0].push(obj);
+                //             }
+                //             if (objA.team2MemberId == obj.id && objA.team2Id == this.selectedTeams2[0]['id']) {
+                //                 this.selectedTeams2[0].push(obj);
+                //             }
+                //         }
+                //     }
+                // }
 
                 let selectedClubId: string;
                 if (this.loggedInuser.userRole > 1 && this.loggedInuser.adminClubId) {
@@ -2503,7 +2510,7 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
-    async editTournaments(stepper: MatStepper) {
+    async editTournaments() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentCats: TournamentCategory[] = [];
 
@@ -2726,8 +2733,8 @@ export class AddTournamentComponent implements OnInit {
             this.snackBar.open('Tournament has been updated.', 'x', {
                 duration: 5000,
             });
-            stepper.next();
-            //this.router.navigate(['/tournaments/view/' + this.tournamentID]);
+            // stepper.next();
+            this.router.navigate(['/tournaments/view/' + this.tournamentID]);
         } else {
             this.snackBar.open('Error! Try Again later.', 'x', {
                 duration: 5000,

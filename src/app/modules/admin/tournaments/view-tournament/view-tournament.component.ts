@@ -113,6 +113,7 @@ export class ViewTournamentComponent implements OnInit {
     membersStatus: any;
     gridColumns = 3;
     courseImg: string;
+    activeTab: string = 'Overview';
     tournamentPlayersAdd: boolean = true;
     showCloseBtn: boolean = true;
     showMatchPlay: boolean = false;
@@ -124,7 +125,7 @@ export class ViewTournamentComponent implements OnInit {
     teetime: number = 0;
     flightNumber: number = 0;
     scoreAdded: boolean = false;
-    avgScore: number[] = [];
+    avgScore: any[] = [];
     avgScore1: number[] = [];
     avgScore2: number[] = [];
     avgScore3: number[] = [];
@@ -209,6 +210,7 @@ export class ViewTournamentComponent implements OnInit {
             },
         },
     ];
+    tabs = ['Overview', 'Groups', 'Scores', 'Participants'];
     dataSourceR1NET: MatTableDataSource<any>;
     displayedColumnsR1NET = ['pos', 'name', 'net', 'toPar', 'thru'];
     dataSourceR2NET: MatTableDataSource<any>;
@@ -342,10 +344,6 @@ export class ViewTournamentComponent implements OnInit {
                     this.dataFullTournament['TournamentQL'][0]['matchFormat'] ==
                     matchFormat.TEXAS_SCRAMBLE
                 ) {
-                    this.totalPlayers =
-                        this.dataFullTournament['TournamentQL'][0][
-                            'members'
-                        ].length;
                     this.showCloseBtn = false;
                     this.tournamentPlayersAdd = true;
                 }
@@ -394,7 +392,7 @@ export class ViewTournamentComponent implements OnInit {
 
                 ////console.log(this.fullTournament);
 
-                this.calculateStatistics();
+                // this.calculateStatistics();
                 // if (this.tournamentPlayersAdd) {
                 //     this.GrossData(
                 //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
@@ -405,49 +403,30 @@ export class ViewTournamentComponent implements OnInit {
                 //             .category
                 //     );
                 // }
-                if (this.activeRound > this.noOfRounds) {
-                    if (this.selected == 0) {
-                        this.getRound1stats(1);
+                this.calculatePlayersCount();
+                this.getRoundStats(this.activeRound);
+                this.calculateStatistics(this.activeRound);
 
-                        this.calculateStatistics1();
-                    } else if (this.selected == 1) {
-                        this.getRound2stats(2);
-                        this.calculateStatistics2();
-                    } else if (this.selected == 2) {
-                        this.getRound3stats(3);
-                        this.calculateStatistics3();
-                    } else if (this.selected == 3) {
-                        this.getRound4stats(4);
-                        this.calculateStatistics4();
-                    } else {
-                        this.getRound4stats(4);
-                        this.calculateStatistics4();
-                    }
-                } else {
-                    if (this.activeRound == 0) {
-                        this.getRoundsstats();
-                        //this.calculateStatistics();
-                    } else if (this.activeRound == 1) {
-                        this.getRound1stats(1);
-                        //this.calculateStatistics();
-                        this.calculateStatistics1();
-                    } else if (this.activeRound == 2) {
-                        this.getRound2stats(2);
-                        this.calculateStatistics2();
-                    } else if (this.activeRound == 3) {
-                        this.getRound3stats(3);
-                        this.calculateStatistics3();
-                    } else if (this.activeRound == 4) {
-                        this.getRound4stats(4);
-                        this.calculateStatistics4();
-                    } else {
-                        this.getRound4stats(4);
-                        this.calculateStatistics4();
-                    }
-                }
+                this.rounds = [];
+
                 for (let i = 1; i <= this.noOfRounds; i++) {
-                    this.rounds.push({ label: 'Round ' + i });
+                    let status = '';
+
+                    if (i < this.activeRound) {
+                        status = 'Completed';
+                    } else if (i === this.activeRound) {
+                        status = 'In Progress';
+                    } else {
+                        status = 'Pending'; // or "Upcoming"
+                    }
+
+                    this.rounds.push({
+                        label: 'Round ' + i,
+                        status: status,
+                        round: i
+                    });
                 }
+
                 // this.rounds.push({ label: 'Summary' });
                 //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
             } else {
@@ -458,306 +437,59 @@ export class ViewTournamentComponent implements OnInit {
         }
     }
 
-    calculateStatistics() {
+    calculatePlayersCount() {
         try {
-
-
-            this.FlightsQL = [];
-            this.topMembers = [];
             this.AmateursCount = 0;
             this.JuniorsCount = 0;
             this.SeniorsCount = 0;
             this.VeteransCount = 0;
             this.LadiesCount = 0;
-            this.AmateursPlayingDates = [];
-            this.SeniorsPlayingDates = [];
-            this.JuniorsPlayingDates = [];
-            this.VeteransPlayingDates = [];
-            this.LadiesPlayingDates = [];
-
-            if (this.fullTournament.FlightsQL.length > 6) {
-                this.FlightsQL = this.fullTournament.FlightsQL.slice(0, 7);
-            } else {
-                this.FlightsQL = this.fullTournament.FlightsQL;
-            }
             // this.FlightsQL.slice(0,6);
-            let totalPlayers =
-                this.dataFullTournament['TournamentQL'][0]['members'];
-            console.log(totalPlayers);
-
-            totalPlayers.sort(this.ComparatorHandicap);
-            //console.log(totalPlayers);
-            let count = 0;
-
-            for (const c of totalPlayers) {
-                if (count < 10) {
-                    let obj = {
-                        id: c.playerId,
-                        title:
-                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                        handicap: c.PlayerQL['handicap'],
-                        category: c.PlayerQL['playerCategory'],
-                        class: c.PlayerQL['playerCategory'],
-                    };
-                    this.topMembers.push(obj);
-                }
-                count++;
-            }
-            //console.log(this.topMembers);
-            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
             this.totalPlayers =
-                this.dataFullTournament['TournamentQL'][0]['members'].length;
-            if (
-                this.dataFullTournament['TournamentQL'][0]['CategoriesQL'].length ==
-                0
-            ) {
-                const colors = ['warn', 'success', 'info', 'danger'];
-                let indeca = 0;
-                if (this.fullTournament.FlightsQL.length > 0) {
-                    for (let c of this.fullTournament.FlightsQL) {
-                        indeca = 0;
-                        for (let index = 0; index < c.MembersQL.length; index++) {
-                            if (c.MembersQL.length > indeca) {
-                                this.membersData.push(
-                                    c.MembersQL[indeca]['PlayerQL']
-                                );
-                                indeca++;
-                            } else {
-                                indeca = 0;
-                            }
-                        }
-                    }
-                } else if (this.fullTournament.members.length > 0) {
-                    for (let c of this.fullTournament.members) {
-                        this.membersData.push(c['PlayerQL']);
-                    }
+                this.dataFullTournament['TournamentQL'][0]['members'];
+            //console.log(totalPlayers);
+
+            for (const c of this.totalPlayers) {
+                if (c.PlayerQL['playerCategory'] == 'Amateurs') {
+                    this.AmateursCount++;
                 }
-                let index: number = 0;
-                for (const c of this.playerCategoryList) {
-                    let m = this.membersData.filter((a) => {
-                        return a.playerCategory == c.name;
-                    });
-
-                    // const distinctThings = m.filter((thing, i, arr) => {
-                    //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-                    // });
-                    if (m && m.length > 0) {
-                        if (c.name == 'Amateurs') {
-                            this.AmateursCount = m.length;
-                        }
-                        if (c.name.includes('Junior')) {
-                            this.JuniorsCount = m.length;
-                        }
-                        if (c.name.includes('Senior')) {
-                            this.SeniorsCount = m.length;
-                        }
-                        if (c.name == 'Professionals') {
-                            this.VeteransCount = m.length;
-                        }
-                        if (c.name == 'Ladies') {
-                            this.LadiesCount = m.length;
-                        }
-                        {
-                            this.totalMembers += m.length;
-                            let stat: any = {
-                                title: c.name,
-                                count: m.length,
-                                class: colors[index],
-                            };
-                            this.membersStats.push(stat);
-                            index++;
-
-                            if (index > 3) index = 0;
-                        }
-                    }
+                if (c.PlayerQL['playerCategory'].includes('Junior')) {
+                    this.JuniorsCount++;
                 }
-                //console.log(this.SeniorsCount);
+                if (c.PlayerQL['playerCategory'].includes('Senior')) {
+                    this.SeniorsCount++;
+                }
+                if (c.PlayerQL['playerCategory'] == 'Professionals') {
+                    this.VeteransCount++;
+                }
+                if (c.PlayerQL['playerCategory'] == 'Ladies') {
+                    this.LadiesCount++;
+                }
+            }
 
-                //console.log(this.membersStats);
-                this.totalPlayers = this.totalMembers;
-                //console.log(this.totalMembers);
+        } catch (error) {
+            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+        }
+    }
 
-                let activeFights = this.fullTournament.FlightsQL.filter((a) => {
-                    return a.flightRound == this.activeRound;
+    calculateStatistics(round?: number) {
+        try {
+
+            this.FlightsQL = [];
+            this.topMembers = [];
+            let totalPlayers = [];
+            if (round) {
+                this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
+                    return a.flightRound == round;
                 });
+            }
 
-                for (let flightData of activeFights) {
-                    for (let member of flightData.MembersQL) {
-                        if (member.ScoresQL.length > 0) {
-                            this.scoreAdded = true;
-                            break;
-                        }
-                    }
-                }
+            if (this.FlightsQL.length && this.FlightsQL.length > 6) {
+                this.FlightsQL.splice(6, this.FlightsQL.length);
             } else {
-                //console.log('dsdsds');
-                const colors = ['warn', 'success', 'info', 'danger'];
-                ////console.log(this.fullTournament.FlightsQL);
-                ////console.log(this.playersCatgery.TournamentMemberQL[0]);
-                for (
-                    let index = 0;
-                    index <
-                    this.dataFullTournament['TournamentQL'][0]['members'].length;
-                    index++
-                ) {
-                    this.membersData.push(
-                        this.dataFullTournament['TournamentQL'][0]['members'][index]
-                    );
-                }
-                //console.log(this.membersData);
-                ////console.log(this.membersData);
-
-                let index: number = 0;
-                //console.log(this.fullTournament.CategoriesQL);
-
-                for (const c of this.fullTournament.CategoriesQL) {
-                    let m = this.membersData.filter((a) => {
-                        return a['PlayerQL'].playerCategory == c.category;
-                    });
-
-                    // const distinctThings = m.filter((thing, i, arr) => {
-                    //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-                    // });
-                    if (c.category == 'Amateurs') {
-                        this.AmateursCount = m.length;
-                        if (
-                            c.flightSettings &&
-                            c.flightSettings['playingDate'] &&
-                            c.flightSettings['playingDate'].length > 0
-                        ) {
-                            for (let obj of c.flightSettings['playingDate']) {
-                                this.AmateursPlayingDates.push(obj);
-                            }
-                        } else if (
-                            c.flightSettings &&
-                            c.flightSettings.length > 0
-                        ) {
-                            for (let obj of c.flightSettings) {
-                                this.AmateursPlayingDates.push(obj);
-                            }
-                        }
-                    }
-                    if (c.category.includes('Junior')) {
-                        this.JuniorsCount = m.length;
-
-                        if (
-                            c.flightSettings &&
-                            c.flightSettings['playingDate'] &&
-                            c.flightSettings['playingDate'].length > 0
-                        ) {
-                            for (let obj of c.flightSettings['playingDate']) {
-                                this.JuniorsPlayingDates.push(obj);
-                            }
-                        } else if (
-                            c.flightSettings &&
-                            c.flightSettings.length > 0
-                        ) {
-                            for (let obj of c.flightSettings) {
-                                this.JuniorsPlayingDates.push(obj);
-                            }
-                        }
-                    }
-                    if (c.category.includes('Senior')) {
-                        this.SeniorsCount = m.length;
-                        if (
-                            c.flightSettings &&
-                            c.flightSettings['playingDate'] &&
-                            c.flightSettings['playingDate'].length > 0
-                        ) {
-                            for (let obj of c.flightSettings['playingDate']) {
-                                this.SeniorsPlayingDates.push(obj);
-                            }
-                        } else if (
-                            c.flightSettings &&
-                            c.flightSettings.length > 0
-                        ) {
-                            for (let obj of c.flightSettings) {
-                                this.SeniorsPlayingDates.push(obj);
-                            }
-                        }
-                    }
-                    if (c.category == 'Professionals') {
-                        this.VeteransCount = m.length;
-                        if (
-                            c.flightSettings &&
-                            c.flightSettings['playingDate'] &&
-                            c.flightSettings['playingDate'].length > 0
-                        ) {
-                            for (let obj of c.flightSettings['playingDate']) {
-                                this.VeteransPlayingDates.push(obj);
-                            }
-                        } else if (
-                            c.flightSettings &&
-                            c.flightSettings.length > 0
-                        ) {
-                            for (let obj of c.flightSettings) {
-                                this.VeteransPlayingDates.push(obj);
-                            }
-                        }
-                    }
-                    if (c.category == 'Ladies') {
-                        this.LadiesCount = m.length;
-                        if (
-                            c.flightSettings &&
-                            c.flightSettings['playingDate'] &&
-                            c.flightSettings['playingDate'].length > 0
-                        ) {
-                            for (let obj of c.flightSettings['playingDate']) {
-                                this.LadiesPlayingDates.push(obj);
-                            }
-                        } else if (
-                            c.flightSettings &&
-                            c.flightSettings.length > 0
-                        ) {
-                            for (let obj of c.flightSettings) {
-                                this.LadiesPlayingDates.push(obj);
-                            }
-                        }
-                    }
-                    {
-                        this.totalMembers += m.length;
-                        let stat: any = {
-                            title: c.category,
-                            count: m.length,
-                            class: colors[index],
-                        };
-                        this.membersStats.push(stat);
-                        index++;
-
-                        if (index > 3) index = 0;
-                    }
-                }
-
-                let activeFights = this.fullTournament.FlightsQL.filter((a) => {
-                    return a.flightRound == this.activeRound;
-                });
-
-                for (let flightData of activeFights) {
-                    for (let member of flightData.MembersQL) {
-                        if (member.ScoresQL.length > 0) {
-                            this.scoreAdded = true;
-                            break;
-                        }
-                    }
-                }
+                totalPlayers = this.dataFullTournament['TournamentQL'][0]['members'];
             }
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
-    calculateStatistics1() {
-        try {
 
-
-            this.FlightsQL = [];
-            this.topMembers = [];
-            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-                return a.flightRound == 1;
-            });
-            if (this.FlightsQL.length > 6) {
-                this.FlightsQL.splice(6, this.FlightsQL.length);
-            }
-            let totalPlayers = [];
             for (const c of this.FlightsQL) {
                 for (let obj of c['MembersQL']) {
                     totalPlayers.push(obj);
@@ -782,131 +514,12 @@ export class ViewTournamentComponent implements OnInit {
                 count++;
             }
             //console.log(this.topMembers);
-            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
+            // this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
-    calculateStatistics2() {
-        try {
-            this.FlightsQL = [];
-            this.topMembers = [];
-            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-                return a.flightRound == 2;
-            });
-            if (this.FlightsQL.length > 6) {
-                this.FlightsQL.splice(6, this.FlightsQL.length);
-            }
-            let totalPlayers = [];
-            for (const c of this.FlightsQL) {
-                for (let obj of c['MembersQL']) {
-                    totalPlayers.push(obj);
-                }
-            }
-            totalPlayers.sort(this.ComparatorHandicap);
-            //console.log(totalPlayers);
-            let count = 0;
 
-            for (const c of totalPlayers) {
-                if (count < 10) {
-                    let obj = {
-                        id: c.playerId,
-                        title:
-                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                        handicap: c.PlayerQL['handicap'],
-                        category: c.PlayerQL['playerCategory'],
-                        class: c.PlayerQL['playerCategory'],
-                    };
-                    this.topMembers.push(obj);
-                }
-                count++;
-            }
-            //console.log(this.topMembers);
-            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
-    calculateStatistics3() {
-        try {
-            this.FlightsQL = [];
-            this.topMembers = [];
-            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-                return a.flightRound == 3;
-            });
-            if (this.FlightsQL.length > 6) {
-                this.FlightsQL.splice(6, this.FlightsQL.length);
-            }
-            let totalPlayers = [];
-            for (const c of this.FlightsQL) {
-                for (let obj of c['MembersQL']) {
-                    totalPlayers.push(obj);
-                }
-            }
-            totalPlayers.sort(this.ComparatorHandicap);
-            //console.log(totalPlayers);
-            let count = 0;
-
-            for (const c of totalPlayers) {
-                if (count < 10) {
-                    let obj = {
-                        id: c.playerId,
-                        title:
-                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                        handicap: c.PlayerQL['handicap'],
-                        category: c.PlayerQL['playerCategory'],
-                        class: c.PlayerQL['playerCategory'],
-                    };
-                    this.topMembers.push(obj);
-                }
-                count++;
-            }
-            //console.log(this.topMembers);
-            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
-    calculateStatistics4() {
-        try {
-            this.FlightsQL = [];
-            this.topMembers = [];
-            this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
-                return a.flightRound == 4;
-            });
-            if (this.FlightsQL.length > 6) {
-                this.FlightsQL.splice(6, this.FlightsQL.length);
-            }
-            let totalPlayers = [];
-            for (const c of this.FlightsQL) {
-                for (let obj of c['MembersQL']) {
-                    totalPlayers.push(obj);
-                }
-            }
-            totalPlayers.sort(this.ComparatorHandicap);
-            //console.log(totalPlayers);
-            let count = 0;
-
-            for (const c of totalPlayers) {
-                if (count < 10) {
-                    let obj = {
-                        id: c.playerId,
-                        title:
-                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
-                        handicap: c.PlayerQL['handicap'],
-                        category: c.PlayerQL['playerCategory'],
-                        class: c.PlayerQL['playerCategory'],
-                    };
-                    this.topMembers.push(obj);
-                }
-                count++;
-            }
-            //console.log(this.topMembers);
-            this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
     public onChangeGross(event) {
         //console.log(event);
         this.selectedCategory = this.tournamentCategories[event.index].category;
@@ -923,242 +536,211 @@ export class ViewTournamentComponent implements OnInit {
     tabClicked(tab: any) {
 
         try {
-            if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
-                this.calculateStatistics1();
-                this.getRound1stats(1);
-                // this.getRound1stats(1);
-                // this.GrossData(this.tournamentCategories[0].category);
-                // this.NetData(this.tournamentCategories[0].category);
-            } else if (tab.index == 1 && tab.tab['textLabel'] !== 'Summary') {
-                this.calculateStatistics2();
-                this.getRound2stats(2);
-            } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
-                this.calculateStatistics3();
-                this.getRound3stats(3);
-            } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
-                this.calculateStatistics4();
-                this.getRound4stats(4);
-            } else if (tab.index == 4 && tab.tab['textLabel'] !== 'Summary') {
-                this.calculateStatistics4();
-                this.getRound4stats(4);
-            } else {
-                this.GrossData(
-                    this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
-                        .category
-                );
-                this.NetData(
-                    this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
-                        .category
-                );
-            }
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
-    maintabClicked(tab: any) {
-        try {
-            this.logger.log('Admin click on Main Tab in View Tournament Page', "info", tab.toString());
-            if (!this.showMatchPlay) {
-                if (tab.index == 0) {
-                    this.showMainTab1 = true;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                    if (this.activeRound == 1) this.calculateStatistics1();
-                    this.getRound1stats(1);
-                    if (this.activeRound == 2) this.calculateStatistics2();
-                    this.getRound2stats(2);
-                    if (this.activeRound == 3) this.calculateStatistics3();
-                    this.getRound3stats(3);
-                    if (this.activeRound == 4) this.calculateStatistics4();
-                    this.getRound4stats(4);
-                } else if (tab.index == 1) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = true;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                } else if (tab.index == 2) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = true;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                } else if (tab.index == 3) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.getTournamentMembers();
-                    this.showMainTab5 = true;
-                } else if (tab.index == 4) {
+            this.activeRound = tab.round;
+            this.calculateStatistics(tab.round);
+            this.getRoundStats(tab.round);
 
-                }
-            } else {
-                if (tab.index == 0) {
-                    this.showMainTab1 = true;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                    this.showMainTab6 = false;
-                    if (this.activeRound == 1) this.calculateStatistics1();
-                    this.getRound1stats(1);
-                    if (this.activeRound == 2) this.calculateStatistics2();
-                    this.getRound2stats(2);
-                    if (this.activeRound == 3) this.calculateStatistics3();
-                    this.getRound3stats(3);
-                    if (this.activeRound == 4) this.calculateStatistics4();
-                    this.getRound4stats(4);
-                } else if (tab.index == 1) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = true;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                    this.showMainTab6 = false;
-                } else if (tab.index == 2) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                    this.showMainTab6 = true;
-                } else if (tab.index == 3) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = true;
-                    this.showMainTab4 = false;
-                    this.showMainTab5 = false;
-                    this.showMainTab6 = false;
-                } else if (tab.index == 4) {
-                    this.showMainTab1 = false;
-                    this.showMainTab2 = false;
-                    this.showMainTab3 = false;
-                    this.showMainTab4 = false;
-                    this.getTournamentMembers();
-                    this.showMainTab5 = true;
-                    this.showMainTab6 = false;
-                } else {
-
-
-                }
-            }
-
+            // if (tab.index == 0 && tab.tab['textLabel'] !== 'Summary') {
+            //     this.calculateStatistics1();
+            //     this.getRound1stats(1);
+            //     // this.getRound1stats(1);
+            //     // this.GrossData(this.tournamentCategories[0].category);
+            //     // this.NetData(this.tournamentCategories[0].category);
+            // } else if (tab.index == 1 && tab.tab['textLabel'] !== 'Summary') {
+            //     this.calculateStatistics2();
+            //     this.getRound2stats(2);
+            // } else if (tab.index == 2 && tab.tab['textLabel'] !== 'Summary') {
+            //     this.calculateStatistics3();
+            //     this.getRound3stats(3);
+            // } else if (tab.index == 3 && tab.tab['textLabel'] !== 'Summary') {
+            //     this.calculateStatistics4();
+            //     this.getRound4stats(4);
+            // } else if (tab.index == 4 && tab.tab['textLabel'] !== 'Summary') {
+            //     this.calculateStatistics4();
+            //     this.getRound4stats(4);
+            // } else {
+            //     this.GrossData(
+            //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+            //             .category
+            //     );
+            //     this.NetData(
+            //         this.dataFullTournament['TournamentQL'][0].CategoriesQL[0]
+            //             .category
+            //     );
+            // }
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
     }
 
-    getRoundsstats() {
-        try {
-            if (this.roundsStats) return;
-
-            let roundFlights = this.fullTournament.FlightsQL;
-
-            let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
-            let finalScoreStats: ScoreStats = stats.getApplicationStats();
-            //console.log(finalScoreStats);
-
-            this.avgScore['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
-            this.avgScore['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
-            this.avgScore['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
-            this.avgScore['shotsBirdiesPercent'] =
-                finalScoreStats.getShotsBirdiesPercent();
-            this.avgScore['shotsBogeysPercent'] =
-                finalScoreStats.getShotsBogeysPercent();
-            this.avgScore['shotsThreeOrHigherPercent'] =
-                finalScoreStats.getShotsThreeOrHigherPercent();
-            this.avgScore['shotsParsPercent'] =
-                finalScoreStats.getShotsParsPercent();
-            this.avgScore['shotsDoubleBogeysPercent'] =
-                finalScoreStats.getShotsDoubleBogeysPercent();
-
-            this.chartavgScore.push(
-                Math.floor(Number(finalScoreStats.par3Stats.getAvgScores()))
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.par4Stats.getAvgScores())
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.par5Stats.getAvgScores())
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.getShotsBirdiesPercent())
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.getShotsBogeysPercent())
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.getShotsParsPercent())
-            );
-            this.chartavgScore.push(
-                Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-            );
-            this._series['0'] = [
-                {
-                    data: this.chartavgScore,
-                    name: 'Members',
-                    type: 'line',
-                },
-                {
-                    data: this.chartavgScore,
-                    name: 'Rounds',
-                    type: 'column',
-                },
-            ];
-            //console.log(this._series);
-
-            if (finalScoreStats['grossTotal'] != 0) {
-                this.pieChartData1 = [
-                    General.precisionRound(this.avgScore['par3Avg'], 2),
-                    General.precisionRound(this.avgScore['par4Avg'], 2),
-                    General.precisionRound(this.avgScore['par5Avg'], 2),
-                ];
-                this.roundsStats = true;
-            } else {
-                this.pieChartData1 = [0.01, 0.01, 0.01];
-                this.roundsStats = false;
-            }
-
-            this.chart();
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
+    setPrimaryTab(tab: string) {
+        this.activeTab = tab;
+        this.calculateStatistics(this.activeRound);
+        this.getRoundStats(this.activeRound);
     }
-    getRound1stats(round: number) {
+
+    activePrimaryTab() {
+        return this.activeTab;
+    }
+
+    // maintabClicked(tab: any) {
+    //     try {
+    //         this.logger.log('Admin click on Main Tab in View Tournament Page', "info", tab.toString());
+    //         if (!this.showMatchPlay) {
+    //             if (tab.index == 0) {
+    //                 this.showMainTab1 = true;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //                 if (this.activeRound == 1) this.calculateStatistics1();
+    //                 this.getRound1stats(1);
+    //                 if (this.activeRound == 2) this.calculateStatistics2();
+    //                 this.getRound2stats(2);
+    //                 if (this.activeRound == 3) this.calculateStatistics3();
+    //                 this.getRound3stats(3);
+    //                 if (this.activeRound == 4) this.calculateStatistics4();
+    //                 this.getRound4stats(4);
+    //             } else if (tab.index == 1) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = true;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //             } else if (tab.index == 2) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = true;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //             } else if (tab.index == 3) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.getTournamentMembers();
+    //                 this.showMainTab5 = true;
+    //             } else if (tab.index == 4) {
+
+    //             }
+    //         } else {
+    //             if (tab.index == 0) {
+    //                 this.showMainTab1 = true;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //                 this.showMainTab6 = false;
+    //                 if (this.activeRound == 1) this.calculateStatistics1();
+    //                 this.getRound1stats(1);
+    //                 if (this.activeRound == 2) this.calculateStatistics2();
+    //                 this.getRound2stats(2);
+    //                 if (this.activeRound == 3) this.calculateStatistics3();
+    //                 this.getRound3stats(3);
+    //                 if (this.activeRound == 4) this.calculateStatistics4();
+    //                 this.getRound4stats(4);
+    //             } else if (tab.index == 1) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = true;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //                 this.showMainTab6 = false;
+    //             } else if (tab.index == 2) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //                 this.showMainTab6 = true;
+    //             } else if (tab.index == 3) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = true;
+    //                 this.showMainTab4 = false;
+    //                 this.showMainTab5 = false;
+    //                 this.showMainTab6 = false;
+    //             } else if (tab.index == 4) {
+    //                 this.showMainTab1 = false;
+    //                 this.showMainTab2 = false;
+    //                 this.showMainTab3 = false;
+    //                 this.showMainTab4 = false;
+    //                 this.getTournamentMembers();
+    //                 this.showMainTab5 = true;
+    //                 this.showMainTab6 = false;
+    //             } else {
+
+
+    //             }
+    //         }
+
+    //     } catch (error) {
+    //         this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
+    //     }
+    // }
+
+    getRoundStats(round?: number) {
         // if (this.round1Stats) return;
-        this.avgScore1 = [];
+        this.avgScore = [];
         this.chartavgScore1 = [];
         this.pieChartData1 = [];
         this._series = [];
+        let roundFlights = [];
 
-        let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == round;
-        });
+        if (round) {
+            roundFlights = this.fullTournament.FlightsQL.filter((a) => {
+                return a.flightRound == round;
+            });
+        } else {
+            roundFlights = this.fullTournament.FlightsQL;
+        }
 
         let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
         let finalScoreStats: ScoreStats = stats.getApplicationStats();
         //console.log(finalScoreStats);
+        // this.avgScore.push({
+        //     name: 'On Par 3',
+        //     value: finalScoreStats.par3Stats.getAvgScores(),
+        // })
+        // this.avgScore.push({
+        //     name: 'On Par 4',
+        //     value: finalScoreStats.par4Stats.getAvgScores(),
+        // })
+        // this.avgScore.push({
+        //     name: 'On Par 5',
+        //     value: finalScoreStats.par5Stats.getAvgScores(),
+        // })
+        this.avgScore.push({
+            name: 'Birdies',
+            value: Math.round(finalScoreStats.getShotsBirdiesPercent()),
+        })
+        this.avgScore.push({
+            name: 'Pars',
+            value: Math.round(finalScoreStats.getShotsParsPercent()),
+        })
+        this.avgScore.push({
+            name: 'Bogeys',
+            value: Math.round(finalScoreStats.getShotsBogeysPercent()),
+        })
+        this.avgScore.push({
+            name: 'D. Bogeys',
+            value: Math.round(finalScoreStats.getShotsDoubleBogeysPercent()),
+        })
 
-        this.avgScore1['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
-        this.avgScore1['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
-        this.avgScore1['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
+        // this.avgScore['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
+        // this.avgScore['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
+        // this.avgScore['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
 
-        this.avgScore1['shotsBirdiesPercent'] =
-            finalScoreStats.getShotsBirdiesPercent();
-        this.avgScore1['shotsBogeysPercent'] =
-            finalScoreStats.getShotsBogeysPercent();
-        this.avgScore1['shotsThreeOrHigherPercent'] =
-            finalScoreStats.getShotsThreeOrHigherPercent();
-        this.avgScore1['shotsParsPercent'] =
-            finalScoreStats.getShotsParsPercent();
-        this.avgScore1['shotsDoubleBogeysPercent'] =
-            finalScoreStats.getShotsDoubleBogeysPercent();
+        // this.avgScore['shotsBirdiesPercent'] =
+        //     finalScoreStats.getShotsBirdiesPercent();
+        // this.avgScore['shotsBogeysPercent'] =
+        //     finalScoreStats.getShotsBogeysPercent();
+        // this.avgScore['shotsThreeOrHigherPercent'] =
+        //     finalScoreStats.getShotsThreeOrHigherPercent();
+        // this.avgScore['shotsParsPercent'] =
+        //     finalScoreStats.getShotsParsPercent();
+        // this.avgScore['shotsDoubleBogeysPercent'] =
+        //     finalScoreStats.getShotsDoubleBogeysPercent();
 
         this.chartavgScore1.push(
             Math.round(finalScoreStats.getShotsBirdiesPercent())
@@ -1214,245 +796,6 @@ export class ViewTournamentComponent implements OnInit {
         this.round1Stats = true;
     }
 
-    getRound2stats(round: number) {
-        // if (this.round2Stats) return;
-        this.avgScore2 = [];
-        this.chartavgScore2 = [];
-        this.pieChartData2 = [];
-        this._series = [];
-        let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == round;
-        });
-
-        let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
-        let finalScoreStats: ScoreStats = stats.getApplicationStats();
-
-        this.avgScore2['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
-        this.avgScore2['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
-        this.avgScore2['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
-
-        this.avgScore2['shotsBirdiesPercent'] =
-            finalScoreStats.getShotsBirdiesPercent();
-        this.avgScore2['shotsBogeysPercent'] =
-            finalScoreStats.getShotsBogeysPercent();
-        this.avgScore2['shotsThreeOrHigherPercent'] =
-            finalScoreStats.getShotsThreeOrHigherPercent();
-        this.avgScore2['shotsParsPercent'] =
-            finalScoreStats.getShotsParsPercent();
-        this.avgScore2['shotsDoubleBogeysPercent'] =
-            finalScoreStats.getShotsDoubleBogeysPercent();
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.par3Stats.getAvgScores())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.par4Stats.getAvgScores())
-        );
-        this.chartavgScore2.push(
-            Math.floor(finalScoreStats.par5Stats.getAvgScores())
-        );
-
-        this._series['0'] = [
-            {
-                data: this.chartavgScore2,
-                name: 'Average',
-                type: 'line',
-            },
-            {
-                data: this.chartavgScore2,
-                name: 'Average',
-                type: 'column',
-            },
-        ];
-
-        // this.pieChartData2 = [
-        //   General.precisionRound(this.avgScore2["par3Avg"], 2),
-        //   General.precisionRound(this.avgScore2["par4Avg"], 2),
-        //   General.precisionRound(this.avgScore2["par5Avg"], 2),
-        // ];
-        if (finalScoreStats['grossTotal'] != 0) {
-            this.pieChartData2 = [
-                General.precisionRound(this.avgScore2['par3Avg'], 2),
-                General.precisionRound(this.avgScore2['par4Avg'], 2),
-                General.precisionRound(this.avgScore2['par5Avg'], 2),
-            ];
-        } else {
-            this.pieChartData2 = [0.01, 0.01, 0.01];
-        }
-        this.round2Stats = true;
-        this.chart();
-    }
-
-    getRound3stats(round: number) {
-        // if (this.round3Stats) return;
-        this.avgScore3 = [];
-        this.chartavgScore3 = [];
-        this.pieChartData3 = [];
-        this._series = [];
-
-        let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == round;
-        });
-
-        let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
-        let finalScoreStats: ScoreStats = stats.getApplicationStats();
-
-        this.avgScore3['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
-        this.avgScore3['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
-        this.avgScore3['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
-
-        this.avgScore3['shotsBirdiesPercent'] =
-            finalScoreStats.getShotsBirdiesPercent();
-        this.avgScore3['shotsBogeysPercent'] =
-            finalScoreStats.getShotsBogeysPercent();
-        this.avgScore3['shotsThreeOrHigherPercent'] =
-            finalScoreStats.getShotsThreeOrHigherPercent();
-        this.avgScore3['shotsParsPercent'] =
-            finalScoreStats.getShotsParsPercent();
-        this.avgScore3['shotsDoubleBogeysPercent'] =
-            finalScoreStats.getShotsDoubleBogeysPercent();
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.par3Stats.getAvgScores())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.par4Stats.getAvgScores())
-        );
-        this.chartavgScore3.push(
-            Math.floor(finalScoreStats.par5Stats.getAvgScores())
-        );
-
-        this._series['0'] = [
-            {
-                data: this.chartavgScore3,
-                name: 'Average',
-                type: 'line',
-            },
-            {
-                data: this.chartavgScore3,
-                name: 'Average',
-                type: 'column',
-            },
-        ];
-        if (finalScoreStats['grossTotal'] != 0) {
-            this.pieChartData3 = [
-                General.precisionRound(this.avgScore3['par3Avg'], 2),
-                General.precisionRound(this.avgScore3['par4Avg'], 2),
-                General.precisionRound(this.avgScore3['par5Avg'], 2),
-            ];
-        } else {
-            this.pieChartData3 = [0.01, 0.01, 0.01];
-        }
-        this.chart();
-        this.round3Stats = true;
-    }
-
-    getRound4stats(round: number) {
-        // if (this.round4Stats) return;
-        this.avgScore4 = [];
-        this.chartavgScore4 = [];
-        this.pieChartData4 = [];
-        this._series = [];
-
-        let roundFlights = this.fullTournament.FlightsQL.filter((a) => {
-            return a.flightRound == round;
-        });
-
-        let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
-        let finalScoreStats: ScoreStats = stats.getApplicationStats();
-
-        this.avgScore4['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
-        this.avgScore4['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
-        this.avgScore4['par5Avg'] = finalScoreStats.par5Stats.getAvgScores();
-
-        this.avgScore4['shotsBirdiesPercent'] =
-            finalScoreStats.getShotsBirdiesPercent();
-        this.avgScore4['shotsBogeysPercent'] =
-            finalScoreStats.getShotsBogeysPercent();
-        this.avgScore4['shotsThreeOrHigherPercent'] =
-            finalScoreStats.getShotsThreeOrHigherPercent();
-        this.avgScore4['shotsParsPercent'] =
-            finalScoreStats.getShotsParsPercent();
-        this.avgScore4['shotsDoubleBogeysPercent'] =
-            finalScoreStats.getShotsDoubleBogeysPercent();
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsBirdiesPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsParsPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsBogeysPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsDoubleBogeysPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.getShotsThreeOrHigherPercent())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.par3Stats.getAvgScores())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.par4Stats.getAvgScores())
-        );
-        this.chartavgScore4.push(
-            Math.floor(finalScoreStats.par5Stats.getAvgScores())
-        );
-
-        this._series['0'] = [
-            {
-                data: this.chartavgScore4,
-                name: 'Average',
-                type: 'line',
-            },
-            {
-                data: this.chartavgScore4,
-                name: 'Average',
-                type: 'column',
-            },
-        ];
-        if (finalScoreStats['grossTotal'] != 0) {
-            this.pieChartData4 = [
-                General.precisionRound(this.avgScore4['par3Avg'], 2),
-                General.precisionRound(this.avgScore4['par4Avg'], 2),
-                General.precisionRound(this.avgScore4['par5Avg'], 2),
-            ];
-        } else {
-            this.pieChartData4 = [0.01, 0.01, 0.01];
-        }
-        this.chart();
-        this.round4Stats = true;
-    }
-
     chart() {
         this.chartGithubIssues = {
             chart: {
@@ -1467,15 +810,7 @@ export class ViewTournamentComponent implements OnInit {
                     enabled: false,
                 },
             },
-            colors: [
-                '#A70606',
-                '#DC5B11',
-                '#0F0F03',
-                '#061797',
-                '#DDDED8',
-                '#C109AE',
-                '#0A9928',
-                '#450707',
+            colors: ['#155e46','#10b981',
             ],
             dataLabels: {
                 enabled: true,

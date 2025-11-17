@@ -1,0 +1,837 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container class="flex-auto h-full dark:bg-transparent">
+
+        <mat-drawer-content class="flex flex-col">
+            <div *ngIf="!isLoading" class="flex flex-col flex-auto min-w-0">
+                <div class="bg-card">
+                    <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+
+                        <a class="inline-flex items-center leading-6 mt-4 text-primary hover:underline"
+                            [routerLink]="['/tournaments']">
+                            <span class="inline-flex items-center">
+                                <mat-icon class="icon-size-5 text-current"
+                                    [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
+                                <span class="ml-1.5 font-medium leading-5">Back to Tournaments</span>
+                            </span>
+                        </a>
+                        <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                            <div class="flex flex-auto items-center min-w-0">
+
+
+                                <div class="flex-0 w-24 rounded-full overflow-hidden">
+                                    <img class="w-full h-full object-cover" src="../../../../../assets/images/logo/{{
+                                            clubLogo
+                                        }}" />
+                                </div>
+                                <div class="flex flex-col min-w-0 ml-4">
+                                    <ng-container>
+                                        <div
+                                            class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                            {{ fullTournament?.title }}
+                                            <button mat-icon-button (click)="
+                                                    redirectToTournamentSetup()
+                                                " color="accent">
+                                                <mat-icon style="
+                                                        font-size: 34px;
+                                                        padding: 4px;
+                                                    " class="mat-18">edit</mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                    <div class="flex items-center">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                                        <div class="ml-1.5 leading-6 truncate text-secondary">
+                                            {{
+                                            fullTournament?.startDate
+                                            | date
+                                            }}-{{
+                                            fullTournament?.endDate | date
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                                <button class="bg-accent" mat-flat-button (click)="redirectToLeaderboard()"
+                                    [color]="'accent'">
+                                    <mat-icon class="icon-size-5" [svgIcon]="
+                                            'heroicons_solid:leaderBoard'
+                                        "></mat-icon>
+                                    <span class="ml-2">Leaderboard</span>
+                                </button>
+                                <button mat-flat-button [color]="'primary'" (click)="viewMarshalList()">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:marshals'"></mat-icon>
+                                    <span class="ml-2">Marshals</span>
+                                </button>
+                                <button mat-flat-button [color]="'primary'" (click)="viewsignupform()">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                                    <span class="ml-2">Sign up Form</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-6 sm:grid-cols-2 mb-10 md:grid-cols-6 gap-6 w-full min-w-0">
+                            <!-- Summary -->
+                            <div *ngIf="this.AmateursCount>0"
+                                class="flex flex-col flex-auto p-6 bg-card shadow-xl border rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                        Amateurs
+                                    </div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-6">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
+                                        {{ this.AmateursCount }}
+                                    </div>
+                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">
+                                        Players
+                                    </div>
+                                    <div class="flex flex-col items-center justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">
+                                            Playing Dates:
+                                        </div>
+                                        <div class="text-lg font-semibold bg-blue-500 text-white rounded-md p-1 mb-1"
+                                            *ngFor="
+                                                let s of AmateursPlayingDates
+                                            ">
+                                            {{ s.dates }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="this.SeniorsCount > 0"
+                                class="flex flex-col flex-auto p-6 bg-card shadow-xl border rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                        Seniors
+                                    </div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-6">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">
+                                        {{ this.SeniorsCount }}
+                                    </div>
+                                    <div class="text-lg font-medium text-red-600 dark:text-red-500">
+                                        Players
+                                    </div>
+                                    <div class="flex flex-col items-center justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">
+                                            Playing Dates:
+                                        </div>
+                                        <div class="text-lg font-semibold bg-red-500 text-white rounded-md p-1 mb-1"
+                                            *ngFor="
+                                                let s of SeniorsPlayingDates
+                                            ">
+                                            {{ s.dates }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="this.JuniorsCount>0"
+                                class="flex flex-col flex-auto p-6 bg-card shadow-xl border rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                        Juniors
+                                    </div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-6">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
+                                        {{ this.JuniorsCount }}
+                                    </div>
+                                    <div class="text-lg font-medium text-amber-600 dark:text-amber-500">
+                                        Players
+                                    </div>
+                                    <div class="flex flex-col items-center justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">
+                                            Playing Dates:
+                                        </div>
+                                        <div class="text-lg font-semibold bg-amber-500 text-white rounded-md p-1 mb-1"
+                                            *ngFor="
+                                                let s of JuniorsPlayingDates
+                                            ">
+                                            {{ s.dates }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="this.VeteransCount>0"
+                                class="flex flex-col flex-auto p-6 bg-card shadow-xl border rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                        Professionals
+                                    </div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-6">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">
+                                        {{ this.VeteransCount }}
+                                    </div>
+                                    <div class="text-lg font-medium text-green-600 dark:text-green-500">
+                                        Players
+                                    </div>
+                                    <div class="flex flex-col items-center justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">
+                                            Playing Dates:
+                                        </div>
+                                        <div class="text-lg font-semibold bg-green-500 text-white rounded-md p-1 mb-1"
+                                            *ngFor="
+                                                let s of VeteransPlayingDates
+                                            ">
+                                            {{ s.dates }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="this.LadiesCount>0"
+                                class="flex flex-col flex-auto p-6 bg-card shadow-xl border rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                        Ladies
+                                    </div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-6">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-yellow-500">
+                                        {{ this.LadiesCount }}
+                                    </div>
+                                    <div class="text-lg font-medium text-yellow-600 dark:text-yellow-500">
+                                        Players
+                                    </div>
+                                    <div class="flex flex-col items-center justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">
+                                            Playing Dates:
+                                        </div>
+                                        <div class="text-lg font-semibold bg-yellow-500 text-white rounded-md p-1 mb-1"
+                                            *ngFor="let s of LadiesPlayingDates">
+                                            {{ s.dates }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex flex-col flex-auto p-6 bg-card shadow-xl border rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                        Total Players
+                                    </div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-6">
+                                    <div
+                                        class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-teal-500">
+                                        {{ this.membersData.length }}
+                                    </div>
+                                    <div class="text-lg font-medium text-teal-600 dark:text-teal-500">
+                                        Players
+                                    </div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                        <!-- <div
+                                            class="text-md font-medium truncate"
+                                        >
+                                            Players
+                                        </div>
+                                        <div
+                                            class="ml-1.5 text-lg font-semibold"
+                                        >
+                                            {{ this.membersData.length }}
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex relatives self-start pt-2 pb-1 pr-4 cursor-pointer overflow-hidden rounded-t-xl border border-b-0 bg-default">
+                            <mat-tab-group [selectedIndex]="mainSelected" (selectedTabChange)="maintabClicked($event)"
+                                mat-stretch-tabs="false" mat-align-tabs="start">
+                                <mat-tab label="Overview"></mat-tab>
+                                <mat-tab class="pl-5" label="Groups"></mat-tab>
+                                <mat-tab *ngIf="showMatchPlay" label="Teams"></mat-tab>
+                                <mat-tab label="Scores"></mat-tab>
+                                <!-- <mat-tab label="Leaderboard"></mat-tab> -->
+                                <mat-tab label="Participants"></mat-tab>
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="this.showMainTab1" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                    <div class="w-full max-w-screen-xl mx-auto">
+                        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [selectedIndex]="selected"
+                            (selectedTabChange)="tabClicked($event)">
+                            <mat-tab *ngFor="let round of rounds" [label]="round.label">
+                                <ng-template matTabContent>
+                                    <div class="flex flex-auto justify-end gap-3">
+                                        <button *ngIf="activeRound > 1" mat-raised-button mat-button
+                                            class="my-3 float-right" color="primary" (click)="undoRound()">
+                                            Undo Round {{activeRound}}
+                                        </button>
+                                        <button *ngIf="activeRound < noOfRounds" mat-raised-button mat-button
+                                            class="my-3 float-right" color="warn" (click)="closeRound()">
+                                            Close Round {{activeRound}}
+                                        </button>
+                                        <button mat-raised-button mat-button color="primary"
+                                            class="my-3 mx-1 float-right" *ngIf="activeRound >= noOfRounds"
+                                            (click)="calculateHandicap()">
+                                            Handicap Calculation
+                                        </button>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6 w-full min-w-0">
+                                        <div *ngIf="
+                                                this.topMembers.length;
+                                                else noCourses
+                                            "
+                                            class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                            <div class="flex flex-col sm:flex-row items-start justify-between">
+                                                <div class="text-lg font-medium tracking-tight leading-6 truncate">
+                                                    Top Players
+                                                </div>
+                                                <div class="mt-3 sm:mt-0 sm:ml-2">
+                                                    <mat-button-toggle-group value="members"
+                                                        #scheduleDaySelector="matButtonToggleGroup">
+                                                        <mat-button-toggle value="members">Members</mat-button-toggle>
+                                                    </mat-button-toggle-group>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex flex-col flex-auto mt-2 overflow-x-auto">
+                                                <table class="overflow-y-visible" mat-table [dataSource]="
+                                                        dataSourceMembersStatus
+                                                    ">
+                                                    <!-- Type -->
+                                                    <ng-container matColumnDef="category" sticky>
+                                                        <th mat-header-cell *matHeaderCellDef>
+                                                            Category
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let budget
+                                                            ">
+                                                            <span class="flex items-center">
+                                                                <span class="w-2 h-2 rounded-full" [ngClass]="{
+                                                                        'bg-blue-500':
+                                                                            budget.category ===
+                                                                            'Amateurs',
+                                                                        'bg-red-500':
+                                                                            budget.category ===
+                                                                            'Senior Amateurs',
+                                                                        'bg-green-500':
+                                                                            budget.category ===
+                                                                            'Veterans',
+                                                                        'bg-amber-500':
+                                                                            budget.category ===
+                                                                            'Ladies',
+                                                                        'bg-indigo-500':
+                                                                            budget.category ===
+                                                                            'Junior Amateurs',
+                                                                        'bg-red-900':
+                                                                            budget.category ===
+                                                                            'Professionals'
+                                                                    }"></span>
+                                                                <span class="ml-3 leading-4">{{
+                                                                    budget.category
+                                                                    }}</span>
+                                                            </span>
+                                                        </td>
+                                                    </ng-container>
+                                                    <!-- Total -->
+                                                    <ng-container matColumnDef="name">
+                                                        <th mat-header-cell *matHeaderCellDef>
+                                                            Name
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let budget
+                                                            ">
+                                                            <span class="font-medium text-right">
+                                                                {{
+                                                                budget.title | uppercase
+                                                                }}
+                                                            </span>
+                                                        </td>
+                                                    </ng-container>
+                                                    <!-- Total -->
+                                                    <ng-container matColumnDef="handicap">
+                                                        <th mat-header-cell *matHeaderCellDef>
+                                                            Handicap
+                                                        </th>
+                                                        <td mat-cell *matCellDef="
+                                                                let budget
+                                                            ">
+                                                            <span class="flex items-center">
+                                                                <span>
+                                                                    <!-- Low -->
+                                                                    <span
+                                                                        class="flex items-end w-1 h-4 bg-red-200 rounded overflow-hidden"
+                                                                        *ngIf="
+                                                                            budget.handicap >
+                                                                            12
+                                                                        ">
+                                                                        <span
+                                                                            class="flex w-full h-1/3 bg-red-600"></span>
+                                                                    </span>
+                                                                    <!-- Medium -->
+                                                                    <span
+                                                                        class="flex items-end w-1 h-4 bg-orange-200 rounded overflow-hidden"
+                                                                        *ngIf="
+                                                                            budget.handicap <
+                                                                                12 &&
+                                                                            budget.handicap >
+                                                                                8
+                                                                        ">
+                                                                        <span
+                                                                            class="flex w-full h-2/4 bg-orange-400"></span>
+                                                                    </span>
+                                                                    <!-- High -->
+                                                                    <span
+                                                                        class="flex items-end w-1 h-4 bg-green-100 rounded overflow-hidden"
+                                                                        *ngIf="
+                                                                            budget.handicap <
+                                                                            7
+                                                                        ">
+                                                                        <span
+                                                                            class="flex w-full h-full bg-green-400"></span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="ml-3 leading-4">HC:{{
+                                                                    budget.handicap
+                                                                    }}</span>
+                                                            </span>
+                                                        </td>
+                                                    </ng-container>
+                                                    <tr mat-header-row *matHeaderRowDef="
+                                                            displayedColumnsMembersStatus
+                                                        "></tr>
+                                                    <tr mat-row *matRowDef="
+                                                            let row;
+                                                            columns: displayedColumnsMembersStatus
+                                                        "></tr>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <ng-template #noCourses>
+                                            <div
+                                                class="sm:col-span-2 md:col-span-4 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden items-center justify-center dark:bg-transparent">
+                                                <mat-icon class="icon-size-24" [svgIcon]="
+                                                        'heroicons_outline:document-search'
+                                                    "></mat-icon>
+                                                <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+                                                    No Members Added!
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                        <div *ngIf="
+                                                this.FlightsQL.length;
+                                                else noFlights
+                                            "
+                                            class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                            <div class="flex flex-col sm:flex-row items-start justify-between">
+                                                <div class="text-lg font-medium tracking-tight leading-6 truncate">
+
+                                                    Groups
+
+                                                </div>
+                                                <div class="mt-3 sm:mt-0 sm:ml-2">
+                                                    <mat-button-toggle-group value="today"
+                                                        #scheduleDaySelector="matButtonToggleGroup">
+                                                        <mat-button-toggle value="today">Today</mat-button-toggle>
+                                                    </mat-button-toggle-group>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col mt-2 divide-y">
+                                                <ng-container *ngFor="
+                                                        let flight of FlightsQL;
+                                                        trackBy: trackByFn
+                                                    ">
+                                                    <div class="flex flex-row items-center justify-between py-4 px-0.5">
+                                                        <div class="flex flex-col">
+                                                            <div class="font-medium">
+
+                                                                Group No:{{
+
+                                                                flight.flightNo
+                                                                }}
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
+                                                                <ng-container *ngIf="
+                                                                        flight.time
+                                                                    ">
+                                                                    <div class="flex items-center">
+                                                                        <mat-icon class="icon-size-5 text-hint"
+                                                                            [svgIcon]="
+                                                                                'heroicons_solid:clock'
+                                                                            "></mat-icon>
+                                                                        <div class="ml-1.5 text-md text-secondary">
+                                                                            {{
+                                                                            flight.time.substring(
+                                                                            0,
+                                                                            5
+                                                                            )
+                                                                            }}
+                                                                        </div>
+                                                                    </div>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="
+                                                                        flight.MembersQL
+                                                                    ">
+                                                                    <div class="flex items-center">
+                                                                        <mat-icon class="icon-size-5 text-hint"
+                                                                            [svgIcon]="
+                                                                                'heroicons_outline:user-group'
+                                                                            "></mat-icon>
+                                                                        <div class="ml-1.5 text-md text-secondary">
+                                                                            {{
+                                                                            flight
+                                                                            .MembersQL
+                                                                            .length
+                                                                            }}
+                                                                        </div>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+                                                        <button (click)="
+                                                                movetoFlight(
+                                                                    flight.id
+                                                                )
+                                                            " mat-icon-button>
+                                                            <mat-icon [svgIcon]="
+                                                                    'heroicons_solid:chevron-right'
+                                                                "></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <ng-template #noFlights>
+                                            <div
+                                                class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden items-center justify-center dark:bg-transparent">
+                                                <mat-icon class="icon-size-24" [svgIcon]="
+                                                        'heroicons_outline:document-search'
+                                                    "></mat-icon>
+                                                <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+
+                                                    No Groups Added!
+
+                                                </div>
+                                            </div>
+                                        </ng-template>
+
+                                        <div
+                                            class="sm:col-span-2 flex md:col-span-2 h-fit lg:col-span-3 flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                            <div class="text-lg font-semibold">% Score</div>
+                                            <div class="content mt-4">
+                                                <div class="flex gap-2 flex-wrap w-full">
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'shotsBirdiesPercent'
+                                                                ]
+                                                            " [label]="'Birdies'"></app-block-white-section>
+                                                    </div>
+
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'shotsParsPercent' 
+                                                                ]
+                                                            " [label]="'Pars'"></app-block-white-section>
+                                                    </div>
+
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'shotsBogeysPercent'
+                                                                ]
+                                                            " [label]="'Bogeys'"></app-block-white-section>
+                                                    </div>
+
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'shotsDoubleBogeysPercent'
+                                                                ]
+                                                            " [label]="
+                                                                'D. Bogeys'
+                                                            "></app-block-white-section>
+                                                    </div>
+
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'shotsThreeOrHigherPercent'
+                                                                ]
+                                                            " [label]="
+                                                                '3 or Plus'
+                                                            "></app-block-white-section>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="sm:col-span-2 flex md:col-span-2 lg:col-span-3 flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                            <div class="text-lg font-semibold">Average Score</div>
+                                            <div>
+                                                <div class="flex flex-col flex-auto">
+                                                    <apx-chart class="flex-auto w-full h-80" [chart]="
+                                                            chartGithubIssues.chart
+                                                        " [colors]="
+                                                            chartGithubIssues.colors
+                                                        " [dataLabels]="
+                                                            chartGithubIssues.dataLabels
+                                                        " [grid]="
+                                                            chartGithubIssues.grid
+                                                        " [labels]="
+                                                            chartGithubIssues.labels
+                                                        " [legend]="
+                                                            chartGithubIssues.legend
+                                                        " [plotOptions]="
+                                                            chartGithubIssues.plotOptions
+                                                        " [series]="
+                                                            chartGithubIssues
+                                                                .series[0]
+                                                        " [states]="
+                                                            chartGithubIssues.states
+                                                        " [stroke]="
+                                                            chartGithubIssues.stroke
+                                                        " [tooltip]="
+                                                            chartGithubIssues.tooltip
+                                                        " [xaxis]="
+                                                            chartGithubIssues.xaxis
+                                                        " [yaxis]="
+                                                            chartGithubIssues.yaxis
+                                                        "></apx-chart>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex">
+                                                <div class="mx-2">
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'par3Avg'
+                                                                ]
+                                                            " [label]="'On Par 3'"></app-block-white-section>
+                                                    </div>
+                                                </div>
+                                                <div class="mx-2">
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'par4Avg'
+                                                                ]
+                                                            " [label]="'On Par 4'"></app-block-white-section>
+                                                    </div>
+                                                </div>
+                                                <div class="mx-2">
+                                                    <div>
+                                                        <app-block-white-section [icon]="
+                                                                'emoji_people'
+                                                            " [data]="
+                                                                avgScore1[
+                                                                    'par5Avg'
+                                                                ]
+                                                            " [label]="'On Par 5'"></app-block-white-section>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+                <div *ngIf="this.showMainTab2" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+
+                    <div class="w-full max-w-screen-xl mx-auto">
+                        <app-flight-management [tournamentID]="tournamentID"></app-flight-management>
+                    </div>
+                </div>
+                <div *ngIf="this.showMainTab6" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                    <div class="w-full max-w-screen-xl mx-auto">
+                        <app-team-management [tournamentID]="tournamentID"></app-team-management>
+
+                    </div>
+                </div>
+                <div *ngIf="this.showMainTab3" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                    <div class="w-full max-w-screen-xl mx-auto">
+                        <app-matchplay [tournamentID]="tournamentID"
+                            [courseID]="this.fullTournament.courseId"></app-matchplay>
+                    </div>
+                </div>
+                <div *ngIf="this.showMainTab4" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                    <!-- <div class="w-full max-w-screen-xl mx-auto">
+                        <app-leaderboard [tournamentID]="tournamentID"></app-leaderboard>
+                    </div> -->
+                </div>
+                <div *ngIf="this.showMainTab5" class="flex-auto border-t -mt-px pt-4 sm:pt-6 mx-20">
+
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full ">
+                        <!-- Recent assessments table -->
+                        <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                            <div class="p-6 flex flex-col sm:flex-row items-center justify-between">
+                                <div>
+                                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">
+                                        Participants
+                                    </div>
+                                </div>
+                                <div class="flex flex-row justify-between items-center">
+
+                                    <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
+
+                                        <mat-form-field
+                                            class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
+                                            <mat-icon class="icon-size-5" matPrefix
+                                                [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                            <input matInput (input)="applyFilter($event.target.value)"
+                                                [placeholder]="'Search'" />
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3 max-w-60">
+
+                                    <button class="bg-accent" mat-flat-button (click)="playerList()"
+                                        [color]="'primary'">
+                                        <mat-icon class="icon-size-5" [svgIcon]="
+                                                'heroicons_solid:add-member'
+                                            "></mat-icon>
+                                        <span class="ml-2"> Add New Member</span>
+                                    </button>
+
+
+                                    <!-- Actions menu (visible on xs) -->
+                                    <div class="sm:hidden">
+                                        <button [matMenuTriggerFor]="actionsMenu" mat-icon-button>
+                                            <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                                        </button>
+                                        <mat-menu #actionsMenu="matMenu">
+                                            <button (click)="playerList()" mat-menu-item>
+                                                Add New Member
+                                            </button>
+
+                                        </mat-menu>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="overflow-x-auto mx-6">
+                                <table class="w-full bg-transparent" mat-table [dataSource]="dataSource"
+                                    [trackBy]="trackByFn" matSort>
+
+                                    <ng-container matColumnDef="firstName">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            First Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{ account.firstName | uppercase}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="lastName">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Last Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{ account["lastName"] | uppercase}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="email">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Email
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{ account["email"]}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="handicap">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Handicap
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{ account["handicap"]}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="category">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Category
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{ account["playerCategory"]}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="actions">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Action
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+                                            <div class="flex">
+                                                <span class="font-medium mr-2 whitespace-nowrap">
+                                                    <mat-icon (click)="deleteTM(account)"
+                                                        [svgIcon]="'heroicons_solid:trash'" color="warn"></mat-icon>
+                                                </span>
+
+
+                                                <span class="font-medium ml-1 whitespace-nowrap">
+                                                    <mat-icon class="ml-2" (click)="disqulifyTM(account)" [svgIcon]="
+                                                'heroicons_solid:close-eye'
+                                            " color="warn"></mat-icon>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+
+                                    <ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="tournamentMembersColumn"></tr>
+                                        <tr class="order-row h-16" mat-row
+                                            *matRowDef="let row; columns: tournamentMembersColumn;">
+                                        </tr>
+                                    </ng-container>
+
+                                </table>
+                                <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 80, 100]"></mat-paginator>
+                                <!-- <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recentOrdersTableFooter']"> -->
+                                <!-- </tr> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>  
