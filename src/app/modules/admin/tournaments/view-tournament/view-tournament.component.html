@@ -391,6 +391,18 @@
             </div>
         </div>
 
+        <div *ngIf="activePrimaryTab() === 'Groups'">
+            <div class="w-full">
+                <app-flight-management [tournamentID]="tournamentID"></app-flight-management>
+            </div>
+        </div>
+
+        <div *ngIf="activePrimaryTab() === 'Scores'" class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+            <div class="w-full">
+                <app-matchplay [tournamentID]="tournamentID" [courseID]="this.fullTournament.courseId"></app-matchplay>
+            </div>
+        </div>
+
         <!-- @else if (activePrimaryTab() === 'Groups') {
         <div class="animate-fade-in bg-white p-6 rounded-lg shadow-sm">
             <h2 class="text-xl font-bold text-gray-900 mb-4">All Groups</h2>

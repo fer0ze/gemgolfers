@@ -117,7 +117,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     flightRound: number = 0;
     activeRound: number;
     noOfRounds: number;
-    tRounds: TournamentRounds[] = [];
+    tRounds: any[] = [];
     roundFlights: any[] = [];
     copyScoreInfo: any[] = [];
     flightTees: Map<string, any> = new Map<string, any>();
@@ -244,18 +244,28 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         ////console.log(this.tournamentInfo[0]);
         if (this.tournamentInfo[0]) {
-            for (
-                let round = 1;
-                round <= this.tournamentInfo[0].noOfRounds;
-                round++
-            ) {
-                let r: any = {
-                    Text: 'Round ' + round,
-                    Value: round,
-                };
-                this.tRounds.push(r);
+
+            this.tRounds = [];
+
+            for (let i = 1; i <= this.noOfRounds; i++) {
+                let status = '';
+
+                if (i < this.activeRound) {
+                    status = 'Completed';
+                } else if (i === this.activeRound) {
+                    status = 'In Progress';
+                } else {
+                    status = 'Pending'; // or "Upcoming"
+                }
+
+                this.tRounds.push({
+                    label: 'Round ' + i,
+                    status: status,
+                    round: i
+                });
             }
         }
+
 
     }
 
@@ -972,7 +982,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     changeRound(item) {
         // console.log("Selected value: " + item.value);
 
-        this.flightRound = item.index + 1;
+        this.flightRound = item.round;
+        this.activeRound = item.round;
         this.roundFlights = [];
         this.selectedMembers = [];
 
