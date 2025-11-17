@@ -1675,28 +1675,29 @@ export class AddTournamentComponent implements OnInit {
                     }
                 }
             } else if (this.showShambles) {
-                const validTeams = this.selectedPairs.filter(t => t.members?.length);
+                const validPairs = this.selectedPairs.filter(p => p.members?.length);
 
-                const teamA = [...validTeams[0].members]; // clone array
-                const teamB = [...validTeams[1].members];
+                // Sorting or leave as is
+                // validPairs.sort((a, b) => a.id - b.id);
 
-                const perTeam = PperFlight / 2; // players per team in each flight
+                for (let i = 0; i < validPairs.length; i += 2) {
 
-                while (teamA.length >= perTeam && teamB.length >= perTeam) {
+                    // Check we have 2 pairs available for this flight
+                    const pairA = validPairs[i];
+                    const pairB = validPairs[i + 1];
 
-                    const flightAPlayers = teamA.splice(0, perTeam);
-                    const flightBPlayers = teamB.splice(0, perTeam);
+                    if (!pairB) break; // Odd pair left without match
 
                     selMembers.push({
-                        teamA: {
-                            pairId: validTeams[0].id,
-                            teamName: validTeams[0].name,
-                            members: flightAPlayers
+                        pairA: {
+                            pairId: pairA.id,
+                            pairName: pairA.name,
+                            members: [...pairA.members]
                         },
-                        teamB: {
-                            pairId: validTeams[1].id,
-                            teamName: validTeams[1].name,
-                            members: flightBPlayers
+                        pairB: {
+                            pairId: pairB.id,
+                            pairName: pairB.name,
+                            members: [...pairB.members]
                         }
                     });
                 }
@@ -3533,12 +3534,12 @@ export class AddTournamentComponent implements OnInit {
                         ind = 0;
                         for (var index4 in this.selectedMembers[index][index2][index3]) {
 
-                            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.SHAMBLES) {
-                                if (index4 == 'teamA' || index4 == 'teamB') {
+                            if (this.showShambles) {
+                                if (index4 == 'pairA' || index4 == 'pairB') {
                                     let pair = {
                                         id: UniqueIdGenerator.generate(),
                                         tournamentId: this.tournamentID,
-                                        pairName: this.selectedMembers[index][index2][index3][index4].teamName,
+                                        pairName: this.selectedMembers[index][index2][index3][index4].pairName,
                                         member1Id: this.selectedMembers[index][index2][index3][index4].members[0].id,
                                         member2Id: this.selectedMembers[index][index2][index3][index4].members[1].id,
                                     }
@@ -3595,7 +3596,7 @@ export class AddTournamentComponent implements OnInit {
                                 //         }
                                 //     }
                                 // }
-                            } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
+                            } else if (this.showMatchPlay) {
                                 // if (Number.isInteger(Number(index4))) {
                                 //     if (ind % 2 == 0) {
                                 //         let newIndex = Number(index4) + 1;

@@ -1342,18 +1342,18 @@
                                         </div>
                                         <!-- Players List -->
                                         <div class="flex-1">
-                                            <div cdkDropList [id]="'teamA-' + i" [cdkDropListData]="tee.teamA.members"
+                                            <div cdkDropList [id]="'pairA-' + i" [cdkDropListData]="tee.pairA.members"
                                                 [cdkDragLockAxis]="'y'"
-                                                [cdkDropListConnectedTo]="['teamA-' + (i-1), 'teamA-' + (i+1)]"
+                                                [cdkDropListConnectedTo]="['pairA-' + (i-1), 'pairA-' + (i+1)]"
                                                 (cdkDropListDropped)="onPlayerDrop($event, 'A', i)"
                                                 class="grid grid-cols-1 gap-3">
                                                 <h4 class="font-bold text-base text-gray-800 mb-2 pb-2 border-b-2 flex items-center"
                                                     >
                                                     <!-- <span class="w-3 h-3 rounded-full mr-2"></span> -->
-                                                    {{tee.teamA.teamName}}
+                                                    {{tee.pairA.teamName}}
                                                 </h4>
                                                 <div *ngFor="
-                                            let player of tee.teamA.members;
+                                            let player of tee.pairA.members;
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
@@ -1370,17 +1370,17 @@
                                         </div>
                                         <div class="flex items-center text-gray-400 font-bold text-lg">VS</div>
                                         <div class="flex-1">
-                                            <div cdkDropList [cdkDropListData]="tee.teamB.members" [id]="'teamB-' + i"
-                                                [[cdkDropListConnectedTo]="['teamB-' + (i-1), 'teamA-' + (i+1)]"
+                                            <div cdkDropList [cdkDropListData]="tee.pairB.members" [id]="'pairB-' + i"
+                                                [[cdkDropListConnectedTo]="['pairB-' + (i-1), 'teamA-' + (i+1)]"
                                                 (cdkDropListDropped)="onPlayerDrop($event, 'B', i)"
                                                 class="grid grid-cols-1 gap-3">
                                                 <h4 class="font-bold text-base text-gray-800 mb-2 pb-2 border-b-2 flex items-center"
                                                     >
                                                     <!-- <span class="w-3 h-3 rounded-full mr-2"></span> -->
-                                                    {{tee.teamB.teamName}}
+                                                    {{tee.pairB.teamName}}
                                                 </h4>
                                                 <div *ngFor="
-                                            let player of tee.teamB.members;
+                                            let player of tee.pairB.members;
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
