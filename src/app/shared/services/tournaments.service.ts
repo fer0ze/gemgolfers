@@ -1366,6 +1366,7 @@ export class TournamentsService {
                 );
         });
     }
+
     deleteTours(deleteTours: any[]): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo
@@ -1375,6 +1376,32 @@ export class TournamentsService {
                         where: {
                             id: {
                                 _in: deleteTours,
+                            },
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        //console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        //console.log('Could delete add due to ' + error);
+                    }
+                );
+        });
+    }
+
+    deleteScores(deleteScores: any[]): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.deleteScores,
+                    variables: {
+                        where: {
+                            id: {
+                                _in: deleteScores,
                             },
                         },
                     },

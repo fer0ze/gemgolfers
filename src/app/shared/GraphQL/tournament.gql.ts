@@ -1296,6 +1296,13 @@ export const DeleteTour = gql`
         }
     }
 `;
+export const deleteScores = gql`
+    mutation deleteScores($where: score_bool_exp!) {
+        delete_score(where: $where) {
+            affected_rows
+        }
+    }
+`;
 export const DeleteTourGuide = gql`
     mutation DeleteTournamentMember($where: tour_guide_bool_exp!) {
         delete_tour_guide(where: $where) {

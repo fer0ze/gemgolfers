@@ -350,6 +350,9 @@ export class ViewTournamentComponent implements OnInit {
                 this.dataFullTournament['TournamentQL'][0]['teamMatch'] == true ? this.showMatchPlay = true : false;
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
+                if (this.showMatchPlay) {
+                    this.tabs.push('Teams');
+                }
 
                 if (this.fullTournament) {
                     this.activeRound = this.fullTournament.activeRound;

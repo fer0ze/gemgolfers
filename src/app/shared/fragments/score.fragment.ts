@@ -7,6 +7,7 @@ fragment ScoreQL on score {
     holeId
     detailId
     playerHandicap
+    id
     HoleIPQL: hole {
         holeNo
         index

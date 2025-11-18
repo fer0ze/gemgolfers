@@ -499,6 +499,9 @@ export class FacadeService {
   deleteTours(deleteTours: any[]): Promise<boolean> {
     return this.tournamentService.deleteTours(deleteTours);
   }
+  deleteScores(deleteScores: any[]): Promise<boolean> {
+    return this.tournamentService.deleteScores(deleteScores);
+  }
   getLeagues() {
     return this.tournamentService.getLeagues();
   }

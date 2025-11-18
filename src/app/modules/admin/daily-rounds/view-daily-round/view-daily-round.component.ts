@@ -508,6 +508,8 @@ export class ViewDailyRoundComponent implements OnInit {
 
             let playerHole9Score: any = [];
             let playerHole18Score: any[] = [];
+            let playerHole9ScoreIds: any = [];
+            let playerHole18ScoreIds: any[] = [];
             let gross9Total = 0;
             let gross18Total = 0;
             let holePlayed: number = 0;
@@ -535,9 +537,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
                 if (hole) {
                     playerHole9Score[i] = hole.grossScore;
+                    playerHole9ScoreIds[i] = { id: hole.id, holeId: hole.holeId, playerId: playerId, flightId: flightData.id }
                     gross9Total += hole.grossScore;
                     holePlayed++;
-                } else playerHole9Score[i] = '';
+                } else {
+                    playerHole9Score[i] = '';
+                    playerHole9ScoreIds[i] = {};
+                }
             }
 
             for (let i = 0; i < 9; i++) {
@@ -574,9 +580,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
                     if (hole) {
                         playerHole18Score[i] = hole.grossScore;
+                        playerHole18ScoreIds[i] = { id: hole.id, holeId: hole.holeId, playerId: playerId, flightId: flightData.id }
                         gross18Total += hole.grossScore;
                         holePlayed++;
-                    } else playerHole18Score[i] = '';
+                    } else {
+                        playerHole18Score[i] = '';
+                        playerHole18ScoreIds[i] = {};
+                    }
                 }
             }
             let grossTotal: number = gross9Total + gross18Total;
@@ -594,6 +604,8 @@ export class ViewDailyRoundComponent implements OnInit {
                 memberShipNumber: player.membershipNumber,
                 handicap: player.handicap,
                 Hole9Scores: playerHole9Score,
+                Hole9ScoresIds: playerHole9ScoreIds,
+                Hole18ScoresIds: playerHole18ScoreIds,
                 Hole18Scores: playerHole18Score,
                 gross9Total: gross9Total,
                 gross18Total: gross18Total,
@@ -1170,6 +1182,8 @@ export class ViewDailyRoundComponent implements OnInit {
 
                 let playerHole9Score: any = [];
                 let playerHole18Score: any[] = [];
+                let playerHole9ScoreIds: any = [];
+                let playerHole18ScoreIds: any[] = [];
                 let gross9Total = 0;
                 let gross18Total = 0;
                 let holePlayed: number = 0;
@@ -1200,9 +1214,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
                         if (hole) {
                             playerHole9Score[i] = hole.grossScore;
+                            playerHole9ScoreIds[i] = { id: hole.id, holeId: hole.holeId, playerId: playerId, flightId: flightData.id }
                             gross9Total += hole.grossScore;
                             holePlayed++;
-                        } else playerHole9Score[i] = '';
+                        } else {
+                            playerHole9Score[i] = '';
+                            playerHole9ScoreIds[i] = {};
+                        }
                     }
                 }
 
@@ -1244,9 +1262,13 @@ export class ViewDailyRoundComponent implements OnInit {
 
                             if (hole) {
                                 playerHole18Score[i] = hole.grossScore;
+                                playerHole18ScoreIds[i] = { id: hole.id, holeId: hole.holeId, playerId: playerId, flightId: flightData.id }
                                 gross18Total += hole.grossScore;
                                 holePlayed++;
-                            } else playerHole18Score[i] = '';
+                            } else {
+                                playerHole18Score[i] = '';
+                                playerHole18ScoreIds[i] = {};
+                            }
                         }
                     }
                 }
@@ -1280,7 +1302,9 @@ export class ViewDailyRoundComponent implements OnInit {
                     memberShipNumber: player.membershipNumber,
                     handicap: handicap ? handicap : player.handicap,
                     Hole9Scores: playerHole9Score,
+                    Hole9ScoresIds: playerHole9ScoreIds,
                     Hole18Scores: playerHole18Score,
+                    Hole18ScoresIds: playerHole18ScoreIds,
                     gross9Total: gross9Total,
                     gross18Total: gross18Total,
                     grossTotal: grossTotal,
@@ -1339,6 +1363,15 @@ export class ViewDailyRoundComponent implements OnInit {
         this.showResult = true;
     }
 
+    findScoreId(list: any[], holeId: string, playerId: string, flightId: string) {
+        return list.find(x =>
+            x &&
+            x.holeId === holeId &&
+            x.playerId === playerId &&
+            x.flightId === flightId
+        );
+    }
+
     async saveFlightScore(flightId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
         ////console.log(flightId);
@@ -1360,6 +1393,7 @@ export class ViewDailyRoundComponent implements OnInit {
         //let courseQLs: any = tournamentData.CourseQL;
         //let holesQLs: any = courseQLs.HolesQL;
         let playerScores: Score[] = [];
+        let deleteIds: string[] = [];
 
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
@@ -1377,6 +1411,7 @@ export class ViewDailyRoundComponent implements OnInit {
             let totalPlayed = 0;
             let playerScoresIds: string[] = [];
             let playerEmptyScoresIds: string[] = [];
+            
             let player1DigitIds: string[] = [];
             let player2DigitIds: string[] = [];
 
@@ -1427,10 +1462,22 @@ export class ViewDailyRoundComponent implements OnInit {
                             );
 
                         totalPlayed++;
-                    } else
+                    } else {
                         playerEmptyScoresIds.push(
                             hole.id + '&' + player.playerId
                         );
+                        let match = this.findScoreId(player.Hole9ScoresIds, hole.id, player.playerId, flightId);
+
+                        // If not found, search in Hole18
+                        if (!match) {
+                            match = this.findScoreId(player.Hole18ScoresIds, hole.id, player.playerId, flightId);
+                        }
+
+                        // Push ID if match found
+                        if (match && match.id) {
+                            deleteIds.push(match.id);
+                        }
+                    }
                 }
             }
             //console.log(playerScores);
@@ -1456,6 +1503,10 @@ export class ViewDailyRoundComponent implements OnInit {
             await this.facadeService.SaveScoresMutation(playerScores)
         );
 
+        if (deleteIds.length > 0) {
+            await this.facadeService.deleteScores(deleteIds);
+        }
+
         if (result) {
             this.snackBar.open('Score has been submitted.', 'x', {
                 duration: 5000,
@@ -1477,7 +1528,7 @@ export class ViewDailyRoundComponent implements OnInit {
     async savePlayerScore(flightId: string, playerId: string) {
         //var startingHole1 = parseFloat((<HTMLInputElement>document.getElementById("hole_1_-L613n4gp3nF0QiXiCt1")).value);
         ////console.log(this.flightPlayers);
-
+        let deleteIds: string[] = [];
         let selectedFlight: any = this.flightPlayers.find((a) => {
             return a.flightId == flightId;
         });
@@ -1531,14 +1582,28 @@ export class ViewDailyRoundComponent implements OnInit {
                             )
                             : 0;
 
-                        if (!grossScore)
+                        if (!grossScore) {
                             document
                                 .getElementById(hole.id + '&' + player.playerId)
                                 .classList.add('empty');
-                        else
+                            let match = this.findScoreId(player.Hole9ScoresIds, hole.id, player.playerId, flightId);
+
+                            // If not found, search in Hole18
+                            if (!match) {
+                                match = this.findScoreId(player.Hole18ScoresIds, hole.id, player.playerId, flightId);
+                            }
+
+                            // Push ID if match found
+                            if (match && match.id) {
+                                deleteIds.push(match.id);
+                            }
+                        }
+                        else {
                             document
                                 .getElementById(hole.id + '&' + player.playerId)
                                 .classList.remove('empty');
+
+                        }
 
                         if (grossScore && grossScore > 9)
                             document
@@ -1577,7 +1642,7 @@ export class ViewDailyRoundComponent implements OnInit {
             }
         }
         //console.log(playerScores);
-        //console.log(playerScores);
+        console.log(deleteIds);
 
         ////console.log(playerScores.length);
 
@@ -1587,6 +1652,10 @@ export class ViewDailyRoundComponent implements OnInit {
             result = <any>(
                 await this.facadeService.SaveScoresMutation(playerScores)
             );
+        }
+
+        if (deleteIds.length > 0) {
+            await this.facadeService.deleteScores(deleteIds);
         }
 
         if (result) {
