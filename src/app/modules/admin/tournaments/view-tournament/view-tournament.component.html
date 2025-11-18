@@ -403,6 +403,109 @@
             </div>
         </div>
 
+        <div *ngIf="activePrimaryTab() === 'Participants'" class="animate-fade-in bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex flex-row justify-between items-center">
+                
+                <h2 class="text-xl font-bold text-gray-900 mb-4">All Participants</h2>
+                <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        <input matInput (input)="applyFilter($event.target.value)" [placeholder]="'Search'" />
+                    </mat-form-field>
+                </div>
+
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-transparent" mat-table [dataSource]="dataSource" [trackBy]="trackByFn" matSort>
+
+                    <ng-container matColumnDef="firstName">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
+                            First Name
+                        </th>
+                        <td  *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                            <span class=" whitespace-nowrap">
+                                {{ account.firstName | uppercase}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lastName">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
+                            Last Name
+                        </th>
+                        <td *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                            <span class=" whitespace-nowrap">
+                                {{ account["lastName"] | uppercase}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
+                            Email
+                        </th>
+                        <td  *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                            <span class=" whitespace-nowrap">
+                                {{ account["email"]}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="handicap">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
+                            Handicap
+                        </th>
+                        <td  *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                            <span class=" whitespace-nowrap">
+                                {{ account["handicap"]}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="category">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
+                            Category
+                        </th>
+                        <td class="py-3 px-4 text-md" *matCellDef="let account">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium"
+                                [class]="account.playerCategory === 'Amateurs' ? 'bg-blue-100 text-blue-800' : account.playerCategory === 'Seniors' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'">
+                                {{ account["playerCategory"]}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
+                            Action
+                        </th>
+                        <td  *matCellDef="let account">
+                            <div class="flex">
+                                <span class="cursor-pointer font-medium mr-2 whitespace-nowrap">
+                                    <mat-icon (click)="deleteTM(account)" [svgIcon]="'heroicons_solid:trash'"
+                                        color="warn"></mat-icon>
+                                </span>
+
+
+                                <span class="cursor-pointer font-medium ml-1 whitespace-nowrap">
+                                    <mat-icon class="ml-2" (click)="disqulifyTM(account)" [svgIcon]="
+                                                'heroicons_solid:close-eye'
+                                            " color="warn"></mat-icon>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+
+                    <ng-container>
+                        <tr mat-header-row *matHeaderRowDef="tournamentMembersColumn"></tr>
+                        <tr class="order-row h-12" mat-row *matRowDef="let row; columns: tournamentMembersColumn;">
+                        </tr>
+                    </ng-container>
+
+                </table>
+                <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 80, 100]"></mat-paginator>
+                <!-- <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recentOrdersTableFooter']"> -->
+                <!-- </tr> -->
+
+            </div>
+        </div>
+
         <!-- @else if (activePrimaryTab() === 'Groups') {
         <div class="animate-fade-in bg-white p-6 rounded-lg shadow-sm">
             <h2 class="text-xl font-bold text-gray-900 mb-4">All Groups</h2>

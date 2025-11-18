@@ -406,7 +406,7 @@ export class ViewTournamentComponent implements OnInit {
                 this.calculatePlayersCount();
                 this.getRoundStats(this.activeRound);
                 this.calculateStatistics(this.activeRound);
-
+                this.getTournamentMembers();
                 this.rounds = [];
 
                 for (let i = 1; i <= this.noOfRounds; i++) {
@@ -810,7 +810,7 @@ export class ViewTournamentComponent implements OnInit {
                     enabled: false,
                 },
             },
-            colors: ['#155e46','#10b981',
+            colors: ['#155e46', '#10b981',
             ],
             dataLabels: {
                 enabled: true,

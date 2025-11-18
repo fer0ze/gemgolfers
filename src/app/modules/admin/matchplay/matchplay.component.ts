@@ -45,7 +45,7 @@ export class MatchplayComponent implements OnInit {
     courseHoleSetNames;
     flightRound: number;
     ddSelectedFlight: string = '0';
-    tRounds: TournamentRounds[] = [];
+    tRounds: any[] = [];
     currentRoundFlights: any[] = [];
     roundFlights: any[] = [];
     //scoreHeader: any[] = [];
@@ -182,6 +182,26 @@ export class MatchplayComponent implements OnInit {
                         //     this.tRounds.push(r);
                         // }
 
+                        this.tRounds = [];
+
+                        for (let i = 1; i <= this.noOfRounds; i++) {
+                            let status = '';
+
+                            if (i < this.activeRound) {
+                                status = 'Completed';
+                            } else if (i === this.activeRound) {
+                                status = 'In Progress';
+                            } else {
+                                status = 'Pending'; // or "Upcoming"
+                            }
+
+                            this.tRounds.push({
+                                label: 'Round ' + i,
+                                status: status,
+                                round: i
+                            });
+                        }
+
                         this.parseSubscriptionResponse();
                     },
                     (error) => (this.isLoading = false)
@@ -237,7 +257,8 @@ export class MatchplayComponent implements OnInit {
         ////console.log("Selected value: " + item.value);
         let roundCourse;
         // if (this.active) {
-        this.flightRound = item.index + 1;
+        this.flightRound = item.round;
+        this.activeRound=item.round;
         if (this.flightRound == 1) {
             this.showRound1 = true;
             roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
@@ -1281,7 +1302,7 @@ export class MatchplayComponent implements OnInit {
             //let holesQLs: any = courseQLs.HolesQL;
             let playerScores: Score[] = [];
 
-            
+
 
             let courseQLs = null;
             let courseHoleQLs = null;
@@ -1921,7 +1942,7 @@ export class MatchplayComponent implements OnInit {
             });
             dialogRef.afterClosed().subscribe(async (resp) => {
                 console.log(resp);
-               
+
                 if (resp) {
                     let selectedTournament = res.tournament.find(a => a.id == resp[0].id);
                     console.log(selectedTournament);

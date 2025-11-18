@@ -23,6 +23,9 @@
 
         </div>
 
+        
+
+        <h2 class="text-xl font-bold text-gray-900 mb-4">All Groups</h2>
         <div class="flex items-center justify-end gap-3">
             <button *ngIf="selectedMembers.length == 0" (click)="createAutoFlights()"
                 class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
@@ -32,8 +35,6 @@
                 Add New Group</button>
 
         </div>
-
-        <h2 class="text-xl font-bold text-gray-900 mb-4">All Groups</h2>
         <div *ngIf="selectedMembers.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <div *ngFor="let items of selectedMembers;
