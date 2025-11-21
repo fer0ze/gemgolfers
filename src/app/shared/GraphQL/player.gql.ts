@@ -852,6 +852,22 @@ export const getPlayerByEmailLogin = gql`
                 leagueAdmin
                 tourAdmin
             }
+            roles {
+                userId
+                roleId
+                role {
+                    id
+                    name
+                    access {
+                        roleId
+                        moduleId
+                        module {
+                            id
+                            name
+                        }
+                    }
+                }
+            }
         }
     }
 `;
@@ -1146,10 +1162,17 @@ export const UpdateHandicapMutation = gql`
 `;
 
 export const FreezePlayerHandicapMutation = gql`
-    mutation FreezePlayerHandicap($playerId: String!, $startDate: date!, $endDate: date!) {
+    mutation FreezePlayerHandicap(
+        $playerId: String!
+        $startDate: date!
+        $endDate: date!
+    ) {
         update_player(
             where: { id: { _eq: $playerId } }
-            _set: { handicapIndexFreezeStart: $startDate, handicapIndexFreezeTill: $endDate }
+            _set: {
+                handicapIndexFreezeStart: $startDate
+                handicapIndexFreezeTill: $endDate
+            }
         ) {
             affected_rows
         }
@@ -1160,7 +1183,10 @@ export const unFreezePlayerHandicapMutation = gql`
     mutation unFreezePlayerHandicapMutation($playerId: String!) {
         update_player(
             where: { id: { _eq: $playerId } }
-            _set: { handicapIndexFreezeTill: null,handicapIndexFreezeStart: null  }
+            _set: {
+                handicapIndexFreezeTill: null
+                handicapIndexFreezeStart: null
+            }
         ) {
             affected_rows
         }
@@ -1410,17 +1436,19 @@ export const PlayerHandicapQuery = gql`
                 playerId
                 adjustmentScore
                 adjustedPanelty
-                  tournamentQL: tournament {
-                title
-            }
+                tournamentQL: tournament {
+                    title
+                }
             }
             used_handicaps {
                 id
                 used_handicap_id
                 combine_handicap_id
             }
-                tournamentQL: tournament {
+            tournamentQL: tournament {
                 title
+                id
+                tournamentFlight
             }
         }
     }
@@ -1465,6 +1493,10 @@ export const PlayerHandicapAllWHSQuery = gql`
                 id
                 used_handicap_id
                 combine_handicap_id
+            }
+            tournament {
+                id
+                tournamentFlight
             }
         }
     }

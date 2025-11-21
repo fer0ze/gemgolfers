@@ -805,45 +805,46 @@ export class AddTournamentComponent implements OnInit {
     }
 
     goToStep(stepTitle: string, stepNumber: number): void {
-        if (stepNumber == 3) {
-            this.flightsSetup();
-        }
-        this.currentStep = stepNumber;
-        this.currentTitle = stepTitle;
-        this.membersSource = new MatTableDataSource([
-            { id: 'temp1', firstName: 'Capt Retired Khataed Khan', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-            { id: 'temp2', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
-            { id: 'temp3', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
-            { id: 'temp4', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-            { id: 'temp5', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-            { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-            { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
-            { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-            { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        ]);
+
+        // this.currentTitle = stepTitle;
+        // this.membersSource = new MatTableDataSource([
+        //     { id: 'temp1', firstName: 'Capt Retired Khataed Khan', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
+        //     { id: 'temp2', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
+        //     { id: 'temp3', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
+        //     { id: 'temp4', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
+        //     { id: 'temp5', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
+        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
+        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
+        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
+        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
+        // ]);
         // // this.tournamentMembers = this.dataSource.data;
         // this.membersSource=new MatTableDataSource
         // const currentIndex = this.steps.findIndex(step => step.title === stepTitle);
-        // const currentGroup = this.formArray?.get([currentIndex]) as FormGroup;
+        const currentGroup = this.formArray?.get([0]) as FormGroup;
         // // 1️⃣ Mark all fields touched to show errors
-        // if (currentGroup) {
-        //     currentGroup.markAllAsTouched();
-        // }
+        if (currentGroup) {
+            currentGroup.markAllAsTouched();
+        }
         // this.currentTitle = stepTitle;
-        // return;
-        // // 2️⃣ Allow backward navigation always
-        // // if (stepNumber <= this.currentStep) {
-        // //     this.currentStep = stepNumber;
-        // //     return;
-        // // }
-
-        // // 3️⃣ Moving forward only if current form is valid
-        // if (currentGroup?.valid) {
-        //     this.currentTitle = stepTitle;
-        // } else {
-        //     // Optionally, show a toast or inline error message
-        //     console.warn('Please complete this step before continuing.');
+        // 2️⃣ Allow backward navigation always
+        // if (stepNumber <= this.currentStep) {
+        //     this.currentStep = stepNumber;
+        //     return;
         // }
+
+
+        // 3️⃣ Moving forward only if current form is valid
+        if (currentGroup?.valid) {
+            this.currentStep = stepNumber;
+            this.currentTitle = stepTitle;
+            if (stepNumber == 3) {
+                this.flightsSetup();
+            }
+        } else {
+            // Optionally, show a toast or inline error message
+            console.warn('Please complete this step before continuing.');
+        }
     }
 
 
@@ -982,8 +983,24 @@ export class AddTournamentComponent implements OnInit {
 
     addFlightField(category: any) {
         const control = this.formArray.get([1]).get('category') as FormArray;
+
+        // Find existing category
+        const existingIndex = control.controls.findIndex(
+            (fg: FormGroup) => fg.get('name')?.value === (category.name ?? category)
+        );
+
+        if (existingIndex !== -1) {
+            // Category already exists → reuse old settings
+            const existingGroup = control.at(existingIndex) as FormGroup;
+
+            // Return or use it however you want  
+            return existingGroup;
+        }
+
+        // Otherwise add NEW category
         control.push(this.createCategory(category));
     }
+
     addCourseField(round: any) {
         const control = this.formArray.get([0]).get('courses') as FormArray;
         control.push(this.createCourses(round));
@@ -2086,6 +2103,13 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async createTournament() {
+
+        const currentGroup = this.formArray?.get([0]) as FormGroup;
+        // // 1️⃣ Mark all fields touched to show errors
+        if (currentGroup.invalid) {
+            currentGroup.markAllAsTouched();
+            return;
+        }
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         let tournamentCats: TournamentCategory[] = [];
@@ -3707,7 +3731,7 @@ export class AddTournamentComponent implements OnInit {
                                 tee_id: roundTeeId1.id,
                                 startingHole:
                                     this.selectedMembers[index][index2][index3]
-                                        .startingHole,
+                                        .tee,
                                 tee: roundTeeId1.name,
                                 category: this.selectedMembers[index].title,
                                 date: General.parseToDate(

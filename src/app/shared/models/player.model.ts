@@ -11,7 +11,7 @@ export interface Player {
     lastName: string;
     gender: string;
     dob: Date;
-    fullName?:string;
+    fullName?: string;
     picture: string;
     email: string;
     phone: string;
@@ -21,14 +21,28 @@ export interface Player {
     countryCode: string;
     extraData: string;
     userRole: number;
-	membershipNumber: string;
+    membershipNumber: string;
     membership: ClubMembership[];
     homeClubId?: string;
     handicapWhsIndex?: number;
     handicapIndexFreezeTill?: Date;
-    playingTee?:string;
-    tee_id?:number;
+    playingTee?: string;
+    tee_id?: number;
 }
+
+export interface UserSessionModel {
+    id: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    picture: string;
+    clubId?: string;
+    roles?: { id: number; name: string }[];
+    modules: { id: string; name: string }[];
+}
+
 
 export interface Marshal {
     id: string;
@@ -49,8 +63,8 @@ export interface PlayerHanidcap {
     score: number;
 }
 
-export interface handicap_change_log{
-    id:string
+export interface handicap_change_log {
+    id: string
     playerId: string;
     oldHandicap: number;
     newHandicap: number;
@@ -58,7 +72,7 @@ export interface handicap_change_log{
     dateTime: string;
     remarks: string;
     tournamentId: string;
-    updaterId : string;
+    updaterId: string;
 }
 
 export interface PlayerWHSHanidcap {
@@ -89,18 +103,18 @@ export interface IPlayerHandicapWhs {
 export interface ClubMembership {
     clubId: string;
     playerId: string;
-    suspended : Boolean;
+    suspended: Boolean;
     club: Club
 }
 
 export interface PlayerCategory {
     id: number;
-    name: string;    
+    name: string;
 }
 
 export interface CourseTee {
     id: string;
-    name: string;    
+    name: string;
 }
 
 export interface TournamentMemberStatus {

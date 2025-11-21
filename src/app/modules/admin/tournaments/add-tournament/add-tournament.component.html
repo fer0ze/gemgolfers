@@ -408,8 +408,8 @@
                         class="mt-8 pt-6 border-t border-gray-200 flex justify-end items-center flex-shrink-0">
 
                         <div>
-                            <button (click)="createTournament()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
-                                font-semibold
+                            <button (click)="createTournament()" [disabled]="formArray.get([0]).invalid" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                font-semibold disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
                         </div>
@@ -417,8 +417,8 @@
                     <div *ngIf="editTournament"
                         class="mt-8 pt-6 border-t border-gray-200 flex justify-center items-center flex-shrink-0">
                         <div>
-                            <button (click)="editTournaments()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
-                                font-semibold
+                            <button (click)="editTournaments()" [disabled]="formArray.get([0]).invalid" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                font-semibold disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Save Changes</button>
                         </div>
@@ -1278,10 +1278,20 @@
                                                 <p class="font-bold text-gray-800 text-lg">{{i+1}}</p>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Tee:</span>
-                                                    {{tee.tee}}</div>
+                                                    {{getNextFlighttee(
+                                                    k,
+                                                    i,
+                                                    m.title,
+                                                    m.Members[i]
+                                                    )}}</div>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Time:</span>
-                                                    {{tee.time}}</div>
+                                                    {{ getNextFlightTime(
+                                                            k,
+                                                            i,
+                                                            m.title,
+                                                            m.Members[i]
+                                                        )}}</div>
                                                 <mat-form-field *ngIf="showTexas" [floatLabel]="'always'"
                                                     appearance="outline" class="w-full custom-mat-input">
                                                     <mat-label>Group Name</mat-label>

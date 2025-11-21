@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Constants, General } from 'app/shared/classes/general';
+import { UserSessionModel } from 'app/shared/models/player.model';
 
 
 @Injectable({
@@ -116,37 +117,44 @@ export class AuthMockApi {
 
                                 this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
                                     // console.log(user);
-                                    this._user.name = user[0].firstName + " " + user[0].lastName;
-                                    this._user.email = user[0].email;
-                                    let clubInfo: any =
-                                        user[0].membership.length > 0
-                                            ? user[0].membership[0].club
-                                            : null;
-                                    let logo =
-                                        clubInfo && clubInfo.logo
-                                            ? clubInfo.logo
-                                            : 'e2esp.png';
-                                    this._user.avatar = 'assets/images/logo/' + logo + '';
-                                    // user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
-                                    //this._user.role = user[0].role[0].length > 0 ? user[0].role[0].id : null;
-                                    if (user[0].permissions?.leagueAdmin && user[0].permissions?.tourAdmin) {
-                                        user[0].userRole = 13;
-                                    } else if (user[0].permissions?.tourAdmin) {
-                                        user[0].userRole = 4;
-                                    } else if (user[0].permissions?.leagueAdmin) {
-                                        user[0].userRole = 9;
+                                    if (user) {
+                                        let userSession: UserSessionModel = this._localStorage.initiateUserSession(user);
+                                        this._user.name = user[0].firstName + " " + user[0].lastName;
+                                        this._user.email = user[0].email;
+                                        let clubInfo: any =
+                                            user[0].membership.length > 0
+                                                ? user[0].membership[0].club
+                                                : null;
+                                        let logo =
+                                            clubInfo && clubInfo.logo
+                                                ? clubInfo.logo
+                                                : 'e2esp.png';
+                                        this._user.avatar = 'assets/images/logo/' + logo + '';
+                                        // user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
+                                        //this._user.role = user[0].role[0].length > 0 ? user[0].role[0].id : null;
+                                        if (user[0].permissions?.leagueAdmin && user[0].permissions?.tourAdmin) {
+                                            user[0].userRole = 13;
+                                        } else if (user[0].permissions?.tourAdmin) {
+                                            user[0].userRole = 4;
+                                        } else if (user[0].permissions?.leagueAdmin) {
+                                            user[0].userRole = 9;
+                                        }
+
+                                        this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
+                                        observer.next([
+                                            200,
+                                            {
+                                                user: cloneDeep(firebaseUser),
+                                                accessToken: idToken,
+                                                tokenType: 'bearer'
+                                            }
+                                        ]);
+                                        observer.complete();
+                                    } else {
+                                        observer.next([404, false]);
+                                        observer.complete();
                                     }
 
-                                    this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
-                                    observer.next([
-                                        200,
-                                        {
-                                            user: cloneDeep(firebaseUser),
-                                            accessToken: idToken,
-                                            tokenType: 'bearer'
-                                        }
-                                    ]);
-                                    observer.complete();
                                 })
 
 
