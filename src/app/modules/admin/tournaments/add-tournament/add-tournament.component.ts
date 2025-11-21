@@ -136,6 +136,8 @@ export class AddTournamentComponent implements OnInit {
     isMarshals: boolean;
     hideClubs: boolean = true;
     showTexas: boolean = false;
+    copied: boolean = false;
+    showSuccessPopup: boolean = false;
     showMatchPlay: boolean = false;
     showMultipleCourses: boolean = false;
     multiCourse: boolean = false;
@@ -143,6 +145,7 @@ export class AddTournamentComponent implements OnInit {
     showBest: boolean = false;
     clubTitle: string;
     sDate: Date;
+    registrationLink: string = 'adasdasdqweqw';
     tournamentID: string;
     subTournamentID: string = '';
     public selectedTime = '08:00 AM';
@@ -781,6 +784,13 @@ export class AddTournamentComponent implements OnInit {
     filterValues(search: string): any {
         //console.log('aaa');
     }
+
+    closePopupAndProceed(): void {
+        this.showSuccessPopup = false;
+        this.currentStep += 1;
+        this.currentTitle = 'Select Players';
+    }
+
     createCourses(round: any): FormGroup {
         return this._formBuilder.group({
             courseName: [
@@ -802,6 +812,15 @@ export class AddTournamentComponent implements OnInit {
         }
 
 
+    }
+
+    copyLink(): void {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(this.registrationLink).then(() => {
+                this.copied = true;
+                setTimeout(() => this.copied = false, 2000);
+            });
+        }
     }
 
     goToStep(stepTitle: string, stepNumber: number): void {
@@ -2422,9 +2441,11 @@ export class AddTournamentComponent implements OnInit {
                     }
                     this.valid1.reset();
                     this.valid2.reset();
-                    this.snackBar.open('Tournament has been created.', 'x', {
-                        duration: 3000,
-                    });
+                    this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
+                    this.showSuccessPopup = true;
+                    // this.snackBar.open('Tournament has been created.', 'x', {
+                    //     duration: 3000,
+                    // });
                     // this.valid2.reset();
 
 
@@ -2497,8 +2518,8 @@ export class AddTournamentComponent implements OnInit {
                     this.syncClubMembers();
 
                     // stepper.next();
-                    this.currentTitle = 'Select Players';
-                    this.currentStep++;
+                    // this.currentTitle = 'Select Players';
+                    // this.currentStep++;
                     console.log(this.clubMembers);
 
                     //this.dataSource = new MatTableDataSource(this.clubMembers);

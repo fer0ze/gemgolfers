@@ -289,6 +289,10 @@ export const tournamentDashBoard = gql`
                 noOfHoles
                 slopeRating
             }
+            admin {
+                id
+                fullName
+            }
             CategoriesQL: categories {
                 ...TournamentMemberCategoryQL
             }
@@ -489,7 +493,7 @@ export const GetTournamentsForAdminCompeleted = gql`
                     { endDate: { _lt: $endDate }, singleRound: { _eq: false } }
                 ]
             }
-            order_by: { endDate: desc }
+            order_by: { createdAt: desc }
         ) {
             id
             title
@@ -588,6 +592,7 @@ export const GetTournamnetListForLiveByAdmin = gql`
                     { endDate: { _gte: $endDate }, singleRound: { _eq: false } }
                 ]
             }
+                order_by: { createdAt: desc }
         ) {
             id
             title
@@ -670,7 +675,7 @@ export const GetTournamnetListForCompleted = gql`
                     }
                 ]
             }
-            order_by: { endDate: desc }
+            order_by: { createdAt: desc }
         ) {
             id
             title
@@ -747,6 +752,7 @@ export const GetTournamnetListForLive = gql`
                     }
                 ]
             }
+                order_by: { createdAt: desc }
         ) {
             id
             title
@@ -874,29 +880,29 @@ export const getTournamentsListByCourse = gql`
                         singleRound: { _eq: false }
                     }
                 ]
-            },
+            }
             order_by: { startDate: desc }
-            limit:100
+            limit: 100
         ) {
             id
-        leagueId
-        tourId
-        clubId
-        courseId
-        adminId
-        title
-        courseHoleSets
-        teamMatch
-        pairsMatch
-        interLeague
-        publicTournament
-        confirmParticipants
-        noOfRounds
-        activeRound
-        matchFormat
-        startDate
-        endDate
-        createdAt
+            leagueId
+            tourId
+            clubId
+            courseId
+            adminId
+            title
+            courseHoleSets
+            teamMatch
+            pairsMatch
+            interLeague
+            publicTournament
+            confirmParticipants
+            noOfRounds
+            activeRound
+            matchFormat
+            startDate
+            endDate
+            createdAt
             flights {
                 id
                 flightRound
@@ -1960,14 +1966,15 @@ export const getTeeTimesSlots = gql`
                     tee_id
                     time
                     flightNo
-                    guest{
+                    guest {
                         flightId
                         guestId
                         firstName
                         lastName
                         name
                         handicap
-                        email}
+                        email
+                    }
                     MembersQL: members {
                         flightId
                         playerId
@@ -2036,14 +2043,15 @@ export const getTeeTimesSlotsAdmin = gql`
                     tee_id
                     time
                     flightNo
-                     guest{
+                    guest {
                         flightId
                         guestId
                         firstName
                         lastName
                         name
                         handicap
-                        email}
+                        email
+                    }
                     MembersQL: members {
                         flightId
                         playerId

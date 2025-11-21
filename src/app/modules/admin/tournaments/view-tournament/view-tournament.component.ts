@@ -480,7 +480,7 @@ export class ViewTournamentComponent implements OnInit {
 
             this.FlightsQL = [];
             this.topMembers = [];
-            let totalPlayers = [];
+            let totalPlayer = [];
             if (round) {
                 this.FlightsQL = this.fullTournament.FlightsQL.filter((a) => {
                     return a.flightRound == round;
@@ -490,19 +490,19 @@ export class ViewTournamentComponent implements OnInit {
             if (this.FlightsQL.length && this.FlightsQL.length > 6) {
                 this.FlightsQL.splice(6, this.FlightsQL.length);
             } else {
-                totalPlayers = this.dataFullTournament['TournamentQL'][0]['members'];
+                totalPlayer = [...this.dataFullTournament['TournamentQL'][0]['members']];
             }
 
             for (const c of this.FlightsQL) {
                 for (let obj of c['MembersQL']) {
-                    totalPlayers.push(obj);
+                    totalPlayer.push(obj);
                 }
             }
             //console.log(totalPlayers);
-            totalPlayers.sort(this.ComparatorHandicap);
+            totalPlayer.sort(this.ComparatorHandicap);
             let count = 0;
 
-            for (const c of totalPlayers) {
+            for (const c of totalPlayer) {
                 if (count < 10) {
                     let obj = {
                         id: c.playerId,

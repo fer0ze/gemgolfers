@@ -755,7 +755,7 @@ export const singleRoundFlightQueryQL = gql`
 `;
 export const calculateHandicapQueryQL = gql`
     mutation calculateHandicapQueryQL($tournamentId: String!) {
-        flightEndedQl: update_flight(
+        flightEndedQl: update_flight_one(
             where: { tournamentId: { _eq: $tournamentId } }
             _set: { ended: true, categoryRound: 2 }
         ) {

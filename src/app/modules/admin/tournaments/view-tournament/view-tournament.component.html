@@ -9,13 +9,19 @@
                     <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
                     Back to Tournaments
                 </a>
-                <h1 class="text-3xl font-bold text-gray-900"> {{ fullTournament?.title }}</h1>
-                <p class="text-sm text-gray-500 flex items-center mt-1">
+                <h1 class="text-4xl font-bold text-gray-900"> {{ fullTournament?.title }}
+                    <button mat-icon-button (click)="
+                                                    redirectToTournamentSetup()
+                                                " color="accent">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </h1>
+                <p class="text-sm text-gray-500 gap-1 flex items-center mt-1">
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
                     {{
                     fullTournament?.startDate
                     | date
-                    }}-{{
+                    }} - {{
                     fullTournament?.endDate | date
                     }}
                 </p>
@@ -95,8 +101,8 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-gray-500 font-medium">Tournament Director</p>
-                        <!-- <p class="font-semibold text-gray-800">{{ tournamentDetails().director }}</p> -->
+                        <p class="text-gray-500 font-medium">Tournament Admin</p>
+                        <p class="font-semibold text-gray-800">{{ this.fullTournament.admin.fullName }}</p>
                     </div>
                 </div>
             </div>
@@ -256,11 +262,12 @@
                 <div class="flex items-center justify-end gap-3">
                     <button *ngIf="activeRound < noOfRounds" (click)="closeRound()"
                         class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
-                        <mat-icon class="icon-size-4 text-primary pt-2"  [svgIcon]="'heroicons_solid:fast-forward'"></mat-icon>
+                        <mat-icon class="icon-size-4 text-primary pt-2"
+                            [svgIcon]="'heroicons_solid:fast-forward'"></mat-icon>
                         Close Round {{activeRound}}</button>
                     <button *ngIf="activeRound > 1" (click)="undoRound()"
                         class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
-                        <mat-icon class="icon-size-4 text-warn pt-1"  [svgIcon]="'heroicons_solid:reply'"></mat-icon>
+                        <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
                         Undo Round {{activeRound}}</button>
                 </div>
 
@@ -410,7 +417,7 @@
 
         <div *ngIf="activePrimaryTab() === 'Participants'" class="animate-fade-in bg-white p-6 rounded-lg shadow-sm">
             <div class="flex flex-row justify-between items-center">
-                
+
                 <h2 class="text-xl font-bold text-gray-900 mb-4">All Participants</h2>
                 <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
 
@@ -428,7 +435,7 @@
                         <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
                             First Name
                         </th>
-                        <td  *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                        <td *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
                             <span class=" whitespace-nowrap">
                                 {{ account.firstName | uppercase}}
                             </span>
@@ -448,7 +455,7 @@
                         <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
                             Email
                         </th>
-                        <td  *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                        <td *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
                             <span class=" whitespace-nowrap">
                                 {{ account["email"]}}
                             </span>
@@ -458,7 +465,7 @@
                         <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
                             Handicap
                         </th>
-                        <td  *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
+                        <td *matCellDef="let account" class="p-0 text-md font-medium text-gray-800">
                             <span class=" whitespace-nowrap">
                                 {{ account["handicap"]}}
                             </span>
@@ -479,7 +486,7 @@
                         <th mat-header-cell mat-sort-header *matHeaderCellDef class="p-0">
                             Action
                         </th>
-                        <td  *matCellDef="let account">
+                        <td *matCellDef="let account">
                             <div class="flex">
                                 <span class="cursor-pointer font-medium mr-2 whitespace-nowrap">
                                     <mat-icon (click)="deleteTM(account)" [svgIcon]="'heroicons_solid:trash'"
