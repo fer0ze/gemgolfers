@@ -68,11 +68,11 @@ import { LogsService } from 'app/shared/services/logs.service';
 import { Team, TeamMembers } from 'app/shared/models/team.model';
 
 @Component({
-    selector: 'app-team-management',
-    templateUrl: './team-management.component.html',
-    styleUrls: ['./team-management.component.scss'],
+    selector: 'app-pair-management',
+    templateUrl: './pair-management.component.html',
+    styleUrls: ['./pair-management.component.scss'],
 })
-export class TeamManagementComponent implements OnInit {
+export class PairManagementComponent implements OnInit {
     @Input()
     tournamentID: string;
     index = 0;
@@ -82,7 +82,7 @@ export class TeamManagementComponent implements OnInit {
         'handicap',
     ];
     memberSelection = new SelectionModel<Player>(true, []);
-    selectedTeams: any[] = [];
+    selectedPairs: any[] = [];
     loggedInuser: UserSessionModel;
     teamMembersToSave: any[] = [];
     tournamentMembers: any[] = [];
@@ -92,10 +92,6 @@ export class TeamManagementComponent implements OnInit {
     selectPlayer: any;
     currentTournament: any;
     teamForm!: FormGroup;
-    teamColors = [
-        '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e',
-        '#14b8a6', '#06b6d4', '#3b82f6', '#8b5cf6', '#d946ef'
-    ];
     selectedTeamColor: string | null = null;
     constructor(
         private _localStorage: LocalStorageService,
@@ -129,34 +125,37 @@ export class TeamManagementComponent implements OnInit {
                 ? tournamentInfo.tournament[0]
                 : [];
         if (this.currentTournament.teamMatch) {
-            this.currentTournament.teams.forEach((team) => {
+            this.currentTournament.pairs.forEach((team) => {
                 const newTeam = {
                     id: team.id,
-                    name: team.name,
-                    color: team.color,
-                    members: [] // Initialize an empty array for members
+                    pairName: team.pairName,
+                    flightId: team.flightId,
+                    members: [
+                        team.player1,
+                        team.player2
+                    ] // Initialize an empty array for members
                 };
 
                 // Loop through each member in membersQL
-                team.membersQL.forEach((memberQL) => {
-                    const playerQL = memberQL.player; // Get the player object from membersQL
+                // team.membersQL.forEach((memberQL) => {
+                //     const playerQL = memberQL.player; // Get the player object from membersQL
 
-                    // Extract relevant properties from the player object
-                    const player = {
-                        id: playerQL.id,
-                        firstName: playerQL.firstName,
-                        lastName: playerQL.lastName,
-                        handicap: playerQL.handicap,
-                        playerCategory: playerQL.playerCategory,
-                        membershipNumber: playerQL.membershipNumber,
-                    };
+                //     // Extract relevant properties from the player object
+                //     const player = {
+                //         id: playerQL.id,
+                //         firstName: playerQL.firstName,
+                //         lastName: playerQL.lastName,
+                //         handicap: playerQL.handicap,
+                //         playerCategory: playerQL.playerCategory,
+                //         membershipNumber: playerQL.membershipNumber,
+                //     };
 
-                    // Push the player into the new team's members array
-                    newTeam.members.push(player);
-                });
+                //     // Push the player into the new team's members array
+                //     newTeam.members.push(player);
+                // });
 
-                // Push the new team into this.selectedTeams
-                this.selectedTeams.push(newTeam);
+                // Push the new team into this.selectedPairs
+                this.selectedPairs.push(newTeam);
             })
         }
         if (this.currentTournament.members) {
@@ -219,14 +218,14 @@ export class TeamManagementComponent implements OnInit {
 
     onColorChange(event: Event, id: any) {
         const inputElement = event.target as HTMLInputElement;
-        const teamToUpdate = this.selectedTeams.find(t => t.id === id);
+        const teamToUpdate = this.selectedPairs.find(t => t.id === id);
         if (teamToUpdate) {
             teamToUpdate.color = inputElement.value;
         }
     }
     removeTeamPlayer(playerId: string, teamId: string) {
         // Find the team with the given ID
-        const teamToUpdate = this.selectedTeams.find(team => team.id === teamId);
+        const teamToUpdate = this.selectedPairs.find(team => team.id === teamId);
 
         // Check if the team is found
         if (teamToUpdate) {
@@ -239,12 +238,12 @@ export class TeamManagementComponent implements OnInit {
     }
 
 
-    deleteTeam(teamId: string) {
+    deletePair(teamId: string) {
         // Find the team being deleted
-        const deletedTeam = this.selectedTeams.find(team => team.id === teamId);
+        const deletedTeam = this.selectedPairs.find(team => team.id === teamId);
 
         // Remove the team from the list
-        this.selectedTeams = this.selectedTeams.filter(team => team.id !== teamId);
+        this.selectedPairs = this.selectedPairs.filter(team => team.id !== teamId);
 
         // If the team existed and had members
         if (deletedTeam && deletedTeam.members && deletedTeam.members.length > 0) {
@@ -266,72 +265,12 @@ export class TeamManagementComponent implements OnInit {
         }
     }
 
-    editTeam(teamId, index) {
-        //console.log(index);
-        try {
-            this.logger.log('Add New member to Team', "info", teamId);
 
-            let TM = [];
-            for (let obj of this.tournamentMembers) {
-                let play = {
-                    id: obj.id,
-                    firstName: obj.firstName,
-                    lastName: obj.lastName,
-                    handicap: obj.handicap,
-                    playerCategory: obj.playerCategory,
-                    membershipNumber: obj.membershipNumber,
-                    email: obj.email,
-                }
-                TM.push(play);
-            }
-
-            const dialogRef = this.dialog.open(DialogAddMemberComponent, {
-                data: {
-                    id: teamId,
-                    members: TM,
-                },
-            });
-
-            dialogRef.afterClosed().subscribe((result) => {
-                //console.log(result);
-                if (result.length > 0) {
-                    let playerAdded = false; // Flag to track if the player has been added to a team
-                    for (let obj of result) {
-                        for (let team of this.selectedTeams) {
-                            const isPlayerPresent = team.members.some(member => member.id === obj.id);
-                            if (!isPlayerPresent) {
-                                const teamToUpdate = this.selectedTeams.find(t => t.id === teamId);
-                                if (teamToUpdate) {
-                                    teamToUpdate.members.push(obj);
-                                    playerAdded = true; // Set the flag to true indicating that the player has been added
-                                    break; // Exit the loop since the player has been added to a team
-                                }
-                            }
-                        }
-                        // if (playerAdded) {
-                        //     break; // Exit the outer loop once the player has been added to a team
-                        // }
-                    }
-                    if (!playerAdded) {
-                        // Show a message if the player is already present in all teams
-                        this.snackBar.open('Player already exists in teams.', 'x', {
-                            duration: 2000,
-                        });
-                    }
-                }
-
-            });
-        } catch (error) {
-            this.logger.log('Getting Tournaments DataAdd New member to flight Failed', "error", error.toString());
-        }
-    }
-
-
-    addSelectedPlayersToTeam(teamId: number) {
+    addSelectedPlayersToPair(pairId: string) {
         const selectedPlayers = [...this.memberSelection.selected]; // array of selected players
         if (!selectedPlayers.length) return;
 
-        const team = this.selectedTeams.find(t => t.id === teamId);
+        const team = this.selectedPairs.find(t => t.id === pairId);
         if (!team) return;
 
         // ✅ Ensure no duplicates in team.members
@@ -351,61 +290,31 @@ export class TeamManagementComponent implements OnInit {
         this.memberSelection.clear();
     }
 
-    async saveTournamentTeams() {
-        let tournamentMember: TeamMembers[] = [];
-        this.teamMembersToSave = [];
-        let teamsToSave: Team[] = [];
+    async saveTournamentPairs() {
+        let tournamentPairs: any[] = [];
         let teamsMembersToRemove: any[] = [];
         // let selectionArray = Object.assign({}, this.selection.selected);
         let flag: boolean = true;
-        // if (this.selectedTeams1[0].length !== this.selectedTeams2[0].length) {
-        //     this.snackBar.open('Teams Members are not equal.', 'x', {
-        //         duration: 2000,
-        //     });
-        //     return;
-        // }
-        this.selectedTeams.forEach((team, index) => {
-            tournamentMember = [];
-            // let name: string = (<HTMLInputElement>(
-            //     document.getElementById(
-            //         'team_' + index + '_name'
-            //     )
-            // )).value;
-
-            // let color: string = (<HTMLInputElement>(
-            //     document.getElementById(
-            //         'team_' + index + '_color'
-            //     )
-            // )).value;
-            // team['name'] = name;
-            // team['color'] = color;
-            teamsMembersToRemove.push(team.id);
-            team.members.forEach((mem) => {
-                let member: any = {
-                    playerId: mem.id,
-                }
-                tournamentMember.push(member);
-            })
-            let teams: any = {
+        this.selectedPairs.forEach((team, index) => {
+            let pair = {
                 id: team.id,
                 tournamentId: this.tournamentID,
-                adminId: this.loggedInuser.id,
-                name: team.name,
-                color: team.color,
-                membersQL: {
-                    data: tournamentMember,
-                },
+                pairName: team.pairName,
+                flightId: team?.flightId || null,
+                member1Id: team.members[0].id,
+                member2Id: team.members[1].id,
             }
-            teamsToSave.push(teams);
+            tournamentPairs.push(pair);
+            teamsMembersToRemove.push(team.id);
         })
-        //console.log(teamsToSave);
+        console.log(tournamentPairs);
         // //console.log(this.teamMembersToSave);
         let result = <any>(
-            await this.facadeService.insertTournamentTeam(teamsToSave, this.tournamentID, teamsMembersToRemove)
+            await this.facadeService.insertTournamentPairs(tournamentPairs, this.tournamentID, teamsMembersToRemove)
         );
 
         if (result) {
-            this.snackBar.open('Tournament Teams have been saved.', 'x', {
+            this.snackBar.open('Tournament Pairs have been saved.', 'x', {
                 duration: 2000,
             });
         } else {
@@ -415,12 +324,13 @@ export class TeamManagementComponent implements OnInit {
         }
     }
 
-    addTeam() {
+    addPairs() {
         const teamName = this.teamForm.get('teamName')?.value?.trim();
         const teamColor = this.teamForm.get('teamColor')?.value;
 
-        this.selectedTeams.push({
+        this.selectedPairs.push({
             id: UniqueIdGenerator.generate(),
+            flightId: null,
             name: teamName,
             color: teamColor,
             members: []
@@ -433,7 +343,7 @@ export class TeamManagementComponent implements OnInit {
         // Reset form after creation
         this.teamForm.reset();
         this.selectedTeamColor = null;
-        // //console.log(this.selectedTeams);
+        // //console.log(this.selectedPairs);
 
     }
 }

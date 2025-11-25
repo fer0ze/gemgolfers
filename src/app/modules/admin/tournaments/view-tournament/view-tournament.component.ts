@@ -118,6 +118,7 @@ export class ViewTournamentComponent implements OnInit {
     tournamentPlayersAdd: boolean = true;
     showCloseBtn: boolean = true;
     showMatchPlay: boolean = false;
+    showShambles: boolean = false;
     categories: TournamentCategory[] = [];
     FlightsQL: any[] = [];
     selectedMembers: Player[][] = [];
@@ -344,14 +345,21 @@ export class ViewTournamentComponent implements OnInit {
                     this.showCloseBtn = false;
                     this.tournamentPlayersAdd = true;
                 }
-                this.dataFullTournament['TournamentQL'][0]['teamMatch'] == true ? this.showMatchPlay = true : false;
+
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
-                if (this.showMatchPlay) {
-                    this.tabs.push('Teams');
-                }
+                
 
                 if (this.fullTournament) {
+                    if (this.fullTournament.matchFormat == matchFormat.SHAMBLES) {
+                        this.showShambles = true;
+                        this.tabs.push('Pairs');
+                    }
+                    if (this.fullTournament.matchFormat == matchFormat.MATCH_PLAY) {
+                        this.showMatchPlay = true;
+                        this.tabs.push('Teams');
+                    }
+
                     this.activeRound = this.fullTournament.activeRound;
                     this.noOfRounds = this.fullTournament.noOfRounds;
                     this.categories = this.fullTournament.CategoriesQL;

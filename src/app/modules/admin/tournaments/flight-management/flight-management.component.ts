@@ -436,6 +436,25 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             }
         });
     }
+
+    convertToAMPMFormat(timeString: string): string {
+        // Split the time string to extract the hour, minute, and second parts
+        if (timeString) {
+            const timeParts = timeString.split(':'); // Split into ["14", "30", "00+00"]
+            // Extract hour, minute, and convert them to numbers
+            const hour = parseInt(timeParts[0], 10);
+            const minute = parseInt(timeParts[1], 10);
+            // Determine whether it's AM or PM
+            const period = hour >= 12 ? 'PM' : 'AM';
+            // Convert the hour from 24-hour to 12-hour format
+            const displayHour = (hour % 12) || 12; // Convert 0 to 12 for 12 AM
+            // Construct the formatted time string
+            return displayHour + ':' + (minute < 10 ? '0' + minute : minute) + ' ' + period;
+        } else {
+            return '-';
+        }
+    }
+
     createflight(flight) {
         let selMembers: Player[][] = [];
 
@@ -1221,21 +1240,21 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     runningFlightcounter++;
                     // //console.log(tournamentFlightMembers);
 
-                    let startingHole = parseFloat(
-                        (<HTMLInputElement>(
-                            document.getElementById('flight_' + index + '_hole')
-                        )).value
-                    );
-                    let startTime: string = (<HTMLInputElement>(
-                        document.getElementById('flight_' + index + '_time')
-                    )).value;
+                    // let startingHole = parseFloat(
+                    //     (<HTMLInputElement>(
+                    //         document.getElementById('flight_' + index + '_hole')
+                    //     )).value
+                    // );
+                    // let startTime: string = (<HTMLInputElement>(
+                    //     document.getElementById('flight_' + index + '_time')
+                    // )).value;
 
-                    let flightNumber = parseFloat(
-                        (<HTMLInputElement>(
-                            document.getElementById('flight_' + index + '_number')
-                        )).value
+                    // let flightNumber = parseFloat(
+                    //     (<HTMLInputElement>(
+                    //         document.getElementById('flight_' + index + '_number')
+                    //     )).value
 
-                    );
+                    // );
                     // let categoryFlight = parseFloat(
                     //     (<HTMLInputElement>(
                     //         document.getElementById('flight_' + index + '_catnumber')
@@ -1243,9 +1262,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     // );
 
                     if (this.showTeams) {
-                        this.teamName = (<HTMLInputElement>(
-                            document.getElementById('flight_' + index + '_name')
-                        )).value;
+                        // this.teamName = (<HTMLInputElement>(
+                        //     document.getElementById('flight_' + index + '_name')
+                        // )).value;
+                        this.teamName= this.selectedMembers[index]['firstName'];
                     }
                     //console.log(this.teamName);
 
@@ -1294,10 +1314,10 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             roundFlightData.length > 0
                                 ? roundFlightData[0].courseHoleSets
                                 : 3,
-                        flightNo: flightNumber,
+                        flightNo: this.selectedMembers[index]['flightNo'],
                         categoryRound: 1,
                         flightRound: this.flightRound,
-                        startingHole: startingHole,
+                        startingHole: this.selectedMembers[index]['startingHole'],
                         tee:
                             roundFlightData.length > 0
                                 ? roundFlightData[0].tee
@@ -1310,7 +1330,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             roundFlightData.length > 0
                                 ? roundFlightData[0].date
                                 : this.tournamentInfo[0].startDate,
-                        time: startTime,
+                        time: this.selectedMembers[index]['time'],
                         ended: false,
                     };
                     if (this.showTeams) {
@@ -1640,18 +1660,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                 runningFlightcounter++;
                 ////console.log(tournamentFlightMembers);
 
-                let startingHole = parseFloat(
-                    (<HTMLInputElement>(
-                        document.getElementById('flight_' + flightNo + '_hole')
-                    )).value
-                );
-                let startTime: string = (<HTMLInputElement>(
-                    document.getElementById('flight_' + flightNo + '_time')
-                )).value;
+                // let startingHole = parseFloat(
+                //     (<HTMLInputElement>(
+                //         document.getElementById('flight_' + flightNo + '_hole')
+                //     )).value
+                // );
+                // let startTime: string = (<HTMLInputElement>(
+                //     document.getElementById('flight_' + flightNo + '_time')
+                // )).value;
 
-                let name: string = (<HTMLInputElement>(
-                    document.getElementById('flight_' + flightNo + '_name')
-                )).value;
+                // let name: string = (<HTMLInputElement>(
+                //     document.getElementById('flight_' + flightNo + '_name')
+                // )).value;
 
                 //let stTime: Time;
                 //stTime.hours = 9;
@@ -1696,7 +1716,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             : 0,
                     flightNo: runningFlightcounter,
                     flightRound: this.flightRound,
-                    startingHole: startingHole,
+                    startingHole: flightData[index]['startingHole'],
                     tee:
                         roundFlightData.length > 0
                             ? roundFlightData[0].tee
@@ -1705,7 +1725,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         roundFlightData.length > 0
                             ? roundFlightData[0].date
                             : this.tournamentInfo[0].startDate,
-                    time: startTime,
+                    time: flightData[index]['time'],
                     ended: false,
                 };
 

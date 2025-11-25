@@ -1699,6 +1699,30 @@ export class TournamentsService {
                 );
         });
     }
+
+    public insertTournamentPairs(
+        pairsToSave: any[], tournamentId, pairsMembersToRemove: any[] = []
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.insertTournamentPairsQL,
+                    variables: {
+                        pairsToSave: pairsToSave,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        ////console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        //console.log('Could not add due to ' + error);
+                        resolve(false);
+                    }
+                );
+        });
+    }
     public insertTournamentMemberStatus(
         tournamentMembers: any[]
     ): Promise<any> {

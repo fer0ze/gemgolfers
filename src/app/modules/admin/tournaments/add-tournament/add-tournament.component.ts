@@ -273,6 +273,7 @@ export class AddTournamentComponent implements OnInit {
         }
 
     }
+
     teamForm!: FormGroup;
     teamColors = [
         '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e',
@@ -3238,7 +3239,7 @@ export class AddTournamentComponent implements OnInit {
         this.categoryCounts = [];
     }
 
-    addTeam(index) {
+    addTeam() {
         const teamName = this.teamForm.get('teamName')?.value?.trim();
         const teamColor = this.teamForm.get('teamColor')?.value;
 
@@ -4018,24 +4019,24 @@ export class AddTournamentComponent implements OnInit {
     masterToggleM() {
         //console.log(this.selection);
         //console.log(this.selection.selected.length);
-        this.isAllSelected()
+        this.isAllSelectedM()
             ? this.memberSelection.clear()
-            : this.dataSource.data.forEach((row) => this.memberSelection.select(row));
+            : this.membersSource.data.forEach((row) => this.memberSelection.select(row));
     }
 
     /** Whether the number of selected elements matches the total number of rows. */
     isAllSelectedM() {
         ////console.log(this.dataSource);
-        if (this.dataSource) {
+        if (this.membersSource) {
             const numSelected = this.memberSelection.selected.length;
-            const numRows = this.dataSource.data.length;
+            const numRows = this.membersSource.data.length;
             return numSelected === numRows;
         }
     }
     // /** The label for the checkbox on the passed row */
     checkboxLabelM(row?: Player): string {
         if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+            return `${this.isAllSelectedM() ? 'select' : 'deselect'} all`;
         }
         return `${this.memberSelection.isSelected(row) ? 'deselect' : 'select'
             } player ${row.firstName} ${row.lastName}`;

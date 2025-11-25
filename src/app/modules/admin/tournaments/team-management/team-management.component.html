@@ -1,4 +1,4 @@
-<div class="flex flex-row">
+<!-- <div class="flex flex-row">
     <div class="mt-2 mr-8 flex flex-col flex-auto p-6  overflow-hidden">
         <div>
             <div cdkDropListGroup id="manageFlights" class="m-4">
@@ -89,4 +89,222 @@
     <button mat-raised-button color="primary" (click)="saveTournamentTeams()">
         Save Changes
     </button>
+</div> -->
+
+<div class="animate-fade-in">
+    <div class="mb-6 space-y-4">
+        <div class="animate-fade-in flex-1 flex flex-col h-full">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 flex-1 h-0">
+
+                <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4">Available Players</h3>
+                    <div class="relative mb-4">
+                        <mat-form-field class="custom-mat-input w-full">
+                            <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
+                            <input matInput (keyup)="
+                                                    applyMembersFilter(
+                                                        $event.target.value
+                                                    )
+                                                " placeholder="Filter" />
+                            <mat-icon matPrefix>search</mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-1 overflow-y-auto border rounded-md bg-white">
+                        <div>
+                            <table mat-table #msort="matSort" [dataSource]="membersSource" matSort>
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="select">
+                                    <th class="bg-gray-100" mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox (change)="
+                                                    $event
+                                                        ? masterToggleM()
+                                                        : null
+                                                " [checked]="
+                                                    memberSelection.hasValue() &&
+                                                    isAllSelectedM()
+                                                " [indeterminate]="
+                                                    memberSelection.hasValue() &&
+                                                    !isAllSelectedM()
+                                                " [aria-label]="checkboxLabelM()">
+                                        </mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <mat-checkbox (click)="
+                                                    $event.stopPropagation()
+                                                " (change)="
+                                                    $event
+                                                        ? memberSelection.toggle(row)
+                                                        : null;
+                                                " [checked]="
+                                                    memberSelection.isSelected(row)
+                                                " [aria-label]="
+                                                    checkboxLabelM(row)
+                                                ">
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="firstName">
+                                    <th class="bg-gray-100" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Name
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div class="py-2">
+                                            <div class="font-semibold text-secondary-foreground">
+                                                {{ element.firstName | uppercase}}
+                                                {{ element.lastName | uppercase}}
+
+                                            </div>
+                                            <div class="text-sm text-gray-700">
+                                                {{
+                                                element.playerCategory ==
+                                                "Seniors"
+                                                ? "Senior Amateurs"
+                                                : element.playerCategory
+                                                }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Handicap Column -->
+                                <ng-container matColumnDef="handicap">
+                                    <th class="bg-gray-100" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        H'CAP
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element.handicap }}
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="membersColumns"></tr>
+                                <tr mat-row *matRowDef="
+                                            let row;
+                                            columns: membersColumns
+                                        "></tr>
+                            </table>
+                            <mat-paginator #paginatorGSTN="matPaginator" [pageSize]="20"
+                                [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Teams -->
+                <div class="flex flex-col min-h-0">
+                    <!-- Create Team Form -->
+                    <div class="border border-gray-200 rounded-lg p-4 mb-6 flex-shrink-0" [formGroup]="teamForm">
+                        <h4 class="font-semibold text-gray-800 mb-3">Create a New Team</h4>
+
+                        <!-- Team name input -->
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <mat-form-field appearance="outline" class="w-full custom-mat-input">
+                                <mat-label>Team Name</mat-label>
+                                <input matInput formControlName="teamName" placeholder="Team Name" />
+                            </mat-form-field>
+
+                            <button mat-raised-button color="primary" (click)="addTeam()"
+                                [disabled]="!teamForm.get('teamName')?.value?.trim()"
+                                class="mt-1.5 text-sm font-semibold shadow-sm disabled:bg-gray-300 disabled:text-white">
+                                Create
+                            </button>
+                        </div>
+
+                        <!-- Team color selector -->
+                        <div class="mt-3">
+                            <p class="text-xs text-gray-500 mb-2">Team Color</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button *ngFor="let color of teamColors" type="button" (click)="selectColor(color)"
+                                    class="w-6 h-6 rounded-full border-2 transition-transform"
+                                    [ngStyle]="{ 'background-color': color }" [ngClass]="{
+                                                    'border-emerald-600 scale-110': selectedTeamColor === color,
+                                                    'border-transparent': selectedTeamColor !== color
+                                            }"></button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Teams Grid -->
+                    <div class="flex-1 overflow-y-auto">
+
+                        <div *ngIf="selectedTeams.length;else noTeamTemplate"
+                            class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                            <ng-container *ngFor="let team of selectedTeams; let i = index">
+                                <div class="border rounded-lg shadow-sm flex flex-col bg-white"
+                                    [style.border-left-width]="'5px !important'" [style.border-left-color]="team.color">
+                                    <!-- Card Header -->
+                                    <div class="p-3 border-b flex justify-between items-center">
+                                        <h5 class="font-bold text-gray-800 truncate" [title]="team.name">{{
+                                            team.name }}</h5>
+                                        <button (click)="deleteTeam(team.id)"
+                                            class="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2">
+                                            <mat-icon class="icon-size-4" [svgIcon]="'heroicons_solid:delete'"
+                                                color="warn"></mat-icon>
+                                        </button>
+                                    </div>
+                                    <!-- Card Body: Player Slots -->
+                                    <div class="p-3 space-y-2 flex-1">
+                                        <!-- Player Slot 1 -->
+
+                                        <div *ngIf="team.members.length==0"
+                                            class="flex justify-center items-center h-full min-h-[38px] p-2 rounded border-2 border-dashed border-gray-300 text-gray-400 text-sm">
+                                            Empty Slot</div>
+
+                                        <!-- Player Slot 2 -->
+                                        <div *ngFor="let item of team.members; let j = index"
+                                            class="flex justify-between items-center bg-gray-200 p-2 rounded">
+                                            <span class="text-md font-medium text-gray-700 truncate">{{item.firstName
+                                                }} {{item.lastName }}</span>
+                                            <button (click)="removeTeamPlayer(item.id, team.id)"
+                                                class="text-gray-400 hover:text-red-500 ml-2 flex-shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    <!-- Card Footer -->
+                                    <div class="p-3 border-t bg-gray-50/50">
+                                        <button (click)="addSelectedPlayersToTeam(team.id)"
+                                            [disabled]="this.memberSelection.selected.length === 0"
+                                            class="w-full text-sm bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
+                                            Add Selected Player(s)
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                            </ng-container>
+                        </div>
+
+                        <div class="mt-8 py-6 border-t border-gray-200 flex justify-end items-center flex-shrink-0">
+                            <div>
+                                <button (click)="saveTournamentTeams()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                        font-semibold
+                                        shadow-sm hover:bg-emerald-700 transition-colors">
+                                    Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #noTeamTemplate>
+                        <div
+                            class="flex flex-col items-center justify-center text-center text-gray-500 bg-gray-50 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mb-3" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.125-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.125-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <p class="font-semibold">No teams created yet.</p>
+                            <p class="text-sm">Use the form above to start creating teams.</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>

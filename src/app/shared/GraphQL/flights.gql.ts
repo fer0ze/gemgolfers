@@ -161,9 +161,8 @@ export const insertFlightMembers = gql`
     mutation insertFlightMembers(
         $slotId: String!
         $flightMembersToSave: [flight_member_insert_input!]!
-        $count:Int!
+        $count: Int!
     ) {
-        
         FlightMembersEntryQLi: insert_flight_member(
             objects: $flightMembersToSave
             on_conflict: {
@@ -180,10 +179,10 @@ export const insertFlightMembers = gql`
             AffectedRowsQLi: affected_rows
         }
         update_tee_time_booking_slot(
-            where:{ id:{ _eq :$slotId }}
-            _set:{joinedMembers:$count}
-        ){
-            returning{
+            where: { id: { _eq: $slotId } }
+            _set: { joinedMembers: $count }
+        ) {
+            returning {
                 id
             }
         }
@@ -193,25 +192,22 @@ export const insertFlightGuest = gql`
     mutation insertFlightGuest(
         $slotId: String!
         $flightMembersToSave: [flight_guest_insert_input!]!
-        $count:Int!
+        $count: Int!
     ) {
-        
         FlightMembersEntryQLi: insert_flight_guest(
             objects: $flightMembersToSave
             on_conflict: {
                 constraint: flight_guest_pkey
-                update_columns: [
-                    name
-                ]
+                update_columns: [name]
             }
         ) {
             AffectedRowsQLi: affected_rows
         }
         update_tee_time_booking_slot(
-            where:{ id:{ _eq :$slotId }}
-            _set:{joinedMembers:$count}
-        ){
-            returning{
+            where: { id: { _eq: $slotId } }
+            _set: { joinedMembers: $count }
+        ) {
+            returning {
                 id
             }
         }
@@ -409,8 +405,9 @@ export const DeleteFlightsAndMembersMutation = gql`
 `;
 export const DeleteFlightMembersMutation = gql`
     mutation DeleteFlightMembersMutation(
-        $membersDeleteExpression: flight_member_bool_exp!,
-        $flightId:String!,$count:Int!
+        $membersDeleteExpression: flight_member_bool_exp!
+        $flightId: String!
+        $count: Int!
     ) {
         DeleteFlightMembers: delete_flight_member(
             where: $membersDeleteExpression
@@ -418,10 +415,10 @@ export const DeleteFlightMembersMutation = gql`
             AffectedRowsQL: affected_rows
         }
         update_tee_time_booking_slot(
-            where:{ flightId:{ _eq :$flightId }}
-            _set:{joinedMembers:$count}
-        ){
-            returning{
+            where: { flightId: { _eq: $flightId } }
+            _set: { joinedMembers: $count }
+        ) {
+            returning {
                 id
             }
         }
@@ -429,8 +426,9 @@ export const DeleteFlightMembersMutation = gql`
 `;
 export const DeleteGuestMembersMutation = gql`
     mutation DeleteGuestMembersMutation(
-        $membersDeleteExpression: flight_guest_bool_exp!,
-        $flightId:String!,$count:Int!
+        $membersDeleteExpression: flight_guest_bool_exp!
+        $flightId: String!
+        $count: Int!
     ) {
         DeleteFlightMembers: delete_flight_guest(
             where: $membersDeleteExpression
@@ -438,10 +436,10 @@ export const DeleteGuestMembersMutation = gql`
             AffectedRowsQL: affected_rows
         }
         update_tee_time_booking_slot(
-            where:{ flightId:{ _eq :$flightId }}
-            _set:{joinedMembers:$count}
-        ){
-            returning{
+            where: { flightId: { _eq: $flightId } }
+            _set: { joinedMembers: $count }
+        ) {
+            returning {
                 id
             }
         }
@@ -522,61 +520,80 @@ export const FlightManagersQuery = gql`
                 default
                 flightSettings
             }
-                club{
-                id 
+            club {
+                id
                 name
-                }
+            }
         }
     }
 `;
 export const TeamManagersQuery = gql`
-query PostsGetQuery($tournamentId: String!) {
-    tournament(where: { id: { _eq: $tournamentId } }){
-        id
-        teamMatch
-        teams{
+    query PostsGetQuery($tournamentId: String!) {
+        tournament(where: { id: { _eq: $tournamentId } }) {
             id
-            adminId
-            tournamentId
-            name
-            color
-            membersQL{
-                teamId
-                playerId
-               player{
+            teamMatch
+            teams {
                 id
-                firstName
-                lastName
-                handicap
-                playerCategory
-                membershipNumber
-               }
+                adminId
+                tournamentId
+                name
+                color
+                membersQL {
+                    teamId
+                    playerId
+                    player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        playerCategory
+                        membershipNumber
+                    }
+                }
             }
-           
-        }
-        opponents{
-            id
-            team1Id
-            team2Id
-            tournamentId
-            team1MemberId
-            team2MemberId
-        }
-        members {
-            playerId
-            tournamentId
-            player {
+            pairs {
                 id
-                firstName
-                lastName
-                handicap
-                playerCategory
-                membershipNumber
-                email
+                flightId
+                tournamentId
+                pairName
+                member1Id
+                member2Id
+                player1 {
+                    id
+                    firstName
+                    lastName
+                    handicap
+                }
+                player2 {
+                    id
+                    firstName
+                    lastName
+                    handicap
+                }
+            }
+            opponents {
+                id
+                team1Id
+                team2Id
+                tournamentId
+                team1MemberId
+                team2MemberId
+            }
+            members {
+                playerId
+                tournamentId
+                player {
+                    id
+                    firstName
+                    lastName
+                    handicap
+                    playerCategory
+                    membershipNumber
+                    email
+                }
             }
         }
     }
-}
 `;
 // OwnQLi: player_by_pk(id: $playerId) {
 //     PermissionsQLi: permissions {
@@ -630,14 +647,15 @@ export const closeActiveRound = gql`
             }
         }
         update_flight(
-            where: { 
+            where: {
                 _and: [
                     {
-                        tournamentId: { _eq: $tournamentId } 
+                        tournamentId: { _eq: $tournamentId }
                         flightRound: { _eq: $activeRound }
                     }
-                ]            
-            },_set: {closed:true }
+                ]
+            }
+            _set: { closed: true }
         ) {
             AffectedRowsQLi: affected_rows
         }
@@ -688,7 +706,8 @@ export const singleRoundFlightsQueryQL = gql`
             }
         }
     }
-    ${FlightsQL}${ScoreQL}
+    ${FlightsQL}
+    ${ScoreQL}
 `;
 export const updatedFlightsQueryQueryQL = gql`
     query ClubSingleRoundFlightsQuery($where: flight_bool_exp!) {
@@ -790,23 +809,15 @@ export const undoFlightHandicapQL = gql`
     }
 `;
 export const UndoSingleFlightHandicapQL = gql`
-    mutation ClubSingleRoundFlightQuery(
-        $flightId: String!
-    ) {
+    mutation ClubSingleRoundFlightQuery($flightId: String!) {
         flightEndedQl: update_flight(
             where: { id: { _eq: $flightId } }
-            _set: { categoryRound: 2 , ended:false}
+            _set: { categoryRound: 2, ended: false }
         ) {
             AffectedRowsQLi: affected_rows
         }
         flightEndedQlA: update_flight_member(
-            where: {
-                _and: [
-                    {
-                        flightId: { _eq: $flightId }
-                    }
-                ]
-            }
+            where: { _and: [{ flightId: { _eq: $flightId } }] }
             _set: { undoHandicap: 1 }
         ) {
             AffectedRowsQLi: affected_rows
@@ -834,8 +845,7 @@ export const undoHandicapPlayerQL = gql`
     }
 `;
 export const updateflightMemberQL = gql`
-
-    mutation UpdateFlightMember($playerId: String!,$tournamentId: String!) {
+    mutation UpdateFlightMember($playerId: String!, $tournamentId: String!) {
         flightEndedQlA: update_flight_member(
             where: { playerId: { _eq: $playerId } }
             _set: { tee_id: 3, playingTee: "SENIORS" }
@@ -848,7 +858,6 @@ export const updateflightMemberQL = gql`
         ) {
             AffectedRowsQLi: affected_rows
         }
-
     }
 `;
 export const markPlayerPaneltyQL = gql`

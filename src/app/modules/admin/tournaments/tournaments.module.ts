@@ -60,10 +60,12 @@ import { DialogAddMemberComponent } from '../dialogs/dialog-add-member/dialog-ad
 import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.component';
 import { TeamManagementComponent } from './team-management/team-management.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { PairManagementComponent } from './pair-management/pair-management.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
         AddTournamentComponent,
+        PairManagementComponent,
         FlightManagementComponent,
         DialogHanidcapListComponent,
         DialogMoveFlightComponent,

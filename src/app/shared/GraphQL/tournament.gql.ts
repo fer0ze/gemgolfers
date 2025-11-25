@@ -684,6 +684,7 @@ export const GetTournamnetListForCompleted = gql`
             matchFormat
             noOfRounds
             admin {
+            id
                 firstName
                 lastName
             }
@@ -714,6 +715,7 @@ export const getTournamentsListByAdminForCompleted = gql`
             matchFormat
             noOfRounds
             admin {
+            id
                 firstName
                 lastName
             }
@@ -736,6 +738,7 @@ export const getTournamentsListByTourForCompleted = gql`
                 matchFormat
                 noOfRounds
                 admin {
+                id
                     firstName
                     lastName
                 }
@@ -759,6 +762,7 @@ export const getTournamentsListByLeague = gql`
                 matchFormat
                 noOfRounds
                 admin {
+                id
                     firstName
                     lastName
                 }
@@ -791,6 +795,7 @@ export const GetTournamnetListForLive = gql`
             noOfRounds
             matchFormat
             admin {
+            id
                 firstName
                 lastName
             }
@@ -826,6 +831,7 @@ export const GetTournamnetListForSchedule = gql`
             noOfRounds
             matchFormat
             admin {
+            id
                 firstName
                 lastName
             }
@@ -1412,6 +1418,21 @@ export const insertTournamentTeamQL = gql`
             on_conflict: {
                 constraint: tournament_team_pkey
                 update_columns: [name, color]
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
+export const insertTournamentPairsQL = gql`
+    mutation insertTournamentPairsQL(
+        $pairsToSave: [tournament_pair_insert_input!]!
+    ) {
+        insert_tournament_pair(
+            objects: $pairsToSave
+            on_conflict: {
+                constraint: tournament_pair_pkey
+                update_columns: [pairName, member1Id,member2Id]
             }
         ) {
             AffectedRowsQL: affected_rows

@@ -23,7 +23,7 @@
 
         </div>
 
-        
+
 
         <h2 class="text-xl font-bold text-gray-900 mb-4">All Groups</h2>
         <div class="flex items-center justify-end gap-3">
@@ -47,18 +47,42 @@
                     <!-- <span class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
                         items.flightNo
                         }}</span> -->
+                    <span id="flight_{{ j }}_time" class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
+                        convertToAMPMFormat(items.time) }}</span>
                 </div>
                 <div class="space-y-2">
                     <div *ngFor="
                                                     let item of items;
                                                     let j = index
-                                                " class="flex justify-between items-center text-sm p-2 rounded-md bg-white">
-                        <span class="font-medium text-gray-700">{{ item.firstName }}</span>
-                        <span class="text-gray-500">HC: {{ item.handicap }}</span>
+                                                "
+                        class="flex justify-between items-center text-sm py-2 rounded-md bg-white">
+                        <span class="font-medium text-gray-700 text-md">{{ item.firstName }} {{ item.lastName }}</span>
+                        <span class="flex gap-2 items-center">
+                            <span class="text-gray-500">HC: {{ item.handicap }}</span>
+                            <mat-icon aria-hidden="false" class="cursor-pointer"
+                                (click)="removePlayer(i,j)">delete_forever</mat-icon>
+                            <mat-icon aria-hidden="false" class="cursor-pointer"
+                                (click)="movePlayer(i, j)">edit</mat-icon>
+                        </span>
                     </div>
-                    
+
+                    <div class="flex justify-end">
+                        <button (click)="editFlight(items.id, i)" class="bg-emerald-600 text-white px-2 py-1 rounded-lg flex items-center text-sm
+                                font-semibold
+                                shadow-sm hover:bg-emerald-700 transition-colors">
+                            Add Member</button>
+                    </div>
+
                 </div>
             </div>
+
+        </div>
+        <div *ngIf="selectedMembers.length > 0" class="flex justify-end mt-6">
+
+            <button (click)="saveFlights()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                font-semibold
+                                shadow-sm hover:bg-emerald-700 transition-colors">
+                Save Changes</button>
 
         </div>
     </div>
