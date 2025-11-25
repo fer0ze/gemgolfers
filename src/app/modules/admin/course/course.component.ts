@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewEncapsulation } from "@angular/core";
 import { Apollo } from "apollo-angular";
-import { Player, ClubMembership } from "app/shared/models/player.model";
+import { Player, ClubMembership, UserSessionModel } from "app/shared/models/player.model";
 import { FacadeService } from "app/shared/services/facade.service";
 import {
   UniqueIdGenerator,
@@ -43,7 +43,7 @@ export class CourseComponent implements OnInit {
     "action",
   ];
   courseData: any;
-  public loggedInuser: any;
+  public loggedInuser: UserSessionModel;
   constructor(
     private location: Router,
     private route: ActivatedRoute,
@@ -52,7 +52,7 @@ export class CourseComponent implements OnInit {
     public dialog: MatDialog,
     private facadeService: FacadeService,
     private logger: LogsService,
-    private _localStorage: LocalStorageService,
+    public _localStorage: LocalStorageService,
     private _fuseConfirmationService: FuseConfirmationService,
 
   ) { }
@@ -61,7 +61,7 @@ export class CourseComponent implements OnInit {
 
     this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
     let dataCourses: any;
-    if (this.loggedInuser.userRole === 1) {
+    if (this._localStorage.isSuperAdmin()) {
       dataCourses = await this.facadeService.getCoursesList();
     } else {
       dataCourses = await this.facadeService.getCoursesListbyID(this.loggedInuser.id);

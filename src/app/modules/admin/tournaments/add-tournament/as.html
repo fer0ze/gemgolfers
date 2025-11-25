@@ -110,7 +110,7 @@
                             </mat-form-field>
                         </div>
 
-                        <div *ngIf="this.loggedInuser.userRole <= 2" class="sm:col-span-1">
+                        <div *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()" class="sm:col-span-1">
                             <mat-form-field class="fuse-mat-no-subscript w-full mt-5">
                                 <mat-label>Club</mat-label>
                                 <input type="text" matInput formControlName="clubsFormCtrl" [matAutocomplete]="auto"

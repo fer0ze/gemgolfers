@@ -11,6 +11,7 @@ import {
     PlayerHanidcap,
     IPlayerHandicapWhs,
     ClubMembership,
+    UserSessionModel,
 } from '../../../shared/models/player.model';
 import {
     Constants,
@@ -73,7 +74,7 @@ export class TournamentsComponent implements OnInit {
     copiedTournamentsSchedule: Tournament[] = [];
     copiedTournamentsIncomplete: Tournament[] = [];
     myTournament: Tournament;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     isLoading: boolean = true;
     isLoadingUpComing: boolean = true;
     isLoadingSchedule: boolean = true;
@@ -92,7 +93,7 @@ export class TournamentsComponent implements OnInit {
         public snackBar: MatSnackBar, private _tourService: TourService,
         public dialog: MatDialog,
         private facadeService: FacadeService,
-        private _localStorage: LocalStorageService,
+        public _localStorage: LocalStorageService,
         private logger: LogsService
     ) { }
 
@@ -133,7 +134,7 @@ export class TournamentsComponent implements OnInit {
             let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
             this.logger.log('Admin comes to Tournament Page', "info");
             this.logger.log('Getting Tournaments Data', "info");
-            if (this.loggedInuser.userRole == 1) {
+            if (this._localStorage.isSuperAdmin()) {
                 let dataTournamentsForCompleted =
                     await this.facadeService.getTournamentsListForCompleted(
                         todayDate
@@ -146,7 +147,7 @@ export class TournamentsComponent implements OnInit {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
                 this.isLoading = false;
-            } else if (this.loggedInuser.userRole == 2) {
+            } else if (this._localStorage.isClubAdmin()) {
                 let dataTournamentsForCompleted =
                     await this.facadeService.getTournamentsListByClubForCompleted(
                         todayDate,
@@ -162,7 +163,23 @@ export class TournamentsComponent implements OnInit {
 
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
-            } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+            } else if (this._localStorage.isTournamentManager()) {
+                let dataTournamentsForCompleted =
+                    await this.facadeService.getTournamentsListByAdminForCompleted(
+                        todayDate,
+                        this.loggedInuser.id
+                    );
+
+                this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                this.copiedcompletedTournaments = this.Tournaments;
+                this.isIncompletedLoading = false;
+                this.isLoading = false;
+                console.log(this.Tournaments);
+                this.dataSource = new MatTableDataSource(this.Tournaments);
+
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            } else if (this._localStorage.isTourAdmin() || this._localStorage.isLeagueAdmin()) {
                 let state = this._localStorage.get(Constants.STATE);
                 if (state == Constants.TOUR) {
                     this.tourId = this._localStorage.get(Constants.TOUR_ID);
@@ -220,7 +237,7 @@ export class TournamentsComponent implements OnInit {
         try {
 
 
-            if (this.loggedInuser.userRole === 2) {
+            if (this._localStorage.isClubAdmin()) {
                 if ($event.value == 1) {
                     this.selected = 1;
                     this.getTournamentLive();
@@ -276,38 +293,6 @@ export class TournamentsComponent implements OnInit {
     }
     addNewRound() {
         this.location.navigate(['/tournaments/add']);
-    }
-    tabClicked(tab: any) {
-        //console.log(tab);
-        if (this.loggedInuser.userRole >= 2) {
-            if (tab.index == 1) {
-                this.selected = 1;
-                this.getTournamentLive();
-            } else if (tab.index == 2) {
-                this.selected = 2;
-                this.getTournamentSchedule();
-            } else if (tab.index == 3) {
-                this.selected = 3;
-                this.getTournamentIncompelete();
-            } else {
-                this.selected = 0;
-                this.getTournamentCompeleted();
-            }
-        } else {
-            if (tab.index == 1) {
-                this.selected = 1;
-                this.getTournamentLiveForAdmin();
-            } else if (tab.index == 2) {
-                this.selected = 2;
-                this.getTournamentScheduleForAdmin();
-            } else if (tab.index == 3) {
-                this.selected = 3;
-                this.getTournamentIncompeleteForAdmin();
-            } else {
-                this.selected = 0;
-                this.getTournamentCompeletedForAdmin();
-            }
-        }
     }
     async getTournamentCompeleted() {
         try {

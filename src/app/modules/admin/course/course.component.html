@@ -168,7 +168,7 @@
                                                 </span>
 
                                                 <span
-                                                    *ngIf="this.loggedInuser.userRole === 1 &&  course.status!='Active'"
+                                                    *ngIf="this._localStorage.isSuperAdmin() &&  course.status!='Active'"
                                                     class="font-bold mx-3 whitespace-nowrap">
                                                     <button (click)="compelteCourse(course.id)"
                                                         [matTooltip]="'Mark as Active'">

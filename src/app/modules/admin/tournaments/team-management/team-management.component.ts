@@ -32,6 +32,7 @@ import {
     Player,
     PlayerCategory,
     Marshal,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import {
@@ -76,7 +77,7 @@ export class TeamManagementComponent implements OnInit {
     tournamentID: string;
     index = 0;
     selectedTeams: any[] = [];
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     teamMembersToSave: any[] = [];
     tournamentMembers: any[] = [];
     selectPlayer: any;

@@ -12,6 +12,7 @@ import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddLeagueComponent } from '../dialogs/dialog-add-league/dialog-add-league.component';
+import { UserSessionModel } from 'app/shared/models/player.model';
 @Component({
     selector: 'app-leagues',
     templateUrl: './leagues.component.html',
@@ -33,7 +34,7 @@ export class LeaguesComponent implements OnInit {
         'details',
         'table'
     ];
-    loggedInuser: any;
+    loggedInuser: UserSessionModel;
     chartBudgetDistribution: ApexOptions = {};
     chartGithubIssues: ApexOptions = {};
     public barChartLabels: string[] = [];
@@ -62,11 +63,11 @@ export class LeaguesComponent implements OnInit {
         let clubName: any[] = [];
         let clubs: any;
         //console.log(this.loggedInuser);
-        if (this.loggedInuser.userRole == 1) {
+        if (this._localStorage.isSuperAdmin()) {
             clubs = await this.facadeService.getLeagues();
-        } else if (this.loggedInuser.userRole == 2) {
+        } else if (this._localStorage.isClubAdmin()) {
             clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.adminClubId);
-        } else if (this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+        } else {
             clubs = await this.facadeService.getLeaguesByClub(this.loggedInuser.id);
         }
         // //console.log(clubs.league);

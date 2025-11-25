@@ -273,7 +273,7 @@
                             placeholder="Club"
                             formControlName="playerClubMember"
                             [disabled]="
-                                loggedInuser.userRole > 1 ? true : false
+                               _localStorage.isClubAdmin() ? false : true
                             "
                         >
                             <mat-option

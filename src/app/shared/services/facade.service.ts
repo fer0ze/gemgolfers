@@ -550,6 +550,12 @@ export class FacadeService {
       clubId
     );
   }
+  getTournamentsListByAdminForCompleted(endDate: Date, clubId: string) {
+    return this.tournamentService.getTournamentsListByAdminForCompleted(
+      endDate,
+      clubId
+    );
+  }
   getTournamentsListByTourForCompleted(tourId: string) {
     return this.tournamentService.getTournamentsListByTourForCompleted(
       tourId

@@ -20,7 +20,7 @@ import {
     UniqueIdGenerator,
 } from 'app/shared/classes/general';
 import { trigger } from '@angular/animations';
-import { Player } from 'app/shared/models/player.model';
+import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
@@ -65,7 +65,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     _seriesPlayers: any = [];
     _overviewPlayers: any = [];
     selectedProject: string = 'ACME Corp. Backend App';
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     newRounds: any = 0;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     clubLogo: string;
@@ -79,7 +79,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
         private _router: Router,
         public dialog: MatDialog,
         private _facadeService: FacadeService,
-        private _datePipe: DatePipe, private _localStorage: LocalStorageService, private logger: LogsService
+        private _datePipe: DatePipe, public _localStorage: LocalStorageService, private logger: LogsService
     ) { }
 
     // -----------------------------------------------------------------------------------------------------
@@ -93,12 +93,8 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.loggedInuser.adminClubId=localStorage.getItem('adminClubID');
         try {
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-            let clubInfo: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
 
-            this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+            this.clubLogo = this.loggedInuser.club && this.loggedInuser.club.logo ? this.loggedInuser.club.logo : 'e2esp.png';
             let currentDate = new Date();
             let tournamentCounts;
             let flightCounts;
@@ -115,7 +111,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                     let getall = res.data;
                     console.log(getall);
 
-                    if (this.loggedInuser.userRole == 2 || this.loggedInuser.userRole == 1) {
+                    if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
 
                         this.tournamentCounts = getall.TournamentCount.aggregate.count;
                         if (this.tournamentCounts > 6) {
@@ -230,7 +226,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             needstriage: categoryCounts.Veterans,
                         }
                         // //console.log(players);
-                        if (this.loggedInuser.userRole == 1) {
+                        if (this._localStorage.isSuperAdmin()) {
                             dataPlayers.push(getall.ClubAggregateQL.aggregate.count)
                             dataPlayers.push(getall.MobileAggregateQL.aggregate.count)
                             dataPlayers.push(getall.TrialAggregateQL.aggregate.count)
@@ -268,7 +264,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                                 },
                             ];
                         }
-                    } else if ((this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) && getall.tour.length > 0) {
+                    } else  {
 
                         // this.tournamentCounts = getall.TournamentsQLs.length;
                         const membersCatCounts = {

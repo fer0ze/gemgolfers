@@ -195,6 +195,27 @@ export class TournamentsService {
                 });
         });
     }
+    public getTournamentsListByAdminForCompleted(
+        endDate: Date,
+        clubId: string
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getTournamentsListByAdminForCompleted,
+                    variables: {
+                        clubId: clubId,
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     public getTournamentsListByTourForCompleted(
         tourId: string
     ): Promise<any> {

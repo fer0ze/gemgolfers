@@ -5,7 +5,7 @@ import { DialogAddTourComponent } from '../dialogs/dialog-add-tour/dialog-add-to
 import { MatDialog } from '@angular/material/dialog';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
-import { Player } from 'app/shared/models/player.model';
+import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
@@ -18,13 +18,13 @@ export class TourComponent implements OnInit {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   tours: any[];
-  loggedInuser: Player;
+  loggedInuser: UserSessionModel;
 
   constructor(
     private _tourService: TourService,
     public dialog: MatDialog,
     private facadeService: FacadeService,
-    private _localStorage: LocalStorageService,
+    public _localStorage: LocalStorageService,
   ) { }
 
   ngOnInit(): void {

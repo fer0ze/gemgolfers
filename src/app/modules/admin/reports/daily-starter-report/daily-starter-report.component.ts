@@ -170,7 +170,7 @@ export class DailyStarterReportComponent implements OnInit {
         this.isLoading = true;
         let counter: number = 0;
 
-        if (this.loggedInuser.userRole == 1) {
+        if (this._localStorage.isSuperAdmin()) {
             dataPlayers = await this.facadeService.getDailyCardSingleAdmin(
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')

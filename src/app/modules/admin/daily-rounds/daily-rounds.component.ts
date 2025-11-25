@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Player } from '../../../shared/models/player.model';
+import { Player, UserSessionModel } from '../../../shared/models/player.model';
 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacadeService } from '../../../shared/services/facade.service';
@@ -27,7 +27,7 @@ import { LogsService } from 'app/shared/services/logs.service';
 export class DailyRoundsComponent implements OnInit {
     isLoading: boolean = false;
     dailyRounds: any = [];
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     minDate: Date;
     maxDate: Date;
     scheduleForm: FormGroup;
@@ -106,7 +106,7 @@ export class DailyRoundsComponent implements OnInit {
             this.showtable = false;
             let dataPlayers: any;
             this.isLoading = true;
-            if (this.loggedInuser.userRole == 1) {
+            if (this._localStorage.isSuperAdmin()) {
                 dataPlayers = await this.facadeService.getDailyRoundsSingleAdmin(
                     this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                     this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')

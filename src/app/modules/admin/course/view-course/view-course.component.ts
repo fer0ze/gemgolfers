@@ -19,6 +19,7 @@ import { Observable, map, shareReplay, startWith } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { MapMarker } from '@angular/google-maps';
 import { read, utils } from 'xlsx';
+import { UserSessionModel } from 'app/shared/models/player.model';
 
 @Component({
     selector: 'app-view-course',
@@ -104,7 +105,7 @@ export class ViewCourseComponent implements OnInit {
     eighteenHoleTotalPar: number = 0;
     twentysevenHoleTotalPar: number = 0;
     thirtySixHoleTotalPar: number = 0;
-    loggedInuser: any;
+    loggedInuser: UserSessionModel;
     public courseForm: FormGroup;
     countries: any;
     cities: any;
@@ -179,7 +180,7 @@ export class ViewCourseComponent implements OnInit {
 
             this.url = 'golfcourse.jpg';
             // this.setHoles(this.NoOfHoles);
-            this.panels = (General.getGolfCourseFeatures(this.loggedInuser.userRole));
+            this.panels = (General.getGolfCourseFeatures());
             //console.log(this.panels);
             const country = this.countries.find(country => country.name === this.countryName);
             //  this.getLatLng(country?.code ?? '');
@@ -466,7 +467,7 @@ export class ViewCourseComponent implements OnInit {
     public createCourse = async (playerFormValue: any) => {
         let course = {
             id: UniqueIdGenerator.generate(),
-            clubId: this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null,
+            clubId: this._localStorage.isClubAdmin() ? this.loggedInuser.adminClubId : null,
             name: playerFormValue.courseName,
             country: playerFormValue.country.name || playerFormValue.country,
             noOfHoles: playerFormValue.noOfHoles,
@@ -481,7 +482,7 @@ export class ViewCourseComponent implements OnInit {
         if (this.courseID) {
             let courses = {
                 id: this.courseID,
-                clubId: this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null,
+                clubId: this._localStorage.isClubAdmin() ? this.loggedInuser.adminClubId : null,
                 name: playerFormValue.courseName,
                 country: playerFormValue.country.name || playerFormValue.country,
                 noOfHoles: playerFormValue.noOfHoles,
@@ -512,7 +513,7 @@ export class ViewCourseComponent implements OnInit {
                 this.snackBar.open("Course has been created.", "x", {
                     duration: 5000,
                 });
-                this.panels = (General.getGolfCourseFeatures(course.noOfHoles));
+                this.panels = (General.getGolfCourseFeatures());
                 // if (course.noOfHoles <= 18) {
                 //     this.panels = this.panels.filter(panel => panel.id !== '3');
                 // }
@@ -1881,7 +1882,7 @@ event   */
             this.snackBar.open('Course-Rating has been Saved!', 'x', {
                 duration: 5000,
             });
-            if (this.loggedInuser.userRole == 1) {
+            if (this._localStorage.isSuperAdmin()) {
                 this.goToPanel('5')
             } else {
                 this.router.navigateByUrl('/courses');

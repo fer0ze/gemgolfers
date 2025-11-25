@@ -43,6 +43,7 @@ import {
     handicap_change_log,
     Player,
     PlayerCategory,
+    UserSessionModel,
 } from 'app/shared/models/player.model';
 import {
     Constants,
@@ -88,7 +89,7 @@ export class ContactsDetailsComponent implements OnInit {
     currentPlayer: any = [];
     tournamentId: any;
     public handicapsWhs: any[] = [];
-    loggedInuser: any;
+    loggedInuser: UserSessionModel;
     handicapIndex: number = 0;
     filteredClubOptions: Observable<Club[]>;
     /**
@@ -107,7 +108,7 @@ export class ContactsDetailsComponent implements OnInit {
         private datepipe: DatePipe,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private _localStorage: LocalStorageService,
+        public _localStorage: LocalStorageService,
         private logger: LogsService
     ) { }
 
@@ -128,14 +129,9 @@ export class ContactsDetailsComponent implements OnInit {
             this.logger.log('Admin comes to Player Edit Page', "info", this.playerID);
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             let dataClubs: any;
-            if (this.loggedInuser.userRole <= 2) {
-                let clubInfo: any =
-                    this.loggedInuser.membership.length > 0
-                        ? this.loggedInuser.membership[0].club
-                        : null;
-
-                this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
-                this.clubTitle = clubInfo ? clubInfo.name : '';
+            if (this._localStorage.isClubAdmin()) {
+                this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
+                this.clubTitle = this.loggedInuser?.club?.name ?? '';
             }
             this.contactForm = new FormGroup({
                 firstName: new FormControl('', [Validators.required]),
@@ -149,7 +145,7 @@ export class ContactsDetailsComponent implements OnInit {
                 handicapWhsIndex: new FormControl('0'),
                 handicapWHS: new FormControl('0', [Validators.required]),
                 club: new FormControl(
-                    this.loggedInuser.userRole > 1 ? this.clubTitle : '',
+                    this._localStorage.isClubAdmin() ? this.clubTitle : '',
                     [Validators.required]
                 ),
                 country: new FormControl('Pakistan'),
@@ -159,7 +155,7 @@ export class ContactsDetailsComponent implements OnInit {
                 notes: new FormControl(''),
             });
             this.playerCategories = this._facadeService.getPlayerCategories();
-            if (this.loggedInuser.userRole == 2) {
+            if (this._localStorage.isClubAdmin()) {
                 dataClubs = await this._facadeService.getClubByID(
                     this.loggedInuser.adminClubId
                 );
@@ -174,7 +170,7 @@ export class ContactsDetailsComponent implements OnInit {
                         map((name) => (name ? this._filter(name) : this.golfClubs))
                     );
                 //console.log(this.filteredClubOptions);
-            } else if (this.loggedInuser.userRole == 1) {
+            } else if (this._localStorage.isSuperAdmin()) {
                 dataClubs = await this._facadeService.getClubList();
                 this.golfClubs = dataClubs.club;
                 this.filteredClubOptions = this.contactForm
@@ -193,7 +189,7 @@ export class ContactsDetailsComponent implements OnInit {
             }
 
 
-            if (this.loggedInuser.userRole > 1) {
+            if (this._localStorage.isClubAdmin()) {
                 this.contactForm.get('club').clearValidators();
                 //this.contactForm.get('club').updateValueAndValidity();
             }
@@ -414,7 +410,7 @@ export class ContactsDetailsComponent implements OnInit {
             //console.log(GEMId);
 
             ////console.log(playerFormValue.playerClubMember);
-            if (this.loggedInuser.userRole < 3) {
+            if (this._localStorage.isClubAdmin()) {
                 let member: any = {
                     clubId:
                         typeof contact.club === 'string'
@@ -458,7 +454,7 @@ export class ContactsDetailsComponent implements OnInit {
             //console.log(contact);
 
             if (!this.editMode) {
-                if (this.loggedInuser.userRole < 3) {
+                if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
                     const isSuccess = <boolean>(
                         await this._facadeService.AddPlayer(player)
                     );
@@ -470,7 +466,7 @@ export class ContactsDetailsComponent implements OnInit {
                         this.reset();
                         this._router.navigate(['/players']);
                     }
-                } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+                } else {
                     let state = this._localStorage.get(Constants.STATE);
                     if (state == Constants.TOUR) {
                         let tourMember = {
@@ -641,7 +637,7 @@ export class ContactsDetailsComponent implements OnInit {
     }
 
     public reset() {
-        // if (this.loggedInuser.userRole > 1) {
+        // if (this._localStorage.isClubAdmin()) {
         //   this.playerForm.get("playerClubMember").setValue(this.clubTitle);
         // }
 

@@ -125,7 +125,7 @@ export class GolfReportComponent implements OnInit {
         this.formdate = fromDate;
         this.toDate = toDate;
         let players: any;
-        if (this.loggedInuser.userRole == 1) {
+        if (this._localStorage.isSuperAdmin()) {
             players = await this.facadeService.getTotalFlightPlayedAdmin(
 
                 this.datePipe.transform(

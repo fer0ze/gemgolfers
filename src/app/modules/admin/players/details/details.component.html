@@ -89,7 +89,7 @@
                         </div>
 
                         <!-- Membership -->
-                        <div *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2"
+                        <div *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()"
                             class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Membership No</mat-label>
@@ -119,7 +119,7 @@
                             </mat-form-field>
                         </div>
                         <!-- Handicap WHS-->
-                        <!-- <div *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2"
+                        <!-- <div *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()"
                             class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Handicap Differential Change</mat-label>
@@ -131,7 +131,7 @@
                         </div> -->
 
                         <!-- CLUB -->
-                        <div *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2"
+                        <div *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()"
                             class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Club</mat-label>
@@ -200,7 +200,7 @@
                         </div>
                         <!-- Country -->
                         <div class="sm:col-span-2"
-                            *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2">
+                            *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()">
                             <div class="space-y-4">
                                 <ng-container>
                                     <div class="flex">
@@ -229,7 +229,7 @@
                         </div>
                         <!-- Status -->
                         <div class="sm:col-span-2"
-                            *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2 ">
+                            *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin() ">
                             <div class="space-y-4">
                                 <ng-container>
                                     <div class="flex">
@@ -284,7 +284,7 @@
 
                         <!-- Birthday -->
                         <div class="sm:col-span-2"
-                            *ngIf="this.loggedInuser.userRole==1 || this.loggedInuser.userRole==2">
+                            *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Birthday</mat-label>
                                 <mat-icon matPrefix class="hidden sm:flex icon-size-5"

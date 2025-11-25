@@ -77,26 +77,51 @@ export class AuthSignInComponent implements OnInit {
         // Sign in
         this._authService.signIn(this.signInForm.value)
             .subscribe(
-                () => {
+                (data) => {
 
-                    // Set the redirect url.
-                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                    // to the correct page after a successful sign in. This way, that url can be set via
-                    // routing file and we don't have to touch here.
-                    const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
-                    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-                    // Navigate to the redirect url\
+                    // // Set the redirect url.
+                    // // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
+                    // // to the correct page after a successful sign in. This way, that url can be set via
+                    // // routing file and we don't have to touch here.
+                    // const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+                    // this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+                    // // Navigate to the redirect url\
 
-                    // this.logger.log('User Logged In Succesfully', "info");
+                    // // this.logger.log('User Logged In Succesfully', "info");
 
-                    if (this.loggedInuser.userRole === 8) {
-                        this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
-                            console.error('Navigation error:', error);
-                        });
+                    // if (this.loggedInuser.userRole === 8) {
+                    //     this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
+                    //         console.error('Navigation error:', error);
+                    //     });
+                    // } else {
+                    //     this._router.navigateByUrl(redirectURL).catch((error) => {
+                    //         console.error('Navigation error:', error);
+                    //     });
+                    // }
+
+                    if (data && data.session) {
+                        this._localStorage.set(Constants.LOGGED_IN_USER, data.session);
+                        this.logger.log("User has been logged in successfully", "info", this.signInForm.value.email);
+                        const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+                        console.log(redirectURL);
+
+                        // Navigate to the redirect url
+                        this._router.navigateByUrl(redirectURL);
                     } else {
-                        this._router.navigateByUrl(redirectURL).catch((error) => {
-                            console.error('Navigation error:', error);
-                        });
+                        localStorage.removeItem('accessToken');
+                        this.logger.log("Unauthorized access", "error", this.signInForm.value.email);
+                        // this._logger.info("Unauthorized access", this.signInForm.value.email);
+                        // Set the alert
+                        this.alert = {
+                            type: 'error',
+                            message: 'Unauthorized access'
+                        };
+
+                        // Show the alert
+                        this.showAlert = true;
+                        this.signInForm.enable();
+
+                        return;
                     }
 
                 },

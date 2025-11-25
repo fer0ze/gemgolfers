@@ -48,7 +48,7 @@ export class ProjectResolver implements Resolve<any> {
             this.logger.log('Getting Dashboard Data', "info");
             let lastWeekSunday = this.currentDate();
             let lastWeekMonday = this.lastSevenDayDate();
-            if (this.loggedInuser.userRole === 1) {
+            if (this._localStorage.isSuperAdmin()) {
                 return this._projectService.getData(
                     null, null,
                     this._datePipe.transform(
@@ -60,7 +60,7 @@ export class ProjectResolver implements Resolve<any> {
                         'yyyy-MM-dd'
                     )
                 );
-            } else if (this.loggedInuser.userRole === 2) {
+            } else if (this._localStorage.isClubAdmin()) {
                 return this._projectService.getData(
                     this.loggedInuser.id,
                     this.loggedInuser.adminClubId,
@@ -73,11 +73,11 @@ export class ProjectResolver implements Resolve<any> {
                         'yyyy-MM-dd'
                     )
                 );
-            } else if (this.loggedInuser.userRole == 8) {
+            } else if (this._localStorage.isClubSecretary()) {
                 this._router.navigateByUrl('/reports/dailyPlayer').catch((error) => {
                     console.error('Navigation error:', error);
                 });
-            } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+            } else if (this._localStorage.isTourAdmin() || this._localStorage.isLeagueAdmin()) {
                 return this._projectService.getTourData(
                     this.loggedInuser.id,
                     this._datePipe.transform(
@@ -89,10 +89,18 @@ export class ProjectResolver implements Resolve<any> {
                         'yyyy-MM-dd'
                     )
                 );
-            } else {
-                this._router.navigateByUrl('/courses').catch((error) => {
-                    console.error('Navigation error:', error);
-                });
+            } else if (this._localStorage.isTournamentManager()) {
+                return this._projectService.getTournamentData(
+                    this.loggedInuser.id,
+                    this._datePipe.transform(
+                        lastWeekSunday.toString(),
+                        'yyyy-MM-dd'
+                    ),
+                    this._datePipe.transform(
+                        lastWeekMonday.toString(),
+                        'yyyy-MM-dd'
+                    )
+                );
             }
         } catch (error) {
             this.logger.log('Getting Dashboard Data Failed', "error", error.toString());

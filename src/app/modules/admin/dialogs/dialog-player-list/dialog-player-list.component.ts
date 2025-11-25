@@ -45,7 +45,7 @@ export class DialogPlayerListComponent implements OnInit {
         public dialogRef: MatDialogRef<DialogPlayerListComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private facadeService: FacadeService,
-        public snackBar: MatSnackBar, private _localStorage: LocalStorageService
+        public snackBar: MatSnackBar, public _localStorage: LocalStorageService
     ) { }
 
     async ngOnInit() {

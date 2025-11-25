@@ -29,6 +29,7 @@ import {
 import {
     Player,
     PlayerWHSHanidcap,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { Score } from '../../../../shared/classes/score';
 import { FacadeService } from '../../../../shared/services/facade.service';
@@ -82,7 +83,7 @@ export class PlayerHandicapComponent implements OnInit, AfterViewInit {
     handicapsToUse: number;
     private _tagsPanelOverlayRef: OverlayRef;
     private playerID: string;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     currentPlayer: Player;
     playerFlightScores: FlightScores[] = [];
     isLoading: boolean = true;
@@ -158,14 +159,8 @@ export class PlayerHandicapComponent implements OnInit, AfterViewInit {
 
     async fecthData() {
         if (this.loggedInuser) {
-            let clubInfo: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
 
-            //console.log(clubInfo);
-
-            this.clubTitle = clubInfo ? clubInfo.name : '';
+            this.clubTitle = this.loggedInuser.club.name ?? '';
         }
 
         if (this.playerID) {
@@ -174,14 +169,7 @@ export class PlayerHandicapComponent implements OnInit, AfterViewInit {
             //   await this.facadeService.getPlayerByID(this.playerID)
             // );
             // //console.log(this.currentPlayerHandicap);
-            let club: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
-            let courseID =
-                club != null && club.courses.length > 0
-                    ? club.courses[0].id
-                    : '-LUFS3FCQKOGpJ2IEHmf';
+            let courseID = this.loggedInuser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
             let courseRating: any = {
                 courseId: courseID,
                 courseHoleSets: 3,

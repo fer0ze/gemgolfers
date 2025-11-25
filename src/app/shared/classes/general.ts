@@ -414,7 +414,7 @@ export class General {
         return tee_id;
     }
 
-    public static getGolfCourseFeatures(number) {
+    public static getGolfCourseFeatures() {
         const features = [
             {
                 id: '0',

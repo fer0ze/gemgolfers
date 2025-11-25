@@ -53,11 +53,11 @@ export class ScheduleComponent implements OnInit {
 
         of(this.clubSchedule).pipe()
         .subscribe(async data => {
-        if(this.loggedInuser.userRole == 1) {
+        if(this._localStorage.isSuperAdmin()) {
             let dataTournaments = await this.facadeService.getScheduleList(this.loggedInuser.adminClubId);
             this.clubSchedule = dataTournaments.club_schedule;
         }
-        else if(this.loggedInuser.userRole >= 2) {
+        else if(this._localStorage.isClubAdmin()) {
             ////console.log(this.loggedInuser.adminClubId);
             let dataTournaments = await this.facadeService.getScheduleList(this.loggedInuser.adminClubId);
             this.clubSchedule = dataTournaments.club_schedule;

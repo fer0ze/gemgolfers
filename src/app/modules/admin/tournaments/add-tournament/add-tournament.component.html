@@ -208,7 +208,7 @@
                                         </mat-form-field>
                                     </div>
 
-                                    <div *ngIf="this.loggedInuser.userRole <= 2">
+                                    <div *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()">
                                         <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                             [floatLabel]="'always'">
                                             <mat-label>Club</mat-label>

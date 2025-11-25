@@ -118,7 +118,7 @@ export class AuthMockApi {
                                 this._facadeService.getPlayerByEmailLogin(email).subscribe((user: any) => {
                                     // console.log(user);
                                     if (user) {
-                                        let userSession: UserSessionModel = this._localStorage.initiateUserSession(user);
+                                        let userSession: UserSessionModel = this._localStorage.initiateUserSession(user[0]);
                                         this._user.name = user[0].firstName + " " + user[0].lastName;
                                         this._user.email = user[0].email;
                                         let clubInfo: any =
@@ -132,21 +132,22 @@ export class AuthMockApi {
                                         this._user.avatar = 'assets/images/logo/' + logo + '';
                                         // user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
                                         //this._user.role = user[0].role[0].length > 0 ? user[0].role[0].id : null;
-                                        if (user[0].permissions?.leagueAdmin && user[0].permissions?.tourAdmin) {
-                                            user[0].userRole = 13;
-                                        } else if (user[0].permissions?.tourAdmin) {
-                                            user[0].userRole = 4;
-                                        } else if (user[0].permissions?.leagueAdmin) {
-                                            user[0].userRole = 9;
-                                        }
+                                        // if (user[0].permissions?.leagueAdmin && user[0].permissions?.tourAdmin) {
+                                        //     user[0].userRole = 13;
+                                        // } else if (user[0].permissions?.tourAdmin) {
+                                        //     user[0].userRole = 4;
+                                        // } else if (user[0].permissions?.leagueAdmin) {
+                                        //     user[0].userRole = 9;
+                                        // }
 
-                                        this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
+                                        // this._localStorage.set(Constants.LOGGED_IN_USER, user[0]);
                                         observer.next([
                                             200,
                                             {
                                                 user: cloneDeep(firebaseUser),
                                                 accessToken: idToken,
-                                                tokenType: 'bearer'
+                                                tokenType: 'bearer',
+                                                session: userSession,
                                             }
                                         ]);
                                         observer.complete();

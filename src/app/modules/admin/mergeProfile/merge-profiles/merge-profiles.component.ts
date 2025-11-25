@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { of } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Player } from 'app/shared/models/player.model';
+import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Constants } from 'app/shared/classes/general';
@@ -47,7 +47,7 @@ export class MergeProfilesComponent implements OnInit {
         'Club',
         // 'Delete',
     ];
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     constructor(
         private handicapService: HandicapService,
         private _facadeService: FacadeService,
@@ -61,9 +61,9 @@ export class MergeProfilesComponent implements OnInit {
             .pipe()
             .subscribe(
                 async (data) => {
-                    if (this.loggedInuser.userRole == 1) {
+                    if (this._localStorage.isSuperAdmin()) {
                         data = await this._facadeService.getPlayersListMerge();
-                    } else if (this.loggedInuser.userRole == 2) {
+                    } else if (this._localStorage.isClubAdmin()) {
                        data = await this._facadeService.getPlayersListMergeClub(this.loggedInuser.adminClubId);
                     }
                     //console.log(data);

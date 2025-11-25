@@ -399,7 +399,7 @@ export class DailyRoundsStatsComponent implements OnInit {
         let prevDate = null;
         let memCounter = 0;
 
-        if ((this.loggedInuser.userRole === 1)) {
+        if ((this._localStorage.isSuperAdmin())) {
             dataPlayers = await this.facadeService.getDailyRoundsStatAdmin(
                 this.datePipe.transform(fromDate.toString(), 'yyyy-MM-dd'),
                 this.datePipe.transform(toDate.toString(), 'yyyy-MM-dd')

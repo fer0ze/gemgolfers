@@ -36,9 +36,12 @@ export interface UserSessionModel {
     firstName: string;
     lastName: string;
     email: string;
+    club: any;
+    courseId: string;
     phone: string;
     picture: string;
     clubId?: string;
+    adminClubId?: string;
     roles?: { id: number; name: string }[];
     modules: { id: string; name: string }[];
 }

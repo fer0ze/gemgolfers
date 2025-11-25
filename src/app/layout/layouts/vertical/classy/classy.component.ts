@@ -71,33 +71,39 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
                 this.user = user;
             });
 
-        // Subscribe to navigation data
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
                 this.navigation = navigation;
             });
 
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        if (this.loggedInuser.userRole == 1) {
-            this.navigation['default'] = defaultNavigationSuperAdmin;
-        } else if (this.loggedInuser.adminClubId != null && this.loggedInuser.userRole == 2) {
-            this.navigation['default'] = defaultNavigation;
-        } else if (this.loggedInuser.userRole == 8) {
-            this.navigation['default'] = sectaryNavigation;
-        } else if (this.loggedInuser.userRole == 4) {
-            this.navigation['default'] = tourNavigation;
-            this.user.avatar = 'assets/images/logo/e2esp.png';
-        } else if (this.loggedInuser.userRole == 9) {
-            this.navigation['default'] = leagueNavigation;
-            this.user.avatar = 'assets/images/logo/e2esp.png';
-        } else if (this.loggedInuser.userRole == 13) {
-            this.navigation['default'] = tourLeagueNavigation;
-            this.user.avatar = 'assets/images/logo/e2esp.png';
-        } else {
-            this.navigation['default'] = userNavigation;
-            this.user.avatar = 'assets/images/logo/leaderboradlogo-without-pb.png';
-        }
+        // Subscribe to navigation data
+        // this._navigationService.navigation$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((navigation: Navigation) => {
+        //         this.navigation = navigation;
+        //     });
+
+        // this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        // if (this._localStorage.isSuperAdmin()) {
+        //     this.navigation['default'] = defaultNavigationSuperAdmin;
+        // } else if (this._localStorage.isClubAdmin()) {
+        //     this.navigation['default'] = defaultNavigation;
+        // } else if (this.loggedInuser.userRole == 8) {
+        //     this.navigation['default'] = sectaryNavigation;
+        // } else if (this.loggedInuser.userRole == 4) {
+        //     this.navigation['default'] = tourNavigation;
+        //     this.user.avatar = 'assets/images/logo/e2esp.png';
+        // } else if (this.loggedInuser.userRole == 9) {
+        //     this.navigation['default'] = leagueNavigation;
+        //     this.user.avatar = 'assets/images/logo/e2esp.png';
+        // } else if (this._localStorage.isSuperAdmin()) {
+        //     this.navigation['default'] = tourLeagueNavigation;
+        //     this.user.avatar = 'assets/images/logo/e2esp.png';
+        // } else {
+        //     this.navigation['default'] = userNavigation;
+        //     this.user.avatar = 'assets/images/logo/leaderboradlogo-without-pb.png';
+        // }
         // //console.log(this.navigation);
 
         // Subscribe to media changes

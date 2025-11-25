@@ -48,7 +48,7 @@ export class DialogAddPlayerComponent implements OnInit {
         private route: ActivatedRoute,
         private location: Location,
         public snackBar: MatSnackBar,
-        public facadeService: FacadeService, private _localStorage: LocalStorageService
+        public facadeService: FacadeService, public _localStorage: LocalStorageService
     ) {}
 
     async ngOnInit() {

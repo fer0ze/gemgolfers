@@ -16,6 +16,7 @@ import { Apollo } from 'apollo-angular';
 import {
     Player,
     TournamentMemberStatus,
+    UserSessionModel,
     enumPlayerCategory,
 } from '../../../../shared/models/player.model';
 import { TeeTime } from '../../../../shared/models/teetime.model';
@@ -79,7 +80,7 @@ export class ViewTeeTimeComponent implements OnInit {
     teamMatch: boolean;
     selectedSubTournament: string;
     subTournamentDetail: any[] = [];
-    loggedInUser: Player;
+    loggedInUser: UserSessionModel;
     players: Player;
     activePlayers: Player[] = [];
     playerScores: Score[];
@@ -118,7 +119,6 @@ export class ViewTeeTimeComponent implements OnInit {
     noItemsInList = false;
     dailyRounds: any = [];
     myPlayer: TeeTime;
-    loggedInuser: Player;
     scheduleForm: FormGroup;
     refresh: boolean = false;
     minDate: Date;
@@ -218,7 +218,7 @@ export class ViewTeeTimeComponent implements OnInit {
             this.showResult = false;
             this.isLoading = true;
 
-            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
             // this.dailyRounds = [];
             this.filters = this._formBuilder.group({
@@ -249,19 +249,13 @@ export class ViewTeeTimeComponent implements OnInit {
         this.isLoading = true;
         let dataPlayers: any;
         this.teeTimes = [];
-        let club: any =
-            this.loggedInuser.membership.length > 0
-                ? this.loggedInuser.membership[0].club
-                : null;
-        let courseId =
-            club != null && club.courses.length > 0
-                ? club.courses[0].id
-                : '-LUFS3FCQKOGpJ2IEHmf';
+        let club: any = this.loggedInUser.clubId;
+        let courseId = this.loggedInUser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
         this.getSelectedCourse(courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf');
         //console.log(this.loggedInUser);
-        if (this.loggedInuser.userRole > 1) {
+        if (this._localStorage.isClubAdmin()) {
             dataPlayers = await this.facadeService.getTeeTimesSlots(
-                this.loggedInuser.adminClubId,
+                this.loggedInUser.adminClubId,
                 date
             );
         } else {
@@ -528,7 +522,7 @@ export class ViewTeeTimeComponent implements OnInit {
         console.log(item);
 
         let datas = await this.facadeService.getPlayersListForTournament(
-            this.loggedInuser.adminClubId
+            this.loggedInUser.adminClubId
         );
         const dialogRef = this.dialog.open(DialogPlayerListComponent, {
             data: { players: datas.player },
@@ -581,15 +575,8 @@ export class ViewTeeTimeComponent implements OnInit {
     }
 
     async createTournament(item, players, guestCheck) {
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        let clubInfo: any
-        if (this.loggedInuser) {
-            clubInfo =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
-        }
-        let courseId = clubInfo?.courses[0].id;
+
+        let courseId = this.loggedInUser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
         // starterFormValue.roundDate = this.datepipe.transform(
         //   starterFormValue.roundDate.toString(),
         //   'yyyy-MM-dd'
@@ -669,7 +656,7 @@ export class ViewTeeTimeComponent implements OnInit {
         let flight: any = {
             id: UniqueIdGenerator.generate(),
             courseId: courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf',
-            adminId: this.loggedInuser.id,
+            adminId: this.loggedInUser.id,
             courseHoleSets: item?.courseHoleSets ? item?.courseHoleSets : 3,
             flightNo: 1,
             flightRound: 0,
@@ -695,14 +682,14 @@ export class ViewTeeTimeComponent implements OnInit {
 
         let tournament: Tournament = {
             id: UniqueIdGenerator.generate(),
-            clubId: this.loggedInuser.adminClubId,
+            clubId: this.loggedInUser.adminClubId,
             leagueId: null,
             courseId: courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf',
-            adminId: this.loggedInuser.id,
+            adminId: this.loggedInUser.id,
             title:
                 this.routeDate.toString().substring(0, 10) +
                 ' ' +
-                this.loggedInuser.membership[0].club.name,
+                this.loggedInUser.club.name,
             prefix: null,
             courseHoleSets: item?.courseHoleSets ? item?.courseHoleSets : 3,
             teamMatch: false,

@@ -1,17 +1,16 @@
 import { IsActiveMatchOptions, Params, QueryParamsHandling } from '@angular/router';
 
-export interface FuseNavigationItem
-{
+export interface FuseNavigationItem {
     id?: string;
     title?: string;
     subtitle?: string;
     type:
-        | 'aside'
-        | 'basic'
-        | 'collapsable'
-        | 'divider'
-        | 'group'
-        | 'spacer';
+    | 'aside'
+    | 'basic'
+    | 'collapsable'
+    | 'divider'
+    | 'group'
+    | 'spacer';
     hidden?: (item: FuseNavigationItem) => boolean;
     active?: boolean;
     disabled?: boolean;
@@ -23,11 +22,11 @@ export interface FuseNavigationItem
     queryParamsHandling?: QueryParamsHandling | null;
     externalLink?: boolean;
     target?:
-        | '_blank'
-        | '_self'
-        | '_parent'
-        | '_top'
-        | string;
+    | '_blank'
+    | '_self'
+    | '_parent'
+    | '_top'
+    | string;
     exactMatch?: boolean;
     isActiveMatchOptions?: IsActiveMatchOptions;
     function?: (item: FuseNavigationItem) => void;
@@ -44,6 +43,7 @@ export interface FuseNavigationItem
     };
     children?: FuseNavigationItem[];
     meta?: any;
+    moduleId?: string;
 }
 
 export type FuseVerticalNavigationAppearance =

@@ -7,13 +7,15 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'DashBoards',
         type: 'group',
         icon: 'heroicons_outline:home',
+        moduleId: '9d597d16-53d3-46de-ace2-9184f01aaef6',
         children: [
             {
                 id: 'dashboards.dasboard',
                 title: 'Home',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
-                link: '/dashboard'
+                link: '/dashboard',
+                moduleId: '9d597d16-53d3-46de-ace2-9184f01aaef6',
             },
         ],
     },
@@ -22,6 +24,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Tournament',
         type: 'group',
         icon: 'heroicons_outline:home',
+        moduleId: '8f4af6b3-88a8-4fb8-a206-9ec8b6b9abdb',
         children: [
             {
                 id: 'tournaments.newTournament',
@@ -29,6 +32,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:academic-cap',
                 link: '/tournaments/add',
+                moduleId: '8f4af6b3-88a8-4fb8-a206-9ec8b6b9abdb',
             },
             {
                 id: 'tournaments.viewtournaments',
@@ -36,38 +40,64 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-list',
                 link: '/tournaments',
+                moduleId: '8f4af6b3-88a8-4fb8-a206-9ec8b6b9abdb',
             },
         ],
     },
-    // },
-    // {
-    //     id: 'leagues',
-    //     title: 'League',
-
-    //     type: 'group',
-    //     icon: 'heroicons_outline:view-boards',
-    //     children: [
-    //         {
-    //             id: 'leagues.newleagues',
-    //             title: 'New League',
-    //             type: 'basic',
-    //             icon: 'heroicons_outline:academic-cap',
-    //             link: '/leagues/new',
-    //         },
-    //         {
-    //             id: 'leagues.viewleagues',
-    //             title: 'All Leagues',
-    //             type: 'basic',
-    //             icon: 'heroicons_outline:view-boards',
-    //             link: '/leagues/view',
-    //         },
-    //     ],
-    // },
+    {
+        id: 'tour',
+        title: 'Tour',
+        type: 'group',
+        icon: 'heroicons_outline:view-boards',
+        moduleId: '8bf08af1-6145-41d5-b508-314b3c98acb1',
+        children: [
+            // {
+            //     id: 'tour.newTour',
+            //     title: 'New Tour',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/tours/add',
+            // },
+            {
+                id: 'tour.viewtours',
+                title: 'All Tours',
+                type: 'basic',
+                icon: 'heroicons_outline:view-list',
+                link: '/tours',
+                moduleId: '8bf08af1-6145-41d5-b508-314b3c98acb1',
+            },
+        ],
+    },
+    {
+        id: 'leagues',
+        title: 'League',
+        moduleId: '4a161b13-37b0-4650-9e91-d49b27ee1a87',
+        type: 'group',
+        icon: 'heroicons_outline:view-boards',
+        children: [
+            // {
+            //     id: 'leagues.newleagues',
+            //     title: 'New League',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:academic-cap',
+            //     link: '/leagues/new',
+            // },
+            {
+                id: 'leagues.viewleagues',
+                title: 'All Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:view-boards',
+                link: '/leagues',
+                moduleId: '4a161b13-37b0-4650-9e91-d49b27ee1a87',
+            },
+        ],
+    },
     {
         id: 'players',
         title: 'Players',
         type: 'group',
         icon: 'heroicons_outline:menu-alt-2',
+        moduleId: '6c614b80-f86f-4873-aa32-e635489e2061',
         children: [
             {
                 id: 'players.viewplayers',
@@ -75,15 +105,16 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:user-group',
                 link: '/players',
+                moduleId: '6c614b80-f86f-4873-aa32-e635489e2061',
             },
         ],
     },
-
     {
         id: 'dailyRounds',
         title: 'DailyRound',
         type: 'group',
         icon: 'heroicons_outline:pencil-alt',
+        moduleId: 'aeda8d18-fe0e-41e9-9cd1-a46ef2e570e9',
         children: [
             // {
             //     id: 'dailyRounds.add',
@@ -98,22 +129,25 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
                 link: '/dailyRounds',
+                moduleId: 'aeda8d18-fe0e-41e9-9cd1-a46ef2e570e9',
             },
             {
                 id: 'dailyRounds.teetimes',
                 title: 'Tee Times',
                 type: 'basic',
                 icon: 'heroicons_outline:menu-alt-4',
+                moduleId: '060c2629-578f-4d4f-aeb3-58c249e5d3ea',
                 link: '/teetimes',
             },
 
-            {
-                id: 'dailyRounds.schedule',
-                title: 'Schedule',
-                type: 'basic',
-                icon: 'heroicons_outline:truck',
-                link: '/tournaments/schedule',
-            },
+            // {
+            //     id: 'dailyRounds.schedule',
+            //     title: 'Schedule',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:truck',
+            //     moduleId: 'aeda8d18-fe0e-41e9-9cd1-a46ef2e570e9',
+            //     link: '/tournaments/schedule',
+            // },
         ],
     },
     {
@@ -121,6 +155,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Handicaps',
         type: 'group',
         icon: 'heroicons_outline:document',
+        moduleId: '491058f8-1b60-4d51-bd05-22d05c1eb9d7',
         children: [
             {
                 id: 'handicaps.CONGU',
@@ -128,6 +163,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:check-circle',
                 link: '/handicaps/CONGU',
+                moduleId: '4ea530d9-56ff-49d9-857d-f03078b19886',
             },
             {
                 id: 'leagues.WHS',
@@ -135,15 +171,16 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:newspaper',
                 link: '/handicaps/WHS',
+                moduleId: '0107c4af-39b4-4127-8ebe-4df7f353ae11',
             },
         ],
     },
-
     {
         id: 'reports',
         title: 'Reports',
         type: 'group',
         icon: 'heroicons_outline:support',
+        moduleId: 'a86c1ea4-586c-4b7e-92c8-397614ed0f5b',
         children: [
             {
                 id: 'reports.handicap',
@@ -151,6 +188,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:check-circle',
                 link: '/reports/handicap',
+                moduleId: '6b2beefb-dd47-44a6-94ef-d25d22ffc89a',
             },
             {
                 id: 'reports.dailyround',
@@ -158,6 +196,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:pencil',
                 link: '/reports/dailyround',
+                moduleId: '14445cbe-0575-4177-a272-38674047c569',
             },
             {
                 id: 'reports.dailycard',
@@ -165,6 +204,63 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:book-open',
                 link: '/reports/dailycard',
+                moduleId: 'b4aa92e7-feed-4f78-a9cb-a82a2cb5883c',
+            },
+            {
+                id: 'reports.tournament',
+                title: 'Tournaments',
+                type: 'basic',
+                icon: 'heroicons_outline:bookmark-alt',
+                link: '/reports/tournament',
+                moduleId: 'c3ea540d-87bb-476a-98c6-9880236ed457',
+            },
+            {
+                id: 'reports.signUpPlayers',
+                title: 'SignUp-Players',
+                type: 'basic',
+                icon: 'heroicons_outline:beaker',
+                link: '/reports/signUpPlayers',
+                moduleId: '918e106e-cdd3-4843-a374-e0e3997203fa'
+            },
+            {
+                id: 'reports.UserActivity',
+                title: 'User Activity',
+                type: 'basic',
+                icon: 'heroicons_outline:chip',
+                link: '/reports/UserActivity',
+                moduleId: 'eb37b55b-6671-4af0-9897-239b67c645c2',
+            },
+            {
+                id: 'reports.leagues',
+                title: 'Leagues',
+                type: 'basic',
+                icon: 'heroicons_outline:cube',
+                link: '/reports/league',
+                moduleId: 'c836d220-6be9-42f6-a1ea-c8897db7c329',
+            },
+            {
+                id: 'reports.clubs',
+                title: 'Clubs',
+                type: 'basic',
+                icon: 'heroicons_outline:desktop-computer',
+                link: '/reports/club',
+                moduleId: '586cb152-b9d5-44f5-b30d-1789743bf271'
+            },
+            {
+                id: 'reports.dashboard',
+                title: 'Daily Players Report',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/reports/dailyPlayer',
+                moduleId: '8f8bb0d1-9b78-4003-80c5-21370f9ff5ef'
+            },
+            {
+                id: 'reports.tour',
+                title: 'Tours',
+                type: 'basic',
+                icon: 'heroicons_outline:color-swatch',
+                link: '/reports/tour',
+                moduleId: '2c41cb75-3bcd-4272-901a-96fc04140b30',
             },
             {
                 id: 'reports.Players',
@@ -172,6 +268,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:speakerphone',
                 link: '/reports/players',
+                moduleId: '1bbaa7bf-2167-40c0-932d-8599a1f73699',
             },
             {
                 id: 'reports.teeTimes',
@@ -179,6 +276,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:newspaper',
                 link: '/reports/teeTime',
+                moduleId: '68ddd97f-5e50-4dd3-99d6-26a7952a0130',
             },
             {
                 id: 'reports.mergreProfiles',
@@ -186,9 +284,76 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:table',
                 link: '/mergeProfile',
+                moduleId: 'b43c9cdd-050b-4967-9161-9ab27b8a2109',
             },
         ],
-    }
+    },
+    {
+        id: 'course',
+        title: 'Courses',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a',
+        children: [
+            {
+                id: 'course.courses',
+                title: 'Courses',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/courses',
+                moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a'
+            },
+        ],
+    },
+    {
+        id: 'feedback',
+        title: 'Admin Side',
+        type: 'group',
+        icon: 'heroicons_outline:heart',
+        moduleId: '040202b8-8abd-4de6-a80d-1d6a2f91130c',
+        children: [
+            {
+                id: 'feedback.viewfeedback',
+                title: 'FeedBacks',
+                type: 'basic',
+                icon: 'heroicons_outline:sparkles',
+                link: '/feedback',
+                moduleId: 'a58af5ba-2eb0-46c7-ba07-7aa602863f05',
+            },
+            {
+                id: 'feedback.coursesRequest',
+                title: 'Courses Request',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-list',
+                link: '/coursesRequest',
+                moduleId: 'a71b1916-ce6a-4ae0-869f-e3d140e64a4b',
+            },
+            {
+                id: 'feedback.allCourses',
+                title: 'Courses',
+                type: 'basic',
+                icon: 'heroicons_outline:sun',
+                link: '/courses',
+                moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a',
+            },
+            {
+                id: 'feedback.mergreProfiles',
+                title: 'Merge-Profile',
+                type: 'basic',
+                icon: 'heroicons_outline:table',
+                link: '/mergeProfile',
+                moduleId: 'af0df7bf-f5e9-447b-bba7-6c69bceea3e8',
+            },
+            {
+                id: 'feedback.news',
+                title: 'News Banner',
+                type: 'basic',
+                icon: 'heroicons_outline:camera',
+                link: '/banner',
+                moduleId: 'a0147639-d995-4048-813d-45c480079f57',
+            },
+        ],
+    },
 ];
 export const tourNavigation: FuseNavigationItem[] = [
     {
@@ -211,6 +376,7 @@ export const tourNavigation: FuseNavigationItem[] = [
         title: 'Tour',
         type: 'group',
         icon: 'heroicons_outline:view-boards',
+        moduleId: '8bf08af1-6145-41d5-b508-314b3c98acb1',
         children: [
             // {
             //     id: 'tour.newTour',
@@ -225,6 +391,7 @@ export const tourNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-list',
                 link: '/tours',
+                moduleId: '8bf08af1-6145-41d5-b508-314b3c98acb1',
             },
         ],
     },
@@ -294,7 +461,7 @@ export const leagueNavigation: FuseNavigationItem[] = [
     {
         id: 'leagues',
         title: 'League',
-
+        moduleId: '4a161b13-37b0-4650-9e91-d49b27ee1a87',
         type: 'group',
         icon: 'heroicons_outline:view-boards',
         children: [
@@ -311,6 +478,7 @@ export const leagueNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
                 link: '/leagues',
+                moduleId: '4a161b13-37b0-4650-9e91-d49b27ee1a87',
             },
         ],
     },
@@ -351,6 +519,7 @@ export const tourLeagueNavigation: FuseNavigationItem[] = [
         title: 'Tour',
         type: 'group',
         icon: 'heroicons_outline:view-boards',
+        moduleId: '8bf08af1-6145-41d5-b508-314b3c98acb1',
         children: [
             // {
             //     id: 'tour.newTour',
@@ -365,6 +534,7 @@ export const tourLeagueNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-list',
                 link: '/tours',
+                moduleId: '8bf08af1-6145-41d5-b508-314b3c98acb1',
             },
         ],
     },
@@ -394,7 +564,7 @@ export const tourLeagueNavigation: FuseNavigationItem[] = [
     {
         id: 'leagues',
         title: 'League',
-
+        moduleId: '4a161b13-37b0-4650-9e91-d49b27ee1a87',
         type: 'group',
         icon: 'heroicons_outline:view-boards',
         children: [
@@ -411,6 +581,7 @@ export const tourLeagueNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-boards',
                 link: '/leagues',
+                moduleId: '4a161b13-37b0-4650-9e91-d49b27ee1a87',
             },
         ],
     },
@@ -434,7 +605,6 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
     {
         id: 'dashboards',
         title: 'DashBoards',
-
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
@@ -450,7 +620,6 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
     {
         id: 'tournaments',
         title: 'Tournament',
-
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
@@ -468,13 +637,6 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:view-list',
                 link: '/tournaments',
-            },
-            {
-                id: 'tournaments.leagues',
-                title: 'All Leagues',
-                type: 'basic',
-                icon: 'heroicons_outline:shield-check',
-                link: '/leagues',
             },
         ],
     },
@@ -610,6 +772,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:bookmark-alt',
                 link: '/reports/tournament',
+                moduleId: 'c3ea540d-87bb-476a-98c6-9880236ed457',
             },
             {
                 id: 'reports.signUpPlayers',
@@ -764,6 +927,7 @@ export const userNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
                 link: '/courses',
+                moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a'
             },
         ],
     },
@@ -780,7 +944,8 @@ export const sectaryNavigation: FuseNavigationItem[] = [
                 title: 'Daily Players Report',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
-                link: '/reports/dailyPlayer'
+                link: '/reports/dailyPlayer',
+                moduleId: '8f8bb0d1-9b78-4003-80c5-21370f9ff5ef'
             },
             {
                 id: 'courses',
@@ -788,6 +953,7 @@ export const sectaryNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:chart-pie',
                 link: '/courses',
+                moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a'
             },
         ],
     },

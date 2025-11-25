@@ -182,7 +182,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
         this.formdate = fromDate;
         this.toDate = toDate;
         const combinedData = `fromDate=${fromDate}, toDate=${toDate}`;
-        if (this.loggedInuser.userRole == 1) {
+        if (this._localStorage.isSuperAdmin()) {
             this.dataPlayersCongu =
                 await this.facadeService.playerUpdatedHandicapReportAdmin(
 

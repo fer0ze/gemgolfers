@@ -10,6 +10,7 @@ import {
     PlayerCategory,
     ClubMembership,
     handicap_change_log,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import {
     HandicapAllocation,
@@ -60,7 +61,7 @@ export class AddDailyRoundComponent implements OnInit {
         'delete',
     ];
     last: boolean = false;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     updateHandicap: boolean = false;
     handicapLog: any;
     playerStatus: Boolean = false;
@@ -118,29 +119,17 @@ export class AddDailyRoundComponent implements OnInit {
 
 
             if (this.loggedInuser) {
-                let clubInfo: any =
-                    this.loggedInuser.membership.length > 0
-                        ? this.loggedInuser.membership[0].club
-                        : null;
 
-                this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
-                this.clubTitle = clubInfo ? clubInfo.name : '';
+                this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
+                this.clubTitle = this.loggedInuser.club.name;
             }
 
-            this.clubID = this.loggedInuser.membership[0].club;
+            this.clubID = this.loggedInuser.clubId;
             //console.log(this.clubID);
 
             this.currentDate = new Date();
-            this.getSelectedCourse(
-                this.clubID.courses.length > 0
-                    ? this.clubID.courses[0].id
-                    : '-LUFS3FCQKOGpJ2IEHmf'
-            );
-            this.getCourseTees(
-                this.clubID.courses.length > 0
-                    ? this.clubID.courses[0].id
-                    : '-LUFS3FCQKOGpJ2IEHmf'
-            )
+            this.getSelectedCourse(this.loggedInuser?.courseId ?? '-LUFS3FCQKOGpJ2IEHmf');
+            this.getCourseTees(this.loggedInuser?.courseId ?? '-LUFS3FCQKOGpJ2IEHmf')
 
             this.starterForm = new FormGroup({
                 holeSets: new FormControl('', [Validators.required]),
@@ -316,10 +305,7 @@ export class AddDailyRoundComponent implements OnInit {
         let flight: any = {
             id: UniqueIdGenerator.generate(),
             //tournamentId: this.tournamentID,
-            courseId:
-                this.clubID.courses.length > 0
-                    ? this.clubID.courses[0].id
-                    : '-LUFS3FCQKOGpJ2IEHmf',
+            courseId: this.loggedInuser?.courseId ?? '-LUFS3FCQKOGpJ2IEHmf',
             adminId: this.loggedInuser.id,
             courseHoleSets: this.selectedCourseHoleSet.substring(0, index),
             flightNo: fcnter,
@@ -348,14 +334,11 @@ export class AddDailyRoundComponent implements OnInit {
             id: this.tournamentID,
             clubId: this.loggedInuser.adminClubId,
             leagueId: null,
-            courseId:
-                this.clubID.courses.length > 0
-                    ? this.clubID.courses[0].id
-                    : '-LUFS3FCQKOGpJ2IEHmf',
+            courseId: this.loggedInuser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf',
             adminId: this.loggedInuser.id,
             title: this.showTournamentTitle ? title : this.currentDate.toString().substring(0, 10) +
                 ' ' +
-                this.loggedInuser.membership[0].club.name,
+                this.loggedInuser.club.name,
             prefix: null,
             courseHoleSets: 3,
             teamMatch: false,

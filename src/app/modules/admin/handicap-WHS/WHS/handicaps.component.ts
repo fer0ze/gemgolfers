@@ -20,6 +20,7 @@ import {
     ClubMembership,
     PlayerWHSHanidcap,
     PlayerCategory,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 
@@ -72,7 +73,7 @@ export class HandicapsComponent implements OnInit {
     myPlayer: Player;
     isLoading: Boolean = true;
     public response: any;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     filterCategory: string;
     playerWHS: PlayerWHSHanidcap;
     playerWHSHistory: any;
@@ -137,13 +138,8 @@ export class HandicapsComponent implements OnInit {
 
             this.MembersCat = this.filterCategory;
             if (this.loggedInuser) {
-                let club: any =
-                    this.loggedInuser.membership.length > 0
-                        ? this.loggedInuser.membership[0].club
-                        : null;
 
-                let courseID =
-                    club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
+                let courseID = this.loggedInuser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
                 let courseRating: any = {
                     courseId: courseID,
                     courseHoleSets: 3,
@@ -154,7 +150,7 @@ export class HandicapsComponent implements OnInit {
             }
             this.playerCategories = this._facadeService.getPlayerCategoriesKGC();
             this.logger.log('Getting WHS Handicap Data', "info");
-            if (this.loggedInuser.userRole > 1) {
+            if (this._localStorage.isClubAdmin()) {
                 if (this.filterCategory)
                     this.dataPlayers =
                         await this._facadeService.getPlayersListByClubAndCategory(

@@ -5,6 +5,7 @@ import {
     IPlayerHandicapWhs,
     Player,
     PlayerWHSHanidcap,
+    UserSessionModel,
     handicap_change_log,
 } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
@@ -42,7 +43,7 @@ import { LogsService } from 'app/shared/services/logs.service';
 })
 export class ViewPlayerComponent implements OnInit {
     private playerID: string;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     currentPlayer: Player;
     playerFlightScores: FlightScores[] = [];
     par3Avg: number;
@@ -213,27 +214,18 @@ export class ViewPlayerComponent implements OnInit {
                 this.playerID = params.get('id');
 
                 if (this.loggedInuser) {
-                    let clubInfo: any =
-                        this.loggedInuser.membership.length > 0
-                            ? this.loggedInuser.membership[0].club
-                            : null;
 
                     //console.log(clubInfo);
 
-                    this.clubTitle = clubInfo ? clubInfo.name : '';
+                    this.clubTitle = this.loggedInuser?.club?.name ?? '';
                 }
             });
 
             if (this.playerID) {
                 //this.currentPlayer = <Player>await this.facadeService.getPlayerByID(this.playerID);
                 ////console.log(this.currentPlayer);
-                let club: any =
-                    this.loggedInuser.membership.length > 0
-                        ? this.loggedInuser.membership[0].club
-                        : null;
 
-                let courseID =
-                    club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
+                let courseID = this.loggedInuser?.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
                 let courseRating: any = {
                     courseId: courseID,
                     courseHoleSets: 3,
@@ -753,7 +745,7 @@ export class ViewPlayerComponent implements OnInit {
             if (result) {
                 let clubId: string;
 
-                if (this.loggedInuser.userRole > 1)
+                if (this._localStorage.isClubAdmin())
                     clubId = this.loggedInuser.adminClubId;
 
                 this.delete(clubId, playerId);

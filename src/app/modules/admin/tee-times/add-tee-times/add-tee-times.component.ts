@@ -11,7 +11,7 @@ import {
     Validators,
     FormGroup,
 } from '@angular/forms';
-import { Player } from '../../../../shared/models/player.model';
+import { Player, UserSessionModel } from '../../../../shared/models/player.model';
 import { TeeTime, TeeTimeSlot } from '../../../../shared/models/teetime.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import {
@@ -32,7 +32,7 @@ import { Club } from 'app/shared/models/club.model';
 })
 export class AddTeeTimesComponent implements OnInit {
     scheduleForm: FormGroup;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     showTeeTime: boolean = false;
     showGuestTee: boolean = false;
     showGuestTime: boolean = false;
@@ -59,7 +59,7 @@ export class AddTeeTimesComponent implements OnInit {
 
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-        console.log(this.loggedInuser);
+        // console.log(this.loggedInuser);
 
         this.scheduleForm = this.fb.group({
             allowNineHole: [false, Validators.required],
@@ -80,7 +80,7 @@ export class AddTeeTimesComponent implements OnInit {
         this.Clubs = dataClubs.club;
         let dataCourses = await this.facadeService.getCoursesList();
         this.Courses = dataCourses.course;
-        this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
+        this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
         let today: Date = new Date();
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -91,20 +91,10 @@ export class AddTeeTimesComponent implements OnInit {
         const currentYear = new Date().getFullYear();
         this.minDate = todayDate;
         this.maxDate = new Date(currentYear + 1, 11, 31);
-        if (this.loggedInuser.userRole > 1) {
-            let clubInfo: any =
-                this.loggedInuser?.membership.length > 0
-                    ? this.loggedInuser?.membership[0].club
-                    : [];
+        if (this._localStorage.isClubAdmin()) {
 
-            let courseName: string =
-                clubInfo?.courses.length > 0
-                    ? clubInfo?.courses[0].name
-                    : '-KpFJ5_ODeRpEQCz9Drd';
-            let courseId: string =
-                clubInfo?.courses.length > 0
-                    ? clubInfo?.courses[0].id
-                    : '-KpFJ5_ODeRpEQCz9Drd';
+            let courseName: string = this.loggedInuser.club?.courses?.[0]?.name ?? '-KpFJ5_ODeRpEQCz9Drd';
+            let courseId: string = this.loggedInuser?.courseId ?? '-KpFJ5_ODeRpEQCz9Drd';
             this.scheduleForm.get('courseName').setValue({
                 id: courseId,
                 name: courseName
@@ -112,8 +102,8 @@ export class AddTeeTimesComponent implements OnInit {
             this.scheduleForm
                 .get('club')
                 .setValue({
-                    id: clubInfo?.id,
-                    name: clubInfo?.name
+                    id: this.loggedInuser.club?.id,
+                    name: this.loggedInuser.club?.name
                 });
 
             this.getSelectedCourse(courseId ? courseId : '-LUFS3FCQKOGpJ2IEHmf');
@@ -179,7 +169,7 @@ export class AddTeeTimesComponent implements OnInit {
     async createSchedule() {
         // TODO: Use EventEmitter with form value
         try {
-            this.isSaving = true;    
+            this.isSaving = true;
             console.log(this.scheduleForm.value);
             let clubId: string = this.loggedInuser.adminClubId;
             let isExist: TeeTime[] =

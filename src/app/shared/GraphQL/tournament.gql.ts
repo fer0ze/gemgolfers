@@ -694,6 +694,36 @@ export const GetTournamnetListForCompleted = gql`
         }
     }
 `;
+export const getTournamentsListByAdminForCompleted = gql`
+    query getTournamentsListByAdminForCompleted( $clubId: String!) {
+        CompletedRecently: tournament(
+            where: {
+                _and: [
+                    {
+                        adminId: { _eq: $clubId }
+                        singleRound: { _eq: false }
+                    }
+                ]
+            }
+            order_by: { createdAt: desc }
+        ) {
+            id
+            title
+            startDate
+            endDate
+            matchFormat
+            noOfRounds
+            admin {
+                firstName
+                lastName
+            }
+            HandicapCalculated: player_handicaps(limit: 1) {
+                playerId
+                tournamentId
+            }
+        }
+    }
+`;
 export const getTournamentsListByTourForCompleted = gql`
     query PostsGetQuery($tourId: String!) {
         CompletedRecently: tour(where: { id: { _eq: $tourId } }) {
@@ -2307,6 +2337,7 @@ export const getallDashboard = gql`
             matchFormat
             noOfRounds
             admin {
+            id
                 firstName
                 lastName
             }
@@ -2380,12 +2411,14 @@ export const getallDashboard = gql`
                 ]
             }
         ) {
+            id
             date
             ended
             MembersQL: members {
                 playerId
                 attendance
                 player {
+                id
                     playerCategory
                 }
             }
@@ -2484,6 +2517,70 @@ export const getPremiumPlayer = gql`
 
 export const getTourDashboard = gql`
     query getTourDashboard(
+        $adminId: String!
+        $fromDate: date!
+        $toDate: date!
+    ) {
+        tour(
+            where: { adminId: { _eq: $adminId } }
+            order_by: [{ dateCreated: desc }]
+        ) {
+            id
+            name
+            tournaments {
+                id
+                leagueId
+                title
+                matchFormat
+                noOfRounds
+                startDate
+                admin {
+                    firstName
+                    lastName
+                }
+            }
+            members {
+                playerId
+                player {
+                    id
+                    playerCategory
+                }
+            }
+        }
+        TournamentsQLs: tournament(
+            where: {
+                adminId: { _eq: $adminId }
+                _and: [
+                    { startDate: { _gte: $toDate } }
+                    { endDate: { _lte: $fromDate } }
+                ]
+            }
+        ) {
+            id
+            startDate
+            MembersQL: members {
+                playerId
+                player {
+                    id
+                    playerCategory
+                }
+            }
+        }
+        league(where: { adminId: { _eq: $adminId } }) {
+            id
+            name
+            dateCreated
+            members {
+                playerId
+            }
+            tournaments {
+                id
+            }
+        }
+    }
+`;
+export const getTournamentData = gql`
+    query getTournamentData(
         $adminId: String!
         $fromDate: date!
         $toDate: date!

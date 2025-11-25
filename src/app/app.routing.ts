@@ -131,9 +131,6 @@ export const appRoutes: Route[] = [
         resolve: {
             initialData: InitialDataResolver,
         },
-        data: {
-            expectedRole: 2,
-        },
         children: [
             {
                 path: 'dashboard',

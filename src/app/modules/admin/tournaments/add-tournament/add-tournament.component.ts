@@ -29,6 +29,7 @@ import {
     Player,
     PlayerCategory,
     Marshal,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import {
@@ -106,7 +107,7 @@ export class AddTournamentComponent implements OnInit {
     selectedIndex: any = 0;
     nameFormGroup: FormGroup;
     emailFormGroup: FormGroup;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     Clubs: Club[] = [];
     showCategory: boolean = true;
     clubMembers: Player[] = [];
@@ -353,13 +354,8 @@ export class AddTournamentComponent implements OnInit {
         }
 
         if (this.loggedInuser) {
-            let clubInfo: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
-
-            this.hideClubs = this.loggedInuser.userRole == 2 ? true : false;
-            this.clubTitle = clubInfo ? clubInfo.name : '';
+            this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
+            this.clubTitle = this.loggedInuser?.club?.name ?? '';
         }
         this.teamForm = this._formBuilder.group({
             teamName: [''],
@@ -381,12 +377,12 @@ export class AddTournamentComponent implements OnInit {
                     endDateFormCtrl: ['', Validators.required],
                     teamMatch: ['1', Validators.required],
                     clubsFormCtrl: [
-                        this.loggedInuser.userRole == 2
-                            ? this.loggedInuser.membership.length > 0
-                                ? this.loggedInuser.membership[0].club
+                        this._localStorage.isClubAdmin()
+                            ? this.loggedInuser.club
+                                ? this.loggedInuser.club
                                 : ''
                             : '',
-                        [Validators.required, RequireMatch],
+                        [],
                     ],
                     courseInfo: this._formBuilder.array([
                         this._formBuilder.group({
@@ -601,9 +597,9 @@ export class AddTournamentComponent implements OnInit {
                 // }
 
                 let selectedClubId: string;
-                if (this.loggedInuser.userRole > 1 && this.loggedInuser.adminClubId) {
+                if (this._localStorage.isClubAdmin() && this.loggedInuser.adminClubId) {
                     selectedClubId = this.loggedInuser.adminClubId
-                } else if (this.loggedInuser.userRole == 1 && this.loggedInuser.adminClubId) {
+                } else if (this._localStorage.isSuperAdmin() && this.loggedInuser.adminClubId) {
                     selectedClubId = this.loggedInuser.adminClubId
                 }
                 this.clubMembers = [];
@@ -772,7 +768,7 @@ export class AddTournamentComponent implements OnInit {
             this.minDate = todayDate;
         }
 
-        if (this.loggedInuser.userRole > 1) {
+        if (this._localStorage.isClubAdmin()) {
             this.formArray.get([0]).get('clubsFormCtrl').clearValidators();
             this.formArray
                 .get([0])
@@ -2339,7 +2335,7 @@ export class AddTournamentComponent implements OnInit {
 
         let tournament = {
             id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
-            clubId: this.loggedInuser.userRole > 2 ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
+            clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
             courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id,
             adminId: this.loggedInuser.id,
@@ -2450,7 +2446,7 @@ export class AddTournamentComponent implements OnInit {
 
 
                     let selectedClubId: string =
-                        this.loggedInuser.userRole > 1
+                        this._localStorage.isClubAdmin()
                             ? this.loggedInuser.adminClubId
                             : this.formArray.get([0]).value.clubsFormCtrl
                                 .id;
@@ -2460,7 +2456,7 @@ export class AddTournamentComponent implements OnInit {
                     //     this.formArray.get([0]).get('clubctgies').value
                     // );
 
-                    if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+                    if (this._localStorage.isTourAdmin() || this._localStorage.isLeagueAdmin()) {
 
                         if (state == Constants.TOUR) {
                             selectedClubId = this._localStorage.get(Constants.TOUR_ID);
@@ -2701,12 +2697,12 @@ export class AddTournamentComponent implements OnInit {
         let tournament = {
             id: this.tournamentID,
             clubId:
-                this.loggedInuser.userRole > 1
+                this._localStorage.isClubAdmin()
                     ? this.loggedInuser.adminClubId
                     : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: null,
             courseId:
-                this.loggedInuser.userRole > 1 &&
+                this._localStorage.isClubAdmin() &&
                     this.currentTournament &&
                     this.courseChange == true
                     ? this.formArray.get([0]).value.courseInfo[0].courseName
@@ -3430,7 +3426,7 @@ export class AddTournamentComponent implements OnInit {
 
         if (this.formArray.get([0]).value.clubsFormCtrl) {
             let selectedClubId: string =
-                this.loggedInuser.userRole > 1
+                this._localStorage.isClubAdmin()
                     ? this.loggedInuser.adminClubId
                     : this.formArray.get([0]).value.clubsFormCtrl.id;
             this.clubMembers = [];
@@ -3461,7 +3457,7 @@ export class AddTournamentComponent implements OnInit {
         // //console.log(this.formArray.get([1]).value.category);
 
         // if (this.formArray.get([0]).value.clubsFormCtrl) {
-        //   let selectedClubId: string = (this.loggedInuser.userRole > 1) ? this.loggedInuser.adminClubId : this.formArray.get([0]).value.clubsFormCtrl.id;
+        //   let selectedClubId: string = (this._localStorage.isClubAdmin()) ? this.loggedInuser.adminClubId : this.formArray.get([0]).value.clubsFormCtrl.id;
         //   this.clubMembers = [];
         //   //console.log(selectedClubId);
         //   let clubMembersData: any = await this.facadeService.getPlayerByClub(selectedClubId);
@@ -4284,7 +4280,7 @@ export class AddTournamentComponent implements OnInit {
         let tournament = {
             id: subTournamentId, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
             clubId:
-                this.loggedInuser.userRole > 1
+                this._localStorage.isClubAdmin()
                     ? this.loggedInuser.adminClubId
                     : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: null,
@@ -4342,7 +4338,7 @@ export class AddTournamentComponent implements OnInit {
             marshals: [],
             flights: [],
             members: [],
-            tourId: this.loggedInuser.userRole == 4 ? this._localStorage.get(Constants.TOUR_ID) : null,
+            tourId: this._localStorage.isTourAdmin() ? this._localStorage.get(Constants.TOUR_ID) : null,
         };
         let result = <any>await this.facadeService.addTournament(tournament);
         // //console.log(tournament)

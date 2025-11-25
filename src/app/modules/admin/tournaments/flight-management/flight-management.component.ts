@@ -32,6 +32,7 @@ import {
     Player,
     PlayerCategory,
     Marshal,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import {
@@ -106,7 +107,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     showCategory: boolean = true;
     newFlights: any[] = [];
     categoryCounts: any = [];
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     teetime: number = 0;
     tournamentInfo: any;
     tournamentMember: any[] = [];
@@ -197,7 +198,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         //console.log(this.tournamentInfo[0]);
         let selectedClubId: string =
-            this.loggedInuser.userRole > 1
+            this._localStorage.isClubAdmin()
                 ? this.loggedInuser.adminClubId
                 : this.tournamentInfo[0].clubId;
         this.clubMembers = [];

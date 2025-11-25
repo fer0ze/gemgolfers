@@ -13,6 +13,7 @@ import {
     Player,
     PlayerHanidcap,
     TournamentMemberStatus,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import {
@@ -107,7 +108,7 @@ export class ViewTournamentComponent implements OnInit {
     leaderboardUrl: string;
     public barChartLabels: string[] = [];
     _series: any = [];
-    loggedInUser: Player;
+    loggedInUser: UserSessionModel;
     leaderboardData: any[] = [];
     playerCategoryList: any[] = [];
     membersStatus: any;
@@ -301,12 +302,8 @@ export class ViewTournamentComponent implements OnInit {
             this.logger.log('Admin comes to View Tournament Page', "info");
 
             this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
-            let clubInfo: any =
-                this.loggedInUser.membership.length > 0
-                    ? this.loggedInUser.membership[0].club
-                    : null;
 
-            this.clubLogo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+            this.clubLogo = this.loggedInUser.club && this.loggedInUser.club.logo ? this.loggedInUser.club.logo : 'e2esp.png';
             this.route.paramMap.subscribe((params) => {
                 this.tournamentID = params.get('id');
             });

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { Player } from 'app/shared/models/player.model';
+import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { Score } from 'app/shared/models/score.model';
 import { Hole } from 'app/shared/models/hole.model';
 import {
@@ -38,7 +38,7 @@ export class MatchplayComponent implements OnInit {
     courseID: string;
     myPlayer: Player;
     isLoading: Boolean = true;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     matchPlayData: any;
     totalRounds: number = 0;
     activeRound: number;

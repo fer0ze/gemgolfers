@@ -189,4 +189,26 @@ export class ProjectService {
                 })
             );
     }
+
+    getTournamentData(id: String, fromDate?: any, toDate?: any): Observable<any> {
+        return this.apollo
+            .subscribe<any>({
+                query: Query.getTournamentData,
+                variables: {
+                    adminId: id,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                },
+            })
+            .pipe(
+                tap((response: any) => {
+                    this.logger.log(
+                        'Getting Tour Dashboard Data Successfull',
+                        'info'
+                    );
+                    this._data.next(response);
+                })
+            );
+    }
+
 }

@@ -27,7 +27,7 @@ import {
     generateGemId,
 } from '../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClubMembership, Player } from 'app/shared/models/player.model';
+import { ClubMembership, Player, UserSessionModel } from 'app/shared/models/player.model';
 import { read, utils } from 'xlsx';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogOverviewComponent } from '../dialogs/dialog-overview/dialog-overview.component';
@@ -72,7 +72,7 @@ export class PlayersComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     count: any = 0;
     showTable: Promise<any>;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     TablePlayers: any = [];
     sorting: any = '';
     public name: any = '';
@@ -94,7 +94,7 @@ export class PlayersComponent implements OnInit {
         public snackBar: MatSnackBar,
         private _handicapServise: HandicapService,
         public dialog: MatDialog,
-        private _localStorage: LocalStorageService,
+        public _localStorage: LocalStorageService,
         private logger: LogsService
     ) { }
     ngOnInit(): void {
@@ -125,7 +125,7 @@ export class PlayersComponent implements OnInit {
 
     async fecthData() {
         let data: any;
-        if (this.loggedInuser.userRole == 1) {
+        if (this._localStorage.isSuperAdmin()) {
             //data = await this._facadeService.getPlayersList();
             of(this.Players)
                 .pipe(
@@ -168,7 +168,7 @@ export class PlayersComponent implements OnInit {
                     },
                     (error) => console.log('error')
                 );
-        } else if (this.loggedInuser.userRole == 2) {
+        } else if (this._localStorage.isClubAdmin()) {
             data = await this._facadeService.getPlayersListByClub(
                 this.loggedInuser.adminClubId
             );
@@ -197,7 +197,7 @@ export class PlayersComponent implements OnInit {
                 };
                 this.TablePlayers.push(newobj);
             }
-        } else if (this.loggedInuser.userRole == 4 || this.loggedInuser.userRole == 9 || this.loggedInuser.userRole == 13) {
+        } else  {
             let state = this._localStorage.get(Constants.STATE);
             if (state == Constants.TOUR) {
                 this.tourID = this._localStorage.get(Constants.TOUR_ID);

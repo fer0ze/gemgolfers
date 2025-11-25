@@ -4,13 +4,14 @@ import { FuseMockApiService } from '@fuse/lib/mock-api';
 import { user as userData } from 'app/mock-api/common/user/data';
 import { Constants } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { UserSessionModel } from 'app/shared/models/player.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserMockApi {
     private _user: any = userData;
-    private loggedInuser: any;
+    private loggedInuser: UserSessionModel;
     /**
      * Constructor
      */
@@ -19,13 +20,9 @@ export class UserMockApi {
         this.registerHandlers();
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         if (this.loggedInuser) {
-            let clubInfo: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
-            let logo = clubInfo && clubInfo.logo ? clubInfo.logo : 'e2esp.png';
+            let logo = this.loggedInuser.club?.logo ? this.loggedInuser.club.logo : 'e2esp.png';
             this._user.email = this.loggedInuser.email;
-            this._user.name = this.loggedInuser.fullName;
+            this._user.name = this.loggedInuser.name;
             this._user.avatar = 'assets/images/logo/' + logo + '';
         }
     }
@@ -49,15 +46,15 @@ export class UserMockApi {
         // @ User - PATCH
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-        .onPatch('api/common/user')
-        .reply(({ request }) => {
-            // Get the user mock-api
-            const user = cloneDeep(request.body.user);
+            .onPatch('api/common/user')
+            .reply(({ request }) => {
+                // Get the user mock-api
+                const user = cloneDeep(request.body.user);
 
-            // Update the user mock-api
-            this._user = assign({}, this._user, user);
-            // Return the response
-            return [200, cloneDeep(this._user)];
-        });
+                // Update the user mock-api
+                this._user = assign({}, this._user, user);
+                // Return the response
+                return [200, cloneDeep(this._user)];
+            });
     }
 }

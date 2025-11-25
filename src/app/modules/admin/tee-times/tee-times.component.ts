@@ -79,7 +79,7 @@ export class TeeTimesComponent implements OnInit {
         this.teeTimes = [];
         let dataPlayers =
             await this.facadeService.getClubTeeTimeBooking(
-                this.loggedInuser.userRole > 1 ? this.loggedInuser.adminClubId : null
+                this._localStorage.isClubAdmin() ? this.loggedInuser.adminClubId : null
             );
         this.teeTimes = dataPlayers.tee_time_booking;
         this.isLoading = false;

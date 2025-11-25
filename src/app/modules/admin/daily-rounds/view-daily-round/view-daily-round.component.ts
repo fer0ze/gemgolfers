@@ -16,6 +16,7 @@ import { Apollo } from 'apollo-angular';
 import {
     Player,
     TournamentMemberStatus,
+    UserSessionModel,
     enumPlayerCategory,
 } from '../../../../shared/models/player.model';
 import { TeeTime } from '../../../../shared/models/teetime.model';
@@ -74,7 +75,6 @@ export class ViewDailyRoundComponent implements OnInit {
     teamMatch: boolean;
     selectedSubTournament: string;
     subTournamentDetail: any[] = [];
-    loggedInUser: Player;
     players: Player;
     activePlayers: Player[] = [];
     playerScores: Score[];
@@ -114,7 +114,7 @@ export class ViewDailyRoundComponent implements OnInit {
     noItemsInList = false;
     dailyRounds: any = [];
     myPlayer: TeeTime;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     scheduleForm: FormGroup;
     refresh: boolean = false;
     minDate: Date;
@@ -235,7 +235,7 @@ export class ViewDailyRoundComponent implements OnInit {
         this.isLoading = true;
         let dataPlayers: any;
         //console.log(this.loggedInUser);
-        if (this.loggedInuser.userRole > 1) {
+        if (this._localStorage.isClubAdmin()) {
             dataPlayers = await this.facadeService.getSingleDailyRound(
                 this.loggedInuser.adminClubId,
                 date
@@ -246,14 +246,7 @@ export class ViewDailyRoundComponent implements OnInit {
             );
         }
 
-        let club: any =
-            this.loggedInuser.membership.length > 0
-                ? this.loggedInuser.membership[0].club
-                : null;
-        let courseId =
-            club != null && club.courses.length > 0
-                ? club.courses[0].id
-                : '-LUFS3FCQKOGpJ2IEHmf';
+        let courseId = this.loggedInuser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
         let selectedCourseHoleSet =
             await this.facadeService.getCourseHoleSetsForCourse(courseId);
         this.courseHoleSetNames = selectedCourseHoleSet['course_hole_sets'];
@@ -1411,7 +1404,7 @@ export class ViewDailyRoundComponent implements OnInit {
             let totalPlayed = 0;
             let playerScoresIds: string[] = [];
             let playerEmptyScoresIds: string[] = [];
-            
+
             let player1DigitIds: string[] = [];
             let player2DigitIds: string[] = [];
 
@@ -3238,7 +3231,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     title:
                         this.fDate +
                         ' ' +
-                        this.loggedInuser.membership[0].club.name,
+                        this.loggedInuser.club.name,
                     prefix: null,
                     courseHoleSets: addRound.holeSets,
                     teamMatch: false,

@@ -16,6 +16,7 @@ import {
     Player,
     ClubMembership,
     PlayerWHSHanidcap,
+    UserSessionModel,
 } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import {
@@ -64,7 +65,7 @@ export class HandicapsComponent implements OnInit {
     myPlayer: Player;
     isLoading: Boolean = true;
     public response: any;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     filterCategory: string;
     playerWHS: PlayerWHSHanidcap;
     playerWHSHistory: any;
@@ -122,7 +123,7 @@ export class HandicapsComponent implements OnInit {
 
             this.MembersCat = this.filterCategory;
             //console.log(this.MembersCat);
-            if (this.loggedInuser.userRole > 1) {
+            if (this._localStorage.isClubAdmin()) {
                 this.logger.log('Getting Congu Handicap Data', "info", this.loggedInuser.adminClubId);
                 if (this.filterCategory)
                     this.dataPlayers =
@@ -271,7 +272,7 @@ export class HandicapsComponent implements OnInit {
 
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
-            doc.text(this.loggedInuser.membership[0].club.name.toString().toUpperCase(), pageWidth / 2, 15, { align: "center" });
+            doc.text(this.loggedInuser.club.name.toString().toUpperCase(), pageWidth / 2, 15, { align: "center" });
             doc.text('Handicap List (Congu)', pageWidth / 2, 27, { align: "center" });
             doc.setFontSize(10);
             doc.text('W.E.F:', 165, 27);

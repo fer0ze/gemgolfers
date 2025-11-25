@@ -187,6 +187,7 @@ export const GetPlayersMerge = gql`
             membershipNumber
             membership {
                 club {
+                id
                     name
                 }
             }
@@ -205,6 +206,7 @@ export const getPlayersListMergeClub = gql`
             membershipNumber
             membership {
                 club {
+                id
                     name
                 }
             }
@@ -676,6 +678,7 @@ export const getTotalFlightPlayedAdmin = gql`
             membershipQL: membership {
                 suspended
                 club {
+                id
                     name
                 }
             }
@@ -926,6 +929,7 @@ export const GetPlayerByFirstName = gql`
             membershipNumber
             membership {
                 club {
+                id
                     name
                 }
             }

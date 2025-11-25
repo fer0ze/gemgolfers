@@ -121,7 +121,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                     ? this.loggedInuser.membership[0].club
                     : null;
 
-            this.hideClubs = this.loggedInuser.userRole > 1 ? true : false;
+            this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
             this.clubTitle = clubInfo ? clubInfo.name : '';
         }
 

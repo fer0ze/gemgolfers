@@ -45,9 +45,9 @@ export class PlayerResolver implements Resolve<any> {
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.logger.log('Getting Dashboard Data', "info");
-            if (this.loggedInuser.userRole === 1) {
+            if (this._localStorage.isSuperAdmin()) {
                 return this._projectService.getData();
-            } else if (this.loggedInuser.userRole === 2) {
+            } else if (this._localStorage.isClubAdmin()) {
                 return this._projectService.getData();
             } 
         } catch (error) {

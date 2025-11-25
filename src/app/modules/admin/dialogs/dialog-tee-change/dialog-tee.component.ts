@@ -25,13 +25,8 @@ export class DialogTeeComponent implements OnInit {
         });
 
         console.log(this.data);
-        let club: any =
-            this.data.loggedInUser.membership.length > 0
-                ? this.data.loggedInUser.membership[0].club
-                : null;
 
-        let courseID =
-            club != null ? club.courses[0].id : '-LUFS3FCQKOGpJ2IEHmf';
+        let courseID = this.data.loggedInUser.courseId ?? '-LUFS3FCQKOGpJ2IEHmf';
         let tees = await this.facadeService.getTeesOfCourse(courseID);
         console.log(tees);
         this.tees = tees?.course_tees;
