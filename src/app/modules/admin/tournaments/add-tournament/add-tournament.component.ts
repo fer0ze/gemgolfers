@@ -3009,11 +3009,14 @@ export class AddTournamentComponent implements OnInit {
 
         if (!this.membersSource) {
             this.membersSource = new MatTableDataSource(updatedData);
+
         } else {
             // 🔹 Reassign merged data to the data source
             this.membersSource.data = updatedData;
         }
-
+        this.membersSource.data.forEach(member => {
+            this.countCategoryMember(true, member);
+        });
         // Optional: update sorting and pagination references
         this.membersSource.sort = this.Memsort;
         this.membersSource.paginator = this.Mempaginator;
@@ -3109,6 +3112,7 @@ export class AddTournamentComponent implements OnInit {
             this.membersSource._updateChangeSubscription();
         }
 
+        this.categoryCounts = []
         // (Optional) If you also maintain a tournamentMembers array:
         if (this.tournamentMembers) {
             this.tournamentMembers = this.tournamentMembers.filter(

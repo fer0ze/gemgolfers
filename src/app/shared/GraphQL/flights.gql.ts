@@ -679,6 +679,9 @@ export const singleRoundFlightsQueryQL = gql`
             order_by: [{ flightRound: asc }, { flightNo: asc }]
         ) {
             ...FlightQL
+            tournament{
+            id
+            tournamentFlight}
             MembersQL: members {
                 flightId
                 playerId
@@ -767,6 +770,16 @@ export const singleRoundFlightQueryQL = gql`
         flightEndedQl: update_flight(
             where: { id: { _eq: $flightId } }
             _set: { ended: true, categoryRound: 2 }
+        ) {
+            AffectedRowsQLi: affected_rows
+        }
+    }
+`;
+export const updateTournamentFlightMutationQL = gql`
+    mutation updateTournamentFlightMutationQL($tournamentId: String!, $roundCategory: Boolean!) {
+         update_tournament(
+            where: { id: { _eq: $tournamentId } }
+            _set: { tournamentFlight: $roundCategory }
         ) {
             AffectedRowsQLi: affected_rows
         }

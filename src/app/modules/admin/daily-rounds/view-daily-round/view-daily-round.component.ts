@@ -2235,6 +2235,7 @@ export class ViewDailyRoundComponent implements OnInit {
                     tee: flight.tee,
                     tournament: tournamentID,
                     members: flight.MembersQL,
+                    tournamentFlight: flight.tournament.tournamentFlight,
                     date: this.routeDate,
                 },
                 width: '650px',
@@ -2456,6 +2457,8 @@ export class ViewDailyRoundComponent implements OnInit {
                                         deleteMember,
                                         flightId
                                     );
+
+
                                 //console.log(result);
                                 //this.facadeService.updateDailyRoundCourseHoleset(this.tournamentID, flightScores, newScores);
 
@@ -2507,6 +2510,10 @@ export class ViewDailyRoundComponent implements OnInit {
 
                             }
                         }
+                        await this.facadeService.updateTournamentFlight(
+                            flight.tournamentId,
+                            result.roundCategory == 'true' ? true : false
+                        );
                     }
                     setTimeout(async () => {
                         let updatedFlight =

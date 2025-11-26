@@ -695,6 +695,28 @@ export class FlightsService {
                 });
         });
     }
+
+    public updateTournamentFlight(tournamentId: string, roundCategory: boolean): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate({
+                    mutation: Query.updateTournamentFlightMutationQL,
+                    variables: {
+                        tournamentId: tournamentId,
+                        roundCategory: roundCategory
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+
+                       
     public updatedFlightsQuery(flightId: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

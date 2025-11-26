@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Club } from '../../../../shared/models/club.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
-import { Player, CourseTee } from '../../../../shared/models/player.model';
+import { Player, CourseTee, UserSessionModel } from '../../../../shared/models/player.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -54,7 +54,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     deleteProfile: any;
     playerTees: Map<string, any> = new Map<string, any>();
 
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     courseTee: CourseTee[] = [];
     updateHandicap: boolean = false;
     handicapLog: any;
@@ -82,6 +82,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     isLoading = true;
     delMember: any[] = [];
     addMember: any[] = [];
+    showTournamentTitle: Boolean = false;
 
     @ViewChild(MatPaginator) Mempaginator: MatPaginator;
     @ViewChild('msort') Memsort: MatSort;
@@ -116,13 +117,9 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         if (this.loggedInuser) {
-            let clubInfo: any =
-                this.loggedInuser.membership.length > 0
-                    ? this.loggedInuser.membership[0].club
-                    : null;
 
             this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
-            this.clubTitle = clubInfo ? clubInfo.name : '';
+            this.clubTitle = this.loggedInuser.club ? this.loggedInuser.club.name : '';
         }
 
         // for(let member of this.data.members) {
@@ -154,6 +151,8 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 this.data.courseHoleSetsInverted,
                 [Validators.required]
             ),
+            title: new FormControl(''),
+            roundCategory: new FormControl(this.data.tournamentFlight == true ? 'true' : 'false', [Validators.required]),
             members: new FormControl(this.data.members, [Validators.required]),
             startingTime: new FormControl(flightTime, [Validators.required]),
             roundTee: new FormControl(this.data.tee, [Validators.required]),
@@ -171,15 +170,27 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
         );
         //console.log(this.membersSource);
 
-        this.clubID = this.loggedInuser.membership[0].club;
+        this.clubID = this.loggedInuser?.adminClubId;
         this.currentDate = new Date();
-        this.getSelectedCourse(this.clubID.courses[0].id);
+        // this.getSelectedCourse(this.loggedInuser?.courseId);
     }
 
     changeFlight(item) {
         //console.log('Selected value: ' + item.value);
         this.starterForm.value.holeSets = item.value;
         //console.log(this.starterForm);
+    }
+
+    changeRound(item) {
+        if (item.value == 'true') {
+            this.starterForm.get('title').setValidators([Validators.required]);
+            this.starterForm.get('title').updateValueAndValidity();
+            this.showTournamentTitle = true;
+        } else {
+            this.starterForm.get('title').clearValidators();
+            this.starterForm.get('title').updateValueAndValidity();
+            this.showTournamentTitle = false;
+        }
     }
 
     selectedTee(event, playerId) {

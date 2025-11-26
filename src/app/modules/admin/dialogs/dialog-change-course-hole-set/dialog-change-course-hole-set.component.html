@@ -10,6 +10,7 @@
     <form [formGroup]="starterForm" autocomplete="off" novalidate (ngSubmit)="changeFlight($event)">
       <div class="flex w-full my-4">
         <mat-form-field *ngIf="data.course" class="fuse-mat-no-subscript w-full">
+          <mat-label>Course Hole Set</mat-label>
           <mat-select (selectionChange)="changeFlight($event)" [(value)]="currentHoleSet" formControlName="holeSets">
             <mat-option *ngFor="let course of courseHoleSetNames" [value]="course.holeSets + '_' + course.inverted">{{
               course.displayName }}</mat-option>
@@ -18,23 +19,39 @@
       </div>
       <div class="flex w-full my-4">
         <mat-form-field class="fuse-mat-no-subscript w-full">
+          <mat-label>Round Category</mat-label>
+          <mat-select (selectionChange)="changeRound($event)" placeholder="Round Category.."
+            formControlName="roundCategory">
+            <mat-option value="false">Daily Round</mat-option>
+            <mat-option value="true">Tournament / League Round</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- <div *ngIf="showTournamentTitle" class="flex w-full my-4">
+        <mat-form-field class="fuse-mat-no-subscript w-full">
+          <mat-label>Tournament / League Name</mat-label>
+          <input matInput placeholder="Tournament / League Name" formControlName="title" />
+        </mat-form-field>
+      </div> -->
+      <!-- <div class="flex w-full my-4">
+        <mat-form-field class="fuse-mat-no-subscript w-full">
           <input type="text" matInput atp-time-picker formControlName="startingTime" placeholder="Select Time" />
           <mat-error>The input is required.</mat-error>
         </mat-form-field>
-      </div>
-      <div class="flex flex-row justify-between my-4">
-        <div>
+      </div> -->
+      <div class="flex flex-row items-center justify-between gap-2 my-4">
+        <div class="w-full">
           <mat-form-field class="fuse-mat-no-subscript w-full">
             <input matInput #query placeholder="Search player" (keyup.enter)="searchPlayer(query.value)" />
           </mat-form-field>
         </div>
-        <div>
+        <div class="flex justify-end w-full">
           <button type="button" mat-raised-button color="primary" (click)="searchPlayer(query.value)"
-            [disabled]="query.value.length == 0" style="margin-top: 13px">
+            [disabled]="query.value.length == 0">
             Search
           </button>
           &nbsp;
-          <button type="button" mat-raised-button color="primary" (click)="addPlayer()" style="margin-top: 13px">
+          <button type="button" mat-raised-button color="primary" (click)="addPlayer()">
             Add New Player
           </button>
         </div>
@@ -119,7 +136,8 @@
   </div>
   <div class="flex items-center justify-center my-2 border-t bg-gray-50">
     <!-- Save -->
-    <button class="my-2" [mat-dialog-close]="starterForm.value" mat-flat-button [color]="'primary'" [matTooltip]="'Save'">
+    <button class="my-2" [mat-dialog-close]="starterForm.value" mat-flat-button [color]="'primary'"
+      [matTooltip]="'Save'">
       Save
     </button>
   </div>

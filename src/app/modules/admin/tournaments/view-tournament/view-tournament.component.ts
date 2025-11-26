@@ -1434,9 +1434,9 @@ export class ViewTournamentComponent implements OnInit {
                     let flight: any = {
                         id: UniqueIdGenerator.generate(),
                         tournamentId: this.tournamentID,
-                        courseId: this.noOfRounds > 1 ? selectedCourse[0].courseId : this.fullTournament.courseId,
+                        courseId: this.noOfRounds > 1 && selectedCourse?.[0] ? selectedCourse?.[0].courseId : this.fullTournament.courseId,
                         adminId: this.loggedInUser.id,
-                        courseHoleSets: this.noOfRounds > 1 ? selectedCourse[0].courseHoleSets : this.fullTournament.courseHoleSets,
+                        courseHoleSets: this.noOfRounds > 1 && selectedCourse?.[0] ? selectedCourse?.[0].courseHoleSets : this.fullTournament.courseHoleSets,
                         flightNo: this.runningFlights,
                         flightRound: this.activeRound + 1,
                         startingHole: teeBox,

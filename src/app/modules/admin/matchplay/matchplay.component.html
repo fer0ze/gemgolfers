@@ -50,7 +50,7 @@
                     <table class="w-full min-w-[800px] text-sm text-left">
                         <thead class="text-xs text-gray-500 uppercase bg-gray-100">
                             <tr>
-                                <th class="py-2 px-2 font-semibold sticky left-0 bg-gray-100 min-w-[200px]">Player
+                                <th class="py-2 px-2 font-semibold sticky left-0 bg-gray-100 min-w-[200px]">Hole. No
                                 </th>
                                 <th *ngFor="let hole of flight.header.courseHoles9"
                                     class="py-2 px-1 font-semibold text-center w-10">{{ hole?.holeNo }}</th>
@@ -94,17 +94,65 @@
                                 </th>
                                 <th class="py-2 px-2 font-semibold text-center bg-gray-200">TOTAL</th>
                             </tr>
+                            <tr>
+                                <th class="py-2 px-2 font-semibold sticky left-0 bg-gray-100 min-w-[200px]">Par
+                                </th>
+                                <th *ngFor="let hole of flight.header.courseHoles9"
+                                    class="py-2 px-1 font-semibold text-center w-10">{{ hole?.par }}</th>
+
+                                <th *ngIf="
+                                                flight.header.courseHoles9
+                                                    .length > 0
+                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.par9 }}</th>
+                                <th *ngFor="
+                                                let hole of flight.header
+                                                    .courseHoles18
+                                            " class="py-2 px-1 font-semibold text-center w-10">{{ hole?.par }}</th>
+
+                                <th *ngIf="
+                                                flight.header.courseHoles18
+                                                    .length > 0
+                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.par18 }}</th>
+                                <th *ngFor="
+                                                let hole of flight.header
+                                                    .courseHoles27
+                                            " class="py-2 px-1 font-semibold text-center w-10">
+                                    {{ hole?.par }}
+                                </th>
+                                <th *ngIf="
+                                                flight.header.courseHoles27
+                                                    .length > 0
+                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">
+                                    {{ flight.header.par27 }}
+                                </th>
+                                <th *ngFor="
+                                                let hole of flight.header
+                                                    .courseHoles36
+                                            " lass="py-2 px-1 font-semibold text-center w-10">
+                                    {{ hole?.par }}
+                                </th>
+                                <th *ngIf="
+                                                flight.header.courseHoles36
+                                                    .length > 0
+                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">
+                                    {{ flight.header.par36 }}
+                                </th>
+                                <th class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.parTotal }}</th>
+                            </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <tr *ngFor="let item of flight" class="bg-white">
                                 <td
                                     class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
-                                    {{ item.name }}</td>
+                                    {{ item.name }} ({{
+                                            item.handicap
+                                            | number : "1.0-0"
+                                            }})</td>
                                 <td *ngFor="
                                                 let score of item.Hole9Scores;
                                                 let i = index
                                             " class="p-1">
-                                    <input type="number" id="{{
+                                    <input  id="{{
                                                         flight.header
                                                             .courseHoles9[i].id
                                                     }}&{{ item.playerId }}" maxlength="2" (keyup.enter)="
@@ -136,7 +184,7 @@
                                     <td *ngFor="let score of item.Hole18Scores;
                                                     let i = index
                                                 " class="p-1">
-                                        <input type="number" (input)="
+                                        <input  (input)="
                                                             onGross18Change(
                                                                 $event.target
                                                                     .value,
@@ -166,7 +214,8 @@
 
                                 </td>
                                 <td class="w-12">
-                                    <input type="text" class="w-12 py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50" id="grosstotal_{{
+                                    <input type="text"
+                                        class="w-12 py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50" id="grosstotal_{{
                                                         item.playerId
                                                     }}" value="{{
                                                         item.grossTotal

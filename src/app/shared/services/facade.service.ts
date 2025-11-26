@@ -1182,6 +1182,10 @@ export class FacadeService {
     );
   }
 
+  updateTournamentFlight(tournamentId:string,flag:boolean){
+    return this.flightsService.updateTournamentFlight(tournamentId,flag);
+  }
+
   updateDailyRoundCourseHoleset(
     tournamentId: string,
     courseHolset: number,

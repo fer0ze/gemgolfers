@@ -1252,7 +1252,7 @@ export const UndoTournamentRoundMutation = gql`
         $tournamentId: String!
         $flightRound: Int!
         $resetRound: Int!
-        $cut: json!
+        $cut: json
     ) {
         undoFlightRoundQL: delete_flight(
             where: {

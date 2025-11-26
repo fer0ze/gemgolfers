@@ -433,7 +433,8 @@
                                 <h3 class="font-bold text-lg text-gray-800 mb-4">Club Members
                                 </h3>
                                 <div class="relative mb-4">
-                                    <mat-form-field class="w-full custom-mat-input">
+                                    <mat-form-field appearance="outline" [floatLabel]="'always'"
+                                        class="w-full custom-mat-input">
                                         <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
                                         <input matInput (keyup)="
                                                     applyFilter(
@@ -449,18 +450,7 @@
                                         <table mat-table #dsort="matSort" [dataSource]="dataSource" matSort>
                                             <ng-container matColumnDef="select">
                                                 <th class="bg-gray-100" mat-header-cell *matHeaderCellDef>
-                                                    <mat-checkbox (change)="
-                                                    $event
-                                                        ? masterToggle()
-                                                        : null
-                                                " [checked]="
-                                                    selection.hasValue() &&
-                                                    isAllSelected()
-                                                " [indeterminate]="
-                                                    selection.hasValue() &&
-                                                    !isAllSelected()
-                                                " [aria-label]="checkboxLabel()">
-                                                    </mat-checkbox>
+                                                    
                                                 </th>
                                                 <td mat-cell *matCellDef="let row">
                                                     <mat-checkbox (click)="
@@ -566,8 +556,37 @@
                             <!-- Tournament Members -->
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
                                 <h3 class="font-bold text-lg text-gray-800 mb-4">Tournament Members</h3>
+                                <div class="flex">
+                                    <div class="flex flex-wrap justify-start" style="width: 50%">
+                                        <span *ngFor="let catCount of categoryCounts">
+                                            <span class="catCount" *ngIf="catCount.value > 0">
+                                                <mat-icon>emoji_people</mat-icon>
+                                                <span class="cat-name font-medium">{{ catCount.name }}</span> :
+                                                <span class="cat-value font-medium">{{ catCount.value }}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+
+
+                                    <!-- <div class="flex justify-end" style="width: min-content">
+                            <span *ngFor="let catCount of TMcategoryCounts"><span class="catCount"
+                                    *ngIf="catCount.value > 0"><mat-icon >emoji_people</mat-icon>{{
+                                    catCount.name }} :
+                                    {{ catCount.value }}</span></span>
+                        </div> -->
+                                    <div class="flex flex-wrap justify-start" style="width: 50%">
+                                        <span *ngFor="let catCount of TMcategoryCounts">
+                                            <span class="catCount" *ngIf="catCount.value > 0">
+                                                <mat-icon>emoji_people</mat-icon>
+                                                <span class="cat-name font-medium">{{ catCount.name }}</span> :
+                                                <span class="cat-value font-medium">{{ catCount.value }}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
                                 <div class="relative mb-4">
-                                    <mat-form-field class="custom-mat-input w-full">
+                                    <mat-form-field appearance="outline" [floatLabel]="'always'"
+                                        class="custom-mat-input w-full">
                                         <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
                                         <input matInput (keyup)="
                                                     applyMembersFilter(
@@ -1396,7 +1415,7 @@
                                                 <p class="font-bold text-gray-800 text-lg">{{i+1}}</p>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Tee:</span>
-                                                   {{getNextFlighttee(
+                                                    {{getNextFlighttee(
                                                     k,
                                                     i,
                                                     m.title,
@@ -1494,7 +1513,7 @@
                                                 <p class="font-bold text-gray-800 text-lg">{{i+1}}</p>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Tee:</span>
-                                                     {{getNextFlighttee(
+                                                    {{getNextFlighttee(
                                                     k,
                                                     i,
                                                     m.title,

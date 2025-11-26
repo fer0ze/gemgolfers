@@ -341,7 +341,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     newObj['allowCat'] = false;
                 }
             } else {
-                //  newObj['allowCat'] = true;
+                  newObj['allowCat'] = true;
             }
         }
         const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
