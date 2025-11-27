@@ -17,6 +17,7 @@ import { FuseAlertType } from '@fuse/components/alert';
 @Component({
     selector: 'app-sign-up-form',
     templateUrl: './sign-up-form.component.html',
+    styleUrls: ['./sign-up-form.component.scss'],
 })
 export class SignUpFormComponent implements OnInit {
     signUpForm: FormGroup;
@@ -35,7 +36,7 @@ export class SignUpFormComponent implements OnInit {
         private _facadeService: FacadeService,
         private route: ActivatedRoute,
         public snackBar: MatSnackBar
-    ) {}
+    ) { }
 
     async ngOnInit() {
         this.route.paramMap.subscribe((params) => {
@@ -61,7 +62,7 @@ export class SignUpFormComponent implements OnInit {
                 ),
                 map((name) => (name ? this._filter(name) : this.golfClubs))
             );
-       
+
         if (this.tournamentQL['CategoriesQL'].length > 0) {
             for (let obj of this.tournamentQL['CategoriesQL']) {
                 let obja = {
@@ -140,7 +141,7 @@ export class SignUpFormComponent implements OnInit {
                 return a.playerId == exist[0].id;
             });
             //console.log(find);
-            if (find ==undefined || Object.keys(find).length === 0) {
+            if (find == undefined || Object.keys(find).length === 0) {
                 let member: any = {
                     tournamentId: this.tournamentID,
                     playerId: exist[0].id,
@@ -156,10 +157,10 @@ export class SignUpFormComponent implements OnInit {
                 this.showAlert = true;
             }
         } else {
-            let players: any[] =
-                await this._facadeService.getallPlayersforGGid();
-            var sortarray = players['player'];
-            sortarray.sort(this.Comparator);
+            // let players: any[] =
+            //     await this._facadeService.getallPlayersforGGid();
+            // var sortarray = players['player'];
+            // sortarray.sort(this.Comparator);
             //console.log(sortarray);
             let member: any = {
                 clubId: signUpPerson.club.id,
@@ -171,7 +172,7 @@ export class SignUpFormComponent implements OnInit {
                 adminClubId: null,
                 firebaseUid: null,
                 fcmToken: null,
-                gemId: generateGemId.generate(sortarray[0].gemId),
+                gemId: null,
                 firstName: signUpPerson.firstName,
                 lastName: signUpPerson.lastName,
                 gender: signUpPerson.gender ? signUpPerson.gender : null,

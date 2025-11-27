@@ -85,6 +85,7 @@ export class ViewTournamentComponent implements OnInit {
     ];
     private noOfHolesInCourse: number = 18;
     fullTournament: any;
+    joiningCode: string = 'df323f';
     memberStatusesQLs: TournamentMemberStatus[] = [];
     isLoading: boolean = true;
     totalRounds: number;
@@ -148,6 +149,7 @@ export class ViewTournamentComponent implements OnInit {
     shotsParsPercent1: number;
     shotsDoubleBogeysPercent1: number;
     roundsStats: boolean = false;
+    copied: boolean = false;
     round1Stats: boolean = false;
     round2Stats: boolean = false;
     round3Stats: boolean = false;
@@ -348,7 +350,7 @@ export class ViewTournamentComponent implements OnInit {
 
                 this.fullTournament = this.dataFullTournament.TournamentQL[0];
                 this.isLoading = false;
-                
+
 
                 if (this.fullTournament) {
                     if (this.fullTournament.matchFormat == matchFormat.SHAMBLES) {
@@ -804,6 +806,14 @@ export class ViewTournamentComponent implements OnInit {
         this.round1Stats = true;
     }
 
+    copyLink(): void {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(this.joiningCode).then(() => {
+                this.copied = true;
+                setTimeout(() => this.copied = false, 2000);
+            });
+        }
+    }
     chart() {
         this.chartGithubIssues = {
             chart: {

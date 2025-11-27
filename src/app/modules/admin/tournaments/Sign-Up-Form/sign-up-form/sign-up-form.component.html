@@ -1,166 +1,142 @@
-<div
-    class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-card">
-    <!-- <div class="flex items-center bg-card h-full"> -->
-    <!-- <div class="h-full">
-            <img class="h-full" src="assets/images/logo/GymKhanaHeader.jpg" />
-        </div> -->
-    <!-- <div class="z-10 relative w-full max-w-2xl">
-<div class="text-7xl font-bold leading-none">
-    <div>Welcome to</div>
-    <div>Gemgolfers</div>
-</div>
-<div class="mt-6 text-lg tracking-tight leading-6">
-    Gemgolers helps Golf Players to organize their Golf and add some
-    extra abilities to enjoy the game.
-</div>
-<div class="flex items-center mt-8">
-    <div class="font-medium tracking-tight">
-        More than 17k people joined us, it's your turn
-    </div>
-</div>
-</div> -->
-    <!-- </div> -->
-
-    <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden dark:border-l"
-        style="background-color: #004987; color: white ;">
-        <div class="z-10 relative w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none ">
-                <div>Welcome to</div>
-                <div>Gemgolfers</div>
-            </div>
-            <div class="mt-6 text-lg tracking-tight leading-6 ">
-                Gemgolers helps Golf Players to organize their Golf and add some
-                extra abilities to enjoy the game.
-            </div>
-            <div class="flex items-center mt-8">
-                <div class="font-medium tracking-tight ">
-                    More than 17k people joined us, it's your turn
-                </div>
-            </div>
+<div class="w-full h-screen flex animate-fade-in">
+    <!-- Left Panel -->
+    <div class="hidden lg:flex w-2/5  text-white p-12 flex-col justify-center bg-[#004987] items-start">
+        <div class="max-w-md">
+            <h1 class="text-4xl font-bold mb-4">Welcome to Gemgolfers</h1>
+            <p class="text-gray-300 mb-6 text-lg">
+                Gemgolfers helps Golf Players to organize their Golf and add some extra abilities to enjoy the game.
+            </p>
+            <p class="text-gray-400">
+                More than 17k people joined us, it's your turn
+            </p>
         </div>
     </div>
-    <div
-        class="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full py-2 md:w-1/2 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
-        <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
-            <div class="mt-2 text-3xl font-extrabold tracking-tight leading-tight">
-                Sign up Form
-            </div>
-            <div class="mt-2 text-4xl font-extrabold tracking-tight leading-tight">
-                {{ this.tournamentQL?.title }}
-            </div>
-            <div class="flex items-center">
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
-                <div class="leading-6 truncate">
+
+    <!-- Right Panel -->
+    <div class="w-full lg:w-3/5 bg-white h-full overflow-y-auto">
+        <div class="p-8 sm:p-12 max-w-2xl mx-auto">
+
+
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Sign up Form</h2>
+                <h3 class="text-xl font-semibold text-gray-700 mt-1">{{ this.tournamentQL?.title }}</h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4 mr-1.5 text-gray-400"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
                     {{
                     this.tournamentQL?.startDate
                     | date
                     }}-{{
                     this.tournamentQL?.endDate | date
                     }}
-                </div>
+                </p>
+                <p class="text-sm text-gray-400 mt-1">Powered by Gemgolfers</p>
             </div>
-            <div class="flex items-baseline mt-0.5 font-medium">
-                <div>Powered by Gemgolfers</div>
-            </div>
-
-            <!-- <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
-                [type]="alert.type" [@shake]="alert.type === 'error'">
-                {{alert.message}}
-            </fuse-alert> -->
-
-            <!-- Alert -->
             <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
                 [type]="alert.type" [@shake]="alert.type === 'error'">
                 {{ alert.message }}
             </fuse-alert>
-            <form *ngIf="!showAlert" class="mt-8" [formGroup]="signUpForm">
-                <mat-form-field class="w-full">
-                    <mat-label>First Name</mat-label>
-                    <input id="firstName" matInput [formControlName]="'firstName'" />
-                    <mat-error *ngIf="hasError('firstName', 'required')">
-                        First name is required
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field class="w-full">
-                    <mat-label>Last Name</mat-label>
-                    <input id="lastName" matInput [formControlName]="'lastName'" />
-                    <mat-error *ngIf="hasError('lastName', 'required')">
-                        Last name is required
-                    </mat-error>
-                </mat-form-field>
 
-                <mat-form-field class="w-full">
-                    <mat-label>Email</mat-label>
-                    <input id="email" matInput [formControlName]="'email'" />
-                    <mat-error *ngIf="hasError('email', 'required')">
-                        Email address is required
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field class="w-full">
-                    <mat-label>Phone </mat-label>
-                    <input id="phone" matInput [formControlName]="'phone'" />
-                    <mat-error *ngIf="hasError('phone', 'required')">
-                        Phone is required
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field class="w-full">
-                    <mat-label>Membership No </mat-label>
-                    <input id="membership" matInput [formControlName]="'membership'" />
-                </mat-form-field>
-                <mat-form-field class="w-full">
-                    <mat-label>Category</mat-label>
-
-                    <mat-select formControlName="category" placeholder="Player Category" class="mr-1.5">
-                        <mat-option *ngFor="let cat of playerCategories" [value]="cat.name">
-                            <span class="flex items-center">
-                                <span class="ml-5">{{ cat.name }}</span>
-                            </span>
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="hasError('category', 'required')">
-                        Category is required
-                    </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="w-full">
-                    <mat-label>Handicap</mat-label>
-                    <input type="number" id="handicap" matInput [formControlName]="'handicap'" />
-                    <mat-error *ngIf="hasError('handicap', 'required')">
-                        Handicap is required
-                    </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="w-full">
-                    <mat-label>Club</mat-label>
-                    <input matInput formControlName="club" [placeholder]="'Club'" [readonly]="false"
-                        [matAutocomplete]="auto" />
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
-                        <mat-option *ngFor="let option of filteredClubOptions | async" [value]="option">
-                            {{ option.name }}
-                        </mat-option>
-                    </mat-autocomplete>
-                    <mat-error *ngIf="hasError('club', 'required')">
-                        Club is required
-                    </mat-error>
-                </mat-form-field>
-
-                <div class="inline-flex items-end w-full mt-1.5">
-                    <mat-checkbox [color]="'primary'">
-                        <span>I agree to the</span>
-                        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">Terms of Service
-                        </a>
-                        <span>and</span>
-                        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">Privacy Policy
-                        </a>
-                    </mat-checkbox>
+            <form class="space-y-6 mt-8" *ngIf="!showAlert" [formGroup]="signUpForm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="relative">
+                        <mat-form-field appearance="outline" floatLabel="always"
+                            class="custom-mat-input w-full col-span-1">
+                            <mat-label>First Name</mat-label>
+                            <input id="firstName" matInput [formControlName]="'firstName'" />
+                            <mat-error *ngIf="hasError('firstName', 'required')">
+                                First name is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="relative">
+                        <mat-form-field appearance="outline" floatLabel="always"
+                            class="custom-mat-input w-full col-span-1">
+                            <mat-label>Last Name</mat-label>
+                            <input id="lastName" matInput [formControlName]="'lastName'" />
+                            <mat-error *ngIf="hasError('lastName', 'required')">
+                                Last name is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class=" relative">
+                    <mat-form-field appearance="outline" floatLabel="always"
+                        class="-mt-8 custom-mat-input w-full col-span-2">
+                        <mat-label>Email</mat-label>
+                        <input id="email" matInput [formControlName]="'email'" />
+                        <mat-error *ngIf="hasError('email', 'required')">
+                            Email address is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="relative">
+                    <mat-form-field appearance="outline" floatLabel="always"
+                        class="-mt-8 custom-mat-input w-full col-span-2">
+                        <mat-label>Phone </mat-label>
+                        <input id="phone" matInput [formControlName]="'phone'" />
+                        <mat-error *ngIf="hasError('phone', 'required')">
+                            Phone is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="relative">
+                    <mat-form-field appearance="outline" floatLabel="always"
+                        class="-mt-8 custom-mat-input w-full col-span-2">
+                        <mat-label>Membership No </mat-label>
+                        <input id="membership" matInput [formControlName]="'membership'" />
+                    </mat-form-field>
                 </div>
 
-                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
-                    [disabled]="signUpForm.invalid" (click)="signUp()">
-                    <span *ngIf="!signUpForm.disabled"> Save </span>
-                    <mat-progress-spinner *ngIf="signUpForm.disabled" [diameter]="24"
-                        [mode]="'indeterminate'"></mat-progress-spinner>
-                </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <mat-form-field appearance="outline" floatLabel="always" class="-mt-4 w-full custom-mat-input ">
+                        <mat-label>Category</mat-label>
+
+                        <mat-select formControlName="category" placeholder="Player Category" class=" w-full">
+                            <mat-option *ngFor="let cat of playerCategories" [value]="cat.name">
+                                <span class="flex items-center">
+                                    <span class="ml-5">{{ cat.name }}</span>
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="hasError('category', 'required')">
+                            Category is required
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" floatLabel="always" class="-mt-4 w-full custom-mat-input ">
+                        <mat-label>Handicap</mat-label>
+                        <input type="number" id="handicap" matInput [formControlName]="'handicap'" />
+                        <mat-error *ngIf="hasError('handicap', 'required')">
+                            Handicap is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="relative">
+                    <mat-form-field appearance="outline" floatLabel="always" class="-mt-8 w-full custom-mat-input" custom-mat-input>
+                        <mat-label>Club</mat-label>
+                        <input matInput formControlName="club" [placeholder]="'Club'" [readonly]="false"
+                            [matAutocomplete]="auto" />
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let option of filteredClubOptions | async" [value]="option">
+                                {{ option.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="hasError('club', 'required')">
+                            Club is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div >
+                    <button type="submit" (click)="$event.preventDefault(); signUp()"
+                        class="w-full bg-emerald-600 text-white px-4 py-3 rounded-lg text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Submit Registration
+                    </button>
+                </div>
             </form>
         </div>
     </div>
