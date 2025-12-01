@@ -457,8 +457,105 @@ export class ViewTournamentComponent implements OnInit {
             // this.FlightsQL.slice(0,6);
             this.totalPlayers =
                 this.dataFullTournament['TournamentQL'][0]['members'];
-            //console.log(totalPlayers);
+            // console.log(totalPlayers);
+            for (const c of this.fullTournament.CategoriesQL) {
+                
 
+                // const distinctThings = m.filter((thing, i, arr) => {
+                //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+                // });
+                if (c.category == 'Amateurs') {
+                    if (
+                        c.flightSettings &&
+                        c.flightSettings['playingDate'] &&
+                        c.flightSettings['playingDate'].length > 0
+                    ) {
+                        for (let obj of c.flightSettings['playingDate']) {
+                            this.AmateursPlayingDates.push(obj);
+                        }
+                    } else if (
+                        c.flightSettings &&
+                        c.flightSettings.length > 0
+                    ) {
+                        for (let obj of c.flightSettings) {
+                            this.AmateursPlayingDates.push(obj);
+                        }
+                    }
+                }
+                if (c.category.includes('Junior')) {
+
+                    if (
+                        c.flightSettings &&
+                        c.flightSettings['playingDate'] &&
+                        c.flightSettings['playingDate'].length > 0
+                    ) {
+                        for (let obj of c.flightSettings['playingDate']) {
+                            this.JuniorsPlayingDates.push(obj);
+                        }
+                    } else if (
+                        c.flightSettings &&
+                        c.flightSettings.length > 0
+                    ) {
+                        for (let obj of c.flightSettings) {
+                            this.JuniorsPlayingDates.push(obj);
+                        }
+                    }
+                }
+                if (c.category.includes('Senior')) {
+                    if (
+                        c.flightSettings &&
+                        c.flightSettings['playingDate'] &&
+                        c.flightSettings['playingDate'].length > 0
+                    ) {
+                        for (let obj of c.flightSettings['playingDate']) {
+                            this.SeniorsPlayingDates.push(obj);
+                        }
+                    } else if (
+                        c.flightSettings &&
+                        c.flightSettings.length > 0
+                    ) {
+                        for (let obj of c.flightSettings) {
+                            this.SeniorsPlayingDates.push(obj);
+                        }
+                    }
+                }
+                if (c.category == 'Professionals') {
+                    if (
+                        c.flightSettings &&
+                        c.flightSettings['playingDate'] &&
+                        c.flightSettings['playingDate'].length > 0
+                    ) {
+                        for (let obj of c.flightSettings['playingDate']) {
+                            this.VeteransPlayingDates.push(obj);
+                        }
+                    } else if (
+                        c.flightSettings &&
+                        c.flightSettings.length > 0
+                    ) {
+                        for (let obj of c.flightSettings) {
+                            this.VeteransPlayingDates.push(obj);
+                        }
+                    }
+                }
+                if (c.category == 'Ladies') {
+                    if (
+                        c.flightSettings &&
+                        c.flightSettings['playingDate'] &&
+                        c.flightSettings['playingDate'].length > 0
+                    ) {
+                        for (let obj of c.flightSettings['playingDate']) {
+                            this.LadiesPlayingDates.push(obj);
+                        }
+                    } else if (
+                        c.flightSettings &&
+                        c.flightSettings.length > 0
+                    ) {
+                        for (let obj of c.flightSettings) {
+                            this.LadiesPlayingDates.push(obj);
+                        }
+                    }
+                }
+            }
             for (const c of this.totalPlayers) {
                 if (c.PlayerQL['playerCategory'] == 'Amateurs') {
                     this.AmateursCount++;

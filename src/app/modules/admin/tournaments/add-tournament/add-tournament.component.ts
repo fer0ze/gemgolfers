@@ -142,11 +142,12 @@ export class AddTournamentComponent implements OnInit {
     showMatchPlay: boolean = false;
     showMultipleCourses: boolean = false;
     multiCourse: boolean = false;
+    noOfRounds: number[] = [1];
     showShambles: boolean = false;
     showBest: boolean = false;
     clubTitle: string;
     sDate: Date;
-    registrationLink: string = 'adasdasdqweqw';
+    registrationLink: string = '';
     tournamentID: string;
     subTournamentID: string = '';
     public selectedTime = '08:00 AM';
@@ -349,10 +350,10 @@ export class AddTournamentComponent implements OnInit {
             this.tournamentID = params.get('id');
         });
 
-        if (this.tournamentID) {
-            this.steps = this.steps.filter((a) => a.title == 'Tournament Setup')
+        // if (this.tournamentID) {
+        //     this.steps = this.steps.filter((a) => a.title == 'Tournament Setup')
 
-        }
+        // }
 
         if (this.loggedInuser) {
             this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
@@ -372,7 +373,11 @@ export class AddTournamentComponent implements OnInit {
                     typeFormCtrl: ['2', Validators.required],
                     handicapAllocations: ['AS_IS', Validators.required],
                     strokeAllocations: ['AT_START', Validators.required],
-                    pointsFormats: ['BOTH', Validators.required],
+                    pointsFormats: this._formBuilder.array([
+                        this._formBuilder.group({
+                            format: [''],
+                        }),
+                    ]),
                     pointValue: ['1', Validators.required],
                     startDateFormCtrl: ['', Validators.required],
                     endDateFormCtrl: ['', Validators.required],
@@ -436,23 +441,36 @@ export class AddTournamentComponent implements OnInit {
             ]),
         });
         let playerCategoryList = this.facadeService.getPlayerCategories();
+        const clubCtgiesFA = this.formArray.get([0]).get('clubctgies') as FormArray;
         for (let p of playerCategoryList) {
             let checkBoxCat: any = {
                 id: p.id,
                 name: p.name,
                 checked: false,
+                startDate: '',
+                endDate: '',
                 // checked: founded.length > 0 ? true : false,
             };
+            clubCtgiesFA.push(
+                this._formBuilder.group({
+                    id: p.id,
+                    name: p.name,
+                    checked: false,
+                    startDate: null,
+                    endDate: null,
+                })
+            );
 
             this.Categories.push(checkBoxCat);
         }
-        let dataClubs = await this.facadeService.getClubList();
-        this.Clubs = dataClubs.club;
 
+        if (this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()) {
+            let dataClubs = await this.facadeService.getClubList();
+            this.Clubs = dataClubs.club;
+        }
 
         let dataCourses = await this.facadeService.getCoursesList();
         this.Courses = dataCourses.course;
-
         // this.Categories =  this.facadeService.getPlayerCategories();
         this._courseHoles = this.facadeService.getCourseHoles('');
         ////console.log(this.Categories);
@@ -484,6 +502,7 @@ export class AddTournamentComponent implements OnInit {
         });
 
         if (this.tournamentID) {
+            this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
             this.valid1.reset();
             let tournamentInfo = await this.facadeService.getTournamentByID(
                 this.tournamentID
@@ -598,24 +617,26 @@ export class AddTournamentComponent implements OnInit {
                 // }
 
                 let selectedClubId: string;
-                if (this._localStorage.isClubAdmin() && this.loggedInuser.adminClubId) {
-                    selectedClubId = this.loggedInuser.adminClubId
+                if (this._localStorage.isClubAdmin()) {
+                    selectedClubId = this.loggedInuser.adminClubId;
                 } else if (this._localStorage.isSuperAdmin() && this.loggedInuser.adminClubId) {
-                    selectedClubId = this.loggedInuser.adminClubId
+                    selectedClubId = this.formArray.get([0]).value.clubsFormCtrl.id;
                 }
-                this.clubMembers = [];
-                //console.log(selectedClubId);
-                let clubMembersData: any =
-                    await this.facadeService.getPlayerByClub(selectedClubId);
+                this.refreshPlayerList(selectedClubId)
+                // this.clubMembers = [];
+                // //console.log(selectedClubId);
+                // let clubMembersData: any =
+                //     await this.facadeService.getPlayerByClub(selectedClubId);
 
-                for (let i = 0; i < clubMembersData.club_member.length; i++) {
-                    this.clubMembers.push(
-                        clubMembersData.club_member[i].player
-                    );
-                }
+                // for (let i = 0; i < clubMembersData.club_member.length; i++) {
+                //     this.clubMembers.push(
+                //         clubMembersData.club_member[i].player
+                //     );
+                // }
                 this.tournamentCourses = this.currentTournament['CoursesQL'];
                 if (this.tournamentCourses.length > 0) {
                     this.showMultipleCourses = true;
+                    // this.multiCourse = true;
                     for (let course of this.tournamentCourses) {
                         const chkArray = this.formArray.get([0]).get('courses') as FormArray;
                         chkArray.push(
@@ -639,7 +660,7 @@ export class AddTournamentComponent implements OnInit {
 
                 //console.log(this.clubMembers);
 
-                this.syncClubMembers();
+                // this.syncClubMembers();
 
                 //this.dataSource = new MatTableDataSource(this.clubMembers);
 
@@ -650,12 +671,15 @@ export class AddTournamentComponent implements OnInit {
                     .get([0])
                     .get('matchFormat')!
                     .setValue(this.currentTournament.matchFormat);
-                this.formArray
-                    .get([0])
-                    .get('clubsFormCtrl')!
-                    .setValue(
-                        this._filterClub(this.currentTournament.clubId)[0],
-                    );
+
+                if (this.currentTournament.clubId) {
+                    this.formArray
+                        .get([0])
+                        .get('clubsFormCtrl')!
+                        .setValue(
+                            this._filterClub(this.currentTournament?.clubId)?.[0],
+                        );
+                }
 
 
 
@@ -667,50 +691,48 @@ export class AddTournamentComponent implements OnInit {
                 // .setValue({value: this.currentTournament.matchFormat})
                 //console.log(this.currentTournament['CategoriesQL']);
 
-                for (let p of playerCategoryList) {
-                    let founded = this.currentTournament['CategoriesQL'].filter(
-                        (a) => {
-                            return a.category == p.name;
-                        }
+                for (let savedCat of this.currentTournament['CategoriesQL']) {
+                    // get index of category in formArray
+                    let idx = playerCategoryList.findIndex(
+                        (x) => x.name === savedCat.category
                     );
+                    if (idx !== -1) {
+                        const control = clubCtgiesFA.at(idx);
 
-                    if (founded.length > 0) {
-                        const chkArray = <FormArray>(
-                            this.formArray.get([0]).get('clubctgies')
-                        );
-                        chkArray.push(
-                            new FormControl({
-                                id: 1,
-                                name: p.name,
-                                checked: founded.length > 0 ? true : false,
-                                dates:
-                                    founded.length > 0
-                                        ? founded[0].flightSettings
-                                        : [],
-                            })
-                        );
-                        if (founded[0].flightSettings.length > 0) {
-                            for (let obj of founded[0].flightSettings) {
-                                let objA = {
-                                    id: p.id,
-                                    name: p.name,
-                                    playingDates: obj,
-                                };
-                                this.dates.push(objA);
-                            }
-                        }
+                        control.patchValue({
+                            checked: true,
+                            startDate: new Date(savedCat.flightSettings?.[0]?.dates) || null,
+                            endDate: new Date(savedCat.flightSettings?.[savedCat.flightSettings.length - 1]?.dates) || null,
+                        });
 
-                        // let obj = {
-                        //     id: 1,
-                        //     name: p.name,
-                        //     // playingDates: result[i]['dates'],
-                        // };
-                        // this.dates.push(obj);
-
+                        this.Categories[idx]['checked'] = true;
+                        // this.Categories[idx].startDate = savedCat.flightSettings?.[0]?.startDate || '';
+                        // this.Categories[idx].endDate = savedCat.flightSettings?.[0]?.endDate || '';
                     }
-
-
                 }
+
+                // if (founded[0].flightSettings.length > 0) {
+                //     for (let obj of founded[0].flightSettings) {
+                //         let objA = {
+                //             id: p.id,
+                //             name: p.name,
+                //             playingDates: obj,
+                //         };
+                //         this.dates.push(objA);
+                //     }
+                // }
+
+                // let obj = {
+                //     id: 1,
+                //     name: p.name,
+                //     // playingDates: result[i]['dates'],
+                // };
+                // this.dates.push(obj);
+
+
+
+
+
                 this.minDate = tournamentInfo.startDate;
                 //const chkArray = <FormArray>this.formArray.get([0]).get("clubctgies");
                 //chkArray.push(new FormControl({ id: 1, name: "Amateurs", checked: false }));
@@ -776,6 +798,10 @@ export class AddTournamentComponent implements OnInit {
                 .get('clubsFormCtrl')
                 .updateValueAndValidity();
         }
+    }
+
+    get clubctgies(): FormArray {
+        return this.formArray.get([0]).get('clubctgies') as FormArray;
     }
 
     filterValues(search: string): any {
@@ -857,11 +883,38 @@ export class AddTournamentComponent implements OnInit {
             if (stepNumber == 3) {
                 this.flightsSetup();
             }
+            if (stepTitle == 'Review & Confirm') {
+                this.getSelectedPlayers();
+            }
         } else {
+            const invalidFields = this.getInvalidControls(currentGroup);
+            console.warn('Invalid fields:', invalidFields);
             // Optionally, show a toast or inline error message
             console.warn('Please complete this step before continuing.');
         }
     }
+
+    getInvalidControls(formGroup: FormGroup, parentKey = ''): string[] {
+        let invalid = [];
+
+        Object.keys(formGroup.controls).forEach(key => {
+            const control = formGroup.get(key);
+            const controlPath = parentKey ? `${parentKey} → ${key}` : key;
+
+            if (control instanceof FormGroup) {
+                invalid = invalid.concat(this.getInvalidControls(control, controlPath));
+            } else if (control instanceof FormArray) {
+                control.controls.forEach((ctrl, idx) => {
+                    invalid = invalid.concat(this.getInvalidControls(ctrl as FormGroup, `${controlPath}[${idx}]`));
+                });
+            } else if (control?.invalid) {
+                invalid.push(controlPath);
+            }
+        });
+
+        return invalid;
+    }
+
 
 
     selectColor(color: string) {
@@ -1103,113 +1156,166 @@ export class AddTournamentComponent implements OnInit {
         return this.Courses.slice();
     }
 
-    checkDate(cat) {
-        //console.log(cat);
-        if (this.editTournament == true) {
-            return this.checkCatToUpdate(cat, false);
+    checkDate(cat: any) {
+        const result = [];
+        const start = new Date(cat.startDate);
+        const end = new Date(cat.endDate);
+
+        let current = new Date(start);
+
+        while (current <= end) {
+            result.push({
+                dates: this.formatDate(current)
+            });
+
+            current.setDate(current.getDate() + 1); // move to next day
         }
-        this.datesPlaying = [];
-        for (let i of this.dates) {
-            if (i.id == cat.id || i.name == cat.name) {
-                this.datesPlaying.push(i['playingDates']);
-            }
-        }
-        //console.log(this.datesPlaying);
-        return this.datesPlaying;
+
+        return result;
     }
 
-    updateChkbxArray(chk, index, isChecked, key) {
-        const chkArray = <FormArray>this.formArray.get([0]).get(key);
-        if (isChecked) {
-            //sometimes inserts values already included creating double records for the same values -hence the defence
-            if (chkArray.controls.findIndex((x) => x.value.id == chk.id) == -1)
-                chkArray.push(new FormControl({ id: chk.id, name: chk.name }));
+    formatDate(date: Date): string {
+        const d = ("0" + date.getDate()).slice(-2);
+        const m = ("0" + (date.getMonth() + 1)).slice(-2);
+        const y = date.getFullYear();
+        return `${d}-${m}-${y}`;
+    }
 
-            //console.log(chkArray);
-            //this.dateSetup();
-            // this.getplayingDates();
-            this.showDates = true;
-            let category;
-            category = this.formArray.get([0]).get('clubctgies').value;
-            //console.log(category);
+    updateCategoryDates(cat) {
+        const chkArray = this.formArray.get([0]).get('clubctgies') as FormArray;
 
-            // const dialogRef = this.dialog.open(DialogPlayingDatesComponent, {
-            //     width: '800px',
+        const idx = chkArray.value.findIndex((x) => x.id === cat.id);
+        if (idx !== -1) {
+            chkArray.at(idx).patchValue({
+                startDate: cat.startDate,
+                endDate: cat.endDate,
+            });
+        }
+    }
 
-            //     data: {
-            //         dates: this.playingDat,
-            //         category: chk,
-            //     },
-            // });
+    // updateChkbxArray(chk, index, isChecked, key) {
+    //     const chkArray = <FormArray>this.formArray.get([0]).get(key);
+    //     if (isChecked) {
+    //         this.Categories[index]['checked'] = true;
+    //         //sometimes inserts values already included creating double records for the same values -hence the defence
+    //         if (chkArray.controls.findIndex((x) => x.value.id == chk.id) == -1)
+    //             chkArray.push(
+    //                 this._formBuilder.group({
+    //                     id: [chk.id],
+    //                     name: [chk.name],
+    //                     startDate: [this.formArray.get([0]).value.startDateFormCtrl, Validators.required],
+    //                     endDate: [this.formArray.get([0]).value.endDateFormCtrl, Validators.required],
+    //                 })
+    //             );
+    //         //console.log(chkArray);
+    //         //this.dateSetup();
+    //         // this.getplayingDates();
+    //         this.showDates = true;
+    //         let category;
+    //         category = this.formArray.get([0]).get('clubctgies').value;
+    //         //console.log(category);
 
-            // dialogRef.afterClosed().subscribe((result) => {
-            //     //console.log(result);
-            //     if (result) {
-            //         for (let i = 0; i < result.length; i++) {
-            //             let obj = {
-            //                 id: result[i]['id'],
-            //                 name: result[i]['name'],
-            //                 playingDates: result[i]['dates'],
-            //             };
-            //             this.dates.push(obj);
-            //         }
-            //         //console.log(this.dates);
-            //     } else {
-            //         this.snackBar.open('Dates have not been saved', 'x', {
-            //             duration: 3000,
-            //         });
-            //     }
-            // });
-            //this.PlayingDateFormGroup(index)
+    //         // const dialogRef = this.dialog.open(DialogPlayingDatesComponent, {
+    //         //     width: '800px',
+
+    //         //     data: {
+    //         //         dates: this.playingDat,
+    //         //         category: chk,
+    //         //     },
+    //         // });
+
+    //         // dialogRef.afterClosed().subscribe((result) => {
+    //         //     //console.log(result);
+    //         //     if (result) {
+    //         //         for (let i = 0; i < result.length; i++) {
+    //         //             let obj = {
+    //         //                 id: result[i]['id'],
+    //         //                 name: result[i]['name'],
+    //         //                 playingDates: result[i]['dates'],
+    //         //             };
+    //         //             this.dates.push(obj);
+    //         //         }
+    //         //         //console.log(this.dates);
+    //         //     } else {
+    //         //         this.snackBar.open('Dates have not been saved', 'x', {
+    //         //             duration: 3000,
+    //         //         });
+    //         //     }
+    //         // });
+    //         //this.PlayingDateFormGroup(index)
+    //     } else {
+    //         let idx = chkArray.controls.findIndex(
+    //             (x) => x.value.name == chk.name
+    //         );
+    //         this.Categories[index]['checked'] = false;
+    //         chkArray.removeAt(idx);
+    //         this.dates = this.dates.filter((x) => x.name != chk.name);
+    //         //console.log(this.dates);
+    //     }
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 1) != -1)
+    //     //     this.selected = this.isAmateur = true;
+    //     // else {
+    //     //     this.isAmateur = false;
+    //     //     this.formArray.get([0]).get('handicapCats').setValue(false);
+    //     // }
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 2) != -1)
+    //     //     this.selected = true;
+    //     // else {
+    //     //     this.isSAmateur = this.isSAmateur = false;
+    //     //     this.formArray.get([0]).get('handicapCats').setValue(false);
+    //     // }
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 2) != -1)
+    //     //     this.isSenior = true;
+    //     // else this.isSenior = false;
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 3) != -1)
+    //     //     this.isVeterans = true;
+    //     // else this.isVeterans = false;
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 4) != -1)
+    //     //     this.isJuniors = true;
+    //     // else this.isJuniors = false;
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 5) != -1)
+    //     //     this.isLadies = true;
+    //     // else this.isLadies = false;
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 6) != -1)
+    //     //     this.isProfessionals = true;
+    //     // else this.isProfessionals = false;
+
+    //     // if (chkArray.controls.findIndex((x) => x.value.id == 7) != -1)
+    //     //     this.isProAm = true;
+    //     // else this.isProAm = false;
+
+    //     ////console.log(chkArray.controls);
+    //     ////console.log(chkArray.controls.findIndex(x => x.value.id == 1));
+    // }
+
+    updateChkbxArray(chk, index, checked, key) {
+        const arr = this.formArray.get([0]).get(key) as FormArray;
+        const group = arr.at(index) as FormGroup;
+
+        if (checked) {
+            group.patchValue({
+                id: chk.id,
+                name: chk.name,
+                startDate: null,
+                endDate: null,
+                checked: true,
+            });
+            group.get('startDate').setValidators(Validators.required);
+            group.get('endDate').setValidators(Validators.required);
+            group.get('startDate').updateValueAndValidity();
+            group.get('endDate').updateValueAndValidity();
         } else {
-            let idx = chkArray.controls.findIndex(
-                (x) => x.value.name == chk.name
-            );
-            chkArray.removeAt(idx);
-            this.dates = this.dates.filter((x) => x.name != chk.name);
-            //console.log(this.dates);
+            group.reset(); // Unselect
         }
 
-        if (chkArray.controls.findIndex((x) => x.value.id == 1) != -1)
-            this.selected = this.isAmateur = true;
-        else {
-            this.isAmateur = false;
-            this.formArray.get([0]).get('handicapCats').setValue(false);
-        }
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 2) != -1)
-            this.selected = true;
-        else {
-            this.isSAmateur = this.isSAmateur = false;
-            this.formArray.get([0]).get('handicapCats').setValue(false);
-        }
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 2) != -1)
-            this.isSenior = true;
-        else this.isSenior = false;
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 3) != -1)
-            this.isVeterans = true;
-        else this.isVeterans = false;
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 4) != -1)
-            this.isJuniors = true;
-        else this.isJuniors = false;
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 5) != -1)
-            this.isLadies = true;
-        else this.isLadies = false;
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 6) != -1)
-            this.isProfessionals = true;
-        else this.isProfessionals = false;
-
-        if (chkArray.controls.findIndex((x) => x.value.id == 7) != -1)
-            this.isProAm = true;
-        else this.isProAm = false;
-
-        ////console.log(chkArray.controls);
-        ////console.log(chkArray.controls.findIndex(x => x.value.id == 1));
+        this.Categories[index]['checked'] = checked;
     }
 
     updateCourseHolSet(chk, isChecked, key) {
@@ -2005,7 +2111,9 @@ export class AddTournamentComponent implements OnInit {
                     //         ]
                     //     );
                     // }
-                    this.addFlightField(this.formArray.get([0]).get('clubctgies').value[i]);
+                    if (this.formArray.get([0]).get('clubctgies').value[i].checked) {
+                        this.addFlightField(this.formArray.get([0]).get('clubctgies').value[i]);
+                    }
                     // }
                 }
                 //console.log(
@@ -2134,8 +2242,8 @@ export class AddTournamentComponent implements OnInit {
         let marshalsData: Marshal[] = [];
 
         //const tc:TournamenCategory = [];
-        if (!this.tournamentID)
-            this.tournamentID = UniqueIdGenerator.generate();
+        // if (!this.tournamentID)
+        this.tournamentID = UniqueIdGenerator.generate();
 
         if (this.showMultipleCourses) {
             if (this.formArray.get([0]).value.numOfRounds > 1) {
@@ -2159,120 +2267,122 @@ export class AddTournamentComponent implements OnInit {
 
         for (let index in this.formArray.get([0]).value.clubctgies) {
             let TCdata: any;
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_AMATEURS.replace(/\s/g, '').toLowerCase()
-            ) {
-                //this.TCdata.lowerLimitStart = 1;
-                //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
+            if (this.formArray.get([0]).value.clubctgies[index].checked) {
+                if (
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_AMATEURS.replace(/\s/g, '').toLowerCase()
+                ) {
+                    //this.TCdata.lowerLimitStart = 1;
+                    //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
+
+                    if (
+                        this.formArray.get([0]).value.handicapCats &&
+                        this.formArray.get([0]).value.prizeCategoryA != '' &&
+                        this.formArray.get([0]).value.prizeCategoryB != ''
+                    ) {
+                        TCdata = {
+                            lowerLimitStart: -1,
+                            lowerLimitEnd: this.formArray.get([0]).value
+                                .handicapCats
+                                ? this.formArray.get([0]).value.prizeCategoryA
+                                : '',
+                            upperLimitStart: this.formArray.get([0]).value
+                                .handicapCats
+                                ? this.formArray.get([0]).value.prizeCategoryB
+                                : '',
+                            upperLimitEnd: 18,
+                        };
+                    }
+                }
+                if (
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_SENIORS_AMATEUR.replace(/\s/g, '').toLowerCase()
+                ) {
+                    //this.TCdata.lowerLimitStart = 1;
+                    //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
+
+                    if (
+                        this.formArray.get([0]).value.handicapCats &&
+                        this.formArray.get([0]).value.prizeCategoryC != '' &&
+                        this.formArray.get([0]).value.prizeCategoryD != ''
+                    ) {
+                        TCdata = {
+                            lowerLimitStart: -1,
+                            lowerLimitEnd: this.formArray.get([0]).value
+                                .handicapCats
+                                ? this.formArray.get([0]).value.prizeCategoryC
+                                : '',
+                            upperLimitStart: this.formArray.get([0]).value
+                                .handicapCats
+                                ? this.formArray.get([0]).value.prizeCategoryD
+                                : '',
+                            upperLimitEnd: 18,
+                        };
+                    }
+                }
+
+                let prizeInfo: any;
 
                 if (
-                    this.formArray.get([0]).value.handicapCats &&
-                    this.formArray.get([0]).value.prizeCategoryA != '' &&
-                    this.formArray.get([0]).value.prizeCategoryB != ''
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_PRO_AM.replace(/\s/g, '').toLowerCase()
                 ) {
-                    TCdata = {
-                        lowerLimitStart: -1,
-                        lowerLimitEnd: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryA
-                            : '',
-                        upperLimitStart: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryB
-                            : '',
-                        upperLimitEnd: 18,
-                    };
-                }
-            }
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_SENIORS_AMATEUR.replace(/\s/g, '').toLowerCase()
-            ) {
-                //this.TCdata.lowerLimitStart = 1;
-                //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
-
-                if (
-                    this.formArray.get([0]).value.handicapCats &&
-                    this.formArray.get([0]).value.prizeCategoryC != '' &&
-                    this.formArray.get([0]).value.prizeCategoryD != ''
-                ) {
-                    TCdata = {
-                        lowerLimitStart: -1,
-                        lowerLimitEnd: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryC
-                            : '',
-                        upperLimitStart: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryD
-                            : '',
-                        upperLimitEnd: 18,
-                    };
-                }
-            }
-
-            let prizeInfo: any;
-
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_PRO_AM.replace(/\s/g, '').toLowerCase()
-            ) {
-                if (this.formArray.get([0]).value.handicapRatio) {
-                    prizeInfo = {
-                        handicapratio: this.formArray.get([0]).value
-                            .handicapRatio,
-                    };
-                }
-            } else {
-                if (
-                    this.getGrossNetTop(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        'GT'
-                    ) ||
-                    this.getGrossNetTop(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        'NT'
-                    )
-                ) {
-                    prizeInfo = {
-                        noofgrosstop: this.getGrossNetTop(
-                            this.formArray.get([0]).value.clubctgies[index]
-                                .name,
+                    if (this.formArray.get([0]).value.handicapRatio) {
+                        prizeInfo = {
+                            handicapratio: this.formArray.get([0]).value
+                                .handicapRatio,
+                        };
+                    }
+                } else {
+                    if (
+                        this.getGrossNetTop(
+                            this.formArray.get([0]).value.clubctgies[index].name,
                             'GT'
-                        ),
-                        noofnettop: this.getGrossNetTop(
-                            this.formArray.get([0]).value.clubctgies[index]
-                                .name,
+                        ) ||
+                        this.getGrossNetTop(
+                            this.formArray.get([0]).value.clubctgies[index].name,
                             'NT'
-                        ), //,
-                    };
+                        )
+                    ) {
+                        prizeInfo = {
+                            noofgrosstop: this.getGrossNetTop(
+                                this.formArray.get([0]).value.clubctgies[index]
+                                    .name,
+                                'GT'
+                            ),
+                            noofnettop: this.getGrossNetTop(
+                                this.formArray.get([0]).value.clubctgies[index]
+                                    .name,
+                                'NT'
+                            ), //,
+                        };
+                    }
                 }
+
+                let tc: any = {
+                    id: UniqueIdGenerator.generate(),
+                    //tournamentId: this.tournamentID,
+                    category: this.formArray.get([0]).value.clubctgies[index].name,
+                    handicapLimits: TCdata ? TCdata : null,
+                    prizeInformation: prizeInfo ? prizeInfo : null,
+                    flightSettings: this.checkDate(
+                        this.formArray.get([0]).value.clubctgies[index]
+                    ),
+                    default: true,
+                    //flightSettings: null,
+                };
+
+                tournamentCats.push(tc);
             }
-
-            let tc: any = {
-                id: UniqueIdGenerator.generate(),
-                //tournamentId: this.tournamentID,
-                category: this.formArray.get([0]).value.clubctgies[index].name,
-                handicapLimits: TCdata ? TCdata : null,
-                prizeInformation: prizeInfo ? prizeInfo : null,
-                flightSettings: this.checkDate(
-                    this.formArray.get([0]).value.clubctgies[index]
-                ),
-                default: true,
-                //flightSettings: null,
-            };
-
-            tournamentCats.push(tc);
         }
 
         for (let i = 1; i <= this.formArray.get([0]).value.noofMarshals; i++) {
@@ -2301,9 +2411,16 @@ export class AddTournamentComponent implements OnInit {
             handicapAllocation: this.formArray.get([0]).value
                 .handicapAllocations,
         };
-        let pointsFormats = {
-            pointsFormats: this.formArray.get([0]).value.pointsFormats,
-        };
+        let arr = this.formArray.get([0]).value.pointsFormats;
+
+        let pointsFormatsObj: any = {};
+
+        arr.forEach((control, index) => {
+            const key = index === 0 ? 'pointsFormat' : `pointsFormat${index + 1}`;
+            pointsFormatsObj[key] = control.format;
+        });
+
+
         // let pointsFormats { "pointsFormat": "BOTH" },
         let pointsValues = { pointsValue: this.formArray.get([0]).value.pointValue };
         //console.log(handicapAllocations);
@@ -2359,7 +2476,7 @@ export class AddTournamentComponent implements OnInit {
                 'SINGLE'
                 ? false
                 : true,
-            pointsFormats: pointsFormats,
+            pointsFormats: this.showMatchPlay ? pointsFormatsObj : null,
             subTournament: false,
             pointsValues: pointsValues,
             handicapAllocations: handicapAllocations,
@@ -2451,68 +2568,17 @@ export class AddTournamentComponent implements OnInit {
                             ? this.loggedInuser.adminClubId
                             : this.formArray.get([0]).value.clubsFormCtrl
                                 .id;
-                    this.clubMembers = [];
                     //console.log(selectedClubId);
                     //console.log(
                     //     this.formArray.get([0]).get('clubctgies').value
                     // );
 
-                    if (this._localStorage.isTourAdmin() || this._localStorage.isLeagueAdmin()) {
 
-                        if (state == Constants.TOUR) {
-                            selectedClubId = this._localStorage.get(Constants.TOUR_ID);
-                            let clubMembersData: any =
-                                await this.facadeService.getPlayersListByTour(
-                                    selectedClubId
-                                );
-
-                            for (
-                                let i = 0;
-                                i < clubMembersData.tour_member.length;
-                                i++
-                            ) {
-                                this.clubMembers.push(
-                                    clubMembersData.tour_member[i].player
-                                );
-                            }
-                        } else if (state == Constants.LEAGUE) {
-                            selectedClubId = this._localStorage.get(Constants.LEAGUE_ID);
-                            let clubMembersData: any =
-                                await this.facadeService.getPlayersListByLeague(
-                                    selectedClubId
-                                );
-
-                            for (
-                                let i = 0;
-                                i < clubMembersData.league_member.length;
-                                i++
-                            ) {
-                                this.clubMembers.push(
-                                    clubMembersData.league_member[i].player
-                                );
-                            }
-                        }
-                    } else {
-                        let clubMembersData: any =
-                            await this.facadeService.getPlayerByClub(
-                                selectedClubId
-                            );
-
-                        for (
-                            let i = 0;
-                            i < clubMembersData.club_member.length;
-                            i++
-                        ) {
-                            this.clubMembers.push(
-                                clubMembersData.club_member[i].player
-                            );
-                        }
-                    }
-
+                    this.refreshPlayerList(selectedClubId)
 
                     //console.log(this.clubMembers);
 
-                    this.syncClubMembers();
+
 
                     // stepper.next();
                     // this.currentTitle = 'Select Players';
@@ -2552,104 +2618,169 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
+    async refreshPlayerList(selectedClubId: string) {
+        let state = this._localStorage.get(Constants.STATE);
+        // this.clubMembers = [];
+
+        const addUniquePlayer = (player: any) => {
+            const existsInClubMembers = this.clubMembers.some(p => p.id === player.id);
+            const existsInTable = this.membersSource?.data?.some(p => p.id === player.id);
+
+            if (!existsInClubMembers && !existsInTable) {
+                this.clubMembers.push(player);
+            }
+        };
+
+        if (this._localStorage.isTourAdmin() || this._localStorage.isLeagueAdmin()) {
+
+            if (state === Constants.TOUR) {
+                selectedClubId = this._localStorage.get(Constants.TOUR_ID);
+                const data: any = await this.facadeService.getPlayersListByTour(selectedClubId);
+
+                data.tour_member.forEach(m => addUniquePlayer(m.player));
+
+            } else if (state === Constants.LEAGUE) {
+                selectedClubId = this._localStorage.get(Constants.LEAGUE_ID);
+                const data: any = await this.facadeService.getPlayersListByLeague(selectedClubId);
+
+                data.league_member.forEach(m => addUniquePlayer(m.player));
+            }
+
+        } else if (this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()) {
+            const data: any = await this.facadeService.getPlayerByClub(selectedClubId);
+
+            data.club_member.forEach(m => addUniquePlayer(m.player));
+
+        } else if (this._localStorage.isTournamentManager()) {
+            const data: any = await this.facadeService.getPlayersByID(this.loggedInuser.id);
+
+            data.player.forEach(p => addUniquePlayer(p));
+        }
+
+        this.syncClubMembers();
+    }
+
+
     async editTournaments() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentCats: TournamentCategory[] = [];
+        let tournamentRoundCourses: TournamentRoundCourses[] = [];
 
         let marshalsData: Marshal[] = [];
+
+        if (this.showMultipleCourses) {
+            if (this.formArray.get([0]).value.numOfRounds > 1) {
+                for (let index in this.formArray.get([0]).value.courses) {
+                    console.log(this.formArray.get([0]).value.courses[index]);
+                    let course = this.formArray.get([0]).value.courses[index];
+                    let courseHoleSet = course.courseHolSet?.split('_');
+
+                    let obj: TournamentRoundCourses = {
+                        round: course.round,
+                        courseId: course?.courseName?.id ?? '',
+                        courseHoleSets: courseHoleSet ? Number(courseHoleSet[0]) : 3,
+                        inverted: courseHoleSet[1] == 'false' ? false : true,
+                    }
+                    tournamentRoundCourses.push(obj);
+                }
+            }
+
+        }
         for (let index in this.formArray.get([0]).value.clubctgies) {
-            let TCdata: any;
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_AMATEURS.replace(/\s/g, '').toLowerCase()
-            ) {
-                //this.TCdata.lowerLimitStart = 1;
-                //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
-
-                if (this.formArray.get([0]).value.handicapCats) {
-                    TCdata = {
-                        lowerLimitStart: 1,
-                        lowerLimitEnd: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryA
-                            : '',
-                        upperLimitStart: this.formArray.get([0]).value
-                            .handicapCats
-                            ? this.formArray.get([0]).value.prizeCategoryB
-                            : '',
-                        upperLimitEnd: 18,
-                    };
-                }
-            }
-
-            let prizeInfo: any;
-
-            if (
-                this.formArray
-                    .get([0])
-                    .value.clubctgies[index].name.replace(/\s/g, '')
-                    .toLowerCase() ==
-                Constants.CATEGORY_PRO_AM.replace(/\s/g, '').toLowerCase()
-            ) {
-                if (this.formArray.get([0]).value.handicapRatio) {
-                    prizeInfo = {
-                        handicapratio: this.formArray.get([0]).value
-                            .handicapRatio,
-                    };
-                }
-            } else {
+            if (this.formArray.get([0]).value.clubctgies[index].checked) {
+                let TCdata: any;
                 if (
-                    this.getGrossNetTop(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        'GT'
-                    ) ||
-                    this.getGrossNetTop(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        'NT'
-                    )
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_AMATEURS.replace(/\s/g, '').toLowerCase()
                 ) {
-                    prizeInfo = {
-                        noofgrosstop: this.getGrossNetTop(
-                            this.formArray.get([0]).value.clubctgies[index]
-                                .name,
-                            'GT'
-                        ),
-                        noofnettop: this.getGrossNetTop(
-                            this.formArray.get([0]).value.clubctgies[index]
-                                .name,
-                            'NT'
-                        ), //,
-                    };
+                    //this.TCdata.lowerLimitStart = 1;
+                    //this.TCdata.lowerLimitEnd = this.formArray.get([0]).value.prizeCategoryA;
+
+                    if (this.formArray.get([0]).value.handicapCats) {
+                        TCdata = {
+                            lowerLimitStart: 1,
+                            lowerLimitEnd: this.formArray.get([0]).value
+                                .handicapCats
+                                ? this.formArray.get([0]).value.prizeCategoryA
+                                : '',
+                            upperLimitStart: this.formArray.get([0]).value
+                                .handicapCats
+                                ? this.formArray.get([0]).value.prizeCategoryB
+                                : '',
+                            upperLimitEnd: 18,
+                        };
+                    }
                 }
+
+                let prizeInfo: any;
+
+                if (
+                    this.formArray
+                        .get([0])
+                        .value.clubctgies[index].name.replace(/\s/g, '')
+                        .toLowerCase() ==
+                    Constants.CATEGORY_PRO_AM.replace(/\s/g, '').toLowerCase()
+                ) {
+                    if (this.formArray.get([0]).value.handicapRatio) {
+                        prizeInfo = {
+                            handicapratio: this.formArray.get([0]).value
+                                .handicapRatio,
+                        };
+                    }
+                } else {
+                    if (
+                        this.getGrossNetTop(
+                            this.formArray.get([0]).value.clubctgies[index].name,
+                            'GT'
+                        ) ||
+                        this.getGrossNetTop(
+                            this.formArray.get([0]).value.clubctgies[index].name,
+                            'NT'
+                        )
+                    ) {
+                        prizeInfo = {
+                            noofgrosstop: this.getGrossNetTop(
+                                this.formArray.get([0]).value.clubctgies[index]
+                                    .name,
+                                'GT'
+                            ),
+                            noofnettop: this.getGrossNetTop(
+                                this.formArray.get([0]).value.clubctgies[index]
+                                    .name,
+                                'NT'
+                            ), //,
+                        };
+                    }
+                }
+
+                let tc: any = {
+                    id: this.tournamentID
+                        ? this.checkCatToUpdate(
+                            this.formArray.get([0]).value.clubctgies[index].name,
+                            true
+                        )
+                        : UniqueIdGenerator.generate(),
+                    tournamentId: this.tournamentID,
+                    category: this.formArray.get([0]).value.clubctgies[index].name,
+                    handicapLimits: TCdata ? TCdata : null,
+                    prizeInformation: prizeInfo ? prizeInfo : null,
+                    flightSettings: this.checkDate(
+                        this.formArray.get([0]).value.clubctgies[index]
+                    ),
+                    default: true,
+                    //flightSettings: null,
+                };
+                //console.log(tc);
+                // let json= JSON.stringify(tc.flightSettings);
+
+                // tc["flightSettings"]=json;
+                //console.log(tc);
+                tournamentCats.push(tc);
+                //console.log(tournamentCats);
             }
-
-            let tc: any = {
-                id: this.tournamentID
-                    ? this.checkCatToUpdate(
-                        this.formArray.get([0]).value.clubctgies[index].name,
-                        true
-                    )
-                    : UniqueIdGenerator.generate(),
-                tournamentId: this.tournamentID,
-                category: this.formArray.get([0]).value.clubctgies[index].name,
-                handicapLimits: TCdata ? TCdata : null,
-                prizeInformation: prizeInfo ? prizeInfo : null,
-                flightSettings: this.checkDate(
-                    this.formArray.get([0]).value.clubctgies[index]
-                ),
-                default: true,
-                //flightSettings: null,
-            };
-            //console.log(tc);
-            // let json= JSON.stringify(tc.flightSettings);
-
-            // tc["flightSettings"]=json;
-            //console.log(tc);
-            tournamentCats.push(tc);
-            //console.log(tournamentCats);
         }
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat ==
@@ -2695,18 +2826,25 @@ export class AddTournamentComponent implements OnInit {
             handicapAllocation: this.formArray.get([0]).value
                 .handicapAllocations,
         };
+
+        let arr = this.formArray.get([0]).value.pointsFormats;
+
+        let pointsFormatsObj: any = {};
+
+        arr.forEach((control, index) => {
+            const key = index === 0 ? 'pointsFormat' : `pointsFormat${index + 1}`;
+            pointsFormatsObj[key] = control.format;
+        });
+        let state = this._localStorage.get(Constants.STATE);
         let tournament = {
             id: this.tournamentID,
-            clubId:
-                this._localStorage.isClubAdmin()
-                    ? this.loggedInuser.adminClubId
-                    : this.formArray.get([0]).value.clubsFormCtrl.id,
-            leagueId: null,
+            clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
+            leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
             courseId:
                 this._localStorage.isClubAdmin() &&
                     this.currentTournament &&
                     this.courseChange == true
-                    ? this.formArray.get([0]).value.courseInfo[0].courseName
+                    ? this.formArray.get([0]).value.courseInfo[0]?.courseName
                         .course.id
                     : this.currentTournament['CourseQL'].id,
             adminId: this.loggedInuser.id,
@@ -2731,7 +2869,7 @@ export class AddTournamentComponent implements OnInit {
                     'SINGLE'
                     ? false
                     : true,
-            pointsFormats: { "pointsFormat": "BOTH" },
+            pointsFormats: this.showMatchPlay ? pointsFormatsObj : null,
             pointsValues: { "pointsValue": 1 },
             handicapAllocations: handicapAllocations,
             tee: 'AMATEURS',
@@ -2759,6 +2897,8 @@ export class AddTournamentComponent implements OnInit {
                         ? true
                         : false
                     : false,
+            tourId: state == Constants.TOUR ? this._localStorage.get(Constants.TOUR_ID) : null,
+            tournament_round_courses: tournamentRoundCourses,
         };
         //console.log(tournament);
         //console.log(tournamentCats);
@@ -3501,6 +3641,7 @@ export class AddTournamentComponent implements OnInit {
                 (error) => (this.isLoading = false)
             );
     }
+
     getSecondOpponent(teams: any[], player: any): string {
         for (const team of teams) {
             const isPlayerInTeam = team.members.some(member => member.id === player.id);
@@ -3954,9 +4095,24 @@ export class AddTournamentComponent implements OnInit {
             }
         });
     }
-    roundChange(event) {
-        this.multiCourse = Number(event.value) > 1;
+
+    roundChange(event: any) {
+        const rounds = Number(event.value);
+        this.multiCourse = rounds > 1;
+        this.noOfRounds = Array.from({ length: rounds }, (_, i) => i + 1);
+
+        const array = this.formArray.get([0]).get('pointsFormats') as FormArray;
+        array.clear(); // Reset
+
+        for (let i = 0; i < rounds; i++) {
+            array.push(
+                this._formBuilder.group({
+                    format: ['', this.showMatchPlay ? Validators.required : Validators.nullValidator],
+                })
+            );
+        }
     }
+
     movePlayer(flight: number, cplayer: number) {
         ////console.log(flight + "<- ->" + player);
         let player: Player = this.selectedMembers[flight][cplayer];

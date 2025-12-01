@@ -326,12 +326,12 @@ export class DialogPlayerListComponent implements OnInit {
         };
 
         clubMember.push(member);
-        let players: any[] = await this.facadeService.getallPlayersforGGid();
-        var sortarray = players['player'];
-        sortarray.sort(this.Comparator);
+        // let players: any[] = await this.facadeService.getallPlayersforGGid();
+        // var sortarray = players['player'];
+        // sortarray.sort(this.Comparator);
         //console.log(sortarray);
         UniqueId = UniqueIdGenerator.generate();
-        GEMId = generateGemId.generate(sortarray[0].gemId);
+        // GEMId = generateGemId.generate(sortarray[0].gemId);
 
         ////console.log(playerFormValue.isClubAdmin);
         const player: Player = {
@@ -344,7 +344,7 @@ export class DialogPlayerListComponent implements OnInit {
 
             fcmToken: null,
 
-            gemId: GEMId,
+            gemId: null,
             firstName: playerFormValue.firstName,
             lastName: playerFormValue.lastName,
             gender: playerFormValue.gender,

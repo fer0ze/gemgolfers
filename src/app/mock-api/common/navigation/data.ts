@@ -328,14 +328,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/coursesRequest',
                 moduleId: 'a71b1916-ce6a-4ae0-869f-e3d140e64a4b',
             },
-            {
-                id: 'feedback.allCourses',
-                title: 'Courses',
-                type: 'basic',
-                icon: 'heroicons_outline:sun',
-                link: '/courses',
-                moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a',
-            },
+            // {
+            //     id: 'feedback.allCourses',
+            //     title: 'Courses',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:sun',
+            //     link: '/courses',
+            //     moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a',
+            // },
             {
                 id: 'feedback.mergreProfiles',
                 title: 'Merge-Profile',

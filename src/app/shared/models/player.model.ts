@@ -11,6 +11,7 @@ export interface Player {
     lastName: string;
     gender: string;
     dob: Date;
+    addedBy?: string;
     fullName?: string;
     picture: string;
     email: string;

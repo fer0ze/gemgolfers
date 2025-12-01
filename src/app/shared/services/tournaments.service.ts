@@ -1185,8 +1185,8 @@ export class TournamentsService {
                                 sponsorLogo: tmnt.sponsorLogo,
                                 mobileLogoUrl: tmnt.mobileLogoUrl,
                                 webLogoUrl: tmnt.webLogoUrl,
-                                noofMarshals: tmnt.noofMarshals,
-                                marshalStart: tmnt.marshalStart,
+                                noOfMarshals: tmnt.noOfMarshals.toString(),
+                                marshalsStartWith: tmnt.marshalsStartWith,
                                 flightsCategory: tmnt.flightsCategory,
                                 subTournament: tmnt.subTournament,
                                 multiFormat: tmnt.multiFormat,
@@ -1876,7 +1876,7 @@ export class TournamentsService {
     }
 
     public editTournament(
-        tournament: any,
+        tmnt: any,
         category,
         marshals: any
     ): Promise<boolean> {
@@ -1885,9 +1885,57 @@ export class TournamentsService {
                 .mutate<any>({
                     mutation: Query.UpdateMutation,
                     variables: {
-                        tournament: tournament,
+                         objects: [
+                            {
+                                id: tmnt.id,
+                                clubId: tmnt.clubId,
+                                leagueId: tmnt.leagueId,
+                                courseId: tmnt.courseId,
+                                adminId: tmnt.adminId,
+                                title: tmnt.title,
+                                prefix: tmnt.prefix,
+                                courseHoleSets: tmnt.courseHoleSets,
+                                teamMatch: tmnt.teamMatch,
+                                pairsMatch: tmnt.pairsMatch,
+                                interLeague: tmnt.interLeague,
+                                approved: tmnt.approved,
+                                publicTournament: tmnt.publicTournament,
+                                confirmParticipants: tmnt.confirmParticipants,
+                                noOfRounds: tmnt.noOfRounds,
+                                activeRound: tmnt.activeRound,
+                                matchFormat: tmnt.matchFormat,
+                                playingOnWhs: tmnt.playingOnWhs,
+                                pointsFormats: tmnt.pointsFormats,
+                                pointsValues: tmnt.pointsValues,
+                                handicapAllocations: tmnt.handicapAllocations,
+                                strokeAllocation: tmnt.strokeAllocation,
+                                tee: tmnt.tee,
+                                scoreManagement: tmnt.scoreManagement,
+                                startDate: tmnt.startDate,
+                                endDate: tmnt.endDate,
+                                tournamentFlight: tmnt.tournamentFlight,
+                                started: tmnt.started,
+                                invited: tmnt.invited,
+                                singleRound: tmnt.singleRound,
+                                sponsorName: tmnt.sponsorName,
+                                sponsorLogo: tmnt.sponsorLogo,
+                                mobileLogoUrl: tmnt.mobileLogoUrl,
+                                webLogoUrl: tmnt.webLogoUrl,
+                                noOfMarshals: tmnt.noOfMarshals.toString(),
+                                marshalsStartWith: tmnt.marshalsStartWith,
+                                flightsCategory: tmnt.flightsCategory,
+                                subTournament: tmnt.subTournament,
+                                multiFormat: tmnt.multiFormat,
+                                createdAt: tmnt.createdAt,
+                                tourId: tmnt.tourId,
+                                tournament_round_courses: {
+                                    data: tmnt.tournament_round_courses ? tmnt.tournament_round_courses : [],
+                                },
+                            },
+                        ],
                         category: category,
                         marshals: marshals,
+                        tournamentId: tmnt.id,
                     },
                 })
                 .subscribe(

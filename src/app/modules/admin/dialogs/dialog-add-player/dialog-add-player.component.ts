@@ -40,6 +40,7 @@ export class DialogAddPlayerComponent implements OnInit {
     golfClubs: Club[] = [];
     listCountries: any[] = [];
     loggedInuser: Player;
+    showClub: boolean = true
 
     constructor(
         public dialogRef: MatDialogRef<DialogAddPlayerComponent>,
@@ -49,7 +50,7 @@ export class DialogAddPlayerComponent implements OnInit {
         private location: Location,
         public snackBar: MatSnackBar,
         public facadeService: FacadeService, public _localStorage: LocalStorageService
-    ) {}
+    ) { }
 
     async ngOnInit() {
         ////console.log(this.route.snapshot.paramMap.get("id"));
@@ -58,7 +59,7 @@ export class DialogAddPlayerComponent implements OnInit {
             this.playerID = params.get('id');
         });
 
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
         this.playerForm = new FormGroup({
             firstName: new FormControl('', [
@@ -71,16 +72,20 @@ export class DialogAddPlayerComponent implements OnInit {
             ]),
 
             email: new FormControl('', [Validators.email]),
-            phone: new FormControl('', [Validators.required]),
+            phone: new FormControl(''),
+            dob: new FormControl(''),
             playerCategory: new FormControl('', [Validators.required]),
             handicap: new FormControl('', [Validators.required]),
-
             playerClubMember: new FormControl(
-                this.loggedInuser ? this.loggedInuser.adminClubId : '',
-                [Validators.required]
+                this._localStorage.isClubAdmin() ? this.loggedInuser.adminClubId : '',
+                [this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin() ? Validators.required : Validators.nullValidator]
             ),
             membershipNumber: new FormControl(''),
         });
+
+        if (this._localStorage.isTournamentManager()) {
+            this.showClub = false;
+        }
 
         this.playerCategories = this.facadeService.getPlayerCategories();
 
@@ -219,7 +224,7 @@ export class DialogAddPlayerComponent implements OnInit {
         }
 
         let clubMember: ClubMembership[] = [];
-         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let UniqueId: string = '';
         let GEMId: string = '';
 
@@ -228,16 +233,16 @@ export class DialogAddPlayerComponent implements OnInit {
         };
 
         clubMember.push(member);
-        let players:any[] = await this.facadeService.getallPlayersforGGid();
-        var sortarray = players['player'];
-        sortarray.sort(this.Comparator);
+        // let players:any[] = await this.facadeService.getallPlayersforGGid();
+        // var sortarray = players['player'];
+        // sortarray.sort(this.Comparator);
         //console.log(sortarray);
         this.playerID
             ? (UniqueId = this.playerID)
             : (UniqueId = UniqueIdGenerator.generate());
-        this.currentPlayer.length > 0
-            ? (GEMId = this.currentPlayer.gemId)
-            : (GEMId = generateGemId.generate(sortarray[0].gemId));
+        // this.currentPlayer.length > 0
+        //     ? (GEMId = this.currentPlayer.gemId)
+        //     : (GEMId = generateGemId.generate(sortarray[0].gemId));
 
         ////console.log(playerFormValue.isClubAdmin);
         const player: Player = {
@@ -254,7 +259,7 @@ export class DialogAddPlayerComponent implements OnInit {
                 this.currentPlayer.length > 0
                     ? this.currentPlayer.fcmToken
                     : null,
-            gemId: GEMId,
+            gemId: null,
             firstName: playerFormValue.firstName,
             lastName: playerFormValue.lastName,
             gender: playerFormValue.gender,
@@ -267,24 +272,34 @@ export class DialogAddPlayerComponent implements OnInit {
             online: false,
             countryCode: playerFormValue.countryCode,
             extraData: playerFormValue.extraData,
-            userRole: playerFormValue.isClubAdmin == true ? 2 : 3,
-            membership: clubMember,
-            membershipNumber: playerFormValue.membershipNumber,
+            userRole: this._localStorage.isTournamentManager() ? 10 : 3,
+            membership: !this._localStorage.isTournamentManager() ? clubMember : null,
+            membershipNumber: playerFormValue?.membershipNumber ?? '',
         };
-
+        let password = Math.random().toString(36).slice(-8);
         if (newFlag && !this.playerID) {
-            ////console.log("Going to add new player");
-            const isSuccess = <boolean>(
-                await this.facadeService.AddPlayer(player)
-            );
-            ////console.log(isSuccess);
-            if (isSuccess) {
-                this.snackBar.open('Player has been created.', 'x', {
-                    duration: 5000,
-                });
-                this.reset();
-                //this.router.navigate(['/players']);
-            }
+
+            await this.facadeService.updateAccountInFirebase(player.email, password).subscribe(async (re) => {
+                if (re) {
+                    this.facadeService.sendTransactionalEmail(player.email, player.firstName, password).subscribe();
+                    ////console.log("Going to add new player");
+                    const isSuccess = <boolean>(
+                        await this.facadeService.AddPlayer(player)
+                    );
+                    ////console.log(isSuccess);
+                    if (isSuccess) {
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 5000,
+                        });
+                        this.reset();
+                        //this.router.navigate(['/players']);
+                    }
+
+                }
+
+
+            })
+
         }
 
         this.response = player;
@@ -293,8 +308,8 @@ export class DialogAddPlayerComponent implements OnInit {
     }
 
     public Comparator(a, b) {
-        let gemIDA=parseInt(a['gemId'].slice(2));
-        let gemIDB=parseInt(b['gemId'].slice(2));
+        let gemIDA = parseInt(a['gemId'].slice(2));
+        let gemIDB = parseInt(b['gemId'].slice(2));
         if (gemIDA < gemIDB) return 1;
         if (gemIDA > gemIDB) return -1;
 

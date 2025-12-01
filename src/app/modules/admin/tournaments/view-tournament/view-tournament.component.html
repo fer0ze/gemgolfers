@@ -32,7 +32,8 @@
                     <input type="text" id="first_name" [value]="joiningCode" readonly
                         class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <label for="first_name"
-                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining Code</label>
+                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
+                        Code</label>
 
                     <button (click)="copyLink()"
                         class="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
@@ -125,8 +126,8 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-gray-500 font-medium">Tournament Admin</p>
-                        <p class="font-semibold text-gray-800">{{ this.fullTournament.admin.fullName }}</p>
+                        <p class="text-gray-500 font-medium">Tournament Format</p>
+                        <p class="font-semibold text-gray-800">{{ this.fullTournament.matchFormat }}</p>
                     </div>
                 </div>
             </div>
@@ -160,11 +161,15 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Amateurs</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.AmateursCount }}</p>
-                    <!-- @if (date()) {
-                    <p class="text-xs text-gray-400 mt-1">
-                        Date: {{ date() }}
+
+                    <p class="text-sm font-medium mt-1">
+                        Date:
+                        <span class="text-xs" *ngFor="let s of AmateursPlayingDates; let last = last">
+                            {{ s.dates | date }}<span *ngIf="!last">, </span>
+                        </span>
+
                     </p>
-                    } -->
+
                 </div>
             </div>
             <div *ngIf="this.SeniorsCount>0"
@@ -177,11 +182,13 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Seniors</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.SeniorsCount }}</p>
-                    <!-- @if (date()) {
-                    <p class="text-xs text-gray-400 mt-1">
-                        Date: {{ date() }}
+                    <p class="text-sm font-medium mt-1">
+                        Date:
+                        <span class="text-xs" *ngFor="let s of SeniorsPlayingDates; let last = last">
+                            {{ s.dates | date }}<span *ngIf="!last">, </span>
+                        </span>
+
                     </p>
-                    } -->
                 </div>
             </div>
             <div *ngIf="this.LadiesCount>0"
@@ -194,11 +201,13 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Ladies</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.LadiesCount }}</p>
-                    <!-- @if (date()) {
-                    <p class="text-xs text-gray-400 mt-1">
-                        Date: {{ date() }}
+                    <p class="text-sm font-medium mt-1">
+                        Date:
+                        <span class="text-xs" *ngFor="let s of LadiesPlayingDates; let last = last">
+                            {{ s.dates | date }}<span *ngIf="!last">, </span>
+                        </span>
+
                     </p>
-                    } -->
                 </div>
             </div>
             <div *ngIf="this.JuniorsCount>0"
@@ -211,11 +220,13 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Juniors</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.JuniorsCount }}</p>
-                    <!-- @if (date()) {
-                    <p class="text-xs text-gray-400 mt-1">
-                        Date: {{ date() }}
+                    <p class="text-sm font-medium mt-1">
+                        Date:
+                        <span class="text-xs" *ngFor="let s of JuniorsPlayingDates; let last = last">
+                            {{ s.dates | date }}<span *ngIf="!last">, </span>
+                        </span>
+
                     </p>
-                    } -->
                 </div>
             </div>
             <div *ngIf="this.VeteransCount>0"
@@ -228,11 +239,13 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Professionals</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.VeteransCount }}</p>
-                    <!-- @if (date()) {
-                    <p class="text-xs text-gray-400 mt-1">
-                        Date: {{ date() }}
+                    <p class="text-sm font-medium mt-1">
+                        Date:
+                        <span class="text-xs" *ngFor="let s of VeteransPlayingDates; let last = last">
+                            {{ s.dates | date }}<span *ngIf="!last">, </span>
+                        </span>
+
                     </p>
-                    } -->
                 </div>
             </div>
 
@@ -442,7 +455,13 @@
         <div *ngIf="activePrimaryTab() === 'Participants'" class="animate-fade-in bg-white p-6 rounded-lg shadow-sm">
             <div class="flex flex-row justify-between items-center">
 
-                <h2 class="text-xl font-bold text-gray-900 mb-4">All Participants</h2>
+                <div class="flex justify-center gap-4 items-center">
+                    <h2 class="text-xl font-bold text-gray-900 ">All Participants</h2>
+                    <button (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                    font-semibold
+                                    shadow-sm hover:bg-emerald-700 transition-colors">
+                        Add New Member</button>
+                </div>
                 <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
 
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">

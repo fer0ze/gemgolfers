@@ -68,6 +68,13 @@ export class FacadeService {
     return this.clubService.updateClub(club);
   }
 
+  updateAccountInFirebase(email: string, password: string) {
+    return this.playerService.updateUserInFireBase(email, password);
+  }
+  sendTransactionalEmail(email: string, name: string, password: string) {
+    return this.playerService.sendTransactionalEmail(email, name, password);
+  }
+
   deleteClub(id: string) {
     return this.clubService.deleteClub(id);
   }
@@ -270,6 +277,9 @@ export class FacadeService {
   getPlayerByID(id: string) {
     return this.playerService.getPlayerByID(id);
   }
+  getPlayersByID(id: string) {
+    return this.playerService.getPlayersByID(id);
+  }
   getPlayerByIDDetailForm(id: string) {
     return this.playerService.getPlayerByIDDetailForm(id);
   }
@@ -346,7 +356,7 @@ export class FacadeService {
   freezePlayerHandicap(playerId: string, startDate: string, endDate: string) {
     return this.playerService.freezePlayerHandicap(playerId, startDate, endDate);
   }
-  unFreezePlayerHandicap(playerId: string, startDate: string, ) {
+  unFreezePlayerHandicap(playerId: string, startDate: string,) {
     return this.playerService.unFreezePlayerHandicap(playerId, startDate);
   }
   getTotalFlightPlayed(club: any, fromDate: string, toDate: string) {
@@ -1182,8 +1192,8 @@ export class FacadeService {
     );
   }
 
-  updateTournamentFlight(tournamentId:string,flag:boolean){
-    return this.flightsService.updateTournamentFlight(tournamentId,flag);
+  updateTournamentFlight(tournamentId: string, flag: boolean) {
+    return this.flightsService.updateTournamentFlight(tournamentId, flag);
   }
 
   updateDailyRoundCourseHoleset(

@@ -429,9 +429,10 @@ export class ContactsDetailsComponent implements OnInit {
                 firebaseUid: this.playerID
                     ? this.currentPlayer.player[0].firebaseUid
                     : null,
-                fcmToken: this.playerID
+                addedBy: this.loggedInuser.id,
+                fcmToken: this.playerID 
                     ? this.currentPlayer.player[0].fcmToken
-                    : null,
+                    : null, 
                 gemId: GEMId,
                 firstName: contact.firstName,
                 lastName: contact.lastName,

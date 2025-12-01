@@ -241,12 +241,17 @@ export class General {
             { id: '2', name: 'Junior Girl(16-21)', result: 'LADIES' },
             { id: '2', name: 'Junior Gril(12-16)', result: 'LADIES' },
             { id: '2', name: 'Junior', result: 'LADIES' },
+            { id: '2', name: 'Juniors', result: 'LADIES' },
             { id: '3', name: 'Senior Amateurs', result: 'SENIORS' },
             { id: '3', name: 'Senior Professionals', result: 'SENIORS' },
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
 
-        return ID;
+        if (ID) {
+            return ID;
+        } else {
+            return { id: '1', name: 'Amateurs', result: 'AMATEURS' };
+        }
     }
 
     public static getTeeYards(teeDistance, tee, courseId, holeId, latLong) {
@@ -367,13 +372,13 @@ export class General {
             { name: "Stroke Play", value: "STROKE_PLAY" },
             { name: "Stable Ford", value: "STABLE_FORD" },
             { name: "Modified Stableford", value: "MODIFIED_STABLEFORD" },
-            { name: "Split Sixes", value: "SPLIT_SIXES" },
+            // { name: "Split Sixes", value: "SPLIT_SIXES" },
         ];
     }
 
     public static teamFormats() {
         return [
-            { name: "Match Play", value: "MATCH_PLAY" },
+            { name: "Ryder Cup", value: "MATCH_PLAY" },
             { name: "Texas Scramble", value: "TEXAS_SCRAMBLE" },
             { name: "Two Ball Scramble", value: "TWO_BALL_SCRAMBLE" },
             { name: "Three Ball Scramble", value: "THREE_BALL_SCRAMBLE" },

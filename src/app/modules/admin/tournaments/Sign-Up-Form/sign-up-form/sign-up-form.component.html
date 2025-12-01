@@ -83,13 +83,13 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div class="relative">
+                <!-- <div class="relative">
                     <mat-form-field appearance="outline" floatLabel="always"
                         class="-mt-8 custom-mat-input w-full col-span-2">
                         <mat-label>Membership No </mat-label>
                         <input id="membership" matInput [formControlName]="'membership'" />
                     </mat-form-field>
-                </div>
+                </div> -->
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <mat-form-field appearance="outline" floatLabel="always" class="-mt-4 w-full custom-mat-input ">
@@ -115,8 +115,9 @@
                     </mat-form-field>
                 </div>
 
-                <div class="relative">
-                    <mat-form-field appearance="outline" floatLabel="always" class="-mt-8 w-full custom-mat-input" custom-mat-input>
+                <div class="relative" *ngIf="showClub">
+                    <mat-form-field appearance="outline" floatLabel="always" class="-mt-8 w-full custom-mat-input"
+                        custom-mat-input>
                         <mat-label>Club</mat-label>
                         <input matInput formControlName="club" [placeholder]="'Club'" [readonly]="false"
                             [matAutocomplete]="auto" />
@@ -131,7 +132,7 @@
                     </mat-form-field>
                 </div>
 
-                <div >
+                <div>
                     <button type="submit" (click)="$event.preventDefault(); signUp()"
                         class="w-full bg-emerald-600 text-white px-4 py-3 rounded-lg text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                         Submit Registration

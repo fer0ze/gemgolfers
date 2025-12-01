@@ -642,6 +642,77 @@ export class PlayersService {
                 });
         });
     }
+
+    updateUserInFireBase(email: string, password: string): Observable<boolean> {
+        return new Observable<boolean>((observer) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.CreateAccountQL,
+                    variables: {
+                        request: {
+                            userUids: email,
+                            UsersData: {
+                                email: email,
+                                firstName: "",
+                                lastName: "",
+                                password: password, // Corrected password assignment
+                                photoURL: "",
+                                newEmail: "", // Adjusted photoURL assignment
+                            },
+                            type: "create"
+                        },
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        observer.next(true); // Emit true on success
+                        observer.complete(); // Complete the observable
+                    },
+                    (error) => {
+                        observer.next(false);
+                        observer.error(error); // Emit error on failure
+                    }
+                );
+        });
+    }
+
+    sendTransactionalEmail(email: string, name: string, password: string): Observable<any> {
+        return this.apollo
+            .subscribe<boolean>({
+                query: Query.emailAction,
+                variables: {
+                    request: {
+                        email: email,
+                        name: name,
+                        password: password
+                    }
+                },
+            })
+            .pipe(map((item) => item.data));
+    }
+
+    getPlayersByID(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.getPlayersByID,
+                    variables: {
+                        where: {
+                            addedBy: {
+                                _eq: id,
+                            },
+                        },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
     getPlayerByIDDetailForm(id: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -925,6 +996,7 @@ export class PlayersService {
                                 firebaseUid: player.firebaseUid,
                                 fcmToken: player.fcmToken,
                                 gemId: player.gemId,
+                                addedBy: player?.addedBy ?? null,
                                 firstName: player.firstName,
                                 lastName: player.lastName,
                                 handicapWhsIndex: player.handicapWhsIndex,
@@ -942,8 +1014,11 @@ export class PlayersService {
                                 userRole: player.userRole,
                                 membershipNumber: player.membershipNumber,
                                 membership: {
-                                    data: player.membership,
+                                    data: player?.membership ?? [],
                                 },
+                                roles: {
+                                    data: [{ roleId: player.userRole }]
+                                }
                             },
                         ],
                     },

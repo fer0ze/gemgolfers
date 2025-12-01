@@ -117,7 +117,7 @@ export enum matchFormat {
 }
 
 export enum matchFormats {
-    MATCH_PLAY = "Match Play",
+    MATCH_PLAY = "Ryder Cup",
     STROKE_PLAY = "Stroke Play",
     STABLEFORD = "Stableford",
     MODIFIED_STABLEFORD = "Modified Stableford",

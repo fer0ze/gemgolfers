@@ -1105,12 +1105,18 @@ export const AddSubTournamentMutation = gql`
 
 export const UpdateMutation = gql`
     mutation updateMutation(
-        $tournament: [tournament_insert_input!]!
+        $objects: [tournament_insert_input!]!
         $category: [tournament_member_category_insert_input!]!
         $marshals: [marshal_insert_input!]!
+        $tournamentId: String!
     ) {
+        delete_tournament_member_category(
+            where: { tournamentId: { _eq: $tournamentId } }
+        ) {
+            affected_rows
+        }
         tournamentUpdateQli: insert_tournament(
-            objects: $tournament
+            objects: $objects
             on_conflict: {
                 constraint: tournament_pkey
                 update_columns: [

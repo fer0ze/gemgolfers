@@ -26,6 +26,7 @@ export class SignUpFormComponent implements OnInit {
         message: 'You are successfully added as a Tournament Member',
     };
     showAlert: boolean = false;
+    showClub: boolean = false;
     tournamentQL: any;
     private tournamentID: string;
     playerCategories: PlayerCategory[] = [];
@@ -47,11 +48,17 @@ export class SignUpFormComponent implements OnInit {
         let data = await this._facadeService.getTournamentByID(
             this.tournamentID
         );
-        //console.log(data);
+        console.log(data);
         this.tournamentQL = data.tournament[0];
         //this.playerCategories = this._facadeService.getPlayerCategories();
         let dataClubs = await this._facadeService.getClubList();
         this.golfClubs = dataClubs.club;
+        if (this.tournamentQL.clubId) {
+            this.showClub = true;
+        } else {
+            this.signUpForm.get('club').removeValidators([Validators.required]);
+            this.signUpForm.get('club').updateValueAndValidity();
+        }
 
         this.filteredClubOptions = this.signUpForm
             .get('club')!
@@ -78,8 +85,8 @@ export class SignUpFormComponent implements OnInit {
         this.signUpForm = new FormGroup({
             firstName: new FormControl('', [Validators.required]),
             lastName: new FormControl('', [Validators.required]),
-            email: new FormControl(''),
-            phone: new FormControl('', [Validators.required]),
+            email: new FormControl('', [Validators.required]),
+            phone: new FormControl(''),
             membership: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),
@@ -141,7 +148,7 @@ export class SignUpFormComponent implements OnInit {
                 return a.playerId == exist[0].id;
             });
             //console.log(find);
-            if (find == undefined || Object.keys(find).length === 0) {
+            if ((find == undefined || Object.keys(find).length === 0) && this.showClub) {
                 let member: any = {
                     tournamentId: this.tournamentID,
                     playerId: exist[0].id,
@@ -162,10 +169,10 @@ export class SignUpFormComponent implements OnInit {
             // var sortarray = players['player'];
             // sortarray.sort(this.Comparator);
             //console.log(sortarray);
-            let member: any = {
-                clubId: signUpPerson.club.id,
-                //clubId: "-KpFBx3dRDXWh7ZoK9vG",
-            };
+            // let member: any = {
+            //     clubId: signUpPerson.club.id,
+            //     //clubId: "-KpFBx3dRDXWh7ZoK9vG",
+            // };
             // clubMember.push(member);
             let player: any = {
                 id: UniqueId,
@@ -173,6 +180,7 @@ export class SignUpFormComponent implements OnInit {
                 firebaseUid: null,
                 fcmToken: null,
                 gemId: null,
+                addedBy: this.tournamentQL.adminId,
                 firstName: signUpPerson.firstName,
                 lastName: signUpPerson.lastName,
                 gender: signUpPerson.gender ? signUpPerson.gender : null,
@@ -189,26 +197,40 @@ export class SignUpFormComponent implements OnInit {
                 online: false,
                 countryCode: signUpPerson.code ? signUpPerson.code : null,
                 extraData: signUpPerson.extra ? signUpPerson.extra : null,
-                membershipNumber: signUpPerson.membershipNumber
-                    ? signUpPerson.membershipNumber.toString()
+                membershipNumber: signUpPerson?.membershipNumber
+                    ? signUpPerson?.membershipNumber.toString()
                     : null,
-                userRole: 3,
-                membership: member,
+                userRole: 10,
+                // membership: member,
             };
 
-            let status = await this._facadeService.AddPlayer(player);
-            if (status) {
-                let member: any = {
-                    tournamentId: this.tournamentID,
-                    playerId: UniqueId,
-                    status: true,
-                };
-                this.saveMembers(member);
-            } else {
-                this.snackBar.open('Something went wrong!', 'x', {
-                    duration: 5000,
-                });
-            }
+            let password = Math.random().toString(36).slice(-8);
+            await this._facadeService.updateAccountInFirebase(player.email, password).subscribe(async (re) => {
+
+                if (re) {
+                    this._facadeService.sendTransactionalEmail(player.email, player.firstName, password).subscribe();
+                    let status = await this._facadeService.AddPlayer(player);
+                    if (status) {
+                        // let member: any = {
+                        //     tournamentId: this.tournamentID,
+                        //     playerId: UniqueId,
+                        //     status: true,
+                        // };
+                        // this.saveMembers(member);
+                        this.alert = {
+                            type: 'success',
+                            message:
+                                'You are successfully added as a Member.',
+                        };
+                        this.showAlert = true;
+                    } else {
+                        this.snackBar.open('Something went wrong!', 'x', {
+                            duration: 5000,
+                        });
+                    }
+
+                }
+            });
         }
     }
     public Comparator(a, b) {

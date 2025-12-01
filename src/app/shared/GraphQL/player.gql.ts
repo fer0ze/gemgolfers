@@ -782,6 +782,36 @@ export const GetPlayerByID = gql`
     }
     ${PlayerQL}
 `;
+
+export const CreateAccountQL = gql`
+    mutation CreateAccountQL($request: fbadminInput!) {
+        CreateFirebaseUsers: firebaseAdminSDK(request: $request) {
+            data
+            status
+        }
+    }
+`;
+
+export const emailAction = gql`
+    query mailChimpIntegrationAction($request: mailChimpInput!) {
+        mailChimpIntegration(request: $request) {
+        data
+    }
+}`;
+
+
+export const getPlayersByID = gql`
+    query getPlayersByID($where: player_bool_exp!) {
+        player(where: $where) {
+            ...PlayerQL
+            subscriptionQL: subscription {
+                playerId
+                subscription
+            }
+        }
+    }
+    ${PlayerQL}
+`;
 export const getPlayerByIDDetailForm = gql`
     query PostsGetQuery($where: player_bool_exp!) {
         player(where: $where) {

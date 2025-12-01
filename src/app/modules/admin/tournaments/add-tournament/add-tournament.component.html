@@ -1,7 +1,7 @@
 <div class="flex-1 flex flex-col h-screen overflow-y-auto p-6 md:p-8">
     <div class="bg-white rounded-xl w-full shadow-lg h-full flex flex-col animate-fade-in overflow-hidden">
         <!-- Header -->
-        <div class="p-6 md:p-8 border-b border-gray-200">
+        <div class="p-6 md:p-8  border-b border-gray-200">
             <a href="#" class="flex items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -9,7 +9,36 @@
                 </svg>
                 Back to Tournaments
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Add Tournament Form</h1>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Add Tournament Form {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || '' }}
+            </h1>
+            <div *ngIf="currentTournament" class="w-120">
+
+                <div class="relative flex items-center">
+                    <label for="first_name"
+                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
+                        Code</label>
+
+                    <input type="text" id="first_name" [value]="registrationLink" readonly
+                        class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <button (click)="copyLink()"
+                        class="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
+
+                        <svg *ngIf="!copied" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <svg *ngIf="copied" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
@@ -110,20 +139,55 @@
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2></mat-datepicker>
                                     </mat-form-field>
+                                    <div>
+                                        <mat-form-field appearance="outline" class="w-full custom-mat-input"
+                                            [floatLabel]="'always'">
+                                            <mat-label>No. of Rounds </mat-label>
+                                            <mat-select formControlName="numOfRounds" class="w-full  text-gray-700"
+                                                (selectionChange)="roundChange($event)">
+                                                <mat-option *ngFor="let round of [1,2,3,4]"
+                                                    [value]="round">{{round}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-checkbox *ngIf="this.multiCourse"
+                                            (change)="multiCourseChange($event.checked)">Multi
+                                            Course</mat-checkbox>
 
-                                    <mat-form-field appearance="outline" class="w-full custom-mat-input"
-                                        [floatLabel]="'always'">
-                                        <mat-label>No. of Rounds </mat-label>
-                                        <mat-select formControlName="numOfRounds" class="w-full  text-gray-700"
-                                            (selectionChange)="roundChange($event)">
-                                            <mat-option *ngFor="let round of [1,2,3,4]"
-                                                [value]="round">{{round}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    </div>
                                 </div>
                             </section>
 
                             <!-- Format & Venue -->
+                            <section class="mb-6" *ngIf="showMultipleCourses">
+                                <h3 class="text-lg font-bold text-gray-800 mb-1">Multi Course Selection</h3>
+                                <p class="text-sm text-gray-500 mb-6">Set up the coursesfor each round.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+                                    <div formArrayName="courses"
+                                        *ngFor="let url of courseFormGroup.controls; let i = index">
+                                        <div [formGroupName]="i">
+                                            <mat-form-field appearance="outline" class="w-full custom-mat-input"
+                                                [floatLabel]="'always'">
+                                                <mat-label>Round {{ i + 1 }} Course</mat-label>
+                                                <input type="text" matInput formControlName="courseName"
+                                                    (keyup)="courseChnage($event.target.value,i)"
+                                                    [matAutocomplete]="auto" placeholder="Course Name" />
+                                                <mat-autocomplete autoActiveFirstOption [displayWith]="displayCourseFn"
+                                                    #auto="matAutocomplete"
+                                                    (optionSelected)="getSelectedCoursesMulti($event.option.value,i)">
+                                                    <mat-option *ngFor="let option of filteredCourseOptions | async"
+                                                        [value]="option">
+                                                        {{ option.name }}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <mat-error>Please select a course from the list.</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </section>
+
+
                             <section class="mb-6">
                                 <h3 class="text-lg font-bold text-gray-800 mb-1">Format & Venue</h3>
                                 <p class="text-sm text-gray-500 mb-6">Set up the game rules and location.</p>
@@ -134,8 +198,8 @@
                                         <mat-label>Match Type</mat-label>
                                         <mat-select formControlName="teamMatch" class="w-full  text-gray-700"
                                             (selectionChange)="teamMatchChange($event)">
-                                            <mat-option value="1">Singles</mat-option>
-                                            <mat-option value="2">Doubles</mat-option>
+                                            <mat-option value="1">Individuals</mat-option>
+                                            <mat-option value="2">Teams</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                     <ng-container formArrayName="courseInfo">
@@ -161,12 +225,12 @@
                                             " [formGroupName]="i" class="flex flex-auto">
                                             <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                                 [floatLabel]="'always'">
-                                                <mat-label>Leaderboard Format</mat-label>
+                                                <mat-label>Second LeaderBoard</mat-label>
                                                 <mat-select class="w-full  text-gray-700"
                                                     placeholder="LeaderBoard Format" formControlName="multiFormat"
                                                     (selectionChange)="typeChange($event)">
-                                                    <mat-option value="SINGLE">Single Format</mat-option>
-                                                    <mat-option value="MULTI">Multi Format</mat-option>
+                                                    <mat-option value="SINGLE">Single LeaderBoard</mat-option>
+                                                    <mat-option value="MULTI">Multi LeaderBoard</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
@@ -184,19 +248,7 @@
                                         </mat-select>
                                     </mat-form-field>
 
-                                    <div *ngIf="this.showMatchPlay">
-                                        <mat-form-field appearance="outline" class="w-full custom-mat-input"
-                                            [floatLabel]="'always'">
-                                            <mat-label>Points Format </mat-label>
-                                            <mat-select class="w-full text-gray-700" placeholder="Handicap...?"
-                                                formControlName="pointsFormats">
-                                                <mat-option value="BOTH">BOTH</mat-option>
-                                                <mat-option value="SINGLES">SINGLES</mat-option>
-                                                <mat-option value="FOURSOME">FOURSOME</mat-option>
-                                                <mat-option value="GREENSOME">GREENSOME</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
+
                                     <div *ngIf="this.showMatchPlay">
                                         <mat-form-field class="w-full custom-mat-input" appearance="outline"
                                             [floatLabel]="'always'">
@@ -273,6 +325,28 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div> -->
+                                </div>
+                            </section>
+                            <!-- Round Wise Point Formats -->
+                            <section class="mb-6" *ngIf="this.showMatchPlay">
+                                <h3 class="text-lg font-bold text-gray-800 mb-1">Round Wise Point Formats</h3>
+                                <p class="text-sm text-gray-500 mb-6">Select a point format for each round.</p>
+                                <div formArrayName="pointsFormats"
+                                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+                                    <ng-container *ngFor="let round of noOfRounds; let i = index">
+                                        <div [formGroupName]="i">
+                                            <mat-form-field appearance="outline" class="w-full custom-mat-input"
+                                                floatLabel="always">
+                                                <mat-label>Round {{ round }} Points Format</mat-label>
+                                                <mat-select formControlName="format" class="w-full  text-gray-700">
+                                                    <mat-option value="BOTH">BOTH</mat-option>
+                                                    <mat-option value="SINGLES">SINGLES</mat-option>
+                                                    <mat-option value="FOURSOME">FOURSOME</mat-option>
+                                                    <mat-option value="GREENSOME">GREENSOME</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-container>
                                 </div>
                             </section>
 
@@ -358,10 +432,10 @@
                                         <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                             [floatLabel]="'always'">
                                             <mat-label>Marshals Start With</mat-label>
-                                            <input matInput formControlName="marshalStart" maxlength="4"
+                                            <input matInput formControlName="marshalStart" maxlength="3"
                                                 class=" text-gray-700" />
 
-                                            <mat-hint align="start">Marshals username prefix(Only 4
+                                            <mat-hint align="start">Marshals username prefix(Only 3
                                                 Char)</mat-hint>
                                         </mat-form-field>
                                     </div>
@@ -380,21 +454,62 @@
                             <!-- Player Categories -->
                             <section class="mb-6" *ngIf="this.showCat">
                                 <h3 class="text-lg font-bold text-gray-800 mb-1">Player Categories</h3>
-                                <p class="text-sm text-gray-500 mb-6">Select all applicable categories for this
-                                    tournament.
+                                <p class="text-sm text-gray-500 mb-6">
+                                    Select all applicable categories for this tournament.
                                 </p>
 
-                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                    <div *ngFor="let cat of Categories;let i = index">
-                                        <mat-checkbox formArrayName="clubctgies" class=" text-gray-700" (change)="
-                                                    updateChkbxArray(
-                                                        cat,
-                                                        i,
-                                                        $event.checked,
-                                                        'clubctgies'
-                                                    )
-                                                " value="cat.id" [checked]="cat['checked']">{{ cat.name
-                                            }}</mat-checkbox>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-4">
+                                    <div *ngFor="let cat of Categories; let i = index" class="p-2">
+                                        <mat-checkbox formArrayName="clubctgies" class="text-gray-700"
+                                            (change)="updateChkbxArray(cat, i, $event.checked, 'clubctgies')"
+                                            [checked]="cat.checked">
+                                            {{ cat.name }}
+                                        </mat-checkbox>
+
+                                        <!-- Show date fields only if selected -->
+                                        <div *ngIf="cat.checked" class="mt-3 flex max-w-36 gap-2"
+                                            [formGroup]="clubctgies.at(i)">
+                                            <!-- <mat-form-field appearance="outline" class="w-full h-10 custom-mat-input">
+                                                <mat-label>Start Date</mat-label>
+                                                <input matInput [matDatepicker]="picker1" placeholder="Start date"
+                                                    required (focus)="picker1.open()" class=" text-gray-700"
+                                                    formControlName="startDate" (change)="updateCategoryDates(cat)">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="picker1"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker1></mat-datepicker>
+
+                                            </mat-form-field>
+                                            <mat-form-field appearance="outline" class="w-full h-10 custom-mat-input">
+                                                <mat-label>End Date</mat-label>
+                                                <input matInput [matDatepicker]="picker3" placeholder="End date"
+                                                    required (focus)="picker3.open()" class=" text-gray-700"
+                                                    formControlName="endDate" (change)="updateCategoryDates(cat)">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="picker3"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker3></mat-datepicker>
+
+                                            </mat-form-field> -->
+
+                                            <mat-form-field appearance="outline" class="w-full h-10 custom-mat-input">
+                                                <mat-label>Start Date</mat-label>
+                                                <input matInput [matDatepicker]="startPicker"
+                                                    formControlName="startDate" (change)="updateCategoryDates(cat)"
+                                                    (focus)="startPicker.open()">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="startPicker"></mat-datepicker-toggle>
+                                                <mat-datepicker #startPicker></mat-datepicker>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline" class="w-full h-10 custom-mat-input">
+                                                <mat-label>End Date</mat-label>
+                                                <input matInput [matDatepicker]="endPicker"
+                                                    (change)="updateCategoryDates(cat)" formControlName="endDate"
+                                                    (focus)="endPicker.open()">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="endPicker"></mat-datepicker-toggle>
+                                                <mat-datepicker #endPicker></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
                                     </div>
                                 </div>
                             </section>
@@ -408,7 +523,7 @@
                         class="mt-8 pt-6 border-t border-gray-200 flex justify-end items-center flex-shrink-0">
 
                         <div>
-                            <button (click)="createTournament()" [disabled]="formArray.get([0]).invalid" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="createTournament()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                 font-semibold disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -417,7 +532,7 @@
                     <div *ngIf="editTournament"
                         class="mt-8 pt-6 border-t border-gray-200 flex justify-center items-center flex-shrink-0">
                         <div>
-                            <button (click)="editTournaments()" [disabled]="formArray.get([0]).invalid" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="editTournaments()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                 font-semibold disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Save Changes</button>
@@ -430,8 +545,24 @@
                         <div class=" grid grid-cols-[1fr_auto_1fr] gap-4 flex-1 h-0">
                             <!-- Club Members -->
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
-                                <h3 class="font-bold text-lg text-gray-800 mb-4">Club Members
-                                </h3>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-bold text-lg text-gray-800">Members
+                                    </h3>
+                                    <div class="flex gap-2">
+                                        <button (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                    font-semibold
+                                    shadow-sm hover:bg-emerald-700 transition-colors">
+                                            Add New Member</button>
+                                        <button mat-icon-button (click)="refreshPlayerList()"
+                                            matTooltip="Refresh Player List"
+                                            class="text-gray-600 hover:text-emerald-600 transition-colors">
+                                            <mat-icon>refresh</mat-icon>
+
+                                        </button>
+
+                                    </div>
+                                </div>
+
                                 <div class="relative mb-4">
                                     <mat-form-field appearance="outline" [floatLabel]="'always'"
                                         class="w-full custom-mat-input">
@@ -450,7 +581,7 @@
                                         <table mat-table #dsort="matSort" [dataSource]="dataSource" matSort>
                                             <ng-container matColumnDef="select">
                                                 <th class="bg-gray-100" mat-header-cell *matHeaderCellDef>
-                                                    
+
                                                 </th>
                                                 <td mat-cell *matCellDef="let row">
                                                     <mat-checkbox (click)="
@@ -557,7 +688,7 @@
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
                                 <h3 class="font-bold text-lg text-gray-800 mb-4">Tournament Members</h3>
                                 <div class="flex">
-                                    <div class="flex flex-wrap justify-start" style="width: 50%">
+                                    <div class="flex flex-wrap justify-start">
                                         <span *ngFor="let catCount of categoryCounts">
                                             <span class="catCount" *ngIf="catCount.value > 0">
                                                 <mat-icon>emoji_people</mat-icon>
@@ -574,7 +705,7 @@
                                     catCount.name }} :
                                     {{ catCount.value }}</span></span>
                         </div> -->
-                                    <div class="flex flex-wrap justify-start" style="width: 50%">
+                                    <div class="flex flex-wrap justify-start">
                                         <span *ngFor="let catCount of TMcategoryCounts">
                                             <span class="catCount" *ngIf="catCount.value > 0">
                                                 <mat-icon>emoji_people</mat-icon>
@@ -703,6 +834,11 @@
                     class="absolute inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 animate-fade-in">
                     <div
                         class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center transform transition-all scale-95 motion-safe:scale-100">
+                        <div class="flex w-full justify-end cursor-pointer" (click)="closePopupAndProceed()">
+                            <button mat-icon-button aria-label="Close">
+                                <mat-icon [svgIcon]="'heroicons_solid:x'"></mat-icon>
+                            </button>
+                        </div>
                         <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
                             <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
