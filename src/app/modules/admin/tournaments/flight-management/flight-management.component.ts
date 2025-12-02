@@ -341,7 +341,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                     newObj['allowCat'] = false;
                 }
             } else {
-                  newObj['allowCat'] = true;
+                newObj['allowCat'] = true;
             }
         }
         const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
@@ -1265,7 +1265,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         // this.teamName = (<HTMLInputElement>(
                         //     document.getElementById('flight_' + index + '_name')
                         // )).value;
-                        this.teamName= this.selectedMembers[index]['firstName'];
+                        this.teamName = this.selectedMembers[index]['firstName'];
                     }
                     //console.log(this.teamName);
 
@@ -2233,21 +2233,19 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         }
     }
 
-    addPlayer() {
+    addPlayer(id, index) {
         const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
-            data: { flights: this.selectedMembers.length },
+            data: {
+                flights: this.selectedMembers.length,
+                tournamentID: this.tournamentID
+            },
         });
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 ////console.log("record deleted.");
-                //console.log(result);
-                this.selectedMembers[this.selectedMembers.length - 1].splice(
-                    this.selectedMembers[this.selectedMembers.length - 1]
-                        .length - 3,
-                    0,
-                    result
-                );
+                console.log(result);
+                this.selectedMembers[index].push(result);
             } else {
                 ////console.log("cancel delete action");
             }

@@ -61,6 +61,7 @@ import { SignUpFormComponent } from './Sign-Up-Form/sign-up-form/sign-up-form.co
 import { TeamManagementComponent } from './team-management/team-management.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PairManagementComponent } from './pair-management/pair-management.component';
+import { InvalidCategoryPlayersComponent } from '../dialogs/dialog-invalid-category-players/invalid-category-players.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -72,6 +73,7 @@ import { PairManagementComponent } from './pair-management/pair-management.compo
         DialogAddPlayerComponent,
         DialogOverviewComponent,
         DialogPlayerComponent,
+        InvalidCategoryPlayersComponent,
         DialogPlayerScoreComponent,
         DialogPlayerListComponent,
         MatchplayComponent,

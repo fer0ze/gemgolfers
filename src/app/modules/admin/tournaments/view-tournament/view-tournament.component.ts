@@ -459,7 +459,7 @@ export class ViewTournamentComponent implements OnInit {
                 this.dataFullTournament['TournamentQL'][0]['members'];
             // console.log(totalPlayers);
             for (const c of this.fullTournament.CategoriesQL) {
-                
+
 
                 // const distinctThings = m.filter((thing, i, arr) => {
                 //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
@@ -2983,7 +2983,7 @@ export class ViewTournamentComponent implements OnInit {
 
     addPlayer() {
         const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
-            data: { flights: this.selectedMembers.length },
+            data: { flights: this.selectedMembers.length, tournamentID: this.tournamentID },
         });
 
         dialogRef.afterClosed().subscribe((result) => {

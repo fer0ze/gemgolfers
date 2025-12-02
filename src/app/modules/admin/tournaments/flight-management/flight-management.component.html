@@ -44,11 +44,22 @@
                 <div class="flex justify-between items-center mb-3">
                     <p class="font-bold text-lg text-gray-800">Group
                         No:{{ items.flightNo }}</p>
+
                     <!-- <span class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
                         items.flightNo
                         }}</span> -->
-                    <span id="flight_{{ j }}_time" class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
-                        convertToAMPMFormat(items.time) }}</span>
+                    <span class="flex items-center gap-x-2">
+                        <span id="flight_{{ j }}_time"
+                            class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
+                            convertToAMPMFormat(items.time) }}</span>
+                        <mat-icon *ngIf="items.length == 0" aria-hidden="false" class=" cursor-pointer"
+                            aria-label="Dragable" color="warn" (click)="
+                                                        deleteEmptyFlight(
+                                                            items.id,
+                                                            i
+                                                        )
+                                                    ">delete_forever</mat-icon>
+                    </span>
                 </div>
                 <div class="space-y-2">
                     <div *ngFor="
@@ -66,11 +77,15 @@
                         </span>
                     </div>
 
-                    <div class="flex justify-end">
+                    <div class="flex justify-end gap-2">
+                        <button (click)="addPlayer(items.id, i)" class="bg-emerald-600 text-white px-2 py-1 rounded-lg flex items-center text-sm
+                                font-semibold
+                                shadow-sm hover:bg-emerald-700 transition-colors">
+                            Add New Golfer</button>
                         <button (click)="editFlight(items.id, i)" class="bg-emerald-600 text-white px-2 py-1 rounded-lg flex items-center text-sm
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
-                            Add Member</button>
+                            Add Registred Golfer</button>
                     </div>
 
                 </div>

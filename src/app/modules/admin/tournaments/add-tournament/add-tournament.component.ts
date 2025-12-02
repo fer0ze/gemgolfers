@@ -8,6 +8,8 @@ import {
     FormArray,
     Validators,
 } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import { read, utils } from 'xlsx';
 import { filter } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FacadeService } from '../../../../shared/services/facade.service';
@@ -30,6 +32,7 @@ import {
     PlayerCategory,
     Marshal,
     UserSessionModel,
+    ClubMembership,
 } from '../../../../shared/models/player.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import {
@@ -66,6 +69,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog-add-member.component';
 import { LogsService } from 'app/shared/services/logs.service';
 import { Team, TeamMembers } from 'app/shared/models/team.model';
+import { InvalidCategoryPlayersComponent } from '../../dialogs/dialog-invalid-category-players/invalid-category-players.component';
 //import { DialogPlayingDatesComponent } from "../../material-components/dialog-playing-dates/dialog-playing-dates.component";
 
 @Component({
@@ -91,12 +95,14 @@ export class AddTournamentComponent implements OnInit {
         'firstName',
         'handicap',
     ];
-
+    file: File;
+    arrayBuffer: any;
     matchFormats: { name: string; value: string }[] = General.singleFormats();
     dataSource: MatTableDataSource<Player | any>;
     selection = new SelectionModel<Player>(true, []);
     memberSelection = new SelectionModel<Player>(true, []);
     isLoading = true;
+    duplicatePlayers = [];
     intervalPerFlight = 0;
     stepTitle: string = 'Tournament Setup Form';
     PLcats: Player[] = [];
@@ -521,6 +527,10 @@ export class AddTournamentComponent implements OnInit {
 
             if (this.currentTournament) {
 
+                this.noOfRounds = Array.from({ length: this.currentTournament.noOfRounds }, (_, i) => i + 1);
+                
+                this.maxDate = new Date(this.currentTournament.endDate);
+                this.minDate = new Date(this.currentTournament.startDate);
                 this.formArray.get([0]).patchValue({
                     titleFormCtrl: this.currentTournament.title,
                     prefixFormCtrl: this.currentTournament.prefix,
@@ -537,6 +547,24 @@ export class AddTournamentComponent implements OnInit {
                     marshalStart: this.currentTournament.marshalsStartWith,
                     noofMarshals: this.currentTournament.noOfMarshals,
                 });
+                if (this.currentTournament.teamMatch && this.currentTournament.pointsFormats) {
+
+                    const formatsArray = this.formArray.get([0]).get('pointsFormats') as FormArray;
+                    formatsArray.clear();
+
+                    const formatsList = Object.values(this.currentTournament.pointsFormats);
+
+                    formatsList.forEach(item => {
+                        formatsArray.push(
+                            this._formBuilder.group({
+                                format: [item, Validators.required]
+                            })
+                        );
+                    });
+
+                    console.log('Points Formats Assigned:', formatsArray.value);
+                }
+
                 if (this.currentTournament.scoreManagement != Constants.SM_ONLY_PLAYERS) {
                     this.isMarshals = true;
                 }
@@ -639,11 +667,12 @@ export class AddTournamentComponent implements OnInit {
                     // this.multiCourse = true;
                     for (let course of this.tournamentCourses) {
                         const chkArray = this.formArray.get([0]).get('courses') as FormArray;
+                        let holeSet = course.courseHoleSets + '_' + course.inverted;
                         chkArray.push(
                             this._formBuilder.group({
                                 courseName: [course.course, Validators.required],
                                 round: [course.round, Validators.required],
-                                courseHolSet: [course.courseHoleSets, Validators.required]
+                                courseHolSet: [holeSet, Validators.required]
                             })
                         );
                     }
@@ -878,13 +907,17 @@ export class AddTournamentComponent implements OnInit {
 
         // 3️⃣ Moving forward only if current form is valid
         if (currentGroup?.valid) {
-            this.currentStep = stepNumber;
-            this.currentTitle = stepTitle;
             if (stepNumber == 3) {
                 this.flightsSetup();
             }
             if (stepTitle == 'Review & Confirm') {
                 this.getSelectedPlayers();
+            }
+            if (stepTitle == 'Groups Setup') {
+                this.saveTournamentMember();
+            } else {
+                this.currentStep = stepNumber;
+                this.currentTitle = stepTitle;
             }
         } else {
             const invalidFields = this.getInvalidControls(currentGroup);
@@ -1366,9 +1399,14 @@ export class AddTournamentComponent implements OnInit {
         return founded;
     }
 
-    public datechange(event) {
-        this.getplayingDates();
-        //console.log(event);
+    public datechangeS(event) {
+        this.minDate = event.value;
+        console.log(event);
+    }
+
+    public datechangeE(event) {
+        this.maxDate = event.value;
+        console.log(event);
     }
 
     getSelectedCourse(course) {
@@ -2916,7 +2954,7 @@ export class AddTournamentComponent implements OnInit {
                 duration: 5000,
             });
             // stepper.next();
-            this.router.navigate(['/tournaments/view/' + this.tournamentID]);
+            // this.router.navigate(['/tournaments/view/' + this.tournamentID]);
         } else {
             this.snackBar.open('Error! Try Again later.', 'x', {
                 duration: 5000,
@@ -2946,15 +2984,289 @@ export class AddTournamentComponent implements OnInit {
             );
     }
 
+    downloadSample() {
+        // Create sample data
+        // this.logger.info("User click on bulk import sample");
+        const data = [
+            { FirstName: 'John', LastName: 'David', Email: 'jhon@gmail.com', Category: 'Amateurs', Handicap: '12' },
+            { FirstName: 'Ana', LastName: 'Fed', Email: 'ana@gmail.com', Category: 'Ladies', Handicap: '11' }, // Add more rows as needed
+        ];
+
+        // Create worksheet
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+        // Create workbook
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        // Save file
+        XLSX.writeFile(wb, 'sample_file.xlsx');
+        // this.logger.info("Bulk import sample downloaded successfully");
+    }
+
+    parseFlightsData(event) {
+        try {
+            this.logger.log("User click on bulk import", 'info', event);
+
+            if (event.target.files.length > 0) {
+                this.file = event.target.files[0];
+                // this.logger.log(this.file);
+            }
+            let fileReader = new FileReader();
+            // this.accounts = [];
+
+            fileReader.onload = (e) => {
+                this.arrayBuffer = fileReader.result;
+                var data = new Uint8Array(this.arrayBuffer);
+                var arr = new Array();
+                for (var i = 0; i != data.length; ++i)
+                    arr[i] = String.fromCharCode(data[i]);
+                var bstr = arr.join('');
+                var workbook = read(bstr, { type: 'binary' });
+                var first_sheet_name = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[first_sheet_name];
+                this.arrayBuffer = utils.sheet_to_json(worksheet, {
+                    raw: true,
+                    defval: '',
+                });
+
+                // this.logger.log(this.playersData);
+                console.log(this.arrayBuffer);
+
+                // this.importExcelData();
+                //this.providerservice.importexcel(this.exceljsondata).subscribe(data=>{
+                //})
+            };
+            fileReader.readAsArrayBuffer(this.file);
+        } catch (error) {
+            this.logger.log("Error in bulk import", 'error', error);
+        }
+    }
+
+    // async importExcelData() {
+    //     try {
+    //         this.importingList = true;
+
+    //         this.savePlayers = [];
+    //         this.duplicatePlayers = [];
+    //         let clubMember: ClubMembership[] = [];
+
+    //         // for (let p of this.playersData) {
+    //         //   // this.logger.logObject(p);
+    //         //   console.log(p);
+
+    //         //   let exist: any = [];
+
+    //         //   if (p.membershipNumber) {
+    //         //     // this.logger.log(p.membershipNumber);
+    //         //     console.log(p.membershipNumber);
+
+    //         //     exist = await this.facadeService.getPlayerByMembershipNumber(
+    //         //       p.membershipNumber.toString()
+    //         //     );
+
+    //         //     if (exist.length > 0) {
+    //         //       if (exist[0].handicapQL.length > 0) {
+    //         //         let handicapHistory = exist[0].handicapQL;
+    //         //         let lastTournamentID =
+    //         //           handicapHistory[handicapHistory.length - 1].tournamentId;
+    //         //         console.log(lastTournamentID);
+
+    //         //         const handicapChangeLog =
+    //         //           await this.facadeService.updateLastHandicap(
+    //         //             exist[0].id,
+    //         //             lastTournamentID,
+    //         //             p.handicap
+    //         //           );
+    //         //         console.log(handicapChangeLog);
+    //         //       }
+
+    //         //       let succes = await this.facadeService.updatePlayerHandicap(
+    //         //         exist[0].id,
+    //         //         p.handicap
+    //         //       );
+
+    //         //       this.duplicatePlayers.push(exist);
+    //         //       //continue;
+    //         //     }
+    //         //   }
+    //         // }
+    //         // console.log(this.duplicatePlayers);
+
+    //         for (let p of this.arrayBuffer) {
+    //             // this.logger.logObject(p);
+    //             console.log(p);
+
+    //             let exist: any = [];
+
+    //             // if (p.membershipNumber) {
+    //             //     // this.logger.log(p.membershipNumber);
+    //             //     console.log(p.membershipNumber);
+
+    //             //     exist = await this.facadeService.getPlayerByMembershipNumber(
+    //             //         p.membershipNumber.toString()
+    //             //     );
+
+    //             //     if (exist.length > 0) {
+    //             //         this.duplicatePlayers.push(p);
+    //             //         //continue;
+    //             //     }
+    //             // }
+
+    //             // if (p.phone && exist.length == 0) {
+    //             //     // this.logger.log(p.phone);
+    //             //     console.log(p.phone);
+    //             //     let phone;
+    //             //     if (p.phone.toString().indexOf("+92") === 0) {
+    //             //         phone = p.phone.toString();
+    //             //     } else if (p.phone.toString().indexOf("0") === 0) {
+    //             //         phone = p.phone.toString().replace(0, "+92");
+    //             //     } else if (p.phone.toString().indexOf("3") === 0) {
+    //             //         phone = "+92" + p.phone.toString();
+    //             //     }
+    //             //     console.log(phone);
+
+    //             //     exist = await this.facadeService.getPlayerByPhone(phone);
+    //             //     // p.phone.toString().indexOf("+") !== -1
+    //             //     // ? p.phone.toString()
+    //             //     // : "+" + p.phone.toString()
+    //             //     if (exist.length > 0) {
+    //             //         this.duplicatePlayers.push(p);
+    //             //         //continue;
+    //             //     }
+    //             // }
+
+    //             if (p.email && exist.length == 0) {
+    //                 exist = await this.facadeService.getPlayerByEmail(p.email.toString());
+
+    //                 if (exist.length > 0) {
+    //                     // this.logger.log("email yes");
+    //                     console.log("email Yes");
+
+    //                     this.duplicatePlayers.push(p);
+    //                     //continue;
+    //                 }
+    //             }
+
+    //             // this.logger.log(exist);
+    //             console.log(exist);
+
+    //             let UniqueId: string =
+    //                 exist && exist.length > 0
+    //                     ? exist[0].id
+    //                     : UniqueIdGenerator.generate();
+
+    //             //if(p.club) {
+    //             if (this._localStorage.isClubAdmin()) {
+    //                 let member: any = {
+    //                     clubId: this.loggedInuser.clubId,
+    //                     playerId: UniqueId,
+    //                 };
+    //                 clubMember.push(member);
+    //             }
+
+    //             if (this._localStorage.isSuperAdmin()) {
+    //                 let member: any = {
+    //                     clubId: this.formArray.get([0]).value.clubsFormCtrl.id;
+    //                     playerId: UniqueId,
+    //                 };
+    //                 clubMember.push(member);
+    //             }
+    //             //}
+
+    //             let player: any = {
+    //                 id: UniqueId,
+    //                 adminClubId: null,
+    //                 firebaseUid: null,
+    //                 fcmToken: null,
+    //                 gemId: null,
+    //                 firstName: p.firstName,
+    //                 lastName: p.lastName,
+    //                 gender: p.gender ? p.gender : null,
+    //                 dob: p.dob ? p.dob : null,
+    //                 picture: p.picture ? p.picture : null,
+    //                 email: p.email ? p.email : null,
+    //                 phone: p.phone ? p.phone : null,
+    //                 playerCategory: p.category ? p.category : null,
+    //                 handicap: p.hc ? p.hc : 0,
+    //                 online: false,
+    //                 countryCode: p.code ? p.code : null,
+    //                 extraData: p.extra ? p.extra : null,
+    //                 membershipNumber: p.membershipNumber,
+    //                 userRole: 3,
+    //                 membership: null,
+    //             };
+
+    //             this.savePlayers.push(player);
+    //         }
+
+    //         // this.logger.log(this.savePlayers);
+    //         // this.logger.log(this.duplicatePlayers);
+    //         console.log(this.savePlayers);
+
+    //         let status = await this.facadeService.importPlayerList(
+    //             this.savePlayers,
+    //             clubMember
+    //         );
+
+    //         if (status) {
+    //             let newProfiles =
+    //                 Number(this.savePlayers.length) -
+    //                 Number(this.duplicatePlayers.length);
+    //             this.snackBar.open(
+    //                 (newProfiles < 0 ? 0 : newProfiles) +
+    //                 " players have been created. " +
+    //                 this.duplicatePlayers.length +
+    //                 " player(s) were already exist.",
+    //                 "x",
+    //                 {
+    //                     duration: 5000,
+    //                 }
+    //             );
+
+    //             // this.importingList = false;
+    //             this.file = null;
+    //             // this.fileInputVariable.nativeElement.value = "";
+
+    //             // await this.delay(5000);
+    //             //window.location.reload();
+    //         } else {
+    //             this.snackBar.open("There was an Error while loading file", "x", {
+    //                 duration: 3000,
+    //             });
+    //             // this.importingList = false;
+    //         }
+    //     } catch {
+    //         // this.importingList = false;
+    //     }
+    // }
+
     async saveTournamentMember() {
         let tournamentMember: TournamentMember[] = [];
+        let invalidPlayers = [];
+        let selectedCategories = this.formArray.get([0]).get('clubctgies').value.filter(a => a.checked == true).map(z => z.name);
+        console.log(selectedCategories);
+
         // let selectionArray = Object.assign({}, this.selection.selected);
 
         for (let index in this.membersSource.data) {
             if (this.membersSource.data[index]) {
+                const player = this.membersSource.data[index];
+
+                if (!player) continue;
+
+                const allowedCategory = selectedCategories.includes(player.playerCategory);
+
+                if (!allowedCategory) {
+                    invalidPlayers.push(player);
+                    continue; // Skip this player
+                }
+
                 let founded = this.tournamentMembers.filter((a) => {
                     return a.id == this.membersSource.data[index].id;
                 });
+                console.log(this.membersSource.data[index]);
+
 
                 if (founded.length == 0) {
                     let member: any = {
@@ -2980,6 +3292,16 @@ export class AddTournamentComponent implements OnInit {
                 //console.log(selectionArray);
             }
         }
+
+        if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY && invalidPlayers.length > 0) {
+            this.dialog.open(InvalidCategoryPlayersComponent, {
+                width: '600px',
+                data: { players: invalidPlayers }
+            });
+            // this.currentStep = 2;
+            // this.currentTitle = 'Select Players';
+            return; // stop saving process
+        }
         this.showCategory = false;
         ////console.log(this.categoryCounts[0]);
 
@@ -2991,6 +3313,11 @@ export class AddTournamentComponent implements OnInit {
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentMember)
         );
+        if (this.dataSource.data.length > 0) {
+            this.dataSource.data.forEach(async (element) => {
+                await this.facadeService.deleteTournamentMember(this.tournamentID, element.id)
+            });
+        }
 
         if (result) {
             // const dialogRef = this.dialog.open(DialogOverviewComponent, {
@@ -4239,7 +4566,7 @@ export class AddTournamentComponent implements OnInit {
 
     addPlayer() {
         const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
-            data: { flights: this.selectedMembers.length },
+            data: { flights: this.selectedMembers.length, tournamentID: this.tournamentID },
         });
 
         dialogRef.afterClosed().subscribe((result) => {

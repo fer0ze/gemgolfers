@@ -443,7 +443,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
     addPlayer() {
         const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
-            data: { flights: this.selectedMembers.length },
+            data: { flights: this.selectedMembers.length,tournamentID: this.tournamentID },
         });
 
         dialogRef.afterClosed().subscribe((result) => {

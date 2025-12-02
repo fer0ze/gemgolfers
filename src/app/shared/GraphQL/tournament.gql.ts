@@ -1115,6 +1115,11 @@ export const UpdateMutation = gql`
         ) {
             affected_rows
         }
+        delete_tournament_round_course(
+            where: { tournamentId: { _eq: $tournamentId } }
+        ) {
+            affected_rows
+        }
         tournamentUpdateQli: insert_tournament(
             objects: $objects
             on_conflict: {

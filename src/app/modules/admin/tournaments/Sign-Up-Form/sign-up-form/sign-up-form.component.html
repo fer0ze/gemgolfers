@@ -18,9 +18,9 @@
 
 
             <div class="mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">Sign up Form</h2>
-                <h3 class="text-xl font-semibold text-gray-700 mt-1">{{ this.tournamentQL?.title }}</h3>
-                <p class="text-sm text-gray-500 mt-2">
+                <h3 class="text-4xl font-bold ">{{ this.tournamentQL?.title }}</h3>
+                <h2 class="text-lg font-semibold text-gray-800">Registration Form</h2>
+                <p class="text-md text-gray-500 mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4 mr-1.5 text-gray-400"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,11 +29,11 @@
                     {{
                     this.tournamentQL?.startDate
                     | date
-                    }}-{{
+                    }} - {{
                     this.tournamentQL?.endDate | date
                     }}
                 </p>
-                <p class="text-sm text-gray-400 mt-1">Powered by Gemgolfers</p>
+                <p class="text-sm text-gray-600 mt-1">Powered by Gemgolfers</p>
             </div>
             <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
                 [type]="alert.type" [@shake]="alert.type === 'error'">

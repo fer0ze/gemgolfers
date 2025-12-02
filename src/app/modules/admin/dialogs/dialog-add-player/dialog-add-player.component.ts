@@ -31,7 +31,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 export class DialogAddPlayerComponent implements OnInit {
     public response: Player;
     public player: Player;
-
+    tournamentQL: any;
     public playerForm: FormGroup;
     public frmTitle: string;
     private playerID: string;
@@ -59,8 +59,6 @@ export class DialogAddPlayerComponent implements OnInit {
             this.playerID = params.get('id');
         });
 
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-
         this.playerForm = new FormGroup({
             firstName: new FormControl('', [
                 Validators.required,
@@ -83,11 +81,28 @@ export class DialogAddPlayerComponent implements OnInit {
             membershipNumber: new FormControl(''),
         });
 
+        let data = await this.facadeService.getTournamentByID(
+            this.data.tournamentID
+        );
+        this.tournamentQL = data?.tournament?.[0];
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
+
+
         if (this._localStorage.isTournamentManager()) {
             this.showClub = false;
         }
 
-        this.playerCategories = this.facadeService.getPlayerCategories();
+        // this.playerCategories = this.facadeService.getPlayerCategories();
+        if (this.tournamentQL['CategoriesQL'].length > 0) {
+            for (let obj of this.tournamentQL['CategoriesQL']) {
+                let obja = {
+                    id: 1,
+                    name: obj.category,
+                };
+                this.playerCategories.push(obja);
+            }
+        }
 
         let dataClubs = await this.facadeService.getClubList();
         this.golfClubs = dataClubs.club;

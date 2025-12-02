@@ -251,7 +251,7 @@ export class SignUpFormComponent implements OnInit {
             this.alert = {
                 type: 'success',
                 message:
-                    'You are successfully added as a Tournament Member.',
+                    'You are successfully registered for the tournament.',
             };
             this.showAlert = true;
 
