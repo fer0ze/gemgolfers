@@ -209,6 +209,7 @@ export const tournamentDashBoard = gql`
             webLogoUrl
             startDate
             teamMatch
+            inviteCode
             endDate
             handicapAllocations
             adminId
@@ -1016,6 +1017,24 @@ export const GetTournamentByID = gql`
                         membershipNumber
                     }
                 }
+            }
+            pairs{
+            id
+            tournamentId
+            flightId
+            pairName
+            member1Id
+            member2Id
+            player1{
+            id
+            firstName
+            lastName
+            }
+            player2{
+            id
+            firstName
+            lastName
+            }
             }
             opponents {
                 id

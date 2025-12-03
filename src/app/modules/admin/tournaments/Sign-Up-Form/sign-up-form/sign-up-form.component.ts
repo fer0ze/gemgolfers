@@ -23,7 +23,7 @@ export class SignUpFormComponent implements OnInit {
     signUpForm: FormGroup;
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
-        message: 'You are successfully added as a Tournament Member',
+        message: 'You are successfully registered for the tournament.',
     };
     showAlert: boolean = false;
     showClub: boolean = false;
@@ -220,7 +220,7 @@ export class SignUpFormComponent implements OnInit {
                         this.alert = {
                             type: 'success',
                             message:
-                                'You are successfully added as a Member.',
+                                'You are successfully registered for the tournament.',
                         };
                         this.showAlert = true;
                     } else {

@@ -1166,6 +1166,7 @@ export class TournamentsService {
                                 publicTournament: tmnt.publicTournament,
                                 confirmParticipants: tmnt.confirmParticipants,
                                 noOfRounds: tmnt.noOfRounds,
+                                inviteCode: tmnt.inviteCode ?? null,
                                 activeRound: tmnt.activeRound,
                                 matchFormat: tmnt.matchFormat,
                                 playingOnWhs: tmnt.playingOnWhs,
@@ -1885,7 +1886,7 @@ export class TournamentsService {
                 .mutate<any>({
                     mutation: Query.UpdateMutation,
                     variables: {
-                         objects: [
+                        objects: [
                             {
                                 id: tmnt.id,
                                 clubId: tmnt.clubId,

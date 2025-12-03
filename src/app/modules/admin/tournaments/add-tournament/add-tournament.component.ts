@@ -597,18 +597,74 @@ export class AddTournamentComponent implements OnInit {
                         // Push the new team into this.selectedTeams
                         this.selectedTeams.push(newTeam);
                     })
+                    this.currentTournament.pairs.forEach((pair) => {
+                        const newPair = {
+                            id: pair.id,
+                            name: pair.pairName,
+                            members: [] // Initialize an empty array for members
+                        };
+                        newPair.members.push(pair?.player1)
+                        newPair.members.push(pair?.player2)
+
+                        // Loop through each member in membersQL
+
+
+                        // Push the new team into this.selectedTeams
+                        this.selectedPairs.push(newPair);
+                    })
 
                     this.matchFormats = General.teamFormats();
                 }
                 if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
                     this.showMatchPlay = true;
                     this.showCat = false;
+                    this.steps = this.steps.filter(
+                        s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
+                    );
+                    this.showMatchPlay = true;
+                    this.showShambles = false;
+                    const hasTeamStep = this.steps.some(s => s.title === 'Select Teams');
+                    if (!hasTeamStep) {
+                        const teamStep = {
+                            number: 3,
+                            title: 'Select Teams',
+                            description: 'Create and manage teams',
+                        };
+
+                        // Insert before "Groups Setup"
+                        const insertIndex = this.steps.findIndex(s => s.title === 'Groups Setup');
+                        this.steps.splice(insertIndex, 0, teamStep);
+
+                        // 🔹 Renumber all steps after insertion
+                        this.steps.forEach((s, index) => (s.number = index + 1));
+                    }
                 } else if (this.currentTournament.matchFormat == matchFormat.TEXAS_SCRAMBLE || this.currentTournament.matchFormat == matchFormat.THREE_BALL_SCRAMBLE
                     || this.currentTournament.matchFormat == matchFormat.TWO_BALL_SCRAMBLE ||
-                    this.currentTournament.matchFormat == matchFormat.SHAMBLES ||
                     this.currentTournament.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                     this.showCat = false;
                     this.showTexas = true;
+                } else if (this.currentTournament.matchFormat == matchFormat.SHAMBLES) {
+                    this.showCat = false;
+                    this.showShambles = true;
+                    this.showMatchPlay = false;
+                    this.steps = this.steps.filter(
+                        s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
+                    );
+                    const hasTeamStep = this.steps.some(s => s.title === 'Select Pairs');
+                    if (!hasTeamStep) {
+                        const teamStep = {
+                            number: 3,
+                            title: 'Select Pairs',
+                            description: 'Create and manage pairs',
+                        };
+
+                        // Insert before "Groups Setup"
+                        const insertIndex = this.steps.findIndex(s => s.title === 'Groups Setup');
+                        this.steps.splice(insertIndex, 0, teamStep);
+
+                        // 🔹 Renumber all steps after insertion
+                        this.steps.forEach((s, index) => (s.number = index + 1));
+                    }
                 } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD || this.currentTournament.matchFormat == matchFormat.MODIFIED_STABLEFORD || this.currentTournament.matchFormat == matchFormat.SPLIT_SIXES) {
                     this.showCat = false;
                 } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE || this.currentTournament.matchFormat == matchFormat.LIV ||
@@ -874,6 +930,11 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
+    backStep() {
+        this.currentStep--;
+        let step = this.steps.find(a => a.number == this.currentStep);
+        this.currentTitle = step?.title;
+    }
     goToStep(stepTitle: string, stepNumber: number): void {
 
         // this.currentTitle = stepTitle;
@@ -912,7 +973,7 @@ export class AddTournamentComponent implements OnInit {
             if (stepTitle == 'Review & Confirm') {
                 this.getSelectedPlayers();
             }
-            if (stepTitle == 'Groups Setup' && this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY ) {
+            if (stepTitle == 'Groups Setup' && this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY) {
                 this.saveTournamentMember();
             } else {
                 this.currentStep = stepNumber;
@@ -2312,6 +2373,12 @@ export class AddTournamentComponent implements OnInit {
         return flightTime;
     }
 
+    generateTMCode(): string {
+        const prefix = 'TM';
+        const randomNumber = Math.floor(100000 + Math.random() * 900000); // 6-digit random number
+        return prefix + randomNumber;
+    }
+
     async createTournament() {
 
         const currentGroup = this.formArray?.get([0]) as FormGroup;
@@ -2551,6 +2618,7 @@ export class AddTournamentComponent implements OnInit {
                     : 0,
             teamMatch: this.formArray.get([0]).value.teamMatch == '1' ? false : true,
             pairsMatch: false,
+            inviteCode: this.generateTMCode(),
             interLeague: false,
             playingOnWhs: false,
             publicTournament: false,

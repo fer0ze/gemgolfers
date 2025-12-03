@@ -85,7 +85,7 @@ export class ViewTournamentComponent implements OnInit {
     ];
     private noOfHolesInCourse: number = 18;
     fullTournament: any;
-    joiningCode: string = 'df323f';
+    joiningCode: string = '';
     memberStatusesQLs: TournamentMemberStatus[] = [];
     isLoading: boolean = true;
     totalRounds: number;
@@ -353,6 +353,7 @@ export class ViewTournamentComponent implements OnInit {
 
 
                 if (this.fullTournament) {
+                    this.joiningCode = this.fullTournament.inviteCode;
                     if (this.fullTournament.matchFormat == matchFormat.SHAMBLES) {
                         this.showShambles = true;
                         this.tabs.push('Pairs');

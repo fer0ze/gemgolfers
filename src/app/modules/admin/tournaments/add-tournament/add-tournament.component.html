@@ -2,15 +2,15 @@
     <div class="bg-white rounded-xl w-full shadow-lg h-full flex flex-col animate-fade-in overflow-hidden">
         <!-- Header -->
         <div class="p-6 md:p-8  border-b border-gray-200">
-            <a href="#" class="flex items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
+            <a (click)="backStep()" class="flex cursor-pointer items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-                Back to Tournaments
+                Back Step
             </a>
             <h1 class="text-3xl font-bold text-gray-900">
-                Add Tournament Form {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || '' }}
+                {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || 'New' }} Tournament Form 
             </h1>
             <div *ngIf="currentTournament" class="w-120">
 
@@ -1425,7 +1425,7 @@
                                                         <mat-form-field appearance="outline"
                                                             class="w-full custom-mat-input">
                                                             <mat-label>Group Time</mat-label>
-                                                            <input type="time" formControlName="flightStartTime"
+                                                            <input  formControlName="flightStartTime"
                                                                 value="{{ selectedTime }}" atp-time-picker matInput
                                                                 #query />
                                                             <mat-error>The input is required.</mat-error>
