@@ -912,7 +912,7 @@ export class AddTournamentComponent implements OnInit {
             if (stepTitle == 'Review & Confirm') {
                 this.getSelectedPlayers();
             }
-            if (stepTitle == 'Groups Setup') {
+            if (stepTitle == 'Groups Setup' && this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY ) {
                 this.saveTournamentMember();
             } else {
                 this.currentStep = stepNumber;
@@ -1853,6 +1853,22 @@ export class AddTournamentComponent implements OnInit {
                                 teamName: validTeams[1].name,
                                 teamColor: validTeams[1].color,
                                 members: flightBPlayers
+                            }
+                        });
+                    }
+                    if (teamA.length || teamB.length) {
+                        selMembers.push({
+                            teamA: {
+                                teamId: validTeams[0].id,
+                                teamName: validTeams[0].name,
+                                teamColor: validTeams[0].color,
+                                members: teamA  // leftover (1)
+                            },
+                            teamB: {
+                                teamId: validTeams[1].id,
+                                teamName: validTeams[1].name,
+                                teamColor: validTeams[1].color,
+                                members: teamB  // leftover (1)
                             }
                         });
                     }
@@ -3285,13 +3301,15 @@ export class AddTournamentComponent implements OnInit {
             if (this.membersSource.data[index]) {
                 const player = this.membersSource.data[index];
 
-                if (!player) continue;
+                if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY) {
+                    if (!player) continue;
 
-                const allowedCategory = selectedCategories.includes(player.playerCategory);
+                    const allowedCategory = selectedCategories.includes(player.playerCategory);
 
-                if (!allowedCategory) {
-                    invalidPlayers.push(player);
-                    continue; // Skip this player
+                    if (!allowedCategory) {
+                        invalidPlayers.push(player);
+                        continue; // Skip this player
+                    }
                 }
 
                 let founded = this.tournamentMembers.filter((a) => {
