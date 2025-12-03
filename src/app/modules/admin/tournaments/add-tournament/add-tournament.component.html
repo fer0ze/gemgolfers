@@ -281,32 +281,38 @@
                                     </div>
 
                                     <div *ngIf="!showMultipleCourses" formArrayName="courseInfo">
-                                        <div *ngFor="
-                                                let url of courseFileds.controls;
-                                                let i = index
-                                            " [formGroupName]="i" class="flex flex-auto">
+                                        <div *ngFor=" let url of courseFileds.controls; let i = index "
+                                            [formGroupName]="i" class="flex flex-auto">
                                             <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                                 [floatLabel]="'always'">
                                                 <mat-label>Course</mat-label>
 
                                                 <input matInput formControlName="courseName" [matAutocomplete]="auto"
-                                                    class=" text-gray-700" placeholder="Course Name" />
+                                                    class="text-gray-700" placeholder="Course Name" />
+
                                                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
-                                                    [displayWith]="displayCourseFn" (optionSelected)="
-                                                        getSelectedCourses(
-                                                            $event.option.value
-                                                        )
-                                                    ">
-                                                    <mat-option class="text-md text-gray-700" *ngFor="
-                                                            let option of filteredCourseOptions
-                                                                | async
-                                                        " [value]="option">
+                                                    [displayWith]="displayCourseFn"
+                                                    (optionSelected)="getSelectedCourses($event.option.value)">
+                                                    <mat-option *ngFor="let option of filteredCourseOptions | async"
+                                                        [value]="option">
                                                         {{ option.name }}
                                                     </mat-option>
                                                 </mat-autocomplete>
-                                                <mat-error>
-                                                    Please select a course from list.
-                                                </mat-error>
+
+                                                <mat-hint align="end">
+
+                                                    <div class="flex gap-x-2 items-center">
+                                                        <span class="text-blue-600 rounded-lg h-fit px-2 py-1 bg-blue-100
+                                                        cursor-pointer hover:bg-blue-200" (click)="openAddCourse()">
+                                                            + Add new course 
+                                                        </span>
+                                                        <span (click)="refreshCourseList()" matTooltip="Refresh Course List" 
+                                                            class="text-gray-600 cursor-pointer hover:text-emerald-600 transition-colors">
+                                                            <mat-icon class="icon-size-4">refresh</mat-icon>
+                                                        </span>
+                                                    </div>
+                                                </mat-hint>
+
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -397,7 +403,7 @@
                                                 <mat-label>Match Format</mat-label>
                                                 <mat-select class="w-full text-gray-700" placeholder="Match Format"
                                                     formControlName="matchFormat" (selectionChange)="texas($event)">
-                                                    <mat-option value="MATCH_PLAY">Match Play</mat-option>
+                                                    <mat-option value="MATCH_PLAY">Ryder Cup</mat-option>
                                                     <mat-option value="STROKE_PLAY">Stroke Play</mat-option>
                                                     <mat-option value="STABLEFORD">Stable Ford</mat-option>
                                                     <mat-option value="TEXAS_SCRAMBLE">Taxes Scramble</mat-option>

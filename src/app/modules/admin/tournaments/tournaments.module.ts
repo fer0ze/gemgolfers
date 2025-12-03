@@ -96,6 +96,7 @@ import { InvalidCategoryPlayersComponent } from '../dialogs/dialog-invalid-categ
         MatFormFieldModule,
         MatButtonToggleModule,
         MatPaginatorModule,
+        MatTooltipModule,
         MatInputModule,
         MatButtonModule,
         BlockWhiteSectionModule,

@@ -60,7 +60,7 @@ import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
 import { DialogMoveFlightComponent } from '../../dialogs/dialog-move-flight/dialog-move-flight.component';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { DialogPlayingDatesComponent } from '../../dialogs/dialog-playing-dates/dialog-playing-dates.component';
@@ -329,6 +329,7 @@ export class AddTournamentComponent implements OnInit {
         private breakpointObserver: BreakpointObserver,
         private datePipe: DatePipe,
         private router: Router,
+        private location: Location,
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
         private _formBuilder: FormBuilder, private logger: LogsService,
@@ -398,9 +399,7 @@ export class AddTournamentComponent implements OnInit {
                     ],
                     courseInfo: this._formBuilder.array([
                         this._formBuilder.group({
-                            courseName: [
-                                '',
-                            ],
+                            courseName: ['', Validators.required],
                             matchFormat: [Constants.MF_STROKE_PLAY],
                             multiFormat: ['SINGLE'],
                         }),
@@ -528,7 +527,7 @@ export class AddTournamentComponent implements OnInit {
             if (this.currentTournament) {
 
                 this.noOfRounds = Array.from({ length: this.currentTournament.noOfRounds }, (_, i) => i + 1);
-                
+
                 this.maxDate = new Date(this.currentTournament.endDate);
                 this.minDate = new Date(this.currentTournament.startDate);
                 this.formArray.get([0]).patchValue({
@@ -1959,14 +1958,47 @@ export class AddTournamentComponent implements OnInit {
         }
         return ''; // Return an empty string if the member is not found in any team
     }
+
+    async refreshCourseList() {
+        let dataCourses = await this.facadeService.getCoursesList();
+        this.Courses = dataCourses.course;
+
+        this.filteredCourseOptions = this.formArray
+            .get([0])
+            .get('courseInfo')!
+            .get([0])
+            .get('courseName')!
+            .valueChanges.pipe(
+                startWith(''),
+                map((value) =>
+                    typeof value === 'string' ? value : value ? value.name : ''
+                ),
+                map((name) =>
+                    name ? this._filterCourse(name) : this.Courses.slice()
+                )
+            );
+    }
+
+    openAddCourse() {
+        const url = this.location.prepareExternalUrl('/courses/add');
+        window.open(url, '_blank');
+    }
+
+
     multiCourseChange(value) {
         if (value) {
+            this.formArray.get([0]).get('courseInfo')!.get([0]).get('courseName').clearValidators();
             const control = this.formArray.get([0]).get('courses') as FormArray;
             control.clear();
             for (let i = 1; i <= Number(this.formArray.get([0]).value.numOfRounds); i++) {
                 this.addCourseField(i);
             }
+        } else {
+            const control = this.formArray.get([0]).get('courses') as FormArray;
+            control.clear();
+            this.formArray.get([0]).get('courseInfo')!.get([0]).get('courseName').addValidators(Validators.required);
         }
+        this.formArray.get([0]).get('courseInfo')!.get([0]).get('courseName').updateValueAndValidity()
         value ? this.showMultipleCourses = true : this.showMultipleCourses = false;
     }
 
