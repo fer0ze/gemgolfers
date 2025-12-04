@@ -258,7 +258,7 @@ export class MatchplayComponent implements OnInit {
         let roundCourse;
         // if (this.active) {
         this.flightRound = item.round;
-        this.activeRound=item.round;
+        this.activeRound = item.round;
         if (this.flightRound == 1) {
             this.showRound1 = true;
             roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
@@ -1465,9 +1465,10 @@ export class MatchplayComponent implements OnInit {
                         }
                         if (player1DigitIds.length > 0) {
                             for (let id of player1DigitIds) {
-                                document
-                                    .getElementById(id)
-                                    .classList.remove('warn');
+                                var a = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                a.classList.remove('warn');
+
                             }
                         }
                         // if (playerScoreEagle.length > 0) {
@@ -1647,9 +1648,9 @@ export class MatchplayComponent implements OnInit {
                         }
                         if (player1DigitIds.length > 0) {
                             for (let id of player1DigitIds) {
-                                document
-                                    .getElementById(id)
-                                    .classList.remove('warn');
+                                var a = document.getElementById(id)
+                                    .parentNode as HTMLElement;
+                                a.classList.remove('warn');
                             }
                         }
                         // if (playerScoreEagle.length > 0) {
