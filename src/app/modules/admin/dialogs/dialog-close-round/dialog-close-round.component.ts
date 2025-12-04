@@ -131,7 +131,7 @@ export class DialogCloseRoundComponent implements OnInit {
                 Validators.compose([Validators.required]),
             ],
             copy: ['0', Validators.required],
-            players: [3, Validators.required],
+            players: [4, Validators.required],
             time: ['09:00', Validators.required],
             interval: [10, Validators.required],
             tee: ['1_10', Validators.required],

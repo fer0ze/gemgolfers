@@ -215,6 +215,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 moduleId: 'c3ea540d-87bb-476a-98c6-9880236ed457',
             },
             {
+                id: 'reports.tournament',
+                title: 'Tournaments',
+                type: 'basic',
+                icon: 'heroicons_outline:bookmark-alt',
+                link: '/reports/tournaments',
+                moduleId: 'bff70470-e4e9-48a9-9740-5d217a67b72d',
+            },
+            {
                 id: 'reports.signUpPlayers',
                 title: 'SignUp-Players',
                 type: 'basic',

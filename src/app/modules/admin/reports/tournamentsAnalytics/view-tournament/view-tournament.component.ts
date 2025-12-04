@@ -14,45 +14,29 @@ import {
     PlayerHanidcap,
     TournamentMemberStatus,
     UserSessionModel,
-} from '../../../../shared/models/player.model';
-import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
+} from '../../../../../shared/models/player.model';
+import { Flight, FlightMembers } from '../../../../../shared/models/flight.model';
 import {
     matchFormat,
     TournamentCategory,
     TournamentMember,
-} from '../../../../shared/models/tournament.model';
-import { Leader, LeaderType } from '../../../../shared/classes/leader';
-import {
-    UniqueIdGenerator,
-    General,
-    Constants,
-    handicapAllocation,
-} from '../../../../shared/classes/general';
-import { FacadeService } from '../../../../shared/services/facade.service';
-import { AppStats } from '../../../../shared/helper/app-stats.help';
-import { FlightScores } from '../../../../shared/classes/FlightScores';
-import { ScoreStats } from '../../../../shared/classes/ScoreStats';
+} from '../../../../../shared/models/tournament.model';
+
 import { of } from 'rxjs';
 import { Score } from 'app/shared/classes/score';
 import { AnyARecord } from 'dns';
 import { DatePipe } from '@angular/common';
-
-import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
-import { DialogCourseDetailsComponent } from '../../dialogs/dialog-course-details/dialog-course-details.component';
-import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
-import { DialogPlayingCategoryComponent } from '../../dialogs/dialog-playing-category/dialog-playing-category.component';
-import { DialogMarshalComponent } from '../../dialogs/dialog-marshal/dialog-marshal.component';
 import { ApexOptions } from 'ng-apexcharts';
-import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
 import { MatDrawer } from '@angular/material/sidenav';
-import { FlightManagementComponent } from '../flight-management/flight-management.component';
 // import { PlayerManagementComponent } from '../player-management/player-management.component';
 import { forEach } from 'lodash';
-import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player.component';
-import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog-add-player.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
-import { log } from 'console';
+import { FacadeService } from 'app/shared/services/facade.service';
+import { ScoreStats } from 'app/shared/classes/ScoreStats';
+import { AppStats } from 'app/shared/helper/app-stats.help';
+import { Constants, General, handicapAllocation, UniqueIdGenerator } from 'app/shared/classes/general';
+import { Leader, LeaderType } from 'app/shared/classes/leader';
 
 @Component({
     selector: 'app-view-tournament',
@@ -84,6 +68,65 @@ export class ViewTournamentComponent implements OnInit {
         'playerCategory',
         'select',
     ];
+
+    scoreStats = [
+        // { label: 'Avg Gross', value: '77.7', icon: 'stats', color: 'blue' },
+        // { label: 'Avg Net', value: '+5.7', icon: 'wave', color: 'purple' },
+        // { label: 'Best Gross', value: '62.0', icon: 'star', color: 'yellow' },
+        // { label: 'Best Net', value: '-10.0', icon: 'danger', color: 'pink' },
+    ];
+
+    easiestHole: any = { holeNo: 0, par: 0 };
+    difficultHole: any = { holeNo: 0, par: 0 };
+
+    achievementLeaders = [
+        // { achievement: 'Most Birdies', name: 'Bareera Talha', value: 25, icon: 'birdie', color: 'red' },
+        // { achievement: 'Most Pars', name: 'HAMZA Javed', value: 33, icon: 'par', color: 'green' },
+        // { achievement: 'Most Eagles', name: 'Feroze E2ESP +7 more', value: 0, icon: 'eagle', color: 'orange' }
+    ];
+
+    categoryLeaders = [
+        { category: 'Best Scorer', name: 'Bareera Talha', value: '-10.0', icon: 'trophy', color: 'yellow' },
+        { category: 'Birdie Leader', name: 'Bareera Talha', value: 25, icon: 'birdie', color: 'red' },
+        { category: 'Eagle Leader', name: 'Bareera Talha', value: 0, icon: 'eagle', color: 'orange' },
+        { category: 'Best Gross Score', name: 'Bareera Talha', value: '62.0', icon: 'target', color: 'blue' },
+        { category: 'Best Net Score', name: 'Bareera Talha', value: '-10.0', icon: 'board', color: 'green' }
+    ];
+
+    readonly circumference = 2 * Math.PI * 45; // r = 45
+
+    topPerformersGross = [
+        { rank: 1, name: 'Bareera Talha', rounds: 2, score: '62.0' },
+        { rank: 2, name: 'Talha Javed', rounds: 2, score: '65.5' },
+        { rank: 3, name: 'HAMZA Javed', rounds: 2, score: '73.5' },
+        { rank: 4, name: 'Feroze E2ESP', rounds: 1, score: '75.0' },
+        { rank: 5, name: 'TJ Baba', rounds: 1, score: '77.0' },
+    ];
+
+    scoreDistribution = [
+        { name: 'Eagles', count: 0, percentage: 0.0, color: '#F97316' }, // orange-500
+        { name: 'Birdies', count: 45, percentage: 17.9, color: '#EF4444' }, // red-500
+        { name: 'Pars', count: 119, percentage: 47.2, color: '#22C55E' }, // green-500
+        { name: 'Bogeys', count: 75, percentage: 29.8, color: '#F59E0B' }, // amber-500
+        { name: 'Double+', count: 13, percentage: 5.2, color: '#64748B' } // slate-500
+    ];
+
+    donutSegments = [
+        // { offset: 20, length: 10, color: '#F97316' }, // orange-500
+        // { offset: 234, length: 130, color: '#EF4444' }, // red-500
+        // { offset: 21230, length: 120, color: '#22C55E' }, // green-500
+        // { offset: 20123, length: 1120, color: '#F59E0B' }, // amber-500
+        // { offset: 2120, length: 120, color: '#64748B' } // slate-500
+    ];
+
+    topPerformersNet = [
+        { rank: 1, name: 'Bareera Talha', rounds: 2, score: '-10.0' },
+        { rank: 2, name: 'Talha Javed', rounds: 2, score: '-6.5' },
+        { rank: 3, name: 'HAMZA Javed', rounds: 2, score: '+1.5' },
+        { rank: 4, name: 'Feroze E2ESP', rounds: 1, score: '+3.0' },
+        { rank: 5, name: 'TJ Baba', rounds: 1, score: '+5.0' },
+    ];
+
     private noOfHolesInCourse: number = 18;
     fullTournament: any;
     joiningCode: string = '';
@@ -416,8 +459,8 @@ export class ViewTournamentComponent implements OnInit {
                 //     );
                 // }
                 this.calculatePlayersCount();
-                this.getRoundStats(this.activeRound);
-                this.calculateStatistics(this.activeRound);
+                this.getRoundStats();
+                this.calculateStatistics();
                 this.getTournamentMembers();
                 this.rounds = [];
 
@@ -806,7 +849,7 @@ export class ViewTournamentComponent implements OnInit {
 
         let stats = new AppStats(roundFlights, this.fullTournament.CourseQL);
         let finalScoreStats: ScoreStats = stats.getApplicationStats();
-        //console.log(finalScoreStats);
+        console.log(finalScoreStats);
         // this.avgScore.push({
         //     name: 'On Par 3',
         //     value: finalScoreStats.par3Stats.getAvgScores(),
@@ -821,20 +864,66 @@ export class ViewTournamentComponent implements OnInit {
         // })
         this.avgScore.push({
             name: 'Birdies',
+            shot: finalScoreStats.getShotsBirdies(),
             value: Math.round(finalScoreStats.getShotsBirdiesPercent()),
         })
         this.avgScore.push({
             name: 'Pars',
+            shot: finalScoreStats.getShotsPars(),
             value: Math.round(finalScoreStats.getShotsParsPercent()),
         })
         this.avgScore.push({
             name: 'Bogeys',
+            shot: finalScoreStats.getShotsBogeys(),
             value: Math.round(finalScoreStats.getShotsBogeysPercent()),
         })
         this.avgScore.push({
             name: 'D. Bogeys',
+            shot: finalScoreStats.getShotsDoubleBogeys(),
             value: Math.round(finalScoreStats.getShotsDoubleBogeysPercent()),
         })
+
+        this.donutSegments.push(
+            {
+                offset: Math.round(finalScoreStats.getShotsBirdies()),
+                length: Math.round(finalScoreStats.getShotsBirdiesPercent()),
+                color: '#F97316'
+            },
+            {
+                offset: Math.round(finalScoreStats.getShotsPars()),
+                length: Math.round(finalScoreStats.getShotsParsPercent()),
+                color: '#EF4444'
+            },
+            {
+                offset: Math.round(finalScoreStats.getShotsBogeys()),
+                length: Math.round(finalScoreStats.getShotsBogeysPercent()),
+                color: '#22C55E'
+            },
+            {
+                offset: Math.round(finalScoreStats.getShotsDoubleBogeys()),
+                length: Math.round(finalScoreStats.getShotsDoubleBogeysPercent()),
+                color: '#64748B'
+            },
+        )
+
+        this.scoreStats.push(
+            { label: 'On Par 3', value: finalScoreStats.par3Stats.holes, icon: 'stats', color: 'blue' },
+            { label: 'On Par 4', value: finalScoreStats.par4Stats.holes, icon: 'wave', color: 'purple' },
+            { label: 'On Par 5', value: finalScoreStats.par5Stats.holes, icon: 'star', color: 'yellow' },
+        )
+
+        this.achievementLeaders.push(
+            { achievement: 'Most Birdies', name: finalScoreStats.topBirdiePlayer, value: finalScoreStats.topBirdieValue, icon: 'birdie', color: 'red' },
+            { achievement: 'Most Pars', name: finalScoreStats.topParPlayer, value: finalScoreStats.topParValue, icon: 'par', color: 'green' },
+            { achievement: 'Most Eagles', name: finalScoreStats.topEaglesPlayer, value: finalScoreStats.topEaglesValue, icon: 'eagle', color: 'orange' },
+        )
+
+        this.easiestHole.holeNo = finalScoreStats.easiestHole.holeNo;
+        this.easiestHole.par = finalScoreStats.easiestHole.par;
+        this.difficultHole.holeNo = finalScoreStats.difficultHole.holeNo;
+        this.difficultHole.par = finalScoreStats.difficultHole.par;
+
+
 
         // this.avgScore['par3Avg'] = finalScoreStats.par3Stats.getAvgScores();
         // this.avgScore['par4Avg'] = finalScoreStats.par4Stats.getAvgScores();
@@ -991,26 +1080,6 @@ export class ViewTournamentComponent implements OnInit {
         };
     }
 
-    viewMarshalList() {
-        try {
-            this.logger.log('Admin click on marshals btn', "info");
-            const dialogRef = this.dialog.open(DialogMarshalComponent, {
-                width: '700px',
-                data: { marshals: this.fullTournament.MarshalQL },
-            });
-
-            dialogRef.afterClosed().subscribe((result) => {
-                ////console.log(result);
-                if (result) {
-                    ////console.log(result.player);
-                } else {
-                    ////console.log("cancel delete action");
-                }
-            });
-        } catch (error) {
-            this.logger.log('Getting Marshals Data Failed', "error", error.toString());
-        }
-    }
 
     // async closeRound(round: number) {
 
@@ -1054,610 +1123,11 @@ export class ViewTournamentComponent implements OnInit {
         return days;
     }
 
-    async closeRound() {
-        try {
-            this.logger.log('Admin Click on Close Round Tournament btn', "info", this.activeRound.toString());
-            if (this.activeRound == this.noOfROund) {
-                this.logger.log('Close Round Dialog Box Open', "info", this.noOfROund.toString());
-                const dialogRef = this.dialog.open(DialogOverviewComponent, {
-                    width: '350px',
-                    data: 'Do you want to close the last round?',
-                });
-
-                dialogRef.afterClosed().subscribe(async (result) => {
-                    if (result) {
-                        const resultString = JSON.stringify(result);
-                        this.logger.log('Result from Close Round Dialog Box', "info", resultString);
-                        await this.facadeService.closeActiveRound(
-                            this.tournamentID,
-                            this.activeRound + 1,
-                            this.fullTournament.cutOffCriteria, this.activeRound
-                        );
-                        window.location.reload();
-                    } else {
-                        this.logger.log('Close Round Dialog Box Close Without Save', "info");
-                        ////console.log("cancel delete action");
-                    }
-                });
-            } else {
-                this.logger.log('Close Round Dialog Box Open', "info", this.noOfROund.toString());
-                let allowCat: boolean = false;
-                this.activeTournamentMembers = [];
-                let flights = this.dataFullTournament['TournamentQL'][0].FlightsQL;
-                let startDate =
-                    this.dataFullTournament['TournamentQL'][0].startDate;
-                startDate = new Date(startDate);
-                startDate.setDate(startDate.getDate() + this.activeRound);
-                //console.log(startDate);
-
-                let newstartDate = startDate.getDate();
-
-                //console.log(newstartDate);
-                if (this.categories.length > 0) {
-                    for (let newObj of this.categories) {
-                        let flightSettings: any = newObj.flightSettings;
-
-                        if (
-                            Object.prototype.toString
-                                .call(flightSettings)
-                                .indexOf('Array') > -1 &&
-                            flightSettings.length > 0
-                        ) {
-                            for (let obj of flightSettings) {
-                                let chngDate = obj.dates.replaceAll('-', '').toString();
-                                let newDate =
-                                    chngDate.substring(4, 8) +
-                                    '-' +
-                                    chngDate.substring(2, 4) +
-                                    '-' +
-                                    +chngDate.substring(0, 2);
-                                // //console.log(newDate);
-
-                                let flightDate = new Date(newDate).getDate();
-                                //console.log(flightDate);
-                                if (flightDate == newstartDate) {
-                                    allowCat = true;
-                                    newObj['allowCat'] = true;
-                                    break;
-                                }
-
-                                ////console.log(this.calculateDiff(newstartDate,flightDate));
-                            }
-                            if (!allowCat) {
-                                newObj['allowCat'] = false;
-                            }
-                            for (let obj of flights) {
-                                if (obj.flightRound == this.activeRound) {
-                                    let check = obj.MembersQL.filter((a) => {
-                                        return (
-                                            a.PlayerQL.playerCategory == newObj.category
-                                        );
-                                    });
-                                    if (check.length > 0) {
-                                        newObj['cut'] = true;
-                                        check = [];
-                                        break;
-                                    } else {
-                                        newObj['cut'] = false;
-                                    }
-                                }
-                            }
-                        } else if (
-                            Object.prototype.toString
-                                .call(flightSettings)
-                                .indexOf('Object') > -1
-                        ) {
-                            for (let obj of flightSettings['playingDate']) {
-                                let chngDate = obj.dates.replaceAll('-', '').toString();
-                                let newDate =
-                                    chngDate.substring(4, 8) +
-                                    '-' +
-                                    chngDate.substring(2, 4) +
-                                    '-' +
-                                    +chngDate.substring(0, 2);
-
-                                let flightDate = new Date(newDate).getDate();
-                                //console.log(flightDate);
-                                if (flightDate == newstartDate) {
-                                    allowCat = true;
-                                    newObj['allowCat'] = true;
-                                    break;
-                                }
-                                ////console.log(this.calculateDiff(newstartDate,flightDate));
-                            }
-                            if (!allowCat) {
-                                newObj['allowCat'] = false;
-                            }
-                            for (let obj of flights) {
-                                if (obj.flightRound == this.activeRound) {
-                                    let check = obj.MembersQL.filter((a) => {
-                                        return (
-                                            a.PlayerQL.playerCategory == newObj.category
-                                        );
-                                    });
-                                    if (check.length > 0) {
-                                        newObj['cut'] = true;
-                                        check = [];
-                                        break;
-                                    } else {
-                                        newObj['cut'] = false;
-                                    }
-                                }
-                            }
-                        } else {
-                            for (let obj of flights) {
-                                if (obj.flightRound == this.activeRound) {
-                                    let check = obj.MembersQL.filter((a) => {
-                                        return (
-                                            a.PlayerQL.playerCategory == newObj.category
-                                        );
-                                    });
-                                    if (check.length > 0) {
-                                        newObj['cut'] = true;
-                                        check = [];
-                                        break;
-                                    } else {
-                                        newObj['cut'] = false;
-                                    }
-                                }
-                            }
-                            newObj['allowCat'] = true;
-                        }
-                    }
-                }
-                const dialogRef = this.dialog.open(DialogCloseRoundComponent, {
-                    width: '800px',
-                    data: {
-                        round: this.activeRound + 1,
-                        categories: this.categories,
-                        tournament: this.tournamentID,
-                        startDate:
-                            this.dataFullTournament.TournamentQL[0].startDate,
-                    },
-                });
-                dialogRef.afterClosed().subscribe(async (result) => {
-
-                    let getResult: any = result;
-                    var jsons = new Array();
-                    let flag = true;
-                    jsons = [];
-                    //console.log(getResult);
-                    if (getResult && getResult.category && this.matchFormat == matchFormat.STROKE_PLAY) {
-                        //console.log(getResult.category);
-                        for (let cats in getResult.category) {
-                            if (getResult.category[cats].copyFlights == 'No') {
-                                flag = false;
-                            }
-
-                            //console.log(getResult.category[cats]);
-                            let copyflights: any = [];
-                            if (
-                                this.fullTournament.cutOffCriteria != null &&
-                                Object.keys(
-                                    this.fullTournament.cutOffCriteria.cutOff[0]
-                                ).length > 0
-                            ) {
-                                for (let cut of this.fullTournament.cutOffCriteria[
-                                    'cutOff'
-                                ]) {
-                                    if (
-                                        cut.name == getResult.category[cats].name &&
-                                        getResult.category[cats].cuttScore == ''
-                                    ) {
-                                        copyflights.push(cut);
-                                    }
-                                }
-                                //console.log(copyflights);
-                            }
-
-                            let cutOffCriteria: any = {
-                                round:
-                                    copyflights.length > 0
-                                        ? copyflights[0].round
-                                        : this.activeRound,
-                                //copyFlights: (getResult.category[cats].copy == "1"),
-                                copymembers:
-                                    copyflights.length > 0
-                                        ? copyflights[0].score
-                                        : null,
-                                copyflights: getResult.category[cats].copyFlights,
-                                name: getResult.category[cats].name,
-                                players: getResult.category[cats].players,
-                                time: getResult.category[cats].time,
-                                interval: getResult.category[cats].interval,
-                                tee: getResult.category[cats].tee,
-                                score:
-                                    copyflights.length > 0
-                                        ? copyflights[0].score
-                                        : flag == false
-                                            ? getResult.category[cats].cuttScore
-                                            : 1000,
-                                type: getResult.category[cats].type,
-                                order: getResult.category[cats].order,
-                                playing: getResult.category[cats].playing,
-                                lastRoundPlayed:
-                                    getResult.category[cats].lastRoundPlayed,
-                            };
-                            //console.log(cutOffCriteria);
-                            await this.closeCurrentRound(
-                                cutOffCriteria,
-                                cutOffCriteria.name,
-                                cutOffCriteria.score,
-                                cutOffCriteria.copymembers
-                            );
-                            // this.dataFullTournament =
-                            //     await this.facadeService.tournamentDashBoard(
-                            //         this.tournamentID
-                            //     );
-                            jsons.push(cutOffCriteria);
-                        }
-                        let jObject = { cutOff: jsons };
-                        //console.log(jObject);
-                        let a = JSON.stringify(jObject);
-                        var src = a.replace(/\\/g, '');
-                        //console.log(src);
-                        const resultString = JSON.stringify(result);
-                        this.logger.log('Result from Close Round Dialog Box', "info", resultString);
-                        let response = await this.facadeService.closeActiveRound(
-                            this.tournamentID,
-                            this.activeRound + 1,
-                            jObject,
-                            this.activeRound
-                        );
-                        if (response) {
-                            window.location.reload();
-                        }
-                    } else {
-                        for (let cats in getResult.category) {
-                            await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
-                        }
-                        let jObject = { cutOff: jsons };
-                        let response = await this.facadeService.closeActiveRound(
-                            this.tournamentID,
-                            this.activeRound + 1,
-                            jObject, this.activeRound
-                        );
-                        if (response) {
-                            window.location.reload();
-                        }
-                    }
-                });
-            }
-        } catch (error) {
-            this.logger.log('Close Tournament Round Failed', "error", error.toString());
-        }
-    }
-
-    showCourseDetails() {
-        this.dialog.open(DialogCourseDetailsComponent, {
-            data: {
-                course: this.dataFullTournament['TournamentQL'][0]['CourseQL']
-                    .id,
-            },
-        });
-    }
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
-    async closeCurrentRound(
-        cutOffCriteria: any,
-        categoryName: string,
-        categoryScore: number,
-        copymembers: any
-    ) {
-        try {
-            this.logger.log('Cut calculation after Close Round.', "info", cutOffCriteria.toString());
-            let nextRoundPlayers: any[] = [];
-            // //console.log(category);
-            // let categoryScore = cutOffCriteria.score.filter((a) => {
-            //   return a.name == category;
-            // });
-            let objLeader: Leader = new Leader(
-                this.fullTournament,
-                this.activeRound,
-                this.fullTournament,
-                categoryName
-            );
-            let result = objLeader.parseSubscriptionResponse();
-            //console.log(result);
-            if (cutOffCriteria.copyflights == 'No') {
-                if (result.length == 0) {
-                    result = this.dataFullTournament.TournamentQL[0].members.filter(
-                        (a) => {
-                            if (a.PlayerQL.playerCategory == categoryName)
-                                return nextRoundPlayers.push(a.PlayerQL);
-                        }
-                    );
-                } else {
-                    if (cutOffCriteria.type == LeaderType.GROSS) {
-                        result = result.filter((a) => {
-                            return (
-                                a.AllGrossUnder <=
-                                (categoryScore
-                                    ? categoryScore
-                                    : a.AllGrossUnder) &&
-                                a['holes' + this.activeRound] ==
-                                this.noOfHolesInCourse
-                            );
-                        });
-                        //console.log(result);
-                        cutOffCriteria.order == 'asc'
-                            ? (nextRoundPlayers = result.sort(
-                                this.ComparatorAllGross
-                            ))
-                            : (nextRoundPlayers = result.sort(
-                                this.ComparatorAllGrossDesc
-                            ));
-                    } else if (cutOffCriteria.type == LeaderType.NEW) {
-                        result =
-                            this.dataFullTournament.TournamentQL[0].members.filter(
-                                (a) => {
-                                    if (a.PlayerQL.playerCategory == categoryName)
-                                        return nextRoundPlayers.push(a.PlayerQL);
-                                }
-                            );
-                        this.makePlayerFlights(result, cutOffCriteria.players);
-                        ////console.log(this.selectedMembers);
-                        await this.saveCategoryFlights(cutOffCriteria, categoryName);
-                    } else {
-                        result = result.filter((a) => {
-                            return (
-                                a.AllNetUnder <=
-                                (categoryScore
-                                    ? categoryScore
-                                    : a.AllNetUnder) &&
-                                a['holes' + this.activeRound] ==
-                                this.noOfHolesInCourse
-                            );
-                        });
-                        cutOffCriteria.order == 'asc'
-                            ? (nextRoundPlayers = result.sort(
-                                this.ComparatorAllNet
-                            ))
-                            : (nextRoundPlayers = result.sort(
-                                this.ComparatorAllNetDesc
-                            ));
-                    }
-                }
-                //nextRoundPlayers = result.sort(this.ComparatorAllGross);
-                //for(let p of nextRoundPlayers) //console.log(p.name + "" + p.playerId);
-                //console.log(nextRoundPlayers);
-                if (copymembers == null) {
-                    this.makePlayerFlights(
-                        nextRoundPlayers,
-                        cutOffCriteria.players
-                    );
-                    ////console.log(this.selectedMembers);
-                    await this.saveCategoryFlights(cutOffCriteria, categoryName);
-                }
-            } else {
-                nextRoundPlayers = result;
-                this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
-                ////console.log(this.selectedMembers);
-                await this.saveCategoryFlights(cutOffCriteria, categoryName);
-            }
-        } catch (error) {
-            this.logger.log('Cut calculation Failed after Close Round.', "info", cutOffCriteria.toString());
-        }
-        // for(let p of nextRoundPlayers) {
-        //   let tm: TournamentMember = {
-        //     tournamentId: this.tournamentID,
-        //     playerId: p.playerId,
-        //     status: true
-        //   }
-        //   this.activeTournamentMembers.push(tm);
-        // }
-        //this.markActiveTournamentMembers(this.activeTournamentMembers);
-    }
 
-    async makePlayerFlights(nextRoundPlayers: any, playersPerFlight: number) {
-        try {
-
-
-            let cnter = 0;
-            let outer = 0;
-            this.selectedMembers = [];
-
-            ////console.log(this.selectedMembers);
-            for (var index in nextRoundPlayers) {
-                ////console.log(outer + "<--->" + cnter);
-
-                if (cnter == 0) this.selectedMembers[outer] = [];
-
-                this.selectedMembers[outer][cnter] = nextRoundPlayers[index];
-
-                if (cnter == playersPerFlight - 1) {
-                    cnter = 0;
-                    outer++;
-                } else {
-                    cnter++;
-                }
-            }
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
-
-    async saveCategoryFlights(criteria: any, categoryName: any) {
-        try {
-            let tournamentFlights: Flight[] = [];
-            //let fcnter = 0;
-            ////console.log(criteria);
-            this.changer++;
-
-            let tournamentFlightMembers: FlightMembers[];
-            let teeBox: number;
-            let teeTime: string = criteria.time;
-            for (var index in this.selectedMembers) {
-                tournamentFlightMembers = [];
-                console.log(this.selectedMembers[index]);
-
-                for (var index2 in this.selectedMembers[index]) {
-                    if (Number.isInteger(Number(index2))) {
-                        // //console.log(this.selectedMembers[index][index2]["playerCategory"]);
-                        // //console.log(this.selectedMembers[index][index2].playerCategory);
-                        ////console.log(categoryName);
-                        // //console.log(this.selectedMembers[index][index2]["name"]);
-
-                        let roundTeeId: any = General.getPlayersTe(categoryName);
-                        // //console.log(roundTeeId.id);
-                        let FM: any = {
-                            playerId: this.selectedMembers[index][index2]['id']
-                                ? this.selectedMembers[index][index2]['id']
-                                : this.selectedMembers[index][index2]['playerId'],
-                            attendance: false,
-                            playingTee: roundTeeId.result,
-                            tee_id: roundTeeId.id,
-                        };
-                        tournamentFlightMembers.push(FM);
-                    }
-                }
-                if (tournamentFlightMembers.length > 0) {
-                    ////console.log(tournamentFlightMembers);
-                    // //console.log('Before Running' + this.runningFlights);
-                    this.runningFlights++;
-                    this.teetime++;
-                    //let startingHole = parseFloat((<HTMLInputElement>document.getElementById("flight_" + index + "_hole")).value);
-                    //let startTime : string = (<HTMLInputElement>document.getElementById("flight_" + index + "_time")).value;
-                    let currentDate = new Date();
-                    currentDate.setDate(currentDate.getDate() + 1);
-                    teeBox = this.getNextTeeBox(criteria.tee, this.teetime);
-                    teeTime = this.getNextFlightTime(
-                        teeTime,
-                        criteria.interval,
-                        criteria.tee,
-                        this.teetime,
-                        teeBox
-                    );
-                    // //console.log(teeBox);
-                    // //console.log(teeTime);
-                    // //console.log(General.parseToDate(currentDate.toDateString()));
-                    let roundTeeId: any = General.getPlayersTe(categoryName);
-                    //console.log(roundTeeId.id);
-                    let selectedCourse;
-                    console.log(this.tournamentCourses);
-                    if (this.tournamentCourses.length > 0) {
-                        selectedCourse = this.tournamentCourses.filter((cour) => { return cour.round == this.activeRound + 1 })
-                    }
-
-                    let flight: any = {
-                        id: UniqueIdGenerator.generate(),
-                        tournamentId: this.tournamentID,
-                        courseId: this.noOfRounds > 1 && selectedCourse?.[0] ? selectedCourse?.[0].courseId : this.fullTournament.courseId,
-                        adminId: this.loggedInUser.id,
-                        courseHoleSets: this.noOfRounds > 1 && selectedCourse?.[0] ? selectedCourse?.[0].courseHoleSets : this.fullTournament.courseHoleSets,
-                        flightNo: this.runningFlights,
-                        flightRound: this.activeRound + 1,
-                        startingHole: teeBox,
-                        tee: roundTeeId.result,
-                        tee_id: roundTeeId.id,
-                        category: categoryName,
-                        date: General.parseToDate(currentDate.toDateString()),
-                        time: teeTime,
-                        ended: false,
-                        members: {
-                            data: tournamentFlightMembers,
-                        },
-                    };
-                    ////console.log(flight);
-                    tournamentFlights.push(flight);
-                    //break;
-                    ////console.log('After loop' + this.runningFlights);
-                }
-            }
-            this.teetime = 0;
-            await this.facadeService.createNextRoundFlights(tournamentFlights);
-            ////console.log(tournamentFlights);
-            // //console.log('After Function' + this.runningFlights);
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-        }
-    }
-    async saveCategoryFlightsForMatchPlay(flights: any[]) {
-        try {
-            let tournamentFlights: Flight[] = [];
-
-            let tournamentTeamOpponents: any[] = [];
-            //let fcnter = 0;
-            ////console.log(criteria);
-            this.changer++;
-
-            let tournamentFlightMembers: FlightMembers[];
-            let teeBox: number;
-            let teeTime: string = "08:00:00+00";
-            for (var index in flights) {
-                tournamentFlightMembers = [];
-                for (var index2 in flights[index]['MembersQL']) {
-                    let FM: any = {
-                        playerId: flights[index]['MembersQL'][index2]['playerId'],
-                        attendance: false,
-                        playingTee: 'AMATEURS',
-                        tee_id: 1,
-                    };
-                    if (this.showMatchPlay && this.check(tournamentTeamOpponents, FM.playerId)) {
-
-                        let team1Id = this.getTeamId(FM.playerId);
-                        let { oppoentId, opponentTeamId } = this.findOpponentFlightWise(team1Id, tournamentTeamOpponents, flights[index]['MembersQL'])
-                        if (team1Id != opponentTeamId) {
-                            let teamOpponent = {
-                                id: UniqueIdGenerator.generate(),
-                                team1Id: team1Id,
-                                team2Id: opponentTeamId,
-                                team1MemberId: FM.playerId,
-                                team2MemberId: oppoentId,
-                                tournamentId: this.tournamentID,
-                            }
-                            tournamentTeamOpponents.push(teamOpponent);
-                        }
-
-                    }
-                    tournamentFlightMembers.push(FM);
-                }
-                if (tournamentFlightMembers.length > 0) {
-
-                    this.runningFlights++;
-                    this.teetime++;
-                    let currentDate = new Date();
-                    currentDate.setDate(currentDate.getDate() + 1);
-                    let flight: any = {
-                        id: UniqueIdGenerator.generate(),
-                        tournamentId: this.tournamentID,
-                        courseId: this.fullTournament.courseId,
-                        adminId: this.loggedInUser.id,
-                        courseHoleSets: 0,
-                        flightNo: this.runningFlights,
-                        flightRound: this.activeRound + 1,
-                        startingHole: teeBox,
-                        tee: 'AMATEURS',
-                        tee_id: 1,
-                        category: 'AMATEURS',
-                        date: General.parseToDate(currentDate.toDateString()),
-                        time: teeTime,
-                        ended: false,
-                        members: {
-                            data: tournamentFlightMembers,
-                        },
-                        team: {
-                            data: tournamentTeamOpponents,
-                        }
-                    };
-                    ////console.log(flight);
-                    tournamentFlights.push(flight);
-                    //break;
-                    ////console.log('After loop' + this.runningFlights);
-                }
-                tournamentTeamOpponents = [];
-            }
-            this.teetime = 0;
-            await this.facadeService.createNextRoundFlights(tournamentFlights);
-            ////console.log(tournamentFlights);
-            // //console.log('After Function' + this.runningFlights);
-        } catch (error) {
-            this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
-
-        }
-    }
     downloadResultSheetGross() {
         let doc = new jsPDF();
         let col = General.createClmGross(this.noOfRounds);
@@ -1915,94 +1385,7 @@ export class ViewTournamentComponent implements OnInit {
         );
     }
 
-    getNextTeeBox(startingHoleOption: string, flight: number): number {
-        if (startingHoleOption == '1_10') {
-            //console.log('In Function' + flight);
 
-            if (flight !== 1 && flight % 2 === 0) return 10;
-            else return 1;
-        } else if (startingHoleOption == '10') {
-            return 10;
-        } else {
-            return 1;
-        }
-    }
-
-    getNextFlightTime(
-        time: string,
-        interval: number,
-        startingHole: string,
-        flight: number,
-        teeBox: number
-    ) {
-        let flightTime: string = '00:00';
-
-        try {
-            let dateNow: Date = new Date(Constants.DEFAULT_DATE + ' ' + time);
-
-            if (startingHole == '1_10') {
-                if (teeBox === 1 && flight !== 1)
-                    dateNow.setMinutes(dateNow.getMinutes() + interval);
-            } else if (startingHole == '1') {
-                if (flight % 2 == 0)
-                    dateNow.setMinutes(dateNow.getMinutes() + interval);
-                else {
-                    dateNow.setMinutes(dateNow.getMinutes());
-                }
-            } else if (startingHole == '10') {
-                if (flight % 2 == 0)
-                    dateNow.setMinutes(dateNow.getMinutes() + interval);
-                else {
-                    dateNow.setMinutes(dateNow.getMinutes());
-                }
-            }
-
-            //console.log(dateNow);
-
-            let h = dateNow.getHours();
-            let m = dateNow.getMinutes();
-
-            flightTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
-        } catch {
-            flightTime = '00:00';
-        }
-
-        return flightTime;
-    }
-
-    undoRound() {
-        try {
-
-            this.logger.log('Admin click on undo round btn', "info", this.activeRound.toString());
-            this.logger.log('Round undo Dialog Box Open', "info", this.activeRound.toString());
-            const dialogRef = this.dialog.open(DialogOverviewComponent, {
-                width: '350px',
-                data: 'Do you want to undo current round?',
-            });
-
-            dialogRef.afterClosed().subscribe(async (result) => {
-                if (result) {
-                    this.logger.log('Round undo sucessfully', "info", this.activeRound.toString());
-                    let jObject = null;
-                    //console.log('====================================');
-                    //console.log(jObject);
-                    //console.log('====================================');
-                    await this.facadeService.UndoTournamentRound(
-                        this.tournamentID,
-                        this.activeRound,
-                        this.activeRound - 1,
-                        jObject
-                    );
-
-                    window.location.reload();
-                } else {
-                    ////console.log("cancel delete action");
-                }
-            });
-        } catch (error) {
-            this.logger.log('Round undo Failed', "error", error.toString());
-        }
-    }
 
     redirectToLeaderboard() {
         //this.router.navigate(['/leaderboard/' + this.tournamentID]);
@@ -2031,30 +1414,6 @@ export class ViewTournamentComponent implements OnInit {
     redirectToAttendance() {
         this.router.navigate(['/tournaments/attendance/' + this.tournamentID]);
     }
-    async calculateHandicap() {
-        //console.log(player);
-        const dialogRef = this.dialog.open(DialogOverviewComponent, {
-            width: '350px',
-            data: 'Do you want to calculate the handicap for this Tournament?',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                ////console.log("record deleted.");
-                let result = this.facadeService.calculateHandicap(
-                    this.tournamentID
-                );
-                if (result) {
-                    this.snackBar.open('Handicap has been calculated.', 'x', {
-                        duration: 3000,
-                        panelClass: ['orange-snackbar'],
-                    });
-                }
-            } else {
-                ////console.log("cancel delete action");
-            }
-        });
-    }
 
     redirectToTournamentSetup() {
         this.router.navigate(['/tournaments/add/' + this.tournamentID]);
@@ -2079,16 +1438,6 @@ export class ViewTournamentComponent implements OnInit {
 
         document.execCommand('copy');
         document.body.removeChild(selBox);
-    }
-    pop(s) {
-        //console.log(s.title);
-
-        const dialogRef = this.dialog.open(DialogPlayingCategoryComponent, {
-            data: {
-                cat: s,
-                tournament: this.tournamentID,
-            },
-        });
     }
     viewProfile(s) {
         //console.log(s);
@@ -2695,62 +2044,7 @@ export class ViewTournamentComponent implements OnInit {
         this.dataSourceTotalNET.sort = this.sort;
         this.showSummary = true;
     }
-    async deleteTM(player: any) {
-        //console.log(player);
-        const dialogRef = this.dialog.open(DialogOverviewComponent, {
-            width: '350px',
-            data: 'Do you want to remove this player from Tournament?',
-        });
 
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                ////console.log("record deleted.");
-                let result = this.facadeService.deleteTournamentMember(
-                    this.tournamentID,
-                    player.id
-                );
-                if (result) {
-                    this.snackBar.open('Member has been deleted', 'x', {
-                        duration: 3000,
-                        panelClass: ['orange-snackbar'],
-                    });
-                    this.tournamentMember = this.tournamentMember.filter(
-                        (a) => a.playerId !== player.id
-                    );
-                }
-            } else {
-                ////console.log("cancel delete action");
-            }
-        });
-    }
-    async disqulifyTM(player: any) {
-        //console.log(player);
-        const dialogRef = this.dialog.open(DialogOverviewComponent, {
-            width: '350px',
-            data: 'Do you want to Disqualify this player from Tournament?',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                ////console.log("record deleted.");
-                let member: any = {
-                    tournamentId: this.tournamentID,
-                    playerId: player.id,
-                    status: 'ic',
-                };
-                let result =
-                    this.facadeService.insertTournamentMemberStatus(member);
-                if (result) {
-                    this.snackBar.open('Member has been disqualify', 'x', {
-                        duration: 3000,
-                        panelClass: ['orange-snackbar'],
-                    });
-                }
-            } else {
-                ////console.log("cancel delete action");
-            }
-        });
-    }
     public getLastHolesTotal(noOfHoles: number, holeScores: any[]): number {
         let total: number = 0;
 
@@ -3007,181 +2301,9 @@ export class ViewTournamentComponent implements OnInit {
         }
     }
 
-    addPlayer() {
-        const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
-            data: { flights: this.selectedMembers.length, tournamentID: this.tournamentID },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                ////console.log("record deleted.");
-                //console.log(result);
-                // this.clubMembers.push(result);
-                ////console.log(this.clubMembers);
-                // this.syncClubMembers();
-            } else {
-                ////console.log("cancel delete action");
-            }
-        });
-    }
-
-    searchPlayer() {
-        const dialogRef = this.dialog.open(DialogPlayerComponent, {
-            width: '740px',
-            data: { flights: this.selectedMembers.length },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            //console.log(result);
-            if (result.length == 1) {
-                ////console.log("record deleted.");
-                //console.log(result);
-
-                let founded = this.tournamentMembers.filter((a) => {
-                    return a.player.id == result[0].player.id;
-                });
-                //console.log(founded);
-
-                if (founded.length == 0) {
-                    let tournamentMember: TournamentMember[] = [];
-
-                    let member: any = {
-                        tournamentId: this.tournamentID,
-                        playerId: result[0].player.id,
-                        status: true,
-                    };
-
-                    this.saveMembers(member);
-                    this.getTournamentMembers();
-                } else {
-                    this.snackBar.open(
-                        'Player already exist in the list.',
-                        'x',
-                        {
-                            duration: 5000,
-                        }
-                    );
-                }
-            } else if (result.length > 1) {
-                result.forEach((element) => {
-                    let founded = this.tournamentMembers.filter((a) => {
-                        return a.player.id == result[0].player.id;
-                    });
-                    //console.log(founded);
-
-                    if (founded.length == 0) {
-                        let tournamentMember: TournamentMember[] = [];
-
-                        let member: any = {
-                            tournamentId: this.tournamentID,
-                            playerId: element.player.id,
-                            status: true,
-                        };
-
-                        this.saveMembers(member);
-                    } else {
-                        this.snackBar.open(
-                            'Player already exist in the list.',
-                            'x',
-                            {
-                                duration: 5000,
-                            }
-                        );
-                    }
-                });
-                this.getTournamentMembers();
-            } else {
-            }
-        });
-    }
-
-    async saveMembers(tournamentMember: TournamentMember[]) {
-        let result = <any>(
-            await this.facadeService.insertTournamentMember(tournamentMember)
-        );
-
-        if (result) {
-            this.snackBar.open('Tournament member have been added.', 'x', {
-                duration: 5000,
-            });
-        }
-    }
-    movetoFlight(id) {
-        this.mainSelected = ++this.mainSelected;
-    }
-    async playerList() {
-
-        try {
-            this.logger.log('Admin Click on Add New Member Btn on Members Tab', "info", this.tournamentID);
 
 
-            let datas = await this.facadeService.getPlayersListForTournament(
-                this.loggedInUser.adminClubId
-            );
-            let subtournamentID =
-                this.dataFullTournament['SubTournamentQL'].length > 0
-                    ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId
-                    : '';
-            const dialogRef = this.dialog.open(DialogPlayerListComponent, {
-                data: {
-                    players: datas.player,
-                    tournamentID: this.tournamentID,
-                    subTournamentID: subtournamentID,
-                },
-            });
 
-            dialogRef.afterClosed().subscribe((result) => {
-                //console.log(result);
-                const resultString = JSON.stringify(result);
-                this.logger.log('Result From Add New Member Btn on Members Tab', "info", resultString);
-                if (result) {
-                    ////console.log("record deleted.");
-                    //console.log(result);
-                    this.getTournamentMembers();
-                    // this.clubMembers.push(result);
-                    // //console.log(this.clubMembers);
-                    // this.syncClubMembers();
-                } else {
-                    ////console.log("cancel delete action");
-                }
-            });
-        } catch (error) {
-            this.logger.log('Getting Players To add on Tournament View Page Failed', "error", error.toString());
-        }
-    }
-    async closeDrawer() {
-        //let obj =new FlightManagementComponent(this.route, this.router,this.snackBar,this.dialog,null,this.facadeService,this.changeDetection);
-        if (this.flightid) {
-            //this._flightManagmentComponent.closedrawer(this.tournamentID);
-            // obj.closedrawer(this.tournamentID)
-            //obj.ngOnInit();
-            // obj.changeRound(2);
-        } else {
-            //this._flightManagmentComponent.closedrawer(this.newFlightID);
-            // obj.closedrawer(this.tournamentID)
-        }
-        this.matDrawer.close();
-        this.flight = [];
-        this.flightid = null;
-        this.dataSourceFlightMembers = null;
-    }
-    selectedTee(event, flightId) {
-        //console.log(flightId);
-        let target = event.source.selected._element.nativeElement;
-        let selectedData = {
-            value: event.value,
-            text: target.innerText.trim(),
-        };
-        // //console.log(this.roundFlights);
-        if (this.flight) {
-            let roundTeeId: any = General.getPlayersTe(selectedData.text);
-
-            if (this.flight.id === flightId) {
-                this.flight.tee = selectedData.value;
-                this.flight.tee_id = roundTeeId.id;
-            }
-        }
-    }
     onfligthNumberChange(event) {
         this.flight.flightNo = event;
     }
@@ -3481,45 +2603,5 @@ export class ViewTournamentComponent implements OnInit {
             );
         }
         // }
-    }
-
-    getTeamId(playerId) {
-        if (this.fullTournament.teams.length > 0) {
-            let playerTeamId;
-            for (let data of this.fullTournament.teams) {
-                data.membersQL.forEach(element => {
-                    if (element.playerId == playerId) {
-                        playerTeamId = data.id;
-                    }
-                });
-            }
-            return playerTeamId;
-        }
-    }
-
-    findOpponentFlightWise(teamId, tournamentTeamOpponents, members) {
-
-        let oppoentId;
-        let opponentTeamId;
-        for (let data of members) {
-            opponentTeamId = this.getTeamId(data.playerId);
-            if (opponentTeamId != teamId && this.check(tournamentTeamOpponents, data.playerId)) {
-                oppoentId = data.playerId;
-                continue;
-            }
-        }
-        return { oppoentId, opponentTeamId };
-
-    }
-
-    check(tournamentTeamOpponents, playerId) {
-
-        let boolean = true;
-        tournamentTeamOpponents.forEach(element => {
-            if (element.team1MemberId == playerId || element.team2MemberId == playerId) {
-                boolean = false;
-            }
-        });
-        return boolean;
     }
 }

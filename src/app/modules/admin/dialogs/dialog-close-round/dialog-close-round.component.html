@@ -224,30 +224,6 @@
                                         catArray[categoryList.value[i].name]
                                             .showCutCopy
                                     "
-                                    class="flex flex-row"
-                                >
-                                    <mat-label class="pt-4"
-                                        >Cut Off Score (To Par)</mat-label
-                                    >
-                                    <mat-form-field>
-                                        <input
-                                            type="number"
-                                            matInput
-                                            formControlName="cuttScore"
-                                            value=""
-                                        />
-                                        <mat-error
-                                            >The input is required.</mat-error
-                                        >
-                                    </mat-form-field>
-                                </div>
-                                <div
-                                    *ngIf="
-                                        catArray[categoryList.value[i].name]
-                                            .cutshow &&
-                                        catArray[categoryList.value[i].name]
-                                            .showCutCopy
-                                    "
                                     class="flex flex-row pl-16 items-center"
                                 >
                                     <mat-label
@@ -265,6 +241,31 @@
                                         >
                                     </mat-radio-group>
                                 </div>
+                                <div
+                                    *ngIf="
+                                        catArray[categoryList.value[i].name]
+                                            .cutshow &&
+                                        catArray[categoryList.value[i].name]
+                                            .showCutCopy
+                                    "
+                                    class="flex flex-row"
+                                >
+                                    <mat-label class="pt-4"
+                                        >Cut Off Score (To Par)</mat-label
+                                    >
+                                    <mat-form-field>
+                                        <input
+                                            type="number"
+                                            matInput
+                                            formControlName="cuttScore"
+                                            value=""
+                                        />
+                                        <mat-error
+                                            >The input is required.</mat-error
+                                        >
+                                    </mat-form-field>
+                                </div>
+                                
                             </div>
 
                             <!-- <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">

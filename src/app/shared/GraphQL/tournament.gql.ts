@@ -149,7 +149,7 @@ export const LeaderboardSubscription = gql`
                 tournamentId
                 name
                 color
-                teamMembers {
+                membersQL {
                     teamId
                     playerId
                     player {
@@ -269,6 +269,10 @@ export const tournamentDashBoard = gql`
                             index
                             par
                         }
+                            player{
+                            id
+                            firstName
+                            lastName}
                     }
                 }
             }
@@ -317,6 +321,50 @@ export const tournamentDashBoard = gql`
                         }
                     }
                 }
+            }
+            teams {
+                id
+                adminId
+                tournamentId
+                name
+                color
+                membersQL {
+                    teamId
+                    playerId
+                    player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        playerCategory
+                        membershipNumber
+                    }
+                }
+            }
+            pairs {
+                id
+                tournamentId
+                flightId
+                pairName
+                member1Id
+                member2Id
+                player1 {
+                    id
+                    firstName
+                    lastName
+                }
+                player2 {
+                    id
+                    firstName
+                    lastName
+                }
+            }
+            opponents {
+                id
+                team1Id
+                team2Id
+                team1MemberId
+                team2MemberId
             }
         }
         SubTournamentQL: sub_tournament(
@@ -593,7 +641,7 @@ export const GetTournamnetListForLiveByAdmin = gql`
                     { endDate: { _gte: $endDate }, singleRound: { _eq: false } }
                 ]
             }
-                order_by: { createdAt: desc }
+            order_by: { createdAt: desc }
         ) {
             id
             title
@@ -685,7 +733,7 @@ export const GetTournamnetListForCompleted = gql`
             matchFormat
             noOfRounds
             admin {
-            id
+                id
                 firstName
                 lastName
             }
@@ -697,14 +745,11 @@ export const GetTournamnetListForCompleted = gql`
     }
 `;
 export const getTournamentsListByAdminForCompleted = gql`
-    query getTournamentsListByAdminForCompleted( $clubId: String!) {
+    query getTournamentsListByAdminForCompleted($clubId: String!) {
         CompletedRecently: tournament(
             where: {
                 _and: [
-                    {
-                        adminId: { _eq: $clubId }
-                        singleRound: { _eq: false }
-                    }
+                    { adminId: { _eq: $clubId }, singleRound: { _eq: false } }
                 ]
             }
             order_by: { createdAt: desc }
@@ -716,7 +761,7 @@ export const getTournamentsListByAdminForCompleted = gql`
             matchFormat
             noOfRounds
             admin {
-            id
+                id
                 firstName
                 lastName
             }
@@ -739,7 +784,7 @@ export const getTournamentsListByTourForCompleted = gql`
                 matchFormat
                 noOfRounds
                 admin {
-                id
+                    id
                     firstName
                     lastName
                 }
@@ -763,7 +808,7 @@ export const getTournamentsListByLeague = gql`
                 matchFormat
                 noOfRounds
                 admin {
-                id
+                    id
                     firstName
                     lastName
                 }
@@ -787,7 +832,7 @@ export const GetTournamnetListForLive = gql`
                     }
                 ]
             }
-                order_by: { createdAt: desc }
+            order_by: { createdAt: desc }
         ) {
             id
             title
@@ -796,7 +841,7 @@ export const GetTournamnetListForLive = gql`
             noOfRounds
             matchFormat
             admin {
-            id
+                id
                 firstName
                 lastName
             }
@@ -832,7 +877,7 @@ export const GetTournamnetListForSchedule = gql`
             noOfRounds
             matchFormat
             admin {
-            id
+                id
                 firstName
                 lastName
             }
@@ -1018,23 +1063,23 @@ export const GetTournamentByID = gql`
                     }
                 }
             }
-            pairs{
-            id
-            tournamentId
-            flightId
-            pairName
-            member1Id
-            member2Id
-            player1{
-            id
-            firstName
-            lastName
-            }
-            player2{
-            id
-            firstName
-            lastName
-            }
+            pairs {
+                id
+                tournamentId
+                flightId
+                pairName
+                member1Id
+                member2Id
+                player1 {
+                    id
+                    firstName
+                    lastName
+                }
+                player2 {
+                    id
+                    firstName
+                    lastName
+                }
             }
             opponents {
                 id
@@ -1414,7 +1459,7 @@ export const insertTournamentMemberQL = gql`
             objects: $tournamentMembers
             on_conflict: {
                 constraint: tournament_member_pkey
-                update_columns: [status]
+                update_columns: [status, category]
             }
         ) {
             AffectedRowsQL: affected_rows
@@ -1462,7 +1507,7 @@ export const insertTournamentPairsQL = gql`
             objects: $pairsToSave
             on_conflict: {
                 constraint: tournament_pair_pkey
-                update_columns: [pairName, member1Id,member2Id]
+                update_columns: [pairName, member1Id, member2Id]
             }
         ) {
             AffectedRowsQL: affected_rows
@@ -2388,7 +2433,7 @@ export const getallDashboard = gql`
             matchFormat
             noOfRounds
             admin {
-            id
+                id
                 firstName
                 lastName
             }
@@ -2469,7 +2514,7 @@ export const getallDashboard = gql`
                 playerId
                 attendance
                 player {
-                id
+                    id
                     playerCategory
                 }
             }

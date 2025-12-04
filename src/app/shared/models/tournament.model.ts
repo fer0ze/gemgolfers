@@ -86,6 +86,7 @@ export class TournamentRoundCourses {
 export class TournamentMember {
     tournamentId: string;
     playerId: string;
+    category?: string;
     status: boolean;
 }
 

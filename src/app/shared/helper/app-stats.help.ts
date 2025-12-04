@@ -63,11 +63,19 @@ export class AppStats {
             }
         }
 
-        ////console.log(this.playerFlightScores);
+        // console.log(this.playerFlightScores);
         let finalScoreStats: ScoreStats = new ScoreStats();
         for (let stats of this.playerFlightScores) {
             finalScoreStats.addScoreStats(stats.scoreStats);
+            finalScoreStats.setTopBirdies(stats.scoreStats);
+            finalScoreStats.setTopPars(stats.scoreStats);
+            finalScoreStats.setTopEagles(stats.scoreStats);
+
+            // console.log(finalScoreStats.birdiesMap);
+
         }
+
+        finalScoreStats.setHoles(finalScoreStats.holesMap);
 
         return finalScoreStats;
     }

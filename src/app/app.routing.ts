@@ -311,6 +311,13 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.TournamentReportModule),
             },
             {
+                path: 'reports/tournaments',
+                loadChildren: () =>
+                    import(
+                        'app/modules/admin/reports/tournamentsAnalytics/tournaments.module'
+                    ).then((m) => m.TournamentsAnalyticsModule),
+            },
+            {
                 path: 'reports/league',
                 loadChildren: () =>
                     import(

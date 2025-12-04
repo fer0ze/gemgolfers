@@ -3390,6 +3390,7 @@ export class AddTournamentComponent implements OnInit {
                     let member: any = {
                         tournamentId: this.tournamentID,
                         playerId: this.membersSource.data[index].id,
+                        category: this.membersSource.data[index].playerCategory,
                         status: true,
                     };
                     this.tournamentMembers.push(this.membersSource.data[index]);
@@ -3400,6 +3401,7 @@ export class AddTournamentComponent implements OnInit {
                     let member: any = {
                         tournamentId: this.subTournamentID,
                         playerId: this.membersSource.data[index].id,
+                        category: this.membersSource.data[index].playerCategory,
                         status: true,
                     };
                     tournamentMember.push(member);

@@ -1,7 +1,7 @@
 export class ParStats {
     private par: number;
 
-    private holes: number = 0;
+    public holes: number = 0;
     private scores: number = 0;
     private unders: number = 0;
     private betters: number = 0;
