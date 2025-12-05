@@ -1308,14 +1308,17 @@ export class ViewTournamentComponent implements OnInit {
                             window.location.reload();
                         }
                     } else {
-                        for (let cats in getResult.category) {
-                            await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+                        if (getResult.category[0].playing == true || getResult.category[0].playing == 'true') {
+                            for (let cats in getResult.category) {
+                                await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+                            }
                         }
                         let jObject = { cutOff: jsons };
                         let response = await this.facadeService.closeActiveRound(
                             this.tournamentID,
                             this.activeRound + 1,
-                            jObject, this.activeRound
+                            jObject,
+                            this.activeRound
                         );
                         if (response) {
                             window.location.reload();

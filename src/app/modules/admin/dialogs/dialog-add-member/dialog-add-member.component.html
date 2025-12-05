@@ -3,11 +3,7 @@
         <div class="flex">
             <div class="text-lg w-76 pt-4">Tournament Members</div>
             <mat-form-field>
-                <input
-                    matInput
-                    (keyup)="applyFilter($event.target.value)"
-                    placeholder="Filter"
-                />
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
             </mat-form-field>
         </div>
 
@@ -16,7 +12,13 @@
             <ng-container matColumnDef="firstName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                 <td mat-cell *matCellDef="let row">
-                    {{ (row.firstName + " " + row.lastName) | uppercase}}
+                    <span class="flex gap-x-2 items-center">
+                        <span class="w-2 h-2 rounded-full" [style.background-color]="row?.teamColor"></span>
+                        <span>
+                            {{ (row.firstName + " " + row.lastName) | uppercase}}
+                        </span>
+
+                    </span>
                 </td>
             </ng-container>
             <!-- Email Column -->
@@ -28,14 +30,15 @@
                     <span *ngIf="row.handicap < 1">0</span>
                     <span *ngIf="row.handicap >= 1">{{
                         row.handicap | number : "1.1-1"
-                    }}</span>
+                        }}</span>
                 </td>
             </ng-container>
             <ng-container matColumnDef="playerCategory">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Category
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.playerCategory=='Seniors' ? 'Senior Amateurs' :row.playerCategory }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.playerCategory=='Seniors' ? 'Senior Amateurs'
+                    :row.playerCategory }}</td>
             </ng-container>
             <!-- Membership Number Column -->
             <ng-container matColumnDef="membershipNumber">
@@ -53,23 +56,15 @@
 
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox
-                        (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="
                             selection.hasValue() && !isAllSelected()
-                        "
-                        [aria-label]="checkboxLabel()"
-                    >
+                        " [aria-label]="checkboxLabel()">
                     </mat-checkbox>
                 </th>
                 <td mat-cell *matCellDef="let row">
-                    <mat-checkbox
-                        (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)"
-                    >
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                     </mat-checkbox>
                 </td>
             </ng-container>
@@ -77,21 +72,13 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-        <mat-paginator
-            [pageSize]="20"
-            [pageSizeOptions]="[10, 20, 50, 100]"
-        ></mat-paginator>
+        <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
     </div>
 </div>
 <div mat-dialog-actions class="flex justify-center mt-4">
     <button mat-raised-button [mat-dialog-close]="refresh">Close</button>
-    <button
-        mat-raised-button
-        color="primary"
-        [mat-dialog-close]="tournamentMember"
-        (click)="onSubmit()"
-        cdkFocusInitial
-    >
+    <button mat-raised-button color="primary" [mat-dialog-close]="tournamentMember" (click)="onSubmit()"
+        cdkFocusInitial>
         Save Member
     </button>
 </div>
