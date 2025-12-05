@@ -25,10 +25,10 @@
                 class="sm:col-span-1 md:col-span-1 lg:col-span-1  flex flex-col rounded-xl flex-auto">
                 <div class="flex justify-between">
                     <div class="text-3xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
-                        {{team1Point}}
+                        {{team1PointD}}
                     </div>
                     <div class="text-3xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
-                        {{team2Point}}
+                        {{team2PointD}}
                     </div>
                 </div>
                 <div *ngFor="let item of flightResults; let last = last">
@@ -198,8 +198,8 @@
                         {{team2Point}}
                     </div>
                 </div>
-                <div *ngFor="let item of flightResults; let last = last">
-                    <div *ngFor="let player of item?.matches; let i = index" class=" text-lg flex flex-col justify-between  max-h-28 border-b font-semibold bg-card mb-10 rounded-xl
+                <div *ngFor="let item of flightResults; let last = index">
+                    <div *ngFor="let player of item?.matches; let i = index;" class=" text-lg flex flex-col justify-between  max-h-28 border-b font-semibold bg-card mb-10 rounded-xl
                     ">
                         <div class="flex flex-row max-h-28">
                             <div class="flex justify-center rounded-r-full w-50 border-l-4"
@@ -214,7 +214,7 @@
                             <div *ngIf="player.score>0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
                                 <span class="text-md w-20 sm:w-full md:w-full text-center">
-                                   All Round
+                                   Round - {{last+1}}
                                 </span>
                                 <span class="pt-2 font-bold text-3xl" [ngStyle]="{'color':player.winningColor}">
                                     {{player.score}} Up
@@ -223,7 +223,7 @@
                             <div *ngIf="player.score==0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
                                 <span class="text-md w-20 sm:w-full md:w-full text-center">
-                                    Round - {{i}}
+                                    Round - {{last+1}}
                                 </span>
                                 <span class="pt-2 font-bold text-3xl">
                                     Tied

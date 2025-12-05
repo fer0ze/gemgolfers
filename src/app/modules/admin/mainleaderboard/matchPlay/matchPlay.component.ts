@@ -125,8 +125,8 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             let membersQLs = flightData.members;
             let flightId = flightData.id;
             let round = flightData.flightRound;
-            let courseHoleSetsInverted=flightData.courseHoleSetsInverted;
-            let courseHoleSets=flightData.courseHoleSets;
+            let courseHoleSetsInverted = flightData.courseHoleSetsInverted;
+            let courseHoleSets = flightData.courseHoleSets;
             let flightResult = { flightId, matches: [] };
             for (let membersQL of membersQLs) {
                 let player = membersQL.player;
@@ -235,8 +235,8 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 this.team1Point += obj['team1Points'];
                 this.team2Point += obj['team2Points'];
                 flightResult.matches.push(matchResult);
+                this.flightResults.push(flightResult);
             }
-            this.flightResults.push(flightResult);
         }
 
         console.log(this.allRoundResults);
@@ -271,7 +271,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 let team1Members = this.getFlightTeamMember(membersQLs, team1Id);
                 let team2Members = this.getFlightTeamMember(membersQLs, team2Id);
                 if (doublesResult.upScore > 0) {
-                    if (doublesResult.finalResult == 'B_WON') {
+                    if (doublesResult.finalResult == team2Id) {
                         color = this.getcolor(team2Id)
                         teamAResult = false;
                         this.team2PointD++;
@@ -326,6 +326,9 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             }
             this.flightResults.push(flightResult);
         }
+        this.allRoundResults[flightRound] = {};
+        this.allRoundResults[flightRound]['team1Points'] = this.team1PointD
+        this.allRoundResults[flightRound]['team2Points'] = this.team2PointD
         console.log(this.flightResults);
     }
 
@@ -438,7 +441,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         this.ngOnInit();
     }
 
-    changeRound(item) { 
+    changeRound(item) {
         this.team1PointD = 0;
         this.team2PointD = 0;
         this.flightRound = item.value;
