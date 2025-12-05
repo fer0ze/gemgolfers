@@ -1375,6 +1375,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             data: tournamentTeamOpponents,
                         }
                     };
+                    tournamentTeamOpponents = [];
                     if (this.showTeams) {
                         let flightNames: any = {
                             flightId: currentFlightId,

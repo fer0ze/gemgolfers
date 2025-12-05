@@ -1976,8 +1976,8 @@ export class ViewTournamentComponent implements OnInit {
     undoRound() {
         try {
 
-            this.logger.log('Admin click on undo round btn', "info", this.activeRound.toString());
-            this.logger.log('Round undo Dialog Box Open', "info", this.activeRound.toString());
+            // this.logger.log('Admin click on undo round btn', "info", this.activeRound.toString());
+            // this.logger.log('Round undo Dialog Box Open', "info", this.activeRound.toString());
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',
                 data: 'Do you want to undo current round?',
@@ -1985,7 +1985,7 @@ export class ViewTournamentComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(async (result) => {
                 if (result) {
-                    this.logger.log('Round undo sucessfully', "info", this.activeRound.toString());
+                    // this.logger.log('Round undo sucessfully', "info", this.activeRound.toString());
                     let jObject = null;
                     //console.log('====================================');
                     //console.log(jObject);
