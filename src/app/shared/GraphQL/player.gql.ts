@@ -1324,6 +1324,10 @@ export const PlayerFlightScoresQuery = gql`
                         index
                         par
                     }
+                        player{
+                        id 
+                        firstName
+                        lastName}
                 }
                 course {
                     id
