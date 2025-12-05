@@ -86,6 +86,26 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
             club{
             id
             name}
+
+            teams {
+                id
+                adminId
+                tournamentId
+                name
+                color
+                membersQL {
+                    teamId
+                    playerId
+                    player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        playerCategory
+                        membershipNumber
+                    }
+                }
+            }
     }
 }${PlayerQL}${TournamentQL}${FlightsQL}${ScoreQL}${ScoreDetailQL}${CourseQL}${HoleQL}${TournamentRoleManagerQL}`;
 

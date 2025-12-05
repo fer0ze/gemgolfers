@@ -524,6 +524,25 @@ export const FlightManagersQuery = gql`
                 id
                 name
             }
+            teams {
+                id
+                adminId
+                tournamentId
+                name
+                color
+                membersQL {
+                    teamId
+                    playerId
+                    player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        playerCategory
+                        membershipNumber
+                    }
+                }
+            }
         }
     }
 `;
@@ -679,9 +698,10 @@ export const singleRoundFlightsQueryQL = gql`
             order_by: [{ flightRound: asc }, { flightNo: asc }]
         ) {
             ...FlightQL
-            tournament{
-            id
-            tournamentFlight}
+            tournament {
+                id
+                tournamentFlight
+            }
             MembersQL: members {
                 flightId
                 playerId
@@ -776,8 +796,11 @@ export const singleRoundFlightQueryQL = gql`
     }
 `;
 export const updateTournamentFlightMutationQL = gql`
-    mutation updateTournamentFlightMutationQL($tournamentId: String!, $roundCategory: Boolean!) {
-         update_tournament(
+    mutation updateTournamentFlightMutationQL(
+        $tournamentId: String!
+        $roundCategory: Boolean!
+    ) {
+        update_tournament(
             where: { id: { _eq: $tournamentId } }
             _set: { tournamentFlight: $roundCategory }
         ) {

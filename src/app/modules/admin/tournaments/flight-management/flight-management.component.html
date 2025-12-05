@@ -67,7 +67,15 @@
                                                     let j = index
                                                 "
                         class="flex justify-between  items-center text-sm p-4 rounded-md bg-white">
-                        <span class="font-medium text-gray-700 text-md">{{ item.firstName }} {{ item.lastName }}</span>
+
+                        <span class="flex gap-x-2 items-center">
+                            <span class="w-2 h-2 rounded-full"
+                                [style.background-color]="getTeamColor(item.id)"></span>
+                            <span class="font-medium text-gray-700 text-md">
+                                {{ item.firstName }} {{ item.lastName }}
+                            </span>
+
+                        </span>
                         <span class="flex gap-2 items-center">
                             <span class="text-gray-500">HC: {{ item.handicap }}</span>
                             <mat-icon aria-hidden="false" class="cursor-pointer"

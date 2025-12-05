@@ -50,7 +50,7 @@ export class SignUpFormComponent implements OnInit {
         );
         console.log(data);
         this.tournamentQL = data.tournament[0];
-        //this.playerCategories = this._facadeService.getPlayerCategories();
+
         let dataClubs = await this._facadeService.getClubList();
         this.golfClubs = dataClubs.club;
         if (this.tournamentQL.clubId) {
@@ -78,6 +78,8 @@ export class SignUpFormComponent implements OnInit {
                 };
                 this.playerCategories.push(obja);
             }
+        } else {
+            this.playerCategories = this._facadeService.getPlayerCategories();
         }
         //console.log(this.playerCategories);
     }

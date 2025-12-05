@@ -103,7 +103,8 @@
                                 <th *ngIf="
                                                 flight.header.courseHoles9
                                                     .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.par9 }}</th>
+                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{
+                                    flight.header.par9 }}</th>
                                 <th *ngFor="
                                                 let hole of flight.header
                                                     .courseHoles18
@@ -112,7 +113,8 @@
                                 <th *ngIf="
                                                 flight.header.courseHoles18
                                                     .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.par18 }}</th>
+                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{
+                                    flight.header.par18 }}</th>
                                 <th *ngFor="
                                                 let hole of flight.header
                                                     .courseHoles27
@@ -137,22 +139,29 @@
                                             " class="py-2 px-2 font-semibold text-center bg-gray-200">
                                     {{ flight.header.par36 }}
                                 </th>
-                                <th class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.parTotal }}</th>
+                                <th class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.parTotal }}
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <tr *ngFor="let item of flight" class="bg-white">
                                 <td
                                     class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
-                                    {{ item.name }} ({{
-                                            item.handicap
-                                            | number : "1.0-0"
-                                            }})</td>
+                                    <span class="flex gap-x-2 items-center">
+                                        <span class="w-2 h-2 rounded-full"
+                                            [style.background-color]="getTeamColor(item.playerId)"></span>
+                                        {{ item.name }} ({{
+                                        item.handicap
+                                        | number : "1.0-0"
+                                        }})
+
+                                    </span>
+                                </td>
                                 <td *ngFor="
                                                 let score of item.Hole9Scores;
                                                 let i = index
                                             " class="p-1">
-                                    <input  id="{{
+                                    <input id="{{
                                                         flight.header
                                                             .courseHoles9[i].id
                                                     }}&{{ item.playerId }}" maxlength="2" (keyup.enter)="
@@ -184,7 +193,7 @@
                                     <td *ngFor="let score of item.Hole18Scores;
                                                     let i = index
                                                 " class="p-1">
-                                        <input  (input)="
+                                        <input (input)="
                                                             onGross18Change(
                                                                 $event.target
                                                                     .value,

@@ -211,6 +211,18 @@ export class MatchplayComponent implements OnInit {
         }
     }
 
+    
+    getTeamColor(playerId: string) {
+        for (let team of this.matchPlayData.teams) {
+            for (let member of team.membersQL) {
+                if (member.playerId === playerId) {
+                    return team.color;   // <--- NOW it properly returns
+                }
+            }
+        }
+        return null;
+    }
+
     changeFlight(item) {
         ////console.log("Selected value: " + item.value);
         this.ddSelectedFlight = item.value;

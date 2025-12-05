@@ -516,6 +516,19 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             //console.log(this.selectedMembers);
         }
     }
+
+    getTeamColor(playerId: string) {
+        for (let team of this.tournamentInfo[0].teams) {
+            for (let member of team.membersQL) {
+                if (member.playerId === playerId) {
+                    return team.color;   // <--- NOW it properly returns
+                }
+            }
+        }
+        return null;
+    }
+
+
     getNextTeeBox(startingHoleOption: string, flight: number): number {
         if (startingHoleOption == '1_10') {
             //console.log('In Function' + flight);

@@ -93,7 +93,7 @@ export class DialogAddPlayerComponent implements OnInit {
             this.showClub = false;
         }
 
-        // this.playerCategories = this.facadeService.getPlayerCategories();
+
         if (this.tournamentQL['CategoriesQL'].length > 0) {
             for (let obj of this.tournamentQL['CategoriesQL']) {
                 let obja = {
@@ -102,6 +102,8 @@ export class DialogAddPlayerComponent implements OnInit {
                 };
                 this.playerCategories.push(obja);
             }
+        } else {
+            this.playerCategories = this.facadeService.getPlayerCategories();
         }
 
         let dataClubs = await this.facadeService.getClubList();
