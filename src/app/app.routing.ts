@@ -273,6 +273,13 @@ export const appRoutes: Route[] = [
                     ),
             },
             {
+                path: 'courses1',
+                loadChildren: () =>
+                    import('app/modules/admin/course copy/course.module').then(
+                        (m) => m.CourseModule
+                    ),
+            },
+            {
                 path: 'mergeProfile',
                 loadChildren: () =>
                     import(

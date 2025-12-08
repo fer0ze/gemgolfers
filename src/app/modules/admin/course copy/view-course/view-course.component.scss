@@ -1,0 +1,233 @@
+div {
+    display: block;
+}
+
+.row {
+    margin-bottom: 0 !important;
+}
+
+.table-Tee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+}
+
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+form {
+    /* flex-flow: column wrap; */
+
+    /* display: flex; */
+    /* display: grid; */
+    max-width: 100%;
+    place-content: center;
+    align-items: end;
+    align-content: stretch;
+}
+
+table {
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-spacing: 3px;
+
+    input {
+        width: 236px;
+        height: 53px;
+        border: none;
+        /* color: #040404; */
+        text-align: center;
+    }
+
+    tr.topheader th {
+        padding: 13px;
+        font-weight: normal;
+    }
+
+    tr.subhead {
+        font-family: monospace;
+        background-color: #185105;
+
+    }
+
+    tr.subhead th {
+        border: solid 1px #fff;
+        font-weight: bold;
+        padding: 19px;
+    }
+
+    tr.scorebody {
+        font-family: monospace;
+
+    }
+
+    tr.scorebody td {
+        font-weight: bold;
+        padding: 5px;
+        text-align: center;
+
+    }
+
+    tr.scorebody td .title {
+        text-align: left;
+    }
+
+    tr.scorebody td input {
+        border: none;
+        text-align: center;
+        width: 30px;
+    }
+
+    td .mat-icon {
+        cursor: pointer;
+        font-size: 22px;
+    }
+
+    @media table and (max-width: 500px) {
+        input {
+            width: 2px;
+        }
+    }
+}
+
+.th-color {
+    color: #ebeaef;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+.holeInput {
+    width: 44px !important;
+    height: 53px !important;
+    background: white;
+    border: 1px solid #c0bfbf !important;
+    text-align: center;
+    margin: 1px;
+    border-radius: 10px;
+    color: #000000;
+    /* margin: -0.5px; */
+}
+
+#title {
+  color: #fff;
+  background-color: #4d90fe;
+  font-size: 25px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+.holeInputs {
+    background: white;
+    width: 245px !important;
+    height: 39px !important;
+    border: 1px solid #c0bfbf !important;
+    text-align: center;
+    margin: 1px;
+    border-radius: 6px;
+}
+.holeSetInputs {
+    width: 245px !important;
+    height: 53px !important;
+    border: 2px solid #085fa8 !important;
+}
+
+.tabelinput {
+    padding: 0px !important;
+    font-weight: normal;
+}
+
+.holeNum {
+    background-color: #085fa8 !important;
+    color: white !important;
+    font-size: 15px;
+}
+
+.holehr {
+    background-color: #ffffff;
+   font-weight: bold !important;
+}
+
+.dist {
+    margin-left: 15px;
+    margin-right: 12px;
+}
+
+.numberCircle {
+    border-radius: 50%;
+    width: 45px;
+    height: 40px;
+    padding: 10px;
+    margin-left: -5px;
+    background: #e01111;
+    border: 2px solid #ffffff;
+    color: rgb(255, 255, 255);
+    text-align: center;
+
+    font: 16px Arial, sans-serif;
+}
+
+.numberCirclea {
+    border-radius: 50%;
+    width: 45px;
+    height: 40px;
+    padding: 10px;
+    margin-left: -5px;
+    background: #005c34;
+    border: 2px solid #ffffff;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font: 16px Arial, sans-serif;
+}
+
+.numberCircleb {
+    border-radius: 50%;
+    width: 45px;
+    height: 40px;
+    padding: 9px;
+    margin-left: -5px;
+    background: #003b88;
+    border: 2px solid #ffffff;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font: 15px Arial, sans-serif;
+}
+
+.divce {
+    margin-left: -5px;
+    /* font-size: 16px; */
+    /* font-weight: bold; */
+}
+
+.divc {
+    margin-left: -3px;
+    /* font-size: 16px; */
+    /* font-weight: bold; */
+}
+
+.empty {
+    background-color: #f7f74f !important;
+    color: #000000;
+
+}
+
+.warn {
+    background-color: #ff0d0d !important;
+    color: #fff;
+
+
+}

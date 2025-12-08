@@ -1,0 +1,229 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <mat-drawer-container class="flex-auto h-full  dark:bg-transparent">
+        <mat-drawer-content class="flex flex-col">
+            <!-- Header -->
+            <div class="bg-card">
+                <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-0">
+                    <div
+                        class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-6 mx-2 sm:my-12 md:my-12">
+                        <!-- Avatar and name -->
+                        <div class="flex flex-auto items-center min-w-0">
+                            <div class="flex flex-col min-w-0 ">
+                                <ng-container>
+                                    <div class="text-4xl font-extrabold tracking-tight">My Courses</div>
+                                    <div class="font-medium text-secondary -mt-2">
+                                        Your list of added courses
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                            <button class="bg-accent" mat-flat-button (click)="createCourse()" [color]="'accent'">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                <span class="ml-2">Add new</span>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Main -->
+            <div class="flex-auto border-t  -mt-px p-2 sm:p-2">
+                <div class="w-full max-w-screen-xl mx-auto">
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full mt-8">
+                        <!-- Recent assessments table -->
+                        <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                            <div class="p-6 flex flex-col sm:flex-row items-center justify-between">
+                                <div>
+                                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Courses
+                                    </div>
+                                    <div class="text-secondary font-medium">Total {{this.Courses.length}}
+                                    </div>
+                                </div>
+                                <div class="flex flex-row justify-between items-center">
+
+                                    <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
+                                        <!-- <mat-form-field
+                                            class="mr-2 fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
+                                            <mat-select [value]="0" (selectionChange)="filterByCategory($event)">
+                                                <ng-container *ngFor="let category of categories">
+                                                    <mat-option [value]="category.value">{{
+                                                        category.title
+                                                        }}</mat-option>
+                                                </ng-container>
+                                            </mat-select>
+                                        </mat-form-field> -->
+                                        <mat-form-field
+                                            class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
+                                            <mat-icon class="icon-size-5" matPrefix
+                                                [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                            <input matInput (input)="applyFilter($event.target.value)"
+                                                [placeholder]="'Search'" />
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto mx-6">
+                                <table class="w-full bg-transparent" mat-table [dataSource]="dataSource" matSort>
+
+                                    <ng-container matColumnDef="name">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{course.name}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfHoles">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Holes
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{course.noOfHoles}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="par">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Par
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{course.par}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="city">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            City
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{course.city}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="country">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Country
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <span class="pr-6 whitespace-nowrap">
+                                                {{course.country}}
+                                            </span>
+                                        </td>
+                                    </ng-container>
+
+
+                                    <ng-container matColumnDef="createdAt">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Created At
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            {{course.createdAt | date:'MMM dd, y'}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Status
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <span
+                                                class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                                [ngClass]="{
+                                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50':
+                                                        course.status=='Active',
+                                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50':
+                                                    course.status=='In Review',
+                                                    'bg-amber-200 text-amber-800 dark:bg-amber-600 dark:text-amber-50':
+                                                    course.status=='In Complete'
+                                                }">
+                                                <span class="leading-relaxed whitespace-nowrap">{{ course.status
+                                                    }}</span>
+                                            </span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="action">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Action
+                                        </th>
+                                        <td mat-cell *matCellDef="let course">
+                                            <div class="flex">
+                                                <span class="font-medium mr-2 whitespace-nowrap">
+                                                    <a [routerLinkActive]="'active'"
+                                                        [routerLink]="['/courses/add/' + course.id ]">
+                                                        <button [matTooltip]="'Edit Course'">
+                                                            <mat-icon [svgIcon]="'heroicons_outline:eye'"
+                                                                color="primary"></mat-icon>
+                                                        </button>
+                                                    </a>
+                                                </span>
+
+                                                <span
+                                                    *ngIf="this._localStorage.isSuperAdmin() &&  course.status!='Active'"
+                                                    class="font-bold mx-3 whitespace-nowrap">
+                                                    <button (click)="compelteCourse(course.id)"
+                                                        [matTooltip]="'Mark as Active'">
+                                                        <mat-icon class="icon-size-7"
+                                                            [svgIcon]="'heroicons_outline:check'"
+                                                            color="primary"></mat-icon>
+                                                    </button>
+                                                </span>
+                                                <!--<span class="font-medium ml-1 whitespace-nowrap">
+                                                <button (click)="deleteUser(account)" [matTooltip]="'Delete User'">
+                                                    <mat-icon class="icon-size-7" [svgIcon]="'heroicons_solid:delete'"
+                                                        color="warn"></mat-icon>
+                                                </button>
+                                            </span> -->
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <!-- <ng-container *ngIf="isUserAdmin()" matColumnDef="button">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                                            Login As
+                                        </th>
+                                        <td mat-cell *matCellDef="let account">
+
+                                        </td>
+                                    </ng-container> -->
+
+                                    <ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                        <tr class="order-row h-16" mat-row
+                                            *matRowDef="let row; columns: displayedColumns;">
+                                        </tr>
+                                    </ng-container>
+
+
+                                </table>
+                                <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 80, 100]"></mat-paginator>
+                                <!-- <tr class="h-16 border-0" mat-footer-row *matFooterRowDef="['recentOrdersTableFooter']"> -->
+                                <!-- </tr> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <ng-template #noContacts>
+                <div
+                    class="sm:col-span-2 md:col-span-2 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden items-center justify-center dark:bg-transparent">
+                    <mat-icon class="icon-size-24" [svgIcon]="
+                        'heroicons_outline:document-search'
+                    "></mat-icon>
+                    <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+                        No Course Added!
+                    </div>
+                </div>
+            </ng-template> -->
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>
