@@ -143,7 +143,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody *ngIf="!this.showTaxes" class="divide-y divide-gray-200">
                             <tr *ngFor="let item of flight" class="bg-white">
                                 <td
                                     class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
@@ -229,6 +229,98 @@
                                                     }}" value="{{
                                                         item.grossTotal
                                                     }}" disabled="disabled" />
+
+                                </td>
+                                <!-- <td class="py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50" id="grosstotal_{{
+                                                        item.playerId
+                                                    }}">{{
+                                    item.grossTotal }}</td> -->
+                            </tr>
+
+                        </tbody>
+                        <tbody *ngIf="this.showTaxes" class="divide-y divide-gray-200">
+                            <tr class="bg-white">
+                                <td
+                                    class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
+                                    <span class="flex gap-x-2 items-center">
+                                        {{ flight.FlightName }}
+
+                                    </span>
+                                </td>
+                                <td *ngFor="
+                                                let score of flight.Hole9Scores;
+                                                let i = index
+                                            " class="p-1">
+                                    <input (input)="
+                                                        onGross9Change(
+                                                            $event.target.value,
+                                                            flight.flightId,
+                                                            flight.header
+                                                        )
+                                                    " type="text" id="{{
+                                                        flight.header
+                                                            .courseHoles9[i].id
+                                                    }}&{{ flight.flightId }}" maxlength="2" (keyup.enter)="
+                                                        keytab($event)
+                                                    " (keypress)="
+                                                        numberOnly($event)
+                                                    " value="{{ score }}"
+                                        class="w-10 text-center bg-white rounded-sm py-1 font-medium border border-gray-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                </td>
+
+                                <td class="w-10">
+                                    <input type="text" class="w-10 py-2 px-2 font-bold text-center bg-gray-50" id="gross9total_{{
+                                                        flight.flightId
+                                                    }}" value="{{
+                                                        flight.gross9Total
+                                                    }}" disabled="disabled" />
+
+                                </td>
+                                <ng-container *ngIf="
+                                                flight.header.courseHoles18
+                                                    .length > 0
+                                            ">
+                                    <td *ngFor="let score of flight.Hole18Scores;
+                                                    let i = index
+                                                " class="p-1">
+                                        <input (input)="
+                                                            onGross18Change(
+                                                                $event.target
+                                                                    .value,
+                                                                flight.flightId,
+                                                                flight.header
+                                                            )
+                                                        " id="{{
+                                                            flight.header
+                                                                .courseHoles18[
+                                                                i
+                                                            ].id
+                                                        }}&{{
+                                                            flight.flightId
+                                                        }}" maxlength="2" (keyup.enter)="
+                                                            keytab($event)
+                                                        " (keypress)="
+                                                            numberOnly($event)
+                                                        " value="{{ score }}"
+                                            class="w-10 text-center bg-white rounded-sm py-1 font-medium border border-gray-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                    </td>
+
+                                </ng-container>
+                                <td class="w-10">
+                                    <input type="text" class="w-10 py-2 px-2 font-bold text-center bg-gray-50" id="gross18total_{{
+                                                            flight.flightId
+                                                        }}" value="{{
+                                                            flight.gross18Total
+                                                        }}"  disabled="disabled"  />
+
+                                </td>
+                                <td class="w-12">
+                                    <input type="text"
+                                        class="w-12 py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50" id="grosstotal_{{
+                                                            flight.flightId
+                                                        }}" value="{{
+                                                            flight.grossTotal
+                                                        }}"  disabled="disabled" />
 
                                 </td>
                                 <!-- <td class="py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50" id="grosstotal_{{

@@ -102,7 +102,7 @@ export enum HandicapAllocation {
 export enum matchFormat {
     MATCH_PLAY = "MATCH_PLAY",
     STROKE_PLAY = "STROKE_PLAY",
-    STABLEFORD = "STABLEFORD",
+    STABLE_FORD = "STABLE_FORD",
     MODIFIED_STABLEFORD = "MODIFIED_STABLEFORD",
     SPLIT_SIXES = "SPLIT_SIXES",
     TEXAS_SCRAMBLE = "TEXAS_SCRAMBLE",
@@ -114,13 +114,16 @@ export enum matchFormat {
     COMBINE_ALL = "COMBINE_ALL",
     BESTBALL = "BESTBALL",
     SHAMBLES = "SHAMBLES",
+    GREENSOME = "GREENSOME",
+    FOURSOME = "FOURSOME",
+    TWO_BALL_BEST_BALL = "TWO_BALL_BEST_BALL",
     LIV = "LIV",
 }
 
 export enum matchFormats {
     MATCH_PLAY = "Ryder Cup",
     STROKE_PLAY = "Stroke Play",
-    STABLEFORD = "Stableford",
+    STABLE_FORD = "Stableford",
     MODIFIED_STABLEFORD = "Modified Stableford",
     SPLIT_SIXES = "Split Sixes",
     TEXAS_SCRAMBLE = "Texas Scramble",
@@ -132,6 +135,9 @@ export enum matchFormats {
     COMBINE_ALL = "Combine All",
     BESTBALL = "Bestball",
     SHAMBLES = "Shambles",
+    GREENSOME = "GreenSome",
+    FOURSOME = "FourSome",
+    TWO_BALL_BEST_BALL = "Two Ball Best Ball",
     LIV = "LIV",
 }
 

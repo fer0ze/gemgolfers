@@ -41,28 +41,33 @@ export const LeaderboardSubscription = gql`
             underGross2
             underGross3
             underGross4
+            underGross5
             playingRound
             name
             scoreR1
             scoreR2
             scoreR3
             scoreR4
+            scoreR5
             holesPlayedR1
             holesPlayedR2
             holesPlayedR3
             holesPlayedR4
+            holesPlayedR5
             status
             category
             netScoreR1
             netScoreR2
             netScoreR3
             netScoreR4
+            netScoreR5
             underNet
             matchFormat
             underNet1
             underNet2
             underNet3
             underNet4
+            underNet5
             holeScoreLast9
             holeScoreLast6
             holeScoreLast3
@@ -75,15 +80,18 @@ export const LeaderboardSubscription = gql`
             pointsRound2
             pointsRound3
             pointsRound4
+            pointsRound5
             activeRound
             completed1
             completed2
             completed3
             completed4
+            completed5
             playerHandicapDoublesRound1
             playerHandicapDoublesRound2
             playerHandicapDoublesRound3
             playerHandicapDoublesRound4
+            playerHandicapDoublesRound5
         }
         TournamentQL: tournament(
             where: {

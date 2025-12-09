@@ -39,7 +39,7 @@ export class FuseLoadingInterceptor implements HttpInterceptor {
 
         return next.handle(req).pipe(
             finalize(() => {
-                console.log(requestId);
+                // console.log(requestId);
 
                 // Set the status to false if there are any errors or the request is completed
                 this._fuseLoadingService._setLoadingStatus(false, requestId);

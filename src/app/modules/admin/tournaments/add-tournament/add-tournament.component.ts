@@ -615,7 +615,10 @@ export class AddTournamentComponent implements OnInit {
 
                     this.matchFormats = General.teamFormats();
                 }
-                if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY) {
+                if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY ||
+                    this.currentTournament.matchFormat == matchFormat.BEST_TWO ||
+                    this.currentTournament.matchFormat == matchFormat.BEST_THREE
+                ) {
                     this.showMatchPlay = true;
                     this.showCat = false;
                     this.steps = this.steps.filter(
@@ -643,7 +646,11 @@ export class AddTournamentComponent implements OnInit {
                     this.currentTournament.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                     this.showCat = false;
                     this.showTexas = true;
-                } else if (this.currentTournament.matchFormat == matchFormat.SHAMBLES) {
+                } else if (this.currentTournament.matchFormat == matchFormat.SHAMBLES ||
+                    this.currentTournament.matchFormat == matchFormat.GREENSOME ||
+                    this.currentTournament.matchFormat == matchFormat.FOURSOME ||
+                    this.currentTournament.matchFormat == matchFormat.TWO_BALL_BEST_BALL
+                ) {
                     this.showCat = false;
                     this.showShambles = true;
                     this.showMatchPlay = false;
@@ -665,7 +672,7 @@ export class AddTournamentComponent implements OnInit {
                         // 🔹 Renumber all steps after insertion
                         this.steps.forEach((s, index) => (s.number = index + 1));
                     }
-                } else if (this.currentTournament.matchFormat == matchFormat.STABLEFORD || this.currentTournament.matchFormat == matchFormat.MODIFIED_STABLEFORD || this.currentTournament.matchFormat == matchFormat.SPLIT_SIXES) {
+                } else if (this.currentTournament.matchFormat == matchFormat.STABLE_FORD || this.currentTournament.matchFormat == matchFormat.MODIFIED_STABLEFORD || this.currentTournament.matchFormat == matchFormat.SPLIT_SIXES) {
                     this.showCat = false;
                 } else if (this.currentTournament.matchFormat == matchFormat.BEST_THREE || this.currentTournament.matchFormat == matchFormat.LIV ||
                     this.currentTournament.matchFormat == matchFormat.BEST_TWO) {
@@ -2588,7 +2595,11 @@ export class AddTournamentComponent implements OnInit {
             this.showTexas = true;
         }
         if (this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormats.SHAMBLES) {
+            matchFormats.SHAMBLES || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormats.GREENSOME || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormats.FOURSOME || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormats.TWO_BALL_BEST_BALL
+        ) {
             this.showShambles = true;
         }
         if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormats.MATCH_PLAY) {
@@ -2947,7 +2958,11 @@ export class AddTournamentComponent implements OnInit {
             this.showTexas = true;
         }
         if (this.formArray.get([0]).value.courseInfo[0].matchFormat ==
-            matchFormat.SHAMBLES) {
+            matchFormat.SHAMBLES || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.GREENSOME || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.FOURSOME || this.formArray.get([0]).value.courseInfo[0].matchFormat ==
+            matchFormat.TWO_BALL_BEST_BALL
+        ) {
             this.showShambles = true;
         }
         for (let i = 1; i <= this.formArray.get([0]).value.noofMarshals; i++) {
@@ -4320,9 +4335,9 @@ export class AddTournamentComponent implements OnInit {
                                 }
                             }
                         }
-                        let roundTeeId1: any = General.getPlayersTees(
-                            tournamentFlightMembers[0].playingTee
-                        );
+                        // let roundTeeId1: any = General.getPlayersTees(
+                        //     tournamentFlightMembers[0].playingTee
+                        // );
                         if (tournamentFlightMembers.length > 0) {
                             // //console.log(tournamentFlightMembers);
                             fcnter++;
@@ -4338,11 +4353,11 @@ export class AddTournamentComponent implements OnInit {
                                 flightNo: fcnter,
                                 flightRound: 1,
                                 categoryRound: 1,
-                                tee_id: roundTeeId1.id,
+                                tee_id: 1,
                                 startingHole:
                                     this.selectedMembers[index][index2][index3]
                                         .tee,
-                                tee: roundTeeId1.name,
+                                tee: 'AMATEURS',
                                 category: this.selectedMembers[index].title,
                                 date: General.parseToDate(
                                     this.formArray.get([0]).value
@@ -5011,14 +5026,14 @@ export class AddTournamentComponent implements OnInit {
     }
     formatChange(event) {
 
-        if (event.value == matchFormat.STROKE_PLAY || event.vlaue == matchFormat.STABLEFORD) {
+        if (event.value == matchFormat.STROKE_PLAY || event.vlaue == matchFormat.STABLE_FORD) {
             this.showCat = true;
             this.showMatchPlay = false;
             this.showShambles = false;
         } else {
             this.showCat = false;
         }
-        if (event.value == matchFormat.MATCH_PLAY) {
+        if (event.value == matchFormat.MATCH_PLAY || event.value == matchFormat.BEST_THREE || event.value == matchFormat.BEST_TWO) {
             this.steps = this.steps.filter(
                 s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
             );
@@ -5039,7 +5054,11 @@ export class AddTournamentComponent implements OnInit {
                 // 🔹 Renumber all steps after insertion
                 this.steps.forEach((s, index) => (s.number = index + 1));
             }
-        } else if (event.value == matchFormat.SHAMBLES) {
+        } else if (event.value == matchFormat.SHAMBLES ||
+            event.value == matchFormat.GREENSOME ||
+            event.value == matchFormat.FOURSOME ||
+            event.value == matchFormat.TWO_BALL_BEST_BALL
+        ) {
             this.showShambles = true;
             this.showMatchPlay = false;
             this.steps = this.steps.filter(

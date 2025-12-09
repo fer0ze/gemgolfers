@@ -76,7 +76,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                 ];
             case 'SINGLES':
                 return [{ value: '2', label: 'SINGLES' }];
-            case 'DOUBLES':
+            case 'FOUR_BALL':
                 return [{ value: '1', label: 'FOUR BALL' }];
             case 'GREENSOME':
                 return [{ value: '1', label: 'GREENSOME' }];

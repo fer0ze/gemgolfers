@@ -41,7 +41,7 @@ export class PlayersScoreLoader {
             if (tournamentQL.matchFormat === matchFormat.STROKE_PLAY || tournamentQL.matchFormat === matchFormat.LIV || tournamentQL.matchFormat === matchFormat.BEST_TWO) {
                 let calResult = this.strokePlayCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.STABLEFORD || tournamentQL.matchFormat === matchFormat.MODIFIED_STABLEFORD || tournamentQL.matchFormat === matchFormat.SPLIT_SIXES) {
+            } else if (tournamentQL.matchFormat === matchFormat.STABLE_FORD || tournamentQL.matchFormat === matchFormat.MODIFIED_STABLEFORD || tournamentQL.matchFormat === matchFormat.SPLIT_SIXES) {
                 let calResult = this.stableFordCalculation(tournamentQL);
 
             } else if (tournamentQL.matchFormat === matchFormat.MATCH_PLAY) {

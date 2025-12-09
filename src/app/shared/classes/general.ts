@@ -411,13 +411,16 @@ export class General {
         return [
             { name: "Ryder Cup", value: "MATCH_PLAY" },
             { name: "Texas Scramble", value: "TEXAS_SCRAMBLE" },
-            { name: "Two Ball Scramble", value: "TWO_BALL_SCRAMBLE" },
-            { name: "Three Ball Scramble", value: "THREE_BALL_SCRAMBLE" },
+            // { name: "Two Ball Scramble", value: "TWO_BALL_SCRAMBLE" },
+            // { name: "Three Ball Scramble", value: "THREE_BALL_SCRAMBLE" },
             { name: "Four Ball Scramble", value: "FOUR_BALL_SCRAMBLE" },
             { name: "Shambles", value: "SHAMBLES" },
+            { name: "GreenSome", value: "GREENSOME" },
+            { name: "FourSome", value: "FOURSOME" },
+            { name: "Two Ball Best Ball", value: "TWO_BALL_BEST_BALL" },
             { name: "Best Three", value: "BEST_THREE" },
             { name: "Best Two", value: "BEST_TWO" },
-            { name: "LIV", value: "LIV" },
+            // { name: "LIV", value: "LIV" },
         ];
     }
 
@@ -843,7 +846,7 @@ export class Constants {
     // Match Formats
     static readonly MF_MATCH_PLAY = 'MATCH_PLAY';
     static readonly MF_STROKE_PLAY = 'STROKE_PLAY';
-    static readonly MF_STABLEFORD = 'STABLEFORD';
+    static readonly MF_STABLEFORD = 'STABLE_FORD';
     static readonly MF_BESTBALL = 'BESTBALL';
 
     // Score Management
