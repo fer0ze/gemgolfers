@@ -307,6 +307,37 @@ export class General {
         return teeYards;
     }
 
+    public static getTeeYard(teeDistance, tee, courseId, holeId) {
+        console.log(teeDistance);
+        let teeYards = [];
+        let lat, lng;
+        if (Object.keys(teeDistance).length != 0) {
+            for (const [key, value] of Object.entries(teeDistance)) {
+                // console.log(`Key: ${key}, Value: ${value}`);
+                let teeId = this.getPlayersTe(key);
+                // console.log(teeId);
+                // if (latLong[key]) {
+                //     [lat, lng] = latLong[key].split(',').map(parseFloat);
+                // } else {
+                //     lat = lng = null;
+                // }
+                if (teeId) {
+                    let obj = {
+                        tee_distance: value,
+                        tee_lat: null,
+                        tee_long: null,
+                        tee_id: Number(teeId?.id),
+                        course_id: courseId,
+                        hole_id: holeId,
+                    }
+                    teeYards.push(obj);
+                }
+            }
+        }
+        // console.log(tee);
+        return teeYards;
+    }
+
     public static getHoleLatLong(greenStart: string | number, greenCenter: string | number, greenEnd: string | number): [number, number, number, number, number, number] {
         const parseLatLong = (latLong: string | number): [number, number] => {
 
