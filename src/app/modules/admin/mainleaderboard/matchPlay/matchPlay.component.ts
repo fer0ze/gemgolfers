@@ -384,7 +384,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
         let find = this.Leaderboard.TeamQL.filter(team => team.id === teamId);
 
         if (find.length > 0) {
-            let teamMember = find[0].membersQL;
+            let teamMember = find[0].teamMembers;
 
             teamMember.forEach(element => {
                 let check = membersQLs.filter(mem => mem.playerId === element.playerId);

@@ -214,7 +214,7 @@ export class MatchplayComponent implements OnInit {
     
     getTeamColor(playerId: string) {
         for (let team of this.matchPlayData.teams) {
-            for (let member of team.membersQL) {
+            for (let member of team.teamMembers) {
                 if (member.playerId === playerId) {
                     return team.color;   // <--- NOW it properly returns
                 }

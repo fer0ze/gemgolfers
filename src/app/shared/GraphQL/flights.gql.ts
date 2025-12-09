@@ -530,7 +530,7 @@ export const FlightManagersQuery = gql`
                 tournamentId
                 name
                 color
-                membersQL {
+                teamMembers {
                     teamId
                     playerId
                     player {
@@ -557,7 +557,7 @@ export const TeamManagersQuery = gql`
                 tournamentId
                 name
                 color
-                membersQL {
+                teamMembers {
                     teamId
                     playerId
                     player {

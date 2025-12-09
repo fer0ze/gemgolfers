@@ -527,7 +527,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     getTeamColor(playerId: string) {
         for (let team of this.tournamentInfo[0].teams) {
-            for (let member of team.membersQL) {
+            for (let member of team.teamMembers) {
                 if (member.playerId === playerId) {
                     return team.color;   // <--- NOW it properly returns
                 }

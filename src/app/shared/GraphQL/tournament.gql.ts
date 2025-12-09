@@ -149,7 +149,7 @@ export const LeaderboardSubscription = gql`
                 tournamentId
                 name
                 color
-                membersQL {
+                teamMembers {
                     teamId
                     playerId
                     player {
@@ -328,7 +328,7 @@ export const tournamentDashBoard = gql`
                 tournamentId
                 name
                 color
-                membersQL {
+                teamMembers {
                     teamId
                     playerId
                     player {
@@ -1050,7 +1050,7 @@ export const GetTournamentByID = gql`
                 tournamentId
                 name
                 color
-                membersQL {
+                teamMembers {
                     teamId
                     playerId
                     player {
@@ -1484,7 +1484,7 @@ export const insertTournamentTeamQL = gql`
         $teamsToSave: [tournament_team_insert_input!]!
         $teamsMembersToRemove: [String!]!
     ) {
-        delete_team_member(where: { teamId: { _in: $teamsMembersToRemove } }) {
+        delete_tournament_team_members(where: { teamId: { _in: $teamsMembersToRemove } }) {
             AffectedRowsQL: affected_rows
         }
 

@@ -93,7 +93,7 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                 tournamentId
                 name
                 color
-                membersQL {
+                teamMembers {
                     teamId
                     playerId
                     player {

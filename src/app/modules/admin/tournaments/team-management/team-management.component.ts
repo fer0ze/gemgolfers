@@ -138,7 +138,7 @@ export class TeamManagementComponent implements OnInit {
                 };
 
                 // Loop through each member in membersQL
-                team.membersQL.forEach((memberQL) => {
+                team.teamMembers.forEach((memberQL) => {
                     const playerQL = memberQL.player; // Get the player object from membersQL
 
                     // Extract relevant properties from the player object
@@ -392,7 +392,7 @@ export class TeamManagementComponent implements OnInit {
                 adminId: this.loggedInuser.id,
                 name: team.name,
                 color: team.color,
-                membersQL: {
+                teamMembers: {
                     data: tournamentMember,
                 },
             }
