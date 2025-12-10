@@ -1310,18 +1310,28 @@ export class ViewTournamentComponent implements OnInit {
                     } else {
                         if (getResult.category[0].playing == true || getResult.category[0].playing == 'true') {
                             for (let cats in getResult.category) {
-                                await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+                                try {
+                                    const res = await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+
+                                    if (res) {
+                                        const jObject = { cutOff: jsons };
+
+                                        const response = await this.facadeService.closeActiveRound(
+                                            this.tournamentID,
+                                            this.activeRound + 1,
+                                            jObject,
+                                            this.activeRound
+                                        );
+
+                                        if (response) {
+                                            window.location.reload();
+                                        }
+                                    }
+
+                                } catch (error) {
+                                    console.error("Error in closing round:", error);
+                                }
                             }
-                        }
-                        let jObject = { cutOff: jsons };
-                        let response = await this.facadeService.closeActiveRound(
-                            this.tournamentID,
-                            this.activeRound + 1,
-                            jObject,
-                            this.activeRound
-                        );
-                        if (response) {
-                            window.location.reload();
                         }
                     }
                 });
@@ -1580,24 +1590,48 @@ export class ViewTournamentComponent implements OnInit {
     async saveCategoryFlightsForMatchPlay(flights: any[]) {
         try {
             let tournamentFlights: Flight[] = [];
-
+            let tournamentPairs: any[];
             let tournamentTeamOpponents: any[] = [];
+            let createPairs: boolean = false;
             //let fcnter = 0;
             ////console.log(criteria);
             this.changer++;
+            // let arr = this.fullTournament.pointsFormats;
+            // arr.forEach((control, index) => {
+            //     if (index == this.activeRound + 1 && (control.format == 'GREENSOME' || control.format == 'FOURSOME')) {
+            //         createPairs = true;
+            //     }
+            // });
 
+            const roundKey = `pointsFormat${this.activeRound + 1}`;
+
+            const format = this.fullTournament.pointsFormats[roundKey];
+
+            console.log("Format:", format);
+            if (format == matchFormat.GREENSOME || format == matchFormat.FOURSOME) {
+                createPairs = true;
+            }
             let tournamentFlightMembers: FlightMembers[];
             let teeBox: number;
             let teeTime: string = "08:00:00+00";
             for (var index in flights) {
+                tournamentPairs = [];
                 tournamentFlightMembers = [];
                 for (var index2 in flights[index]['MembersQL']) {
+
+                    // const nextMember = flights[index]['MembersQL'][index2 + 1]['playerId'];
                     let FM: any = {
                         playerId: flights[index]['MembersQL'][index2]['playerId'],
                         attendance: false,
                         playingTee: 'AMATEURS',
                         tee_id: 1,
+                        // PlayerQL:flights[index]['MembersQL'][index2]['PlayerQL'],
                     };
+
+                    const existsInPairs = tournamentPairs.some(p =>
+                        p.member1Id === FM.playerId || p.member2Id === FM.playerId
+                    );
+
                     if (this.showMatchPlay && this.check(tournamentTeamOpponents, FM.playerId)) {
 
                         let team1Id = this.getTeamId(FM.playerId);
@@ -1613,7 +1647,18 @@ export class ViewTournamentComponent implements OnInit {
                             }
                             tournamentTeamOpponents.push(teamOpponent);
                         }
+                    }
 
+                    if (createPairs && !existsInPairs) {
+                        let nextMember = this.getTeamMemberInFlight(flights[index]['MembersQL'], FM.playerId)
+                        let pair = {
+                            id: UniqueIdGenerator.generate(),
+                            tournamentId: this.tournamentID,
+                            pairName: flights[index]['MembersQL'][index2].PlayerQL.firstName + '/' + nextMember.PlayerQL.firstName,
+                            member1Id: FM.playerId,
+                            member2Id: nextMember.playerId,
+                        };
+                        tournamentPairs.push(pair);
                     }
                     tournamentFlightMembers.push(FM);
                 }
@@ -1643,7 +1688,10 @@ export class ViewTournamentComponent implements OnInit {
                         },
                         team: {
                             data: tournamentTeamOpponents,
-                        }
+                        },
+                        pairs: {
+                            data: tournamentPairs,
+                        },
                     };
                     ////console.log(flight);
                     tournamentFlights.push(flight);
@@ -1653,7 +1701,7 @@ export class ViewTournamentComponent implements OnInit {
                 tournamentTeamOpponents = [];
             }
             this.teetime = 0;
-            await this.facadeService.createNextRoundFlights(tournamentFlights);
+            return await this.facadeService.createNextRoundFlights(tournamentFlights);
             ////console.log(tournamentFlights);
             // //console.log('After Function' + this.runningFlights);
         } catch (error) {
@@ -3490,7 +3538,7 @@ export class ViewTournamentComponent implements OnInit {
         if (this.fullTournament.teams.length > 0) {
             let playerTeamId;
             for (let data of this.fullTournament.teams) {
-                data.membersQL.forEach(element => {
+                data.teamMembers.forEach(element => {
                     if (element.playerId == playerId) {
                         playerTeamId = data.id;
                     }
@@ -3499,6 +3547,27 @@ export class ViewTournamentComponent implements OnInit {
             return playerTeamId;
         }
     }
+
+    getTeamMemberInFlight(members, playerId) {
+        if (!members || members.length === 0) return null;
+
+        // 1. Get current player’s Team ID
+        const teamId = this.getTeamId(playerId);
+        if (!teamId) return null;
+
+        // 2. Find another member in the flight with the SAME teamId
+        for (let m of members) {
+            if (m.playerId !== playerId) {
+                const memberTeamId = this.getTeamId(m.playerId);
+                if (memberTeamId === teamId) {
+                    return m; // Found teammate in the same flight
+                }
+            }
+        }
+
+        return null; // No teammate found
+    }
+
 
     findOpponentFlightWise(teamId, tournamentTeamOpponents, members) {
 

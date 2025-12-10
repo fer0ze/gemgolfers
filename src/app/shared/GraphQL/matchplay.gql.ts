@@ -20,6 +20,7 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
         clubId
         title
         matchFormat
+        pointsFormats
         SubTournamentsQL: sub_tournaments {
             SubTournamentQL: sub_tournament {
                 SubTournamentFlightsQL: flights {

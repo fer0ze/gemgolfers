@@ -148,6 +148,8 @@
                                 <td
                                     class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
                                     <span *ngIf="this.showPairs" class="flex gap-x-2 items-center">
+                                        <span *ngIf="this.showMatchPlay" class="w-2 h-2 rounded-full"
+                                            [style.background-color]="getTeamColor(item.playerId)"></span>
                                         {{ item.pairName }} 
 
                                     </span>

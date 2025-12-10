@@ -1192,6 +1192,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             let flightName: any[] = [];
             let flightsToRemove: string[] = [];
             let tournamentTeamOpponents: any[] = [];
+            let tournamentPairs: any[];
             let flightMembersToRemove: string[] = [];
             let membersFromFlightToRemove: string[] = [];
             let flightMembersToSave: any[] = [];
@@ -1199,12 +1200,22 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             let fcnter = 0;
             let runningFlightcounter = 0;
             this.copyScoreInfo = [];
+            let createPairs: boolean = false;
 
+            const roundKey = this.activeRound == 1 ? 'pointsFormat' : `pointsFormat${this.activeRound}`;
+
+            const format = this.tournamentInfo[0].pointsFormats[roundKey];
+
+            console.log("Format:", format);
+            if (format == matchFormat.GREENSOME || format == matchFormat.FOURSOME) {
+                createPairs = true;
+            }
             ////console.log(this.selectedMembers);
             ////console.log(this.roundFlights);
 
             for (let index in this.selectedMembers) {
                 tournamentFlightMembers = [];
+                tournamentPairs = [];
 
                 for (let index2 in this.selectedMembers[index]) {
                     if (Number.isInteger(Number(index2))) {
@@ -1215,6 +1226,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                         .playerCategory
                                     : 'AMATEURS'
                             );
+
                             let FM: any = {
                                 playerId: this.selectedMembers[index][index2].id,
                                 flightId: this.selectedMembers[index]['id'],
@@ -1230,6 +1242,11 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                     : 'AMATEURS',
                                 tee_id: roundTeeId?.id ?? '1',
                             };
+
+                            const existsInPairs = tournamentPairs.some(p =>
+                                p.member1Id === FM.playerId || p.member2Id === FM.playerId
+                            );
+
                             if (this.showMatchPlay && this.check(tournamentTeamOpponents, FM.playerId)) {
 
                                 let team1Id = this.getTeamId(FM.playerId);
@@ -1246,6 +1263,18 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                                     tournamentTeamOpponents.push(teamOpponent);
                                 }
 
+                            }
+
+                            if (createPairs && !existsInPairs) {
+                                let nextMember = this.getTeamMemberInFlight(this.selectedMembers[index], FM.playerId)
+                                let pair = {
+                                    id: UniqueIdGenerator.generate(),
+                                    tournamentId: this.tournamentID,
+                                    pairName: 'Pair',
+                                    member1Id: FM.playerId,
+                                    member2Id: nextMember.id,
+                                };
+                                tournamentPairs.push(pair);
                             }
                             tournamentFlightMembers.push(FM);
                             flightMembersToSave.push(FM);
@@ -1373,7 +1402,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                         ended: false,
                         team: {
                             data: tournamentTeamOpponents,
-                        }
+                        }, pairs: {
+                            data: tournamentPairs,
+                        },
                     };
                     tournamentTeamOpponents = [];
                     if (this.showTeams) {
@@ -1928,7 +1959,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         if (this.tournamentInfo[0].teams.length > 0) {
             let playerTeamId;
             for (let data of this.tournamentInfo[0].teams) {
-                data.membersQL.forEach(element => {
+                data.teamMembers.forEach(element => {
                     if (element.playerId == playerId) {
                         playerTeamId = data.id;
                     }
@@ -1953,6 +1984,29 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         }
         return { oppoentId, opponentTeamId };
 
+    }
+
+    getTeamMemberInFlight(members, playerId) {
+        if (!members || members.length === 0) return null;
+
+        // 1. Get current player’s Team ID
+        const teamId = this.getTeamId(playerId);
+        if (!teamId) return null;
+
+        // 2. Find another member in the flight with the SAME teamId
+        for (let m of members) {
+            if (typeof m === 'object') {
+                if (m.id !== playerId) {
+                    const memberTeamId = this.getTeamId(m.id);
+                    if (memberTeamId === teamId) {
+                        return m; // Found teammate in the same flight
+                    }
+                }
+
+            }
+        }
+
+        return null; // No teammate found
     }
 
     check(tournamentTeamOpponents, playerId) {

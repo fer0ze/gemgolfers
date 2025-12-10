@@ -222,6 +222,7 @@ export const tournamentDashBoard = gql`
             handicapAllocations
             adminId
             courseHoleSets
+            pointsFormats
             courseHoleSetsInverted
             prefix
             members {

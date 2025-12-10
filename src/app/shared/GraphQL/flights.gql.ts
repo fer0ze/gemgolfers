@@ -476,6 +476,7 @@ export const FlightManagersQuery = gql`
             activeRound
             title
             startDate
+            pointsFormats
 
             FlightManagerQLi: flights(
                 where: { tournamentId: { _eq: $tournamentId } }

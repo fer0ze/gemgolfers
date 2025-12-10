@@ -127,10 +127,27 @@ export class MatchplayComponent implements OnInit {
                             this.showPairs = true;
                         }
 
+
                         let tournamentData: any = this.matchPlayData;
 
                         this.activeRound = tournamentData.activeRound;
                         this.totalRounds = tournamentData.noOfRounds;
+                        if (
+                            this.matchPlayData.matchFormat === matchFormat.MATCH_PLAY &&
+                            this.matchPlayData.pointsFormats
+                        ) {
+                            const roundKey =
+                                this.activeRound === 1
+                                    ? "pointsFormat"
+                                    : `pointsFormat${this.activeRound}`;
+
+                            const format = this.matchPlayData.pointsFormats[roundKey];
+
+                            console.log("Format:", format);
+                            if (format == matchFormat.GREENSOME || format == matchFormat.FOURSOME) {
+                                this.showPairs = true;
+                            }
+                        }
                         this.selectedIndex = this.activeRound - 1;
                         let roundCourse;
                         this.noOfRounds = tournamentData.noOfRounds;
@@ -277,6 +294,24 @@ export class MatchplayComponent implements OnInit {
         // if (this.active) {
         this.flightRound = item.round;
         this.activeRound = item.round;
+        if (
+            this.matchPlayData.matchFormat === matchFormat.MATCH_PLAY &&
+            this.matchPlayData.pointsFormats
+        ) {
+            const roundKey =
+                this.activeRound === 1
+                    ? "pointsFormat"
+                    : `pointsFormat${this.activeRound}`;
+
+            const format = this.matchPlayData.pointsFormats[roundKey];
+
+            console.log("Format:", format);
+            if (format == matchFormat.GREENSOME || format == matchFormat.FOURSOME) {
+                this.showPairs = true;
+            } else {
+                this.showPairs = false;
+            }
+        }
         if (this.flightRound == 1) {
             this.showRound1 = true;
             roundCourse = this.matchPlayData['CoursesQL'].filter((course) => { return course.round == this.flightRound });
