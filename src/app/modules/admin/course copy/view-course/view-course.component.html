@@ -213,6 +213,16 @@
                                     {{ hole.holeNo }}
                                 </div>
                             </ng-container>
+                            <ng-container *ngIf="NoOfHoles>18">
+                                <div *ngFor="let hole of holeSetfor27" class="font-semibold text-gray-700 p-2">
+                                    {{ hole.holeNo }}
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>28">
+                                <div *ngFor="let hole of holeSetfor36" class="font-semibold text-gray-700 p-2">
+                                    {{ hole.holeNo }}
+                                </div>
+                            </ng-container>
 
                             <!-- <div class="font-semibold text-gray-700 p-2 bg-gray-100">In</div>
                         <div class="font-semibold text-gray-700 p-2 bg-gray-200">Totals</div> -->
@@ -233,6 +243,22 @@
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
                                     <input type="number" [value]="hole.teeDistances[tee.tee_id] "
                                         (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>19">
+                                <ng-container *ngFor="let hole of holeSetfor27; let i = index">
+                                    <input type="number" [value]="hole.teeDistances[tee.tee_id] "
+                                        (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>28">
+                                <ng-container *ngFor="let hole of holeSetfor18; let i = index">
+                                    <input type="number" [value]="hole.teeDistances[tee.tee_id] "
+                                        (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
                                 </ng-container>
@@ -281,6 +307,40 @@
                                 </ng-container>
 
                             </ng-container>
+                            <ng-container *ngIf="NoOfHoles>19">
+                                <ng-container *ngFor="let hole of holeSetfor27; let i = index">
+                                    <input type="number" value="{{
+                                                                hole['par']
+                                                            }}" (input)="
+                                                                onParInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            "
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                                </ng-container>
+
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>28">
+                                <ng-container *ngFor="let hole of holeSetfor36; let i = index">
+                                    <input type="number" value="{{
+                                                                hole['par']
+                                                            }}" (input)="
+                                                                onParInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            "
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                                </ng-container>
+
+                            </ng-container>
 
                             <!-- <input type="number" [value]="back9Par()" readonly
                             class="w-full text-center border-gray-300 rounded-md shadow-sm bg-gray-100 p-1 font-semibold">
@@ -310,6 +370,38 @@
 
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
+                                    <input type="number" (input)="
+                                                                onIndexInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            " value="{{
+                                                                hole['index']
+                                                            }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>19">
+                                <ng-container *ngFor="let hole of holeSetfor27; let i = index">
+                                    <input type="number" (input)="
+                                                                onIndexInput(
+                                                                    $event
+                                                                        .target
+                                                                        .value,
+                                                                    hole.holeNo
+                                                                )
+                                                            " value="{{
+                                                                hole['index']
+                                                            }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>28">
+                                <ng-container *ngFor="let hole of holeSetfor36; let i = index">
                                     <input type="number" (input)="
                                                                 onIndexInput(
                                                                     $event

@@ -221,7 +221,7 @@ export class ViewCourseComponent implements OnInit {
             //  this.getLatLng(country?.code ?? '');
 
         } else {
-
+            this.addNewTee();   
         }
 
         this.listCountries = this.courseForm

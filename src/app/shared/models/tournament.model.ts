@@ -187,3 +187,51 @@ export interface AddDailyRound {
     roundDate: Date;
     //addPlayer : Player;
 }
+
+export const INDIVIDUAL_FORMATS_INFO: Record<string, string> = {
+    STROKE_PLAY: "Simply calculate the player gross score and net score as it comes.",
+
+    STABLE_FORD: `Stableford Leaderboard is calculated on Net Score and points are awarded as below.
+
+Simply calculate the player points after checking the net score on each hole.
+
+Double Eagle: 5 points
+Eagle: 4 points
+Birdie: 3 points
+Par: 2 points
+Bogey: 1 point
+Double Bogey or more: 0 points`,
+
+    "STROKE_PLAY / STABLEFORD": `StrokePlay: Simply calculate the player gross score and net score as it comes.
+
+Stableford: Stableford Leaderboard is calculated on Net Score and points are awarded:
+
+Double Eagle: 5 points
+Eagle: 4 points
+Birdie: 3 points
+Par: 2 points
+Bogey: 1 point
+Double Bogey or more: 0 points`,
+
+    NASSAU: `It is a Matchplay format and is played on Net Score in a 4 ball...`,
+
+    MODIFIED_STABLEFORD: `Modified Stableford Leaderboard is calculated on Net Score...`,
+
+    SPLIT_SIXES: `Played on Net Score in a 3 ball group...`,
+
+    RYDER_CUP: `Calculate the team score in two ways...`,
+
+    SHAMBLES: `In Shambles, we have pairs...`,
+
+    TWO_BALL_BEST_BALL: `In TWO Ball Best Ball, we have pairs...`,
+
+    TEXAS_SCRAMBLE: `In Texas Scramble, we combine handicap...`,
+
+    BEST_TWO: `BEST TWO and BEST THREE formats...`,
+
+    BEST_THREE: `BEST TWO and BEST THREE formats...`,
+
+    GREENSOME: "",
+
+    FOURSOME: ""
+};

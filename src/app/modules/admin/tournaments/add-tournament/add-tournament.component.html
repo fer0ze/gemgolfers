@@ -11,7 +11,7 @@
                 Back Step
             </a>
             <h1 class="text-3xl font-bold text-gray-900">
-                {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || 'New Tournament Form' }} 
+                {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || 'New Tournament Form' }}
             </h1>
             <div *ngIf="currentTournament" class="w-120">
 
@@ -219,6 +219,18 @@
                                                         format.name
                                                         }}</mat-option>
                                                 </mat-select>
+                                                <mat-hint align="end">
+
+                                                    <div class="flex gap-x-2 items-center">
+                                                        <span (click)="openFormatInfo(i)"
+                                                            class="text-gray-600 items-center flex cursor-pointer ">
+                                                            <mat-icon class="icon-size-3" class="icon">info</mat-icon>
+                                                            <span class="hover:underline">
+                                                                Format Info
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </mat-hint>
                                             </mat-form-field>
                                         </div>
                                         <div *ngFor="

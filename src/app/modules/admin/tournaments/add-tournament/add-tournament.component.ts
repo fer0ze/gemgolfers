@@ -20,6 +20,7 @@ import {
     CourseHoleSet,
 } from '../../../../shared/models/course.model';
 import {
+    INDIVIDUAL_FORMATS_INFO,
     matchFormat,
     matchFormats,
     Tournament,
@@ -70,6 +71,7 @@ import { DialogAddMemberComponent } from '../../dialogs/dialog-add-member/dialog
 import { LogsService } from 'app/shared/services/logs.service';
 import { Team, TeamMembers } from 'app/shared/models/team.model';
 import { InvalidCategoryPlayersComponent } from '../../dialogs/dialog-invalid-category-players/invalid-category-players.component';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 //import { DialogPlayingDatesComponent } from "../../material-components/dialog-playing-dates/dialog-playing-dates.component";
 
 @Component({
@@ -331,6 +333,7 @@ export class AddTournamentComponent implements OnInit {
         private datePipe: DatePipe,
         private router: Router,
         private location: Location,
+        private _fuseConfirmationService: FuseConfirmationService,
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
         private _formBuilder: FormBuilder, private logger: LogsService,
@@ -4840,6 +4843,34 @@ export class AddTournamentComponent implements OnInit {
         });
     }
 
+    openFormatInfo(index: number) {
+        const selectedFormat = this.courseFileds.controls[index].value.matchFormat;
+
+        const infoText = INDIVIDUAL_FORMATS_INFO[selectedFormat]
+            || "No information available.";
+
+        // this.dialog.open(DialogOverviewComponent, {
+        //     width: '350px',
+        //     data: infoText
+        // });
+
+        this._fuseConfirmationService.open({
+            title: selectedFormat,
+            message: infoText,
+            icon: {
+                name: 'info',
+                color: 'primary',
+            },
+            actions: {
+                cancel: {
+                    show: false,
+                },
+                confirm: {
+                    label: 'Close',
+                },
+            },
+        });
+    }
     async saveMembers(tournamentMember: TournamentMember[]) {
         let result = <any>(
             await this.facadeService.insertTournamentMember(tournamentMember)
