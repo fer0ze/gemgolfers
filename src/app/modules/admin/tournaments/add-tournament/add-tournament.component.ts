@@ -945,9 +945,11 @@ export class AddTournamentComponent implements OnInit {
     }
 
     backStep() {
-        this.currentStep--;
-        let step = this.steps.find(a => a.number == this.currentStep);
-        this.currentTitle = step?.title;
+        if (this.currentStep > 1) {
+            this.currentStep--;
+            let step = this.steps.find(a => a.number == this.currentStep);
+            this.currentTitle = step?.title;
+        }
     }
     goToStep(stepTitle: string, stepNumber: number): void {
 
@@ -4172,12 +4174,19 @@ export class AddTournamentComponent implements OnInit {
         let tournamentMember: TournamentMember[] = [];
         let flightName: any[] = [];
         let fcnter = 0;
+        let createPairs: boolean = false;
         let ind: number = 0;
 
         let tournamentFlightMembers: FlightMembers[];
         let tournamentPairs: any[];
         let tournamentTeamOpponents: any[] = [];
 
+        let arr = this.formArray.get([0]).value.pointsFormats;
+        arr.forEach((control, index) => {
+            if (index == 0 && (control.format == 'GREENSOME' || control.format == 'FOURSOME')) {
+                createPairs = true;
+            }
+        });
         if (this.currentTournament)
             this.tournamentID = this.currentTournament.id;
         for (let index in this.selectedMembers) {
@@ -4266,43 +4275,13 @@ export class AddTournamentComponent implements OnInit {
                                 //     }
                                 // }
                             } else if (this.showMatchPlay) {
-                                // if (Number.isInteger(Number(index4))) {
-                                //     if (ind % 2 == 0) {
-                                //         let newIndex = Number(index4) + 1;
-                                //         let teamOpponent = {
-                                //             id: UniqueIdGenerator.generate(),
-                                //             team1Id: this.selectedTeams[0]['id'],
-                                //             team2Id: this.selectedTeams[1]['id'],
-                                //             team1MemberId: this.selectedMembers[index][index2][index3][index4].id,
-                                //             team2MemberId: this.selectedMembers[index][index2][index3][newIndex].id,
-                                //             tournamentId: this.tournamentID,
-                                //         }
-                                //         tournamentTeamOpponents.push(teamOpponent);
-                                //     }
-                                //     ind++;
-                                //     if (Number.isInteger(Number(index4))) {
 
-
-                                //         let roundTeeId: any = General.getPlayersTe(
-                                //             this.selectedMembers[index][index2][index3][
-                                //                 index4
-                                //             ].playerCategory
-                                //         );
-
-                                //         let FM: any = {
-                                //             playerId:
-                                //                 this.selectedMembers[index][index2][
-                                //                     index3
-                                //                 ][index4].id,
-                                //             attendance: false,
-                                //             playingTee: roundTeeId.result,
-                                //             tee_id: roundTeeId.id,
-                                //         };
-
-                                //         tournamentFlightMembers.push(FM);
-                                //     }
-                                // }
                                 for (let index5 in this.selectedMembers[index][index2][index3][index4].members) {
+                                    const currentMember = this.selectedMembers[index][index2][index3][index4].members[index5];
+                                    const nextMember = this.selectedMembers[index][index2][index3][index4].members[Number(index5) + 1];
+                                    const existsInPairs = tournamentPairs.some(p =>
+                                        p.member1Id === currentMember.id || p.member2Id === currentMember.id
+                                    );
                                     if (index4 == 'teamA') {
                                         let teamOpponent = {
                                             id: UniqueIdGenerator.generate(),
@@ -4313,6 +4292,16 @@ export class AddTournamentComponent implements OnInit {
                                             tournamentId: this.tournamentID,
                                         }
                                         tournamentTeamOpponents.push(teamOpponent);
+                                    }
+                                    if (createPairs && nextMember && !existsInPairs) {
+                                        let pair = {
+                                            id: UniqueIdGenerator.generate(),
+                                            tournamentId: this.tournamentID,
+                                            pairName: currentMember.firstName + '/' + nextMember.firstName,
+                                            member1Id: currentMember.id,
+                                            member2Id: nextMember.id,
+                                        };
+                                        tournamentPairs.push(pair);
                                     }
                                     let roundTeeId: any = General.getPlayersTe(this.selectedMembers[index][index2][index3][index4].members[index5].playerCategory
                                     );
@@ -4426,24 +4415,24 @@ export class AddTournamentComponent implements OnInit {
             }
         }
 
-        // let result = <any>(
-        //     await this.facadeService.createNextRoundFlights(tournamentFlights)
-        // );
-        // if (this.showTexas == true) {
-        //     await this.facadeService.addFlightName(flightName);
-        // }
+        let result = <any>(
+            await this.facadeService.createNextRoundFlights(tournamentFlights)
+        );
+        if (this.showTexas == true) {
+            await this.facadeService.addFlightName(flightName);
+        }
 
-        // if (result) {
-        //     this.isCreatingFlights = false;
-        //     this.snackBar.open('Tournament has been setup.', 'x', {
-        //         duration: 5000,
-        //     });
-        //     this.reset();
-        //     this.router.navigate(['/tournaments/view/' + this.tournamentID]);
-        // } else {
-        //     this.isCreatingFlights = false;
+        if (result) {
+            this.isCreatingFlights = false;
+            this.snackBar.open('Tournament has been setup.', 'x', {
+                duration: 5000,
+            });
+            this.reset();
+            this.router.navigate(['/tournaments/view/' + this.tournamentID]);
+        } else {
+            this.isCreatingFlights = false;
 
-        // }
+        }
     }
 
     removeTeamPlayer(playerId: string, teamId: string) {
