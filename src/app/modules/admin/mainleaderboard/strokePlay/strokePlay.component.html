@@ -252,9 +252,9 @@
                                         <span >
                                             HC: {{ formatHandicap(item?.handicap) }}
                                         </span>
-                                        <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
+                                        <!-- <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
                                             HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
-                                        </span>
+                                        </span> -->
 
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
@@ -303,9 +303,12 @@
                                         <span >
                                             HC: {{ formatHandicap(item?.handicap) }}
                                         </span>
-                                        <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
-                                            HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
+                                        <!-- <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
+                                            / HC:{{ item.handicap1 }} / HC:{{item.handicap2}}
                                         </span>
+                                        <span *ngIf="Leaderboard.matchFormat=='BEST_THREE'">
+                                            / HC:{{ item.handicap1 }} / HC:{{item.handicap2}} / HC:{{item.handicap3}}
+                                        </span> -->
 
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="

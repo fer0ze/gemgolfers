@@ -53,7 +53,7 @@ export class PlayersScoreLoader {
             } else if (tournamentQL.matchFormat === matchFormat.FOUR_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
                 let calResult = this.scrambleCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES) {
+            } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES || tournamentQL.matchFormat === matchFormat.GREENSOME || tournamentQL.matchFormat === matchFormat.FOURSOME) {
                 let calResult = this.shamblesCalculation(tournamentQL);
 
             }
@@ -1320,6 +1320,10 @@ export class PlayersScoreLoader {
 
         ////console.log(flightsQLs);
         for (let flightData of flightsQLs) {
+            let pair = PairsQLs.find((a => a.flightId == flightData.id));
+            console.log(pair);
+            let pairsMembers = [];
+
             //////console.log("Flight ID: " + flightData.id);
             let membersQLs: any = flightData.MembersQL;
 
@@ -1327,6 +1331,9 @@ export class PlayersScoreLoader {
 
                 //////console.log(membersQL);
                 let playerId: String = membersQL.playerId;
+                if (playerId == pair.member1Id ||playerId == pair.member2Id) {
+                    pairsMembers.push(membersQL)
+                }
                 //let playerQL:Player = membersQL.PlayerQL;
                 if (playerId != this.playerId && playerId != teamMemberId) {
                     continue;
@@ -1460,7 +1467,7 @@ export class PlayersScoreLoader {
                     playerId: playerId,
                     name: name,
                     picture: picture,
-                    players: membersQLs,
+                    players: pairsMembers,
                     playingRound: flightData.flightRound,
                     handicap: handicap,
                     score: grossTotal,
@@ -1479,7 +1486,7 @@ export class PlayersScoreLoader {
                     handicap: handicap,
                     score: netTotal,
                     playerId: playerId,
-                    players: membersQLs,
+                    players: pairsMembers,
                     playingRound: flightData.flightRound,
                     type: LeaderType.NET,
                     status: 0,

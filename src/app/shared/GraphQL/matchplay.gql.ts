@@ -57,6 +57,25 @@ query MatchPlayDataQuery($playerId: String!, $flightId: String!) {
                 }
             }
         }
+
+        pairs {
+                id
+                tournamentId
+                flightId
+                pairName
+                member1Id
+                member2Id
+                player1 {
+                    id
+                    firstName
+                    lastName
+                }
+                player2 {
+                    id
+                    firstName
+                    lastName
+                }
+            }
         CourseQL: course {
             ...CourseQL
             HolesQL: holes {

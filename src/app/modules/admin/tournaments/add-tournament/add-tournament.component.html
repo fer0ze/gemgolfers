@@ -2,7 +2,8 @@
     <div class="bg-white rounded-xl w-full shadow-lg h-full flex flex-col animate-fade-in overflow-hidden">
         <!-- Header -->
         <div class="p-6 md:p-8  border-b border-gray-200">
-            <a (click)="backStep()" class="flex cursor-pointer items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
+            <a (click)="backStep()"
+                class="flex cursor-pointer items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -10,14 +11,15 @@
                 Back Step
             </a>
             <h1 class="text-3xl font-bold text-gray-900">
-                {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || 'New' }} Tournament Form 
+                {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || 'New' }} Tournament Form
             </h1>
             <div *ngIf="currentTournament" class="w-120">
 
                 <div class="relative flex items-center">
-                    <label for="first_name"
-                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
-                        Code</label>
+                    <label for="first_name" class="absolute text-sm text-gray-500 duration-300 transform
+                         -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 ">
+                        SignUp Form Link
+                    </label>
 
                     <input type="text" id="first_name" [value]="registrationLink" readonly
                         class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
@@ -304,9 +306,10 @@
                                                     <div class="flex gap-x-2 items-center">
                                                         <span class="text-blue-600 rounded-lg h-fit px-2 py-1 bg-blue-100
                                                         cursor-pointer hover:bg-blue-200" (click)="openAddCourse()">
-                                                            + Add new course 
+                                                            + Add new course
                                                         </span>
-                                                        <span (click)="refreshCourseList()" matTooltip="Refresh Course List" 
+                                                        <span (click)="refreshCourseList()"
+                                                            matTooltip="Refresh Course List"
                                                             class="text-gray-600 cursor-pointer hover:text-emerald-600 transition-colors">
                                                             <mat-icon class="icon-size-4">refresh</mat-icon>
                                                         </span>
@@ -911,7 +914,8 @@
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
                                 <h3 class="font-bold text-lg text-gray-800 mb-4">Available Players</h3>
                                 <div class="relative mb-4">
-                                    <mat-form-field appearance="outline" [floatLabel]="'always'" class="custom-mat-input w-full">
+                                    <mat-form-field appearance="outline" [floatLabel]="'always'"
+                                        class="custom-mat-input w-full">
                                         <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
                                         <input matInput (keyup)="
                                                     applyMembersFilter(
@@ -1141,7 +1145,8 @@
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
                                 <h3 class="font-bold text-lg text-gray-800 mb-4">Available Players</h3>
                                 <div class="relative mb-4">
-                                    <mat-form-field appearance="outline" [floatLabel]="'always'" class="custom-mat-input w-full">
+                                    <mat-form-field appearance="outline" [floatLabel]="'always'"
+                                        class="custom-mat-input w-full">
                                         <!-- <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search"> -->
                                         <input matInput (keyup)="
                                                     applyMembersFilter(
@@ -1426,7 +1431,7 @@
                                                         <mat-form-field appearance="outline"
                                                             class="w-full custom-mat-input">
                                                             <mat-label>Group Time</mat-label>
-                                                            <input  formControlName="flightStartTime"
+                                                            <input formControlName="flightStartTime"
                                                                 value="{{ selectedTime }}" atp-time-picker matInput
                                                                 #query />
                                                             <mat-error>The input is required.</mat-error>
@@ -1541,7 +1546,8 @@
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
-                                                        <p class="font-semibold">{{player.firstName}}</p>
+                                                        <p class="font-semibold">{{player.firstName}}
+                                                            {{player.lastName}}</p>
                                                         <p class="text-md">{{player.playerCategory}} (HC:
                                                             {{player.handicap}})</p>
                                                     </div>
@@ -1753,7 +1759,7 @@
                         </div>
                     </div>
                     <div class="mt-8 py-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
-                    
+
                         <div *ngIf="this.showMatchPlay">
                             <button (click)="goToStep('Groups Setup',4)"
                                 class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
@@ -1765,7 +1771,7 @@
 
                         </div>
                         <div>
-                            <button (click)="createFlights()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="createFlights()" [disabled]="this.isCreatingFlights" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Start Tournament</button>

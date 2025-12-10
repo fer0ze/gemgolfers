@@ -56,6 +56,7 @@ export class MatchplayComponent implements OnInit {
     courseHoleSet: number = 0;
     subTournaments: any[];
     showTaxes: boolean = false;
+    showPairs: boolean = false;
     active: boolean = false;
     flightPlayers: any[] = [];
     filters: FormGroup;
@@ -103,13 +104,13 @@ export class MatchplayComponent implements OnInit {
                                 '-L6WPki8tSDZ1IAAoRXZ',
                                 this.tournamentID
                             );
-                        console.log(dataLeaderboard);
+                        //console.log(dataLeaderboard);
 
 
                         this.matchPlayData = dataLeaderboard.TournamentQL;
                         this.isLoading = false;
                         ////console.log('Match play data');
-                        //console.log(this.matchPlayData);
+                        console.log(this.matchPlayData);
                         if (
                             this.matchPlayData['matchFormat'] ==
                             matchFormat.TEXAS_SCRAMBLE || this.matchPlayData['matchFormat'] ==
@@ -119,6 +120,11 @@ export class MatchplayComponent implements OnInit {
                             matchFormat.FOUR_BALL_SCRAMBLE
                         ) {
                             this.showTaxes = true;
+                        }
+                        if (
+                            this.matchPlayData['matchFormat'] == matchFormat.GREENSOME || this.matchPlayData['matchFormat'] == matchFormat.FOURSOME
+                        ) {
+                            this.showPairs = true;
                         }
 
                         let tournamentData: any = this.matchPlayData;
@@ -211,7 +217,7 @@ export class MatchplayComponent implements OnInit {
         }
     }
 
-    
+
     getTeamColor(playerId: string) {
         for (let team of this.matchPlayData.teams) {
             for (let member of team.teamMembers) {
@@ -730,6 +736,20 @@ export class MatchplayComponent implements OnInit {
     ) {
         try {
 
+            const pairLookup = new Map();
+            const memberToPair = new Map();
+
+            if (this.matchPlayData?.pairs?.length) {
+                for (const p of this.matchPlayData.pairs) {
+                    pairLookup.set(p.id, p);
+                }
+            }
+
+            for (const p of this.matchPlayData.pairs) {
+                memberToPair.set(p.member1Id, p);
+                memberToPair.set(p.member2Id, p);
+            }
+
             this.active = true;
             let findex = 0;
             for (let flightData of flightsQLs) {
@@ -748,7 +768,7 @@ export class MatchplayComponent implements OnInit {
                 ////console.log(par9);
                 ////console.log(par18);
                 ////console.log(flightData);
-                if (!this.showTaxes) {
+                if (!this.showTaxes && !this.showPairs) {
                     for (let membersQL of membersQLs) {
                         let player: Player = membersQL.PlayerQL;
                         let playerScore: any[] = membersQL.ScoresQL;
@@ -876,7 +896,7 @@ export class MatchplayComponent implements OnInit {
 
                         singleFlight.push(LeaderGross);
                     }
-                } else {
+                } else if (this.showTaxes) {
                     for (let membersQL of membersQLs) {
                         let player: Player = membersQL.PlayerQL;
 
@@ -1005,14 +1025,128 @@ export class MatchplayComponent implements OnInit {
 
                         singleFlight.push(LeaderGross);
                     }
+                } else if (this.showPairs) {
+                    const addedPairs = new Set();
+
+                    for (let membersQL of membersQLs) {
+                        let player: Player = membersQL.PlayerQL;
+                        let playerScore: any[] = membersQL.ScoresQL;
+
+                        if (!player) continue;
+
+                        const pair = memberToPair.get(player.id);
+                        if (!pair) continue;
+
+                        // ⛔ Skip if this pair is already processed
+                        if (addedPairs.has(pair.id)) continue;
+
+                        // ✅ Mark pair as processed
+                        addedPairs.add(pair.id);
+
+                        // We will use this player's score for the whole PAIR
+                        let playerHole9Score: any = [];
+                        let playerHole18Score: any[] = [];
+                        let playerHole9NetScore: any = [];
+                        let playerHole18NetScore: any[] = [];
+                        let gross9Total = 0;
+                        let gross18Total = 0;
+                        let net9Total = 0;
+                        let net18Total = 0;
+                        let holePlayed = 0;
+
+                        // ---------- 9 Holes ----------
+                        for (let i = 0; i < 9; i++) {
+                            let courseHole = flightHeader.courseHoles9.filter(el => el.holeNo == i + 1);
+
+                            let hole = playerScore.find(a =>
+                                a.holeId == (courseHole.length > 0 ? courseHole[0].id : '')
+                            );
+
+                            if (hole) {
+                                playerHole9Score[i] = hole.grossScore;
+                                playerHole9NetScore[i] = hole.netScore;
+                                gross9Total += hole.grossScore;
+                                net9Total += hole.netScore;
+                                holePlayed++;
+                            } else {
+                                playerHole9Score[i] = '';
+                                playerHole9NetScore[i] = '';
+                            }
+                        }
+
+                        // ---------- Back 9 Holes (10–18) ----------
+                        for (let i = 0; i < 9; i++) {
+                            let courseHole = flightHeader.courseHoles18.filter(
+                                el => el.holeNo == i + 10
+                            );
+
+                            let hole = playerScore.find(a =>
+                                a.holeId == (courseHole.length > 0 ? courseHole[0].id : '')
+                            );
+
+                            if (hole) {
+                                playerHole18Score[i] = hole.grossScore;
+                                playerHole18NetScore[i] = hole.netScore;
+                                gross18Total += hole.grossScore;
+                                net18Total += hole.netScore;
+                                holePlayed++;
+                            } else {
+                                playerHole18Score[i] = '';
+                                playerHole18NetScore[i] = '';
+                            }
+                        }
+
+                        let grossTotal = gross9Total + gross18Total;
+                        let netTotal = net9Total + net18Total;
+
+                        ////console.log(playerHole9Score);
+                        ////console.log(playerHole18Score);
+
+                        if (this.courseHoleSetNames) {
+                            courseHoleSetTitle = this.courseHoleSetNames.find(
+                                (a) => {
+                                    return (
+                                        a.holeSets == flightData.courseHoleSets &&
+                                        a.inverted ==
+                                        flightData.courseHoleSetsInverted
+                                    );
+                                }
+                            );
+                        }
+
+                        let LeaderGross: any = {
+                            teamName: pair.pairName,
+                            flightId: flightData.id,
+                            pairId: pair.id,
+                            pairName: pair.pairName,
+                            courseId: flightData.courseId,
+                            playerId: player.id,
+                            name: player.firstName + ' ' + player.lastName,
+                            picture: player.picture,
+                            handicap: player.handicap,
+                            Hole9Scores: playerHole9Score,
+                            Hole18Scores: playerHole18Score,
+                            Hole9NetScores: playerHole9Score,
+                            Hole18NetScores: playerHole18NetScore,
+                            gross9Total: gross9Total,
+                            membershipNumber: player.membershipNumber,
+                            playerCategory: player.playerCategory,
+                            gross18Total: gross18Total,
+                            grossTotal: grossTotal,
+                            net9Total: net9Total,
+                            net18Total: net18Total,
+                            netTotal: netTotal,
+                            holesPlayed: holePlayed,
+                        };
+
+                        singleFlight.push(LeaderGross);
+                    }
                 }
 
                 this.flightPlayers.push(singleFlight);
                 this.flightPlayers[findex]['header'] = flightHeader;
-                (this.flightPlayers[findex]['FlightName'] = this.showTaxes
-                    ? flightData['FlightName'].name
-                    : ''),
-                    (this.flightPlayers[findex]['flightId'] = flightData.id);
+                (this.flightPlayers[findex]['FlightName'] = this.showTaxes ? flightData['FlightName'].name : '');
+                (this.flightPlayers[findex]['flightId'] = flightData.id);
                 this.flightPlayers[findex]['courseHoleSetTitle'] =
                     courseHoleSetTitle ? courseHoleSetTitle.displayName : '';
                 this.flightPlayers[findex]['courseHoleSetKey'] = courseHoleSetTitle
@@ -1296,6 +1430,12 @@ export class MatchplayComponent implements OnInit {
         try {
             this.logger.log('Tournament Group Score Save btn Clicked', "info", flightId);
 
+            const memberToPair = new Map();
+            for (const p of this.matchPlayData?.pairs) {
+                memberToPair.set(p.member1Id, p);
+                memberToPair.set(p.member2Id, p);
+            }
+
             let selectedFlight: any = this.flightPlayers.find((a) => {
                 return a.flightId == flightId;
             });
@@ -1376,6 +1516,40 @@ export class MatchplayComponent implements OnInit {
                                         this.loggedInuser.lastName,
                                     detailId: null,
                                 };
+                                if (this.showPairs) {
+                                    const pair = memberToPair.get(player.playerId); // find pair for this player
+                                    if (pair) {
+                                        // find the other member
+                                        const otherPlayerId =
+                                            pair.member1Id === player.playerId
+                                                ? pair.member2Id
+                                                : pair.member1Id;
+
+                                        let newPlayerScore: Score = {
+                                            playerId: otherPlayerId,
+                                            flightId: player.flightId,
+                                            holeId: hole.id,
+                                            playerHandicap: this.precisionRound(
+                                                player.handicap,
+                                                0
+                                            ),
+                                            grossScore: grossScore,
+                                            updatedAt: General.parseToDate(
+                                                todayDate.toDateString()
+                                            ),
+                                            updaterId: this.loggedInuser.id,
+                                            updaterName:
+                                                this.loggedInuser.firstName +
+                                                ' ' +
+                                                this.loggedInuser.lastName,
+                                            detailId: null,
+                                        };
+                                        playerScores.push(newPlayerScore);
+
+                                    }
+                                }
+
+
                                 //console.log(playerScore);
 
                                 playerScores.push(playerScore);

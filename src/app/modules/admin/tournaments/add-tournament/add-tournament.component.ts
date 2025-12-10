@@ -135,6 +135,7 @@ export class AddTournamentComponent implements OnInit {
     isSenior: boolean
     membersSource: MatTableDataSource<Player | any>;
     isVeterans: boolean;
+    isCreatingFlights: boolean = false;
     isJuniors: boolean;
     isLadies: boolean;
     isProfessionals: boolean;
@@ -546,7 +547,7 @@ export class AddTournamentComponent implements OnInit {
                     marshalStart: this.currentTournament.marshalsStartWith,
                     noofMarshals: this.currentTournament.noOfMarshals,
                 });
-                if (this.currentTournament.teamMatch && this.currentTournament.pointsFormats) {
+                if (this.currentTournament.matchFormat == matchFormat.MATCH_PLAY && this.currentTournament.pointsFormats) {
 
                     const formatsArray = this.formArray.get([0]).get('pointsFormats') as FormArray;
                     formatsArray.clear();
@@ -619,12 +620,18 @@ export class AddTournamentComponent implements OnInit {
                     this.currentTournament.matchFormat == matchFormat.BEST_TWO ||
                     this.currentTournament.matchFormat == matchFormat.BEST_THREE
                 ) {
-                    this.showMatchPlay = true;
+                    if (this.currentTournament.matchFormat == matchFormat.BEST_TWO ||
+                        this.currentTournament.matchFormat == matchFormat.BEST_THREE
+                    ) {
+                        this.showBest = true;
+                    } else {
+                        this.showMatchPlay = true;
+                    }
+
                     this.showCat = false;
                     this.steps = this.steps.filter(
                         s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
                     );
-                    this.showMatchPlay = true;
                     this.showShambles = false;
                     const hasTeamStep = this.steps.some(s => s.title === 'Select Teams');
                     if (!hasTeamStep) {
@@ -1046,7 +1053,7 @@ export class AddTournamentComponent implements OnInit {
                 playingDate: this.checkDate(cat),
             });
         } else {
-            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                 playersperFlight = '4'
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TWO_BALL_SCRAMBLE) {
                 playersperFlight = '2'
@@ -1868,7 +1875,7 @@ export class AddTournamentComponent implements OnInit {
                 return a.playerCategory == PLcategory;
             });
         } else {
-            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE) {
+            if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                 this.showTexas = true;
             } else if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.MATCH_PLAY) {
                 this.showMatchPlay = true;
@@ -1877,6 +1884,11 @@ export class AddTournamentComponent implements OnInit {
                 this.showBest = true;
             }
             FilteredPL = [...this.tournamentMembers];
+            if (this.showBest) {
+                const teamMemberIds = this.selectedTeams
+                    .flatMap(team => team.members.map(m => m.id));
+                FilteredPL = FilteredPL.filter(player => teamMemberIds.includes(player.id));
+            }
         }
 
         const FilteredFlight = this.formArray
@@ -3521,7 +3533,7 @@ export class AddTournamentComponent implements OnInit {
             // this.snackBar.open('Tournament members have been saved.', 'x', {
             //     duration: 5000,
             // });
-            if (this.showMatchPlay) {
+            if (this.showMatchPlay || this.showBest) {
                 this.currentTitle = 'Select Teams';
             } else if (this.showShambles) {
                 this.currentTitle = 'Select Pairs';
@@ -4154,6 +4166,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async createFlights() {
+        this.isCreatingFlights = true;
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         let tournamentFlights: Flight[] = [];
         let tournamentMember: TournamentMember[] = [];
@@ -4413,20 +4426,24 @@ export class AddTournamentComponent implements OnInit {
             }
         }
 
-        let result = <any>(
-            await this.facadeService.createNextRoundFlights(tournamentFlights)
-        );
-        if (this.showTexas == true) {
-            await this.facadeService.addFlightName(flightName);
-        }
+        // let result = <any>(
+        //     await this.facadeService.createNextRoundFlights(tournamentFlights)
+        // );
+        // if (this.showTexas == true) {
+        //     await this.facadeService.addFlightName(flightName);
+        // }
 
-        if (result) {
-            this.snackBar.open('Tournament has been setup.', 'x', {
-                duration: 5000,
-            });
-            this.reset();
-            this.router.navigate(['/tournaments/view/' + this.tournamentID]);
-        }
+        // if (result) {
+        //     this.isCreatingFlights = false;
+        //     this.snackBar.open('Tournament has been setup.', 'x', {
+        //         duration: 5000,
+        //     });
+        //     this.reset();
+        //     this.router.navigate(['/tournaments/view/' + this.tournamentID]);
+        // } else {
+        //     this.isCreatingFlights = false;
+
+        // }
     }
 
     removeTeamPlayer(playerId: string, teamId: string) {
@@ -5033,7 +5050,7 @@ export class AddTournamentComponent implements OnInit {
         } else {
             this.showCat = false;
         }
-        if (event.value == matchFormat.MATCH_PLAY || event.value == matchFormat.BEST_THREE || event.value == matchFormat.BEST_TWO) {
+        if (event.value == matchFormat.MATCH_PLAY) {
             this.steps = this.steps.filter(
                 s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
             );
@@ -5070,6 +5087,28 @@ export class AddTournamentComponent implements OnInit {
                     number: 3,
                     title: 'Select Pairs',
                     description: 'Create and manage pairs',
+                };
+
+                // Insert before "Groups Setup"
+                const insertIndex = this.steps.findIndex(s => s.title === 'Groups Setup');
+                this.steps.splice(insertIndex, 0, teamStep);
+
+                // 🔹 Renumber all steps after insertion
+                this.steps.forEach((s, index) => (s.number = index + 1));
+            }
+        } else if (event.value == matchFormat.BEST_THREE || event.value == matchFormat.BEST_TWO) {
+            this.steps = this.steps.filter(
+                s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
+            );
+            this.showShambles = false;
+            this.showBest = true;
+            this.showMatchPlay = false;
+            const hasTeamStep = this.steps.some(s => s.title === 'Select Teams');
+            if (!hasTeamStep) {
+                const teamStep = {
+                    number: 3,
+                    title: 'Select Teams',
+                    description: 'Create and manage teams',
                 };
 
                 // Insert before "Groups Setup"

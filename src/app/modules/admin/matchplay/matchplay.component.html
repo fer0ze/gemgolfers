@@ -147,7 +147,11 @@
                             <tr *ngFor="let item of flight" class="bg-white">
                                 <td
                                     class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
-                                    <span class="flex gap-x-2 items-center">
+                                    <span *ngIf="this.showPairs" class="flex gap-x-2 items-center">
+                                        {{ item.pairName }} 
+
+                                    </span>
+                                    <span *ngIf="!this.showPairs" class="flex gap-x-2 items-center">
                                         <span class="w-2 h-2 rounded-full"
                                             [style.background-color]="getTeamColor(item.playerId)"></span>
                                         {{ item.name }} ({{
@@ -311,7 +315,7 @@
                                                             flight.flightId
                                                         }}" value="{{
                                                             flight.gross18Total
-                                                        }}"  disabled="disabled"  />
+                                                        }}" disabled="disabled" />
 
                                 </td>
                                 <td class="w-12">
@@ -320,7 +324,7 @@
                                                             flight.flightId
                                                         }}" value="{{
                                                             flight.grossTotal
-                                                        }}"  disabled="disabled" />
+                                                        }}" disabled="disabled" />
 
                                 </td>
                                 <!-- <td class="py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50" id="grosstotal_{{
