@@ -216,6 +216,7 @@ export class ViewTournamentComponent implements OnInit {
         },
     ];
     tabs = ['Overview', 'Groups', 'Scores', 'Participants'];
+    ponitsFormats: any;
     dataSourceR1NET: MatTableDataSource<any>;
     displayedColumnsR1NET = ['pos', 'name', 'net', 'toPar', 'thru'];
     dataSourceR2NET: MatTableDataSource<any>;
@@ -365,6 +366,15 @@ export class ViewTournamentComponent implements OnInit {
                     if (this.fullTournament.matchFormat == matchFormat.MATCH_PLAY) {
                         this.showMatchPlay = true;
                         this.tabs.push('Teams');
+                        const formatsObj = this.fullTournament.pointsFormats;
+
+                        const readableFormats = Object.values(formatsObj)       // Extract values
+                            .filter(f => f)                                     // Remove null/undefined
+                            .map((f: string) => f.toLowerCase())                          // lowercase
+                            .map((f: string) => f.charAt(0).toUpperCase() + f.slice(1))   // capitalize first letter
+                            .join(", ");                                        // join by comma
+
+                        this.ponitsFormats = readableFormats
                     }
 
                     this.activeRound = this.fullTournament.activeRound;

@@ -85,10 +85,7 @@ export class DialogAddPlayerComponent implements OnInit {
             this.data.tournamentID
         );
         this.tournamentQL = data?.tournament?.[0];
-
-
-
-
+        
         if (this._localStorage.isTournamentManager()) {
             this.showClub = false;
         }
