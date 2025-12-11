@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="flex justify-end gap-2 p-4">
-                        <button (click)="addPlayer(items.id, i)" class="bg-emerald-600 text-white px-2 py-1 rounded-lg flex items-center text-sm
+                        <button *ngIf="!isClubAdmin" (click)="addPlayer(items.id, i)" class="bg-emerald-600 text-white px-2 py-1 rounded-lg flex items-center text-sm
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                             Add New Golfer</button>

@@ -152,7 +152,7 @@ export class ViewTournamentComponent implements OnInit {
     roundsStats: boolean = false;
     copied: boolean = false;
     round1Stats: boolean = false;
-    round2Stats: boolean = false;
+    isClubAdmin: boolean = false;
     round3Stats: boolean = false;
     round4Stats: boolean = false;
     showMainTab1: boolean = true;
@@ -307,6 +307,9 @@ export class ViewTournamentComponent implements OnInit {
 
             this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
+            if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
+                this.isClubAdmin = true;
+            }
             this.clubLogo = this.loggedInUser.club && this.loggedInUser.club.logo ? this.loggedInUser.club.logo : 'e2esp.png';
             this.route.paramMap.subscribe((params) => {
                 this.tournamentID = params.get('id');

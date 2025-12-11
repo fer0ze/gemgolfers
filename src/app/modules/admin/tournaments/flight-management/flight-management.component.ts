@@ -124,7 +124,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     flightTees: Map<string, any> = new Map<string, any>();
     file: File;
     addFlightNum: number = 0;
-    addFlights: boolean = true;
+    isClubAdmin: boolean = true;
     arrayBuffer: any;
     flightsData: any;
     categories: TournamentCategory[] = [];
@@ -178,7 +178,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     async ngOnInit() {
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         //console.log(this.loggedInuser);
-
+        if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
+            this.isClubAdmin = true;
+        }
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });

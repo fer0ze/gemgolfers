@@ -733,7 +733,7 @@ export const GetTournamnetListForCompleted = gql`
                     }
                 ]
             }
-            order_by: { createdAt: desc }
+            order_by: { endDate: desc }
         ) {
             id
             title
@@ -2687,8 +2687,6 @@ export const getTourDashboard = gql`
 export const getTournamentData = gql`
     query getTournamentData(
         $adminId: String!
-        $fromDate: date!
-        $toDate: date!
     ) {
         tour(
             where: { adminId: { _eq: $adminId } }
@@ -2719,14 +2717,18 @@ export const getTournamentData = gql`
         TournamentsQLs: tournament(
             where: {
                 adminId: { _eq: $adminId }
-                _and: [
-                    { startDate: { _gte: $toDate } }
-                    { endDate: { _lte: $fromDate } }
-                ]
             }
         ) {
             id
+            title
+            matchFormat
+            noOfRounds
             startDate
+            admin {
+                id
+                firstName
+                lastName
+            }
             MembersQL: members {
                 playerId
                 player {

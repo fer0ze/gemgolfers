@@ -196,8 +196,6 @@ export class ProjectService {
                 query: Query.getTournamentData,
                 variables: {
                     adminId: id,
-                    fromDate: fromDate,
-                    toDate: toDate,
                 },
             })
             .pipe(

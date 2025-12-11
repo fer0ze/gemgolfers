@@ -1032,3 +1032,4 @@ export class generateGemId {
 }
 export const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const labelsPlayers = ['Club', 'Mobile', 'Trail', 'Premium'];
+export const labelsMembers = ['Amateurs', 'Senior Amateurs', 'Veterans', 'Ladies','Others'];

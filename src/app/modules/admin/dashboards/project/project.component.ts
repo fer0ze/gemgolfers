@@ -16,6 +16,7 @@ import {
     Constants,
     General,
     labels,
+    labelsMembers,
     labelsPlayers,
     UniqueIdGenerator,
 } from 'app/shared/classes/general';
@@ -60,6 +61,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
     loading: boolean = false;
     _labels: any = labels;
     _labelsPlayers: any = labelsPlayers;
+    _labelsMembers: any = labelsMembers;
     _series: any = [];
     _overview: any = [];
     _seriesPlayers: any = [];
@@ -264,7 +266,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                                 },
                             ];
                         }
-                    } else  {
+                    } else {
 
                         // this.tournamentCounts = getall.TournamentsQLs.length;
                         const membersCatCounts = {
@@ -311,6 +313,10 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                         if (latestTournament.length > 6) {
                             this.tournaments = latestTournament.splice(0, 6);
                         } else {
+                            latestTournament = getall.TournamentsQLs;
+                            if (latestTournament.length > 6) {
+                                this.tournaments = latestTournament.splice(0, 6);
+                            }
                             this.tournaments = latestTournament;
                         }
                         //this.flightCounts = getall.tour.length;
@@ -410,14 +416,27 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             reopened: categoryCounts.Ladies,
                             needstriage: categoryCounts.Veterans,
                         }
+                        let dataPlayersCount: any[] = [];
                         // //console.log(players);
-                        this._seriesPlayers['all'] = [
+                        this._seriesPlayers = [
                             membersCatCounts.Amateurs,
                             membersCatCounts['Senior Amateurs'],
                             membersCatCounts.Veterans,
                             membersCatCounts.Ladies,
                             membersCatCounts.others,
 
+                        ];
+
+                        dataPlayersCount.push(categoryCounts.Amateurs)
+                        dataPlayersCount.push(categoryCounts['Senior Amateurs'])
+                        dataPlayersCount.push(categoryCounts.Veterans)
+                        dataPlayersCount.push(categoryCounts.Ladies)
+
+                        this._seriesPlayers = [
+                            {
+                                data: dataPlayersCount,
+                                name: 'Players',
+                            },
                         ];
                     }
 
@@ -590,7 +609,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
             grid: {
                 borderColor: 'var(--fuse-border)',
             },
-            labels: this._labelsPlayers,
+            labels: this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin() ? this._labelsPlayers : this._labelsMembers,
             legend: {
                 show: false,
             },

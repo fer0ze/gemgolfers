@@ -58,7 +58,7 @@ export class DialogAddPlayerComponent implements OnInit {
         this.route.paramMap.subscribe((params) => {
             this.playerID = params.get('id');
         });
-
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         this.playerForm = new FormGroup({
             firstName: new FormControl('', [
                 Validators.required,
@@ -85,7 +85,7 @@ export class DialogAddPlayerComponent implements OnInit {
             this.data.tournamentID
         );
         this.tournamentQL = data?.tournament?.[0];
-        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+
 
 
 
