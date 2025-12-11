@@ -1170,6 +1170,8 @@ export class TournamentsService {
                                 activeRound: tmnt.activeRound,
                                 matchFormat: tmnt.matchFormat,
                                 playingOnWhs: tmnt.playingOnWhs,
+                                isSetupComplete: tmnt.isSetupComplete,
+                                currentTab: tmnt.currentTab,
                                 pointsFormats: tmnt.pointsFormats,
                                 pointsValues: tmnt.pointsValues,
                                 handicapAllocations: tmnt.handicapAllocations,
