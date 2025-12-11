@@ -124,7 +124,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     flightTees: Map<string, any> = new Map<string, any>();
     file: File;
     addFlightNum: number = 0;
-    isClubAdmin: boolean = true;
+    isClubAdmin: boolean = false;
     arrayBuffer: any;
     flightsData: any;
     categories: TournamentCategory[] = [];

@@ -2842,6 +2842,17 @@ export class ViewTournamentComponent implements OnInit {
                     tournamentsMember.push(member);
                 });
                 this.dataSource = new MatTableDataSource(tournamentsMember);
+                this.dataSource.filterPredicate = (data: any, filter: string) => {
+                    const first = (data.firstName || "").toLowerCase();
+                    const last = (data.lastName || "").toLowerCase();
+                    const full = `${first} ${last}`.trim();
+
+                    filter = filter.toLowerCase();
+
+                    return first.includes(filter) ||
+                        last.includes(filter) ||
+                        full.includes(filter);
+                };
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
             } else {
@@ -2864,6 +2875,17 @@ export class ViewTournamentComponent implements OnInit {
                 this.tournamentMembers = dataFullTournaments.TournamentMemberQL;
 
                 this.dataSource = new MatTableDataSource(this.tournamentMember);
+                this.dataSource.filterPredicate = (data: any, filter: string) => {
+                    const first = (data.firstName || "").toLowerCase();
+                    const last = (data.lastName || "").toLowerCase();
+                    const full = `${first} ${last}`.trim();
+
+                    filter = filter.toLowerCase();
+
+                    return first.includes(filter) ||
+                        last.includes(filter) ||
+                        full.includes(filter);
+                };
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
             }

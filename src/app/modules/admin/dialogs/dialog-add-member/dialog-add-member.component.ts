@@ -39,7 +39,7 @@ export class DialogAddMemberComponent implements OnInit {
         'email',
         'select',
     ];
-    tournamentMember=[];
+    tournamentMember = [];
     refresh: boolean = false;
     dataSource: MatTableDataSource<Player>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -48,12 +48,24 @@ export class DialogAddMemberComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<DialogAddMemberComponent>
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         //console.log(this.data);
 
         this.dataSource = new MatTableDataSource(this.data.members);
+        // CUSTOM FILTER PREDICATE FOR FULL NAME SEARCH
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+            const first = (data.firstName || "").toLowerCase();
+            const last = (data.lastName || "").toLowerCase();
+            const full = `${first} ${last}`.trim();
+
+            filter = filter.toLowerCase();
+
+            return first.includes(filter) ||
+                last.includes(filter) ||
+                full.includes(filter);
+        };
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
     }
@@ -90,9 +102,8 @@ export class DialogAddMemberComponent implements OnInit {
         if (!row) {
             return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${
-            this.selection.isSelected(row) ? 'deselect' : 'select'
-        } player ${row.firstName} ${row.lastName}`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
     }
 
     onNoClick(): void {
@@ -102,7 +113,7 @@ export class DialogAddMemberComponent implements OnInit {
         let selectionArray = Object.assign({}, this.selection.selected);
         for (var index in selectionArray) {
             if (selectionArray[index]) {
-               
+
                 this.tournamentMember.push(selectionArray[index]);
 
             }
