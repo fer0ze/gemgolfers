@@ -569,7 +569,7 @@
                                     <h3 class="font-bold text-lg text-gray-800">Members
                                     </h3>
                                     <div class="flex gap-2">
-                                        <button  *ngIf="!hideClubs" (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                        <button *ngIf="!hideClubs" (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                     font-semibold
                                     shadow-sm hover:bg-emerald-700 transition-colors">
                                             Add New Member</button>
@@ -610,10 +610,10 @@
                                                             ? masterToggle()
                                                             : null
                                                     " [checked]="
-                                                        memberSelection.hasValue() &&
+                                                        selection.hasValue() &&
                                                         isAllSelected()
                                                     " [indeterminate]="
-                                                        memberSelection.hasValue() &&
+                                                        selection.hasValue() &&
                                                         !isAllSelected()
                                                     " [aria-label]="checkboxLabel()">
                                                     </mat-checkbox>
@@ -788,12 +788,7 @@
                                                     " (change)="
                                                         $event
                                                             ? memberSelection.toggle(row)
-                                                            : null;
-                                                        updateCategorySelection(
-                                                            $event,
-                                                            row
-                                                        )
-                                                    " [checked]="
+                                                            : null;" [checked]="
                                                         memberSelection.isSelected(row)
                                                     " [aria-label]="
                                                         checkboxLabelM(row)
@@ -1632,7 +1627,8 @@
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
-                                                        <p class="font-semibold">{{player.firstName}} {{player.lastName}}</p>
+                                                        <p class="font-semibold">{{player.firstName}}
+                                                            {{player.lastName}}</p>
                                                         <p class="text-md">{{player.playerCategory}} (HC:
                                                             {{player.handicap}})</p>
                                                     </div>
@@ -1660,7 +1656,8 @@
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
-                                                        <p class="font-semibold">{{player.firstName}} {{player.lastName}}</p>
+                                                        <p class="font-semibold">{{player.firstName}}
+                                                            {{player.lastName}}</p>
                                                         <p class="text-md">{{player.playerCategory}} (HC:
                                                             {{player.handicap}})</p>
                                                     </div>
@@ -1729,7 +1726,8 @@
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
-                                                        <p class="font-semibold">{{player.firstName}} {{player.lastName}}</p>
+                                                        <p class="font-semibold">{{player.firstName}}
+                                                            {{player.lastName}}</p>
                                                         <p class="text-md">{{player.playerCategory}} (HC:
                                                             {{player.handicap}})</p>
                                                     </div>
@@ -1756,7 +1754,8 @@
                                             let j = index" cdkDrag [cdkDragData]="player"
                                                     class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
                                                     <div>
-                                                        <p class="font-semibold">{{player.firstName}} {{player.lastName}}</p>
+                                                        <p class="font-semibold">{{player.firstName}}
+                                                            {{player.lastName}}</p>
                                                         <p class="text-md">{{player.playerCategory}} (HC:
                                                             {{player.handicap}})</p>
                                                     </div>

@@ -752,8 +752,13 @@ export class FacadeService {
   getLeagueName(id: string) {
     return this.tournamentService.getLeagueName(id);
   }
+
   setScoreUpdateTime(tournamentId: string, date: string) {
     return this.tournamentService.setScoreUpdateTime(tournamentId, date);
+  }
+
+  setTournamentStep(tournamentId: string, currentStep: number, isSetupComplete: boolean) {
+    return this.tournamentService.setTournamentStep(tournamentId, currentStep, isSetupComplete);
   }
 
   leaderAllRoundData(tournamentId: string) {

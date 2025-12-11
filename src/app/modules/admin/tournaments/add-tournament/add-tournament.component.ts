@@ -694,9 +694,21 @@ export class AddTournamentComponent implements OnInit {
 
                 //console.log(this.currentTournament);
 
-                if (this.currentTournament.members)
-                    for (let p of this.currentTournament.members)
-                        this.tournamentMembers.push(<Player>p['PlayerQL']);
+                if (this.currentTournament.members) {
+                    for (let p of this.currentTournament.members) {
+
+                        const playerQL = p['PlayerQL'];  // reference to player object
+
+                        // If category exists on parent object, update PlayerQL
+                        if (p.category !== undefined && p.category !== null) {
+                            playerQL.playerCategory = p.category;   // <-- update PlayerQL prop
+                        }
+
+                        // Push updated object
+                        this.tournamentMembers.push(<Player>playerQL);
+                    }
+                }
+
 
                 this.syncTournamentMembers();
 
@@ -830,9 +842,13 @@ export class AddTournamentComponent implements OnInit {
                 // };
                 // this.dates.push(obj);
 
+                if (!this.currentTournament.isSetupComplete && this.currentTournament.currentTab) {
+                    const step = this.steps.find(s => s.number === this.currentTournament.currentTab + 1);
+                    this.currentTitle = step ? step.title : this.currentTitle;
+                    this.currentStep = step ? step.number : this.currentStep;
+                    this.goToStep(this.currentTitle, this.currentStep)
 
-
-
+                }
 
                 this.minDate = tournamentInfo.startDate;
                 //const chkArray = <FormArray>this.formArray.get([0]).get("clubctgies");
@@ -1424,6 +1440,10 @@ export class AddTournamentComponent implements OnInit {
             group.get('startDate').updateValueAndValidity();
             group.get('endDate').updateValueAndValidity();
         } else {
+            group.get('startDate').removeValidators([Validators.required]);
+            group.get('endDate').removeValidators([Validators.required]);
+            group.get('startDate').updateValueAndValidity();
+            group.get('endDate').updateValueAndValidity();
             group.reset(); // Unselect
         }
 
@@ -2419,8 +2439,8 @@ export class AddTournamentComponent implements OnInit {
         let marshalsData: Marshal[] = [];
 
         //const tc:TournamenCategory = [];
-        // if (!this.tournamentID)
-        this.tournamentID = UniqueIdGenerator.generate();
+        if (!this.tournamentID)
+            this.tournamentID = UniqueIdGenerator.generate();
 
         if (this.showMultipleCourses) {
             if (this.formArray.get([0]).value.numOfRounds > 1) {
@@ -2633,7 +2653,7 @@ export class AddTournamentComponent implements OnInit {
         let state = this._localStorage.get(Constants.STATE);
 
         let tournament = {
-            id: this.tournamentID, //(this.tournamentID)? this.tournamentID : UniqueIdGenerator.generate(),
+            id: (this.tournamentID) ? this.tournamentID : UniqueIdGenerator.generate(),
             clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
             courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id,
@@ -2689,6 +2709,8 @@ export class AddTournamentComponent implements OnInit {
                         : false
                     : false,
             categories: tournamentCats,
+            isSetupComplete: false,
+            currentTab: 1,
             createdAt: new Date().toISOString(),
             marshals: marshalsData,
             flights: [],
@@ -2725,6 +2747,7 @@ export class AddTournamentComponent implements OnInit {
                 this.currentTournament = tournament;
                 //console.log(result);
                 if (result) {
+                    this.editTournament = true
 
                     // this.valid2.reset();
                     this.setState(this.valid1, false);
@@ -2760,7 +2783,7 @@ export class AddTournamentComponent implements OnInit {
 
                     //console.log(this.clubMembers);
 
-
+                    this.currentTournament = tournament;
 
                     // stepper.next();
                     // this.currentTitle = 'Select Players';
@@ -2772,7 +2795,7 @@ export class AddTournamentComponent implements OnInit {
                 }
                 // if (result) {
 
-                //   this.currentTournament = tournament;
+
                 //   const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 //     width: "350px",
                 //     data: "Do you want to Add Members Now ?",
@@ -3026,13 +3049,7 @@ export class AddTournamentComponent implements OnInit {
             id: this.tournamentID,
             clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
-            courseId:
-                this._localStorage.isClubAdmin() &&
-                    this.currentTournament &&
-                    this.courseChange == true
-                    ? this.formArray.get([0]).value.courseInfo[0]?.courseName
-                        .course.id
-                    : this.currentTournament['CourseQL'].id,
+            courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName.course.id,
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
             prefix: this.formArray.get([0]).value.prefixFormCtrl,
@@ -3449,6 +3466,20 @@ export class AddTournamentComponent implements OnInit {
             this.dialog.open(InvalidCategoryPlayersComponent, {
                 width: '600px',
                 data: { players: invalidPlayers }
+            }).afterClosed().subscribe((res) => {
+                console.log(res);
+
+                // if (res && res.length > 0) {
+                //     res.forEach(resPlayer => {
+                //         const memberIndex = this.membersSource.data.findIndex(
+                //             player => player.id === resPlayer.id
+                //         );
+                //         if (memberIndex !== -1) {
+                //             this.membersSource.data[memberIndex].playerCategory = resPlayer.playerCategory;
+                //         }
+                //     });
+                //     this.membersSource._updateChangeSubscription();
+                // }
             });
             // this.currentStep = 2;
             // this.currentTitle = 'Select Players';
@@ -3538,6 +3569,7 @@ export class AddTournamentComponent implements OnInit {
             // this.snackBar.open('Tournament members have been saved.', 'x', {
             //     duration: 5000,
             // });
+            await this.facadeService.setTournamentStep(this.tournamentID, 2, false);
             if (this.showMatchPlay || this.showBest) {
                 this.currentTitle = 'Select Teams';
             } else if (this.showShambles) {
@@ -3643,6 +3675,7 @@ export class AddTournamentComponent implements OnInit {
         this.clubMembers = this.clubMembers.filter(
             (clubMember) => !members.some((added) => added.id === clubMember.id)
         );
+        this.selection.clear();
         if (this.dataSource) {
             this.dataSource.data = this.dataSource.data.filter(
                 (member) => !members.some((removed) => removed.id === member.id)
@@ -3676,6 +3709,7 @@ export class AddTournamentComponent implements OnInit {
             this.dataSource.data = updatedData;
         }
 
+
         // Optional: update sorting and pagination references
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -3684,8 +3718,14 @@ export class AddTournamentComponent implements OnInit {
             this.membersSource.data = this.membersSource.data.filter(
                 (member) => !members.some((removed) => removed.id === member.id)
             );
+            this.categoryCounts = []
+            this.membersSource.data.forEach(member => {
+                this.countCategoryMember(true, member);
+            });
             this.membersSource._updateChangeSubscription();
         }
+
+
 
         // (Optional) If you also maintain a tournamentMembers array:
         if (this.tournamentMembers) {
@@ -3730,6 +3770,7 @@ export class AddTournamentComponent implements OnInit {
             );
             this.membersSource._updateChangeSubscription();
         }
+        this.memberSelection.clear();
 
         this.categoryCounts = []
         // (Optional) If you also maintain a tournamentMembers array:
@@ -3848,6 +3889,7 @@ export class AddTournamentComponent implements OnInit {
             });
             this.currentTitle = 'Groups Setup';
             this.currentStep++;
+            await this.facadeService.setTournamentStep(this.tournamentID, 3, false);
             // stepper.next();
         } else {
             this.snackBar.open('Error!.Try Again', 'x', {
@@ -4426,6 +4468,7 @@ export class AddTournamentComponent implements OnInit {
         }
 
         if (result) {
+            await this.facadeService.setTournamentStep(this.tournamentID, 4, true);
             this.isCreatingFlights = false;
             this.snackBar.open('Tournament has been setup.', 'x', {
                 duration: 5000,

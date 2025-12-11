@@ -1802,6 +1802,32 @@ export class TournamentsService {
         });
     }
 
+    public setTournamentStep(
+        tournamentId: string, currentStep: number, isSetupComplete: boolean
+    ): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.setTournamentStepQL,
+                    variables: {
+                        tournamentId: tournamentId,
+                        currentStep: currentStep,
+                        isSetupComplete: isSetupComplete,
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        ////console.log(data);
+                        resolve(true);
+                    },
+                    (error) => {
+                        resolve(false);
+                        ////console.log('Could not add due to ' + error);
+                    }
+                );
+        });
+    }
+
     public updateFlightSettings(
         tournamentId: string,
         category: string,

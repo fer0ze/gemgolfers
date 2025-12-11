@@ -211,6 +211,7 @@ export const tournamentDashBoard = gql`
             title
             noOfRounds
             matchFormat
+            isSetupComplete
             members
             cutOffCriteria
             activeRound
@@ -278,10 +279,11 @@ export const tournamentDashBoard = gql`
                             index
                             par
                         }
-                            player{
+                        player {
                             id
                             firstName
-                            lastName}
+                            lastName
+                        }
                     }
                 }
             }
@@ -559,6 +561,7 @@ export const GetTournamentsForAdminCompeleted = gql`
             endDate
             noOfRounds
             matchFormat
+            isSetupComplete
             admin {
                 firstName
                 lastName
@@ -657,6 +660,7 @@ export const GetTournamnetListForLiveByAdmin = gql`
             startDate
             endDate
             noOfRounds
+            isSetupComplete
             admin {
                 firstName
                 lastName
@@ -740,6 +744,7 @@ export const GetTournamnetListForCompleted = gql`
             startDate
             endDate
             matchFormat
+            isSetupComplete
             noOfRounds
             admin {
                 id
@@ -769,6 +774,7 @@ export const getTournamentsListByAdminForCompleted = gql`
             endDate
             matchFormat
             noOfRounds
+            isSetupComplete
             admin {
                 id
                 firstName
@@ -792,6 +798,7 @@ export const getTournamentsListByTourForCompleted = gql`
                 endDate
                 matchFormat
                 noOfRounds
+                isSetupComplete
                 admin {
                     id
                     firstName
@@ -816,6 +823,7 @@ export const getTournamentsListByLeague = gql`
                 endDate
                 matchFormat
                 noOfRounds
+                isSetupComplete
                 admin {
                     id
                     firstName
@@ -849,6 +857,7 @@ export const GetTournamnetListForLive = gql`
             endDate
             noOfRounds
             matchFormat
+            isSetupComplete
             admin {
                 id
                 firstName
@@ -885,6 +894,7 @@ export const GetTournamnetListForSchedule = gql`
             endDate
             noOfRounds
             matchFormat
+            isSetupComplete
             admin {
                 id
                 firstName
@@ -991,6 +1001,7 @@ export const getTournamentsListByCourse = gql`
             noOfRounds
             activeRound
             matchFormat
+            isSetupComplete
             startDate
             endDate
             createdAt
@@ -1493,7 +1504,9 @@ export const insertTournamentTeamQL = gql`
         $teamsToSave: [tournament_team_insert_input!]!
         $teamsMembersToRemove: [String!]!
     ) {
-        delete_tournament_team_members(where: { teamId: { _in: $teamsMembersToRemove } }) {
+        delete_tournament_team_members(
+            where: { teamId: { _in: $teamsMembersToRemove } }
+        ) {
             AffectedRowsQL: affected_rows
         }
 
@@ -2300,6 +2313,23 @@ export const setScoreUpdateTimeQL = gql`
         }
     }
 `;
+export const setTournamentStepQL = gql`
+    mutation setTournamentStepQL(
+        $tournamentId: String!
+        $currentStep: Int!
+        $isSetupComplete: Boolean!
+    ) {
+        update_tournament(
+            where: { id: { _eq: $tournamentId } }
+            _set: {
+                currentTab: $currentStep
+                isSetupComplete: $isSetupComplete
+            }
+        ) {
+            AffectedRowsQL: affected_rows
+        }
+    }
+`;
 export const RoundScoreQLA = gql`
     query ClubSingleRoundFlightsQuery($id: String!) {
         FlightQL: flight(where: { id: { _eq: $id } }) {
@@ -2440,6 +2470,7 @@ export const getallDashboard = gql`
             id
             title
             matchFormat
+            isSetupComplete
             noOfRounds
             admin {
                 id
@@ -2685,9 +2716,7 @@ export const getTourDashboard = gql`
     }
 `;
 export const getTournamentData = gql`
-    query getTournamentData(
-        $adminId: String!
-    ) {
+    query getTournamentData($adminId: String!) {
         tour(
             where: { adminId: { _eq: $adminId } }
             order_by: [{ dateCreated: desc }]
@@ -2714,14 +2743,11 @@ export const getTournamentData = gql`
                 }
             }
         }
-        TournamentsQLs: tournament(
-            where: {
-                adminId: { _eq: $adminId }
-            }
-        ) {
+        TournamentsQLs: tournament(where: { adminId: { _eq: $adminId } }) {
             id
             title
             matchFormat
+            isSetupComplete
             noOfRounds
             startDate
             admin {

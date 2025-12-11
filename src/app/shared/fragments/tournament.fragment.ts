@@ -113,6 +113,8 @@ export const TournamentQL = gql`
         noOfMarshals
         subTournament
         courseHoleSetsInverted
+        isSetupComplete
+        currentTab
         CourseQL: course {
             ...CourseQL
         }
@@ -124,6 +126,7 @@ export const TournamentQL = gql`
         }
         members {
             playerId
+            category
             PlayerQL: player {
                 ...PlayerQL
             }
