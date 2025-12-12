@@ -100,7 +100,7 @@ export const appRoutes: Route[] = [
         },
         children: [
             { path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule) },
-            { path: 'leaderboard',loadChildren: () => import( 'app/modules/admin/mainleaderboard/mainleaderboard.module').then((m) => m.MainLeaderboardModule)},
+            { path: 'leaderboard', loadChildren: () => import('app/modules/admin/mainleaderboard/mainleaderboard.module').then((m) => m.MainLeaderboardModule) },
             {
                 path: 'leagueTable',
                 loadChildren: () =>
@@ -173,6 +173,9 @@ export const appRoutes: Route[] = [
                     import(
                         'app/modules/admin/reports/daily-rounds-stats/daily-rounds-stats.module'
                     ).then((m) => m.DailyRoundsStatsModule),
+            },
+            {
+                path: 'profile', loadChildren: () => import('app/modules/admin/profile/profile.module').then(m => m.ProfileModule),
             },
             {
                 path: 'reports/dailycard',

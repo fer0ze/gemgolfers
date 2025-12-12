@@ -350,6 +350,9 @@ export class FacadeService {
   updatePlayer(club: Player) {
     return this.playerService.updatePlayer(club);
   }
+  updatePlayerProfile(player: Player, file: File) {
+    return this.playerService.updatePlayerProfile(player, file);
+  }
   updateConguHandicap(id: string, newHandicap: any, tournamentId: any) {
     return this.playerService.updateConguHandicap(id, newHandicap, tournamentId);
   }

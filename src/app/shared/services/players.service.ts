@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { Observable, map, pipe } from 'rxjs';
+import { Observable, from, map, pipe, switchMap } from 'rxjs';
 import {
     Player,
     PlayerCategory,
@@ -9,6 +9,7 @@ import {
     handicap_change_log,
 } from '../models/player.model';
 import * as Query from '../GraphQL/player.gql';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 //import { map } from "rxjs/operators";
 //import { toDate } from "@angular/common/src/i18n/format_date";
 
@@ -16,7 +17,7 @@ import * as Query from '../GraphQL/player.gql';
     providedIn: 'root',
 })
 export class PlayersService {
-    constructor(private apollo: Apollo) { }
+    constructor(private apollo: Apollo, private storage: AngularFireStorage) { }
 
     public getPlayersList(): Promise<any> {
         return new Promise((resolve) => {
@@ -1254,6 +1255,105 @@ export class PlayersService {
                 );
         });
     }
+
+    updatePlayerProfile(player: Player, file: File): Observable<string> {
+        if (file) {
+            const fileName = 'profile/' + player.id + '.png';
+            const ref = this.storage.ref(fileName);
+            const task = ref.put(file);
+
+            return from(task).pipe(
+                switchMap((snapshot: any) => {
+                    return ref.getDownloadURL();
+                }),
+                switchMap((downloadUrl: string) => {
+                    // Update the picture URL in the account object
+                    player.picture = downloadUrl;
+
+                    // Perform the mutation using Apollo client
+                    return this.apollo
+                        .mutate<any>({
+                            mutation: Query.UpdatePlayerProfileMutation,
+                            variables: {
+                                where: {
+                                    id: {
+                                        _eq: player.id ?? 'asdasdasdah7',
+                                    },
+                                },
+                                set: {
+                                    adminClubId: player.adminClubId,
+                                    firebaseUid: player.firebaseUid,
+                                    fcmToken: player.fcmToken,
+                                    gemId: player.gemId,
+                                    firstName: player.firstName,
+                                    lastName: player.lastName,
+                                    gender: player.gender,
+                                    dob: player.dob,
+                                    picture: player.picture,
+                                    email: player.email,
+                                    phone: player.phone,
+                                    playerCategory: player.playerCategory,
+                                    handicap: player.handicap,
+                                    online: player.online,
+                                    extraData: player.extraData,
+                                    countryCode: player.countryCode,
+                                    homeClubId: player.homeClubId,
+                                    userRole: player.userRole,
+                                    membershipNumber: player.membershipNumber,
+                                },
+                            },
+                        })
+                        .pipe(
+                            map((response: any) => {
+                                // Return the download URL
+                                return downloadUrl;
+                            })
+                        );
+                })
+            );
+        } else {
+            return this.apollo
+                .mutate<any>({
+                    mutation: Query.UpdatePlayerProfileMutation,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: player.id ?? 'asdasdasdah7',
+                            },
+                        },
+                        set: {
+                            adminClubId: player.adminClubId,
+                            firebaseUid: player.firebaseUid,
+                            fcmToken: player.fcmToken,
+                            gemId: player.gemId,
+                            firstName: player.firstName,
+                            lastName: player.lastName,
+                            gender: player.gender,
+                            dob: player.dob,
+                            picture: player.picture,
+                            email: player.email,
+                            phone: player.phone,
+                            playerCategory: player.playerCategory,
+                            handicap: player.handicap,
+                            online: player.online,
+                            extraData: player.extraData,
+                            countryCode: player.countryCode,
+                            homeClubId: player.homeClubId,
+                            userRole: player.userRole,
+                            membershipNumber: player.membershipNumber,
+                        },
+                    },
+                })
+                .pipe(
+                    map((response: any) => {
+                        // Return the download URL
+                        return response;
+                    })
+                );
+
+        }
+    }
+
     updateConguHandicap(id, newHandicap, tournamentId): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo

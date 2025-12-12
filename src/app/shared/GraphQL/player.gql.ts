@@ -815,11 +815,13 @@ export const getPlayersByID = gql`
 export const getPlayerByIDDetailForm = gql`
     query PostsGetQuery($where: player_bool_exp!) {
         player(where: $where) {
+            id
             firstName
             lastName
             gender
             email
             phone
+            picture
             dob
             handicap
             handicapWhsIndex
@@ -1163,6 +1165,20 @@ export const UpdateMutation = gql`
         ) {
             returning {
                 playerId
+            }
+        }
+    }
+`;
+
+export const UpdatePlayerProfileMutation = gql`
+    mutation UpdatePlayerProfileMutation(
+        $where: player_bool_exp!
+        $set: player_set_input!
+    ) {
+        update_player(where: $where, _set: $set) {
+            affected_rows
+            returning {
+                id
             }
         }
     }

@@ -81,7 +81,7 @@ export class LocalStorageService {
         let modules: { id: string; name: string }[] = [];
         let clubId = '';
         let courseId = '';
-        let clubInfo: any = user.membership.length > 0
+        let clubInfo: any = user?.membership.length > 0
             ? user.membership[0].club
             : null;
         clubId = clubInfo ? clubInfo.id : '';

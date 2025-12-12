@@ -4,22 +4,26 @@ import { BooleanInput } from '@angular/cdk/coercion';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
+import { LocalStorageService } from 'app/shared/services/localStorage';
+import { UserSessionModel } from 'app/shared/models/player.model';
 
 @Component({
-    selector       : 'user',
-    templateUrl    : './user.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'user',
+    templateUrl: './user.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'user'
+    exportAs: 'user'
 })
-export class UserComponent implements OnInit, OnDestroy
-{
+export class UserComponent implements OnInit, OnDestroy {
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_showAvatar: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
     @Input() showAvatar: boolean = true;
+    showProfile: boolean = false;
     user: User;
+
+    _loggedInUser: UserSessionModel;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -29,9 +33,9 @@ export class UserComponent implements OnInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _userService: UserService
-    )
-    {
+        private _userService: UserService,
+        private _localStorage: LocalStorageService,
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -41,13 +45,18 @@ export class UserComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
+        if (this._localStorage.isTournamentManager()) {
+            this.showProfile = true;
+        }
         // Subscribe to user changes
         this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this.user = user;
+                if (user.avatar == 'assets/images/logo/e2esp.png') {
+                    this.showAvatar = false;
+                }
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -57,8 +66,7 @@ export class UserComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -73,11 +81,9 @@ export class UserComponent implements OnInit, OnDestroy
      *
      * @param status
      */
-    updateUserStatus(status: string): void
-    {
+    updateUserStatus(status: string): void {
         // Return if user is not available
-        if ( !this.user )
-        {
+        if (!this.user) {
             return;
         }
 
@@ -91,8 +97,16 @@ export class UserComponent implements OnInit, OnDestroy
     /**
      * Sign out
      */
-    signOut(): void
-    {
+    signOut(): void {
         this._router.navigate(['/sign-out']);
+    }
+
+    /**
+     * Sign out
+     */
+    profileChange(): void {
+        ////console.log(this.user);
+
+        this._router.navigate(['/profile/', this.user.id]);
     }
 }

@@ -26,6 +26,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean;
+    showAvatar: boolean = true;
     navigation: Navigation;
     user: User;
     public loggedInuser: any;
@@ -67,7 +68,10 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
-                // console.log(user);
+                console.log(user);
+                if (user.avatar == 'assets/images/logo/e2esp.png') {
+                    this.showAvatar = false;
+                }
                 this.user = user;
             });
 
