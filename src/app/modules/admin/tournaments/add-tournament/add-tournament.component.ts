@@ -3432,8 +3432,7 @@ export class AddTournamentComponent implements OnInit {
                 let founded = this.tournamentMembers.filter((a) => {
                     return a.id == this.membersSource.data[index].id;
                 });
-                console.log(this.membersSource.data[index]);
-
+                // console.log(this.membersSource.data[index]);
 
                 if (founded.length == 0) {
                     let member: any = {
@@ -3463,23 +3462,24 @@ export class AddTournamentComponent implements OnInit {
         }
 
         if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY && invalidPlayers.length > 0) {
+            this.tournamentMembers = [];
             this.dialog.open(InvalidCategoryPlayersComponent, {
                 width: '600px',
                 data: { players: invalidPlayers }
             }).afterClosed().subscribe((res) => {
                 console.log(res);
 
-                // if (res && res.length > 0) {
-                //     res.forEach(resPlayer => {
-                //         const memberIndex = this.membersSource.data.findIndex(
-                //             player => player.id === resPlayer.id
-                //         );
-                //         if (memberIndex !== -1) {
-                //             this.membersSource.data[memberIndex].playerCategory = resPlayer.playerCategory;
-                //         }
-                //     });
-                //     this.membersSource._updateChangeSubscription();
-                // }
+                if (res && res.length > 0) {
+                    res.forEach(resPlayer => {
+                        const memberIndex = this.membersSource.data.findIndex(
+                            player => player.id === resPlayer.id
+                        );
+                        if (memberIndex !== -1) {
+                            this.membersSource.data[memberIndex].playerCategory = resPlayer.playerCategory;
+                        }
+                    });
+                    this.membersSource._updateChangeSubscription();
+                }
             });
             // this.currentStep = 2;
             // this.currentTitle = 'Select Players';
