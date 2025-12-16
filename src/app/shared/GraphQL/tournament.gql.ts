@@ -2103,17 +2103,11 @@ export const getTeeTimesSlots = gql`
                 noOfHoles
                 FlightsQL: flight {
                     id
-                    courseId
                     courseHoleSets
                     courseHoleSetsInverted
                     tournamentId
                     date
-                    ended
-                    tee
-                    categoryRound
-                    tee_id
                     time
-                    flightNo
                     guest {
                         flightId
                         guestId
@@ -2126,39 +2120,26 @@ export const getTeeTimesSlots = gql`
                     MembersQL: members {
                         flightId
                         playerId
-                        attendance
-                        guest
                         playingTee
                         playingHandicap
                         playingHandicapWhs
-                        undoHandicap
-                        panelty
                         PlayerQL: player {
                             id
                             firstName
                             lastName
                             handicap
                             membershipNumber
-                            picture
                             email
                         }
-                        ScoresQL: scores(order_by: { hole: { holeNo: asc } }) {
-                            ...ScoreQL
-                        }
                     }
-                    CourseQL: course {
-                        ...CourseQL
-                        HolesQL: holes {
-                            ...HoleQL
+                        admin{
+                        id
+                        fullName
                         }
-                    }
                 }
             }
         }
     }
-    ${ScoreQL}
-    ${CourseQL}
-    ${HoleQL}
 `;
 export const getTeeTimesSlotsAdmin = gql`
     query ClubSingleRoundFlightsQuery($toDate: date!) {

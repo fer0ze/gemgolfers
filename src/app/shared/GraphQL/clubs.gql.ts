@@ -285,11 +285,6 @@ export const GetTeeTimeBookingQL = gql`
                 id
                 name
             }
-            slots_aggregate {
-                aggregate {
-                    count
-                }
-            }
                 slots(order_by: { slotTime: asc }){
                 id
                 slotTime
