@@ -1206,9 +1206,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
             const roundKey = this.activeRound == 1 ? 'pointsFormat' : `pointsFormat${this.activeRound}`;
 
-            const format = this.tournamentInfo[0].pointsFormats[roundKey];
+            const format = this.tournamentInfo[0]?.pointsFormats?.[roundKey] ?? null;
 
-            console.log("Format:", format);
+            // console.log("Format:", format);
             if (format == matchFormat.GREENSOME || format == matchFormat.FOURSOME) {
                 createPairs = true;
             }
