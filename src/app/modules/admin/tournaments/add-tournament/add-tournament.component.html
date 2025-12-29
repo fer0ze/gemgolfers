@@ -135,7 +135,7 @@
                                     <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                         [floatLabel]="'always'">
                                         <mat-label>End Date </mat-label>
-                                        <input matInput [matDatepicker]="picker2" class=" text-gray-700"
+                                        <input matInput [min]="minDate" [matDatepicker]="picker2" class=" text-gray-700"
                                             (focus)="picker2.open()" (dateChange)="datechangeE($event)"
                                             formControlName="endDateFormCtrl" placeholder="End date" required />
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -224,8 +224,8 @@
                                                     <div class="flex gap-x-2 items-center">
                                                         <span (click)="openFormatInfo(i)"
                                                             class="text-gray-600 items-center flex cursor-pointer ">
-                                                            <mat-icon class="icon-size-3" class="icon">info</mat-icon>
-                                                            <span class="hover:underline">
+                                                            <mat-icon class="icon-size-4" class="icon">info</mat-icon>
+                                                            <span class="hover:underline text-md">
                                                                 Format Info
                                                             </span>
                                                         </span>
