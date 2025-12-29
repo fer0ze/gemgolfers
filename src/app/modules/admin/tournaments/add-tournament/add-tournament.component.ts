@@ -768,6 +768,7 @@ export class AddTournamentComponent implements OnInit {
                         .get('courseName')
                         .setValue({
                             name: this.currentTournament['CourseQL'].name,
+                            id: this.currentTournament['CourseQL'].id,
                         });
                 }
 
@@ -1299,18 +1300,18 @@ export class AddTournamentComponent implements OnInit {
             current.setDate(current.getDate() + 1); // move to next day
         }
 
-        return result;
+        return result; 
     }
 
     formatDate(date: Date): string {
         const d = ("0" + date.getDate()).slice(-2);
         const m = ("0" + (date.getMonth() + 1)).slice(-2);
         const y = date.getFullYear();
-        return `${d}-${m}-${y}`;
+        return `${y}-${m}-${d}`;
     }
 
     updateCategoryDates(cat) {
-        const chkArray = this.formArray.get([0]).get('clubctgies') as FormArray;
+        const chkArray = this.formArray.get([0]).get('clubctgies') as FormArray; 
 
         const idx = chkArray.value.findIndex((x) => x.id === cat.id);
         if (idx !== -1) {
@@ -3049,7 +3050,7 @@ export class AddTournamentComponent implements OnInit {
             id: this.tournamentID,
             clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
             leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
-            courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName.course.id,
+            courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.id ?? this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id,
             adminId: this.loggedInuser.id,
             title: this.formArray.get([0]).value.titleFormCtrl,
             prefix: this.formArray.get([0]).value.prefixFormCtrl,
