@@ -1122,16 +1122,16 @@ export class ViewTournamentComponent implements OnInit {
                             flightSettings.length > 0
                         ) {
                             for (let obj of flightSettings) {
-                                let chngDate = obj.dates.replaceAll('-', '').toString();
-                                let newDate =
-                                    chngDate.substring(4, 8) +
-                                    '-' +
-                                    chngDate.substring(2, 4) +
-                                    '-' +
-                                    +chngDate.substring(0, 2);
+                                // let chngDate = obj.dates.replaceAll('-', '').toString();
+                                // let newDate =
+                                //     chngDate.substring(4, 8) +
+                                //     '-' +
+                                //     chngDate.substring(2, 4) +
+                                //     '-' +
+                                //     +chngDate.substring(0, 2);
                                 // //console.log(newDate);
 
-                                let flightDate = new Date(newDate).getDate();
+                                let flightDate = new Date(obj.dates).getDate();
                                 //console.log(flightDate);
                                 if (flightDate == newstartDate) {
                                     allowCat = true;
@@ -1175,6 +1175,9 @@ export class ViewTournamentComponent implements OnInit {
                                     +chngDate.substring(0, 2);
 
                                 let flightDate = new Date(newDate).getDate();
+                                if(flightDate==NaN){
+                                    flightDate = new Date(obj.dates).getDate();F
+                                }
                                 //console.log(flightDate);
                                 if (flightDate == newstartDate) {
                                     allowCat = true;
