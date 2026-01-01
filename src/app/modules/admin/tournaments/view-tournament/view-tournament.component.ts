@@ -1176,7 +1176,7 @@ export class ViewTournamentComponent implements OnInit {
 
                                 let flightDate = new Date(newDate).getDate();
                                 if(flightDate==NaN){
-                                    flightDate = new Date(obj.dates).getDate();F
+                                    flightDate = new Date(obj.dates).getDate();
                                 }
                                 //console.log(flightDate);
                                 if (flightDate == newstartDate) {
