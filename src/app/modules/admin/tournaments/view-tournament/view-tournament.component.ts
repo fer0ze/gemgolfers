@@ -608,16 +608,21 @@ export class ViewTournamentComponent implements OnInit {
 
             if (this.FlightsQL.length && this.FlightsQL.length > 6) {
                 this.FlightsQL.splice(6, this.FlightsQL.length);
+                for (const c of this.FlightsQL) {
+                    for (let obj of c['MembersQL']) {
+                        totalPlayer.push(obj);
+                    }
+                }
             } else {
                 totalPlayer = [...this.dataFullTournament['TournamentQL'][0]['members']];
             }
 
-            for (const c of this.FlightsQL) {
-                for (let obj of c['MembersQL']) {
-                    totalPlayer.push(obj);
-                }
-            }
-            //console.log(totalPlayers);
+            // for (const c of this.FlightsQL) {
+            //     for (let obj of c['MembersQL']) {
+            //         totalPlayer.push(obj);
+            //     }
+            // }
+            // console.log(totalPlayer);
             totalPlayer.sort(this.ComparatorHandicap);
             let count = 0;
 

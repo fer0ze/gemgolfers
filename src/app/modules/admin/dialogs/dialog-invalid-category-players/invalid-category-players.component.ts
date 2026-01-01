@@ -26,6 +26,9 @@ export class InvalidCategoryPlayersComponent {
 
         this.playerCategories = this.facadeService.getPlayerCategories();
         console.log(data);
+        this.playerCategories = this.playerCategories.filter(category =>
+            data.categories.includes(category.name)
+        );
 
         this.dataSource.data = data.players;
     }

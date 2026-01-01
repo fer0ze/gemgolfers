@@ -543,7 +543,7 @@
                 </form>
 
                 <div *ngIf="currentTitle === 'Select Players'">
-                    <div class="animate-fade-in flex-1 flex flex-col h-full">
+                    <div class="animate-fade-in flex-1 flex flex-col w-full h-full">
                         <!-- <div class="flex items-center justify-end py-4 space-x-3">
                             <button class="bg-blue-500 text-white px-2 py-2 rounded-lg flex items-center  font-semibold
                                 shadow-sm hover:bg-blue-600 " (click)="downloadSample()" [color]="'primary'">
@@ -562,9 +562,9 @@
                                 Bulk Import
                             </label>
                         </div> -->
-                        <div class=" grid grid-rows-[1fr_auto_1fr] sm:grid-cols-[1fr_auto_1fr] gap-4 flex-1 h-0">
+                        <div class="flex flex-col sm:flex-row gap-6 flex-1 w-full">
                             <!-- Club Members -->
-                            <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
+                            <div class="border w-full border-gray-200 rounded-lg p-4 flex flex-col">
                                 <div class="flex justify-between items-center mb-4">
                                     <h3 class="font-bold text-lg text-gray-800">Members
                                     </h3>
@@ -718,7 +718,7 @@
                                     <mat-icon [svgIcon]="'heroicons_solid:chevron-double-left'"></mat-icon>
                                 </button>
                             </div>
-                            <div class="flex flex-col">
+                            <div class="flex w-full flex-col">
 
                                 <!-- Tournament Members -->
                                 <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
@@ -1411,7 +1411,7 @@
 
                                                             <input matInput formControlName="playersperFlight"
                                                                 [disabled]="showTexas" [readonly]="showTexas"
-                                                                type="number" />
+                                                                type="number" min="1" />
                                                             <mat-error>The input is required.</mat-error>
                                                         </mat-form-field>
                                                     </div>

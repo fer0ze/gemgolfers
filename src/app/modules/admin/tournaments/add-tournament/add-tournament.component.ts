@@ -1300,7 +1300,7 @@ export class AddTournamentComponent implements OnInit {
             current.setDate(current.getDate() + 1); // move to next day
         }
 
-        return result; 
+        return result;
     }
 
     formatDate(date: Date): string {
@@ -1311,7 +1311,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     updateCategoryDates(cat) {
-        const chkArray = this.formArray.get([0]).get('clubctgies') as FormArray; 
+        const chkArray = this.formArray.get([0]).get('clubctgies') as FormArray;
 
         const idx = chkArray.value.findIndex((x) => x.id === cat.id);
         if (idx !== -1) {
@@ -3466,7 +3466,10 @@ export class AddTournamentComponent implements OnInit {
             this.tournamentMembers = [];
             this.dialog.open(InvalidCategoryPlayersComponent, {
                 width: '600px',
-                data: { players: invalidPlayers }
+                data: {
+                    players: invalidPlayers,
+                    categories: selectedCategories,
+                }
             }).afterClosed().subscribe((res) => {
                 console.log(res);
 
