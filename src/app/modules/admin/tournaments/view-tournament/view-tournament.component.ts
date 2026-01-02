@@ -1175,7 +1175,7 @@ export class ViewTournamentComponent implements OnInit {
                                     +chngDate.substring(0, 2);
 
                                 let flightDate = new Date(newDate).getDate();
-                                if(flightDate==NaN){
+                                if (flightDate == NaN) {
                                     flightDate = new Date(obj.dates).getDate();
                                 }
                                 //console.log(flightDate);
@@ -1379,111 +1379,91 @@ export class ViewTournamentComponent implements OnInit {
         categoryName: string,
         categoryScore: number,
         copymembers: any
-    ) {
+    ): Promise<void> {
         try {
-            this.logger.log('Cut calculation after Close Round.', "info", cutOffCriteria.toString());
+            this.logger.log(
+                'Cut calculation after Close Round.',
+                'info',
+                JSON.stringify(cutOffCriteria)
+            );
+
             let nextRoundPlayers: any[] = [];
-            // //console.log(category);
-            // let categoryScore = cutOffCriteria.score.filter((a) => {
-            //   return a.name == category;
-            // });
-            let objLeader: Leader = new Leader(
+
+            const objLeader: Leader = new Leader(
                 this.fullTournament,
                 this.activeRound,
                 this.fullTournament,
                 categoryName
             );
+
             let result = objLeader.parseSubscriptionResponse();
-            //console.log(result);
-            if (cutOffCriteria.copyflights == false) {
-                if (result.length == 0) {
+
+            if (!cutOffCriteria.copyflights) {
+
+                if (!result || result.length === 0) {
                     result = this.dataFullTournament.TournamentQL[0].members.filter(
-                        (a) => {
-                            if (a.PlayerQL.playerCategory == categoryName)
-                                return nextRoundPlayers.push(a.PlayerQL);
-                        }
-                    );
-                } else {
-                    if (cutOffCriteria.type == LeaderType.GROSS) {
-                        result = result.filter((a) => {
-                            return (
-                                a.AllGrossUnder <=
-                                (categoryScore
-                                    ? categoryScore
-                                    : a.AllGrossUnder) &&
-                                a['holes' + this.activeRound] ==
-                                this.noOfHolesInCourse
-                            );
-                        });
-                        //console.log(result);
-                        cutOffCriteria.order == 'asc'
-                            ? (nextRoundPlayers = result.sort(
-                                this.ComparatorAllGross
-                            ))
-                            : (nextRoundPlayers = result.sort(
-                                this.ComparatorAllGrossDesc
-                            ));
-                    } else if (cutOffCriteria.type == LeaderType.NEW) {
-                        result =
-                            this.dataFullTournament.TournamentQL[0].members.filter(
-                                (a) => {
-                                    if (a.PlayerQL.playerCategory == categoryName)
-                                        return nextRoundPlayers.push(a.PlayerQL);
-                                }
-                            );
-                        this.makePlayerFlights(result, cutOffCriteria.players);
-                        ////console.log(this.selectedMembers);
-                        await this.saveCategoryFlights(cutOffCriteria, categoryName);
-                    } else {
-                        result = result.filter((a) => {
-                            return (
-                                a.AllNetUnder <=
-                                (categoryScore
-                                    ? categoryScore
-                                    : a.AllNetUnder) &&
-                                a['holes' + this.activeRound] ==
-                                this.noOfHolesInCourse
-                            );
-                        });
-                        cutOffCriteria.order == 'asc'
-                            ? (nextRoundPlayers = result.sort(
-                                this.ComparatorAllNet
-                            ))
-                            : (nextRoundPlayers = result.sort(
-                                this.ComparatorAllNetDesc
-                            ));
-                    }
+                        (a) => a.PlayerQL.playerCategory === categoryName
+                    ).map(m => m.PlayerQL);
                 }
-                //nextRoundPlayers = result.sort(this.ComparatorAllGross);
-                //for(let p of nextRoundPlayers) //console.log(p.name + "" + p.playerId);
-                //console.log(nextRoundPlayers);
-                if (copymembers == null) {
-                    this.makePlayerFlights(
-                        nextRoundPlayers,
-                        cutOffCriteria.players
+                else if (cutOffCriteria.type === LeaderType.GROSS) {
+
+                    result = result.filter(a =>
+                        a.AllGrossUnder <= (categoryScore ?? a.AllGrossUnder) &&
+                        a['holes' + this.activeRound] === this.noOfHolesInCourse
                     );
-                    ////console.log(this.selectedMembers);
+
+                    nextRoundPlayers =
+                        cutOffCriteria.order === 'asc'
+                            ? result.sort(this.ComparatorAllGross)
+                            : result.sort(this.ComparatorAllGrossDesc);
+
+                }
+                else if (cutOffCriteria.type === LeaderType.NEW) {
+
+                    const members =
+                        this.dataFullTournament.TournamentQL[0].members.filter(
+                            a => a.PlayerQL.playerCategory === categoryName
+                        );
+
+                    this.makePlayerFlights(members.map(m => m.PlayerQL), cutOffCriteria.players);
+                    await this.saveCategoryFlights(cutOffCriteria, categoryName);
+                    return;
+
+                }
+                else {
+
+                    result = result.filter(a =>
+                        a.AllNetUnder <= (categoryScore ?? a.AllNetUnder) &&
+                        a['holes' + this.activeRound] === this.noOfHolesInCourse
+                    );
+
+                    nextRoundPlayers =
+                        cutOffCriteria.order === 'asc'
+                            ? result.sort(this.ComparatorAllNet)
+                            : result.sort(this.ComparatorAllNetDesc);
+                }
+
+                if (copymembers == null) {
+                    this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
                     await this.saveCategoryFlights(cutOffCriteria, categoryName);
                 }
+
             } else {
                 nextRoundPlayers = result;
                 this.makePlayerFlights(nextRoundPlayers, cutOffCriteria.players);
-                ////console.log(this.selectedMembers);
                 await this.saveCategoryFlights(cutOffCriteria, categoryName);
             }
+
         } catch (error) {
-            this.logger.log('Cut calculation Failed after Close Round.', "info", cutOffCriteria.toString());
+            this.logger.log(
+                'Cut calculation Failed after Close Round.',
+                'error',
+                JSON.stringify(error)
+            );
+            throw error; // 🔥 important: propagate failure
         }
-        // for(let p of nextRoundPlayers) {
-        //   let tm: TournamentMember = {
-        //     tournamentId: this.tournamentID,
-        //     playerId: p.playerId,
-        //     status: true
-        //   }
-        //   this.activeTournamentMembers.push(tm);
-        // }
-        //this.markActiveTournamentMembers(this.activeTournamentMembers);
     }
+
 
     async makePlayerFlights(nextRoundPlayers: any, playersPerFlight: number) {
         try {
