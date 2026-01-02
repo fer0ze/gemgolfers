@@ -1,17 +1,35 @@
-.mat-form-field, .mat-radio-button {
-    margin: 0 5px!important;
+.mat-form-field,
+.mat-radio-button {
+    margin: 0 5px !important;
 }
 
 
 mat-radio-button {
     .mat-radio-label {
-        padding-right: 10px!important;
+        padding-right: 10px !important;
     }
 }
 
-.separator {
-    border-bottom: 1px dashed #479944;
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-    margin: 16px;
-  }
+
+:host ::ng-deep .custom-mat-input.mat-form-field-appearance-outline .mat-form-field-flex {
+    height: 3rem !important;
+    padding: 0 0.75em !important;
+    margin-top: -0.25em !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* ✅ Fix floating label misalignment */
+:host ::ng-deep .custom-mat-input .mat-form-field-label-wrapper {
+    top: -0.4em !important;
+    /* Move label up slightly to match smaller height */
+}
+
+:host ::ng-deep .custom-mat-input .mat-form-field-infix {
+    padding-bottom: 1.8rem !important;
+}
+
+/* Optional — smooth transition for label movement */
+:host ::ng-deep .custom-mat-input .mat-form-field-label {
+    transition: all 0.15s ease-in-out !important;
+}

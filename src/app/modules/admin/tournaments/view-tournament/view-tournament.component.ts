@@ -1246,7 +1246,7 @@ export class ViewTournamentComponent implements OnInit {
                     if (getResult && getResult.category && this.matchFormat == matchFormat.STROKE_PLAY) {
                         //console.log(getResult.category);
                         for (let cats in getResult.category) {
-                            if (getResult.category[cats].copyFlights == 'No') {
+                            if (getResult.category[cats].copyFlights == false) {
                                 flag = false;
                             }
 
@@ -1395,7 +1395,7 @@ export class ViewTournamentComponent implements OnInit {
             );
             let result = objLeader.parseSubscriptionResponse();
             //console.log(result);
-            if (cutOffCriteria.copyflights == 'No') {
+            if (cutOffCriteria.copyflights == false) {
                 if (result.length == 0) {
                     result = this.dataFullTournament.TournamentQL[0].members.filter(
                         (a) => {

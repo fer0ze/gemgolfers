@@ -72,7 +72,7 @@ export class DialogCloseRoundComponent implements OnInit {
                         : '"08:00"';
                     if (c.cut) {
                         this.catArray[c.category]['cutshow'] = true;
-                        this.catArray[c.category]['showCutCopy'] = true;
+                        this.catArray[c.category]['showCutCopy'] = false;
                     } else {
                         this.catArray[c.category]['cutshow'] = false;
                         this.catArray[c.category]['showCutCopy'] = false;
@@ -137,7 +137,7 @@ export class DialogCloseRoundComponent implements OnInit {
             tee: ['1_10', Validators.required],
             type: [ 'GROSS', Validators.required],
             order: ['desc', Validators.required],
-            copyFlights: ['No', Validators.required],
+            copyFlights: [false, Validators.required],
             cuttScore: [''],
             playing: [true],
             lastRoundPlayed: [this.PlayingFlight],
@@ -218,7 +218,7 @@ export class DialogCloseRoundComponent implements OnInit {
             tee: ['1_10', Validators.required],
             type: [cat.cut == true ? 'GROSS' : 'NET', Validators.required],
             order: ['desc', Validators.required],
-            copyFlights: ['No', Validators.required],
+            copyFlights: [false, Validators.required],
             cuttScore: [''],
             playing: [this.catArray[cat.category].value],
             lastRoundPlayed: [this.PlayingFlight],
@@ -227,17 +227,18 @@ export class DialogCloseRoundComponent implements OnInit {
 
     selectionChangeCopy(evt, cat) {
         //console.log(evt);
+        //console.log(evt);
         //console.log(cat);
 
-        evt.value == 'Yes'
-            ? (this.catArray[cat].showCutCopy = false)
-            : (this.catArray[cat].showCutCopy = true);
+        evt.checked == true
+            ? (this.catArray[cat].showCutCopy = true)
+            : (this.catArray[cat].showCutCopy = false);
     }
     selectionChange(evt, cat) {
         //console.log(evt);
         //console.log(cat);
 
-        evt.value == 'true'
+        evt.checked == true
             ? (this.catArray[cat].value = true)
             : (this.catArray[cat].value = false);
     }
