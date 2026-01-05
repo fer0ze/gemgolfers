@@ -1790,6 +1790,7 @@ export const getDailyTeeTimeReportClub = gql`
                 FlightsQL: flight {
                     id
                     ended
+                    time
                     courseHoleSets
                     courseHoleSetsInverted
                     MembersQL: members {

@@ -18,7 +18,7 @@ import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacadeService } from '../../../../shared/services/facade.service';
-import { Constants } from '../../../../shared/classes/general';
+import { Constants, General } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dialog-player-list.component';
@@ -33,7 +33,7 @@ import { LogsService } from 'app/shared/services/logs.service';
     styleUrls: ['./daily-starter-report.component.scss'],
 })
 export class DailyStarterReportComponent implements OnInit {
-   
+
     isLoading: boolean = false;
     showtable: boolean = false;
     loggedInuser: Player;
@@ -52,7 +52,7 @@ export class DailyStarterReportComponent implements OnInit {
         'roundsPlayed',
         'membersPlayed',
         'submittedCards',
-        'nonSubmittedCards',
+        // 'nonSubmittedCards',
         'details',
     ];
     //['id','name', 'dates','updatedHandicap','details'];
@@ -83,7 +83,7 @@ export class DailyStarterReportComponent implements OnInit {
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
 
             this.isLoading = true;
-           
+
             this.showtable = false;
 
             //  this.scheduleForm = this.fb.group({
@@ -92,6 +92,7 @@ export class DailyStarterReportComponent implements OnInit {
             // });
 
             this.scheduleForm = this.fb.group({
+                dateRange: ['Last_Week'],
                 startDate: ['', [Validators.required]],
                 endDate: ['', [Validators.required]],
             });
@@ -99,22 +100,16 @@ export class DailyStarterReportComponent implements OnInit {
             //console.log(this.scheduleForm);
 
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+            var currentDate = new Date();
+            // currentDate.setDate(currentDate.getDate());
 
-           
-            of()
-                .pipe()
-                .subscribe(
-                    async (data) => {
-                        var currentDate = new Date();
-                        currentDate.setDate(currentDate.getDate());
+            // var nxtDate = new Date();
+            // nxtDate.setDate(nxtDate.getDate() + 7);
+            let lastDate = this.endOfWeek();
 
-                        //var nxtDate = new Date();
-                        //nxtDate.setDate(nxtDate.getDate() + 7);
+            this.getDailyRounds(currentDate, lastDate);
 
-                        this.getDailyRounds(currentDate, currentDate);
-                    },
-                    (error) => (this.isLoading = false)
-                );
+
         } catch (error) {
             this.logger.log('Getting Daily Starter Data Failed', "error", error.toString());
         }
@@ -132,7 +127,7 @@ export class DailyStarterReportComponent implements OnInit {
 
     async getDailyRounds(fromDate: Date, toDate: Date) {
         let dailyRoundsData: any[] = [];
-       
+
         let dataPlayers: any;
         this.dailyStats = [];
         this.showtable = false;
@@ -160,6 +155,7 @@ export class DailyStarterReportComponent implements OnInit {
             let prevDate = null;
             let count = 0;
             let memCounter = 0;
+            let allPlayers = 0;
             let totalFlights = 0;
             let submittedCards = 0;
             let nonSubmittedCards = 0;
@@ -170,34 +166,33 @@ export class DailyStarterReportComponent implements OnInit {
                     const dailyStat = {
                         date: obj.teeDate,
                         membersCount:
-                            obj.slots[i]?.FlightsQL 
-                                ? obj.slots[i].FlightsQL
-                                    .MembersQL.length
+                            obj.slots[i]?.FlightsQL
+                                ? 1
                                 : 0,
                         noOfFlights: ++totalFlights,
                         allPlayers:
-                            obj.slots[i]?.FlightsQL  &&
+                            obj.slots[i]?.FlightsQL &&
                                 obj.slots[i].FlightsQL.MembersQL
                                     .length > 0
                                 ? obj.slots[i].FlightsQL
                                     .MembersQL
                                 : [],
                         submittedCards:
-                            obj.slots[i]?.FlightsQL  &&
+                            obj.slots[i]?.FlightsQL &&
                                 obj.slots[i].FlightsQL.MembersQL
                                     .length > 0
-                                ? obj.slots[i].FlightsQL.MembersQL.filter((a) => {
-                                    return a.ScoresQL.length > 0;
-                                })
-                                : [],
+                                ? obj.slots[i].FlightsQL.MembersQL
+                                    .length
+                                : 0,
                         nonSubmittedCards:
-                            obj.slots[i]?.FlightsQL  &&
+                            obj.slots[i]?.FlightsQL &&
                                 obj.slots[i].FlightsQL.MembersQL
                                     .length > 0
                                 ? obj.slots[i].FlightsQL.MembersQL.filter((a) => {
                                     return a.ScoresQL.length == 0;
                                 })
                                 : [],
+                        flights: obj.slots[i]?.FlightsQL ? obj.slots[i].FlightsQL : {},
                     };
                     this.dailyStats.push(dailyStat);
                 }
@@ -208,8 +203,9 @@ export class DailyStarterReportComponent implements OnInit {
                 if (stats.date == prevDate) {
                     memCounter = memCounter + stats.membersCount;
                     totalFlights = stats.noOfFlights;
+                    allPlayers = stats.allPlayers;
                     submittedCards =
-                        submittedCards + stats.submittedCards.length;
+                        submittedCards + stats.submittedCards;
                     nonSubmittedCards =
                         nonSubmittedCards + stats.nonSubmittedCards.length;
                     submitPer = (submittedCards / memCounter) * 100;
@@ -223,6 +219,13 @@ export class DailyStarterReportComponent implements OnInit {
                         nonSubmittedCards;
                     myData[myData.length - 1].submitPer = submitPer;
                     myData[myData.length - 1].nonSubmitPer = nonSubmitPer;
+                    if (
+                        stats.flights &&
+                        typeof stats.flights === 'object' &&
+                        Object.keys(stats.flights).length > 0
+                    ) {
+                        myData[myData.length - 1].flights.push(stats.flights);
+                    }
                     ////console.log(myData);
 
                     if (stats.nonSubmittedCards.length) {
@@ -250,11 +253,12 @@ export class DailyStarterReportComponent implements OnInit {
                     submittedCards = 0;
                     nonSubmittedCards = 0;
                     submitPer = 0;
+                    allPlayers = 0;
                     nonSubmitPer = 0;
                     memCounter = memCounter + stats.membersCount;
                     totalFlights = stats.noOfFlights;
                     submittedCards =
-                        submittedCards + stats.submittedCards.length;
+                        submittedCards + stats.submittedCards;
                     nonSubmittedCards =
                         nonSubmittedCards + stats.nonSubmittedCards.length;
                     submitPer = submitPer + (submittedCards / memCounter) * 100;
@@ -283,6 +287,7 @@ export class DailyStarterReportComponent implements OnInit {
                         date: stats.date,
                         membersCount: memCounter,
                         totalFlights: totalFlights,
+                        allPlayers: allPlayers,
                         submittedCards: submittedCards,
                         submittedCardsList: submittedCardsList,
                         allPlayersList: allPlayersList,
@@ -290,14 +295,15 @@ export class DailyStarterReportComponent implements OnInit {
                         nonSubmittedCardsList: nonSubmittedCardsList,
                         submitPer: submitPer,
                         nonSubmitPer: nonSubmitPer,
+                        flights: [Object.keys(stats.flights).length > 0 ? stats.flights : {}],
                     };
                     count++;
                     myData.push(obj);
                     //console.log(count);
-                    //console.log(myData);
                     prevDate = stats.date;
                 }
             }
+            console.log(myData);
             this.isLoading = false;
             this.showtable = true;
             this.dataSource = null;
@@ -307,40 +313,124 @@ export class DailyStarterReportComponent implements OnInit {
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
 
-       
+
         }
     }
-    public downloadAsPDF() {
-        this.logger.log('Admin Click Download Pdf Daily Starter Report', "info");
-        let doc = new jsPDF();
-        let res = doc.autoTableHtmlToJson(document.getElementById('pdfTable'));
-        let columns = [
-            res.columns[0],
-            res.columns[1],
-            res.columns[2],
-            res.columns[3],
-            res.columns[4],
-            res.columns[5],
-        ];
-        doc.setFontSize(30);
-        doc.text('KGC Daily Starter Report:', 15, 15);
-        doc.setFontSize(13);
-        doc.setTextColor(100);
 
-        // From HTML
-        // doc.autoTable({
-        //   html: "#pdfTable",
-        //   startY: 35,
-        //   theme: "grid",
-        // });
-        doc.autoTable(columns, res.data, { startY: 25, theme: 'grid' });
+    public downloadAsPDF(data: any) {
+        const doc = new jsPDF('portrait');
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
 
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
+        /* =======================
+           Title Section
+        ======================= */
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Tee Times Report', pageWidth / 2, 15, { align: 'center' });
 
-        // Download PDF document
-        //doc.save('flights.pdf');
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Date: ${data.date}`, pageWidth / 2, 22, { align: 'center' });
+
+        /* =======================
+           Prepare Flights Data
+        ======================= */
+        const flightsArray = (data.flights || [])
+            .filter(f => Array.isArray(f.MembersQL) && f.MembersQL.length)
+            .map((flight, index) => {
+                const firstMember = flight.MembersQL[0];
+                const playerCategory =
+                    firstMember?.PlayerQL?.playerCategory || 'Unknown';
+
+                return {
+                    time: flight.time || '',                     // if exists
+                    flightNumber: `No. ${index + 1}`,             // fallback
+                    startingHole: flight.startingHole || 1,       // fallback
+                    players: flight.MembersQL.map(m => ({
+                        fullName: `${m.PlayerQL?.firstName || ''} ${m.PlayerQL?.lastName || ''}`.trim(),
+                        handicap: m.PlayerQL?.handicap ?? '-'
+                    })),
+                    playerCategory
+                };
+            });
+
+        /* =======================
+           Split Left / Right
+        ======================= */
+        // const leftFlights = flightsArray.filter(f => f.startingHole < 10);
+        // const rightFlights = flightsArray.filter(f => f.startingHole >= 10);
+
+        // const maxFlights = Math.max(leftFlights.length, rightFlights.length);
+        // while (leftFlights.length < maxFlights) leftFlights.push(null);
+        // while (rightFlights.length < maxFlights) rightFlights.push(null);
+
+        /* =======================
+           Layout Settings
+        ======================= */
+        let startY = 30;
+        const blockHeight = 42;
+        const blockWidth = 92;
+
+        for (let i = 0; i < flightsArray.length; i++) {
+            const startX = (i % 2 === 0) ? 10 : 10 + blockWidth;
+
+            // Page break (only check when starting a new row)
+            if (i % 2 === 0 && startY + blockHeight > pageHeight - 10) {
+                doc.addPage();
+                startY = 30;
+            }
+
+            this.drawFlightBlock(doc, flightsArray[i], startX, startY);
+
+            // Move Y only after completing a row (right column)
+            if (i % 2 === 1) {
+                startY += blockHeight;
+            }
+        }
+
+        doc.save(`Golf_Draws_${data.date}.pdf`);
     }
+
+    // **Reusable Function to Draw Flight Block**
+    private drawFlightBlock(doc, flight, startX, startY) {
+        if (!flight) return;
+
+        doc.rect(startX, startY, 90, 40);
+        doc.setFillColor(41, 128, 185);
+        doc.rect(startX, startY, 90, 8, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Time', startX + 4, startY + 5);
+        doc.text('Group', startX + 15, startY + 5);
+        doc.text('Players', startX + 29, startY + 5);
+        doc.text('Hc.', startX + 77, startY + 5);
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text(General.formatTime(flight.time), startX + 4, startY + 14);
+        doc.text(flight.flightNumber, startX + 15, startY + 14);
+
+        const maxLineWidth = 44;
+        const lineHeight = 6;
+        let currentY = startY + 14;
+
+        flight.players.forEach((player) => {
+            let splitName = doc.splitTextToSize(player.fullName.toString().toUpperCase(), maxLineWidth);
+
+            splitName.forEach((line, lineIndex) => {
+                doc.text(line, startX + 29, currentY + (lineIndex * lineHeight));
+            });
+
+            doc.text(player.handicap.toString(), startX + 77, currentY);
+            currentY += splitName.length * lineHeight;
+        });
+    }
+
+
     Comparator(a, b) {
         if (a['date'] < b['date']) return -1;
         if (a['date'] > b['date']) return 1;
