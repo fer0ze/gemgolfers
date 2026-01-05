@@ -317,6 +317,10 @@
                         class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                         <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
                         Undo Round {{activeRound}}</button>
+                    <button *ngIf="activeRound == noOfRounds" (click)="closeRound()"
+                        class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+                        <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                        Close Tournament</button>
                 </div>
 
             </div>
