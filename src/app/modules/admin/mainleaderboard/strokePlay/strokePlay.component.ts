@@ -116,7 +116,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             }
         }
         if (this.totalRounds > 1) {
-            this.getPlayers([...this.LeaderboardAllPlayers], 0, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+            this.getPlayers([...this.LeaderboardAllPlayers], 0, this.lastActiveTab, this.currentFormat == 2 ? 'format' : 'LIV')
         } else {
             this.flightRound = 1;
             if (this.lastActiveTab == 1) {
