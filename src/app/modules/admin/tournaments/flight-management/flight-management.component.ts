@@ -75,8 +75,8 @@ import { isObject } from 'lodash';
     styleUrls: ['./flight-management.component.scss'],
 })
 export class FlightManagementComponent implements OnInit, OnChanges {
-    @Input()
-    tournamentID: string;
+    @Input() tournamentID: string;
+    @Input() activeRound: number;
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     dataSource: MatTableDataSource<any>;
     dataSources: MatTableDataSource<any>;
@@ -116,7 +116,6 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     isLoading: boolean = true;
     preFlightTime: string;
     flightRound: number = 0;
-    activeRound: number;
     noOfRounds: number;
     tRounds: any[] = [];
     roundFlights: any[] = [];
@@ -169,6 +168,15 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         // ..this.getSelectedPlayers();
         // this.selectedMembers=changes;
+        console.log(changes);
+
+        if (changes['activeRound']) {
+            this.activeRound = changes['activeRound'].currentValue;
+            this.flightRound = changes['activeRound'].currentValue;
+            this.getSelectedPlayers();
+            // console.log('Active round changed:', changes['activeRound'].currentValue);
+            // Reload data / logic here
+        }
         if ('selectedMembers' in changes) {
             this.getSelectedPlayers();
         }
@@ -176,6 +184,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         // changes.prop contains the old and the new value...
     }
     async ngOnInit() {
+        console.log(this.activeRound);
+
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         //console.log(this.loggedInuser);
         if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
@@ -193,7 +203,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.logger.log('Getting View Flights on Tournament Page', "info", this.tournamentID.toString());
 
         this.tournamentInfo = dataFullTournament.TournamentQL;
-        this.activeRound = this.tournamentInfo[0].activeRound;
+        // this.activeRound = this.tournamentInfo[0].activeRound;
         this.noOfRounds = this.tournamentInfo[0].noOfRounds;
         this.selectedIndex = this.activeRound - 1;
         this.categories = this.tournamentInfo[0]['CategoriesQL'];
@@ -240,7 +250,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             // else this.flightRound = this.tournamentInfo[0].activeRound;
             this.showMatchPlay = true;
         }
-        this.flightRound = this.tournamentInfo[0].activeRound;
+        this.flightRound = this.activeRound;
         this.getSelectedPlayers();
 
         //this.syncTournamentMembers();
@@ -279,6 +289,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
 
     }
+
 
     createAutoFlights() {
         let allowCat: boolean = false;

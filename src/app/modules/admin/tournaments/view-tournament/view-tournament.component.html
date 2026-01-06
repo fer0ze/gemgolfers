@@ -2,22 +2,23 @@
     <div class="p-6 md:px-20  md:py-8 flex-1">
 
         <!-- Top Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+        <div
+            class="flex flex-col text-white bg-[#175f9d] p-4 rounded-lg sm:flex-row justify-between items-start sm:items-center mb-8">
             <div>
                 <a [routerLink]="['/tournaments']"
-                    class="flex items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
+                    class="flex items-center text-sm text-white hover:text-emerald-600 mb-2 transition-colors">
                     <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
                     Back to Tournaments
                 </a>
-                <h1 class="text-4xl font-bold text-gray-900"> {{ fullTournament?.title }}
+                <h1 class="text-4xl font-bold text-white"> {{ fullTournament?.title }}
                     <button mat-icon-button (click)="
                                                     redirectToTournamentSetup()
-                                                " color="accent">
-                        <mat-icon>edit</mat-icon>
+                                                " class="ml-2 text-white hover:text-gray-200">
+                        <mat-icon class="text-white">edit</mat-icon>
                     </button>
                 </h1>
-                <p class="text-sm text-gray-500 gap-1 flex items-center mt-1">
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                <p class="text-sm text-white gap-1 flex items-center mt-1">
+                    <mat-icon class="icon-size-5 text-white" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
                     {{
                     fullTournament?.startDate
                     |date
@@ -32,7 +33,7 @@
                     <input type="text" id="first_name" [value]="joiningCode" readonly
                         class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <label for="first_name"
-                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
+                        class="absolute text-sm text-white duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-[#175f9d] px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
                         Code</label>
 
                     <button (click)="copyLink()"
@@ -63,8 +64,8 @@
                     Leaderboard
                 </button>
                 <button (click)="viewMarshalList()"
-                    class="bg-primary hover:bg-gray-100 text-white px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-200 shadow-sm transition-colors">
-                    <mat-icon class="icon-size-4 mr-2 text-white" [svgIcon]="'heroicons_solid:marshals'"></mat-icon>
+                    class="bg-white hover:bg-gray-100 px-4 py-2 text-gray-700 rounded-lg flex items-center text-sm font-semibold border shadow-sm transition-colors">
+                    <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:marshals'"></mat-icon>
                     Marshals
                 </button>
                 <!-- <button mat-flat-button [color]="'primary'" (click)="viewMarshalList()">
@@ -146,9 +147,9 @@
 
         <!-- Stats Cards -->
         <div class="flex flex-col sm:flex-row gap-6 mb-8">
-            <div class="bg-white p-5 rounded-lg w-full shadow-sm flex items-center space-x-4 border border-gray-200">
+            <div class="bg-white p-4 rounded-lg w-full shadow-sm flex items-center space-x-4 border border-gray-200">
 
-                <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-teal-200">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center bg-teal-200">
                     <mat-icon class="icon-size-5  text-teal-600" [svgIcon]="'heroicons_outline:user-group'"></mat-icon>
                 </div>
 
@@ -163,22 +164,24 @@
                 </div>
             </div>
             <div *ngIf="this.AmateursCount>0"
-                class="bg-white w-full p-5 rounded-lg shadow-sm flex items-center space-x-4 border border-gray-200">
+                class="bg-white w-full p-4 rounded-lg shadow-sm flex items-center space-x-4 border border-gray-200">
 
-                <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-blue-200">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center bg-blue-200">
                     <mat-icon class="icon-size-5  text-blue-600" [svgIcon]="'heroicons_outline:user'"></mat-icon>
                 </div>
 
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Amateurs</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.AmateursCount }}</p>
-
                     <p class="text-sm font-medium mt-1 line-clamp-2">
                         Date:
                         <span class="text-xs " *ngFor="let s of AmateursPlayingDates; let last = last">
                             {{ s.dates }}<span *ngIf="!last">, </span>
                         </span>
                     </p>
+
+
+
 
 
                 </div>
@@ -262,8 +265,51 @@
 
         </div>
 
+        <!-- Round Tabs -->
+        <div class=" space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                <div *ngFor="let round of rounds" (click)="round.round <= currentRound ? tabClicked(round) : null"
+                    class="p-4 rounded-lg flex justify-between items-center cursor-pointer transition-all border-2"
+                    [ngClass]="{
+           'bg-emerald-50 border-emerald-500 shadow-md': activeRound === round.round,
+           'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm': round.round < activeRound,
+           'bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400': round.round > currentRound
+         }">
+
+                    <div>
+                        <p class="font-semibold"
+                            [ngClass]="{'text-gray-800': round.round <= currentRound, 'text-gray-400': round.round > currentRound}">
+                            {{ round.label }}
+                        </p>
+                        <p class="text-sm"
+                            [ngClass]="{'text-gray-500': round.round <= currentRound, 'text-gray-400': round.round > currentRound}">
+                            {{ round.status }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <span *ngIf="round.status === 'Completed' && round.round <= currentRound"
+                            class="w-3 h-3 rounded-full bg-green-500"></span>
+                        <span *ngIf="round.status === 'In Progress' && round.round <= currentRound"
+                            class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" [ngClass]="{
+               'text-emerald-600': activeRound === round.round,
+               'text-gray-400': round.round > activeRound || (activeRound !== round.round && round.round <= activeRound)
+             }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
         <!-- Tabs -->
-        <div class="mb-6">
+        <div class="my-4">
             <div class="border-b border-gray-200">
                 <nav class="-mb-px flex space-x-6" aria-label="Tabs">
 
@@ -282,74 +328,33 @@
 
 
         <div *ngIf="activePrimaryTab() === 'Overview'" class="animate-fade-in">
-            <!-- Round Tabs -->
-            <div class="mb-6 space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-                    <div *ngFor="let round of rounds" (click)="round.round <= currentRound ? tabClicked(round) : null"
-                        class="p-4 rounded-lg flex justify-between items-center cursor-pointer transition-all border-2"
-                        [ngClass]="{
-           'bg-emerald-50 border-emerald-500 shadow-md': activeRound === round.round,
-           'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm': round.round < activeRound,
-           'bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400': round.round > currentRound
-         }">
 
-                        <div>
-                            <p class="font-semibold"
-                                [ngClass]="{'text-gray-800': round.round <= currentRound, 'text-gray-400': round.round > currentRound}">
-                                {{ round.label }}
-                            </p>
-                            <p class="text-sm"
-                                [ngClass]="{'text-gray-500': round.round <= currentRound, 'text-gray-400': round.round > currentRound}">
-                                {{ round.status }}
-                            </p>
-                        </div>
+            <!-- Buttons: show only for the active round -->
+            <div class="flex items-center justify-end gap-3 mb-4">
+                <button *ngIf="currentRound < noOfRounds && activeRound== currentRound" (click)="closeRound()"
+                    class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+                    <mat-icon class="icon-size-4 text-primary pt-2"
+                        [svgIcon]="'heroicons_solid:fast-forward'"></mat-icon>
+                    Close Round {{activeRound}}
+                </button>
 
-                        <div class="flex items-center space-x-2">
-                            <span *ngIf="round.status === 'Completed' && round.round <= activeRound"
-                                class="w-3 h-3 rounded-full bg-green-500"></span>
-                            <span *ngIf="round.status === 'In Progress' && round.round <= activeRound"
-                                class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" [ngClass]="{
-               'text-emerald-600': activeRound === round.round,
-               'text-gray-400': round.round > activeRound || (activeRound !== round.round && round.round <= activeRound)
-             }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7" />
-                            </svg>
-                        </div>
-                    </div>
+                <button *ngIf="activeRound > 1" (click)="undoRound()"
+                    class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+                    <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
+                    Undo Round {{activeRound}}
+                </button>
 
-                </div>
-
-                <!-- Buttons: show only for the active round -->
-                <div class="flex items-center justify-end gap-3">
-                    <button *ngIf="currentRound < noOfRounds && activeRound== currentRound" (click)="closeRound()"
-                        class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
-                        <mat-icon class="icon-size-4 text-primary pt-2"
-                            [svgIcon]="'heroicons_solid:fast-forward'"></mat-icon>
-                        Close Round {{activeRound}}
-                    </button>
-
-                    <button *ngIf="activeRound > 1" (click)="undoRound()"
-                        class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
-                        <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
-                        Undo Round {{activeRound}}
-                    </button>
-
-                    <button *ngIf="activeRound === noOfRounds" (click)="closeRound()"
-                        class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
-                        <mat-icon class="icon-size-4 text-warn pt-1"
-                            [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
-                        Close Tournament
-                    </button>
-                </div>
-
+                <button *ngIf="activeRound === noOfRounds" (click)="closeRound()"
+                    class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+                    <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                    Close Tournament
+                </button>
             </div>
-
-
             <!-- Main Content Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+               
                 <!-- Left Column -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Top Players -->
@@ -480,13 +485,15 @@
 
         <div *ngIf="activePrimaryTab() === 'Groups'">
             <div class="w-full">
-                <app-flight-management [tournamentID]="tournamentID"></app-flight-management>
+                <app-flight-management [activeRound]="activeRound"
+                    [tournamentID]="tournamentID"></app-flight-management>
             </div>
         </div>
 
         <div *ngIf="activePrimaryTab() === 'Scores'">
             <div class="w-full">
-                <app-matchplay [tournamentID]="tournamentID" [courseID]="this.fullTournament.courseId"></app-matchplay>
+                <app-matchplay [activeRound]="activeRound" [tournamentID]="tournamentID"
+                    [courseID]="this.fullTournament.courseId"></app-matchplay>
             </div>
         </div>
 

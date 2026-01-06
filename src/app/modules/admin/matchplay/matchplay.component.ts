@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { Player, UserSessionModel } from 'app/shared/models/player.model';
@@ -31,17 +31,18 @@ import { DialogTournamentComponent } from '../dialogs/dialog-tournament/dialog-t
     templateUrl: './matchplay.component.html',
     styleUrls: ['./matchplay.component.scss'],
 })
-export class MatchplayComponent implements OnInit {
+export class MatchplayComponent implements OnInit, OnChanges {
     @Input()
     tournamentID: string;
     @Input()
     courseID: string;
+    @Input()
+    activeRound: number;
     myPlayer: Player;
     isLoading: Boolean = true;
     loggedInuser: UserSessionModel;
     matchPlayData: any;
     totalRounds: number = 0;
-    activeRound: number;
     courseHoleSetNames;
     flightRound: number;
     ddSelectedFlight: string = '0';
@@ -130,7 +131,7 @@ export class MatchplayComponent implements OnInit {
 
                         let tournamentData: any = this.matchPlayData;
 
-                        this.activeRound = tournamentData.activeRound;
+                        // this.activeRound = tournamentData.activeRound;
                         this.totalRounds = tournamentData.noOfRounds;
                         if (
                             this.matchPlayData.matchFormat === matchFormat.MATCH_PLAY &&
@@ -191,7 +192,7 @@ export class MatchplayComponent implements OnInit {
 
                         if (tournamentData.activeRound > tournamentData.noOfRounds)
                             this.flightRound = tournamentData.noOfRounds;
-                        else this.flightRound = tournamentData.activeRound;
+                        else this.flightRound = this.activeRound;
 
                         // for (
                         //     let round = 1;
@@ -244,6 +245,22 @@ export class MatchplayComponent implements OnInit {
             }
         }
         return null;
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // ..this.getSelectedPlayers();
+        // this.selectedMembers=changes;
+        console.log(changes);
+
+        if (changes['activeRound']) {
+            this.activeRound = changes['activeRound'].currentValue;
+            this.flightRound = changes['activeRound'].currentValue;
+            this.changeRound({ round: this.activeRound });
+            // console.log('Active round changed:', changes['activeRound'].currentValue);
+            // Reload data / logic here
+        }
+
+        // changes.prop contains the old and the new value...
     }
 
     changeFlight(item) {

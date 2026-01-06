@@ -116,7 +116,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             }
         }
         if (this.totalRounds > 1) {
-            this.getPlayers([...this.LeaderboardAllPlayers], 0, this.lastActiveTab, this.currentFormat == 2 ? 'format' : 'LIV')
+            this.getPlayers([...this.LeaderboardAllPlayers], 0, this.lastActiveTab, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
         } else {
             this.flightRound = 1;
             if (this.lastActiveTab == 1) {
@@ -127,7 +127,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], 1, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], 1, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             } else {
                 this.isNet = true;
                 this.isGross = false;
@@ -136,7 +136,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], 1, 2, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], 1, 2, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             }
         }
 
@@ -198,7 +198,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.LeaderboardPlayers = newArray
             }
         } else {
-            // leaders = leaders.filter((lead) => lead.matchFormat == matchFormat);
+            leaders = leaders.filter((lead) => lead.matchFormat == matchFormat);
             // if (this.Leaderboard.matchFormat == 'BEST_TWO') {
             //     this.getPlayerHandicap(leaders, this.Leaderboard.TeamQL);
             // }
@@ -374,7 +374,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             } else if (this.lastActiveTab == 2) {
                 this.isNet = false;
                 this.isGross = false;
@@ -383,7 +383,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = true;
                 this.allRoundCutOffNet = true;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             } else {
                 this.isGross = false;
                 this.isNet = false;
@@ -392,7 +392,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             }
         } else {
             if (this.lastActiveTab == 1) {
@@ -403,7 +403,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             } else if (this.lastActiveTab == 2) {
                 this.isNet = true;
                 this.isGross = false;
@@ -412,7 +412,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             } else {
                 this.isGross = true;
                 this.isNet = false;
@@ -421,7 +421,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
 
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
             }
         }
     }
@@ -439,7 +439,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.isGross = false;
                 this.isNet = false;
                 this.lastActiveTab = 1;
-                this.getPlayers([...this.LeaderboardAllPlayers], 0, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], 0, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
 
             } else if (item.value == LeaderTypeValue.NET) {
                 //////console.log("Selected value: " + item.value);
@@ -451,7 +451,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.isNet = false;
                 this.isGross = false;
                 this.lastActiveTab = 2;
-                this.getPlayers([...this.LeaderboardAllPlayers], 0, 2, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], 0, 2, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
 
             }
 
@@ -466,7 +466,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
                 this.lastActiveTab = 1;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 1, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
 
             } else if (item.value == LeaderTypeValue.NET) {
                 //////console.log("Selected value: " + item.value);
@@ -478,7 +478,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
                 this.lastActiveTab = 2;
-                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : 'LIV')
+                this.getPlayers([...this.LeaderboardAllPlayers], +this.flightRound, 2, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat)
 
             }
         }
@@ -488,8 +488,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         console.log(this.LeaderboardAllPlayers);
         this.currentFormat = +event.value;
         if (event.value == 1) {
-            let leaders = this.LeaderboardAllPlayers.filter((player) => player.matchFormat == 'LIV')
-            this.getPlayers(leaders, +this.flightRound, 1, "LIV");
+            let leaders = this.LeaderboardAllPlayers.filter((player) => player.matchFormat == this.Leaderboard.matchFormat)
+            // this.getPlayers(leaders, +this.flightRound, 1, "LIV");
+            this.getPlayers(leaders, +this.flightRound, 1, this.Leaderboard.matchFormat);
         } else {
             let leaders = this.LeaderboardAllPlayers.filter((player) => player.matchFormat == 'format')
             this.getPlayers(leaders, +this.flightRound, 1, 'format');
@@ -698,7 +699,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.isGross = false;
                 this.isNet = false;
             }
-            this.getPlayers(this.LeaderboardAllPlayers, 0, this.lastActiveTab, this.currentFormat == 2 ? 'format' : 'LIV');
+            this.getPlayers(this.LeaderboardAllPlayers, 0, this.lastActiveTab, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat);
         } else {
             if (this.lastActiveTab == 1) {
                 this.isGross = true;
@@ -725,7 +726,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.allRoundNetScore = false;
                 this.allRoundCutOffNet = false;
             }
-            this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, this.lastActiveTab, this.currentFormat == 2 ? 'format' : 'LIV');
+            this.getPlayers(this.LeaderboardAllPlayers, +this.flightRound, this.lastActiveTab, this.currentFormat == 2 ? 'format' : this.Leaderboard.matchFormat);
         }
     }
     async viewPlayerScore(

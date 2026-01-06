@@ -17,6 +17,15 @@
                 <mat-button-toggle value="2">NET</mat-button-toggle>
             </mat-button-toggle-group> -->
             <div>
+                <mat-form-field *ngIf="matchFormat=='BEST_TWO' || matchFormat=='BEST_THREE'" class="fuse-mat-no-subscript pb-2 w-full sm:w-36 mx-2">
+                    <mat-select (selectionChange)="formatChange($event)" value="2">
+                        <mat-option value="2">Singles</mat-option>
+                        <mat-option value="1">Teams</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+            <div>
                 <mat-form-field *ngIf="matchFormat=='LIV'" class="fuse-mat-no-subscript pb-2 w-full sm:w-36 mx-2">
                     <mat-select (selectionChange)="formatChange($event)" value="2">
                         <mat-option value="2">Singles</mat-option>
