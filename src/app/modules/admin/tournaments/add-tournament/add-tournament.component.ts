@@ -385,6 +385,7 @@ export class AddTournamentComponent implements OnInit {
                     numOfRounds: ['1', Validators.required],
                     typeFormCtrl: ['2', Validators.required],
                     handicapAllocations: ['AS_IS', Validators.required],
+                    secondFormat: ['STROKE_PLAY', Validators.required],
                     strokeAllocations: ['AT_START', Validators.required],
                     pointsFormats: this._formBuilder.array([
                         this._formBuilder.group({
@@ -2721,6 +2722,7 @@ export class AddTournamentComponent implements OnInit {
             members: [],
             tourId: state == Constants.TOUR ? this._localStorage.get(Constants.TOUR_ID) : null,
             tournament_round_courses: tournamentRoundCourses,
+            secondFormat: this.showSubtournament ? this.formArray.get([0]).value.secondFormat : null,
         };
 
         //console.log(tournament);
@@ -2757,11 +2759,11 @@ export class AddTournamentComponent implements OnInit {
                     this.setState(this.valid1, false);
                     this.setState(this.valid2, false);
 
-                    if (
-                        this.showSubtournament == true
-                    ) {
-                        this.createSubtournament(this.tournamentID);
-                    }
+                    // if (
+                    //     this.showSubtournament == true
+                    // ) {
+                    //     this.createSubtournament(this.tournamentID);
+                    // }
                     this.valid1.reset();
                     this.valid2.reset();
                     this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
@@ -3482,15 +3484,15 @@ export class AddTournamentComponent implements OnInit {
                     tournamentMember.push(member);
                 }
 
-                if (this.showSubtournament) {
-                    let member: any = {
-                        tournamentId: this.subTournamentID,
-                        playerId: this.membersSource.data[index].id,
-                        category: this.membersSource.data[index].playerCategory,
-                        status: true,
-                    };
-                    tournamentMember.push(member);
-                }
+                // if (this.showSubtournament) {
+                //     let member: any = {
+                //         tournamentId: this.subTournamentID,
+                //         playerId: this.membersSource.data[index].id,
+                //         category: this.membersSource.data[index].playerCategory,
+                //         status: true,
+                //     };
+                //     tournamentMember.push(member);
+                // }
 
                 //console.log(counter);
 
@@ -5185,7 +5187,7 @@ export class AddTournamentComponent implements OnInit {
         };
     }
     formatChange(event) {
-
+        this.showSubtournament = false;
         if (event.value == matchFormat.STROKE_PLAY || event.vlaue == matchFormat.STABLE_FORD) {
             this.showCat = true;
             this.showMatchPlay = false;
@@ -5239,10 +5241,12 @@ export class AddTournamentComponent implements OnInit {
                 // 🔹 Renumber all steps after insertion
                 this.steps.forEach((s, index) => (s.number = index + 1));
             }
+
         } else if (event.value == matchFormat.BEST_THREE || event.value == matchFormat.BEST_TWO) {
             this.steps = this.steps.filter(
                 s => s.title !== 'Select Teams' && s.title !== 'Select Pairs'
             );
+            this.showSubtournament = true;
             this.showShambles = false;
             this.showBest = true;
             this.showMatchPlay = false;

@@ -41,7 +41,7 @@ export class DialogCloseRoundComponent implements OnInit {
             category: this.fb.array([]),
         });
 
-        //console.log(this.data);
+        console.log(this.data);
         this.round = this.data.round;
         let sDate = new Date(this.data.startDate);
 
@@ -74,7 +74,7 @@ export class DialogCloseRoundComponent implements OnInit {
                         this.catArray[c.category]['cutshow'] = true;
                         this.catArray[c.category]['showCutCopy'] = false;
                     } else {
-                        this.catArray[c.category]['cutshow'] = false;
+                        this.catArray[c.category]['cutshow'] = true;
                         this.catArray[c.category]['showCutCopy'] = false;
                     }
                     ////console.log(this.catArray);
@@ -135,7 +135,7 @@ export class DialogCloseRoundComponent implements OnInit {
             time: ['09:00', Validators.required],
             interval: [10, Validators.required],
             tee: ['1_10', Validators.required],
-            type: [ 'GROSS', Validators.required],
+            type: ['GROSS', Validators.required],
             order: ['desc', Validators.required],
             copyFlights: [false, Validators.required],
             cuttScore: [''],
@@ -216,7 +216,7 @@ export class DialogCloseRoundComponent implements OnInit {
             time: ['09:00', Validators.required],
             interval: [10, Validators.required],
             tee: ['1_10', Validators.required],
-            type: [cat.cut == true ? 'GROSS' : 'NET', Validators.required],
+            type: ['GROSS', Validators.required],
             order: ['desc', Validators.required],
             copyFlights: [false, Validators.required],
             cuttScore: [''],

@@ -233,7 +233,7 @@
                                                 </mat-hint>
                                             </mat-form-field>
                                         </div>
-                                        <div *ngFor="
+                                        <!-- <div *ngFor="
                                                 let url of courseFileds.controls;
                                                 let i = index
                                             " [formGroupName]="i" class="flex flex-auto">
@@ -247,8 +247,32 @@
                                                     <mat-option value="MULTI">Multi LeaderBoard</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
-                                        </div>
+                                        </div> -->
+                                        <!-- <div *ngFor="
+                                                let url of courseFileds.controls;
+                                                let i = index
+                                            " [formGroupName]="i" class="flex flex-auto">
+                                            <mat-form-field appearance="outline" class="w-full custom-mat-input"
+                                                [floatLabel]="'always'">
+                                                <mat-label>Second LeaderBoard</mat-label>
+                                                <mat-select class="w-full  text-gray-700"
+                                                    placeholder="LeaderBoard Format" formControlName="multiFormat"
+                                                    (selectionChange)="typeChange($event)">
+                                                    <mat-option value="SINGLE">Single LeaderBoard</mat-option>
+                                                    <mat-option value="MULTI">Multi LeaderBoard</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div> -->
                                     </ng-container>
+
+                                    <mat-form-field *ngIf="this.showSubtournament" appearance="outline"
+                                        class="w-full custom-mat-input" [floatLabel]="'always'">
+                                        <mat-label>Second LeaderBoard Format</mat-label>
+                                        <mat-select class="w-full text-gray-700" formControlName="secondFormat">
+                                            <mat-option value="STROKE_PLAY">Stroke Play</mat-option>
+                                            <mat-option value="STABLEFORD">Stable Ford</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
 
                                     <mat-form-field *ngIf="!this.showCat" appearance="outline"
                                         class="w-full custom-mat-input" [floatLabel]="'always'">
@@ -372,7 +396,7 @@
                                 </div>
                             </section>
 
-                            <section *ngIf="showSubtournament" class="mb-6">
+                            <!-- <section *ngIf="showSubtournament" class="mb-6">
                                 <h3 class="text-lg font-bold text-gray-800 mb-1">Sub LeaderBoard Format</h3>
                                 <p class="text-sm text-gray-500 mb-6">Configure how sub leaderboard appears in the
                                     tournament.
@@ -430,7 +454,7 @@
                                     </div>
 
                                 </div>
-                            </section>
+                            </section> -->
                             <section class="mb-6">
                                 <h3 class="text-lg font-bold text-gray-800 mb-1">Score Management</h3>
                                 <p class="text-sm text-gray-500 mb-6">Select how scores will be managed for this
@@ -959,7 +983,7 @@
                                                     <mat-checkbox (change)="
                                                         $event
                                                             ? memberTMSelection.toggle(row)
-                                                            : null;"  (click)="
+                                                            : null;" (click)="
                                                     $event.stopPropagation()
                                                 " [checked]="
                                                     memberTMSelection.isSelected(row)

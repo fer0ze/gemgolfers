@@ -229,6 +229,7 @@ export const tournamentDashBoard = gql`
             members {
                 playerId
                 tournamentId
+                category
                 PlayerQL: player {
                     id
                     playerCategory
@@ -1160,6 +1161,7 @@ export const AddMutation = gql`
                 clubId
                 leagueId
                 courseId
+                secondFormat
                 adminId
                 title
                 categories {

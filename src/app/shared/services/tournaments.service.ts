@@ -1158,6 +1158,7 @@ export class TournamentsService {
                                 adminId: tmnt.adminId,
                                 title: tmnt.title,
                                 prefix: tmnt.prefix,
+                                secondFormat: tmnt.secondFormat,
                                 courseHoleSets: tmnt.courseHoleSets,
                                 teamMatch: tmnt.teamMatch,
                                 pairsMatch: tmnt.pairsMatch,
