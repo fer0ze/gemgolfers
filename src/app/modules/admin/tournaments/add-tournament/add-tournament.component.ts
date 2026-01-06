@@ -103,6 +103,7 @@ export class AddTournamentComponent implements OnInit {
     dataSource: MatTableDataSource<Player | any>;
     selection = new SelectionModel<Player>(true, []);
     memberSelection = new SelectionModel<Player>(true, []);
+    memberTMSelection = new SelectionModel<Player>(true, []);
     isLoading = true;
     duplicatePlayers = [];
     intervalPerFlight = 0;
@@ -136,6 +137,7 @@ export class AddTournamentComponent implements OnInit {
     teamMembersToSave: any[] = [];
     isSenior: boolean
     membersSource: MatTableDataSource<Player | any>;
+    membersTeamSource: MatTableDataSource<Player | any>;
     isVeterans: boolean;
     isCreatingFlights: boolean = false;
     isJuniors: boolean;
@@ -711,6 +713,7 @@ export class AddTournamentComponent implements OnInit {
 
 
                 this.syncTournamentMembers();
+                this.syncTournamentTeamMembers();
 
                 //this.selection = new SelectionModel<Player>(true, this.tournamentMembers);
                 let TM = [];
@@ -3150,6 +3153,39 @@ export class AddTournamentComponent implements OnInit {
             );
     }
 
+    syncTournamentTeamMembers() {
+        this.isLoading = true;
+
+        of(this.tournamentMembers)
+            .pipe()
+            .subscribe(
+                (data) => {
+                    this.isLoading = false;
+
+                    // 1️⃣ Collect all player IDs that are already in selectedTeams
+                    const teamMemberIds = new Set<any>();
+                    this.selectedTeams.forEach((team) => {
+                        team.members.forEach((member) => {
+                            teamMemberIds.add(member.id);
+                        });
+                    });
+
+                    // 2️⃣ Filter tournamentMembers to exclude those already in teams
+                    const availableMembers = this.tournamentMembers.filter(
+                        (member) => !teamMemberIds.has(member.id)
+                    );
+
+                    // 3️⃣ Assign to MatTableDataSource
+                    this.membersTeamSource = new MatTableDataSource(availableMembers);
+                    this.membersTeamSource.sort = this.Memsort;
+                    this.membersTeamSource.paginator = this.Mempaginator;
+                },
+                (error) => {
+                    this.isLoading = false;
+                }
+            );
+    }
+
     downloadSample() {
         // Create sample data
         // this.logger.info("User click on bulk import sample");
@@ -3573,7 +3609,9 @@ export class AddTournamentComponent implements OnInit {
             // this.snackBar.open('Tournament members have been saved.', 'x', {
             //     duration: 5000,
             // });
-            await this.facadeService.setTournamentStep(this.tournamentID, 2, false);
+            if (!this.currentTournament.isSetupComplete) {
+                await this.facadeService.setTournamentStep(this.tournamentID, 2, false);
+            }
             if (this.showMatchPlay || this.showBest) {
                 this.currentTitle = 'Select Teams';
             } else if (this.showShambles) {
@@ -3585,6 +3623,7 @@ export class AddTournamentComponent implements OnInit {
             await this.flightsSetup();
             // this.valid1.reset();
             this.syncTournamentMembers();
+            this.syncTournamentTeamMembers();
             this.syncClubMembers();
             this.categoryCounts = [];
 
@@ -3893,7 +3932,9 @@ export class AddTournamentComponent implements OnInit {
             });
             this.currentTitle = 'Groups Setup';
             this.currentStep++;
-            await this.facadeService.setTournamentStep(this.tournamentID, 3, false);
+            if (!this.currentTournament.isSetupComplete) {
+                await this.facadeService.setTournamentStep(this.tournamentID, 3, false);
+            }
             // stepper.next();
         } else {
             this.snackBar.open('Error!.Try Again', 'x', {
@@ -3904,6 +3945,7 @@ export class AddTournamentComponent implements OnInit {
 
         this.valid1.reset();
         this.syncTournamentMembers();
+        this.syncTournamentTeamMembers();
         this.syncClubMembers();
         this.categoryCounts = [];
     }
@@ -3960,7 +4002,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     addSelectedPlayersToTeam(teamId: number) {
-        const selectedPlayers = [...this.memberSelection.selected]; // array of selected players
+        const selectedPlayers = [...this.memberTMSelection.selected]; // array of selected players
         if (!selectedPlayers.length) return;
 
         const team = this.selectedTeams.find(t => t.id === teamId);
@@ -3974,17 +4016,17 @@ export class AddTournamentComponent implements OnInit {
         team.members = [...team.members, ...uniqueNewMembers];
 
         // ✅ Remove selected members from the main data source
-        const remainingMembers = this.membersSource.data.filter(
+        const remainingMembers = this.membersTeamSource.data.filter(
             (m: any) => !selectedPlayers.some(p => p.id === m.id)
         );
-        this.membersSource.data = [...remainingMembers];
+        this.membersTeamSource.data = [...remainingMembers];
 
         // ✅ Clear selection
-        this.memberSelection.clear();
+        this.memberTMSelection.clear();
     }
 
     addSelectedPlayersToPair(pairId: string) {
-        const selectedPlayers = [...this.memberSelection.selected]; // array of selected players
+        const selectedPlayers = [...this.memberTMSelection.selected]; // array of selected players
         if (!selectedPlayers.length) return;
 
         const team = this.selectedPairs.find(t => t.id === pairId);
@@ -3998,13 +4040,13 @@ export class AddTournamentComponent implements OnInit {
         team.members = [...team.members, ...uniqueNewMembers];
 
         // ✅ Remove selected members from the main data source
-        const remainingMembers = this.membersSource.data.filter(
+        const remainingMembers = this.membersTeamSource.data.filter(
             (m: any) => !selectedPlayers.some(p => p.id === m.id)
         );
-        this.membersSource.data = [...remainingMembers];
+        this.membersTeamSource.data = [...remainingMembers];
 
         // ✅ Clear selection
-        this.memberSelection.clear();
+        this.memberTMSelection.clear();
     }
 
 
@@ -4463,6 +4505,12 @@ export class AddTournamentComponent implements OnInit {
                 }
             }
         }
+        let flightIds = this.currentTournament.flights.filter((slot: any) => slot.id != null).map((slot: any) => slot.id);
+        for (let id of flightIds) {
+            if (id && id != '') {
+                await this.facadeService.deleteFlight(id);
+            }
+        }
 
         let result = <any>(
             await this.facadeService.createNextRoundFlights(tournamentFlights)
@@ -4472,7 +4520,9 @@ export class AddTournamentComponent implements OnInit {
         }
 
         if (result) {
-            await this.facadeService.setTournamentStep(this.tournamentID, 4, true);
+            if (!this.currentTournament.isSetupComplete) {
+                await this.facadeService.setTournamentStep(this.tournamentID, 4, true);
+            }
             this.isCreatingFlights = false;
             this.snackBar.open('Tournament has been setup.', 'x', {
                 duration: 5000,
@@ -4498,13 +4548,13 @@ export class AddTournamentComponent implements OnInit {
 
             // Add the removed player back to the dataSource (if found)
             if (removedPlayer) {
-                const existingData = this.membersSource?.data || [];
+                const existingData = this.membersTeamSource?.data || [];
 
                 // 🔹 Check for duplicates before adding back
                 const alreadyExists = existingData.some(member => member.id === removedPlayer.id);
                 if (!alreadyExists) {
-                    this.membersSource.data = [...existingData, removedPlayer];
-                    this.membersSource._updateChangeSubscription();
+                    this.membersTeamSource.data = [...existingData, removedPlayer];
+                    this.membersTeamSource._updateChangeSubscription();
                 }
             }
         } else {
@@ -4533,10 +4583,10 @@ export class AddTournamentComponent implements OnInit {
             ];
 
             // Update the data source
-            this.membersSource.data = updatedMembers;
+            this.membersTeamSource.data = updatedMembers;
 
             // Optional: refresh table visuals (sorting/pagination)
-            this.membersSource._updateChangeSubscription();
+            this.membersTeamSource._updateChangeSubscription();
         }
     }
 
@@ -4549,7 +4599,7 @@ export class AddTournamentComponent implements OnInit {
 
         // If the team existed and had members
         if (deletedTeam && deletedTeam.members && deletedTeam.members.length > 0) {
-            const existingMembers = this.membersSource?.data || [];
+            const existingMembers = this.membersTeamSource?.data || [];
 
             // Add back team members that are not already in membersSource
             const updatedMembers = [
@@ -4560,10 +4610,10 @@ export class AddTournamentComponent implements OnInit {
             ];
 
             // Update the data source
-            this.membersSource.data = updatedMembers;
+            this.membersTeamSource.data = updatedMembers;
 
             // Optional: refresh table visuals (sorting/pagination)
-            this.membersSource._updateChangeSubscription();
+            this.membersTeamSource._updateChangeSubscription();
         }
     }
 
@@ -4714,9 +4764,35 @@ export class AddTournamentComponent implements OnInit {
     // /** The label for the checkbox on the passed row */
     checkboxLabelM(row?: Player): string {
         if (!row) {
-            return `${this.isAllSelectedM() ? 'select' : 'deselect'} all`;
+            return `${this.isAllSelectedTM() ? 'select' : 'deselect'} all`;
         }
         return `${this.memberSelection.isSelected(row) ? 'deselect' : 'select'
+            } player ${row.firstName} ${row.lastName}`;
+    }
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggleTM() {
+        //console.log(this.selection);
+        //console.log(this.selection.selected.length);
+        this.isAllSelectedTM()
+            ? this.memberTMSelection.clear()
+            : this.membersTeamSource.data.forEach((row) => this.memberTMSelection.select(row));
+    }
+
+    /** Whether the number of selected elements matches the total number of rows. */
+    isAllSelectedTM() {
+        ////console.log(this.dataSource);
+        if (this.membersTeamSource) {
+            const numSelected = this.memberTMSelection.selected.length;
+            const numRows = this.membersTeamSource.data.length;
+            return numSelected === numRows;
+        }
+    }
+    // /** The label for the checkbox on the passed row */
+    checkboxLabelTM(row?: Player): string {
+        if (!row) {
+            return `${this.isAllSelectedTM() ? 'select' : 'deselect'} all`;
+        }
+        return `${this.memberTMSelection.isSelected(row) ? 'deselect' : 'select'
             } player ${row.firstName} ${row.lastName}`;
     }
 

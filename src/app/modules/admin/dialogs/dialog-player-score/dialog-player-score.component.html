@@ -69,7 +69,7 @@
                     <th *ngIf="item.courseHoles36.length > 0">in</th>
                     <th>total</th>
                 </tr>
-                <tr *ngFor="let item of scoreHeader" class="subhead">
+                <!-- <tr *ngFor="let item of scoreHeader" class="subhead">
                     <th>Yardage</th>
                     <th *ngFor="let yard of item.yardage9">
                         {{ yard ? yard : "-" }}
@@ -96,7 +96,7 @@
                         {{ item.yardage36Total ? item.yardage36Total : "-" }}
                     </th>
                     <th>{{ item.yardageTotal ? item.yardageTotal : "-" }}</th>
-                </tr>
+                </tr> -->
                 <tr *ngFor="let item of scoreHeader" class="subhead">
                     <th>Par</th>
                     <th *ngFor="let hole of item.courseHoles9">
@@ -159,12 +159,7 @@
                     </td>
                     <td *ngIf="data.team">{{ item.name }}</td>
                     <!-- for per hole calculation <td *ngFor="let score of item.Hole9Scores; let i = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[i]}">{{score}}</td> -->
-                    <td *ngFor="let score of item.Hole9Scores; let j = index" [ngClass]="{
-                            eagle: (score - scoreHeader[0].courseHoles9[j]['par'])==-2,
-                            birdy: (score - scoreHeader[0].courseHoles9[j]['par'])==-1,
-                            bogey : (score - scoreHeader[0].courseHoles9[j]['par'])==1,
-                            doublebogey: (score - scoreHeader[0].courseHoles9[j]['par'])==2 
-                        }">
+                    <td *ngFor="let score of item.Hole9Scores; let j = index" >
                         <span class="class_name_round">
                             {{ score }}
                         </span>
@@ -173,12 +168,9 @@
                         <span>{{ item?.hole9Total }}</span>
                     </td>
                     <ng-container *ngIf="item.Hole18Scores.length > 0">
-                        <td *ngFor="let score of item.Hole18Scores; let j = index" [ngClass]="{
-                            eagle: (score - scoreHeader[0].courseHoles18[j]['par'])==-2,
-                            birdy: (score - scoreHeader[0].courseHoles18[j]['par'])==-1,
-                            bogey : (score - scoreHeader[0].courseHoles18[j]['par'])==1,
-                            doublebogey: (score - scoreHeader[0].courseHoles18[j]['par'])==2 
-                        }">
+                        <td *ngFor="let score of item.Hole18Scores; let j = index" 
+                        
+                        >
                             <span>
                                 {{ score }}
                             </span>

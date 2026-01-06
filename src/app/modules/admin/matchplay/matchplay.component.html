@@ -150,20 +150,24 @@
                                     <span *ngIf="this.showPairs" class="flex gap-x-2 items-center">
                                         <span *ngIf="this.showMatchPlay" class="w-2 h-2 rounded-full"
                                             [style.background-color]="getTeamColor(item.playerId)"></span>
-                                        {{ item.pairName }} 
+                                        {{ item.pairName }}
 
                                     </span>
                                     <span *ngIf="!this.showPairs" class="flex gap-x-2 items-center">
                                         <span class="w-2 h-2 rounded-full"
                                             [style.background-color]="getTeamColor(item.playerId)"></span>
-                                        {{ item.name }} ({{
-                                        item.handicap
-                                        | number : "1.0-0"
-                                        }})
+                                        <span>
+                                            {{ item.name }} ({{
+                                            item.handicap
+                                            | number : "1.0-0"
+                                            }})
 
+                                        </span>
+                                        <mat-icon matTooltip="Score Saved"
+                                            *ngIf="item.scoreSaved" class="text-emerald-600 icon-size-4" [svgIcon]="'heroicons_solid:badge-check'"></mat-icon>
                                     </span>
                                 </td>
-                                <td *ngFor="
+                                <td  *ngFor="
                                                 let score of item.Hole9Scores;
                                                 let i = index
                                             " class="p-1">
@@ -196,7 +200,7 @@
                                                 flight.header.courseHoles18
                                                     .length > 0
                                             ">
-                                    <td *ngFor="let score of item.Hole18Scores;
+                                    <td  *ngFor="let score of item.Hole18Scores;
                                                     let i = index
                                                 " class="p-1">
                                         <input (input)="
@@ -253,7 +257,7 @@
 
                                     </span>
                                 </td>
-                                <td *ngFor="
+                                <td  *ngFor="
                                                 let score of flight.Hole9Scores;
                                                 let i = index
                                             " class="p-1">
@@ -286,7 +290,7 @@
                                                 flight.header.courseHoles18
                                                     .length > 0
                                             ">
-                                    <td *ngFor="let score of flight.Hole18Scores;
+                                    <td  *ngFor="let score of flight.Hole18Scores;
                                                     let i = index
                                                 " class="p-1">
                                         <input (input)="

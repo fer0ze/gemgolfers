@@ -198,10 +198,10 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 this.LeaderboardPlayers = newArray
             }
         } else {
-            leaders = leaders.filter((lead) => lead.matchFormat == matchFormat);
-            if (this.Leaderboard.matchFormat == 'BEST_TWO') {
-                this.getPlayerHandicap(leaders, this.Leaderboard.TeamQL);
-            }
+            // leaders = leaders.filter((lead) => lead.matchFormat == matchFormat);
+            // if (this.Leaderboard.matchFormat == 'BEST_TWO') {
+            //     this.getPlayerHandicap(leaders, this.Leaderboard.TeamQL);
+            // }
             this.getPlayersByRound(leaders, round, lastTab);
         }
     }
@@ -747,8 +747,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
         let scoreResult: any;
         let ScoreLoader = new PlayersScoreLoader(this.facadeService, this.Leaderboard.id, playerId);
         await ScoreLoader.fetchTournamentScores();
-        if (this.Leaderboard.matchFormat = matchFormat.BEST_TWO) {
-            scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound, playerId2);
+        if (this.Leaderboard.matchFormat == matchFormat.BEST_TWO || this.Leaderboard.matchFormat == matchFormat.BEST_THREE) {
+            let teamMembersIds = this.Leaderboard.TeamQL.find(team => team.teamMembers.find(member => member.playerId == playerId)).teamMembers.map(member => member.playerId);
+            scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound, teamMembersIds);
         } else {
             scoreResult = ScoreLoader.getStrokePlayScore(playerId, this.flightRound);
         }

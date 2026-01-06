@@ -97,8 +97,8 @@
                                 </div>
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
-                                    <div class="text-xs flex items-center">
-                                        <span> HC: {{ formatHandicap(item?.handicap) }}</span>
+                                    <div class="text-xs flex items-center" >
+                                        <span *ngIf="matchFormat == 'STROKE_PLAY'"> HC: {{ formatHandicap(item?.handicap) }}</span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(
@@ -249,7 +249,7 @@
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
-                                        <span>
+                                        <span *ngIf="matchFormat == 'STROKE_PLAY'">
                                             HC: {{ formatHandicap(item?.handicap) }}
                                         </span>
                                         <!-- <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
@@ -300,7 +300,7 @@
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
-                                        <span>
+                                        <span *ngIf="matchFormat == 'STROKE_PLAY'">
                                             HC: {{ formatHandicap(item?.handicap) }}
                                         </span>
                                         <!-- <span *ngIf="Leaderboard.matchFormat=='BEST_TWO'">
@@ -367,7 +367,7 @@
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
-                                        <span>
+                                        <span *ngIf="matchFormat == 'STROKE_PLAY'">
                                             HC: {{ formatHandicap(item?.handicap) }}</span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
@@ -490,7 +490,7 @@
                                 <div class="col col-1">-</div>
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
-                                    <div class="text-xs">
+                                    <div class="text-xs" *ngIf="matchFormat == 'STROKE_PLAY'">
                                         HC: {{ formatHandicap(item?.handicap) }}
                                     </div>
                                 </div>
@@ -573,7 +573,10 @@
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
                                     <div class="text-xs flex items-center">
-                                        HC: {{ formatHandicap(item?.handicap) }}
+                                        <span *ngIf="matchFormat == 'STROKE_PLAY'">
+                                            HC: {{ formatHandicap(item?.handicap) }}
+
+                                        </span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(
@@ -677,8 +680,10 @@
                                 <div class="col col-1">-</div>
                                 <div class="col col-2">
                                     {{ item.name | uppercase}}
-                                    <div class="text-xs flex items-center">
-                                        HC: {{ formatHandicap(item?.handicap) }}
+                                    <div class="text-xs flex items-center" >
+                                        <span  *ngIf="matchFormat == 'STROKE_PLAY'">
+                                            HC: {{ formatHandicap(item?.handicap) }}
+                                        </span>
                                         <div class="cursor-pointer py-0.5 ml-1 w-18 leading-3 flex justify-center rounded-full text-sm font-semibold text-blue-800 bg-blue-100'"
                                             (click)="
                                                             viewPlayerScore(

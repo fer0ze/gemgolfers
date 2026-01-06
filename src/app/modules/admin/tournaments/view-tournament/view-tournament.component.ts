@@ -91,6 +91,7 @@ export class ViewTournamentComponent implements OnInit {
     isLoading: boolean = true;
     totalRounds: number;
     activeRound: number = 1;
+    currentRound: number = 1;
     noOfRounds: number = 1;
     selected: number = 0;
     changer: number = 0;
@@ -380,6 +381,7 @@ export class ViewTournamentComponent implements OnInit {
                 }
 
                 this.activeRound = this.fullTournament.activeRound;
+                this.currentRound = this.fullTournament.activeRound;
                 this.noOfRounds = this.fullTournament.noOfRounds;
                 this.categories = this.fullTournament.CategoriesQL;
                 this.tournamentCategories =
@@ -1081,7 +1083,7 @@ calculateDiff(startDate, endDate) {
             this.logger.log('Close Round Dialog Box Open', "info", this.noOfROund.toString());
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',
-                data: 'Do you want to close the last round?',
+                data: 'Do you want to close the tournament?',
             });
 
             dialogRef.afterClosed().subscribe(async (result) => {

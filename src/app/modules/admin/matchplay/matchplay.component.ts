@@ -839,7 +839,7 @@ export class MatchplayComponent implements OnInit {
                                     (courseHole.length > 0 ? courseHole[0].id : '')
                                 );
                             });
-                            // //console.log(hole);
+                            console.log(hole);
 
                             if (hole) {
                                 playerHole9Score[i] = hole.grossScore;
@@ -847,6 +847,7 @@ export class MatchplayComponent implements OnInit {
                                 gross9Total += hole.grossScore;
                                 net9Total += hole.netScore;
                                 holePlayed++;
+
                             } else {
                                 playerHole9Score[i] = '';
                                 playerHole9NetScore[i] = '';
@@ -917,6 +918,7 @@ export class MatchplayComponent implements OnInit {
                             playerCategory: player.playerCategory,
                             handicap: player.handicap,
                             Hole9Scores: playerHole9Score,
+                            scoreSaved: playerScore.length > 0 ? true : false,
                             Hole18Scores: playerHole18Score,
                             Hole9NetScores: playerHole9Score,
                             Hole18NetScores: playerHole18NetScore,
@@ -1048,6 +1050,7 @@ export class MatchplayComponent implements OnInit {
                             Hole9NetScores: playerHole9Score,
                             Hole18NetScores: playerHole18NetScore,
                             gross9Total: gross9Total,
+                            scoreSaved: playerScore.length > 0 ? true : false,
                             membershipNumber: player.membershipNumber,
                             playerCategory: player.playerCategory,
                             gross18Total: gross18Total,
@@ -1164,6 +1167,7 @@ export class MatchplayComponent implements OnInit {
                             Hole9NetScores: playerHole9Score,
                             Hole18NetScores: playerHole18NetScore,
                             gross9Total: gross9Total,
+                            scoreSaved: playerScore.length > 0 ? true : false,
                             membershipNumber: player.membershipNumber,
                             playerCategory: player.playerCategory,
                             gross18Total: gross18Total,
@@ -1202,7 +1206,7 @@ export class MatchplayComponent implements OnInit {
                     this.flightPlayers[findex][0].gross18Total;
                 this.flightPlayers[findex]['grossTotal'] =
                     this.flightPlayers[findex][0].grossTotal;
-                //console.log(this.flightPlayers);
+                console.log(this.flightPlayers);
 
                 findex++;
             }
@@ -1532,6 +1536,7 @@ export class MatchplayComponent implements OnInit {
 
                             //console.log(grossScore);
                             if (grossScore) {
+                                player.scoreSaved = true;
                                 let playerScore: Score = {
                                     playerId: player.playerId,
                                     flightId: player.flightId,

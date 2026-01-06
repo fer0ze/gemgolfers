@@ -1101,6 +1101,9 @@ export const GetTournamentByID = gql`
                     lastName
                 }
             }
+                flights{
+                id
+                }
             opponents {
                 id
                 team1Id

@@ -200,7 +200,7 @@
                                         <mat-label>Match Type</mat-label>
                                         <mat-select formControlName="teamMatch" class="w-full  text-gray-700"
                                             (selectionChange)="teamMatchChange($event)">
-                                            <mat-option value="1">Individuals</mat-option>
+                                            <mat-option value="1">Individual</mat-option>
                                             <mat-option value="2">Teams</mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -938,38 +938,33 @@
                                 </div>
                                 <div class="flex-1 overflow-y-auto border rounded-md bg-white">
                                     <div>
-                                        <table mat-table #msort="matSort" [dataSource]="membersSource" matSort>
+                                        <table mat-table #msort="matSort" [dataSource]="membersTeamSource" matSort>
                                             <!-- Name Column -->
                                             <ng-container matColumnDef="select">
                                                 <th class="bg-gray-100" mat-header-cell *matHeaderCellDef>
                                                     <mat-checkbox (change)="
                                                     $event
-                                                        ? masterToggleM()
+                                                        ? masterToggleTM()
                                                         : null
                                                 " [checked]="
-                                                    memberSelection.hasValue() &&
-                                                    isAllSelectedM()
+                                                    memberTMSelection.hasValue() &&
+                                                    isAllSelectedTM()
                                                 " [indeterminate]="
-                                                    memberSelection.hasValue() &&
-                                                    !isAllSelectedM()
-                                                " [aria-label]="checkboxLabelM()">
+                                                    memberTMSelection.hasValue() &&
+                                                    !isAllSelectedTM()
+                                                " [aria-label]="checkboxLabelTM()">
                                                     </mat-checkbox>
                                                 </th>
                                                 <td mat-cell *matCellDef="let row">
-                                                    <mat-checkbox (click)="
+                                                    <mat-checkbox (change)="
+                                                        $event
+                                                            ? memberTMSelection.toggle(row)
+                                                            : null;"  (click)="
                                                     $event.stopPropagation()
-                                                " (change)="
-                                                    $event
-                                                        ? memberSelection.toggle(row)
-                                                        : null;
-                                                    updateCategorySelection(
-                                                        $event,
-                                                        row
-                                                    )
                                                 " [checked]="
-                                                    memberSelection.isSelected(row)
+                                                    memberTMSelection.isSelected(row)
                                                 " [aria-label]="
-                                                    checkboxLabelM(row)
+                                                    checkboxLabelTM(row)
                                                 ">
                                                     </mat-checkbox>
                                                 </td>
@@ -1052,7 +1047,7 @@
                                                 (click)="selectColor(color)"
                                                 class="w-6 h-6 rounded-full border-2 transition-transform"
                                                 [ngStyle]="{ 'background-color': color }" [ngClass]="{
-                                                    'border-emerald-600 scale-110': selectedTeamColor === color,
+                                                    'border-emerald-600 scale-150': selectedTeamColor === color,
                                                     'border-transparent': selectedTeamColor !== color
                                             }"></button>
                                         </div>
@@ -1108,7 +1103,7 @@
                                                 <!-- Card Footer -->
                                                 <div class="p-3 border-t bg-gray-50/50">
                                                     <button (click)="addSelectedPlayersToTeam(team.id)"
-                                                        [disabled]="this.memberSelection.selected.length === 0"
+                                                        [disabled]="this.memberTMSelection.selected.length === 0"
                                                         class="w-full text-sm bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
                                                         Add Selected Player(s)
                                                     </button>

@@ -286,20 +286,34 @@
             <div class="mb-6 space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-                    <div *ngFor="let round of rounds" (click)="tabClicked(round)"
+                    <div *ngFor="let round of rounds" (click)="round.round <= currentRound ? tabClicked(round) : null"
                         class="p-4 rounded-lg flex justify-between items-center cursor-pointer transition-all border-2"
-                        [class]="activeRound === round.round ? 'bg-emerald-50 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm'">
+                        [ngClass]="{
+           'bg-emerald-50 border-emerald-500 shadow-md': activeRound === round.round,
+           'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm': round.round < activeRound,
+           'bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400': round.round > currentRound
+         }">
+
                         <div>
-                            <p class="font-semibold text-gray-800">{{ round.label }}</p>
-                            <p class="text-sm text-gray-500">{{ round.status }}</p>
+                            <p class="font-semibold"
+                                [ngClass]="{'text-gray-800': round.round <= currentRound, 'text-gray-400': round.round > currentRound}">
+                                {{ round.label }}
+                            </p>
+                            <p class="text-sm"
+                                [ngClass]="{'text-gray-500': round.round <= currentRound, 'text-gray-400': round.round > currentRound}">
+                                {{ round.status }}
+                            </p>
                         </div>
+
                         <div class="flex items-center space-x-2">
-                            <span *ngIf="round.status === 'Completed'" class="w-3 h-3 rounded-full bg-green-500"></span>
-                            <span *ngIf="round.status === 'In Progress'"
+                            <span *ngIf="round.status === 'Completed' && round.round <= activeRound"
+                                class="w-3 h-3 rounded-full bg-green-500"></span>
+                            <span *ngIf="round.status === 'In Progress' && round.round <= activeRound"
                                 class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                [class]="activeRound === round.round ? 'text-emerald-600' : 'text-gray-400'" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" [ngClass]="{
+               'text-emerald-600': activeRound === round.round,
+               'text-gray-400': round.round > activeRound || (activeRound !== round.round && round.round <= activeRound)
+             }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 5l7 7-7 7" />
                             </svg>
@@ -307,23 +321,32 @@
                     </div>
 
                 </div>
+
+                <!-- Buttons: show only for the active round -->
                 <div class="flex items-center justify-end gap-3">
-                    <button *ngIf="activeRound < noOfRounds" (click)="closeRound()"
+                    <button *ngIf="currentRound < noOfRounds && activeRound== currentRound" (click)="closeRound()"
                         class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                         <mat-icon class="icon-size-4 text-primary pt-2"
                             [svgIcon]="'heroicons_solid:fast-forward'"></mat-icon>
-                        Close Round {{activeRound}}</button>
+                        Close Round {{activeRound}}
+                    </button>
+
                     <button *ngIf="activeRound > 1" (click)="undoRound()"
                         class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                         <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
-                        Undo Round {{activeRound}}</button>
-                    <button *ngIf="activeRound == noOfRounds" (click)="closeRound()"
+                        Undo Round {{activeRound}}
+                    </button>
+
+                    <button *ngIf="activeRound === noOfRounds" (click)="closeRound()"
                         class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
-                        <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
-                        Close Tournament</button>
+                        <mat-icon class="icon-size-4 text-warn pt-1"
+                            [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                        Close Tournament
+                    </button>
                 </div>
 
             </div>
+
 
             <!-- Main Content Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
