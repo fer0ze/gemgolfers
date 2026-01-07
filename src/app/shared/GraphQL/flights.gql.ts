@@ -507,6 +507,7 @@ export const FlightManagersQuery = gql`
                         handicap
                         membershipNumber
                     }
+                        playingHandicap
                     attendance
                     playingTee
                     tee_id

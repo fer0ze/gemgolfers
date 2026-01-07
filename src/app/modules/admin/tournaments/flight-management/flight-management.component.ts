@@ -1165,15 +1165,12 @@ export class FlightManagementComponent implements OnInit, OnChanges {
                             this.roundFlights[index].MembersQL;
 
                     for (let member of this.roundFlights[index].MembersQL) {
-                        this.selectedMembers[outer][cnter] = <Player>(
-                            member.PlayerQL
-                        );
-                        this.selectedMembers[outer][cnter]['attendance'] =
-                            member.attendance;
-                        this.selectedMembers[outer][cnter]['playingTee'] =
-                            member.playingTee;
-                        this.selectedMembers[outer][cnter]['tee_id'] =
-                            member.tee_id;
+                        const player: Player = {
+                            ...member.PlayerQL,                 // copy player data
+                            handicap: member.playingHandicap
+                        };
+
+                        this.selectedMembers[outer][cnter] = player;
                         cnter++;
                     }
 
