@@ -75,7 +75,9 @@
                         <div class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                 <mat-label>Tee Booking Live Time:</mat-label>
-                                <input type="time" matInput atp-time-picker formControlName="teeBookingTime" />
+                                <input matInput [ngxTimepicker]="timePicker" formControlName="teeBookingTime" />
+                                <ngx-material-timepicker #timePicker format="12" [minutesGap]="5">
+                                </ngx-material-timepicker>
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>
                         </div>
@@ -93,8 +95,7 @@
                         <div class="sm:col-span-2">
                             <mat-form-field class="fuse-mat-no-subscript w-full">
                                 <mat-label>Participants:</mat-label>
-                                <mat-select  placeholder="Players"
-                                    formControlName="allowGuest">
+                                <mat-select placeholder="Players" formControlName="allowGuest">
                                     <mat-option value="0">Club Members</mat-option>
                                     <mat-option value="1">Club Members and Guests</mat-option>
                                 </mat-select>
@@ -180,15 +181,19 @@
                                 <div class="sm:col-span-2">
                                     <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                         <mat-label>{{ timingGroup.get('name').value }} Start Time:</mat-label>
-                                        <input type="time" matInput atp-time-picker formControlName="startTime" >
-                               
+                                        <input type="time" matInput [ngxTimepicker]="timePicker1"
+                                            formControlName="startTime">
+                                        <ngx-material-timepicker #timePicker1 format="12" [minutesGap]="5">
+                                        </ngx-material-timepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="sm:col-span-2 mt-2">
                                     <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                         <mat-label>{{ timingGroup.get('name').value }} Last Time:</mat-label>
-                                        <input type="time" matInput atp-time-picker  formControlName="endTime">
-                                       
+                                        <input type="time" matInput [ngxTimepicker]="timePicker2"
+                                            formControlName="endTime">
+                                        <ngx-material-timepicker #timePicker2 format="12" [minutesGap]="5">
+                                        </ngx-material-timepicker>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -247,22 +252,24 @@
                             </mat-form-field>
                         </div>
                         <div class="sm:col-span-2"></div>
-                        <ng-container *ngIf="showGuestTime" >
-                            <div formArrayName="guestTiming" class="sm:col-span-2" 
+                        <ng-container *ngIf="showGuestTime">
+                            <div formArrayName="guestTiming" class="sm:col-span-2"
                                 *ngFor="let timingGroups of guestTimingFormArray.controls; let i = index">
                                 <div [formGroupName]="i">
                                     <div class="sm:col-span-2">
                                         <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                             <mat-label>{{ timingGroups.get('name').value }} Start Time:</mat-label>
-                                            <input type="time" matInput atp-time-picker formControlName="startTime" >
-                                   
+                                            <input type="time" matInput [ngxTimepicker]="timePicker3" formControlName="startTime">
+                                            <ngx-material-timepicker #timePicker3 format="12" [minutesGap]="5">
+                                            </ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
                                     <div class="sm:col-span-2 mt-2">
                                         <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                             <mat-label>{{ timingGroups.get('name').value }} Last Time:</mat-label>
-                                            <input type="time" matInput atp-time-picker  formControlName="endTime">
-                                           
+                                            <input type="time" matInput [ngxTimepicker]="timePicker4" formControlName="endTime">
+                                            <ngx-material-timepicker #timePicker4 format="12" [minutesGap]="5">
+                                            </ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -274,7 +281,8 @@
                     </div>
 
                     <div class="flex items-center justify-end">
-                        <button class="mx-2" mat-raised-button color="primary" [disabled]="!scheduleForm.valid || isSaving">
+                        <button class="mx-2" mat-raised-button color="primary"
+                            [disabled]="!scheduleForm.valid || isSaving">
                             Save
                         </button>
                         <button mat-raised-button color="accent" [routerLinkActive]="'active'"

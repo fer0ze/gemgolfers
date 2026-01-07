@@ -70,8 +70,10 @@
                         <div class="sm:col-span-2">
                             <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                 <mat-label>Starting Time</mat-label>
-                                <input matInput atp-time-picker formControlName="startingTime"
+                                <input matInput formControlName="startingTime" [ngxTimepicker]="timePicker"
                                     placeholder="Select Time" />
+                                <ngx-material-timepicker #timePicker format="12" [minutesGap]="5">
+                                </ngx-material-timepicker>
                                 <mat-icon class="icon-size-4.5" [svgIcon]="'heroicons_outline:clock'"></mat-icon>
                                 <mat-error>The input is required.</mat-error>
                             </mat-form-field>

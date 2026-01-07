@@ -27,6 +27,7 @@ import { MatCardModule } from '@angular/material/card';
 import { DialogChangeCourseHoleSetComponent } from '../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 // import { AmazingTimePickerModule } from 'amazing-time-picker';
 @NgModule({
     declarations: [
@@ -58,6 +59,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         MatToolbarModule,
         MatSidenavModule,
         MatDialogModule,
+        NgxMaterialTimepickerModule,
         MatSlideToggleModule,
         MatTooltipModule,
         // AmazingTimePickerModule,

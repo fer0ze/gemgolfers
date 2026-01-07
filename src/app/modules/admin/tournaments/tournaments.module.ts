@@ -63,6 +63,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PairManagementComponent } from './pair-management/pair-management.component';
 import { InvalidCategoryPlayersComponent } from '../dialogs/dialog-invalid-category-players/invalid-category-players.component';
 import { DialogEditPlayerHandicapComponent } from '../dialogs/dialog-edit-player-handicap/dialog-edit-player-handicap.component';
+import { NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -100,6 +102,7 @@ import { DialogEditPlayerHandicapComponent } from '../dialogs/dialog-edit-player
         MatPaginatorModule,
         MatTooltipModule,
         MatInputModule,
+        NgxMaterialTimepickerModule,
         MatButtonModule,
         BlockWhiteSectionModule,
         MatIconModule,

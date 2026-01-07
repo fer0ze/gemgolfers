@@ -1461,12 +1461,18 @@
                                                         <mat-form-field appearance="outline"
                                                             class="w-full custom-mat-input">
                                                             <mat-label>Group Time</mat-label>
-                                                            <input formControlName="flightStartTime"
-                                                                value="{{ selectedTime }}" atp-time-picker matInput
-                                                                #query />
-                                                            <mat-error>The input is required.</mat-error>
+
+                                                            <input matInput formControlName="flightStartTime"
+                                                                [ngxTimepicker]="timePicker" readonly />
+
+                                                            <ngx-material-timepicker #timePicker format="12"
+                                                                [minutesGap]="5">
+                                                            </ngx-material-timepicker>
+
+                                                            
                                                         </mat-form-field>
                                                     </div>
+
                                                     <div class="md:col-span-2 relative">
                                                         <mat-form-field appearance="outline"
                                                             class="w-full custom-mat-input">

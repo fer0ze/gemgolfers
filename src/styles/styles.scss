@@ -15,3 +15,12 @@
     /* Example font size */
     /* Add any other styles you need */
 }
+/* Add this to your global styles.scss or styles.css */
+
+.ngx-timepicker-overlay {
+    z-index: 9999 !important; /* Ensure this is higher than the MatDialog's 1000 */
+}
+
+.ngx-material-timepicker-container {
+    z-index: 10000 !important;
+}

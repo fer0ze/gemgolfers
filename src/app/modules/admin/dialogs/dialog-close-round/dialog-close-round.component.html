@@ -14,14 +14,14 @@
                 <div [formGroupName]="i" class="space-y-6">
 
                     <!-- AUTO CUT SETTINGS -->
-                    <div *ngIf="round !== 1000 && catArray[categoryList.value[i].name].cutshow" class="bg-gray-50 rounded-xl border px-5 pt-4">
+                    <div *ngIf="round !== 1000 && catArray[categoryList.value[i].name].cutshow"
+                        class="bg-gray-50 rounded-xl border px-5 pt-4">
                         <h3 class="text-xl font-semibold mb-2">Cut & Group Settings</h3>
 
-                        <div >
+                        <div>
 
                             <!-- TOGGLE -->
-                            <div 
-                                class="flex items-center justify-between ">
+                            <div class="flex items-center justify-between ">
                                 <mat-label class="font-medium">
                                     {{ catArray[categoryList.value[i].name].cutshow
                                     ? 'Make Auto Cut Based Groups'
@@ -33,7 +33,7 @@
                                 </mat-slide-toggle>
                             </div>
 
-                            <p  class="text-sm text-gray-500 mb-4">
+                            <p class="text-sm text-gray-500 mb-4">
                                 Groups will be created based on Gross or Net score
                             </p>
 
@@ -111,7 +111,9 @@
                                 <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                     [floatLabel]="'always'">
                                     <mat-label>Start Time</mat-label>
-                                    <input atp-time-picker matInput formControlName="time" />
+                                    <input [ngxTimepicker]="timePicker" matInput formControlName="time" />
+                                    <ngx-material-timepicker  [appendToInput]="true" #timePicker format="12" [minutesGap]="5">
+                                    </ngx-material-timepicker>
                                 </mat-form-field>
                             </div>
 

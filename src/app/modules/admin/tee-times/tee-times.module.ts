@@ -38,6 +38,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/dialog-player-list.component';
 import { ViewTeeTimeComponent } from './view-tee-times/view-tee-timescomponent';
 import { DialogAddGuestComponent } from '../dialogs/dialog-add-guest/dialog-add-guest.component';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
 
@@ -62,7 +63,7 @@ import { DialogAddGuestComponent } from '../dialogs/dialog-add-guest/dialog-add-
     MatSelectModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    MatNativeDateModule,NgxMaterialTimepickerModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
