@@ -21,7 +21,6 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
 import { GlobalErrorHandler } from './errorhandler.module';
-import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
     declarations: [AppComponent],
@@ -47,7 +46,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
         MarkdownModule.forRoot({}),
 
         HttpClientModule,
-        GoogleMapsModule,
         GraphQLModule,
     ],
     bootstrap: [AppComponent],

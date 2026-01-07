@@ -28,7 +28,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AmazingTimePickerModule } from 'amazing-time-picker';
+// import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -72,7 +72,7 @@ import { DetailLeagueComponent } from './detail/detail-league.component';
         FormsModule,
         MatAutocompleteModule,
         MatSidenavModule,
-        AmazingTimePickerModule,
+        // AmazingTimePickerModule,
     ],
 })
 export class LeaguesModule {}

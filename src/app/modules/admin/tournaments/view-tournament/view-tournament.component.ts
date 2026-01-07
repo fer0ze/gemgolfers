@@ -53,6 +53,7 @@ import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { log } from 'console';
+import { DialogEditPlayerHandicapComponent } from '../../dialogs/dialog-edit-player-handicap/dialog-edit-player-handicap.component';
 
 @Component({
     selector: 'app-view-tournament',
@@ -2779,6 +2780,48 @@ export class ViewTournamentComponent implements OnInit {
             }
         });
     }
+    async editTM(player: any) {
+        //console.log(player);
+        const dialogRef = this.dialog.open(DialogEditPlayerHandicapComponent, {
+            data: {
+                player: player,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(async(res) => {
+            if (res) {
+                console.log(res);
+
+                ////console.log("record deleted.");
+                let result = await this.facadeService.updateTournamentMemberHandicap(
+                    this.tournamentID,
+                    player.id,
+                    res.handicap
+                );
+                if (result) {
+                    this.snackBar.open('Member has been updated', 'x', {
+                        duration: 3000,
+                        panelClass: ['orange-snackbar'],
+                    });
+
+                    //Update the handicap in the table
+                    let tmIndex = this.dataSource.data.findIndex(
+                        (a) => a.id === player.id
+                    );
+                    if (tmIndex !== -1) {
+                        this.dataSource.data[tmIndex].handicap =
+                            res.handicap;
+                        this.dataSource._updateChangeSubscription();
+                    }
+
+
+
+                }
+            } else {
+                ////console.log("cancel delete action");
+            }
+        });
+    }
     async disqulifyTM(player: any) {
         //console.log(player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
@@ -2838,7 +2881,7 @@ export class ViewTournamentComponent implements OnInit {
                         firstName: account.player ? account.player["firstName"] : account["firstName"],
                         lastName: account.player ? account.player["lastName"] : account["lastName"],
                         email: account.player ? account.player["email"] : account["email"],
-                        handicap: account.player ? account.player["handicap"] : account["handicap"],
+                        handicap: account.handicap ? account.handicap : account.player["handicap"],
                         playerCategory: account.player ? account.player["playerCategory"] : account["playerCategory"],
                     }
                     tournamentsMember.push(member);

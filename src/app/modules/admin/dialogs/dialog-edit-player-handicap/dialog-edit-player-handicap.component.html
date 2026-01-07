@@ -1,0 +1,18 @@
+<div mat-dialog-content class="p-4">
+    <div>
+        <h3 color="primary" class="font-medium text-lg">Change Handicap</h3>
+    </div>
+    <form [formGroup]="playersForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Handicap</mat-label>
+            <input matInput formControlName="handicap" type="number" /> 
+            <mat-error *ngIf="playersForm.get('handicap')?.hasError('required')">
+                Handicap is required
+            </mat-error>
+        </mat-form-field>
+    </form>
+    <div mat-dialog-actions align="end">
+        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button color="primary" [disabled]="!playersForm.valid" (click)="onSaveClick()">Save</button>
+    </div>
+</div>

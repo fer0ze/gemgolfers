@@ -1316,6 +1316,38 @@ export class TournamentsService {
                 );
         });
     }
+
+    updateTournamentMemberHandicap(
+        tournamentId: string,
+        playerId: string,
+        handicap: string // or number
+    ): Promise<boolean> {
+        return new Promise((resolve) => {
+            this.apollo
+                .mutate<any>({
+                    mutation: Query.UpdateTournamentAndFlightHandicap, // Use the updated mutation
+                    variables: {
+                        tournamentId: tournamentId,
+                        playerId: playerId,
+                        // Ensure handicap is a number if your DB expects Int/Numeric
+                        handicap: handicap
+                    },
+                })
+                .subscribe(
+                    ({ data }) => {
+                        // Returns true if either update affected at least one row
+                        const success =
+                            data.update_tournament_member.affected_rows > 0 ||
+                            data.update_flight_member.affected_rows > 0;
+                        resolve(true);
+                    },
+                    (error) => {
+                        console.error('Update failed', error);
+                        resolve(false);
+                    }
+                );
+        });
+    }
     deleteTournaments(deletedtournaments: any[]): Promise<boolean> {
         return new Promise((resolve) => {
             this.apollo

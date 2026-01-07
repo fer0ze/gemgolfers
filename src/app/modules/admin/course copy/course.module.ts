@@ -33,7 +33,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { GoogleMapsModule } from '@angular/google-maps';
+// import { GoogleMapsModule } from '@angular/google-maps';
 @NgModule({
     declarations: [CourseComponent,ViewCourseComponent],
     imports: [
@@ -57,7 +57,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
         MatDatepickerModule,
         MatRadioModule,
         MatTabsModule,
-        GoogleMapsModule,
+        // GoogleMapsModule,
         MatProgressSpinnerModule,
         MatAutocompleteModule,
         MatToolbarModule,

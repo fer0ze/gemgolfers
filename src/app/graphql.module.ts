@@ -2,18 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Apollo, ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink, HttpLinkModule } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
-
-import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
+import { HttpLink } from 'apollo-angular/http';
+import { ApolloClientOptions, ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [],
     imports: [CommonModule],
-    exports: [HttpClientModule, ApolloModule, HttpLinkModule],
+    exports: [HttpClientModule, ApolloModule,],
 })
 export class GraphQLModule {
     constructor(apollo: Apollo, httpLink: HttpLink) {
@@ -33,6 +29,8 @@ export class GraphQLModule {
         apollo.create({
             link: http,
             cache: new InMemoryCache(),
+            assumeImmutableResults: false,
+
         });
     }
 }

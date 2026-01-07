@@ -581,13 +581,17 @@
                         <td *matCellDef="let account">
                             <div class="flex">
                                 <span class="cursor-pointer font-medium mr-2 whitespace-nowrap">
+                                    <mat-icon (click)="editTM(account)" [svgIcon]="'heroicons_solid:pencil'"
+                                        color="accent"></mat-icon>
+                                </span>
+                                <span class="cursor-pointer font-medium mr-2 whitespace-nowrap">
                                     <mat-icon (click)="deleteTM(account)" [svgIcon]="'heroicons_solid:trash'"
                                         color="warn"></mat-icon>
                                 </span>
 
 
-                                <span class="cursor-pointer font-medium ml-1 whitespace-nowrap">
-                                    <mat-icon class="ml-2" (click)="disqulifyTM(account)" [svgIcon]="
+                                <span class="cursor-pointer font-medium whitespace-nowrap">
+                                    <mat-icon class="ml-1" (click)="disqulifyTM(account)" [svgIcon]="
                                                 'heroicons_solid:close-eye'
                                             " color="warn"></mat-icon>
                                 </span>

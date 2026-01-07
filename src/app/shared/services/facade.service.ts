@@ -635,6 +635,13 @@ export class FacadeService {
       playerId
     );
   }
+  updateTournamentMemberHandicap(tournamentId: string, playerId: string, handicap: string) {
+    return this.tournamentService.updateTournamentMemberHandicap(
+      tournamentId,
+      playerId,
+      handicap
+    );
+  }
   deleteTourGuide(id: string) {
     return this.tournamentService.deleteTourGuide(
       id

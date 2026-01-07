@@ -24,11 +24,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
-import { MatTimepickerModule } from 'mat-timepicker';
 import { DialogChangeCourseHoleSetComponent } from '../dialogs/dialog-change-course-hole-set/dialog-change-course-hole-set.component';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AmazingTimePickerModule } from 'amazing-time-picker';
+// import { AmazingTimePickerModule } from 'amazing-time-picker';
 @NgModule({
     declarations: [
         DailyRoundsComponent,
@@ -59,10 +58,9 @@ import { AmazingTimePickerModule } from 'amazing-time-picker';
         MatToolbarModule,
         MatSidenavModule,
         MatDialogModule,
-        MatTimepickerModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        AmazingTimePickerModule,
+        // AmazingTimePickerModule,
     ],
     entryComponents: [
         // DailogDailyPlayerScoreComponent,

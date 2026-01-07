@@ -31,7 +31,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { TournamentsRoutingModule } from './tournaments-routing.module';
 import { TournamentsComponent } from './tournaments.component';
 // import { CalculateHandicapComponent } from './calculate-handicap/calculate-handicap.component';
-import { AmazingTimePickerModule } from 'amazing-time-picker';
+// import { AmazingTimePickerModule } from 'amazing-time-picker';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -81,7 +81,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         FormsModule,
         MatAutocompleteModule,
         MatSidenavModule,
-        AmazingTimePickerModule,
+        // AmazingTimePickerModule,
 
     ],
 })

@@ -230,6 +230,7 @@ export const tournamentDashBoard = gql`
                 playerId
                 tournamentId
                 category
+                handicap
                 PlayerQL: player {
                     id
                     playerCategory
@@ -1102,9 +1103,9 @@ export const GetTournamentByID = gql`
                     lastName
                 }
             }
-                flights{
+            flights {
                 id
-                }
+            }
             opponents {
                 id
                 team1Id
@@ -1389,6 +1390,8 @@ export const TournamentMembersQL = gql`
         TournamentMemberQL: tournament_member(where: $where) {
             tournamentId
             playerId
+            handicap
+            category
             player {
                 id
                 firstName
@@ -1410,6 +1413,39 @@ export const DeleteTournamentMember = gql`
         }
     }
 `;
+
+export const UpdateTournamentAndFlightHandicap = gql`
+    mutation UpdateHandicaps(
+        $tournamentId: String!
+        $playerId: String!
+        $handicap: numeric!
+    ) {
+        update_tournament_member(
+            where: {
+                _and: [
+                    { tournamentId: { _eq: $tournamentId } }
+                    { playerId: { _eq: $playerId } }
+                ]
+            }
+            _set: { handicap: $handicap }
+        ) {
+            affected_rows
+        }
+
+        update_flight_member(
+            where: {
+                _and: [
+                    { playerId: { _eq: $playerId } }
+                    { flight: { tournamentId: { _eq: $tournamentId } } }
+                ]
+            }
+            _set: { playingHandicap: $handicap, strokeAdjusted: true }
+        ) {
+            affected_rows
+        }
+    }
+`;
+
 export const DeleteTournaments = gql`
     mutation DeleteTournaments($where: tournament_bool_exp!) {
         delete_tournament(where: $where) {
@@ -2138,10 +2174,10 @@ export const getTeeTimesSlots = gql`
                             email
                         }
                     }
-                        admin{
+                    admin {
                         id
                         fullName
-                        }
+                    }
                 }
             }
         }

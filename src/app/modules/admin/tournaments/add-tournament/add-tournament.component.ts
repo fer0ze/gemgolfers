@@ -63,7 +63,6 @@ import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-ov
 import { DialogMoveFlightComponent } from '../../dialogs/dialog-move-flight/dialog-move-flight.component';
 import { DatePipe, Location } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
-import { AmazingTimePickerService } from 'amazing-time-picker';
 import { DialogPlayingDatesComponent } from '../../dialogs/dialog-playing-dates/dialog-playing-dates.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -330,7 +329,6 @@ export class AddTournamentComponent implements OnInit {
     private marshalValidators = [Validators.maxLength(3)];
 
     constructor(
-        private atp: AmazingTimePickerService,
         private breakpointObserver: BreakpointObserver,
         private datePipe: DatePipe,
         private router: Router,
@@ -701,14 +699,20 @@ export class AddTournamentComponent implements OnInit {
                     for (let p of this.currentTournament.members) {
 
                         const playerQL = p['PlayerQL'];  // reference to player object
+                        const updatedPlayer = { ...playerQL };
 
-                        // If category exists on parent object, update PlayerQL
                         if (p.category !== undefined && p.category !== null) {
-                            playerQL.playerCategory = p.category;   // <-- update PlayerQL prop
+                            updatedPlayer.playerCategory = p.category;
                         }
 
+                        
+                        // // If category exists on parent object, update PlayerQL
+                        // if (p.category !== undefined && p.category !== null) {
+                        //     playerQL['playerCategory'] = p.category;   // <-- update PlayerQL prop
+                        // }
+
                         // Push updated object
-                        this.tournamentMembers.push(<Player>playerQL);
+                        this.tournamentMembers.push(<Player>updatedPlayer);
                     }
                 }
 

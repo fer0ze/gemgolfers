@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GoogleMap } from '@angular/google-maps';
+// import { GoogleMap } from '@angular/google-maps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,13 +11,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { countries, getCity } from 'app/shared/classes/country';
 import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/general';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { GoogleMapsApiService } from 'app/shared/services/google-map.service';
+// import { GoogleMapsApiService } from 'app/shared/services/google-map.service';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-import e from 'express';
 import { Observable, map, shareReplay, startWith } from 'rxjs';
 import * as XLSX from 'xlsx';
-import { MapMarker } from '@angular/google-maps';
 import { read, utils } from 'xlsx';
 import { UserSessionModel } from 'app/shared/models/player.model';
 
@@ -27,16 +25,16 @@ import { UserSessionModel } from 'app/shared/models/player.model';
     styleUrls: ['./view-course.component.scss'],
 })
 export class ViewCourseComponent implements OnInit {
-    center: google.maps.LatLngLiteral = { lat: 51.678418, lng: 7.809007 };
+    // center: google.maps.LatLngLiteral = { lat: 51.678418, lng: 7.809007 };
     zoom = 18;
     file: File;
     cordinatesData = [];
-    @ViewChild('googleMap', { static: false }) googleMapElement!: GoogleMap;
-    @ViewChild('googleMap', { static: false, read: ElementRef }) googleMapContainer: ElementRef;
+    // @ViewChild('googleMap', { static: false }) googleMapElement!: GoogleMap;
+    // @ViewChild('googleMap', { static: false, read: ElementRef }) googleMapContainer: ElementRef;
     @ViewChild('fileInput') fileInputVariable: ElementRef;
     @ViewChild('pacInput', { static: false }) searchBoxRef!: ElementRef;
     arrayBuffer: any;
-    mapTypeId: google.maps.MapTypeId = google.maps.MapTypeId.TERRAIN;
+    // mapTypeId: google.maps.MapTypeId = google.maps.MapTypeId.TERRAIN;
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -146,7 +144,7 @@ export class ViewCourseComponent implements OnInit {
         private router: Router,
         private _localStorage: LocalStorageService,
         private route: ActivatedRoute,
-        private googleMapsApiSerivce: GoogleMapsApiService,
+        // private googleMapsApiSerivce: GoogleMapsApiService,
         private _cityService: HandicapService,
         public snackBar: MatSnackBar,
         public dialog: MatDialog,
@@ -239,94 +237,94 @@ export class ViewCourseComponent implements OnInit {
     //     this.searchPlace();
     // }
 
-    searchPlace() {
-        const request = {
-            query: this.courseTitle,
-            fields: ["name", "geometry"],
-        };
-        // Access the native Google Maps object
-        const map = this.googleMapElement.googleMap;
+    // searchPlace() {
+    //     const request = {
+    //         query: this.courseTitle,
+    //         fields: ["name", "geometry"],
+    //     };
+    //     // Access the native Google Maps object
+    //     const map = this.googleMapElement.googleMap;
 
-        const service = new google.maps.places.PlacesService(map)
-        console.log(service);
+    //     const service = new google.maps.places.PlacesService(map)
+    //     console.log(service);
 
-        service.findPlaceFromQuery(
-            request,
-            (results: google.maps.places.PlaceResult[] | null, status: google.maps.places.PlacesServiceStatus) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-                    for (let i = 0; i < results.length; i++) {
-                        console.log(results);
-                    }
-                    // Use the location from the result to center the map
-                    if (results[0].geometry?.location) {
-                        this.center = {
-                            lat: results[0].geometry.location.lat(),
-                            lng: results[0].geometry.location.lng(),
-                        };
-                        this.markers = [{
-                            position: {
-                                lat: results[0].geometry.location.lat(),
-                                lng: results[0].geometry.location.lng(),
-                            },
-                            title: results[0].name,
-                        }];
-                        map.setCenter(this.center);
-                        this.filterByHole(1);
-                    } else {
-                        this.filterByHole(1);
-                    }
-                }
-            }
-        );
-    }
-    searchBox() {
+    //     service.findPlaceFromQuery(
+    //         request,
+    //         (results: google.maps.places.PlaceResult[] | null, status: google.maps.places.PlacesServiceStatus) => {
+    //             if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+    //                 for (let i = 0; i < results.length; i++) {
+    //                     console.log(results);
+    //                 }
+    //                 // Use the location from the result to center the map
+    //                 if (results[0].geometry?.location) {
+    //                     // this.center = {
+    //                     //     lat: results[0].geometry.location.lat(),
+    //                     //     lng: results[0].geometry.location.lng(),
+    //                     // };
+    //                     this.markers = [{
+    //                         position: {
+    //                             lat: results[0].geometry.location.lat(),
+    //                             lng: results[0].geometry.location.lng(),
+    //                         },
+    //                         title: results[0].name,
+    //                     }];
+    //                     // map.setCenter(this.center);
+    //                     this.filterByHole(1);
+    //                 } else {
+    //                     this.filterByHole(1);
+    //                 }
+    //             }
+    //         }
+    //     );
+    // }
+    // searchBox() {
 
-        const input = document.getElementById('pac-input') as HTMLInputElement;
-        const searchBox = new google.maps.places.Autocomplete(input);
+    //     const input = document.getElementById('pac-input') as HTMLInputElement;
+    //     const searchBox = new google.maps.places.Autocomplete(input);
 
-        searchBox.bindTo('bounds', this.googleMapElement.googleMap as google.maps.Map);
+    //     searchBox.bindTo('bounds', this.googleMapElement.googleMap as google.maps.Map);
 
-        searchBox.addListener('place_changed', () => {
-            const place = searchBox.getPlace();
-            if (!place.geometry || !place.geometry.location) {
-                console.error('Returned place contains no geometry');
-                return;
-            }
+    //     searchBox.addListener('place_changed', () => {
+    //         const place = searchBox.getPlace();
+    //         if (!place.geometry || !place.geometry.location) {
+    //             console.error('Returned place contains no geometry');
+    //             return;
+    //         }
 
-            // Center the map on the selected place
-            this.center = {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-            };
+    //         // Center the map on the selected place
+    //         this.center = {
+    //             lat: place.geometry.location.lat(),
+    //             lng: place.geometry.location.lng()
+    //         };
 
-            // Update the markers array to include the selected place
-            this.markers = [{
-                position: {
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng()
-                },
-                title: place.name
-            }];
+    //         // Update the markers array to include the selected place
+    //         this.markers = [{
+    //             position: {
+    //                 lat: place.geometry.location.lat(),
+    //                 lng: place.geometry.location.lng()
+    //             },
+    //             title: place.name
+    //         }];
 
-            // Center the map on the selected place
-            this.googleMapElement.googleMap?.setCenter(this.center);
-            this.googleMapElement.googleMap?.setZoom(15); // Optional: zoom in to the place
-        });
+    //         // Center the map on the selected place
+    //         this.googleMapElement.googleMap?.setCenter(this.center);
+    //         this.googleMapElement.googleMap?.setZoom(15); // Optional: zoom in to the place
+    //     });
 
-    }
+    // }
     getLatLng(address: string) {
-        this.googleMapsApiSerivce.getLatLng(address).subscribe(
-            (response) => {
-                // console.log(response);
-                this.center = {
-                    lat: response.lat,
-                    lng: response.lng
-                };
-            },
-            (error) => {
-                console.error('Error fetching location', error);
-            }
-        );
+        // this.googleMapsApiSerivce.getLatLng(address).subscribe(
+        //     (response) => {
+        //         // console.log(response);
+        //         // this.center = {
+        //         //     lat: response.lat,
+        //         //     lng: response.lng
+        //         // };
+        //     },
+        //     (error) => {
+        //         console.error('Error fetching location', error);
+        //     }
+        // );
     }
     ////*******************************************************************COURSE CREATE**************************************************************************************** */
     countrySelected(event) {
@@ -356,7 +354,7 @@ export class ViewCourseComponent implements OnInit {
     onMapClick(event: any) {
         //  console.log(event);
         if (event.latLng != null) {
-            this.center = event.latLng.toJSON();
+            // this.center = event.latLng.toJSON();
             // console.log('Coordinates:', this.center.lat, this.center.lng);
         }
         var clickedHole = undefined;
@@ -414,10 +412,10 @@ export class ViewCourseComponent implements OnInit {
         if (typeof (latLong) == 'string') {
             const [lat, lng] = latLong.split(',').map(Number);
             if (lat !== 0 && lng !== 0) {
-                this.center = { lat, lng };
+                // this.center = { lat, lng };
             }
         }
-        this.focusMap();
+        // this.focusMap();
     }
     onGreenCenterLat(holeNo: number, latLong): void {
         this.currentHoleNo = holeNo;
@@ -425,10 +423,10 @@ export class ViewCourseComponent implements OnInit {
         if (typeof (latLong) == 'string') {
             const [lat, lng] = latLong.split(',').map(Number);
             if (lat !== 0 && lng !== 0) {
-                this.center = { lat, lng };
+                // this.center = { lat, lng };
             }
         }
-        this.focusMap();
+        // this.focusMap();
     }
     onGreenEndLat(holeNo: number, latLong): void {
         this.currentHoleNo = holeNo;
@@ -436,21 +434,21 @@ export class ViewCourseComponent implements OnInit {
         if (typeof (latLong) == 'string') {
             const [lat, lng] = latLong.split(',').map(Number);
             if (lat !== 0 && lng !== 0) {
-                this.center = { lat, lng };
+                // this.center = { lat, lng };
             }
         }
-        this.focusMap();
+        // this.focusMap();
     }
-    focusMap(): void {
-        if (this.googleMapContainer && this.googleMapContainer.nativeElement) {
-            const mapDiv = this.googleMapContainer.nativeElement.querySelector('div');
-            if (mapDiv) {
-                mapDiv.tabIndex = -1; // Make the div focusable
-                mapDiv.focus();
-                this.mapTypeId = google.maps.MapTypeId.SATELLITE;
-            }
-        }
-    }
+    // focusMap(): void {
+    //     if (this.googleMapContainer && this.googleMapContainer.nativeElement) {
+    //         const mapDiv = this.googleMapContainer.nativeElement.querySelector('div');
+    //         if (mapDiv) {
+    //             mapDiv.tabIndex = -1; // Make the div focusable
+    //             mapDiv.focus();
+    //             this.mapTypeId = google.maps.MapTypeId.SATELLITE;
+    //         }
+    //     }
+    // }
     filterByHole(holeNo) {
         this.currentHoleNo = holeNo;
         let greenStartLatLong;
@@ -466,11 +464,11 @@ export class ViewCourseComponent implements OnInit {
         if (greenStartLatLong) {
             const [lat, lng] = greenStartLatLong.greenCenterLatLong.split(',').map(Number);
             if (lat !== 0 && lng !== 0) {
-                this.center = { lat, lng };
+                // this.center = { lat, lng };
             }
             // this.center = greenStartLatLong.greenCenterLatLong
         }
-        this.focusMap();
+        // this.focusMap();
     }
     private _filter(value: string) {
         if (value) {
@@ -1115,7 +1113,7 @@ export class ViewCourseComponent implements OnInit {
         this.currentHoleNo = hole_id.holeNo;
         this.currentLatLong = false;
         this.currentTee = tee_id;
-        this.focusMap();
+        // this.focusMap();
     }
     private isIndexUnique(val: any, holes): boolean {
         // Extract index values from holeSetfor9
@@ -1182,10 +1180,10 @@ export class ViewCourseComponent implements OnInit {
         if (typeof (hzrd.lat_long) == 'string') {
             const [lat, lng] = hzrd.lat_long.split(',').map(Number);
             if (lat !== 0 && lng !== 0) {
-                this.center = { lat, lng };
+                // this.center = { lat, lng };
             }
         }
-        this.focusMap();
+        // this.focusMap();
 
     }
     /**
@@ -2121,26 +2119,26 @@ event   */
         // }
     }
 
-    initializeGoogleMapElement(): void {
-        if (!this.googleMapElement) {
-            setTimeout(() => {
-                this.googleMapElement = this.googleMapElement || this.getGoogleMapElement();
-                if (this.googleMapElement) {
-                    this.searchPlace();
-                    this.searchBox();
+    // initializeGoogleMapElement(): void {
+    //     if (!this.googleMapElement) {
+    //         setTimeout(() => {
+    //             this.googleMapElement = this.googleMapElement || this.getGoogleMapElement();
+    //             if (this.googleMapElement) {
+    //                 this.searchPlace();
+    //                 this.searchBox();
 
-                    console.log('Google Map element initialized:', this.googleMapElement);
-                } else {
-                    console.error('Google Map element could not be initialized.');
-                }
-            }, 100); // Adjust the timeout as needed
-        }
-    }
+    //                 console.log('Google Map element initialized:', this.googleMapElement);
+    //             } else {
+    //                 console.error('Google Map element could not be initialized.');
+    //             }
+    //         }, 100); // Adjust the timeout as needed
+    //     }
+    // }
 
-    getGoogleMapElement(): GoogleMap {
-        const mapEl = document.querySelector('google-map');
-        return mapEl ? (mapEl as unknown as GoogleMap) : null;
-    }
+    // getGoogleMapElement(): GoogleMap {
+    //     const mapEl = document.querySelector('google-map');
+    //     return mapEl ? (mapEl as unknown as GoogleMap) : null;
+    // }
 
     downloadSample() {
         // Create sample data

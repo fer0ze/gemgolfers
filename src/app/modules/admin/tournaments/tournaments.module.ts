@@ -33,7 +33,7 @@ import { TournamentsComponent } from './tournaments.component';
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
 import { FlightManagementComponent } from './flight-management/flight-management.component';
 // import { CalculateHandicapComponent } from './calculate-handicap/calculate-handicap.component';
-import { AmazingTimePickerModule } from 'amazing-time-picker';
+// import { AmazingTimePickerModule } from 'amazing-time-picker';
 
 import { DialogHanidcapListComponent } from '../dialogs/dialog-hanidcap-list/dialog-hanidcap-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -62,6 +62,7 @@ import { TeamManagementComponent } from './team-management/team-management.compo
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PairManagementComponent } from './pair-management/pair-management.component';
 import { InvalidCategoryPlayersComponent } from '../dialogs/dialog-invalid-category-players/invalid-category-players.component';
+import { DialogEditPlayerHandicapComponent } from '../dialogs/dialog-edit-player-handicap/dialog-edit-player-handicap.component';
 @NgModule({
     declarations: [
         TournamentsComponent,
@@ -83,7 +84,8 @@ import { InvalidCategoryPlayersComponent } from '../dialogs/dialog-invalid-categ
         DialogAddMemberComponent,TeamManagementComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
-        DialogPlayingDatesComponent
+        DialogPlayingDatesComponent,
+        DialogEditPlayerHandicapComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
@@ -122,7 +124,7 @@ import { InvalidCategoryPlayersComponent } from '../dialogs/dialog-invalid-categ
         FormsModule,
         MatAutocompleteModule,
         MatSidenavModule,
-        AmazingTimePickerModule,
+        // AmazingTimePickerModule,
 
     ],
     entryComponents: [DialogHanidcapListComponent],

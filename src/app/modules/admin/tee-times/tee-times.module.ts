@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 //import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
-import { AmazingTimePickerModule } from 'amazing-time-picker';
+// import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -71,7 +71,7 @@ import { DialogAddGuestComponent } from '../dialogs/dialog-add-guest/dialog-add-
     MatToolbarModule,
     MatDialogModule,
     MatExpansionModule,
-    AmazingTimePickerModule,
+    // AmazingTimePickerModule,
   ],
   entryComponents: [
     DialogTeeTimeSlotComponent
