@@ -219,7 +219,7 @@ export class ViewCourseComponent implements OnInit {
             //  this.getLatLng(country?.code ?? '');
 
         } else {
-            this.addNewTee();   
+            this.addNewTee();
         }
 
         this.listCountries = this.courseForm
@@ -2017,7 +2017,7 @@ event   */
             });
             if (this._localStorage.isSuperAdmin()) {
                 this.goToPanel('5')
-            } else {
+            } else if (this.loggedInuser) {
                 this.router.navigateByUrl('/courses');
             }
         } else {

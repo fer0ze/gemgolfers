@@ -62,6 +62,13 @@ export const appRoutes: Route[] = [
                         (m) => m.AuthSignUpModule
                     ),
             },
+            {
+                path: 'courses',
+                loadChildren: () =>
+                    import('app/modules/admin/course copy/course.module').then(
+                        (m) => m.CourseModule
+                    ),
+            },
         ],
     },
 

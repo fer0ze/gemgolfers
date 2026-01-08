@@ -181,7 +181,7 @@
                                 <div class="sm:col-span-2">
                                     <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                         <mat-label>{{ timingGroup.get('name').value }} Start Time:</mat-label>
-                                        <input type="time" matInput [ngxTimepicker]="timePicker1"
+                                        <input  matInput [ngxTimepicker]="timePicker1"
                                             formControlName="startTime">
                                         <ngx-material-timepicker #timePicker1 format="12" [minutesGap]="5">
                                         </ngx-material-timepicker>
@@ -190,7 +190,7 @@
                                 <div class="sm:col-span-2 mt-2">
                                     <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                         <mat-label>{{ timingGroup.get('name').value }} Last Time:</mat-label>
-                                        <input type="time" matInput [ngxTimepicker]="timePicker2"
+                                        <input  matInput [ngxTimepicker]="timePicker2"
                                             formControlName="endTime">
                                         <ngx-material-timepicker #timePicker2 format="12" [minutesGap]="5">
                                         </ngx-material-timepicker>

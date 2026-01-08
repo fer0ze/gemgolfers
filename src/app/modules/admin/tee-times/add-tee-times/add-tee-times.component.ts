@@ -24,6 +24,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Course } from 'app/shared/models/course.model';
 import { map, startWith } from 'rxjs';
 import { Club } from 'app/shared/models/club.model';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
     selector: 'app-add-tee-times',
@@ -55,9 +56,11 @@ export class AddTeeTimesComponent implements OnInit {
         public snackBar: MatSnackBar,
         private router: Router,
         private _localStorage: LocalStorageService,
+        private logger: LogsService,
     ) { }
 
     async ngOnInit() {
+        this.logger.log('Admin Come to Add Tee Time Page', "info");
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
         // console.log(this.loggedInuser);
 
@@ -169,6 +172,7 @@ export class AddTeeTimesComponent implements OnInit {
     async createSchedule() {
         // TODO: Use EventEmitter with form value
         try {
+            this.logger.log('Admin Click on create tee time button', "info", this.scheduleForm.value);
             this.isSaving = true;
             console.log(this.scheduleForm.value);
             let clubId: string = this.loggedInuser.adminClubId;
@@ -239,7 +243,7 @@ export class AddTeeTimesComponent implements OnInit {
 
                 this.isSaving = false;
                 this.reset();
-                this.router.navigate(['/teetimes']);
+                // this.router.navigate(['/teetimes']);
             }
         } catch {
             this.isSaving = false;
@@ -295,8 +299,8 @@ export class AddTeeTimesComponent implements OnInit {
 
             this.teeSlots = [];
             const createSlot = (courseHoleSets, inverted, startTime, endTime, guestHole, noOfHoles) => {
-                let startLimit = new Date(Constants.DEFAULT_DATE + ' ' + startTime.substr(0, 5));
-                const endLimit = new Date(Constants.DEFAULT_DATE + ' ' + endTime.substr(0, 5));
+                let startLimit = new Date(Constants.DEFAULT_DATE + ' ' + startTime);
+                const endLimit = new Date(Constants.DEFAULT_DATE + ' ' + endTime);
 
                 while (startLimit <= endLimit) {
                     const h = startLimit.getHours();
@@ -395,8 +399,8 @@ export class AddTeeTimesComponent implements OnInit {
             name: name,
             courseHoleSets: holeSet,
             inverted: inverted,
-            startTime: '06:00',
-            endTime: '18:00',
+            startTime: '',
+            endTime: '',
             noOfHoles: noOfHoles,
         });
     }

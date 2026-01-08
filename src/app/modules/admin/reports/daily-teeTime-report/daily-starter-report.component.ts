@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // import * as jsPDF from "jspdf";
-import { Player } from '../../../../shared/models/player.model';
+import { Player, UserSessionModel } from '../../../../shared/models/player.model';
 import 'jspdf-autotable';
 import * as jsPDF from 'jspdf';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -36,7 +36,7 @@ export class DailyStarterReportComponent implements OnInit {
 
     isLoading: boolean = false;
     showtable: boolean = false;
-    loggedInuser: Player;
+    loggedInuser: UserSessionModel;
     scheduleForm: FormGroup;
     refresh: boolean = false;
     minDate: Date;
@@ -327,7 +327,7 @@ export class DailyStarterReportComponent implements OnInit {
         ======================= */
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text('Tee Times Report', pageWidth / 2, 15, { align: 'center' });
+        doc.text(`${this.loggedInuser.club?.name} Tee Times Report`, pageWidth / 2, 15, { align: 'center' });
 
         doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
