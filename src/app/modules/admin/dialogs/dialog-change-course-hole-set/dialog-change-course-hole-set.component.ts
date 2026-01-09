@@ -423,11 +423,14 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 (data) => {
                     this.isLoading = false;
                     //console.log(this.starterForm.value.members);
-                    this.starterForm.value.members.forEach(
-                        (obj, i) =>
-                        (obj['fullName'] =
-                            obj.firstName + ' ' + obj.lastName)
-                    );
+                    this.starterForm.value.members.forEach(obj => {
+                        // Always ensure PlayerQL exists
+
+                        if (obj?.PlayerQL?.firstName &&  obj?.PlayerQL?.lastName) {
+                            obj.PlayerQL.fullName =
+                                `${obj.PlayerQL.firstName || ''} ${obj.PlayerQL.lastName || ''}`.trim();
+                        } 
+                    });
                     this.membersSource = new MatTableDataSource(
                         this.starterForm.value.members
                     );
@@ -443,7 +446,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
 
     addPlayer() {
         const dialogRef = this.dialog.open(DialogAddPlayerComponent, {
-            data: { flights: this.selectedMembers.length,tournamentID: this.tournamentID },
+            data: { flights: this.selectedMembers.length, tournamentID: this.tournamentID },
         });
 
         dialogRef.afterClosed().subscribe((result) => {
