@@ -243,7 +243,7 @@ export class AddTeeTimesComponent implements OnInit {
 
                 this.isSaving = false;
                 this.reset();
-                // this.router.navigate(['/teetimes']);
+                this.router.navigate(['/teetimes']);
             }
         } catch {
             this.isSaving = false;
