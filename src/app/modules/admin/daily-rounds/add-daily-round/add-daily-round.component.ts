@@ -465,13 +465,16 @@ export class AddDailyRoundComponent implements OnInit {
                     if (playerTee == 'Senior Amateurs') {
                         playerTee = 'Seniors';
                     }
-                    player[0]['playingTee'] = playerTee.toUpperCase();
-                    let selectedData = {
-                        value: player[0]['playingTee'],
-                        text: player[0]['playingTee'],
+                    const updatedPlayer = {
+                        ...player[0],
+                        playingTee: playerTee.toUpperCase()
                     };
-                    this.playerTees.set(player[0].id, selectedData);
-                    this.tournamentMembers.push(player[0]);
+                    let selectedData = {
+                        value: updatedPlayer['playingTee'],
+                        text: updatedPlayer['playingTee'],
+                    };
+                    this.playerTees.set(updatedPlayer.id, selectedData);
+                    this.tournamentMembers.push(updatedPlayer);
 
                     this.syncTournamentMembers();
                     this.snackBar.open(
