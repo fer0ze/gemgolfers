@@ -299,8 +299,16 @@ export class AddTeeTimesComponent implements OnInit {
 
             this.teeSlots = [];
             const createSlot = (courseHoleSets, inverted, startTime, endTime, guestHole, noOfHoles) => {
-                let startLimit = new Date(Constants.DEFAULT_DATE + ' ' + startTime);
-                const endLimit = new Date(Constants.DEFAULT_DATE + ' ' + endTime);
+                const baseDate = new Date(Constants.DEFAULT_DATE);
+
+                const s = this.parseTime(startTime);
+                const e = this.parseTime(endTime);
+
+                let startLimit = new Date(baseDate);
+                startLimit.setHours(s.hours, s.minutes, 0, 0);
+
+                const endLimit = new Date(baseDate);
+                endLimit.setHours(e.hours, e.minutes, 0, 0);
 
                 while (startLimit <= endLimit) {
                     const h = startLimit.getHours();
@@ -348,6 +356,20 @@ export class AddTeeTimesComponent implements OnInit {
             // })
 
         } catch { }
+    }
+
+    parseTime(time: string): { hours: number; minutes: number } {
+        const [t, modifier] = time.split(' ');
+        let [hours, minutes] = t.split(':').map(Number);
+
+        if (modifier === 'PM' && hours !== 12) {
+            hours += 12;
+        }
+        if (modifier === 'AM' && hours === 12) {
+            hours = 0;
+        }
+
+        return { hours, minutes };
     }
 
 
