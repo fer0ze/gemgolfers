@@ -44,6 +44,7 @@ export class ViewCourseComponent implements OnInit {
     courseID: any;
     courseData: any;
     courseTitle: any;
+    editForm: boolean = false;
     currentHoleNo: number | null = 1;
     currentHzd: any | null = null;
     currentHzdId: string | null = null;
@@ -209,6 +210,7 @@ export class ViewCourseComponent implements OnInit {
             this.courseForm.get('city').setValue(this.cityName);
             this.courseForm.get('noOfHoles').setValue(this.NoOfHoles.toString());
 
+            this.editForm = true;
             this.url = 'golfcourse.jpg';
             // this.setHoles(this.NoOfHoles);
             this.panels = (General.getGolfCourseFeatures());
@@ -535,9 +537,9 @@ export class ViewCourseComponent implements OnInit {
                 await this.facadeService.updateCourse(courses, []));
             if (isSuccess) {
                 this.saveTees();
-                this.snackBar.open("Course has been Updated.", "x", {
-                    duration: 5000,
-                });
+                // this.snackBar.open("Course has been Updated.", "x", {
+                //     duration: 5000,
+                // });
                 this.goToPanel('1');
             } else {
                 this.snackBar.open("Course Not Updated!", "x", {
@@ -552,9 +554,9 @@ export class ViewCourseComponent implements OnInit {
 
 
                 // this.savecoureRating();
-                this.snackBar.open("Course has been created.", "x", {
-                    duration: 5000,
-                });
+                // this.snackBar.open("Course has been created.", "x", {
+                //     duration: 5000,
+                // });
                 // this.panels = (General.getGolfCourseFeatures());
                 // if (course.noOfHoles <= 18) {
                 //     this.panels = this.panels.filter(panel => panel.id !== '3');
@@ -2074,30 +2076,54 @@ event   */
             await this.facadeService.saveCourseRating(teeObj)
         );
         if (saveCourseRating) {
-            this.snackBar.open('Course-Rating has been Saved!', 'x', {
-                duration: 5000,
-            });
+            // this.snackBar.open('Course-Rating has been Saved!', 'x', {
+            //     duration: 5000,
+            // });
             if (this._localStorage.isSuperAdmin()) {
                 this.goToPanel('5')
             } else if (this.loggedInuser) {
                 this.router.navigateByUrl('/courses2');
             } else {
-                this._fuseConfirmationService.open({
-                    title: 'Courses Saved Successfully',
-                    message: 'Course has been saved successfully. Please contact your administrator to activate the course.',
-                    icon: {
-                        name: 'info',
-                        color: 'primary',
-                    },
-                    actions: {
-                        cancel: {
-                            show: false,
+                if (!this.editForm) {
+                    this._fuseConfirmationService.open({
+                        title: 'Courses Saved Successfully',
+                        message: 'Our administrator will review your course and will activate the course.',
+                        icon: {
+                            name: 'info',
+                            color: 'primary',
                         },
-                        confirm: {
-                            label: 'Close',
+                        actions: {
+                            cancel: {
+                                show: false,
+                            },
+                            confirm: {
+                                label: 'Close',
+                            },
                         },
-                    },
-                })
+                    }).afterClosed().subscribe(() => {
+                        location.reload();
+                    })
+
+                } else {
+                    this._fuseConfirmationService.open({
+                        title: 'Courses Updated Successfully',
+                        message: 'Course has been updated successfully.',
+                        icon: {
+                            name: 'info',
+                            color: 'primary',
+                        },
+                        actions: {
+                            cancel: {
+                                show: false,
+                            },
+                            confirm: {
+                                label: 'Close',
+                            },
+                        },
+                    }).afterClosed().subscribe(() => {
+                        location.reload();
+                    })
+                }
             }
         } else {
             this.snackBar.open('Course-Rating has not Saved!', 'x', {
