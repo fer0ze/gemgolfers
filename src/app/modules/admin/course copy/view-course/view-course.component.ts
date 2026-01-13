@@ -52,7 +52,7 @@ export class ViewCourseComponent implements OnInit {
     countryName: any;
     cityName: any;
     NoOfHoles: any = 18;
-    NoOfCols: number = 19;
+    NoOfCols: number = 22;
     url: string;
     Tee = [];
     id = [];
@@ -797,8 +797,13 @@ export class ViewCourseComponent implements OnInit {
     holesChange(event: any) {
         const noOfHoles = Number(event.value);
         this.NoOfHoles = noOfHoles;
-        this.NoOfCols = noOfHoles + 1;
+        if (noOfHoles == 9) {
+            this.NoOfCols = noOfHoles + 3;
+        } else {
+            this.NoOfCols = noOfHoles + 4;
+        }
     }
+
     async setHoles(Number: number) {
         console.log(Number);
         let holes = await this.facadeService.getCourseHole(this.courseID);
@@ -1087,6 +1092,61 @@ export class ViewCourseComponent implements OnInit {
             }
         }
     }
+
+    teeYardageFront9(tee: any): number {
+        if (!this.holeSetfor9?.length) {
+            return 0;
+        }
+
+        return this.holeSetfor9.reduce((total, hole) => {
+            const yardage =
+                hole?.teeDistances?.[tee.tee_id];
+
+            return total + (yardage ? Number(yardage) : 0);
+        }, 0);
+    }
+
+    teeYardageBack9(tee: any): number {
+        if (!this.holeSetfor18?.length) {
+            return 0;
+        }
+
+        return this.holeSetfor18.reduce((total, hole) => {
+            const yardage =
+                hole?.teeDistances?.[tee.tee_id];
+
+            return total + (yardage ? Number(yardage) : 0);
+        }, 0);
+    }
+
+    teeYardageTotal(tee: any): number {
+        return this.teeYardageFront9(tee) + this.teeYardageBack9(tee);
+    }
+
+    totalParFront9(): number {
+        if (!this.holeSetfor9?.length) {
+            return 0;
+        }
+
+        return this.holeSetfor9.reduce((total, hole) => {
+            return total + (hole.par ? Number(hole.par) : 0);
+        }, 0);
+    }
+
+    totalParBack9(): number {
+        if (!this.holeSetfor18?.length) {
+            return 0;
+        }
+
+        return this.holeSetfor18.reduce((total, hole) => {
+            return total + (hole.par ? Number(hole.par) : 0);
+        }, 0);
+    }
+
+    totalPar(): number {
+        return this.totalParFront9() + this.totalParBack9();
+    }
+
     /**
      * onTeeInput
      */

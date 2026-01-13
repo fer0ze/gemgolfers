@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-            </div> 
+            </div>
 
             <!-- Tees Section -->
             <div *ngFor="let tee of Tee; let i = index"
@@ -206,11 +206,25 @@
                             <div *ngFor="let hole of holeSetfor9" class="font-semibold text-gray-700 p-2">
                                 {{ hole.holeNo }}
                             </div>
-
+                            <ng-container>
+                                <div class="font-semibold text-gray-700 p-2">
+                                    Out
+                                </div>
+                            </ng-container>
                             <!-- <div class="font-semibold text-gray-700 p-2 bg-gray-100">Out</div> -->
                             <ng-container *ngIf="NoOfHoles>9">
                                 <div *ngFor="let hole of holeSetfor18" class="font-semibold text-gray-700 p-2">
                                     {{ hole.holeNo }}
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>9">
+                                <div class="font-semibold text-gray-700 p-2">
+                                    In
+                                </div>
+                            </ng-container>
+                            <ng-container>
+                                <div class="font-semibold text-gray-700 p-2">
+                                    Totals
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>18">
@@ -218,6 +232,7 @@
                                     {{ hole.holeNo }}
                                 </div>
                             </ng-container>
+
                             <ng-container *ngIf="NoOfHoles>28">
                                 <div *ngFor="let hole of holeSetfor36" class="font-semibold text-gray-700 p-2">
                                     {{ hole.holeNo }}
@@ -238,6 +253,11 @@
 
                                 </ng-container>
                             </ng-container>
+                            <ng-container>
+                                <input [value]="teeYardageFront9(tee)" readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                            </ng-container>
 
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
@@ -246,6 +266,16 @@
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
                                 </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>10">
+                                <input [value]="teeYardageBack9(tee)" readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                            </ng-container>
+                            <ng-container>
+                                <input [value]="teeYardageTotal(tee)" readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>19">
                                 <ng-container *ngFor="let hole of holeSetfor27; let i = index">
@@ -290,6 +320,11 @@
                                 </ng-container>
 
                             </ng-container>
+                            <ng-container>
+                                <input [value]="totalParFront9()" readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                            </ng-container>
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
                                     <input type="number" value="{{
@@ -305,6 +340,16 @@
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
                                 </ng-container>
+
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>10">
+                                <input [value]="totalParBack9()" readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                            </ng-container>
+                            <ng-container>
+                                <input [value]="totalPar()" readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>19">
@@ -367,7 +412,11 @@
 
                                 </ng-container>
                             </ng-container>
+                            <ng-container>
+                                <input readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
+                            </ng-container>
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
                                     <input type="number" (input)="
@@ -383,6 +432,16 @@
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
                                 </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="NoOfHoles>10">
+                                <input readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
+                            </ng-container>
+                            <ng-container>
+                                <input readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
+
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>19">
                                 <ng-container *ngFor="let hole of holeSetfor27; let i = index">
@@ -435,8 +494,8 @@
                     class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
                     Add Another Tee
                 </button>
-                <button (click)="createCourse()"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                <button (click)="createCourse()" [disabled]="!courseForm.valid"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed">
                     Save Course
                 </button>
             </div>
