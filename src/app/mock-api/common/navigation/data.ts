@@ -308,7 +308,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Courses',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
-                link: '/courses',
+                link: '/courses2',
                 moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a'
             },
         ],
@@ -858,7 +858,7 @@ export const defaultNavigationSuperAdmin: FuseNavigationItem[] = [
                 title: 'Courses',
                 type: 'basic',
                 icon: 'heroicons_outline:sun',
-                link: '/courses',
+                link: '/courses2',
             },
             {
                 id: 'feedback.mergreProfiles',
@@ -934,7 +934,7 @@ export const userNavigation: FuseNavigationItem[] = [
                 title: 'Courses',
                 type: 'basic',
                 icon: 'heroicons_outline:clipboard-check',
-                link: '/courses',
+                link: '/courses2',
                 moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a'
             },
         ],
@@ -960,7 +960,7 @@ export const sectaryNavigation: FuseNavigationItem[] = [
                 title: 'Courses',
                 type: 'basic',
                 icon: 'heroicons_outline:chart-pie',
-                link: '/courses',
+                link: '/courses2',
                 moduleId: '2ecc2580-63a7-43b5-bee8-fd0f6c217c8a'
             },
         ],

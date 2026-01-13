@@ -2110,7 +2110,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     openAddCourse() {
-        const url = this.location.prepareExternalUrl('/courses/add');
+        const url = this.location.prepareExternalUrl('/courses2/add');
         window.open(url, '_blank');
     }
 

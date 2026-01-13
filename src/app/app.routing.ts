@@ -283,7 +283,7 @@ export const appRoutes: Route[] = [
                     ),
             },
             {
-                path: 'courses',
+                path: 'courses2',
                 loadChildren: () =>
                     import('app/modules/admin/course copy/course.module').then(
                         (m) => m.CourseModule

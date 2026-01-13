@@ -2018,7 +2018,7 @@ event   */
             if (this._localStorage.isSuperAdmin()) {
                 this.goToPanel('5')
             } else if (this.loggedInuser) {
-                this.router.navigateByUrl('/courses');
+                this.router.navigateByUrl('/courses2');
             }
         } else {
             this.snackBar.open('Course-Rating has not Saved!', 'x', {

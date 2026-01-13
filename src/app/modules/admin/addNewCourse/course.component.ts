@@ -89,7 +89,7 @@ export class CourseComponent implements OnInit {
   }
 
   createCourse() {
-    this.location.navigate(['/courses2/add']);
+    this.location.navigate(['/courses/add']);
   }
 
   compelteCourse(id) {

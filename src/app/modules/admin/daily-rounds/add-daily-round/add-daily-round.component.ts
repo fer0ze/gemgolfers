@@ -642,8 +642,6 @@ export class AddDailyRoundComponent implements OnInit {
         }
     }
 
-
-
     syncTournamentMembers() {
         of(this.tournamentMembers)
             .pipe()
