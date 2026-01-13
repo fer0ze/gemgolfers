@@ -28,6 +28,22 @@ export class CoursesService {
         });
     });
   }
+  public getApprovedCoursesList(): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .subscribe({
+          query: Query.getApprovedCoursesList,
+        })
+        .subscribe(({ data }) => {
+          if (data == null) {
+            resolve(null);
+          } else {
+            ////console.log(data.course);
+            resolve(data);
+          }
+        });
+    });
+  }
 
   public getCoursesListbyID(id: string): Promise<any> {
     return new Promise((resolve) => {

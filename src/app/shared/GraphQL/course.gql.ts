@@ -4,7 +4,33 @@ import { CourseQL, CourseHoleSetsQL } from '../fragments/course.fragment';
 
 export const GetCourses = gql`
     query PostsGetQuery {
-        course(order_by: { name: asc }) {
+        course(order_by: { createdAt: desc }) {
+            id
+            clubId
+            name
+            noOfHoles
+            par
+            courseRating
+            slopeRating
+            teeDistanceUnit
+            mapSupported
+            country
+            countryGeonameId
+            city
+            cityGeonameId
+            nameForHoles1to9
+            nameForHoles10to18
+            nameForHoles19to27
+            nameForHoles28to36
+            createdAt
+            status
+        }
+    }
+`;
+
+export const getApprovedCoursesList = gql`
+    query getApprovedCoursesList {
+        course(where: { status: { _eq: "Active" } }, order_by: { name: asc }) {
             id
             clubId
             name
@@ -240,14 +266,14 @@ export const getCourseHoleSetsForCourseForm = gql`
 export const getTeesOfCourse = gql`
     query getTeesOfCourse($where: course_tees_bool_exp!) {
         course_tees(where: $where) {
-       course_id
+            course_id
             tee_id
             name_by_club
             color
             tee_order
             tee_name {
-            id
-            name
+                id
+                name
                 key
             }
         }

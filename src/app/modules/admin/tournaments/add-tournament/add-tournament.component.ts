@@ -479,7 +479,7 @@ export class AddTournamentComponent implements OnInit {
             this.Clubs = dataClubs.club;
         }
 
-        let dataCourses = await this.facadeService.getCoursesList();
+        let dataCourses = await this.facadeService.getApprovedCoursesList();
         this.Courses = dataCourses.course;
         // this.Categories =  this.facadeService.getPlayerCategories();
         this._courseHoles = this.facadeService.getCourseHoles('');
@@ -2090,7 +2090,7 @@ export class AddTournamentComponent implements OnInit {
     }
 
     async refreshCourseList() {
-        let dataCourses = await this.facadeService.getCoursesList();
+        let dataCourses = await this.facadeService.getApprovedCoursesList();
         this.Courses = dataCourses.course;
 
         this.filteredCourseOptions = this.formArray

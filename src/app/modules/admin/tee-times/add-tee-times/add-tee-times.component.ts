@@ -81,7 +81,7 @@ export class AddTeeTimesComponent implements OnInit {
         });
         let dataClubs = await this.facadeService.getClubList();
         this.Clubs = dataClubs.club;
-        let dataCourses = await this.facadeService.getCoursesList();
+        let dataCourses = await this.facadeService.getApprovedCoursesList();
         this.Courses = dataCourses.course;
         this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
         let today: Date = new Date();
