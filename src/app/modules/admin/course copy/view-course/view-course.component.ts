@@ -18,6 +18,7 @@ import { Observable, map, shareReplay, startWith } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { read, utils } from 'xlsx';
 import { UserSessionModel } from 'app/shared/models/player.model';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
     selector: 'app-view-course',
@@ -143,6 +144,7 @@ export class ViewCourseComponent implements OnInit {
         // private datePipe: DatePipe,
         private router: Router,
         private _localStorage: LocalStorageService,
+        private _fuseConfirmationService: FuseConfirmationService,
         private route: ActivatedRoute,
         // private googleMapsApiSerivce: GoogleMapsApiService,
         private _cityService: HandicapService,
@@ -2079,6 +2081,23 @@ event   */
                 this.goToPanel('5')
             } else if (this.loggedInuser) {
                 this.router.navigateByUrl('/courses2');
+            } else {
+                this._fuseConfirmationService.open({
+                    title: 'Courses Saved Successfully',
+                    message: 'Course has been saved successfully. Please contact your administrator to activate the course.',
+                    icon: {
+                        name: 'info',
+                        color: 'primary',
+                    },
+                    actions: {
+                        cancel: {
+                            show: false,
+                        },
+                        confirm: {
+                            label: 'Close',
+                        },
+                    },
+                })
             }
         } else {
             this.snackBar.open('Course-Rating has not Saved!', 'x', {
