@@ -2086,7 +2086,7 @@ event   */
             } else {
                 if (!this.editForm) {
                     this._fuseConfirmationService.open({
-                        title: 'Courses Saved Successfully',
+                        title: 'Course Saved Successfully',
                         message: 'Our administrator will review your course and will activate the course.',
                         icon: {
                             name: 'info',
@@ -2106,7 +2106,7 @@ event   */
 
                 } else {
                     this._fuseConfirmationService.open({
-                        title: 'Courses Updated Successfully',
+                        title: 'Course Updated Successfully',
                         message: 'Course has been updated successfully.',
                         icon: {
                             name: 'info',
