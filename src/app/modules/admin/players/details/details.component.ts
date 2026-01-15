@@ -506,7 +506,7 @@ export class ContactsDetailsComponent implements OnInit {
             } else {
                 const isSuccess = <boolean>(
                     await this._facadeService.updatePlayer(player)
-                );
+                ); 
 
                 if (this.currentPlayer.player[0].handicap !== contact.handicap) {
                     //console.log(this.tournamentId);

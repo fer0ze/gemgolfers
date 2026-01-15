@@ -176,6 +176,7 @@ export class PlayersComponent implements OnInit {
             this.Players = data.player;
             //console.log(data);
             for (let obj of this.Players) {
+                let clubName = obj?.membershipQL?.filter(a => a.clubId == this.loggedInuser?.adminClubId).map(a => a?.club?.name);
                 let Fname = obj.firstName
                     ? obj.firstName.trim()
                     : obj.firstName;
@@ -193,11 +194,11 @@ export class PlayersComponent implements OnInit {
                             : obj.playerCategory,
                     Handicap: obj.handicap,
                     // Status: obj.membershipQL,
-                    club: obj.membershipQL[0]?.club?.name ?? '-',
+                    club: clubName ?? '-',
                 };
                 this.TablePlayers.push(newobj);
             }
-        } else  {
+        } else {
             let state = this._localStorage.get(Constants.STATE);
             if (state == Constants.TOUR) {
                 this.tourID = this._localStorage.get(Constants.TOUR_ID);

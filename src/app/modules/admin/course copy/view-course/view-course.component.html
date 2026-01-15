@@ -116,7 +116,7 @@
                             <label [for]="'rating18' + i" class="block text-md font-medium text-gray-700">
                                 18 Hole Rating
                             </label>
-                            <input type="number" [id]="'rating18' + i" [value]="tee['18_hole_course_rating'] || ''"
+                            <input type="number" min="1" [id]="'rating18' + i" [value]="tee['18_hole_course_rating'] || ''"
                                 (input)="updateTeeValue(tee.id, $event.target.value, '18_hole_course_rating')"
                                 class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
                         </div>
@@ -125,7 +125,7 @@
                             <label [for]="'slope18' + i" class="block text-md font-medium text-gray-700">
                                 18 Hole Slope
                             </label>
-                            <input type="number" [id]="'slope18' + i" [value]="tee['18_hole_slope_rating'] || ''"
+                            <input type="number" min="1" [id]="'slope18' + i" [value]="tee['18_hole_slope_rating'] || ''"
                                 (input)="updateTeeValue(tee.id, $event.target.value, '18_hole_slope_rating')"
                                 class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
                         </div>
@@ -159,7 +159,7 @@
                             <label [for]="'ratingF9' + i" class="block text-md font-medium text-gray-700">
                                 Front 9 Rating
                             </label>
-                            <input type="number" [id]="'ratingF9' + i" [value]="tee['9_hole_front_course_rating'] || ''"
+                            <input type="number" min="1" [id]="'ratingF9' + i" [value]="tee['9_hole_front_course_rating'] || ''"
                                 (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_front_course_rating')"
                                 class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
                         </div>
@@ -168,7 +168,7 @@
                             <label [for]="'slopeF9' + i" class="block text-md font-medium text-gray-700">
                                 Front 9 Slope
                             </label>
-                            <input type="number" [id]="'slopeF9' + i" [value]="tee['9_hole_front_slope_rating'] || ''"
+                            <input type="number" min="1" [id]="'slopeF9' + i" [value]="tee['9_hole_front_slope_rating'] || ''"
                                 (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_front_slope_rating')"
                                 class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
                         </div>
@@ -177,7 +177,7 @@
                             <label [for]="'ratingB9' + i" class="block text-md font-medium text-gray-700">
                                 Back 9 Rating
                             </label>
-                            <input type="number" [id]="'ratingB9' + i" [value]="tee['9_hole_back_course_rating'] || ''"
+                            <input type="number" min="1" [id]="'ratingB9' + i" [value]="tee['9_hole_back_course_rating'] || ''"
                                 (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_back_course_rating')"
                                 class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
                         </div>
@@ -186,7 +186,7 @@
                             <label [for]="'slopeB9' + i" class="block text-md font-medium text-gray-700">
                                 Back 9 Slope
                             </label>
-                            <input type="number" [id]="'slopeB9' + i" [value]="tee['9_hole_back_slope_rating'] || ''"
+                            <input type="number" min="1" [id]="'slopeB9' + i" [value]="tee['9_hole_back_slope_rating'] || ''"
                                 (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_back_slope_rating')"
                                 class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
                         </div>
@@ -247,7 +247,7 @@
 
                             <ng-container>
                                 <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" [value]="hole.teeDistances[tee.tee_id] "
+                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
                                         (input)="onTeeInput($event.target.value,tee.tee_id,hole,9)"
                                         class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
@@ -261,7 +261,7 @@
 
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" [value]="hole.teeDistances[tee.tee_id] "
+                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
                                         (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
@@ -279,7 +279,7 @@
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>19">
                                 <ng-container *ngFor="let hole of holeSetfor27; let i = index">
-                                    <input type="number" [value]="hole.teeDistances[tee.tee_id] "
+                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
                                         (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
@@ -287,7 +287,7 @@
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>28">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" [value]="hole.teeDistances[tee.tee_id] "
+                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
                                         (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
                                         class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
@@ -305,7 +305,7 @@
 
                             <ng-container>
                                 <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" value="{{
+                                    <input type="number" min="1" value="{{
                                                                 hole['par']
                                                             }}" (input)="
                                                                 onParInput(
@@ -327,7 +327,7 @@
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" value="{{
+                                    <input type="number" min="1" value="{{
                                                                 hole['par']
                                                             }}" (input)="
                                                                 onParInput(
@@ -354,7 +354,7 @@
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>19">
                                 <ng-container *ngFor="let hole of holeSetfor27; let i = index">
-                                    <input type="number" value="{{
+                                    <input type="number" min="1" value="{{
                                                                 hole['par']
                                                             }}" (input)="
                                                                 onParInput(
@@ -398,7 +398,7 @@
 
                             <ng-container>
                                 <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" (input)="
+                                    <input type="number" min="1" (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target
@@ -419,7 +419,7 @@
                             </ng-container>
                             <ng-container *ngIf="NoOfHoles>10">
                                 <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" (input)="
+                                    <input type="number" min="1" (input)="
                                                                 onIndexInput(
                                                                     $event
                                                                         .target

@@ -187,7 +187,7 @@ export const GetPlayersMerge = gql`
             membershipNumber
             membership {
                 club {
-                id
+                    id
                     name
                 }
             }
@@ -206,7 +206,7 @@ export const getPlayersListMergeClub = gql`
             membershipNumber
             membership {
                 club {
-                id
+                    id
                     name
                 }
             }
@@ -418,6 +418,8 @@ export const GetPlayersByClub = gql`
             email
             membershipNumber
             membershipQL: membership {
+            clubId
+            playerId
                 suspended
                 club {
                     id
@@ -678,7 +680,7 @@ export const getTotalFlightPlayedAdmin = gql`
             membershipQL: membership {
                 suspended
                 club {
-                id
+                    id
                     name
                 }
             }
@@ -795,10 +797,10 @@ export const CreateAccountQL = gql`
 export const emailAction = gql`
     query mailChimpIntegrationAction($request: mailChimpInput!) {
         mailChimpIntegration(request: $request) {
-        data
+            data
+        }
     }
-}`;
-
+`;
 
 export const getPlayersByID = gql`
     query getPlayersByID($where: player_bool_exp!) {
@@ -961,7 +963,7 @@ export const GetPlayerByFirstName = gql`
             membershipNumber
             membership {
                 club {
-                id
+                    id
                     name
                 }
             }
@@ -1151,7 +1153,14 @@ export const UpdateMutation = gql`
                 id
             }
         }
-        delete_club_member(where: { playerId: { _eq: $playerID } }) {
+        delete_club_member(
+            where: {
+                _and: [
+                    { playerId: { _eq: $playerID } }
+                    { clubId: { _eq: $clubID } }
+                ]
+            }
+        ) {
             affected_rows
         }
         insert_club_member(
@@ -1340,10 +1349,11 @@ export const PlayerFlightScoresQuery = gql`
                         index
                         par
                     }
-                        player{
-                        id 
+                    player {
+                        id
                         firstName
-                        lastName}
+                        lastName
+                    }
                 }
                 course {
                     id
