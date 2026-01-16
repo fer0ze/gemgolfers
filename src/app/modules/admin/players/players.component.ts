@@ -176,7 +176,7 @@ export class PlayersComponent implements OnInit {
             this.Players = data.player;
             //console.log(data);
             for (let obj of this.Players) {
-                let clubName = obj?.membershipQL?.filter(a => a.clubId == this.loggedInuser?.adminClubId).map(a => a?.club?.name);
+                let clubName = obj?.membershipQL?.filter(a => a.clubId == this.loggedInuser?.adminClubId).map(b => b?.club?.name);
                 let Fname = obj.firstName
                     ? obj.firstName.trim()
                     : obj.firstName;
