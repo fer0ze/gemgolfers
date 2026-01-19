@@ -483,33 +483,26 @@ export class HandicapsComponent implements OnInit {
             let count = 0;
 
             this.dataPlayers.player.forEach((element) => {
-                if (
-                    element.membershipNumber != null &&
-                    element.membershipNumber != '' &&
-                    (element.handicapWhsIndex != null || element.handicap > 0)
-                ) {
-                    count++;
-                    let handicapIndex =
-                        element.handicapWhsIndex != null
-                            ? element.handicapWhsIndex
-                            : element.handicap;
-                    let ratings = this.getTeesRating(handicapIndex);
-                    var temp = [
-                        count,
-                        element.membershipNumber,
-                        element.firstName + ' ' + element.lastName,
-                        element.playerCategory,
-                        element.handicapWhsIndex != null
-                            ? element.handicapWhsIndex.toFixed(1)
-                            : element.handicap.toFixed(1),
-                        ratings['BLACK'],//blue
-                        ratings['BLUE'],//white
-                        ratings['WHITE'],//yellow
-                        ratings['Black-Veterans'],//Balck
-                        ratings['RED'],//red
-                    ];
-                    rows.push(temp);
-                }
+
+                count++;
+                let handicapIndex = element.handicapWhsIndex;
+                let ratings = this.getTeesRating(handicapIndex);
+                var temp = [
+                    count,
+                    element.membershipNumber,
+                    element.firstName + ' ' + element.lastName,
+                    element.playerCategory,
+                    element.handicapWhsIndex != null
+                        ? element.handicapWhsIndex.toFixed(1)
+                        : '-',
+                    ratings['BLACK'] ?? '-',//blue
+                    ratings['BLUE'] ?? '-',//white
+                    ratings['WHITE'] ?? '-',//yellow
+                    ratings['Black-Veterans'] ?? '-',//Balck
+                    ratings['RED'] ?? '-',//red
+                ];
+                rows.push(temp);
+
             });
             // From HTML
             var columnStyles = {
