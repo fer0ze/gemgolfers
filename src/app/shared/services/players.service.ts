@@ -1725,6 +1725,7 @@ export class PlayersService {
         const CLUB_CATEGORIES: PlayerCategory[] = [
             { id: 1, name: 'Amateurs' },
             { id: 2, name: 'Senior' },
+            { id: 3, name: 'Junior' },
             { id: 7, name: 'Veterans' },
             { id: 9, name: 'Ladies' },
         ]

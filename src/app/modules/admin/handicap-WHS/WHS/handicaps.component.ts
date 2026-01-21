@@ -354,7 +354,7 @@ export class HandicapsComponent implements OnInit {
                 teeHandicap = ratings['WHITE'];
             } else if (cat === 'Veterans') {
                 teeHandicap = ratings['Black-Veterans'];
-            } else if (cat === 'Ladies') {
+            } else if (cat === 'Ladies' || cat.includes('Junior')) {
                 teeHandicap = ratings['RED'];
             }
 
@@ -482,7 +482,7 @@ export class HandicapsComponent implements OnInit {
 
             let count = 0;
 
-            this.dataPlayers.player.forEach((element) => {
+            this.WHSSource.data.forEach((element) => {
 
                 count++;
                 let handicapIndex = element.handicapWhsIndex;
