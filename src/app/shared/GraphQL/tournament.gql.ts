@@ -1823,10 +1823,11 @@ export const getDailyTeeTimeReportClub = gql`
                     { teeDate: { _lte: $fromDate } }
                 ]
             }
+            ,order_by: { teeDate: desc }
         ) {
             id
             teeDate
-            slots {
+            slots(order_by: { slotTime: asc }) {
                 id
                 FlightsQL: flight {
                     id

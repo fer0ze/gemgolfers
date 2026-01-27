@@ -341,10 +341,10 @@ export class HandicapsComponent implements OnInit {
                 player.handicapWhsIndex != null
                     ? player.handicapWhsIndex
                     : player.handicap;
-            if (player.id === '-MPn9llt470he1qOULgW') {
-                console.log(player);
+            // if (player.id === '-MPn9llt470he1qOULgW') {
+            //     console.log(player);
 
-            }
+            // }
             // Calculate ratings and determine teeHandicap
             let ratings = this.getTeesRating(handicapIndex);
             let teeHandicap = 0;
