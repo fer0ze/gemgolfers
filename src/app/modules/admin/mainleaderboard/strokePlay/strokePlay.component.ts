@@ -298,12 +298,18 @@ export class StrokePlayComponent implements OnInit, OnChanges {
             this.LeaderboardPlayers.sort((a, b) => {
                 return this.ComparatorScoreG(a, b, this.flightRound);
             });
-            this.sortLeadersGross(this.LeaderboardPlayers, round);
+            this.LeaderboardPlayers = this.sortLeadersGross(
+                this.LeaderboardPlayers.map(player => ({ ...player })),
+                round
+            );
         } else {
             this.LeaderboardPlayers.sort((a, b) => {
                 return this.ComparatorScoreN(a, b, this.flightRound);
             });
-            this.sortLeadersNet(this.LeaderboardPlayers, round);
+            this.LeaderboardPlayers = this.sortLeadersNet(
+                this.LeaderboardPlayers.map(player => ({ ...player })),
+                round
+            );
         }
     }
     getScoreByRoundG(item: any, round: number): string {
@@ -499,10 +505,8 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     updateCategoryNames() {
         let categoryNames: string[] = [];
         this.eventCategories = [];
-        this.Leaderboard.CategoriesQL = [...this.Leaderboard.CategoriesQL].sort(
-            (a, b) => a.category.localeCompare(b.category)
-        );
-        for (let c of this.Leaderboard.CategoriesQL) {
+        const sortedCategories = [...this.Leaderboard.CategoriesQL].sort(this.sortCategory);
+        for (let c of sortedCategories) {
             categoryNames.push(this.getTitle(c, 0));
             if (this.hasLimits(c)) {
                 if (this.hasMiddleLimits(c)) {
@@ -823,7 +827,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     private sortLeadersGross(leaderList: any[], round) {
         this.flightRound = round;
 
-        leaderList = leaderList.sort(this.ComparatorPositionGross(round));
+        leaderList = leaderList.map(leader => ({ ...leader }));
+
+        leaderList.sort(this.ComparatorPositionGross(round));
         let pos: number = 1;
         let tied: boolean;
 
@@ -848,11 +854,14 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 leaderList[i]['position'] = pos;
             }
         }
+        return leaderList;
     }
     private sortLeadersNet(leaderList: any[], round) {
         this.flightRound = round;
 
-        leaderList = leaderList.sort(this.ComparatorPositionNet(round));
+        leaderList = leaderList.map(leader => ({ ...leader }));
+
+        leaderList.sort(this.ComparatorPositionNet(round));
         let pos: number = 1;
         let tied: boolean;
 
@@ -877,6 +886,7 @@ export class StrokePlayComponent implements OnInit, OnChanges {
                 leaderList[i]['position'] = pos;
             }
         }
+        return leaderList;
 
     }
     ComparatorPositionGross(round) {
