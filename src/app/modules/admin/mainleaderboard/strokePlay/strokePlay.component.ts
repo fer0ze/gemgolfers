@@ -499,7 +499,9 @@ export class StrokePlayComponent implements OnInit, OnChanges {
     updateCategoryNames() {
         let categoryNames: string[] = [];
         this.eventCategories = [];
-        this.Leaderboard.CategoriesQL.sort(this.sortCategory);
+        this.Leaderboard.CategoriesQL = [...this.Leaderboard.CategoriesQL].sort(
+            (a, b) => a.category.localeCompare(b.category)
+        );
         for (let c of this.Leaderboard.CategoriesQL) {
             categoryNames.push(this.getTitle(c, 0));
             if (this.hasLimits(c)) {
