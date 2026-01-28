@@ -1,3 +1,39 @@
-<div mat-dialog-content>
-  <h4>{{ this.data["message"] }}</h4>
+<!-- Message only -->
+<div *ngIf="showMessage" mat-dialog-content>
+  <h4>{{ data?.message }}</h4>
+</div>
+
+<!-- Feedback form -->
+<div *ngIf="!showMessage" mat-dialog-content>
+  <div class="mb-4">
+    <h2 class="text-2xl font-semibold">We’d love your feedback</h2>
+    <p class="text-sm text-gray-500">
+      Report a bug, request a feature, or share general feedback
+    </p>
+  </div>
+
+  <form [formGroup]="feedbackForm" class="flex flex-col gap-4">
+    <mat-form-field appearance="outline" class="w-full" [floatLabel]="'always'">
+      <mat-label>Feedback Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option value="GENERAL_FEEDBACK">General Feedback</mat-option>
+        <mat-option value="BUG_REPORT">Report a Bug</mat-option>
+        <mat-option value="FEATURE_REQUEST">Feature Request / Enhancement</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" [floatLabel]="'always'" class="w-full">
+      <mat-label>Message</mat-label>
+      <textarea matInput rows="4" formControlName="message"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+
+
+<!-- Actions -->
+<div mat-dialog-actions align="end" *ngIf="!showMessage">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="feedbackForm.invalid" (click)="submitFeedback()">
+    Submit
+  </button>
 </div>

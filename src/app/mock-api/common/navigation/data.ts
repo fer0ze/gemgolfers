@@ -315,7 +315,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'feedback',
-        title: 'Admin Side',
+        title: 'Support Side',
         type: 'group',
         icon: 'heroicons_outline:heart',
         moduleId: '040202b8-8abd-4de6-a80d-1d6a2f91130c',
@@ -360,6 +360,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/banner',
                 moduleId: 'a0147639-d995-4048-813d-45c480079f57',
             },
+            // {
+            //     id: 'feedback.contact',
+            //     title: 'Contact Us',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:camera',
+            //     link: '/contactUs',
+            //     moduleId: 'c3fd09da-a101-4d17-a2b3-a50ec6cbd538',
+            // },
         ],
     },
 ];

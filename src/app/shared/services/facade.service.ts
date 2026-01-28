@@ -54,12 +54,18 @@ export class FacadeService {
   AddClub(club: Club) {
     return this.clubService.AddClub(club);
   }
+  addFeedback(feedback: any) {
+    return this.clubService.addFeedback(feedback);
+  }
 
   AddClubSchedule(schedule: ClubSchedule) {
     return this.clubService.AddClubSchedule(schedule);
   }
   getAllFeedback() {
     return this.clubService.getAllFeedback();
+  }
+  getAllFeedbackByUserId(userId: string) {
+    return this.clubService.getAllFeedbackByUserId(userId);
   }
   getAllCoursesRequest() {
     return this.clubService.getAllCoursesRequest();

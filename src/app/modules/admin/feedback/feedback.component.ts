@@ -7,6 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnyAaaaRecord } from "dns";
 import { DialogShowfeedbackComponent } from "../dialogs/dialog-showfeedback/dialog-showfeedback.component";
+import { Constants, General, UniqueIdGenerator } from "app/shared/classes/general";
+import { LocalStorageService } from "app/shared/services/localStorage";
+import { UserSessionModel } from "app/shared/models/player.model";
 
 @Component({
   selector: "app-feedback",
@@ -14,22 +17,33 @@ import { DialogShowfeedbackComponent } from "../dialogs/dialog-showfeedback/dial
   styleUrls: ["./feedback.component.scss"],
 })
 export class FeedbackComponent implements OnInit {
+
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   feedback: any[] = [];
-  displayedColumns = ["id", "name", "type", "contact","createdAt", "details"];
+  displayedColumns = ["id", "name", "type", "contact", "createdAt", "details"];
   courseData: any;
-  constructor(private facadeService: FacadeService, public dialog: MatDialog) {}
+  public loggedInuser: UserSessionModel;
+
+  constructor(private facadeService: FacadeService, public dialog: MatDialog, public _localStorage: LocalStorageService, public snackBar: MatSnackBar) { }
 
   async ngOnInit() {
-    let feedbacks = await this.facadeService.getAllFeedback();
+
+    this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+    let feedbacks: any;
+    if (this._localStorage.isSuperAdmin()) {
+      feedbacks = await this.facadeService.getAllFeedback();
+    } else {
+      feedbacks = await this.facadeService.getAllFeedbackByUserId(this.loggedInuser.id);
+    }
     this.feedback = feedbacks.feedback;
     //console.log(this.feedback);
     this.dataSource = new MatTableDataSource(this.feedback);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
   showMessage(message) {
     //console.log(message);
     const dialogRef = this.dialog.open(DialogShowfeedbackComponent, {
@@ -37,6 +51,33 @@ export class FeedbackComponent implements OnInit {
       data: { message: message },
     });
   }
+
+  addNewFeedback() {
+    const dialogRef = this.dialog.open(DialogShowfeedbackComponent, {
+      width: "50%",
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      //console.log(`Dialog result: ${result}`);
+      if (result) {
+
+        let feedback = {
+          id: UniqueIdGenerator.generate(),
+          userId: this.loggedInuser.id,
+          type: result.type,
+          name: this.loggedInuser.firstName + ' ' + this.loggedInuser.lastName,
+          contact: this.loggedInuser.email,
+          message: result.message,
+        }
+        this.facadeService.addFeedback(feedback).then((res) => {
+          this.snackBar.open('Feedback submitted successfully!.', 'x', {
+            duration: 2000,
+          });
+          this.ngOnInit();
+        });
+      }
+    });
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches

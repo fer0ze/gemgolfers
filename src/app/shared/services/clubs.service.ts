@@ -9,7 +9,7 @@ import { map } from "rxjs/operators";
   providedIn: "root",
 })
 export class ClubsService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   public getClubsList(): Promise<any> {
     return new Promise((resolve) => {
@@ -133,7 +133,7 @@ export class ClubsService {
       this.apollo
         .watchQuery<any>({
           query: Query.getClubMemberAggregateByCategroyDashBoardAll,
-         
+
         })
         .valueChanges.subscribe(({ data }) => {
           resolve(data);
@@ -154,6 +154,36 @@ export class ClubsService {
                 address: club.address,
                 email: club.email,
                 phone: club.phone,
+              },
+            ],
+          },
+        })
+        .subscribe(
+          ({ data }) => {
+            resolve(true);
+          },
+          (error) => {
+            resolve(false);
+            //console.log("Could not add due to " + error);
+          }
+        );
+    });
+  }
+
+  public addFeedback(feedback): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.addFeedback,
+          variables: {
+            objects: [
+              {
+                id: feedback.id,
+                type: feedback.type,
+                message: feedback.message,
+                userId: feedback.userId,
+                name: feedback.name,
+                contact: feedback.contact,
               },
             ],
           },
@@ -287,6 +317,29 @@ export class ClubsService {
       this.apollo
         .subscribe({
           query: Query.Getfeedbacks,
+        })
+        .subscribe(({ data }) => {
+          if (!data) {
+            resolve(null);
+          } else {
+            ////console.log(data.club);
+            resolve(data);
+          }
+        });
+    });
+  }
+  public getAllFeedbackByUserId(userId: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .subscribe({
+          query: Query.getAllFeedbackByUserId,
+          variables: {
+            where: {
+              userId: {
+                _eq: userId,
+              },
+            },
+          },
         })
         .subscribe(({ data }) => {
           if (!data) {

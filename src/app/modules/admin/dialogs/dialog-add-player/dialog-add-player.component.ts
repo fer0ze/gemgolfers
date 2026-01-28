@@ -29,6 +29,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
     styleUrls: ['./dialog-add-player.component.scss'],
 })
 export class DialogAddPlayerComponent implements OnInit {
+
     public response: Player;
     public player: Player;
     tournamentQL: any;
@@ -186,6 +187,7 @@ export class DialogAddPlayerComponent implements OnInit {
     }
 
     async executePlayerCreation(playerFormValue: any) {
+
         let newFlag = true;
         let checkEmail: any = [];
         let checkPhone: any = [];
@@ -274,6 +276,7 @@ export class DialogAddPlayerComponent implements OnInit {
                     ? this.currentPlayer.fcmToken
                     : null,
             gemId: null,
+            addedBy: this.loggedInuser.id,
             firstName: playerFormValue.firstName,
             lastName: playerFormValue.lastName,
             gender: playerFormValue.gender,

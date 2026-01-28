@@ -35,13 +35,13 @@ import { DialogShowfeedbackComponent } from "../dialogs/dialog-showfeedback/dial
     CommonModule,
     MatTableModule,
     MatFormFieldModule,
-    MatPaginatorModule,FeedbackRoutingModule,
+    MatPaginatorModule, FeedbackRoutingModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     MatSortModule,
     MatCardModule,
-
+    ReactiveFormsModule,
     MatRadioModule,
     MatSelectModule,
 
@@ -56,4 +56,4 @@ import { DialogShowfeedbackComponent } from "../dialogs/dialog-showfeedback/dial
   declarations: [FeedbackComponent, DialogShowfeedbackComponent],
   entryComponents: [DialogShowfeedbackComponent],
 })
-export class FeedbackModule {}
+export class FeedbackModule { }

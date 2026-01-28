@@ -75,11 +75,11 @@
 
                         <!-- Text -->
                         <div class=" cursor-pointer" (click)="goToStep(step.title,step.number)">
-                            <p class="font-semibold text-md"
+                            <p class="font-semibold"
                                 [ngClass]="currentStep >= step.number || currentTournament ? 'text-gray-800' : 'text-gray-500'">
                                 {{ step.title }}
                             </p>
-                            <p class="text-md text-gray-400">{{ step.description }}</p>
+                            <!-- <p class="text-md text-gray-400">{{ step.description }}</p> -->
                         </div>
                     </div>
                 </nav>
@@ -470,25 +470,25 @@
                                         setupMarshals($event.value)
                                     ">
                                             <mat-option value="ONLY_PLAYERS">Only Players</mat-option>
-                                            <mat-option value="ONLY_MARSHALS">Only Marshals</mat-option>
-                                            <mat-option value="PLAYERS_AND_MARSHALS">Players and Marshals</mat-option>
+                                            <mat-option value="ONLY_MARSHALS">Only Scorers </mat-option>
+                                            <mat-option value="PLAYERS_AND_MARSHALS">Players and Scorers</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                     <div *ngIf="isMarshals">
                                         <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                             [floatLabel]="'always'">
-                                            <mat-label>Marshals Start With</mat-label>
+                                            <mat-label>Scorers Start With</mat-label>
                                             <input matInput formControlName="marshalStart" maxlength="3"
                                                 class=" text-gray-700" />
 
-                                            <mat-hint align="start">Marshals username prefix(Only 3
+                                            <mat-hint align="start">Scorers username prefix(Only 3
                                                 Char)</mat-hint>
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="isMarshals">
                                         <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                             [floatLabel]="'always'">
-                                            <mat-label>No. of Marshals</mat-label>
+                                            <mat-label>No. of Scorers</mat-label>
                                             <input matInput formControlName="noofMarshals" type="number" min="1"
                                                 max="30" class=" text-gray-700" />
 
@@ -590,13 +590,13 @@
                             <!-- Club Members -->
                             <div class="border w-full border-gray-200 rounded-lg p-4 flex flex-col">
                                 <div class="flex justify-between items-center mb-4">
-                                    <h3 class="font-bold text-lg text-gray-800">Members
+                                    <h3 class="font-bold text-lg text-gray-800">Roasters
                                     </h3>
                                     <div class="flex gap-2">
                                         <button *ngIf="!hideClubs" (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                     font-semibold
                                     shadow-sm hover:bg-emerald-700 transition-colors">
-                                            Add New Member</button>
+                                            Add New</button>
                                         <button *ngIf="hideClubs" (click)="searchPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
                                     font-semibold
                                     shadow-sm hover:bg-emerald-700 transition-colors">
@@ -746,7 +746,7 @@
 
                                 <!-- Tournament Members -->
                                 <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
-                                    <h3 class="font-bold text-lg text-gray-800 mb-4">Tournament Members</h3>
+                                    <h3 class="font-bold text-lg text-gray-800 mb-4">Tournament Participants</h3>
                                     <div class="flex">
                                         <div class="flex flex-wrap justify-start">
                                             <span *ngFor="let catCount of categoryCounts">

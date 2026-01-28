@@ -79,6 +79,16 @@ export const AddMutation = gql`
     }
 `;
 
+export const addFeedback = gql`
+    mutation addFeedback($objects: [feedback_insert_input!]!) {
+        insert_feedback(objects: $objects) {
+            returning {
+                id
+            }
+        }
+    }
+`;
+
 export const UpdateMutation = gql`
     mutation updateMutation($where: club_bool_exp!, $set: club_set_input!) {
         update_club(where: $where, _set: $set) {
@@ -355,6 +365,21 @@ export const Getfeedbacks = gql`
         }
     }
 `;
+
+export const getAllFeedbackByUserId = gql`
+    query getAllFeedbackByUserId($where: feedback_bool_exp!) {
+        feedback(where: $where, order_by: { dateTime: desc }) {
+            id
+            type
+            name
+            contact
+            message
+            dateTime
+        }
+    }
+`;
+
+
 export const getAllCoursesRequest = gql`
     query getAllCoursesRequest {
         course_request(order_by: { createdAt: desc }) {
