@@ -151,6 +151,7 @@ export class DialogPlayerListComponent implements OnInit {
                         tournamentId: this.data.subTournamentID,
                         playerId: selectionArray[index].id,
                         status: true,
+                        category: selectionArray[index].playerCategory
                     };
                     tournamentMember.push(member);
                 }
@@ -251,14 +252,14 @@ export class DialogPlayerListComponent implements OnInit {
             ]),
 
             email: new FormControl('', [Validators.email]),
-            phone: new FormControl('', [Validators.required]),
-            dob: new FormControl('', [Validators.required]),
+            phone: new FormControl(''),
+            dob: new FormControl(''),
             playerCategory: new FormControl('', [Validators.required]),
             handicap: new FormControl('', [Validators.required]),
 
             playerClubMember: new FormControl(
                 this.loggedInuser ? this.loggedInuser.adminClubId : '',
-                [Validators.required]
+                [this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin() ? Validators.required : Validators.nullValidator]
             ),
             membershipNumber: new FormControl(''),
         });
@@ -343,7 +344,7 @@ export class DialogPlayerListComponent implements OnInit {
             firebaseUid: null,
 
             fcmToken: null,
-
+            addedBy: this.loggedInuser ? this.loggedInuser.id : null,
             gemId: null,
             firstName: playerFormValue.firstName,
             lastName: playerFormValue.lastName,
@@ -358,7 +359,7 @@ export class DialogPlayerListComponent implements OnInit {
             countryCode: playerFormValue.countryCode,
             extraData: playerFormValue.extraData,
             userRole: playerFormValue.isClubAdmin == true ? 2 : 3,
-            membership: clubMember,
+            membership: !this._localStorage.isTournamentManager() ? clubMember : null,
             membershipNumber: playerFormValue.membershipNumber,
         };
 
@@ -369,6 +370,13 @@ export class DialogPlayerListComponent implements OnInit {
             );
             ////console.log(isSuccess);
             if (isSuccess) {
+                let member: any = {
+                    tournamentId: this.data.tournamentID,
+                    playerId: player.id,
+                    status: true,
+                    category: player.playerCategory,
+                };
+                await this.saveMembers(member);
                 this.snackBar.open('Player has been created.', 'x', {
                     duration: 5000,
                 });
@@ -390,12 +398,9 @@ export class DialogPlayerListComponent implements OnInit {
     }
 
 
-    public Comparator(a, b) {
-        let gemIDA = parseInt(a['gemId'].slice(2));
-        let gemIDB = parseInt(b['gemId'].slice(2));
-        if (gemIDA < gemIDB) return 1;
-        if (gemIDA > gemIDB) return -1;
-
-        return 0;
+    async saveMembers(tournamentMember: TournamentMember[]) {
+        let result = <any>(
+            await this.facadeService.insertTournamentMember(tournamentMember)
+        );
     }
 }

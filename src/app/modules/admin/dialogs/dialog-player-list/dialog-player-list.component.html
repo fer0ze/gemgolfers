@@ -172,7 +172,7 @@
                         />
                         
                         <mat-error *ngIf="hasError('lastName', 'required')"
-                            >Address is required</mat-error
+                            >Last Name is required</mat-error
                         >
                         <mat-error *ngIf="hasError('lastName', 'maxlength')"
                             >You have more than 100 characters</mat-error
@@ -182,7 +182,7 @@
 
                     
 
-                    <mat-form-field class="w48 mx-1">
+                    <!-- <mat-form-field class="w48 mx-1">
                       <mat-label>Date of Birth</mat-label>
                         <input
                             matInput
@@ -196,7 +196,7 @@
                         ></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                         <mat-error>This field is required</mat-error>
-                    </mat-form-field>
+                    </mat-form-field> -->
 
                     <mat-form-field class="w48 mx-1">
                       <mat-label>Email</mat-label>
@@ -247,7 +247,7 @@
                             formControlName="handicap"
                         />
                         <mat-error *ngIf="hasError('handicap', 'required')"
-                            >Phone is required</mat-error
+                            >Handicap is required</mat-error
                         >
                         <mat-icon matSuffix>golf_course</mat-icon>
                     </mat-form-field>
@@ -267,7 +267,7 @@
                         <mat-icon matSuffix>category</mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field class="w48 mx-1">
+                    <mat-form-field *ngIf="_localStorage.isClubAdmin()" class="w48 mx-1">
                       <mat-label>Club</mat-label>
                         <mat-select
                             placeholder="Club"

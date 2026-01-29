@@ -41,7 +41,7 @@ export class DialogAddPlayerComponent implements OnInit {
     golfClubs: Club[] = [];
     listCountries: any[] = [];
     loggedInuser: Player;
-    showClub: boolean = true
+    showClub: boolean = true;
 
     constructor(
         public dialogRef: MatDialogRef<DialogAddPlayerComponent>,
@@ -86,7 +86,7 @@ export class DialogAddPlayerComponent implements OnInit {
             this.data.tournamentID
         );
         this.tournamentQL = data?.tournament?.[0];
-        
+
         if (this._localStorage.isTournamentManager()) {
             this.showClub = false;
         }

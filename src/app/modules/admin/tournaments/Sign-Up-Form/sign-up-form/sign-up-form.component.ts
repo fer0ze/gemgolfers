@@ -150,7 +150,7 @@ export class SignUpFormComponent implements OnInit {
                 return a.playerId == exist[0].id;
             });
             //console.log(find);
-            if ((find == undefined || Object.keys(find).length === 0) && this.showClub) {
+            if ((find == undefined || Object.keys(find).length === 0)) {
                 let member: any = {
                     tournamentId: this.tournamentID,
                     playerId: exist[0].id,
@@ -213,6 +213,12 @@ export class SignUpFormComponent implements OnInit {
                     this._facadeService.sendTransactionalEmail(player.email, player.firstName, password).subscribe();
                     let status = await this._facadeService.AddPlayer(player);
                     if (status) {
+                        let member: any = {
+                            tournamentId: this.tournamentID,
+                            playerId: player.id,
+                            status: true,
+                        };
+                        this.saveMembers(member);
                         // let member: any = {
                         //     tournamentId: this.tournamentID,
                         //     playerId: UniqueId,

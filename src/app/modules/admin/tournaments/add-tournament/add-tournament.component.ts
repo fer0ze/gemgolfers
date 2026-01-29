@@ -139,6 +139,7 @@ export class AddTournamentComponent implements OnInit {
     membersTeamSource: MatTableDataSource<Player | any>;
     isVeterans: boolean;
     isCreatingFlights: boolean = false;
+    skipCat: boolean = false;
     isJuniors: boolean;
     isLadies: boolean;
     isProfessionals: boolean;
@@ -148,6 +149,7 @@ export class AddTournamentComponent implements OnInit {
     hideClubs: boolean = true;
     showTexas: boolean = false;
     copied: boolean = false;
+    copiedC: boolean = false;
     showSuccessPopup: boolean = false;
     showMatchPlay: boolean = false;
     showMultipleCourses: boolean = false;
@@ -158,6 +160,7 @@ export class AddTournamentComponent implements OnInit {
     clubTitle: string;
     sDate: Date;
     registrationLink: string = '';
+    joinCode: string = '';
     tournamentID: string;
     subTournamentID: string = '';
     public selectedTime = '08:00 AM';
@@ -513,6 +516,7 @@ export class AddTournamentComponent implements OnInit {
 
         if (this.tournamentID) {
             this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
+            this.joinCode = '';
             this.valid1.reset();
             let tournamentInfo = await this.facadeService.getTournamentByID(
                 this.tournamentID
@@ -531,8 +535,10 @@ export class AddTournamentComponent implements OnInit {
 
             if (this.currentTournament) {
 
-                this.noOfRounds = Array.from({ length: this.currentTournament.noOfRounds }, (_, i) => i + 1);
+                this.skipCat = this.currentTournament.skipCategory ? this.currentTournament.skipCategory : false;
 
+                this.noOfRounds = Array.from({ length: this.currentTournament.noOfRounds }, (_, i) => i + 1);
+                this.joinCode = this.currentTournament.inviteCode;
                 this.maxDate = new Date(this.currentTournament.endDate);
                 this.minDate = new Date(this.currentTournament.startDate);
                 this.formArray.get([0]).patchValue({
@@ -705,7 +711,7 @@ export class AddTournamentComponent implements OnInit {
                             updatedPlayer.playerCategory = p.category;
                         }
 
-                        
+
                         // // If category exists on parent object, update PlayerQL
                         // if (p.category !== undefined && p.category !== null) {
                         //     playerQL['playerCategory'] = p.category;   // <-- update PlayerQL prop
@@ -971,6 +977,14 @@ export class AddTournamentComponent implements OnInit {
             });
         }
     }
+    copyCode(): void {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(this.joinCode).then(() => {
+                this.copiedC = true;
+                setTimeout(() => this.copiedC = false, 2000);
+            });
+        }
+    }
 
     backStep() {
         if (this.currentStep > 1) {
@@ -1064,7 +1078,7 @@ export class AddTournamentComponent implements OnInit {
         if (cat != 'Teams') {
             return this._formBuilder.group({
                 name: [
-                    cat ? cat.name : '',
+                    cat?.name ?? cat,
                     Validators.compose([Validators.required]),
                 ],
                 playersperFlight: [
@@ -1905,9 +1919,13 @@ export class AddTournamentComponent implements OnInit {
         if (
             this.formArray.get([0]).value.courseInfo[0].matchFormat == 'STROKE_PLAY'
         ) {
-            FilteredPL = this.tournamentMembers.filter((a) => {
-                return a.playerCategory == PLcategory;
-            });
+            if (PLcategory && PLcategory != 'All') {
+                FilteredPL = this.tournamentMembers.filter((a) => {
+                    return a.playerCategory == PLcategory;
+                });
+            } else {
+                FilteredPL = [...this.tournamentMembers];
+            }
         } else {
             if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.TEXAS_SCRAMBLE || this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
                 this.showTexas = true;
@@ -2316,6 +2334,10 @@ export class AddTournamentComponent implements OnInit {
                     }
                     // }
                 }
+                if (this.skipCat) {
+                    this.addFlightField('All');
+                }
+
                 //console.log(
                 //     this.formArray.get([0]).get('clubctgies').value.length
                 // );
@@ -2331,6 +2353,7 @@ export class AddTournamentComponent implements OnInit {
         // }
         //this.router.navigate(["/tournaments/view/" + this.tournamentID]);
     }
+
     datechanged(event, t) {
         //console.log(event);
         //console.log(t);
@@ -2660,6 +2683,7 @@ export class AddTournamentComponent implements OnInit {
 
         console.log(this.formArray);
         let state = this._localStorage.get(Constants.STATE);
+        this.joinCode = this.generateTMCode();
 
         let tournament = {
             id: (this.tournamentID) ? this.tournamentID : UniqueIdGenerator.generate(),
@@ -2675,13 +2699,14 @@ export class AddTournamentComponent implements OnInit {
                     : 0,
             teamMatch: this.formArray.get([0]).value.teamMatch == '1' ? false : true,
             pairsMatch: false,
-            inviteCode: this.generateTMCode(),
+            inviteCode: this.joinCode,
             interLeague: false,
             playingOnWhs: false,
             publicTournament: false,
             confirmParticipants: this.formArray.get([0]).value.askConfirmation,
             noOfRounds: this.formArray.get([0]).value.numOfRounds,
             activeRound: 1,
+            skipCategory: this.skipCat,
             matchFormat: this.formArray.get([0]).value.courseInfo[0].matchFormat,
             multiFormat: this.formArray.get([0]).value.courseInfo[0].multiFormat ==
                 'SINGLE'
@@ -2870,9 +2895,45 @@ export class AddTournamentComponent implements OnInit {
             const data: any = await this.facadeService.getPlayersByID(this.loggedInuser.id);
 
             data.player.forEach(p => addUniquePlayer(p));
+
+            let dataFullTournaments: any;
+
+            dataFullTournaments =
+                await this.facadeService.getTournamentMembers(
+                    this.tournamentID
+                );
+            //console.log(dataFullTournaments);
+            // this.tournamentMembers = [];
+            for (let p of dataFullTournaments.TournamentMemberQL) {
+                const player = p.player;
+
+                const exists =
+                    this.tournamentMembers.some(m => m.id === player.id) ||
+                    this.membersSource?.data?.some(m => m.id === player.id);
+
+                if (!exists) {
+                    this.tournamentMembers.push(player);
+                }
+            }
+
+            //Add the tournament members to membersSource table and also need to get previous data in table
+            const tournamentIds = new Set(
+                this.tournamentMembers.map(p => p.id)
+            );
+
+            const filteredMembersSource = (this.membersSource?.data ?? []).filter(
+                p => !tournamentIds.has(p.id)
+            );
+
+            this.membersSource = new MatTableDataSource([
+                ...this.tournamentMembers,
+                ...filteredMembersSource
+            ]);
+
         }
 
         this.syncClubMembers();
+        // this.syncTournamentMembers();
     }
 
 
@@ -3461,7 +3522,7 @@ export class AddTournamentComponent implements OnInit {
             if (this.membersSource.data[index]) {
                 const player = this.membersSource.data[index];
 
-                if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY) {
+                if (this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY && selectedCategories.length > 0) {
                     if (!player) continue;
 
                     const allowedCategory = selectedCategories.includes(player.playerCategory);
@@ -3648,16 +3709,25 @@ export class AddTournamentComponent implements OnInit {
         }
     }
 
+    paneltToggle(event) {
+        this.skipCat = !this.skipCat;
+    }
+
     saveTournamentMembers() {
         let selectionArray = Object.assign({}, this.selection.selected);
         let members: any[] = [];
 
         for (let index in selectionArray) {
             if (selectionArray[index]) {
-                const founded = this.tournamentMembers.filter(
-                    (a) => a.id === selectionArray[index].id
-                );
-                if (founded.length === 0) {
+                // Check if member is already in this.membersSource.data and tournamentMembers
+
+                const founded = this.tournamentMembers.filter((a) => {
+                    return a.id == selectionArray[index].id;
+                });
+                const founded2 = this.membersSource.data.filter((a) => {
+                    return a.id == selectionArray[index].id;
+                });
+                if (founded.length === 0 && founded2.length === 0) {
                     members.push(selectionArray[index]);
                 }
             }

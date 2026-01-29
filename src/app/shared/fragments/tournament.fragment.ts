@@ -79,7 +79,9 @@ export const TournamentQL = gql`
         clubId
         courseId
         secondFormat
+        skipCategory
         adminId
+        inviteCode
         title
         courseHoleSets
         teamMatch

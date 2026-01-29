@@ -8,6 +8,8 @@ import { FacadeService } from 'app/shared/services/facade.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Constants } from 'app/shared/classes/general';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 
 @Component({
     selector: 'settings-account',
@@ -29,6 +31,7 @@ export class SettingsAccountComponent implements OnInit {
     _loggedInUser: UserSessionModel;
     pictureUrl: string = '';
     file: any;
+    user: User;
 
     /**
      * Constructor
@@ -36,6 +39,7 @@ export class SettingsAccountComponent implements OnInit {
     constructor(
         private _formBuilder: UntypedFormBuilder,
         private _snackBar: MatSnackBar,
+        private _userService: UserService,
         private logger: LogsService,
         private _facadeService: FacadeService,
         private _localStorage: LocalStorageService,
@@ -188,6 +192,13 @@ export class SettingsAccountComponent implements OnInit {
                     // if(res){
                     //     this.
                     // }
+                    console.log(res);
+
+                    this._userService.update({
+                        ...this.user,
+                        avatar: res
+                    }).subscribe();
+
                     this.logger.log("User profile updated successfully", 'info');
                     this._snackBar.open("Account has been updated.", "x", {
                         duration: 5 * 3000,

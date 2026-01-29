@@ -19,8 +19,8 @@
         </div>
         <!-- User -->
         <div class="flex flex-col items-center w-full p-4">
-            <div class="relative w-fit h-fit">
-                <img class="" *ngIf="user.avatar && showAvatar" [src]="user.avatar" alt="User avatar">
+            <div class="flex h-20 items-center px-8 pt-10 mb-12 w-full justify-center">
+                <img class="w-32 h-32 rounded-full" *ngIf="user.avatar && showAvatar" [src]="user.avatar" alt="User avatar">
                 <mat-icon class="icon-size-24" *ngIf="!showAvatar || !user.avatar"
                     [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
             </div>

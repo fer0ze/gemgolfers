@@ -125,11 +125,15 @@ export class AuthMockApi {
                                             user[0].membership.length > 0
                                                 ? user[0].membership[0].club
                                                 : null;
-                                        let logo =
-                                            clubInfo && clubInfo.logo
-                                                ? clubInfo.logo
-                                                : 'e2esp.png';
-                                        this._user.avatar = 'assets/images/logo/' + logo + '';
+                                        let logo = clubInfo && clubInfo.logo
+                                            ? clubInfo.logo
+                                            : 'e2esp.png';
+                                        if (logo && clubInfo) {
+                                            this._user.avatar = 'assets/images/logo/' + logo + '';
+                                        } else {
+                                            this._user.avatar = user[0].picture;
+
+                                        }
                                         // user[0].tour_admin.length > 0 ? user[0].userRole = 4 : user[0].userRole;
                                         //this._user.role = user[0].role[0].length > 0 ? user[0].role[0].id : null;
                                         // if (user[0].permissions?.leagueAdmin && user[0].permissions?.tourAdmin) {

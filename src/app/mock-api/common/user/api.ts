@@ -23,7 +23,7 @@ export class UserMockApi {
             let logo = this.loggedInuser.club?.logo ? this.loggedInuser.club.logo : 'e2esp.png';
             this._user.email = this.loggedInuser.email;
             this._user.name = this.loggedInuser.name;
-            this._user.avatar = 'assets/images/logo/' + logo + '';
+            this._user.avatar = this.loggedInuser.picture;
         }
     }
 

@@ -867,6 +867,7 @@ export const getPlayerByEmailLogin = gql`
             firstName
             email
             firebaseUid
+            picture
             lastName
             fullName
             userRole

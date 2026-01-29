@@ -2788,7 +2788,7 @@ export class ViewTournamentComponent implements OnInit {
             },
         });
 
-        dialogRef.afterClosed().subscribe(async(res) => {
+        dialogRef.afterClosed().subscribe(async (res) => {
             if (res) {
                 console.log(res);
 
@@ -3234,11 +3234,16 @@ export class ViewTournamentComponent implements OnInit {
 
         try {
             this.logger.log('Admin Click on Add New Member Btn on Members Tab', "info", this.tournamentID);
-
-
-            let datas = await this.facadeService.getPlayersListForTournament(
-                this.loggedInUser.adminClubId
-            );
+            let datas: any;
+            if (this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()) {
+                datas = await this.facadeService.getPlayersListForTournament(
+                    this.loggedInUser.adminClubId
+                );
+            } else {
+                datas = await this.facadeService.getPlayersByID(
+                    this.loggedInUser.id
+                );
+            }
             let subtournamentID =
                 this.dataFullTournament['SubTournamentQL'].length > 0
                     ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId

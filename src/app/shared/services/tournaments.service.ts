@@ -1159,6 +1159,7 @@ export class TournamentsService {
                                 title: tmnt.title,
                                 prefix: tmnt.prefix,
                                 secondFormat: tmnt.secondFormat,
+                                skipCategory: tmnt.skipCategory,
                                 courseHoleSets: tmnt.courseHoleSets,
                                 teamMatch: tmnt.teamMatch,
                                 pairsMatch: tmnt.pairsMatch,
