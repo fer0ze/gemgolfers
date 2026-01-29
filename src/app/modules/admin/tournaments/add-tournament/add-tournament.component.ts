@@ -2683,179 +2683,200 @@ export class AddTournamentComponent implements OnInit {
 
         console.log(this.formArray);
         let state = this._localStorage.get(Constants.STATE);
-        this.joinCode = this.generateTMCode();
 
-        let tournament = {
-            id: (this.tournamentID) ? this.tournamentID : UniqueIdGenerator.generate(),
-            clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
-            leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
-            courseId: this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id,
-            adminId: this.loggedInuser.id,
-            title: this.formArray.get([0]).value.titleFormCtrl,
-            prefix: this.formArray.get([0]).value.prefixFormCtrl,
-            courseHoleSets:
-                courseHoleSetsData.length > 0
-                    ? Number(courseHoleSetsData[0])
-                    : 0,
-            teamMatch: this.formArray.get([0]).value.teamMatch == '1' ? false : true,
-            pairsMatch: false,
-            inviteCode: this.joinCode,
-            interLeague: false,
-            playingOnWhs: false,
-            publicTournament: false,
-            confirmParticipants: this.formArray.get([0]).value.askConfirmation,
-            noOfRounds: this.formArray.get([0]).value.numOfRounds,
-            activeRound: 1,
-            skipCategory: this.skipCat,
-            matchFormat: this.formArray.get([0]).value.courseInfo[0].matchFormat,
-            multiFormat: this.formArray.get([0]).value.courseInfo[0].multiFormat ==
-                'SINGLE'
-                ? false
-                : true,
-            pointsFormats: this.showMatchPlay ? pointsFormatsObj : null,
-            subTournament: false,
-            pointsValues: pointsValues,
-            handicapAllocations: handicapAllocations,
-            tee: 'AMATEURS',
-            marshalsStartWith: this.formArray.get([0]).value.marshalStart,
-            noOfMarshals: this.formArray.get([0]).value.noofMarshals,
-            tee_id: 1,
-            scoreManagement: this.formArray.get([0]).value.scoreManagement,
-            startDate: General.parseToDate(
-                this.formArray.get([0]).value.startDateFormCtrl
-            ),
-            endDate: General.parseToDate(
-                this.formArray.get([0]).value.endDateFormCtrl
-            ),
-            flightsCategory: null,
-            started: true,
-            invited: false,
-            singleRound: false,
-            sponsorName: '',
-            sponsorLogo: '',
-            mobileLogoUrl: '',
-            strokeAllocation: this.formArray.get([0]).value.strokeAllocations,
-            webLogoUrl: '',
-            courseHoleSetsInverted:
-                courseHoleSetsData.length > 0
-                    ? courseHoleSetsData[1] == 'true'
-                        ? true
-                        : false
-                    : false,
-            categories: tournamentCats,
-            isSetupComplete: false,
-            currentTab: 1,
-            createdAt: new Date().toISOString(),
-            marshals: marshalsData,
-            flights: [],
-            members: [],
-            tourId: state == Constants.TOUR ? this._localStorage.get(Constants.TOUR_ID) : null,
-            tournament_round_courses: tournamentRoundCourses,
-            secondFormat: this.showSubtournament ? this.formArray.get([0]).value.secondFormat : null,
-        };
+        let courseId = this.formArray.get([0]).value.courseInfo[0]?.courseName?.course?.id ?? this.formArray.get([0]).value.courses[0]?.courseName?.id;
+        if (!courseId) {
+            this._fuseConfirmationService.open({
+                title: 'Error',
+                message: 'Please select a course to proceed or add a new course.',
+                actions: {
+                    cancel: {
+                        show: false,
+                    },
+                    confirm: {
+                        label: 'Add Course',
+                    },
+                },
+            }).afterClosed().subscribe((result) => {
+                if (result === 'confirmed') {
+                    this.openAddCourse();
+                }
+            })
+        } else {
+            this.joinCode = this.generateTMCode();
+            let tournament = {
+                id: (this.tournamentID) ? this.tournamentID : UniqueIdGenerator.generate(),
+                clubId: !this._localStorage.isClubAdmin() && !this._localStorage.isSuperAdmin() ? null : this.formArray.get([0]).value.clubsFormCtrl.id,
+                leagueId: state == Constants.LEAGUE ? this._localStorage.get(Constants.LEAGUE_ID) : null,
+                courseId: courseId,
+                adminId: this.loggedInuser.id,
+                title: this.formArray.get([0]).value.titleFormCtrl,
+                prefix: this.formArray.get([0]).value.prefixFormCtrl,
+                courseHoleSets:
+                    courseHoleSetsData.length > 0
+                        ? Number(courseHoleSetsData[0])
+                        : 0,
+                teamMatch: this.formArray.get([0]).value.teamMatch == '1' ? false : true,
+                pairsMatch: false,
+                inviteCode: this.joinCode,
+                interLeague: false,
+                playingOnWhs: false,
+                publicTournament: false,
+                confirmParticipants: this.formArray.get([0]).value.askConfirmation,
+                noOfRounds: this.formArray.get([0]).value.numOfRounds,
+                activeRound: 1,
+                skipCategory: this.skipCat,
+                matchFormat: this.formArray.get([0]).value.courseInfo[0].matchFormat,
+                multiFormat: this.formArray.get([0]).value.courseInfo[0].multiFormat ==
+                    'SINGLE'
+                    ? false
+                    : true,
+                pointsFormats: this.showMatchPlay ? pointsFormatsObj : null,
+                subTournament: false,
+                pointsValues: pointsValues,
+                handicapAllocations: handicapAllocations,
+                tee: 'AMATEURS',
+                marshalsStartWith: this.formArray.get([0]).value.marshalStart,
+                noOfMarshals: this.formArray.get([0]).value.noofMarshals,
+                tee_id: 1,
+                scoreManagement: this.formArray.get([0]).value.scoreManagement,
+                startDate: General.parseToDate(
+                    this.formArray.get([0]).value.startDateFormCtrl
+                ),
+                endDate: General.parseToDate(
+                    this.formArray.get([0]).value.endDateFormCtrl
+                ),
+                flightsCategory: null,
+                started: true,
+                invited: false,
+                singleRound: false,
+                sponsorName: '',
+                sponsorLogo: '',
+                mobileLogoUrl: '',
+                strokeAllocation: this.formArray.get([0]).value.strokeAllocations,
+                webLogoUrl: '',
+                courseHoleSetsInverted:
+                    courseHoleSetsData.length > 0
+                        ? courseHoleSetsData[1] == 'true'
+                            ? true
+                            : false
+                        : false,
+                categories: tournamentCats,
+                isSetupComplete: false,
+                currentTab: 1,
+                createdAt: new Date().toISOString(),
+                marshals: marshalsData,
+                flights: [],
+                members: [],
+                tourId: state == Constants.TOUR ? this._localStorage.get(Constants.TOUR_ID) : null,
+                tournament_round_courses: tournamentRoundCourses,
+                secondFormat: this.showSubtournament ? this.formArray.get([0]).value.secondFormat : null,
+            };
 
-        //console.log(tournament);
+            //console.log(tournament);
 
-        let result = <any>(
-            await this.facadeService.createTournamentMarshals(marshalsData)
-        );
-
-        if (this.formArray.get([0]).value.prefixFormCtrl) {
-            let checkPrfix: any = [];
-            checkPrfix = <Tournament>(
-                await this.facadeService.checkPrefix(
-                    this.formArray.get([0]).value.prefixFormCtrl
-                )
+            let result = <any>(
+                await this.facadeService.createTournamentMarshals(marshalsData)
             );
 
-            //console.log(checkPrfix);
-
-            if (checkPrfix.length > 0) {
-                this.snackBar.open('Prefix already exist.', 'x', {
-                    duration: 5000,
-                });
-            } else {
-                let result = <any>(
-                    await this.facadeService.addTournament(tournament)
-                    // //console.log('a')
+            if (this.formArray.get([0]).value.prefixFormCtrl) {
+                let checkPrfix: any = [];
+                checkPrfix = <Tournament>(
+                    await this.facadeService.checkPrefix(
+                        this.formArray.get([0]).value.prefixFormCtrl
+                    )
                 );
-                this.currentTournament = tournament;
-                //console.log(result);
-                if (result) {
-                    this.editTournament = true
 
-                    // this.valid2.reset();
-                    this.setState(this.valid1, false);
-                    this.setState(this.valid2, false);
+                //console.log(checkPrfix);
 
-                    // if (
-                    //     this.showSubtournament == true
-                    // ) {
-                    //     this.createSubtournament(this.tournamentID);
-                    // }
-                    this.valid1.reset();
-                    this.valid2.reset();
-                    this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
-                    this.showSuccessPopup = true;
-                    // this.snackBar.open('Tournament has been created.', 'x', {
-                    //     duration: 3000,
-                    // });
-                    // this.valid2.reset();
-
-
-                    let selectedClubId: string =
-                        this._localStorage.isClubAdmin()
-                            ? this.loggedInuser.adminClubId
-                            : this.formArray.get([0]).value.clubsFormCtrl
-                                .id;
-                    //console.log(selectedClubId);
-                    //console.log(
-                    //     this.formArray.get([0]).get('clubctgies').value
-                    // );
-
-
-                    this.refreshPlayerList(selectedClubId)
-
-                    //console.log(this.clubMembers);
-
+                if (checkPrfix.length > 0) {
+                    this.snackBar.open('Prefix already exist.', 'x', {
+                        duration: 5000,
+                    });
+                } else {
+                    let result = <any>(
+                        await this.facadeService.addTournament(tournament)
+                        // //console.log('a')
+                    );
                     this.currentTournament = tournament;
+                    //console.log(result);
+                    if (result) {
+                        this.editTournament = true
 
-                    // stepper.next();
-                    // this.currentTitle = 'Select Players';
-                    // this.currentStep++;
-                    console.log(this.clubMembers);
+                        // this.valid2.reset();
+                        this.setState(this.valid1, false);
+                        this.setState(this.valid2, false);
 
-                    //this.dataSource = new MatTableDataSource(this.clubMembers);
+                        // if (
+                        //     this.showSubtournament == true
+                        // ) {
+                        //     this.createSubtournament(this.tournamentID);
+                        // }
+                        this.valid1.reset();
+                        this.valid2.reset();
+                        this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
+                        this.showSuccessPopup = true;
+                        // this.snackBar.open('Tournament has been created.', 'x', {
+                        //     duration: 3000,
+                        // });
+                        // this.valid2.reset();
 
+
+                        let selectedClubId: string =
+                            this._localStorage.isClubAdmin()
+                                ? this.loggedInuser.adminClubId
+                                : this.formArray.get([0]).value.clubsFormCtrl
+                                    .id;
+                        //console.log(selectedClubId);
+                        //console.log(
+                        //     this.formArray.get([0]).get('clubctgies').value
+                        // );
+
+
+                        this.refreshPlayerList(selectedClubId)
+
+                        //console.log(this.clubMembers);
+
+                        this.currentTournament = tournament;
+
+                        // stepper.next();
+                        // this.currentTitle = 'Select Players';
+                        // this.currentStep++;
+                        console.log(this.clubMembers);
+
+                        //this.dataSource = new MatTableDataSource(this.clubMembers);
+
+                    }
+                    // if (result) {
+
+
+                    //   const dialogRef = this.dialog.open(DialogOverviewComponent, {
+                    //     width: "350px",
+                    //     data: "Do you want to Add Members Now ?",
+                    //   });
+                    //   dialogRef.afterClosed().subscribe((result) => {
+                    //     if (result) {
+                    //       this.snackBar.open("Tournament has been created.", "x", {
+                    //         duration: 5000,
+                    //       });
+                    //       this.router.navigate([
+                    //         "/tournaments/manage/" + this.tournamentID,
+                    //       ]);
+                    //     } else {
+                    //       this.snackBar.open("Tournament has been created.", "x", {
+                    //         duration: 5000,
+                    //       });
+                    //       this.router.navigate(["/tournaments/view/" + this.tournamentID]);
+                    //     }
+                    //   });
+
+                    //   this.reset();
+                    //   this.router.navigate(['/tournaments/view/' + this.tournamentID]);
+                    // }
                 }
-                // if (result) {
-
-
-                //   const dialogRef = this.dialog.open(DialogOverviewComponent, {
-                //     width: "350px",
-                //     data: "Do you want to Add Members Now ?",
-                //   });
-                //   dialogRef.afterClosed().subscribe((result) => {
-                //     if (result) {
-                //       this.snackBar.open("Tournament has been created.", "x", {
-                //         duration: 5000,
-                //       });
-                //       this.router.navigate([
-                //         "/tournaments/manage/" + this.tournamentID,
-                //       ]);
-                //     } else {
-                //       this.snackBar.open("Tournament has been created.", "x", {
-                //         duration: 5000,
-                //       });
-                //       this.router.navigate(["/tournaments/view/" + this.tournamentID]);
-                //     }
-                //   });
-
-                //   this.reset();
-                //   this.router.navigate(['/tournaments/view/' + this.tournamentID]);
-                // }
             }
         }
+
     }
 
     async refreshPlayerList(selectedClubId: string) {
