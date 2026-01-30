@@ -200,7 +200,7 @@ export class AddDailyRoundComponent implements OnInit {
                 let tee = {
                     name: obj.name_by_club,
                     color: obj.color,
-                    tee_id: obj.tee_id,
+                    tee_id: obj.tee_id.toString(),
                 };
                 this.tees.push(tee);
             }
@@ -459,19 +459,25 @@ export class AddDailyRoundComponent implements OnInit {
 
                         attendance: true,
                     };
-
                     this.flightMembers.push(member);
+
+                    let teeId = General.getPlayersTe(player[0].playerCategory);
+
                     let playerTee = player[0].playerCategory;
+
                     if (playerTee == 'Senior Amateurs') {
                         playerTee = 'Seniors';
                     }
+
                     const updatedPlayer = {
                         ...player[0],
-                        playingTee: playerTee.toUpperCase()
+                        playingTee: playerTee.toUpperCase(),
+                        tee_id: teeId?.id ?? "1",
                     };
+
                     let selectedData = {
-                        value: updatedPlayer['playingTee'],
-                        text: updatedPlayer['playingTee'],
+                        value: teeId?.id ?? "1",
+                        text: teeId?.result ?? updatedPlayer['playingTee'],
                     };
                     this.playerTees.set(updatedPlayer.id, selectedData);
                     this.tournamentMembers.push(updatedPlayer);
@@ -567,9 +573,10 @@ export class AddDailyRoundComponent implements OnInit {
                                 playerTee = 'Seniors';
                             }
                             playerTee = playerTee.toUpperCase();
+                            let teeId = General.getPlayersTe(playerTee);
                             let selectedData = {
-                                value: playerTee,
-                                text: playerTee,
+                                value: teeId?.id ?? "1",
+                                text: teeId?.result ?? "AMATEURS",
                             };
                             this.playerTees.set(result.player.id, selectedData);
 
@@ -596,7 +603,8 @@ export class AddDailyRoundComponent implements OnInit {
                                 membership: result.player.membership,
                                 membershipNumber:
                                     result.player.membershipNumber,
-                                playingTee: playerTee,
+                                playingTee: teeId?.result ?? playerTee,
+                                tee_id: teeId?.id ?? "1",
                             };
 
                             //console.log(obj);

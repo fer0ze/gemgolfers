@@ -208,6 +208,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
             if (member.playerId === playerId) {
                 return {
                     ...member,
+                    tee_id: selectedData.value,
                     playingTee: selectedData.text
                 };
             }
@@ -426,10 +427,10 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                     this.starterForm.value.members.forEach(obj => {
                         // Always ensure PlayerQL exists
 
-                        if (obj?.PlayerQL?.firstName &&  obj?.PlayerQL?.lastName) {
+                        if (obj?.PlayerQL?.firstName && obj?.PlayerQL?.lastName) {
                             obj.PlayerQL.fullName =
                                 `${obj.PlayerQL.firstName || ''} ${obj.PlayerQL.lastName || ''}`.trim();
-                        } 
+                        }
                     });
                     this.membersSource = new MatTableDataSource(
                         this.starterForm.value.members

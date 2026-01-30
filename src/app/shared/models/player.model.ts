@@ -28,7 +28,7 @@ export interface Player {
     handicapWhsIndex?: number;
     handicapIndexFreezeTill?: Date;
     playingTee?: string;
-    tee_id?: number;
+    tee_id?: any;
 }
 
 export interface UserSessionModel {

@@ -2245,7 +2245,7 @@ export class ViewDailyRoundComponent implements OnInit {
                 console.log(result);
                 if (result) {
                     ////console.log(result);
-                    //console.log(result);
+                    console.log(result);
                     const resultString = JSON.stringify(result);
                     // this.logger.log('Rsult from Dailog change Hole Set on Daily Round Page', "info", resultString);
 
