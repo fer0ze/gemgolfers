@@ -841,7 +841,7 @@ export class ViewDailyRoundComponent implements OnInit {
         ////console.log(this.coursesList)
         holesQLs = holesQLs.sort(this.Comparator);
 
-        console.log(holesQLs);
+        // console.log(holesQLs);
         //this.removeExtraHoleSets(holeSets, holesQLs, courseHoleSetsInverted);
         // this.getSelectedCourse("-LUFS3FCQKOGpJ2IEHmf");
         // //console.log(this.courseHoleSetNames);
@@ -1076,8 +1076,8 @@ export class ViewDailyRoundComponent implements OnInit {
                     let holesSetB = holesSets.find(
                         (x) => x.holeSets == obj.backId
                     );
-                    console.log(holesSetA);
-                    console.log(holesSetB);
+                    // console.log(holesSetA);
+                    // console.log(holesSetB);
                     let counter = 1;
                     for (let i of holes) {
                         if (holesSetA.id == i.holeSetId) {
@@ -1635,7 +1635,7 @@ export class ViewDailyRoundComponent implements OnInit {
             }
         }
         //console.log(playerScores);
-        console.log(deleteIds);
+        // console.log(deleteIds);
 
         ////console.log(playerScores.length);
 
@@ -2215,7 +2215,7 @@ export class ViewDailyRoundComponent implements OnInit {
             let updatedData = await this.facadeService.singleRoundFlightsQuery(
                 flightId
             );
-            console.log(updatedData);
+            // console.log(updatedData);
 
             if (!updatedData) return;
             else {
@@ -2242,10 +2242,10 @@ export class ViewDailyRoundComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe(async (result) => {
-                console.log(result);
+                // console.log(result);
                 if (result) {
                     ////console.log(result);
-                    console.log(result);
+                    // console.log(result);
                     const resultString = JSON.stringify(result);
                     // this.logger.log('Rsult from Dailog change Hole Set on Daily Round Page', "info", resultString);
 
@@ -3387,9 +3387,9 @@ export class ViewDailyRoundComponent implements OnInit {
         try {
             const combinedData = `flightId=${flightId}, playerId=${playerId}`;
             this.logger.log('Admin click delete player on Daily Round Page', "info", combinedData);
-            console.log(tournamentId);
-            console.log(flightId);
-            console.log(playerId);
+            // console.log(tournamentId);
+            // console.log(flightId);
+            // console.log(playerId);
 
             const dialogRef = this.dialog.open(DialogOverviewComponent, {
                 width: '350px',

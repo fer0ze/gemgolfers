@@ -40,6 +40,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
     styleUrls: ['./dialog-change-course-hole-set.component.scss'],
 })
 export class DialogChangeCourseHoleSetComponent implements OnInit {
+
     selectedCourseHoleSet: string;
     currentHoleSet: string;
     courseHoleSetNames;
@@ -101,7 +102,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        console.log(this.data);
+        // console.log(this.data);
         this.currentHoleSet =
             this.data.currentHoleSet + '_' + this.data.courseHoleSetsInverted;
         this.selectedCourseHoleSet =
@@ -237,6 +238,7 @@ export class DialogChangeCourseHoleSetComponent implements OnInit {
                 }
             });
     }
+
     async getCourseTees(course) {
         let tee = await this.facadeService.getTeesOfCourse(course);
         if (tee['course_tees'].length > 0) {

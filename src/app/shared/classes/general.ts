@@ -255,7 +255,7 @@ export class General {
     }
 
     public static getTeeYards(teeDistance, tee, courseId, holeId, latLong) {
-        console.log(teeDistance);
+        // console.log(teeDistance);
         let teeYards = [];
         let lat, lng;
         if (Object.keys(teeDistance).length != 0) {
@@ -308,7 +308,7 @@ export class General {
     }
 
     public static getTeeYard(teeDistance, tee, courseId, holeId) {
-        console.log(teeDistance);
+        // console.log(teeDistance);
         let teeYards = [];
         let lat, lng;
         if (Object.keys(teeDistance).length != 0) {
