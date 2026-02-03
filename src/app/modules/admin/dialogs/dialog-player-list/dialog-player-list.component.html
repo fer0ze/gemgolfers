@@ -238,7 +238,7 @@
                     </mat-form-field>
 
                     <mat-form-field class="w48 mx-1">
-                      <mat-label>Handicap</mat-label>
+                      <mat-label>Playing Handicap</mat-label>
                         <input
                             matInput
                             type="text"
@@ -252,7 +252,7 @@
                         <mat-icon matSuffix>golf_course</mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field class="w48 mx-1">
+                    <mat-form-field class="w48 mx-1" >
                       <mat-label>Category</mat-label>
                         <mat-select
                             placeholder="Player Category"
@@ -287,7 +287,7 @@
 
                     
 
-                    <mat-form-field class="w48 mx-1">
+                    <mat-form-field class="w48 mx-1" *ngIf="_localStorage.isClubAdmin()">
                       <mat-label>MembershipNo</mat-label>
                         <input
                             matInput

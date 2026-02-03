@@ -273,48 +273,39 @@ export class DialogPlayerListComponent implements OnInit {
     };
     async executePlayerCreation(playerFormValue: any) {
         let newFlag = true;
-        let checkEmail: any = [];
-        let checkPhone: any = [];
-        let emailPlayerId: string = '';
-        let phonePlayerId: string = '';
+        let checkEmail: Player[] = [];
+        let checkPhone: Player[] = [];
 
-        if (this.playerForm.get('email').value)
-            checkEmail = <Player>(
-                await this.facadeService.getPlayerByEmail(
-                    this.playerForm.get('email').value
-                )
-            );
+        const email = this.playerForm.get('email')?.value;
+        const phone = this.playerForm.get('phone')?.value;
 
-        if (this.playerForm.get('phone').value)
-            checkPhone = <Player>(
-                await this.facadeService.getPlayerByPhone(
-                    this.playerForm.get('phone').value
-                )
-            );
+        if (email) {
+            checkEmail = await this.facadeService.getPlayerByEmail(email) as Player[];
+        }
 
-        ////console.log(checkEmail);
-        if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
+        if (phone) {
+            checkPhone = await this.facadeService.getPlayerByPhone(phone) as Player[];
+        }
 
-        if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
+        const existingPlayer = checkEmail[0] || checkPhone[0];
+
+        if (existingPlayer) {
+            const member = {
+                tournamentId: this.data.tournamentID,
+                playerId: existingPlayer.id,
+                category: existingPlayer.playerCategory,
+                status: true,
+            };
+
+            await this.facadeService.insertTournamentMember([member]);
+            this.dialogRef.close(existingPlayer);
+            return;
+        }
 
         if (
-            checkEmail.length > 0) {
-            this.snackBar.open('Email already exist.', 'x', {
-                duration: 5000,
-            });
-
-            return;
-        } else if (
-            checkPhone.length > 0
+            (checkEmail.length > 0 || checkPhone.length > 0)
         ) {
-            this.snackBar.open('Phone number already exist.', 'x', {
-                duration: 5000,
-            });
-
-            return;
-        } else if (checkEmail.length > 0 || checkPhone.length > 0) {
             newFlag = false;
-        } else {
         }
 
         let clubMember: ClubMembership[] = [];

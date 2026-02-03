@@ -2054,6 +2054,13 @@ export class FlightManagementComponent implements OnInit, OnChanges {
             let TM = [];
             for (let obj of this.tournamentMember) {
                 let teamColor = this.getTeamColor(obj.playerId);
+                //Check that the obj is not in all selectedMembers just
+
+                let existsInSelectedMembers = this.selectedMembers.some((members) => members.some((member) => member.id == obj.playerId));
+                if (existsInSelectedMembers) {
+                    continue;
+                }
+
                 obj.player = {
                     ...obj.player,
                     teamColor

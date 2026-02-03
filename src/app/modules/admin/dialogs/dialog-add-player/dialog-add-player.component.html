@@ -57,14 +57,14 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Handicap</mat-label>
+                    <mat-label>Playing Handicap</mat-label>
                     <input matInput type="text" placeholder="Player's Handicap" type="number"
                         formControlName="handicap" />
-                    <mat-error *ngIf="hasError('handicap', 'required')">Phone is required</mat-error>
+                    <mat-error *ngIf="hasError('handicap', 'required')">Handicap is required</mat-error>
                     <mat-icon matSuffix>golf_course</mat-icon>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field *ngIf="showCategory">
                     <mat-label>Category</mat-label>
                     <mat-select placeholder="Player Category" formControlName="playerCategory">
                         <mat-option *ngFor="let category of playerCategories" [value]="category.name">{{ category.name

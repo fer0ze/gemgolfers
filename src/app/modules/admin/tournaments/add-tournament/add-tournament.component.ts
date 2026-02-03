@@ -139,7 +139,7 @@ export class AddTournamentComponent implements OnInit {
     membersTeamSource: MatTableDataSource<Player | any>;
     isVeterans: boolean;
     isCreatingFlights: boolean = false;
-    skipCat: boolean = false;
+    skipCat: boolean = true;
     isJuniors: boolean;
     isLadies: boolean;
     isProfessionals: boolean;
@@ -190,7 +190,8 @@ export class AddTournamentComponent implements OnInit {
         { number: 1, title: 'Tournament Setup', description: 'Basic details & rules' },
         { number: 2, title: 'Select Players', description: 'Add members to event' },
         { number: 3, title: 'Groups Setup', description: 'Arrange player groups' },
-        { number: 4, title: 'Review & Confirm', description: 'Final arrangement' },
+        { number: 4, title: 'Banner Setup', description: 'Arrange player groups' },
+        { number: 5, title: 'Review & Confirm', description: 'Final arrangement' },
     ];
     @ViewChild('paginatorGSTN') Mempaginator: MatPaginator;
     @ViewChild('msort') Memsort: MatSort;
@@ -4301,6 +4302,7 @@ export class AddTournamentComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.clubMembers);
                     this.dataSource.sort = this.sort;
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource._updateChangeSubscription();
                 },
                 (error) => (this.isLoading = false)
             );
@@ -4936,8 +4938,37 @@ export class AddTournamentComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 ////console.log("record deleted.");
-                //console.log(result);
-                this.clubMembers.push(result);
+                console.log(result);
+                // this.clubMembers.push(result);
+                //Need to check that player is already exist in the this.membersSource or not
+
+
+
+                let isExist = false;
+                for (let member of this.membersSource.data) {
+                    if (member.id === result.id) {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (!isExist) {
+                    const existingData = this.membersSource?.data || [];
+                    const updatedData = [...existingData, ...[result]];
+                    if (!this.membersSource) {
+                        this.membersSource = new MatTableDataSource(updatedData);
+                    } else {
+                        // 🔹 Reassign merged data to the data source
+                        this.membersSource.data = updatedData;
+                    }
+                    this.membersSource._updateChangeSubscription();
+
+                }else{
+                    this.snackBar.open('Player already exist in the list.', 'x', {
+                        duration: 3000,
+                    });
+                }
+
                 ////console.log(this.clubMembers);
                 this.syncClubMembers();
             } else {
@@ -5077,6 +5108,31 @@ export class AddTournamentComponent implements OnInit {
         this._fuseConfirmationService.open({
             title: selectedFormat,
             message: infoText,
+            icon: {
+                name: 'info',
+                color: 'primary',
+            },
+            actions: {
+                cancel: {
+                    show: false,
+                },
+                confirm: {
+                    label: 'Close',
+                },
+            },
+        });
+    }
+
+    openInfo(text: string) {
+
+        // this.dialog.open(DialogOverviewComponent, {
+        //     width: '350px',
+        //     data: infoText
+        // });
+
+        this._fuseConfirmationService.open({
+            title: 'Information',
+            message: text,
             icon: {
                 name: 'info',
                 color: 'primary',

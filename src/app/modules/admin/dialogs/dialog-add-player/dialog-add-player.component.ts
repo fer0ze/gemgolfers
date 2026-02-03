@@ -22,6 +22,7 @@ import {
     General,
 } from '../../../../shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { TournamentMember } from 'app/shared/models/tournament.model';
 
 @Component({
     selector: 'app-dialog-add-player',
@@ -42,6 +43,7 @@ export class DialogAddPlayerComponent implements OnInit {
     listCountries: any[] = [];
     loggedInuser: Player;
     showClub: boolean = true;
+    showCategory: boolean = true;
 
     constructor(
         public dialogRef: MatDialogRef<DialogAddPlayerComponent>,
@@ -73,7 +75,7 @@ export class DialogAddPlayerComponent implements OnInit {
             email: new FormControl('', [Validators.email]),
             phone: new FormControl(''),
             dob: new FormControl(''),
-            playerCategory: new FormControl('', [Validators.required]),
+            playerCategory: new FormControl('Amateurs', [Validators.required]),
             handicap: new FormControl('', [Validators.required]),
             playerClubMember: new FormControl(
                 this._localStorage.isClubAdmin() ? this.loggedInuser.adminClubId : '',
@@ -89,6 +91,10 @@ export class DialogAddPlayerComponent implements OnInit {
 
         if (this._localStorage.isTournamentManager()) {
             this.showClub = false;
+        }
+
+        if (this.tournamentQL.skipCategory) {
+            this.showCategory = false;
         }
 
 
@@ -126,7 +132,7 @@ export class DialogAddPlayerComponent implements OnInit {
                 phone: this.currentPlayer[0].phone,
                 dob: this.currentPlayer[0].dob,
                 picture: this.currentPlayer[0].picture,
-                playerCategory: this.currentPlayer[0].playerCategory,
+                playerCategory: this.currentPlayer?.[0].playerCategory,
                 handicap: this.currentPlayer[0].handicap,
 
                 playerClubMember: this.loggedInuser
@@ -188,56 +194,48 @@ export class DialogAddPlayerComponent implements OnInit {
 
     async executePlayerCreation(playerFormValue: any) {
 
+        let tournamentMember: TournamentMember[] = [];
         let newFlag = true;
-        let checkEmail: any = [];
-        let checkPhone: any = [];
-        let emailPlayerId: string = '';
-        let phonePlayerId: string = '';
+        let checkEmail: Player[] = [];
+        let checkPhone: Player[] = [];
 
-        if (this.playerForm.get('email').value)
-            checkEmail = <Player>(
-                await this.facadeService.getPlayerByEmail(
-                    this.playerForm.get('email').value
-                )
-            );
+        const email = this.playerForm.get('email')?.value;
+        const phone = this.playerForm.get('phone')?.value;
 
-        if (this.playerForm.get('phone').value)
-            checkPhone = <Player>(
-                await this.facadeService.getPlayerByPhone(
-                    this.playerForm.get('phone').value
-                )
-            );
+        if (email) {
+            checkEmail = await this.facadeService.getPlayerByEmail(email) as Player[];
+        }
 
-        ////console.log(checkEmail);
-        if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
+        if (phone) {
+            checkPhone = await this.facadeService.getPlayerByPhone(phone) as Player[];
+        }
 
-        if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
+        const existingPlayer =
+            checkEmail[0] || checkPhone[0];
 
         if (
-            (checkEmail.length > 0 && !this.playerID) ||
-            (emailPlayerId !== '' && emailPlayerId !== this.playerID)
+            existingPlayer &&
+            (!this.playerID || existingPlayer.id !== this.playerID)
         ) {
-            this.snackBar.open('Email already exist.', 'x', {
-                duration: 5000,
-            });
+            const member = {
+                tournamentId: this.data.tournamentID,
+                playerId: existingPlayer.id,
+                category: existingPlayer.playerCategory,
+                status: true,
+            };
 
+            await this.facadeService.insertTournamentMember([member]);
+            this.dialogRef.close(existingPlayer);
             return;
-        } else if (
-            (checkPhone.length > 0 && !this.playerID) ||
-            (phonePlayerId !== '' && phonePlayerId !== this.playerID)
-        ) {
-            this.snackBar.open('Phone number already exist.', 'x', {
-                duration: 5000,
-            });
+        }
 
-            return;
-        } else if (
-            (checkEmail.length > 0 && this.playerID) ||
-            (checkPhone.length > 0 && this.playerID)
+        if (
+            (checkEmail.length > 0 || checkPhone.length > 0) &&
+            this.playerID
         ) {
             newFlag = false;
-        } else {
         }
+
 
         let clubMember: ClubMembership[] = [];
         this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
@@ -305,7 +303,7 @@ export class DialogAddPlayerComponent implements OnInit {
                     );
                     ////console.log(isSuccess);
                     if (isSuccess) {
-                        this.snackBar.open('Player has been created.', 'x', {
+                        this.snackBar.open('Player has been added.', 'x', {
                             duration: 5000,
                         });
                         this.reset();

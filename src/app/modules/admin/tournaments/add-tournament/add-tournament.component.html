@@ -23,22 +23,30 @@
 
                     <input type="text" id="first_name" [value]="registrationLink" readonly
                         class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <button (click)="copyLink()"
-                        class="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
+                    <div
+                        class="absolute flex gap-x-2 right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
-                        <svg *ngIf="!copied" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        <svg *ngIf="copied" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600"
-                            viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clip-rule="evenodd" />
-                        </svg>
+                        <button (click)="copyLink()"
+                            class="rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
-                    </button>
+                            <svg *ngIf="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <svg *ngIf="copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+
+                        </button>
+                        <span (click)="openInfo('Golfers who want to join via link')"
+                            class="text-gray-600 items-center flex cursor-pointer ">
+                            <mat-icon class="icon-size-2" class="icon">info</mat-icon>
+                        </span>
+                    </div>
                 </div>
                 <div *ngIf="joinCode" class="relative mt-2 flex items-center">
                     <label for="first_name" class="absolute text-sm text-gray-500 duration-300 transform
@@ -48,22 +56,32 @@
 
                     <input type="text" id="first_name" [value]="joinCode" readonly
                         class=" pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <button (click)="copyCode()"
-                        class="-ml-8 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
-                        <svg *ngIf="!copiedC" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        <svg *ngIf="copiedC" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600"
-                            viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clip-rule="evenodd" />
-                        </svg>
+                    <div
+                        class="-ml-12 flex gap-x-2p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
-                    </button>
+                        <button (click)="copyCode()"
+                            class=" rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
+
+                            <svg *ngIf="!copiedC" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <svg *ngIf="copiedC" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+
+                        </button>
+
+                        <span (click)="openInfo('Golfers who want to join via code through app')"
+                            class="text-gray-600 items-center flex cursor-pointer ">
+                            <mat-icon class="icon-size-2" class="icon">info</mat-icon>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,7 +94,7 @@
                         <!-- Icon and line -->
                         <div class="flex flex-col items-center mr-4">
                             <button
-                                class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 transition-all cursor-pointer"
+                                class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-bold border-2 transition-all cursor-pointer"
                                 [ngClass]="currentStep >= step.number 
                   ? 'bg-emerald-600 border-emerald-600 text-white'
                   : 'bg-white border-gray-300 text-gray-500'" (click)="goToStep(step.title,step.number)">
@@ -93,7 +111,7 @@
                                 </ng-template>
                             </button>
 
-                            <div *ngIf="step.number < steps.length" class="w-0.5 h-8 mt-2"
+                            <div *ngIf="step.number < steps.length" class="w-0.5 h-6 mt-2"
                                 [ngClass]="currentStep > step.number ? 'bg-emerald-600' : 'bg-gray-300'">
                             </div>
                         </div>
@@ -120,7 +138,8 @@
                             <!-- Basic Information -->
                             <section class="mb-6">
                                 <h3 class="text-lg font-bold text-gray-800 mb-1">Basic Information</h3>
-                                <p class="text-sm text-gray-500 mb-6">Enter the main details for your tournament.</p>
+                                <p class="text-sm text-gray-500 mb-6">Enter the main details for your tournament.
+                                </p>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
                                     <mat-form-field appearance="outline" class="w-full custom-mat-input"
@@ -144,7 +163,8 @@
                             <!-- Scheduling -->
                             <section class="mb-6">
                                 <h3 class="text-lg font-bold text-gray-800 mb-1">Scheduling</h3>
-                                <p class="text-sm text-gray-500 mb-6">Define the dates and duration of the event.</p>
+                                <p class="text-sm text-gray-500 mb-6">Define the dates and duration of the event.
+                                </p>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6">
                                     <mat-form-field appearance="outline" class="w-full custom-mat-input"
@@ -365,7 +385,7 @@
                                                 <mat-hint align="end">
 
                                                     <div class="flex gap-x-2 items-center">
-                                                        <span class="text-blue-600 rounded-lg h-fit px-2 py-1 bg-blue-100
+                                                        <span class="text-blue-600 rounded-lg h-fit px-2 py-1 text-[13px] bg-blue-100
                                                         cursor-pointer hover:bg-blue-200" (click)="openAddCourse()">
                                                             + Add new course
                                                         </span>
@@ -496,18 +516,19 @@
                                     ">
                                             <mat-option value="ONLY_PLAYERS">Only Players</mat-option>
                                             <mat-option value="ONLY_MARSHALS">Only Scorers </mat-option>
-                                            <mat-option value="PLAYERS_AND_MARSHALS">Players and Scorers</mat-option>
+                                            <mat-option value="PLAYERS_AND_MARSHALS">Players and
+                                                Scorers</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                     <div *ngIf="isMarshals">
                                         <mat-form-field appearance="outline" class="w-full custom-mat-input"
                                             [floatLabel]="'always'">
-                                            <mat-label>Scorers Start With</mat-label>
+                                            <mat-label>Scorers Username Prefix(Only 3 Char)</mat-label>
                                             <input matInput formControlName="marshalStart" maxlength="3"
                                                 class=" text-gray-700" />
 
-                                            <mat-hint align="start">Scorers username prefix(Only 3
-                                                Char)</mat-hint>
+                                            <!-- <mat-hint align="start">Scorers username prefix(Only 3
+                                                Char)</mat-hint> -->
                                         </mat-form-field>
                                     </div>
                                     <div *ngIf="isMarshals">
@@ -527,9 +548,9 @@
                                 <div class="flex justify-between">
                                     <div>
                                         <h3 class="text-lg font-bold text-gray-800 mb-1">Player Categories</h3>
-                                        <p class="text-sm text-gray-500 mb-6">
+                                        <!-- <p class="text-sm text-gray-500 mb-6">
                                             Select all applicable categories for this tournament.
-                                        </p>
+                                        </p> -->
 
                                     </div>
 
@@ -540,7 +561,8 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="!this.skipCat" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-4">
+                                <div *ngIf="!this.skipCat"
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-4">
                                     <div *ngFor="let cat of Categories; let i = index" class="p-2">
                                         <mat-checkbox formArrayName="clubctgies" class="text-gray-700"
                                             (change)="updateChkbxArray(cat, i, $event.checked, 'clubctgies')"
@@ -783,7 +805,7 @@
                                 <!-- Tournament Members -->
                                 <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
                                     <h3 class="font-bold text-lg text-gray-800 mb-4">Tournament Participants</h3>
-                                    <div class="flex">
+                                    <div *ngIf="!skipCat" class="flex">
                                         <div class="flex flex-wrap justify-start">
                                             <span *ngFor="let catCount of categoryCounts">
                                                 <span class="catCount" *ngIf="catCount.value > 0">
@@ -942,7 +964,8 @@
                         <p class="text-gray-600 mt-2">Your tournament has been successfully created.</p>
 
                         <div class="mt-6 text-left">
-                            <p class="text-sm font-medium text-gray-700 mb-2">Share this link with players to let them
+                            <p class="text-sm font-medium text-gray-700 mb-2">Share this link with players to let
+                                them
                                 sign up:</p>
                             <div class="relative flex items-center">
                                 <input type="text" [value]="registrationLink" readonly
@@ -964,7 +987,8 @@
 
                                 </button>
                             </div>
-                            <p *ngIf="copied" class="text-xs text-green-600 mt-1 text-center">Copied to clipboard!</p>
+                            <p *ngIf="copied" class="text-xs text-green-600 mt-1 text-center">Copied to clipboard!
+                            </p>
 
                         </div>
 

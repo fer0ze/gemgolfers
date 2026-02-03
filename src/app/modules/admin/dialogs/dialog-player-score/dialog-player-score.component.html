@@ -159,8 +159,13 @@
                     </td>
                     <td *ngIf="data.team">{{ item.name }}</td>
                     <!-- for per hole calculation <td *ngFor="let score of item.Hole9Scores; let i = index;" [ngClass]="{'scorebodyred': item.playerId == data.removed[i]}">{{score}}</td> -->
-                    <td *ngFor="let score of item.Hole9Scores; let j = index" >
-                        <span class="class_name_round">
+                    <td *ngFor="let score of item.Hole9Scores; let j = index">
+                        <span class="p-[2px]" [ngClass]="{
+                            eagle: (score - scoreHeader[0].courseHoles9[j]['par'])<=-2,
+                            birdy: (score - scoreHeader[0].courseHoles9[j]['par'])==-1,
+                            bogey : (score - scoreHeader[0].courseHoles9[j]['par'])==1,
+                            doublebogey: (score - scoreHeader[0].courseHoles9[j]['par'])>=2 
+                        }">
                             {{ score }}
                         </span>
                     </td>
@@ -168,10 +173,13 @@
                         <span>{{ item?.hole9Total }}</span>
                     </td>
                     <ng-container *ngIf="item.Hole18Scores.length > 0">
-                        <td *ngFor="let score of item.Hole18Scores; let j = index" 
-                        
-                        >
-                            <span>
+                        <td *ngFor="let score of item.Hole18Scores; let j = index">
+                            <span class="p-[2px]" [ngClass]="{
+                            eagle: (score - scoreHeader[0].courseHoles18[j]['par'])<=-2,
+                            birdy: (score - scoreHeader[0].courseHoles18[j]['par'])==-1,
+                            bogey : (score - scoreHeader[0].courseHoles18[j]['par'])==1,
+                            doublebogey: (score - scoreHeader[0].courseHoles18[j]['par'])>=2 
+                        }">
                                 {{ score }}
                             </span>
                         </td>

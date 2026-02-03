@@ -2826,7 +2826,7 @@ export class ViewTournamentComponent implements OnInit {
         //console.log(player);
         const dialogRef = this.dialog.open(DialogOverviewComponent, {
             width: '350px',
-            data: 'Do you want to Disqualify this player from Tournament?',
+            data: 'Do you want to mark this player Incomplete/Disqualified?',
         });
 
         dialogRef.afterClosed().subscribe((result) => {
@@ -3244,6 +3244,11 @@ export class ViewTournamentComponent implements OnInit {
                     this.loggedInUser.id
                 );
             }
+            //Remve the players who are already in the tournament
+            datas.player = datas.player.filter((player) => {
+                let exist = this.tournamentMembers.find((a) => a.playerId == player.id);
+                return !exist;
+            });
             let subtournamentID =
                 this.dataFullTournament['SubTournamentQL'].length > 0
                     ? this.dataFullTournament['SubTournamentQL'][0].subTournamentId

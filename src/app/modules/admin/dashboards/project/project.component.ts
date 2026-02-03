@@ -316,8 +316,9 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                             latestTournament = getall.TournamentsQLs;
                             if (latestTournament.length > 6) {
                                 this.tournaments = latestTournament.splice(0, 6);
+                            } else {
+                                this.tournaments = latestTournament;
                             }
-                            this.tournaments = latestTournament;
                         }
                         //this.flightCounts = getall.tour.length;
                         let myData: any[] = [];
