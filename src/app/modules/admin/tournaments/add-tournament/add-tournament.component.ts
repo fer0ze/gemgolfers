@@ -173,9 +173,11 @@ export class AddTournamentComponent implements OnInit {
     classifiedPlayers: any[] = [];
     setupInitialized: boolean = false;
     playingFlight: any[] = [];
+    bannerPreview: string | ArrayBuffer | null = null;
     courseHoleSetNames: any[];
     courseHoleSetName: any[] = [];
     courseChange: boolean = false;
+    bannerForm: FormGroup;
     courseHoleSetCount: number = 0;
     showCourseHole: boolean = false;
     atpTime: any;
@@ -370,6 +372,11 @@ export class AddTournamentComponent implements OnInit {
 
         // }
 
+        this.bannerForm = this._formBuilder.group({
+            repetitions: [1, [Validators.required, Validators.min(1)]],
+            startIndex: [0, [Validators.required, Validators.min(0)]]
+        });
+
         if (this.loggedInuser) {
             this.hideClubs = this._localStorage.isClubAdmin() ? true : false;
             this.clubTitle = this.loggedInuser?.club?.name ?? '';
@@ -537,7 +544,13 @@ export class AddTournamentComponent implements OnInit {
             if (this.currentTournament) {
 
                 this.skipCat = this.currentTournament.skipCategory ? this.currentTournament.skipCategory : false;
-
+                if (this.currentTournament.leaderboard_ad) {
+                    this.bannerPreview = this.currentTournament?.leaderboard_ad?.ad;
+                    this.bannerForm.patchValue({
+                        repetitions: this.currentTournament?.leaderboard_ad?.repetitionInterval,
+                        startIndex: this.currentTournament?.leaderboard_ad?.firstRow
+                    });
+                }
                 this.noOfRounds = Array.from({ length: this.currentTournament.noOfRounds }, (_, i) => i + 1);
                 this.joinCode = this.currentTournament.inviteCode;
                 this.maxDate = new Date(this.currentTournament.endDate);
@@ -994,42 +1007,34 @@ export class AddTournamentComponent implements OnInit {
             this.currentTitle = step?.title;
         }
     }
+
+    onFileSelected(event: any): void {
+        const file = event.target.files[0];
+        if (file) {
+            this.file = file;
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.bannerPreview = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    get repetitions() { return this.bannerForm.get('repetitions'); }
+    get startIndex() { return this.bannerForm.get('startIndex'); }
+
     goToStep(stepTitle: string, stepNumber: number): void {
 
-        // this.currentTitle = stepTitle;
-        // this.membersSource = new MatTableDataSource([
-        //     { id: 'temp1', firstName: 'Capt Retired Khataed Khan', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        //     { id: 'temp2', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
-        //     { id: 'temp3', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
-        //     { id: 'temp4', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        //     { id: 'temp5', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Ladies' },
-        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        //     { id: 'temp6', firstName: 'temp', lastName: 'temp', handicap: 0, playerCategory: 'Amateurs' },
-        // ]);
-        // // this.tournamentMembers = this.dataSource.data;
-        // this.membersSource=new MatTableDataSource
-        // const currentIndex = this.steps.findIndex(step => step.title === stepTitle);
         const currentGroup = this.formArray?.get([0]) as FormGroup;
         // // 1️⃣ Mark all fields touched to show errors
         if (currentGroup) {
             currentGroup.markAllAsTouched();
         }
-        // this.currentTitle = stepTitle;
-        // 2️⃣ Allow backward navigation always
-        // if (stepNumber <= this.currentStep) {
-        //     this.currentStep = stepNumber;
-        //     return;
-        // }
-
-
-        // 3️⃣ Moving forward only if current form is valid
         if (currentGroup?.valid) {
             if (stepNumber == 3) {
                 this.flightsSetup();
             }
-            if (stepTitle == 'Review & Confirm') {
+            if (stepTitle == 'Banner Setup') {
                 this.getSelectedPlayers();
             }
             if (stepTitle == 'Groups Setup' && this.formArray.get([0]).value.courseInfo[0].matchFormat == matchFormat.STROKE_PLAY) {
@@ -1877,7 +1882,7 @@ export class AddTournamentComponent implements OnInit {
             //         this.formArray.get([1]).get('category').value[i]
             //     );
         }
-        this.currentTitle = 'Review & Confirm';
+        this.currentTitle = 'Banner Setup';
         this.currentStep++;
         // if (index < this.formArray.get([1]).get('category').value.length - 1) {
         //     this.selectedIndex = ++index;
@@ -1886,6 +1891,32 @@ export class AddTournamentComponent implements OnInit {
         //     stepper.next();
         // }
         console.log(this.selectedMembers);
+    }
+
+    addBanner() {
+
+        if (this.file) {
+            console.log(this.file);
+            console.log(this.bannerForm.getRawValue());
+
+            let banner = {
+                touranmentId: this.tournamentID,
+                firstRow: this.bannerForm.get('startIndex').value,
+                repetitionInterval: this.bannerForm.get('repetitions').value,
+            }
+            this.facadeService.updateTournamentBanner(banner, this.file).subscribe((res) => {
+                if (res) {
+                    this.currentTitle = 'Review & Confirm';
+                    this.currentStep++;
+                }
+            })
+
+        } else {
+            this.currentTitle = 'Review & Confirm';
+            this.currentStep++;
+        }
+
+
     }
 
     // getFC(event, category: any) {
@@ -4963,7 +4994,7 @@ export class AddTournamentComponent implements OnInit {
                     }
                     this.membersSource._updateChangeSubscription();
 
-                }else{
+                } else {
                     this.snackBar.open('Player already exist in the list.', 'x', {
                         duration: 3000,
                     });

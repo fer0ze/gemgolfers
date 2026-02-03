@@ -134,6 +134,12 @@ export const TournamentQL = gql`
                 ...PlayerQL
             }
         }
+            leaderboard_ad{
+            tournamentId
+            ad
+            firstRow
+            repetitionInterval
+            }
     }
     ${CourseQL}
     ${PlayerQL}

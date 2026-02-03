@@ -57,8 +57,7 @@
                     <input type="text" id="first_name" [value]="joinCode" readonly
                         class=" pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
 
-                    <div
-                        class="-ml-12 flex gap-x-2p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
+                    <div class="-ml-12 flex gap-x-2p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
                         <button (click)="copyCode()"
                             class=" rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
@@ -1587,6 +1586,153 @@
                         </div>
                     </div>
                 </div>
+                <div *ngIf="currentTitle === 'Banner Setup'">
+                    <div class="animate-fade-in">
+                        <div
+                            class="flex flex-col p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl shadow-sm">
+
+                            <!-- Header -->
+                            <div
+                                class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-6 mb-8">
+                                <div class="animate-fade-in">
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white leading-none">Banner
+                                        Setup</h3>
+                                    <p class="text-secondary text-sm mt-2">Configure your leaderboard banner and display
+                                        logic here.</p>
+                                </div>
+
+                                <!-- Status Indicator -->
+
+                            </div>
+                            <form [formGroup]="bannerForm">
+
+
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+                                    <!-- Left Side: Image Upload (Span 5) -->
+                                    <div class="lg:col-span-5 flex flex-col">
+                                        <label
+                                            class="text-sm font-bold uppercase tracking-widest text-primary/60 mb-3">Banner
+                                            Creative</label>
+
+                                        <div class="relative group aspect-[16/6] flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-blue-50/50 hover:border-primary transition-all cursor-pointer overflow-hidden"
+                                            (click)="fileInput.click()">
+
+                                            <!-- Hidden Input -->
+                                            <input #fileInput type="file" (change)="onFileSelected($event)"
+                                                accept="image/*" class="hidden">
+
+                                            <!-- Placeholder (Visible when no image) -->
+                                            <ng-container *ngIf="!bannerPreview">
+                                                <mat-icon
+                                                    class="text-gray-400 icon-size-10 mb-2 group-hover:scale-110 transition-transform"
+                                                    svgIcon="heroicons_outline:photo"></mat-icon>
+                                                <span class="text-md font-semibold text-gray-500">Click to upload banner
+                                                    (PNG, JPG)</span>
+                                                <span class="text-[12px] text-gray-400 mt-1">Recommended size:
+                                                    1200x400px</span>
+                                            </ng-container>
+
+                                            <!-- Preview (Visible when image uploaded) -->
+                                            <img *ngIf="bannerPreview" [src]="bannerPreview"
+                                                class="absolute inset-0 w-full h-full object-cover">
+
+                                            <!-- Overlay on Hover -->
+                                            <div *ngIf="bannerPreview"
+                                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <span
+                                                    class="text-white text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-md">Change
+                                                    Image</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right Side: Properties (Span 7) -->
+                                    <div class="lg:col-span-7 flex flex-col justify-center">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                            <!-- Number of Repetitions -->
+                                            <div class="flex flex-col">
+                                                <label
+                                                    class="text-sm font-bold uppercase tracking-widest text-primary/60 mb-3">Repetition
+                                                    Frequency</label>
+                                                <mat-form-field class="w-full" appearance="outline">
+                                                    <mat-label>Number of Repetitions</mat-label>
+                                                    <mat-icon matPrefix class="icon-size-5 text-secondary"
+                                                        svgIcon="heroicons_outline:arrow-path"></mat-icon>
+                                                    <input type="number" matInput formControlName="repetitions"
+                                                        placeholder="e.g. 5">
+                                                    <mat-hint>How many times banner repeats</mat-hint>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <!-- Starting Index -->
+                                            <div class="flex flex-col">
+                                                <label
+                                                    class="text-sm font-bold uppercase tracking-widest text-primary/60 mb-3">Display
+                                                    Logic</label>
+                                                <mat-form-field class="w-full" appearance="outline">
+                                                    <mat-label>Starting Index</mat-label>
+                                                    <mat-icon matPrefix class="icon-size-5 text-secondary"
+                                                        svgIcon="heroicons_outline:hashtag"></mat-icon>
+                                                    <input type="number" matInput formControlName="startIndex"
+                                                        placeholder="e.g. 1">
+                                                    <mat-hint>Row position to start from</mat-hint>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Pro Disclaimer -->
+                                        <div
+                                            class="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-start border border-gray-100 dark:border-gray-800">
+                                            <mat-icon class="icon-size-5 text-blue-500 mr-3"
+                                                svgIcon="heroicons_outline:information-circle"></mat-icon>
+                                            <div class="text-[11px] leading-relaxed text-secondary italic">
+                                                <span
+                                                    class="font-bold text-gray-700 dark:text-gray-300 not-italic">Configuration
+                                                    Logic:</span>
+                                                The banner will first appear at row <span
+                                                    class="font-bold">#{{startIndex?.value || 'X'}}</span> and repeat
+                                                every
+                                                <span class="font-bold">{{repetitions?.value || 'X'}}</span> entries.
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Actions -->
+                            <!-- <div class="flex justify-end gap-3 mt-10 pt-6 border-t border-gray-100">
+                                <button mat-stroked-button class="px-8 rounded-xl h-11">Cancel</button>
+                                <button mat-flat-button color="primary"
+                                    class="px-8 rounded-xl h-11 shadow-lg shadow-primary/20">
+                                    Save Configuration
+                                </button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <!-- <div>Banner</div> -->
+                    <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
+                        <div *ngIf="this.showMatchPlay">
+                            <button (click)="goToStep('Groups Setup',4)"
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+
+                        </div>
+                        <div *ngIf="!this.showMatchPlay">
+                            <button (click)="goToStep('Groups Setup',3)"
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+
+                        </div>
+                        <div>
+                            <button (click)="addBanner()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                font-semibold
+                                shadow-sm hover:bg-emerald-700 transition-colors">
+                                Next Step</button>
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="currentTitle === 'Review & Confirm'">
 
                     <div class="animate-fade-in">
@@ -1861,12 +2007,12 @@
                     <div class="mt-8 py-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
 
                         <div *ngIf="this.showMatchPlay">
-                            <button (click)="goToStep('Groups Setup',4)"
+                            <button (click)="goToStep('Banner Setup',4)"
                                 class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div *ngIf="!this.showMatchPlay">
-                            <button (click)="goToStep('Groups Setup',3)"
+                            <button (click)="goToStep('Banner Setup',3)"
                                 class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>

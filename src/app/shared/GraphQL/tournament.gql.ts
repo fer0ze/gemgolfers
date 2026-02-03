@@ -1181,6 +1181,23 @@ export const AddMutation = gql`
         }
     }
 `;
+
+export const insertTournamentBanner = gql`
+    mutation insertTournamentBanner($objects: [leaderboard_ad_insert_input!]!) {
+        insert_leaderboard_ad(
+            objects: $objects
+            on_conflict: {
+                constraint: leaderboard_ad_pkey
+                update_columns: [ad, firstRow, repetitionInterval]
+            }
+        ) {
+            returning {
+                ad
+            }
+        }
+    }
+`;
+
 export const AddSubTournamentMutation = gql`
     mutation insert_sub_tournament(
         $subTournaments: [sub_tournament_insert_input!]!
@@ -1823,7 +1840,7 @@ export const getDailyTeeTimeReportClub = gql`
                     { teeDate: { _lte: $fromDate } }
                 ]
             }
-            ,order_by: { teeDate: desc }
+            order_by: { teeDate: desc }
         ) {
             id
             teeDate

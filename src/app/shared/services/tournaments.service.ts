@@ -43,6 +43,47 @@ export class TournamentsService {
                 });
         });
     }
+
+    updateTournamentBanner(banner, file: File): Observable<string> {
+        if (file) {
+            const fileName = 'profile/' + banner.touranmentId + '.png';
+            const ref = this.storage.ref(fileName);
+            const task = ref.put(file);
+
+            return from(task).pipe(
+                switchMap((snapshot: any) => {
+                    return ref.getDownloadURL();
+                }),
+                switchMap((downloadUrl: string) => {
+                    // Update the picture URL in the account object
+                    banner.ad = downloadUrl;
+
+                    // Perform the mutation using Apollo client
+                    return this.apollo
+                        .mutate<any>({
+                            mutation: Query.insertTournamentBanner,
+                            variables: {
+                                objects: [
+                                    {
+                                        tournamentId: banner.touranmentId,
+                                        ad: banner.ad,
+                                        firstRow: banner.firstRow,
+                                        repetitionInterval: banner.repetitionInterval,
+                                    }
+                                ]
+                            },
+                        })
+                        .pipe(
+                            map((response: any) => {
+                                // Return the download URL
+                                return downloadUrl;
+                            })
+                        );
+                })
+            );
+        }
+    }
+
     public getTournamentsListReport(): Observable<any> {
         return this.apollo
             .subscribe({
