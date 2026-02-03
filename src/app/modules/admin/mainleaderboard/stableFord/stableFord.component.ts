@@ -93,10 +93,12 @@ export class StableFordComponent implements OnInit, OnChanges {
                 if (this.allLeadersCutOffNet.length > 0) {
                     this.isCuttOffRequired = true;
                     this.allRoundCutOffNet = true;
-                    this.sortAllNetLeadersTie(this.allLeadersCutOffNet)
+                    this.allLeadersCutOffNet = this.sortAllNetLeadersTie(this.allLeadersCutOffNet)
                 }
-                this.LeaderboardPlayers.sort(this.ComparatorAllNet);
-                this.sortAllNetLeadersTie(this.LeaderboardPlayers);
+                this.LeaderboardPlayers = [...this.LeaderboardPlayers].sort(this.ComparatorAllNet);
+
+                this.LeaderboardPlayers =
+                    this.sortAllNetLeadersTie(this.LeaderboardPlayers);
             }
         } else {
             this.getPlayersByRound(leaders, round, lastTab);
@@ -341,8 +343,8 @@ export class StableFordComponent implements OnInit, OnChanges {
         });
     }
     ComparatorAllNet(a, b) {
-        let totalA=a.pointsRound1 + a.pointsRound2 + a.pointsRound3 + a.pointsRound4;
-        let totalB=b.pointsRound1 + b.pointsRound2 + b.pointsRound3 + b.pointsRound4;
+        let totalA = a.pointsRound1 + a.pointsRound2 + a.pointsRound3 + a.pointsRound4;
+        let totalB = b.pointsRound1 + b.pointsRound2 + b.pointsRound3 + b.pointsRound4;
         if (totalA < totalB) return 1;
         if (totalA > totalB) return -1;
         return 0;
@@ -371,7 +373,7 @@ export class StableFordComponent implements OnInit, OnChanges {
         //leaderList = leaderList.sort(this.ComparatorPosition);
         //////console.log(leaderList);
         //return false;
-
+        leaderList = leaderList.map(leader => ({ ...leader }));
         let pos: number = 1;
         let tied: boolean;
 
@@ -478,9 +480,10 @@ export class StableFordComponent implements OnInit, OnChanges {
     private sortAllNetLeadersTie(leaderList: any[]) {
         //Collections.sort(grossLeaders);
 
-        leaderList = leaderList.sort(this.ComparatorAllNetPosition);
-        //////console.log(leaderList);
-        //return false;
+        leaderList = leaderList.map(player => ({ ...player }));
+
+        // sort safely
+        leaderList.sort(this.ComparatorAllNetPosition);
 
         let pos: number = 1;
         let tied: boolean;
@@ -512,7 +515,7 @@ export class StableFordComponent implements OnInit, OnChanges {
                 secondCompleted = leaderPrevious.completed4;
             }
 
-            tied = (leaderCurrent.pointsRound1+leaderCurrent.pointsRound2+leaderCurrent.pointsRound3+leaderCurrent.pointsRound4)== (leaderPrevious.pointsRound1+leaderPrevious.pointsRound2+leaderPrevious.pointsRound3+leaderPrevious.pointsRound4);
+            tied = (leaderCurrent.pointsRound1 + leaderCurrent.pointsRound2 + leaderCurrent.pointsRound3 + leaderCurrent.pointsRound4) == (leaderPrevious.pointsRound1 + leaderPrevious.pointsRound2 + leaderPrevious.pointsRound3 + leaderPrevious.pointsRound4);
 
             if (tied) {
                 //leaderCurrent["tied"]= true;

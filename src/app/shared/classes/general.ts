@@ -401,7 +401,7 @@ export class General {
     public static singleFormats() {
         return [
             { name: "Stroke Play", value: "STROKE_PLAY" },
-            { name: "Stable Ford", value: "STABLE_FORD" },
+            { name: "Stable Ford", value: "STABLEFORD" },
             { name: "Modified Stableford", value: "MODIFIED_STABLEFORD" },
             // { name: "Split Sixes", value: "SPLIT_SIXES" },
         ];

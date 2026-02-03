@@ -54,11 +54,11 @@ export class ScrambleComponent implements OnInit, OnChanges {
         if (leaders.length > 0) {
 
             if (this.isGross) {
-                this.LeaderboardPlayers.sort(this.ComparatorAllGross);
-                this.sortAllGrossLeadersTie(this.LeaderboardPlayers)
+                this.LeaderboardPlayers = [...this.LeaderboardPlayers].sort(this.ComparatorAllGross);;
+                this.LeaderboardPlayers = this.sortAllGrossLeadersTie(this.LeaderboardPlayers)
             } else {
-                this.LeaderboardPlayers.sort(this.ComparatorAllNet);
-                this.sortAllNetLeadersTie(this.LeaderboardPlayers)
+                this.LeaderboardPlayers = [...this.LeaderboardPlayers].sort(this.ComparatorAllNet);
+                this.LeaderboardPlayers = this.sortAllNetLeadersTie(this.LeaderboardPlayers)
             }
         }
 
@@ -88,7 +88,10 @@ export class ScrambleComponent implements OnInit, OnChanges {
     }
 
     private sortAllGrossLeadersTie(leaderGrossList: any[]) {
-        leaderGrossList = leaderGrossList.sort(this.ComparatorAllGrossPosition);
+
+        leaderGrossList = leaderGrossList.map(player => ({ ...player }));
+
+        leaderGrossList.sort(this.ComparatorAllGrossPosition);
         let pos: number = 1;
         let tied: boolean;
 
@@ -147,7 +150,8 @@ export class ScrambleComponent implements OnInit, OnChanges {
     private sortAllNetLeadersTie(leaderList: any[]) {
         //Collections.sort(grossLeaders);
 
-        leaderList = leaderList.sort(this.ComparatorAllNetPosition);
+        leaderList = leaderList.map(player => ({ ...player }));
+        leaderList.sort(this.ComparatorAllNetPosition);
         //////console.log(leaderList);
         //return false;
 
