@@ -37,13 +37,13 @@
                         <div class="flex flex-row max-h-28">
                             <div class="flex justify-between p-2 rounded-r-full w-50 border-l-4 flex-col"
                                 [ngStyle]="{ 'background': player.playerColor,'border-color':player.playerColor }">
-                                <div class="flex justify-center items-start flex-col w-full">
+                                <div *ngIf="player.playerName1" class="flex justify-center items-start flex-col w-full">
                                     {{ player.playerName1 }}
                                     <span class="text-md">
                                         Hc:{{player.player1Handicap}}
                                     </span>
                                 </div>
-                                <div class="flex justify-center items-start flex-col w-full">
+                                <div *ngIf="player.playerName2" class="flex justify-center items-start flex-col w-full">
                                     {{ player.playerName2 }}
                                     <span class="text-md">
                                         Hc:{{player.player2Handicap}}
@@ -76,13 +76,13 @@
                             </div>
                             <div class="flex justify-between p-2 rounded-l-full w-50 border-r-4 flex-col items-end"
                                 [ngStyle]="{ 'background': player.opponentColor,'border-color':player.opponentColor }">
-                                <div class="flex justify-center items-end flex-col w-full">
+                                <div *ngIf="player.opponentName1" class="flex justify-center items-end flex-col w-full">
                                     {{ player.opponentName1 }}
                                     <span class="text-md">
                                         Hc:{{player.opponent1Handicap}}
                                     </span>
                                 </div>
-                                <div class="flex justify-center items-end flex-col w-full">
+                                <div *ngIf="player.opponentName2" class="flex justify-center items-end flex-col w-full">
                                     {{ player.opponentName2 }}
                                     <span class="text-md">
                                         Hc:{{player.opponent2Handicap}}
@@ -133,7 +133,8 @@
                                 <span class="text-md w-20 sm:w-full md:w-full text-center">
                                     Group - {{player.flightNo}}
                                 </span>
-                                <span class="pt-2 font-bold text-3xl sm:text-sm  md:text-3xl " [ngStyle]="{'color':player.winningColor}">
+                                <span class="pt-2 font-bold text-3xl sm:text-sm  md:text-3xl "
+                                    [ngStyle]="{'color':player.winningColor}">
                                     {{player.score}} Up
                                 </span>
                                 <span class="pt-2 text-lg text-gray-400  sm:text-sm">
@@ -164,8 +165,10 @@
 
                             </div>
                         </div>
-                        <div class="flex justify-center items-center bg-card py-1 sm:p-1 md:p-1 w-min sm:w-full md:w-full">
-                            <div *ngFor="let hole of player?.holes" class="px-1 rounded-full mr-1 sm:mx-1 md:mx-1 sm:px-1 md:px-1"
+                        <div
+                            class="flex justify-center items-center bg-card py-1 sm:p-1 md:p-1 w-min sm:w-full md:w-full">
+                            <div *ngFor="let hole of player?.holes"
+                                class="px-1 rounded-full mr-1 sm:mx-1 md:mx-1 sm:px-1 md:px-1"
                                 [ngStyle]="{ 'background': hole.winnerId}">
                                 <div class="text-sm font-bold" [ngClass]="{ 'line-through': hole.winnerId==null}">
                                     {{hole.holeNo}}
@@ -214,7 +217,7 @@
                             <div *ngIf="player.score>0"
                                 class="flex justify-center items-center p-10 flex-auto flex-col">
                                 <span class="text-md w-20 sm:w-full md:w-full text-center">
-                                   Round - {{last+1}}
+                                    Round - {{last+1}}
                                 </span>
                                 <span class="pt-2 font-bold text-3xl" [ngStyle]="{'color':player.winningColor}">
                                     {{player.score}} Up

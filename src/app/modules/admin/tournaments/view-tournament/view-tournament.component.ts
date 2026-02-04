@@ -1337,7 +1337,7 @@ export class ViewTournamentComponent implements OnInit {
                         if (getResult.category[0].playing == true || getResult.category[0].playing == 'true') {
                             for (let cats in getResult.category) {
                                 try {
-                                    const res = await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL);
+                                    const res = await this.saveCategoryFlightsForMatchPlay(this.fullTournament.FlightsQL.filter(a => a.flightRound == this.activeRound));
 
                                     if (res) {
                                         const jObject = { cutOff: jsons };
