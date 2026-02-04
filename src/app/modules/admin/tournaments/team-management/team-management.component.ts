@@ -335,7 +335,7 @@ export class TeamManagementComponent implements OnInit {
         if (!team) return;
 
         // ✅ Ensure no duplicates in team.members
-        const existingIds = new Set(team.members.map(m => m.id));
+        const existingIds = new Set(this.selectedTeams.flatMap(t => t.members.map(m => m.id)));
         const uniqueNewMembers = selectedPlayers.filter(p => !existingIds.has(p.id));
 
         // ✅ Add only new members

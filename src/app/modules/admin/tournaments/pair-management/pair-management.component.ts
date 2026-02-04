@@ -273,8 +273,15 @@ export class PairManagementComponent implements OnInit {
         const team = this.selectedPairs.find(t => t.id === pairId);
         if (!team) return;
 
+        if (team.members.length + selectedPlayers.length > 2) {
+            this.snackBar.open('Pair can have only 2 members.', 'x', {
+                duration: 2000,
+            });
+            return;
+        }
+
         // ✅ Ensure no duplicates in team.members
-        const existingIds = new Set(team.members.map(m => m.id));
+        const existingIds = new Set(this.selectedPairs.flatMap(t => t.members.map(m => m.id)));
         const uniqueNewMembers = selectedPlayers.filter(p => !existingIds.has(p.id));
 
         // ✅ Add only new members
