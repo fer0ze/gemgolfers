@@ -1247,39 +1247,34 @@
                                 </div>
                                 <div class="flex-1 overflow-y-auto border rounded-md bg-white">
                                     <div>
-                                        <table mat-table #msort="matSort" [dataSource]="membersSource" matSort>
+                                        <table mat-table #msort="matSort" [dataSource]="membersTeamSource" matSort>
                                             <!-- Name Column -->
                                             <ng-container matColumnDef="select">
                                                 <th class="bg-gray-100" mat-header-cell *matHeaderCellDef>
                                                     <mat-checkbox (change)="
                                                     $event
-                                                        ? masterToggleM()
+                                                        ? masterToggleTM()
                                                         : null
                                                 " [checked]="
-                                                    memberSelection.hasValue() &&
-                                                    isAllSelectedM()
+                                                    memberTMSelection.hasValue() &&
+                                                    isAllSelectedTM()
                                                 " [indeterminate]="
-                                                    memberSelection.hasValue() &&
-                                                    !isAllSelectedM()
+                                                    memberTMSelection.hasValue() &&
+                                                    !isAllSelectedTM()
                                                 " [aria-label]="checkboxLabelM()">
                                                     </mat-checkbox>
                                                 </th>
                                                 <td mat-cell *matCellDef="let row">
-                                                    <mat-checkbox (click)="
-                                                    $event.stopPropagation()
-                                                " (change)="
+                                                    <mat-checkbox (change)="
                                                     $event
-                                                        ? memberSelection.toggle(row)
-                                                        : null;
-                                                    updateCategorySelection(
-                                                        $event,
-                                                        row
-                                                    )
-                                                " [checked]="
-                                                    memberSelection.isSelected(row)
-                                                " [aria-label]="
-                                                    checkboxLabelM(row)
-                                                ">
+                                                    ? memberTMSelection.toggle(row)
+                                                    : null;" (click)="
+                                                    $event.stopPropagation()
+                                                    " [checked]="
+                                                    memberTMSelection.isSelected(row)
+                                                    " [aria-label]="
+                                                    checkboxLabelTM(row)
+                                                    ">
                                                     </mat-checkbox>
                                                 </td>
                                             </ng-container>
@@ -1401,7 +1396,7 @@
                                                         <span
                                                             class="text-md font-medium text-gray-700 truncate">{{item.firstName
                                                             }} {{item.lastName }}</span>
-                                                        <button (click)="removeTeamPlayer(item.id, team.id)"
+                                                        <button (click)="removePairPlayer(item.id, team.id)"
                                                             class="text-gray-400 hover:text-red-500 ml-2 flex-shrink-0">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
                                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1415,7 +1410,7 @@
                                                 <!-- Card Footer -->
                                                 <div class="p-3 border-t bg-gray-50/50">
                                                     <button (click)="addSelectedPlayersToPair(team.id)"
-                                                        [disabled]="this.memberSelection.selected.length === 0"
+                                                        [disabled]="this.memberTMSelection.selected.length === 0"
                                                         class="w-full text-sm bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
                                                         Add Selected Player(s)
                                                     </button>

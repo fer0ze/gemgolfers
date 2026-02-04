@@ -4691,6 +4691,33 @@ export class AddTournamentComponent implements OnInit {
             console.warn('Team not found');
         }
     }
+    
+    removePairPlayer(playerId: string, teamId: string) {
+        // Find the team
+        const teamToUpdate = this.selectedPairs.find(team => team.id === teamId);
+
+        if (teamToUpdate) {
+            // Find the player being removed
+            const removedPlayer = teamToUpdate.members.find(member => member.id === playerId);
+
+            // Remove from the team
+            teamToUpdate.members = teamToUpdate.members.filter(member => member.id !== playerId);
+
+            // Add the removed player back to the dataSource (if found)
+            if (removedPlayer) {
+                const existingData = this.membersTeamSource?.data || [];
+
+                // 🔹 Check for duplicates before adding back
+                const alreadyExists = existingData.some(member => member.id === removedPlayer.id);
+                if (!alreadyExists) {
+                    this.membersTeamSource.data = [...existingData, removedPlayer];
+                    this.membersTeamSource._updateChangeSubscription();
+                }
+            }
+        } else {
+            console.warn('Team not found');
+        }
+    }
 
 
     deleteTeam(teamId: string) {
