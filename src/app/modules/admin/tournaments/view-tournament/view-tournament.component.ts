@@ -1657,16 +1657,21 @@ export class ViewTournamentComponent implements OnInit {
 
                     if (createPairs && !existsInPairs) {
                         let nextMember = this.getTeamMemberInFlight(flights[index]['MembersQL'], FM.playerId)
-                        let pair = {
-                            id: UniqueIdGenerator.generate(),
-                            tournamentId: this.tournamentID,
-                            pairName: flights[index]['MembersQL'][index2].PlayerQL.firstName + '/' + nextMember.PlayerQL.firstName,
-                            member1Id: FM.playerId,
-                            member2Id: nextMember.playerId,
-                        };
-                        tournamentPairs.push(pair);
+                        if (nextMember) {
+                            let pair = {
+                                id: UniqueIdGenerator.generate(),
+                                tournamentId: this.tournamentID,
+                                pairName: flights[index]['MembersQL'][index2].PlayerQL.firstName + '/' + nextMember.PlayerQL.firstName,
+                                member1Id: FM.playerId,
+                                member2Id: nextMember.playerId,
+                            };
+                            tournamentPairs.push(pair);
+                        } else {
+                            FM = null;
+                        }
                     }
-                    tournamentFlightMembers.push(FM);
+                    if (FM)
+                        tournamentFlightMembers.push(FM);
                 }
                 if (tournamentFlightMembers.length > 0) {
 
