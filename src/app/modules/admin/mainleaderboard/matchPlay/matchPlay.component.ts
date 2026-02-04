@@ -122,13 +122,14 @@ export class MatchPlayComponent implements OnInit, OnChanges {
             return fli.flightRound == flightRound
         }))
         for (let flightData of flights) {
-            let membersQLs = flightData.members;
+            let membersQLs = [...flightData.members];
             let flightId = flightData.id;
             let round = flightData.flightRound;
             let courseHoleSetsInverted = flightData.courseHoleSetsInverted;
             let courseHoleSets = flightData.courseHoleSets;
             let flightResult = { flightId, matches: [] };
-            for (let membersQL of membersQLs) {
+            const mutableMembersQLs = membersQLs.map(m => ({ ...m }));
+            for (let membersQL of mutableMembersQLs) {
                 let player = membersQL.player;
                 let name = player.firstName + " " + player.lastName;
                 let playerId = membersQL.playerId;
@@ -141,7 +142,7 @@ export class MatchPlayComponent implements OnInit, OnChanges {
                     let playerScore = this.getPlayerScore(playerId, round);
                     let opponentScore = this.getPlayerScore(opponentId, round);
                     let holesPlayed = this.getHolePlayed(playerId, round);
-                    let opponentScores = membersQLs.filter((mem => { return mem.playerId == opponentId }))
+                    let opponentScores = mutableMembersQLs.filter((mem => { return mem.playerId == opponentId }))
                     if (playerScore !== null && opponentScore !== null) {
                         let playerWon = playerScore > opponentScore;
                         let tied = playerScore == opponentScore;
