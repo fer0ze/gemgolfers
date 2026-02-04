@@ -395,7 +395,8 @@ export class ScrambleComponent implements OnInit, OnChanges {
             this.Leaderboard.matchFormat == matchFormat.THREE_BALL_SCRAMBLE ||
             this.Leaderboard.matchFormat == matchFormat.FOUR_BALL_SCRAMBLE) {
             scoreResult = ScoreLoader.getTexasScrambleScore(playerId);
-        } else if (this.Leaderboard.matchFormat == matchFormat.SHAMBLES || this.Leaderboard.matchFormat == matchFormat.GREENSOME || this.Leaderboard.matchFormat == matchFormat.FOURSOME) {
+        } else if (this.Leaderboard.matchFormat == matchFormat.SHAMBLES ||
+            this.Leaderboard.matchFormat == matchFormat.TWO_BALL_BEST_BALL || this.Leaderboard.matchFormat == matchFormat.GREENSOME || this.Leaderboard.matchFormat == matchFormat.FOURSOME) {
             scoreResult = ScoreLoader.getShamblesScore(playerId);
         }
         //console.log(scoreResult);

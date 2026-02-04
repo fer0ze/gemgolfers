@@ -88,6 +88,9 @@
             <ng-container *ngSwitchCase="'SHAMBLES'">
                 <app-scramble [data]="Leaderboard"></app-scramble>
             </ng-container>
+            <ng-container *ngSwitchCase="'TWO_BALL_BEST_BALL'">
+                <app-scramble [data]="Leaderboard"></app-scramble>
+            </ng-container>
             <ng-container *ngSwitchCase="'LIV'">
                 <app-stroke-play [data]="Leaderboard"></app-stroke-play>
             </ng-container>

@@ -53,7 +53,7 @@ export class PlayersScoreLoader {
             } else if (tournamentQL.matchFormat === matchFormat.FOUR_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.TWO_BALL_SCRAMBLE || tournamentQL.matchFormat === matchFormat.THREE_BALL_SCRAMBLE) {
                 let calResult = this.scrambleCalculation(tournamentQL);
 
-            } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES || tournamentQL.matchFormat === matchFormat.GREENSOME || tournamentQL.matchFormat === matchFormat.FOURSOME) {
+            } else if (tournamentQL.matchFormat === matchFormat.SHAMBLES || tournamentQL.matchFormat === matchFormat.GREENSOME || tournamentQL.matchFormat === matchFormat.TWO_BALL_BEST_BALL || tournamentQL.matchFormat === matchFormat.FOURSOME) {
                 let calResult = this.shamblesCalculation(tournamentQL);
 
             }
