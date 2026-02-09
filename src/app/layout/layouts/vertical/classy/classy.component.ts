@@ -11,12 +11,6 @@ import { NavigationService } from 'app/core/navigation/navigation.service';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { Constants } from 'app/shared/classes/general';
-import {
-    defaultNavigation, userNavigation,
-    defaultNavigationSuperAdmin, sectaryNavigation, tourNavigation,
-    leagueNavigation,
-    tourLeagueNavigation
-} from 'app/mock-api/common/navigation/data';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({

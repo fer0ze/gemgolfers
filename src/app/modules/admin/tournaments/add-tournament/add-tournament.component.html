@@ -807,7 +807,7 @@
                                     <div *ngIf="!skipCat" class="flex">
                                         <div class="flex flex-wrap justify-start">
                                             <span *ngFor="let catCount of categoryCounts">
-                                                <span class="catCount" *ngIf="catCount.value > 0">
+                                                <span class="flex border border-gray-300 p-4 rounded-md" *ngIf="catCount.value > 0">
                                                     <mat-icon>emoji_people</mat-icon>
                                                     <span class="cat-name font-medium">{{ catCount.name }}</span> :
                                                     <span class="cat-value font-medium">{{ catCount.value }}</span>
@@ -822,9 +822,9 @@
                                         catCount.name }} :
                                         {{ catCount.value }}</span></span>
                             </div> -->
-                                        <div class="flex flex-wrap justify-start">
+                                        <div class="flex flex-wrap justify-start gap-2">
                                             <span *ngFor="let catCount of TMcategoryCounts">
-                                                <span class="catCount" *ngIf="catCount.value > 0">
+                                                <span class="flex border border-gray-300  p-4 rounded-md" *ngIf="catCount.value > 0">
                                                     <mat-icon>emoji_people</mat-icon>
                                                     <span class="cat-name font-medium">{{ catCount.name }}</span> :
                                                     <span class="cat-value font-medium">{{ catCount.value }}</span>

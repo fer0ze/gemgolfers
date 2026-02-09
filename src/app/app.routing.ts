@@ -268,13 +268,13 @@ export const appRoutes: Route[] = [
                         (m) => m.LeaguesModule
                     ),
             },
-            {
-                path: 'tournaments/schedule',
-                loadChildren: () =>
-                    import(
-                        'app/modules/admin/tournaments/schedule/schedule.module'
-                    ).then((m) => m.ScheduleModule),
-            },
+            // {
+            //     path: 'tournaments/schedule',
+            //     loadChildren: () =>
+            //         import(
+            //             'app/modules/admin/tournaments/schedule/schedule.module'
+            //         ).then((m) => m.ScheduleModule), 
+            // },
             {
                 path: 'courses1',
                 loadChildren: () =>

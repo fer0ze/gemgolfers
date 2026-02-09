@@ -44,7 +44,7 @@ export class NavigationService {
                 console.log(navigation);
                 this._loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
                 if (this._loggedInUser) {
-                    console.log(this._loggedInUser);
+                    // console.log(this._loggedInUser);
 
                     const userModuleAccess = this._loggedInUser.modules.map(m => m.id);
 

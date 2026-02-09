@@ -3,13 +3,7 @@ import { cloneDeep } from 'lodash-es';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import {
-    compactNavigation,
-    defaultNavigation,
-    userNavigation,
-
-    defaultNavigationSuperAdmin,
-    sectaryNavigation,
-    tourNavigation,
+    defaultNavigation
 } from 'app/mock-api/common/navigation/data';
 import { Constants } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
@@ -18,12 +12,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
     providedIn: 'root',
 })
 export class NavigationMockApi {
-    private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
-    private readonly _tourNavigation: FuseNavigationItem[] = tourNavigation;
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
-    private readonly _userNavigation: FuseNavigationItem[] = userNavigation;
-    private readonly _defaultNavigationSuperAdmin: FuseNavigationItem[] = defaultNavigationSuperAdmin;
-    private readonly _sectaryNavigation: FuseNavigationItem[] = sectaryNavigation;
     private loggedInuser: any;
     /**
      * Constructor
@@ -100,12 +89,7 @@ export class NavigationMockApi {
             return [
                 200,
                 {
-                    compact: cloneDeep(this._compactNavigation),
                     default: cloneDeep(this._defaultNavigation),
-                    secetary: cloneDeep(this._sectaryNavigation),
-                    defaultAdmimn: cloneDeep(this._defaultNavigationSuperAdmin),
-                    tour: cloneDeep(this._tourNavigation),
-                    courses: cloneDeep(this._userNavigation),
                 }
             ];
 
