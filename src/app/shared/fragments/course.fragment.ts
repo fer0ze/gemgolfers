@@ -9,18 +9,8 @@ fragment CourseQL on course {
     par
     courseRating
     slopeRating
-    teeDistanceUnit
-    mapSupported
     country
-    countryGeonameId
     city
-    picture
-    
-    cityGeonameId
-    nameForHoles1to9
-    nameForHoles10to18
-    nameForHoles19to27
-    nameForHoles28to36
 }`;
 
 export const CourseHoleSetsQL = gql`

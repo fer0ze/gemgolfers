@@ -1078,6 +1078,25 @@ export class TournamentsService {
         });
     }
 
+    getTournamentByIDForSignUpUsers(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .watchQuery<any>({
+                    query: Query.getTournamentByIDForSignUpUsers,
+                    variables: {
+                        where: {
+                            id: {
+                                _eq: id,
+                            },
+                        },
+                    },
+                })
+                .valueChanges.subscribe(({ data }) => {
+                    resolve(data);
+                });
+        });
+    }
+
     getFlightSettings(tournamentId: string, category: string): Promise<any> {
         return new Promise((resolve) => {
             this.apollo

@@ -58,7 +58,7 @@
             </div>
 
             <!-- Main actions -->
-            <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+            <div class="flex items-center gap-x-2 mt-4 sm:mt-0 md:mt-4">
                 <!-- Search -->
                 <div class="flex-auto">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
@@ -68,7 +68,7 @@
                     </mat-form-field>
                 </div>
                 <!-- Add contact button -->
-                <button class="ml-4" mat-flat-button [color]="'primary'">
+                <button  mat-flat-button [color]="'primary'">
                     <a class="flex items-center" [routerLinkActive]="'active'" [routerLink]="['/players/add']">
                         <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                         <span class="ml-2 mr-1">Add</span>
@@ -82,19 +82,36 @@
                     <mat-icon class="icon-size-5 text-gray-50 mr-2" [svgIcon]="'heroicons_solid:save'"></mat-icon>
                     Bulk Import
                 </label> -->
-                <button (click)="exportToExcel()" class="ml-4" mat-flat-button [color]="'accent'">
+
+                <!-- Make a mat menu button with name actions  -->
+                <button mat-flat-button [color]="'accent'" #actionsMenuTrigger="matMenuTrigger"
+                    [matMenuTriggerFor]="actionsMenu">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                    <span class="ml-2">Actions</span>
+                </button>
+            </div>
+
+            <mat-menu #actionsMenu="matMenu">
+                <button (click)="exportToExcel()" mat-menu-item>
 
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-report'"></mat-icon>
                     <span class="ml-2">Export to Excel</span>
 
                 </button>
-                <button (click)="verifyUserEmails()" class="ml-4" mat-flat-button [color]="'primary'">
+                <button (click)="verifyUserEmails()" mat-menu-item>
 
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                     <span class="ml-2">Verify Users</span>
 
                 </button>
-            </div>
+                <button (click)="sendResetPasswordEmail()" mat-menu-item>
+
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                    <span class="ml-2">Send Reset Password Email</span>
+
+                </button>
+            </mat-menu>
+
         </div>
         <div class="xl:col-span-2 flex flex-col flex-auto bg-card overflow-x-auto">
             <div class="overflow-x-auto">
@@ -251,10 +268,12 @@
                         </th>
                         <td mat-cell *matCellDef="let transaction">
                             <span class="pr-6 font-medium whitespace-nowrap">
-                                <a class="flex items-center" [routerLinkActive]="'active'" [routerLink]="[
+                                <a [routerLinkActive]="'active'" [routerLink]="[
                                         '/players/view/' + transaction.id
                                     ]">
-                                    <mat-icon [svgIcon]="'heroicons_outline:pencil'" color="primary"></mat-icon>
+                                    <button>
+                                        <mat-icon [svgIcon]="'heroicons_outline:pencil'" color="primary"></mat-icon>
+                                    </button>
                                 </a>
                             </span>
                         </td>

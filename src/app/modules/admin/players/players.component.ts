@@ -490,9 +490,22 @@ export class PlayersComponent implements OnInit {
                 duration: 5000,
             });
         }
+    }
 
+    sendResetPasswordEmail(): void {
+
+        let selectionArray = this.selection.selected;
+        this._facadeService.executeSendResetEmailInBulk(selectionArray).subscribe((res) => {
+            //console.log(res);
+
+            this.snackBar.open("Password reset email has been sent successfully.", "close", {
+                duration: 3000,
+            });
+            this.selection.clear();
+        });
 
     }
+
     public onSortChanged(e) {
         this.sorting = e.direction;
         this.name = e.active;

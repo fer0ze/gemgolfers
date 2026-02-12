@@ -310,6 +310,9 @@ export class FacadeService {
   verifyUserEmails(emails: string[]) {
     return this.playerService.verifyUserEmails(emails);
   }
+  executeSendResetEmailInBulk(emails: any[]) {
+    return this.playerService.executeSendResetEmailInBulk(emails);
+  }
 
   getPlayerByMembershipNumberForSearch(
     clubID: string,
@@ -679,6 +682,9 @@ export class FacadeService {
 
   getTournamentByID(id: string) {
     return this.tournamentService.getTournamentByID(id);
+  }
+  getTournamentByIDForSignUpUsers(id: string) {
+    return this.tournamentService.getTournamentByIDForSignUpUsers(id);
   }
 
   addTournament(tournament: any, flightId: string = '', slotId: string = '', count = 0) {

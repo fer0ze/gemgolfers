@@ -825,6 +825,7 @@ export class Constants {
     // Players Categories
     static readonly CATEGORY_AMATEURS = 'Amateurs';
     static readonly CATEGORY_AMATEUR = 'Amateur';
+    static readonly PUBLIC_TOKEN = 'AUOZbiqwX03jnltdZstE';
     static readonly CATEGORY_SENIORS = 'Seniors';
     static readonly CATEGORY_SENIORS_AMATEUR = 'Senior Amateurs';
     static readonly CATEGORY_SENIOR = 'Senior';
@@ -1032,4 +1033,4 @@ export class generateGemId {
 }
 export const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const labelsPlayers = ['Club', 'Mobile', 'Trail', 'Premium'];
-export const labelsMembers = ['Amateurs', 'Senior Amateurs', 'Veterans', 'Ladies','Others'];
+export const labelsMembers = ['Amateurs', 'Senior Amateurs', 'Veterans', 'Ladies', 'Others'];

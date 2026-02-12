@@ -45,20 +45,20 @@ export class SignUpFormComponent implements OnInit {
         });
 
         this.createForm();
-        let data = await this._facadeService.getTournamentByID(
+        let data = await this._facadeService.getTournamentByIDForSignUpUsers(
             this.tournamentID
         );
         console.log(data);
         this.tournamentQL = data.tournament[0];
 
-        let dataClubs = await this._facadeService.getClubList();
-        this.golfClubs = dataClubs.club;
-        if (this.tournamentQL.clubId) {
-            this.showClub = true;
-        } else {
-            this.signUpForm.get('club').removeValidators([Validators.required]);
-            this.signUpForm.get('club').updateValueAndValidity();
-        }
+        // let dataClubs = await this._facadeService.getClubList();
+        // this.golfClubs = dataClubs.club;
+        // if (this.tournamentQL.clubId) {
+        //     this.showClub = true;
+        // } else {
+        //     this.signUpForm.get('club').removeValidators([Validators.required]);
+        //     this.signUpForm.get('club').updateValueAndValidity();
+        // }
 
         this.filteredClubOptions = this.signUpForm
             .get('club')!
@@ -70,8 +70,8 @@ export class SignUpFormComponent implements OnInit {
                 map((name) => (name ? this._filter(name) : this.golfClubs))
             );
 
-        if (this.tournamentQL['CategoriesQL'].length > 0) {
-            for (let obj of this.tournamentQL['CategoriesQL']) {
+        if (this.tournamentQL['categories'].length > 0) {
+            for (let obj of this.tournamentQL['categories']) {
                 let obja = {
                     id: 1,
                     name: obj.category,
@@ -92,7 +92,7 @@ export class SignUpFormComponent implements OnInit {
             membership: new FormControl(''),
             category: new FormControl('', [Validators.required]),
             handicap: new FormControl('0', [Validators.required]),
-            club: new FormControl('', [Validators.required]),
+            club: new FormControl(''),
         });
     }
     displayFn(club: Club): string {

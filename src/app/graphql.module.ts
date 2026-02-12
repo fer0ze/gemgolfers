@@ -1,36 +1,67 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { Apollo, ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { NgModule } from '@angular/core';
 import { ApolloClientOptions, ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { take } from 'rxjs/operators';
 import { environment } from '../environments/environment';
+import { firstValueFrom } from 'rxjs';
+import { Constants } from './shared/classes/general';
+
+const uri = environment.apiUrl;
+
+const authContext = (auth: AngularFireAuth) =>
+    setContext(async () => {
+        const token = await firstValueFrom(auth.idToken.pipe(take(1)));
+
+        if (token) {
+            localStorage.setItem('accessToken', token);
+            return {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+        }
+
+        return {}; // no auth header → anonymous role
+    });
+
+
+const errorLink = onError(({ graphQLErrors }) => {
+    if (graphQLErrors) {
+        for (const err of graphQLErrors) {
+            const message = err.message || '';
+            if (message.includes('Malformed Authorization header') ||
+                message.includes('JWSError') ||
+                message.includes('JWT')) {
+                localStorage.clear()
+                return;
+            }
+        }
+    }
+});
+
+export function createApollo(httpLink: HttpLink, auth: AngularFireAuth): ApolloClientOptions<any> {
+    return {
+        link: ApolloLink.from([
+            errorLink,
+            authContext(auth),
+            httpLink.create({ uri, withCredentials: true })
+        ]),
+        cache: new InMemoryCache(),
+    };
+}
 
 @NgModule({
-    declarations: [],
-    imports: [CommonModule],
-    exports: [HttpClientModule, ApolloModule,],
+    exports: [ApolloModule],
+    providers: [
+        {
+            provide: APOLLO_OPTIONS,
+            useFactory: createApollo,
+            deps: [HttpLink, AngularFireAuth],
+        },
+    ],
 })
-export class GraphQLModule {
-    constructor(apollo: Apollo, httpLink: HttpLink) {
-        const uri = environment.apiUrl;
-        const wssuri = environment.wsUrl;
-        const authHeader = new HttpHeaders()
-            .set(
-                'X-Hasura-Admin-Secret',
-                environment.apiKey
-            )
-            .set('Content-Type', 'application/json')
-            .set('Authorization', `Bearer ${localStorage.getItem('authToken')}`)
-            .set('X-Hasura-Role', environment.defaultRole)
-            .set('X-Hasura-Allowed-Roles', [environment.defaultRole]);
-        const http = httpLink.create({ uri, headers: authHeader });
-
-        apollo.create({
-            link: http,
-            cache: new InMemoryCache(),
-            assumeImmutableResults: false,
-
-        });
-    }
-}
+export class GraphQLModule { }

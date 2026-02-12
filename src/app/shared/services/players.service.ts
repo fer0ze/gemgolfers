@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { Observable, from, map, pipe, switchMap } from 'rxjs';
+import { Observable, catchError, forkJoin, from, map, of, pipe, switchMap } from 'rxjs';
 import {
     Player,
     PlayerCategory,
@@ -10,6 +10,7 @@ import {
 } from '../models/player.model';
 import * as Query from '../GraphQL/player.gql';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 //import { map } from "rxjs/operators";
 //import { toDate } from "@angular/common/src/i18n/format_date";
 
@@ -17,7 +18,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
     providedIn: 'root',
 })
 export class PlayersService {
-    constructor(private apollo: Apollo, private storage: AngularFireStorage) { }
+    constructor(private apollo: Apollo, private storage: AngularFireStorage, private afAuth: AngularFireAuth) { }
 
     public getPlayersList(): Promise<any> {
         return new Promise((resolve) => {
@@ -1752,5 +1753,19 @@ export class PlayersService {
                 }
             );
         });
+    }
+
+    public executeSendResetEmailInBulk(userEmails: any[]) {
+
+        const resetObservables = userEmails.map(account => this.sendUserResetEmail(account.Email));
+ 
+        return forkJoin(resetObservables);
+    }
+
+    sendUserResetEmail(email: string): Observable<boolean> {
+        return from(this.afAuth.sendPasswordResetEmail(email)).pipe(
+            map(() => true),
+            catchError(() => of(false))
+        );
     }
 }

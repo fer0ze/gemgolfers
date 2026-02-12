@@ -4,7 +4,6 @@ export const environment = {
   encryptSecretKey: 'prod-gemgolfers',
   apiUrl: 'https://proddb.gemgolfers.com/v1/graphql',
   wsUrl: 'wss://proddb.gemgolfers.com/v1/graphql',
-  apiKey: 'fercjqjjpgcngydvqoze',
   logName: 'Gemgolfers-WebApp-Prod',
   googleMapsApiKey:"AIzaSyBCBlexCU_5DOhvdyi-__ML37-CFi-TjFI",
   defaultRole: 'admin',

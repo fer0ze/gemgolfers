@@ -1138,6 +1138,26 @@ export const GetTournamentByID = gql`
     ${HoleQL}
 `;
 
+export const getTournamentByIDForSignUpUsers = gql`
+    query PostsGetQuery($where: tournament_bool_exp!) {
+        tournament(where: $where) {
+            id
+            clubId
+            adminId
+            categories {
+                id
+                tournamentId
+                category
+                flightSettings
+            }
+            members {
+                playerId
+                tournamentId
+            }
+        }
+    }
+`;
+
 export const GetFlightSettings = gql`
     query PostsGetQuery($where: tournament_member_category_bool_exp!) {
         tournament_member_category(where: $where) {

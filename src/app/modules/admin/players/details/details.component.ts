@@ -430,9 +430,9 @@ export class ContactsDetailsComponent implements OnInit {
                     ? this.currentPlayer.player[0].firebaseUid
                     : null,
                 addedBy: this.loggedInuser.id,
-                fcmToken: this.playerID 
+                fcmToken: this.playerID
                     ? this.currentPlayer.player[0].fcmToken
-                    : null, 
+                    : null,
                 gemId: GEMId,
                 firstName: contact.firstName,
                 lastName: contact.lastName,
@@ -452,21 +452,31 @@ export class ContactsDetailsComponent implements OnInit {
                 membershipNumber: contact.membershipNo,
                 homeClubId: clubMember[0].clubId ?? '',
             };
+            let password = `${player.firstName}123`;
             //console.log(contact);
 
             if (!this.editMode) {
                 if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
-                    const isSuccess = <boolean>(
-                        await this._facadeService.AddPlayer(player)
-                    );
-                    if (isSuccess) {
-                        this.save = true;
-                        this.snackBar.open('Player has been created.', 'x', {
-                            duration: 1000,
-                        });
-                        this.reset();
-                        this._router.navigate(['/players']);
-                    }
+                    await this._facadeService.updateAccountInFirebase(player.email, password).subscribe(async (re) => {
+                        if (re) {
+                            this._facadeService.sendTransactionalEmail(player.email, player.firstName, password).subscribe();
+                            const isSuccess = <boolean>(
+                                await this._facadeService.AddPlayer(player)
+                            );
+                            if (isSuccess) {
+                                this.save = true;
+                                this.snackBar.open('Player has been created.', 'x', {
+                                    duration: 1000,
+                                });
+                                this.reset();
+                                this._router.navigate(['/players']);
+                            }
+                        } else {
+                            this.snackBar.open('Error!. Please try again.', 'x', {
+                                duration: 1000,
+                            });
+                        }
+                    })
                 } else {
                     let state = this._localStorage.get(Constants.STATE);
                     if (state == Constants.TOUR) {
@@ -506,7 +516,7 @@ export class ContactsDetailsComponent implements OnInit {
             } else {
                 const isSuccess = <boolean>(
                     await this._facadeService.updatePlayer(player)
-                ); 
+                );
 
                 if (this.currentPlayer.player[0].handicap !== contact.handicap) {
                     //console.log(this.tournamentId);

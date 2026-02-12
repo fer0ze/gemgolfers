@@ -83,7 +83,6 @@ export const getTorunamentScoreViewQueryQL = gql`
                         id
                         firstName
                         lastName
-                        picture
                         playerCategory
                         handicap
                     }
