@@ -423,7 +423,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
             }
         } else {
             if (filterValue.length >= 3) {
-                for (let c of this.dataPlayersWHS.player_handicap_whs) {
+                for (let c of this.dataPlayersWHS) {
                     if (c.player.membershipNumber == filterValue) {
                         const dailyStat = {
                             name: c.player.firstName + ' ' + c.player.lastName,
@@ -503,7 +503,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
             }
         } else {
             if (filterValue.length >= 3) {
-                for (let c of this.dataPlayersWHS.player_handicap_whs) {
+                for (let c of this.dataPlayersWHS) {
                     c['fullname'] =
                         c.player['firstName'] + ' ' + c.player['lastName'];
                     if (
@@ -717,7 +717,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
         let count = 0;
         //console.log(this.dataPlayersCongu.player_handicap);
 
-        this.dataPlayersWHS.player_handicap_whs.forEach((element) => {
+        this.dataPlayersWHS.forEach((element) => {
             count++;
             let temp = [
                 count,
