@@ -567,7 +567,7 @@ export class DailyStarterReportComponent implements OnInit {
             //console.log(startDate);
             this.getDailyRounds(lastDate, startDate);
         } else {
-        }
+        } 
     }
 
     playerList(players, key, date) {

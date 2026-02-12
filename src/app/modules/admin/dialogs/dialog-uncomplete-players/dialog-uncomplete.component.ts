@@ -25,7 +25,16 @@ export class DialogUncompletedComponent implements OnInit {
         'membershipNumber',
         'cat',
         'email',
-       
+
+    ];
+    tableColumns = [
+        'firstName',
+        'lastName',
+        'handicapWhsIndex',
+        'membershipNumber',
+        'playerCategory',
+        'email',
+
     ];
     monthName = [
         'Monday',
@@ -46,8 +55,8 @@ export class DialogUncompletedComponent implements OnInit {
         public dialogRef: MatDialogRef<DialogUncompletedComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private facadeService: FacadeService,
-      
-    ) {}
+
+    ) { }
 
     ngOnInit() {
         //console.log(this.data);
@@ -70,44 +79,59 @@ export class DialogUncompletedComponent implements OnInit {
     }
 
     public downloadAsPDF() {
-        var doc = new jsPDF();
-        let date=new Date(this.data.date).getDate() +'/'+(new Date(this.data.date).getMonth()+1) +'/'+new Date(this.data.date).getFullYear(); 
-        var day=new Date(this.data.date).getDay()-1;
-        // day=this.monthName[day];
+        const doc = new jsPDF();
+
+        let dateObj = new Date(this.data.date);
+        let date = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+        let day = dateObj.getDay() - 1;
+
         doc.setFontSize(18);
-        if(this.data.key=='non'){
-            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
+
+        if (this.data.key == 'non') {
+            doc.text("Date: " + date + "-" + this.monthName[day], 74, 15);
             doc.text("Round's Non-Submitted Cards Detail:", 54, 23);
-        }else if(this.data.key=='all'){      
-            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
+        } else if (this.data.key == 'all') {
+            doc.text("Date: " + date + "-" + this.monthName[day], 74, 15);
             doc.text("All Players Detail:", 68, 23);
-        }else{
-            doc.text("Date: "+date+"-"+this.monthName[day], 74, 15);
-            doc.text("Round's Submitted Cards Detail:",62, 23);
+        } else {
+            doc.text("Date: " + date + "-" + this.monthName[day], 74, 15);
+            doc.text("Round's Submitted Cards Detail:", 62, 23);
         }
+
         doc.setFontSize(11);
         doc.setTextColor(100);
 
-        // From HTML
-        doc.autoTable({
-            html: '#playerTables',
-            startY: 25,
-            theme: 'grid',
-            useCss: false,
+        // 🔹 Get table columns
+        const columns = this.tableColumns.map(col => ({
+            header: col.toUpperCase(),
+            dataKey: col
+        }));
+
+        // 🔹 Get table rows
+        const rows = this.dataSource.data.map((row: any) => {
+            let obj: any = {};
+            this.tableColumns.forEach(col => {
+                obj[col] = row[col];
+            });
+            return obj;
         });
 
-        // Open PDF document in new tab
-        doc.output('dataurlnewwindow');
+        doc.autoTable({
+            columns: columns,
+            body: rows,
+            startY: 30,
+            theme: 'grid'
+        });
 
-        // Download PDF document
-        //doc.save('flights.pdf');
+        doc.save('players.pdf');
     }
+
 
     onNoClick(): void {
         this.dialogRef.close();
     }
 
-   
+
     close() {
         this.dialogRef.close();
     }
@@ -116,7 +140,7 @@ export class DialogUncompletedComponent implements OnInit {
 
         const data = this.dataSource.data.map((item) => {
             // Create a new object without the 'Details' column
-            const {  id, ...filteredItem } = item;
+            const { id, ...filteredItem } = item;
             return filteredItem;
         });
 
