@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    Router, Resolve,
-    RouterStateSnapshot,
-    ActivatedRouteSnapshot
-} from '@angular/router';
+import { Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { BehaviorSubject, Observable, catchError, throwError, } from 'rxjs';
 import { UserActivityService } from './userActivityReport.service';
@@ -11,7 +7,7 @@ import { DatePipe } from '@angular/common';
 @Injectable({
     providedIn: 'root'
 })
-export class Resolver implements Resolve<any> {
+export class Resolver  {
 
     /**
      * Constructor

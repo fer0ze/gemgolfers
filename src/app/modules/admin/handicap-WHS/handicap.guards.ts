@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PlayerHandicapComponent } from './player-handicap/player-handicaps.component';
 
@@ -7,7 +7,7 @@ import { PlayerHandicapComponent } from './player-handicap/player-handicaps.comp
 @Injectable({
     providedIn: 'root'
 })
-export class CanDeactivateHandicapDetails implements CanDeactivate<PlayerHandicapComponent>
+export class CanDeactivateHandicapDetails 
 {
     canDeactivate(
         component: PlayerHandicapComponent,

@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Resolve,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Constants } from 'app/shared/classes/general';
 import { DatePipe } from '@angular/common';
@@ -15,7 +10,7 @@ import { PlayerService } from './players.service';
 @Injectable({
     providedIn: 'root',
 })
-export class PlayerResolver implements Resolve<any> {
+export class PlayerResolver  {
     loggedInuser: any;
     /**
      * Constructor

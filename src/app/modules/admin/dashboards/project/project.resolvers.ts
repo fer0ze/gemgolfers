@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Resolve,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ProjectService } from 'app/modules/admin/dashboards/project/project.service';
 import { Constants } from 'app/shared/classes/general';
@@ -15,7 +10,7 @@ import { LogsService } from 'app/shared/services/logs.service';
 @Injectable({
     providedIn: 'root',
 })
-export class ProjectResolver implements Resolve<any> {
+export class ProjectResolver  {
     loggedInuser: any;
     /**
      * Constructor

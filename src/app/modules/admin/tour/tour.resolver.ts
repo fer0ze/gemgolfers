@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Resolve,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LogsService } from 'app/shared/services/logs.service';
 import { TourService } from './tour.service';
@@ -14,7 +9,7 @@ import { Constants } from 'app/shared/classes/general';
 @Injectable({
     providedIn: 'root',
 })
-export class TourResolver implements Resolve<any> {
+export class TourResolver  {
     loggedInuser: any;
     /**
      * Constructor
