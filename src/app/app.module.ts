@@ -12,7 +12,7 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { GraphQLModule } from './graphql.module';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -22,36 +22,21 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'environments/environment';
 import { GlobalErrorHandler } from './errorhandler.module';
 
-@NgModule({
-    declarations: [AppComponent],
-    imports: [
-        BrowserModule,
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes),
-
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
         FuseConfigModule.forRoot(appConfig),
         FuseMockApiModule.forRoot(mockApiServices),
-
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
-
         // Core module of your application
         CoreModule,
         // Layout module of your application
         LayoutModule,
-
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-
-        HttpClientModule,
-        GraphQLModule,
-    ],
-    bootstrap: [AppComponent],
-    // providers: [{
-    //     provide: ErrorHandler,
-    //     useClass: GlobalErrorHandler,
-    // }]
-})
+        GraphQLModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
