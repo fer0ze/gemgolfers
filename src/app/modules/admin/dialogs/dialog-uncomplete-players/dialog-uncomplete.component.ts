@@ -28,12 +28,11 @@ export class DialogUncompletedComponent implements OnInit {
 
     ];
     tableColumns = [
-        'firstName',
-        'lastName',
-        'handicapWhsIndex',
-        'membershipNumber',
-        'playerCategory',
-        'email',
+        'Name',
+        'Handicap Index',
+        'M.No',
+        'Category',
+        'Email',
 
     ];
     monthName = [
@@ -101,20 +100,19 @@ export class DialogUncompletedComponent implements OnInit {
         doc.setFontSize(11);
         doc.setTextColor(100);
 
-        // 🔹 Get table columns
-        const columns = this.tableColumns.map(col => ({
-            header: col.toUpperCase(),
-            dataKey: col
-        }));
+        // 🔹 Get table columns from the dataSource
+        const columns = this.tableColumns.map(col => ({ header: col, dataKey: col }));
 
         // 🔹 Get table rows
-        const rows = this.dataSource.data.map((row: any) => {
-            let obj: any = {};
-            this.tableColumns.forEach(col => {
-                obj[col] = row[col];
-            });
-            return obj;
-        });
+        const rows = this.dataSource.data.map(player => ({
+            'Name': player.firstName + ' ' + player.lastName,
+            'Handicap Index': player.handicapWhsIndex,
+            'M.No': player.membershipNumber,
+            'Category': player.playerCategory,
+            'Email': player.email,
+        }));
+
+        // 🔹 Add table to PDF
 
         doc.autoTable({
             columns: columns,
