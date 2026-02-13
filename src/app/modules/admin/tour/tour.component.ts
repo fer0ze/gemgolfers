@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TourService } from './tour.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DialogAddTourComponent } from '../dialogs/dialog-add-tour/dialog-add-tour.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
 import { Player, UserSessionModel } from 'app/shared/models/player.model';

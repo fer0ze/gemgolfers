@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Constants } from 'app/shared/classes/general';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
 
 @Component({
     selector: 'app-dialog-close-round',

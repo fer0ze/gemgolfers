@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
@@ -1180,7 +1180,7 @@ export class ViewTournamentComponent implements OnInit {
                                     +chngDate.substring(0, 2);
 
                                 let flightDate = new Date(newDate).getDate();
-                                if (flightDate == NaN) {
+                                if (Number.isNaN(flightDate)) {
                                     flightDate = new Date(obj.dates).getDate();
                                 }
                                 //console.log(flightDate);

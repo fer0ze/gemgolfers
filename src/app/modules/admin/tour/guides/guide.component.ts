@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { Constants, General, UniqueIdGenerator } from 'app/shared/classes/general';
 import { Player } from 'app/shared/models/player.model';
@@ -8,7 +8,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, UntypedFormArray, Validators } from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({

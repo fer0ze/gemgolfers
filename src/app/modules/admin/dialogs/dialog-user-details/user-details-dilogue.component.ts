@@ -1,16 +1,16 @@
 import { DialogOverviewComponent } from "../dialog-overview/dialog-overview.component";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from "@angular/material/legacy-dialog";
 import { PlayerHanidcap } from "../../../../shared/models/player.model";
 import { PlayerHandicap } from "../../../../shared/classes/player-hanidcap";
 import { FacadeService } from "../../../../shared/services/facade.service";
 import { PlayerQL } from "../../../../shared/fragments/player.fragment";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { DatePipe, formatDate } from "@angular/common";
 
 @Component({

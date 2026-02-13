@@ -4,13 +4,13 @@ import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Club } from 'app/shared/models/club.model';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ApexOptions } from 'ng-apexcharts';
 import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogAddLeagueComponent } from '../dialogs/dialog-add-league/dialog-add-league.component';
 import { UserSessionModel } from 'app/shared/models/player.model';
 @Component({

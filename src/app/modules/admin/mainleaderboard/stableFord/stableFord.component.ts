@@ -1,6 +1,6 @@
 // Import necessary modules and components
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogPlayerScoreComponent } from '../../dialogs/dialog-player-score/dialog-player-score.component';
 import { handicapAllocation } from 'app/shared/classes/general';
 import { Player } from 'app/shared/models/player.model';

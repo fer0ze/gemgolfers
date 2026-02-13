@@ -28,15 +28,15 @@ import {
 import { of, Observable } from 'rxjs';
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";
 // import { DialogPlayerComponent } from "../../material-components/dialog-player/dialog-player.component";
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 //import { DialogAddPlayerComponent } from "../../material-components/dialog-add-player/dialog-add-player.component";
 import { DatePipe } from '@angular/common';
 import { DialogAddExisitingPlayerComponent } from '../../dialogs/dialog-add-exisiting-player/dialog-add-exisiting-player.component';
 import { join } from 'path';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 

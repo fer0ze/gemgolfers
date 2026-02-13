@@ -7,11 +7,11 @@ import {
     Input,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Apollo } from 'apollo-angular';
 import {
     Player,
@@ -55,7 +55,7 @@ import { forEach } from 'lodash';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list-flight/dialog-player-list.component';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { DialogAddGuestComponent } from '../../dialogs/dialog-add-guest/dialog-add-guest.component';
 // import { DialogChangeCourseHoleSetComponent } from "../../material-components/dialog-change-course-hole-set/dialog-change-course-hole-set.component";
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";

@@ -25,7 +25,7 @@ import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
 import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 

@@ -9,7 +9,7 @@ import {
 import { Club } from 'app/shared/models/club.model';
 import { PlayerCategory } from 'app/shared/models/player.model';
 import { TournamentMember } from 'app/shared/models/tournament.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { generate, map, Observable, startWith } from 'rxjs';
 import { FuseAlertType } from '@fuse/components/alert';
