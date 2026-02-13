@@ -66,7 +66,6 @@ const dailystarterStatsRoutes: Route[] = [
         MatInputModule,
         MatDatepickerModule,
     ],
-    entryComponents: [UserDetailsDilogueComponent],
     providers: [DatePipe],
 })
 export class GolfReportModule {}

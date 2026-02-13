@@ -1,5 +1,5 @@
-import {  NgModule } from '@angular/core';
-import {  CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -43,7 +43,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
 @NgModule({
-  declarations: [TeeTimesComponent, AddTeeTimesComponent,DialogAddGuestComponent, DialogTeeTimeSlotComponent,DialogPlayerListComponent,ViewTeeTimeComponent],
+  declarations: [TeeTimesComponent, AddTeeTimesComponent, DialogAddGuestComponent, DialogTeeTimeSlotComponent, DialogPlayerListComponent, ViewTeeTimeComponent],
   imports: [
     CommonModule,
     TeeTimesRoutingModule,
@@ -63,7 +63,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatSelectModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule,NgxMaterialTimepickerModule,
+    MatNativeDateModule, NgxMaterialTimepickerModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
@@ -74,8 +74,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatExpansionModule,
     // AmazingTimePickerModule,
   ],
-  entryComponents: [
-    DialogTeeTimeSlotComponent
-  ]
+
 })
 export class TeeTimesModule { }

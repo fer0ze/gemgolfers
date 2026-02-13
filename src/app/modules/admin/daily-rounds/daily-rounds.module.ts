@@ -64,11 +64,6 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
         MatTooltipModule,
         // AmazingTimePickerModule,
     ],
-    entryComponents: [
-        // DailogDailyPlayerScoreComponent,
-        // DialogChangeCourseHoleSetComponent,
-        DialogAddExisitingPlayerComponent,
-        // DialogAddDailyRoundPlayerComponent
-    ],
+
 })
-export class DailyRoundsModule {}
+export class DailyRoundsModule { }

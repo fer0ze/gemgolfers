@@ -70,7 +70,6 @@ const dailyPlayerRoutes: Route[] = [
         MatInputModule,
         MatDatepickerModule,
     ],
-    entryComponents: [UserDetailsDilogueComponent],
     providers: [DailyPlayerReportResolver, DatePipe],
 })
 export class DailyPlayerReportModule { }

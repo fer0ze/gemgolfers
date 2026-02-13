@@ -73,6 +73,5 @@ import { DialoghandicapFreezeComponent } from '../dialogs/dialog-handicap-freeze
         MatProgressSpinnerModule,
         // FlexLayoutModule.withConfig({ addFlexToParent: false }),
     ],
-    // entryComponents: [UserWHSDeatilsDialogueComponent],
 })
 export class HandicapModule { }

@@ -83,7 +83,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
         ViewTournamentComponent,
         DialogMarshalComponent,
         DialogPlayingCategoryComponent,
-        DialogAddMemberComponent,TeamManagementComponent,
+        DialogAddMemberComponent, TeamManagementComponent,
         DialogCourseDetailsComponent,
         DialogCloseRoundComponent,
         DialogPlayingDatesComponent,
@@ -130,7 +130,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
         // AmazingTimePickerModule,
 
     ],
-    entryComponents: [DialogHanidcapListComponent],
+
     providers: [FlightManagementComponent],
 })
-export class TournamentsModule {}
+export class TournamentsModule { }

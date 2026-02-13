@@ -71,6 +71,5 @@ import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/le
         MatProgressSpinnerModule,
         // FlexLayoutModule.withConfig({ addFlexToParent: false }),
     ],
-    // entryComponents: [UserWHSDeatilsDialogueComponent],
 })
 export class HandicapModule {}

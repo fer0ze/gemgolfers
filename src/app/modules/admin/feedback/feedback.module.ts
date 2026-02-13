@@ -54,6 +54,5 @@ import { DialogShowfeedbackComponent } from "../dialogs/dialog-showfeedback/dial
     MatDialogModule,
   ],
   declarations: [FeedbackComponent, DialogShowfeedbackComponent],
-  entryComponents: [DialogShowfeedbackComponent],
 })
 export class FeedbackModule { }
