@@ -5,7 +5,7 @@ import { PlayerHanidcap } from "../../../../shared/models/player.model";
 import { PlayerHandicap } from "../../../../shared/classes/player-hanidcap";
 import { FacadeService } from "../../../../shared/services/facade.service";
 import { PlayerQL } from "../../../../shared/fragments/player.fragment";
-import * as jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -109,7 +109,7 @@ export class UserDetailsDilogueComponent implements OnInit {
     doc.setTextColor(100);
 
     // From HTML
-    doc.autoTable({
+    (doc as any).autoTable({
       html: "#pdfTable",
       startY: 25,
       theme: "grid",

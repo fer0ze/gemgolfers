@@ -6,7 +6,7 @@ import { Constants } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { Player } from 'app/shared/models/player.model';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 @Component({
     selector: 'app-dialog-player-score',
@@ -588,7 +588,7 @@ export class DialogPlayerScoreComponent implements OnInit {
         doc.setTextColor(100);
 
         // From HTML
-        doc.autoTable({
+        (doc as any).autoTable({
             html: '#pdfTable',
             startY: 25,
             theme: 'grid',

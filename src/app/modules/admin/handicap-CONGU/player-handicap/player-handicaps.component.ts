@@ -39,7 +39,7 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { HandicapsComponent } from '../CONGU/handicaps.component';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 @Component({
@@ -246,7 +246,7 @@ export class PlayerHandicapComponent implements OnInit {
                 rows.push(temp);
             });
             //From HTML
-            doc.autoTable(col, rows, {
+            (doc as any).autoTable(col, rows, {
                 startY: 25,
                 theme: 'grid',
                 didParseCell: function (data) {

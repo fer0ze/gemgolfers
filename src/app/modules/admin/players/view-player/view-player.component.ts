@@ -19,7 +19,7 @@ import { FlightScores } from 'app/shared/classes/FlightScores';
 import { Flight } from 'app/shared/models/flight.model';
 import { Course } from 'app/shared/classes/course';
 
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { ScoreStats } from 'app/shared/classes/ScoreStats';
 import { MatPaginator } from '@angular/material/paginator';
@@ -962,7 +962,7 @@ export class ViewPlayerComponent implements OnInit {
         //console.log(rows);
 
         let a = 1;
-        doc.autoTable(col, rows, {
+        (doc as any).autoTable(col, rows, {
             startY: 25,
             theme: 'grid',
             didParseCell: function (data) {
@@ -986,7 +986,7 @@ export class ViewPlayerComponent implements OnInit {
                 ////console.log(a);
             },
         });
-        // doc.autoTable({
+        // (doc as any).autoTable({
         //   html: "#pdfTable",
         //   startY: 25,
         //   theme: "grid",
@@ -1060,7 +1060,7 @@ export class ViewPlayerComponent implements OnInit {
             rows.push(temp);
         });
         //From HTML
-        doc.autoTable(col, rows, {
+        (doc as any).autoTable(col, rows, {
             startY: 25,
             theme: 'grid',
             didParseCell: function (data) {

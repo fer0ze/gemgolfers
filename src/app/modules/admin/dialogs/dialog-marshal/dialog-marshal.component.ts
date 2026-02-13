@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Marshal } from 'app/shared/models/player.model';
 import { LogsService } from 'app/shared/services/logs.service';
 
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
 @Component({
@@ -48,7 +48,7 @@ export class DialogMarshalComponent implements OnInit {
     doc.setTextColor(100);
 
     // From HTML
-    doc.autoTable({
+    (doc as any).autoTable({
       html: '#pdfTable',
       startY: 25,
       theme: 'grid',

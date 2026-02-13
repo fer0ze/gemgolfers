@@ -23,7 +23,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { CommonModule } from '@angular/common';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { DialogTournamentComponent } from '../dialogs/dialog-tournament/dialog-tournament.component';
 
 @Component({
@@ -368,7 +368,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
     }
     async generatePDFGross() {
         const doc = new jsPDF("l", "mm", "a4"); // Landscape mode
-        const pageWidth = doc.internal.pageSize.width;
+        const pageWidth = (doc as any).internal.pageSize.width;
 
         // **Header 1: Tournament Title**
         doc.setFontSize(14);
@@ -482,7 +482,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
                 });
 
             // **Step 3: Generate Table for Current Category**
-            doc.autoTable({
+            (doc as any).autoTable({
                 startY: startY,
                 head: headers,
                 body: dataA,
@@ -492,7 +492,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
                 columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } }, // Align Name & Club to the left
             });
 
-            startY = doc.lastAutoTable.finalY + 10; // Move startY below the table
+            startY = (doc as any).lastAutoTable.finalY + 10; // Move startY below the table
             categoryIndex++;
         });
 
@@ -501,7 +501,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
     }
     async generatePDFNet() {
         const doc = new jsPDF("l", "mm", "a4"); // Landscape mode
-        const pageWidth = doc.internal.pageSize.width;
+        const pageWidth = (doc as any).internal.pageSize.width;
 
         // **Header 1: Tournament Title**
         doc.setFontSize(14);
@@ -614,7 +614,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
                 });
 
             // **Step 3: Generate Table for Current Category**
-            doc.autoTable({
+            (doc as any).autoTable({
                 startY: startY,
                 head: headers,
                 body: dataA,
@@ -624,7 +624,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
                 columnStyles: { 1: { halign: "left" }, 2: { halign: "left" } }, // Align Name & Club to the left
             });
 
-            startY = doc.lastAutoTable.finalY + 10; // Move startY below the table
+            startY = (doc as any).lastAutoTable.finalY + 10; // Move startY below the table
             categoryIndex++;
         });
 

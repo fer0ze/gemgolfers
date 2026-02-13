@@ -31,7 +31,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 @Component({
@@ -268,7 +268,7 @@ export class HandicapsComponent implements OnInit {
         try {
             this.logger.log('Download Handicap Congu Button Click', "info");
             let doc = new jsPDF();
-            const pageWidth = doc.internal.pageSize.width;
+            const pageWidth = (doc as any).internal.pageSize.width;
 
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
@@ -351,7 +351,7 @@ export class HandicapsComponent implements OnInit {
                 });
 
                 // **Step 5: Generate Table for Current Category**
-                doc.autoTable({
+                (doc as any).autoTable({
                     startY: startY,
                     head: [['Sr.', 'M.No', 'Name', 'Exact H/C', 'Play H/C']],
                     body: rows,
@@ -361,7 +361,7 @@ export class HandicapsComponent implements OnInit {
                     columnStyles: { 2: { halign: "left" } }, // Align Name column to the left
 
                     didDrawPage: (data) => {
-                        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+                        const currentPage = (doc as any).internal.getCurrentPageInfo().pageNumber;
                         // Add Category Header on every page
                         if (currentPage > 1) {
                             doc.setFontSize(12);

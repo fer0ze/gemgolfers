@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Player } from '../../../../shared/models/player.model';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TournamentMember } from 'app/shared/models/tournament.model';
@@ -114,7 +114,7 @@ export class DialogUncompletedComponent implements OnInit {
 
         // 🔹 Add table to PDF
 
-        doc.autoTable({
+        (doc as any).autoTable({
             columns: columns,
             body: rows,
             startY: 30,

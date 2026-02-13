@@ -6,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
     enumPlayerCategory,
@@ -1136,8 +1136,8 @@ export class ViewTournamentComponent implements OnInit {
         doc.setFillColor(0, 0, 0);
         doc.rect(10, 5, 190, 20, 'F');
         doc.setTextColor(255, 255, 255);
-        doc.text(this.fullTournament.title, 13, 12, 'justify');
-        doc.text('\nScore Sheet', 13, 12, 'justify');
+        doc.text(this.fullTournament.title, 13, 12, { align: 'justify' });
+        doc.text('\nScore Sheet', 13, 12, { align: 'justify' });
 
         this.tournamentCategories.forEach((element) => {
             this.getSummaryData(element.category);
@@ -1223,7 +1223,7 @@ export class ViewTournamentComponent implements OnInit {
             // //console.log(rows);
             // this.sortAllGrossLeadersTie(rows);
             // //console.log(rows);
-            doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
+            (doc as any).autoTable(col, rows, { startY: 35, theme: 'grid' });
             doc.addPage();
 
             // Open PDF document in new tab
@@ -1241,8 +1241,8 @@ export class ViewTournamentComponent implements OnInit {
         doc.setFillColor(0, 0, 0);
         doc.rect(10, 5, 190, 20, 'F');
         doc.setTextColor(255, 255, 255);
-        doc.text(this.fullTournament.title, 13, 12, 'justify');
-        doc.text('\nScore Sheet', 13, 12, 'justify');
+        doc.text(this.fullTournament.title, 13, 12, { align: 'justify' });
+        doc.text('\nScore Sheet', 13, 12, { align: 'justify' });
 
         this.tournamentCategories.forEach((element) => {
             this.getSummaryData(element.category);
@@ -1327,7 +1327,7 @@ export class ViewTournamentComponent implements OnInit {
             //console.log(rows);
             // this.sortAllGrossLeadersTie(rows);
             // //console.log(rows);
-            doc.autoTable(col, rows, { startY: 35, theme: 'grid' });
+            (doc as any).autoTable(col, rows, { startY: 35, theme: 'grid' });
             doc.addPage();
 
             // Open PDF document in new tab

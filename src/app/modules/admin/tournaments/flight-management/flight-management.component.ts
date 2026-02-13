@@ -44,7 +44,7 @@ import {
 import { SelectionModel } from '@angular/cdk/collections';
 import { of } from 'rxjs';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -614,8 +614,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
     public downloadAsPDFCat(noOfRounds) {
         const doc = new jsPDF('portrait');
-        const pageHeight = doc.internal.pageSize.height;
-        const pageWidth = doc.internal.pageSize.width;
+        const pageHeight = (doc as any).internal.pageSize.height;
+        const pageWidth = (doc as any).internal.pageSize.width;
 
         // **Title**
         doc.setFontSize(16);
@@ -708,8 +708,8 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
     public downloadAsPDF(noOfRounds) {
         const doc = new jsPDF('portrait');
-        const pageHeight = doc.internal.pageSize.height;
-        const pageWidth = doc.internal.pageSize.width;
+        const pageHeight = (doc as any).internal.pageSize.height;
+        const pageWidth = (doc as any).internal.pageSize.width;
 
         // **Title**
         doc.setFontSize(16);

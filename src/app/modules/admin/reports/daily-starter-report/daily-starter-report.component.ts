@@ -12,10 +12,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
-// import * as jsPDF from "jspdf";
+// import { jsPDF } from "jspdf";
 import { Player } from '../../../../shared/models/player.model';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { Constants } from '../../../../shared/classes/general';
@@ -446,7 +446,7 @@ export class DailyStarterReportComponent implements OnInit {
     public downloadAsPDF() {
         this.logger.log('Admin Click Download Pdf Daily Starter Report', "info");
         let doc = new jsPDF();
-        let res = doc.autoTableHtmlToJson(document.getElementById('pdfTable'));
+        let res = (doc as any).autoTableHtmlToJson(document.getElementById('pdfTable'));
         let columns = [
             res.columns[0],
             res.columns[1],
@@ -461,12 +461,12 @@ export class DailyStarterReportComponent implements OnInit {
         doc.setTextColor(100);
 
         // From HTML
-        // doc.autoTable({
+        // (doc as any).autoTable({
         //   html: "#pdfTable",
         //   startY: 35,
         //   theme: "grid",
         // });
-        doc.autoTable(columns, res.data, { startY: 25, theme: 'grid' });
+        (doc as any).autoTable(columns, res.data, { startY: 25, theme: 'grid' });
 
         // Open PDF document in new tab
         doc.output('dataurlnewwindow');

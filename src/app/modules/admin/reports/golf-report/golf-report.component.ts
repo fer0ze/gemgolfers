@@ -13,7 +13,7 @@ import {
     Constants,
     General,
 } from '../../../../shared/classes/general';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 import 'jspdf-autotable';
 // import { UserDetailsDilogueComponent } from "../../material-components/user-details-dilogue/user-details-dilogue.component";
@@ -231,7 +231,7 @@ export class GolfReportComponent implements OnInit {
     // public downloadAsPDF() {
     //     this.logger.log('Admin Click Download Pdf Daily Player Report', "info");
     //     let doc = new jsPDF();
-    //     let res = doc.autoTableHtmlToJson(document.getElementById('a'));
+    //     let res = (doc as any).autoTableHtmlToJson(document.getElementById('a'));
     //     let columns = [
     //         res.columns[0],
     //         res.columns[1],
@@ -246,12 +246,12 @@ export class GolfReportComponent implements OnInit {
     //     doc.setTextColor(100);
 
     //     // From HTML
-    //     // doc.autoTable({
+    //     // (doc as any).autoTable({
     //     //   html: "#pdfTable",
     //     //   startY: 35,
     //     //   theme: "grid",
     //     // });
-    //     doc.autoTable(columns, res.data, { startY: 25, theme: 'grid' });
+    //     (doc as any).autoTable(columns, res.data, { startY: 25, theme: 'grid' });
 
     //     // Open PDF document in new tab
     //     doc.output('dataurlnewwindow');

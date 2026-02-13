@@ -19,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlightScores } from '../../../../shared/classes/FlightScores';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import {
     Constants,
     General,
@@ -490,7 +490,7 @@ export class PlayerHandicapComponent implements OnInit, AfterViewInit {
             });
             // From HTML
             let a = 1;
-            doc.autoTable(col, rows, {
+            (doc as any).autoTable(col, rows, {
                 startY: 25,
                 theme: 'grid',
                 didParseCell: function (data) {
@@ -514,7 +514,7 @@ export class PlayerHandicapComponent implements OnInit, AfterViewInit {
                     ////console.log(a);
                 },
             });
-            // doc.autoTable({
+            // (doc as any).autoTable({
             //   html: "#pdfTable",
             //   startY: 25,
             //   theme: "grid",

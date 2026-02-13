@@ -12,10 +12,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
-// import * as jsPDF from "jspdf";
+// import { jsPDF } from "jspdf";
 import { Player, UserSessionModel } from '../../../../shared/models/player.model';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { Constants, General } from '../../../../shared/classes/general';
@@ -319,8 +319,8 @@ export class DailyStarterReportComponent implements OnInit {
 
     public downloadAsPDF(data: any) {
         const doc = new jsPDF('portrait');
-        const pageHeight = doc.internal.pageSize.height;
-        const pageWidth = doc.internal.pageSize.width;
+        const pageHeight = (doc as any).internal.pageSize.height;
+        const pageWidth = (doc as any).internal.pageSize.width;
 
         /* =======================
            Title Section

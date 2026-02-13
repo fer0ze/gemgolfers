@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import {
     Player,
     ClubMembership,
@@ -513,7 +513,7 @@ export class HandicapsComponent implements OnInit {
                 },
             };
             // From HTML
-            doc.autoTable({
+            (doc as any).autoTable({
                 head: [col],
                 body: rows,
                 startY: 25,
@@ -566,7 +566,7 @@ export class HandicapsComponent implements OnInit {
         ];
 
         // **Generate Table**
-        doc.autoTable({
+        (doc as any).autoTable({
             startY: 30, // Adjust position after second header
             head: headers,
             body: data,

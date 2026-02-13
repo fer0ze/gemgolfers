@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Player } from '../../../../shared/models/player.model';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TournamentMember } from 'app/shared/models/tournament.model';
@@ -71,7 +71,7 @@ export class DialogLeaguesComponent implements OnInit {
     //     doc.setTextColor(100);
 
     //     // From HTML
-    //     doc.autoTable({
+    //     (doc as any).autoTable({
     //         html: '#playerTables',
     //         startY: 25,
     //         theme: 'grid',

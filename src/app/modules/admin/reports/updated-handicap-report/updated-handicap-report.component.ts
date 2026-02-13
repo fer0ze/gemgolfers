@@ -17,7 +17,7 @@ import { FacadeService } from '../../../../shared/services/facade.service';
 import { Constants } from '../../../../shared/classes/general';
 import { of } from 'rxjs';
 import { DatePipe, formatDate } from '@angular/common';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
@@ -679,7 +679,7 @@ export class UpdatedHandicapReportComponent implements OnInit {
             rows.push(temp);
         });
         // From HTML
-        doc.autoTable(col, rows, { startY: 25, theme: 'grid' });
+        (doc as any).autoTable(col, rows, { startY: 25, theme: 'grid' });
 
         // Open PDF document in new tab
         //doc.output("dataurlnewwindow");

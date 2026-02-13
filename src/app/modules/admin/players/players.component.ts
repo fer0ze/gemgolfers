@@ -18,7 +18,7 @@ import { Subject, takeUntil, Observable, of, switchMap } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { query } from '@angular/animations';
 import { MatDrawer } from '@angular/material/sidenav';
 import {
@@ -401,7 +401,7 @@ export class PlayersComponent implements OnInit {
                 rows.push(temp);
             });
             // From HTML
-            doc.autoTable(col, rows, {
+            (doc as any).autoTable(col, rows, {
                 startY: 25,
                 theme: 'grid',
                 columnStyles: {
