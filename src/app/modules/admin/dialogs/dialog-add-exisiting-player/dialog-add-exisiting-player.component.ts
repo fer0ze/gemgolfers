@@ -1,16 +1,17 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Player } from '../../../../shared/models/player.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FacadeService } from '../../../../shared/services/facade.service';
 
 @Component({
+    standalone: false,
   selector: 'app-dialog-add-exisiting-player',
   templateUrl: './dialog-add-exisiting-player.component.html',
   styleUrls: ['./dialog-add-exisiting-player.component.scss']

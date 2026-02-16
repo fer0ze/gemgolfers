@@ -7,6 +7,7 @@ import { Constants } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
+    standalone: false,
     selector: 'auth-sign-out',
     templateUrl: './sign-out.component.html',
     encapsulation: ViewEncapsulation.None

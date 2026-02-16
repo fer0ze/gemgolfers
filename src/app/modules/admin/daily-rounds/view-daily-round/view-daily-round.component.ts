@@ -7,11 +7,11 @@ import {
     Input,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
 import {
     Player,
@@ -55,6 +55,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 // import { DialogChangeCourseHoleSetComponent } from "../../material-components/dialog-change-course-hole-set/dialog-change-course-hole-set.component";
 // import { DialogOverviewComponent } from "../../material-components/dialog-overview/dialog-overview.component";
 @Component({
+    standalone: false,
     selector: 'app-view-daily-round',
     templateUrl: './view-daily-round.component.html',
     styleUrls: ['./view-daily-round.component.scss'],

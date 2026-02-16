@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Constants, General } from 'app/shared/classes/general';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { LogsService } from 'app/shared/services/logs.service';
 @Component({
+    standalone: false,
   selector: 'app-daily-player-report',
   templateUrl: './daily-player-report.component.html',
   styleUrls: ['./daily-player-report.component.scss'],
@@ -234,7 +235,7 @@ export class DailyPlayerReportComponent implements OnInit, AfterViewInit {
           filter: {
             type: 'darken',
             value: 0.75,
-          },
+          } as any,
         },
       },
       stroke: {

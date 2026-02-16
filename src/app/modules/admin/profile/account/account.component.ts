@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { LogsService } from 'app/shared/services/logs.service';
 import { FacadeService } from 'app/shared/services/facade.service';
@@ -12,6 +12,7 @@ import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 
 @Component({
+    standalone: false,
     selector: 'settings-account',
     templateUrl: './account.component.html',
     encapsulation: ViewEncapsulation.None,

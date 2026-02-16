@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
+    standalone: false,
     selector: 'settings-security',
     templateUrl: './security.component.html',
     encapsulation: ViewEncapsulation.None,

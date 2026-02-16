@@ -4,9 +4,9 @@ import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Club } from 'app/shared/models/club.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 import { Subject, of, takeUntil } from 'rxjs';
 import {
@@ -20,7 +20,7 @@ import * as XLSX from 'xlsx';
 import { read, utils } from 'xlsx';
 import { Resolver } from './userActivityReport.resolver.component';
 import { UserActivityService } from './userActivityReport.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { ProjectService } from '../../dashboards/project/project.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -29,6 +29,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 import { DialogUserActivityComponent } from '../../dialogs/dialog-user-activity/dialog-user-activity.component';
 @Component({
+    standalone: false,
     selector: 'userActivityReport',
     templateUrl: './userActivityReport.component.html',
     styleUrls: ['./userActivityReport.component.scss'],

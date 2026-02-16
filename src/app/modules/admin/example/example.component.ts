@@ -4,6 +4,7 @@ import { FacadeService } from "../../../shared/services/facade.service";
 import { Constants, General } from "../../../shared/classes/general";
 
 @Component({
+    standalone: false,
     selector     : 'example',
     templateUrl  : './example.component.html',
     encapsulation: ViewEncapsulation.None

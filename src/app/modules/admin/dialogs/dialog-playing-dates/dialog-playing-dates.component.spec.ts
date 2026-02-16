@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DialogPlayingDatesComponent } from "./dialog-playing-dates.component";
 
 describe("DialogPlayingDatesComponent", () => {

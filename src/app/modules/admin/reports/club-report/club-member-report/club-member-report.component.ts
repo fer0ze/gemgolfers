@@ -4,11 +4,12 @@ import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Club } from 'app/shared/models/club.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 @Component({
+    standalone: false,
     selector: 'app-club--member-report',
     templateUrl: './club-member-report.component.html',
     styleUrls: ['./club-member-report.component.scss'],
@@ -142,7 +143,7 @@ export class ClubMemberComponent implements OnInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

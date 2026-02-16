@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { Subject, takeUntil, Observable, of, switchMap } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
@@ -31,12 +31,13 @@ import { ClubMembership, Player, UserSessionModel } from 'app/shared/models/play
 import { read, utils } from 'xlsx';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogOverviewComponent } from '../dialogs/dialog-overview/dialog-overview.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
+    standalone: false,
     selector: 'app-players',
     templateUrl: './players.component.html',
     encapsulation: ViewEncapsulation.None,

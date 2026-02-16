@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Marshal } from 'app/shared/models/player.model';
 import { LogsService } from 'app/shared/services/logs.service';
 
@@ -8,6 +8,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
 @Component({
+    standalone: false,
   selector: 'app-dialog-marshal',
   templateUrl: './dialog-marshal.component.html',
   styleUrls: ['./dialog-marshal.component.scss']

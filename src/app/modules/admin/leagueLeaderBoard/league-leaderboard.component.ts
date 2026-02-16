@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FacadeService } from 'app/shared/services/facade.service';
 
 @Component({
+    standalone: false,
     selector: 'app-league-leaderboard',
     templateUrl: './league-leaderboard.component.html',
     styleUrls: ['./league-leaderboard.component.scss'],

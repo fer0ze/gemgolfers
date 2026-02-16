@@ -7,6 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { UniqueIdGenerator } from 'app/shared/classes/general';
 
 @Component({
+    standalone: false,
     selector: 'auth-sign-up',
     templateUrl: './sign-up.component.html',
     encapsulation: ViewEncapsulation.None,

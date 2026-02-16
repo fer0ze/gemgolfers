@@ -4,9 +4,9 @@ import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Club } from 'app/shared/models/club.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 import { Subject, of, takeUntil } from 'rxjs';
 import {
@@ -20,7 +20,7 @@ import * as XLSX from 'xlsx';
 import { read, utils } from 'xlsx';
 import { Resolver } from './league-resolver.component';
 import { LeagueService } from './league-service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { ProjectService } from '../../dashboards/project/project.service';
 import { DialogLeaguesComponent } from '../../dialogs/dialog-leagues/dialog-leagues.component';
@@ -28,8 +28,9 @@ import { Constants, General } from 'app/shared/classes/general';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfirmationDialogComponent } from '@fuse/services/confirmation/dialog/dialog.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
+    standalone: false,
     selector: 'app-league-report',
     templateUrl: './league-report.component.html',
     styleUrls: ['./league-report.component.scss'],
@@ -528,7 +529,7 @@ export class LeagueReportComponent implements OnInit, AfterViewInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef,
-    MatLegacyDialogClose as MatDialogClose,
-} from '@angular/material/legacy-dialog';
+    MAT_DIALOG_DATA,
+    MatDialogRef,
+    MatDialogClose,
+} from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Club } from '../../../../shared/models/club.model';
 import {
     Player,
@@ -25,6 +25,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { TournamentMember } from 'app/shared/models/tournament.model';
 
 @Component({
+    standalone: false,
     selector: 'app-dialog-add-player',
     templateUrl: './dialog-add-player.component.html',
     styleUrls: ['./dialog-add-player.component.scss'],

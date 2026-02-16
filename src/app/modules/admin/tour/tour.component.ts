@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { TourService } from './tour.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DialogAddTourComponent } from '../dialogs/dialog-add-tour/dialog-add-tour.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
 import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
+    standalone: false,
   selector: 'app-tour',
   templateUrl: './tour.component.html',
   styleUrls: ['./tour.component.scss']

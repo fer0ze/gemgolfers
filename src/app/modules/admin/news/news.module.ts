@@ -6,12 +6,12 @@ import { NewsRoutingModule } from "./news-routing.module";
 
 import { environment } from "../../../../environments/environment";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from "@angular/material/legacy-progress-spinner";
-import { MatLegacyCardModule as MatCardModule } from "@angular/material/legacy-card";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { AngularFireModule } from "@angular/fire/compat";
 import { AngularFireStorageModule } from "@angular/fire/compat/storage";
-import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
   imports: [

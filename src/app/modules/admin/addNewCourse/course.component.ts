@@ -23,6 +23,7 @@ import { LocalStorageService } from "app/shared/services/localStorage";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 
 @Component({
+    standalone: false,
   selector: 'app-course',
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.scss']

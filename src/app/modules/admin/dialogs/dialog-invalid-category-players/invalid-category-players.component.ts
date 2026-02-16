@@ -1,10 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { PlayerCategory } from 'app/shared/models/player.model';
 import { FacadeService } from 'app/shared/services/facade.service';
 
 @Component({
+    standalone: false,
     selector: 'app-invalid-category-players',
     templateUrl: './invalid-category-players.component.html',
 })

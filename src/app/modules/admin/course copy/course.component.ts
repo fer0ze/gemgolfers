@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewEncapsulation } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { Player, ClubMembership, UserSessionModel } from "app/shared/models/player.model";
@@ -23,6 +23,7 @@ import { LocalStorageService } from "app/shared/services/localStorage";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 
 @Component({
+    standalone: false,
   selector: 'app-course',
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.scss']

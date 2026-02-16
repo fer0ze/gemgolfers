@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Player } from '../../../shared/models/player.model';
 import { TeeTime, TeeTimeSlot } from '../../../shared/models/teetime.model';
 import { FacadeService } from '../../../shared/services/facade.service';
@@ -24,6 +24,7 @@ import { DialogPlayerListComponent } from '../dialogs/dialog-player-list-flight/
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
+    standalone: false,
     selector: 'app-tee-times',
     templateUrl: './tee-times.component.html',
     styleUrls: ['./tee-times.component.scss'],

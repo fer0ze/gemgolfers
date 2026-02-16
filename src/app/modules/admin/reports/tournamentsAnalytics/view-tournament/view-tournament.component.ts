@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
@@ -24,7 +24,6 @@ import {
 
 import { of } from 'rxjs';
 import { Score } from 'app/shared/classes/score';
-import { AnyARecord } from 'dns';
 import { DatePipe } from '@angular/common';
 import { ApexOptions } from 'ng-apexcharts';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -39,6 +38,7 @@ import { Constants, General, handicapAllocation, UniqueIdGenerator } from 'app/s
 import { Leader, LeaderType } from 'app/shared/classes/leader';
 
 @Component({
+    standalone: false,
     selector: 'app-view-tournament',
     templateUrl: './view-tournament.component.html',
     styleUrls: ['./view-tournament.component.scss'],
@@ -1043,7 +1043,7 @@ export class ViewTournamentComponent implements OnInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

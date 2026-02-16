@@ -1,6 +1,6 @@
 // Import necessary modules and components
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogPlayerScoreComponent } from '../../dialogs/dialog-player-score/dialog-player-score.component';
 import { handicapAllocation } from 'app/shared/classes/general';
 import { Player } from 'app/shared/models/player.model';
@@ -14,6 +14,7 @@ import { matchFormat } from 'app/shared/models/tournament.model';
 
 
 @Component({
+    standalone: false,
     selector: 'app-scramble', // This is the selector for the component
     templateUrl: './texaScramble.component.html', // HTML template file path
     styleUrls: ['../strokePlay/strokePlay.component.scss'] // CSS/SCSS styles file(s) path

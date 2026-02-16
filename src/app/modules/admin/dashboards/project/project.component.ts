@@ -25,11 +25,12 @@ import { Player, UserSessionModel } from 'app/shared/models/player.model';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogAddTourMainComponent } from '../../dialogs/dialog-add-tour-main/dialog-add-tour-main.component';
 import { DialogPlayersComponent } from '../../dialogs/dialog-report-player/dialog-uncomplete.component';
 
 @Component({
+    standalone: false,
     selector: 'project',
     templateUrl: './project.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -539,7 +540,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {
@@ -628,7 +629,7 @@ export class ProjectComponent implements OnInit, OnDestroy, AfterViewInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

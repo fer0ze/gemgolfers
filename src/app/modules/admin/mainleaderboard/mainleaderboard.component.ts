@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
     Player,
     TournamentMemberStatus,
@@ -21,13 +21,13 @@ import { LeaderType, LeaderTypeValue } from 'app/shared/classes/leader';
 //import { TournamentHandicapCategory } from 'src/app/shared/classes/TournamentHandicapCategory';
 
 import { Apollo } from 'apollo-angular';
-import { async } from '@angular/core/testing';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { LeaderboardSubscription } from 'app/shared/GraphQL/tournament.gql';
 import { LeaderboardService } from './mainleaderboard.service';
 
 
 @Component({
+    standalone: false,
     selector: 'app-mainleaderboard',
     templateUrl: './mainleaderboard.component.html',
     styleUrls: ['./mainleaderboard.component.scss'],

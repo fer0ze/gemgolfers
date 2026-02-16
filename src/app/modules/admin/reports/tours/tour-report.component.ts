@@ -4,9 +4,9 @@ import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Club } from 'app/shared/models/club.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 import { Subject, of, takeUntil } from 'rxjs';
 import {
@@ -18,15 +18,16 @@ import {
 } from '@angular/animations';
 import * as XLSX from 'xlsx';
 import { read, utils } from 'xlsx';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TourService } from './tour-service';
 import { DialogTourComponent } from '../../dialogs/dialog-tour/dialog-tour.component';
 import { Constants, General } from 'app/shared/classes/general';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationDialogComponent } from '@fuse/services/confirmation/dialog/dialog.component';
 @Component({
+    standalone: false,
     selector: 'app-tour-report',
     templateUrl: './tour-report.component.html',
     styleUrls: ['./tour-report.component.scss'],
@@ -523,7 +524,7 @@ export class TourReportComponent implements OnInit, AfterViewInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

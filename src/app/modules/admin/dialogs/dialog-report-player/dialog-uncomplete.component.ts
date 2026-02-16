@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { Player } from '../../../../shared/models/player.model';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -13,6 +13,7 @@ import { FacadeService } from 'app/shared/services/facade.service';
 import * as XLSX from 'xlsx';
 import { read, utils } from 'xlsx';
 @Component({
+    standalone: false,
     selector: 'app-uncompleted',
     templateUrl: './dialog-uncomplete.component.html',
     styleUrls: ['./dialog-uncomplete.component.scss'],

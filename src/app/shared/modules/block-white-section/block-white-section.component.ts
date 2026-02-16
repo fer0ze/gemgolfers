@@ -1,6 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 
 @Component({
+    standalone: false,
   selector: 'app-block-white-section',
   templateUrl: './block-white-section.component.html',
   styleUrls: ['./block-white-section.component.scss']

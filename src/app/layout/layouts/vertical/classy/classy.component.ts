@@ -14,6 +14,7 @@ import { Constants } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
+    standalone: false,
     selector: 'classy-layout',
     templateUrl: './classy.component.html',
     encapsulation: ViewEncapsulation.None,

@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { HandicapService } from 'app/shared/services/handicap.service';
 
 @Component({
+    standalone: false,
     selector: 'app-dialog-tee',
     templateUrl: './dialog-tee.component.html',
     styleUrls: ['./dialog-tee.component.scss'],

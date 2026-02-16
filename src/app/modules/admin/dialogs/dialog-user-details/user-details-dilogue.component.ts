@@ -1,19 +1,20 @@
 import { DialogOverviewComponent } from "../dialog-overview/dialog-overview.component";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from "@angular/material/legacy-dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { PlayerHanidcap } from "../../../../shared/models/player.model";
 import { PlayerHandicap } from "../../../../shared/classes/player-hanidcap";
 import { FacadeService } from "../../../../shared/services/facade.service";
 import { PlayerQL } from "../../../../shared/fragments/player.fragment";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { DatePipe, formatDate } from "@angular/common";
 
 @Component({
+    standalone: false,
   selector: "app-user-details-dilogue",
   templateUrl: "./user-details-dilogue.component.html",
   styleUrls: ["./user-details-dilogue.component.scss"],

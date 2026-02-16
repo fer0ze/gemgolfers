@@ -4,16 +4,17 @@ import { Apollo } from 'apollo-angular';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { DatePipe } from '@angular/common';
 import { Club } from 'app/shared/models/club.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApexOptions } from 'ng-apexcharts';
 import { Constants, UniqueIdGenerator } from 'app/shared/classes/general';
 import { LocalStorageService } from 'app/shared/services/localStorage';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogAddLeagueComponent } from '../dialogs/dialog-add-league/dialog-add-league.component';
 import { UserSessionModel } from 'app/shared/models/player.model';
 @Component({
+    standalone: false,
     selector: 'app-leagues',
     templateUrl: './leagues.component.html',
     styleUrls: ['./leagues.component.scss'],
@@ -155,7 +156,7 @@ export class LeaguesComponent implements OnInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

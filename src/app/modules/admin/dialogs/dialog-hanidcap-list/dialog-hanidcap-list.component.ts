@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from "@angular/material/legacy-dialog";
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
+    standalone: false,
   selector: "app-dialog-hanidcap-list",
   templateUrl: "./dialog-hanidcap-list.component.html",
   styleUrls: ["./dialog-hanidcap-list.component.scss"],

@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FacadeService } from "../../../shared/services/facade.service";
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { AnyAaaaRecord } from "dns";
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogShowfeedbackComponent } from "../dialogs/dialog-showfeedback/dialog-showfeedback.component";
 import { Constants, General, UniqueIdGenerator } from "app/shared/classes/general";
 import { LocalStorageService } from "app/shared/services/localStorage";
 import { UserSessionModel } from "app/shared/models/player.model";
 
 @Component({
+    standalone: false,
   selector: "app-feedback",
   templateUrl: "./feedback.component.html",
   styleUrls: ["./feedback.component.scss"],

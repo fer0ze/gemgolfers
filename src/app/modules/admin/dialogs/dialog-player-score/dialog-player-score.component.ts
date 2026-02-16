@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { Hole } from '../../../../shared/models/hole.model';
 import { Constants } from '../../../../shared/classes/general';
@@ -9,6 +9,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 @Component({
+    standalone: false,
     selector: 'app-dialog-player-score',
     templateUrl: './dialog-player-score.component.html',
     styleUrls: ['./dialog-player-score.component.scss'],

@@ -12,11 +12,11 @@ import {
 import { FacadeService } from 'app/shared/services/facade.service';
 import { Constants, General } from 'app/shared/classes/general';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogPlayerScoreComponent } from '../dialogs/dialog-player-score/dialog-player-score.component';
 import { of } from 'rxjs';
 import { LocalStorageService } from 'app/shared/services/localStorage';
@@ -27,6 +27,7 @@ import { jsPDF } from 'jspdf';
 import { DialogTournamentComponent } from '../dialogs/dialog-tournament/dialog-tournament.component';
 
 @Component({
+    standalone: false,
     selector: 'app-matchplay',
     templateUrl: './matchplay.component.html',
     styleUrls: ['./matchplay.component.scss'],

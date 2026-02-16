@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
+    standalone: false,
   selector: 'app-dialog-view-schedule',
   templateUrl: './dialog-view-schedule.component.html',
   styleUrls: ['./dialog-view-schedule.component.scss']

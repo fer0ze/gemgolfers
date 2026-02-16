@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
     FormArray,
     FormControl,
@@ -27,6 +27,7 @@ import { Club } from 'app/shared/models/club.model';
 import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
+    standalone: false,
     selector: 'app-add-tee-times',
     templateUrl: './add-tee-times.component.html',
     styleUrls: ['./add-tee-times.component.scss'],

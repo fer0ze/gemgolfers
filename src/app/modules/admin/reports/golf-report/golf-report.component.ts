@@ -1,10 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import {
@@ -17,11 +17,12 @@ import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 import 'jspdf-autotable';
 // import { UserDetailsDilogueComponent } from "../../material-components/user-details-dilogue/user-details-dilogue.component";
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { UserDetailsDilogueComponent } from '../../dialogs/dialog-user-details/user-details-dilogue.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 @Component({
+    standalone: false,
     selector: 'app-golf-report',
     templateUrl: './golf-report.component.html',
     styleUrls: ['./golf-report.component.scss'],

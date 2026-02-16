@@ -5,6 +5,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 
 
 @Component({
+    standalone: false,
   selector: 'app-add-league',
   templateUrl: './detail-league.component.html',
   styleUrls: ['./detail-league.component.scss']

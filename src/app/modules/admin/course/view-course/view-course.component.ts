@@ -1,11 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { async } from '@angular/core/testing';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 // import { GoogleMap } from '@angular/google-maps';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { countries, getCity } from 'app/shared/classes/country';
@@ -20,6 +19,7 @@ import { read, utils } from 'xlsx';
 import { UserSessionModel } from 'app/shared/models/player.model';
 
 @Component({
+    standalone: false,
     selector: 'app-view-course',
     templateUrl: './view-course.component.html',
     styleUrls: ['./view-course.component.scss'],

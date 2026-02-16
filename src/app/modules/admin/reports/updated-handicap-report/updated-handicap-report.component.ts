@@ -6,10 +6,10 @@ import {
     ElementRef,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 // import { Apollo } from "apollo-angular";
 import { Player } from '../../../../shared/models/player.model';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -22,6 +22,7 @@ import 'jspdf-autotable';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 @Component({
+    standalone: false,
     selector: 'app-updated-handicap-report',
     templateUrl: './updated-handicap-report.component.html',
     styleUrls: ['./updated-handicap-report.component.scss'],

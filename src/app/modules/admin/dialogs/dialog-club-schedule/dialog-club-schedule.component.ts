@@ -1,15 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import { Course } from '../../../../shared/models/course.model';
 import { ClubSchedule } from '../../../../shared/models/club.model';
 import { Player } from '../../../../shared/models/player.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { General, UniqueIdGenerator, Constants } from '../../../../shared/classes/general';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
+    standalone: false,
   selector: 'app-dialog-club-schedule',
   templateUrl: './dialog-club-schedule.component.html',
   styleUrls: ['./dialog-club-schedule.component.scss']

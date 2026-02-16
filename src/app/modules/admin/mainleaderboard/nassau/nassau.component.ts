@@ -1,6 +1,6 @@
 // Import necessary modules and components
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogPlayerScoreComponent } from '../../dialogs/dialog-player-score/dialog-player-score.component';
 import { handicapAllocation } from 'app/shared/classes/general';
 import { Player } from 'app/shared/models/player.model';
@@ -9,6 +9,7 @@ import { LeaderTypeValue } from 'app/shared/classes/leader';
 import { PlayersScoreLoader } from 'app/shared/helper/PlayersViewScore';
 import { FacadeService } from 'app/shared/services/facade.service';
 @Component({
+    standalone: false,
     selector: 'app-nassau', // This is the selector for the component
     templateUrl: './nassau.component.html', // HTML template file path
     styleUrls: ['./nassau.component.scss'] // CSS/SCSS styles file(s) path

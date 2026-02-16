@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { finalize } from "rxjs/operators";
 
-import { realpathSync } from "fs";
 import { AngularFireStorage } from "@angular/fire/compat/storage";
 import { AngularFireDatabase } from "@angular/fire/compat/database";
 @Component({
+    standalone: false,
   selector: "app-news",
   templateUrl: "./news.component.html",
   styleUrls: ["./news.component.scss"],

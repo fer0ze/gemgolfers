@@ -6,12 +6,12 @@ import {
     ElementRef,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 // import { jsPDF } from "jspdf";
 import { Player } from '../../../../shared/models/player.model';
 import 'jspdf-autotable';
@@ -28,6 +28,7 @@ import { LogsService } from 'app/shared/services/logs.service';
 // import { DialogPlayerListComponent } from "../../material-components/dialog-player-list/dialog-player-list.component";
 
 @Component({
+    standalone: false,
     selector: 'app-daily-starter-report',
     templateUrl: './daily-starter-report.component.html',
     styleUrls: ['./daily-starter-report.component.scss'],

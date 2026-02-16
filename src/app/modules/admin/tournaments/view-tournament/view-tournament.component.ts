@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
@@ -34,7 +34,6 @@ import { FlightScores } from '../../../../shared/classes/FlightScores';
 import { ScoreStats } from '../../../../shared/classes/ScoreStats';
 import { of } from 'rxjs';
 import { Score } from 'app/shared/classes/score';
-import { AnyARecord } from 'dns';
 import { DatePipe } from '@angular/common';
 
 import { DialogCloseRoundComponent } from '../../dialogs/dialog-close-round/dialog-close-round.component';
@@ -52,10 +51,10 @@ import { DialogPlayerComponent } from '../../dialogs/dialog-player/dialog-player
 import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog-add-player.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
-import { log } from 'console';
 import { DialogEditPlayerHandicapComponent } from '../../dialogs/dialog-edit-player-handicap/dialog-edit-player-handicap.component';
 
 @Component({
+    standalone: false,
     selector: 'app-view-tournament',
     templateUrl: './view-tournament.component.html',
     styleUrls: ['./view-tournament.component.scss'],
@@ -977,7 +976,7 @@ export class ViewTournamentComponent implements OnInit {
                     filter: {
                         type: 'darken',
                         value: 0.75,
-                    },
+                    } as any,
                 },
             },
             stroke: {

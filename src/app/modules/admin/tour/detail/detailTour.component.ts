@@ -5,6 +5,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Constants } from 'app/shared/classes/general';
 
 @Component({
+    standalone: false,
   selector: 'app-_detailtour',
   templateUrl: './detailTour.component.html',
   styleUrls: ['./detailTour.component.scss']

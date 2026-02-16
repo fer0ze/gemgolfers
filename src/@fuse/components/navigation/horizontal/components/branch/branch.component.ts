@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
-import { MatLegacyMenu as MatMenu } from '@angular/material/legacy-menu';
+import { MatMenu } from '@angular/material/menu';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseHorizontalNavigationComponent } from '@fuse/components/navigation/horizontal/horizontal.component';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
+    standalone: false,
     selector       : 'fuse-horizontal-navigation-branch-item',
     templateUrl    : './branch.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush

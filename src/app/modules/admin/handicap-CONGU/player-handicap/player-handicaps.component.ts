@@ -10,11 +10,11 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlightScores } from '../../../../shared/classes/FlightScores';
 import {
@@ -31,7 +31,6 @@ import { Score } from '../../../../shared/classes/score';
 import { FacadeService } from '../../../../shared/services/facade.service';
 import { Flight } from '../../../../shared/models/flight.model';
 import { formatDate, Location } from '@angular/common';
-import { EMLINK } from 'constants';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
@@ -43,6 +42,7 @@ import { jsPDF } from 'jspdf';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 @Component({
+    standalone: false,
     selector: 'app-player-handicap',
     templateUrl: './player-handicaps.component.html',
 })

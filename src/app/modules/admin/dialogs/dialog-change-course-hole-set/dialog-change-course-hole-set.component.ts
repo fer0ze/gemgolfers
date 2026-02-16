@@ -1,20 +1,20 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
-    MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-    MatLegacyDialogRef as MatDialogRef,
-    MatLegacyDialogClose as MatDialogClose,
-} from '@angular/material/legacy-dialog';
+    MAT_DIALOG_DATA,
+    MatDialogRef,
+    MatDialogClose,
+} from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Club } from '../../../../shared/models/club.model';
 import { Flight, FlightMembers } from '../../../../shared/models/flight.model';
 import { Player, CourseTee, UserSessionModel } from '../../../../shared/models/player.model';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import {
     DailyRound,
     Tournament,
@@ -35,6 +35,7 @@ import { DialogAddExisitingPlayerComponent } from '../dialog-add-exisiting-playe
 import { LocalStorageService } from 'app/shared/services/localStorage';
 
 @Component({
+    standalone: false,
     selector: 'app-dialog-change-course-hole-set',
     templateUrl: './dialog-change-course-hole-set.component.html',
     styleUrls: ['./dialog-change-course-hole-set.component.scss'],

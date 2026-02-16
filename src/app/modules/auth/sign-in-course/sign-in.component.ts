@@ -9,6 +9,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
+    standalone: false,
     selector: 'sign-in-course',
     templateUrl: './sign-in-course.component.html',
     encapsulation: ViewEncapsulation.None,

@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CourseHoleSet } from 'app/shared/models/course.model';
 import { Course } from 'app/shared/models/course.model';
 import { FacadeService } from '../../../../shared/services/facade.service';
 
 @Component({
+    standalone: false,
   selector: 'app-dialog-course-details',
   templateUrl: './dialog-course-details.component.html',
   styleUrls: ['./dialog-course-details.component.scss']

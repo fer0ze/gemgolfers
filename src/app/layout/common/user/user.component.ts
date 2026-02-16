@@ -8,6 +8,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { UserSessionModel } from 'app/shared/models/player.model';
 
 @Component({
+    standalone: false,
     selector: 'user',
     templateUrl: './user.component.html',
     encapsulation: ViewEncapsulation.None,

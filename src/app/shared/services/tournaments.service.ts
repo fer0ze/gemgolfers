@@ -12,8 +12,6 @@ import {
     PlayerHanidcap,
 } from '../models/player.model';
 import * as Query from '../GraphQL/tournament.gql';
-import { resolve } from 'url';
-import { AnyNsRecord, AnyPtrRecord } from 'dns';
 import { Observable, tap, from, switchMap, map } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Team } from '../models/team.model';
