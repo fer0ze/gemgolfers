@@ -2,6 +2,102 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+
+/* Restore rounded pill-shaped buttons (legacy Material style) */
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button,
+.mat-mdc-button {
+    border-radius: 9999px !important;
+    padding: 0 24px !important;
+    min-height: 40px;
+}
+
+.mat-mdc-icon-button {
+    border-radius: 50% !important;
+}
+
+.mat-mdc-mini-fab {
+    border-radius: 50% !important;
+}
+
+/* Make icons inside colored buttons white */
+.mat-mdc-raised-button .mat-icon,
+.mat-mdc-unelevated-button .mat-icon,
+.mat-mdc-fab .mat-icon,
+.mat-mdc-mini-fab .mat-icon {
+    color: #ffffff !important;
+}
+
+/* Restore white background form fields with full outline border */
+.mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Remove all inner borders on the notch where the label sits (no vertical or bottom lines) */
+.mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch {
+    border-right: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined {
+    background-color: #ffffff !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--filled {
+    background-color: #ffffff !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--filled .mdc-line-ripple::before {
+    border-bottom-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ---- Fuse form-field utility classes (MDC-compatible) ---- */
+
+/* fuse-mat-no-subscript: Remove the subscript/hint area below the field */
+.mat-mdc-form-field.fuse-mat-no-subscript .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+}
+
+/* fuse-mat-dense: Make form fields compact (40px height to match buttons) */
+.mat-mdc-form-field.fuse-mat-dense .mdc-text-field {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.mat-mdc-form-field.fuse-mat-dense .mat-mdc-text-field-wrapper {
+    height: 40px !important;
+    min-height: 40px !important;
+}
+
+.mat-mdc-form-field.fuse-mat-dense .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex {
+    height: 100% !important;
+    align-items: center !important;
+}
+
+.mat-mdc-form-field.fuse-mat-dense .mat-mdc-form-field-infix {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    min-height: unset !important;
+}
+
+/* fuse-mat-rounded: Rounded border-radius for form fields */
+.mat-mdc-form-field.fuse-mat-rounded .mdc-text-field--outlined {
+    border-radius: 24px !important;
+}
+
+.mat-mdc-form-field.fuse-mat-rounded .mdc-notched-outline .mdc-notched-outline__leading {
+    border-radius: 24px 0 0 24px !important;
+    width: 24px !important;
+}
+
+.mat-mdc-form-field.fuse-mat-rounded .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-radius: 0 24px 24px 0 !important;
+}
+
 ::ng-deep mat-table th {
     font-size: 16px;
     /* Your desired font size here */
