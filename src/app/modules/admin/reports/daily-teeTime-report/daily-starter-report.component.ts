@@ -25,6 +25,7 @@ import { DialogPlayerListComponent } from '../../dialogs/dialog-player-list/dial
 import { DialogUncompletedComponent } from '../../dialogs/dialog-uncomplete-players/dialog-uncomplete.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
+import { log } from 'console';
 // import { DialogPlayerListComponent } from "../../material-components/dialog-player-list/dialog-player-list.component";
 
 @Component({
@@ -321,6 +322,7 @@ export class DailyStarterReportComponent implements OnInit {
         const doc = new jsPDF('portrait');
         const pageHeight = doc.internal.pageSize.height;
         const pageWidth = doc.internal.pageSize.width;
+        console.log(data);
 
         /* =======================
            Title Section
@@ -394,6 +396,8 @@ export class DailyStarterReportComponent implements OnInit {
 
     // **Reusable Function to Draw Flight Block**
     private drawFlightBlock(doc, flight, startX, startY) {
+        // console.log(flight);
+
         if (!flight) return;
 
         doc.rect(startX, startY, 90, 40);
@@ -401,18 +405,20 @@ export class DailyStarterReportComponent implements OnInit {
         doc.rect(startX, startY, 90, 8, 'F');
 
         doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
+        doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
-        doc.text('Time', startX + 4, startY + 5);
-        doc.text('Group', startX + 15, startY + 5);
+        doc.text('Time', startX + 2, startY + 5);
+        doc.text('Group', startX + 10, startY + 5);
+        doc.text('Tee', startX + 20, startY + 5);
         doc.text('Players', startX + 29, startY + 5);
         doc.text('Hc.', startX + 77, startY + 5);
 
         doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.text(General.formatTime(flight.time), startX + 4, startY + 14);
-        doc.text(flight.flightNumber, startX + 15, startY + 14);
+        doc.text(General.formatTime(flight.time), startX + 2, startY + 14);
+        doc.text(flight.flightNumber, startX + 10, startY + 14);
+        doc.text(flight.startingHole.toString(), startX + 20, startY + 14);
 
         const maxLineWidth = 44;
         const lineHeight = 6;

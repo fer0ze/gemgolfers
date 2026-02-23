@@ -1864,13 +1864,14 @@ export const getDailyTeeTimeReportClub = gql`
         ) {
             id
             teeDate
-            slots(order_by: { slotTime: asc }) {
+            slots(order_by: { slotTime: asc, startingHole: asc }) {
                 id
                 FlightsQL: flight {
                     id
                     ended
                     time
                     courseHoleSets
+                    startingHole
                     courseHoleSetsInverted
                     MembersQL: members {
                         flightId
