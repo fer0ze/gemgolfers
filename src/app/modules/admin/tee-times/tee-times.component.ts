@@ -89,7 +89,7 @@ export class TeeTimesComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.teeTimes);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
+ 
 
         //this.facadeService.findOne("-LeGr4seWAKipHNVKh_2").subscribe(result => this.myPlayer = result);
     }
