@@ -254,6 +254,7 @@ export class PlayersService {
                                     _eq: id,
                                 },
                             },
+                            playerCategory: { _nin: ["Professionals", "Caddie", "Senior Professionals"] }
                         },
                     },
                 })
