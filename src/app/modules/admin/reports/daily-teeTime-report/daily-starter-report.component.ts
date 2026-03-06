@@ -370,25 +370,33 @@ export class DailyStarterReportComponent implements OnInit {
         /* =======================
            Layout Settings
         ======================= */
+
+        const leftFlights = flightsArray.filter(f => f.startingHole < 10);
+        const rightFlights = flightsArray.filter(f => f.startingHole >= 10);
+
+        const maxFlights = Math.max(leftFlights.length, rightFlights.length);
+
+        // make arrays equal length
+        while (leftFlights.length < maxFlights) leftFlights.push(null);
+        while (rightFlights.length < maxFlights) rightFlights.push(null);
+
         let startY = 30;
         const blockHeight = 42;
-        const blockWidth = 92;
 
-        for (let i = 0; i < flightsArray.length; i++) {
-            const startX = (i % 2 === 0) ? 10 : 10 + blockWidth;
+        for (let i = 0; i < maxFlights; i++) {
 
-            // Page break (only check when starting a new row)
-            if (i % 2 === 0 && startY + blockHeight > pageHeight - 10) {
+            if (startY + blockHeight > pageHeight - 10) {
                 doc.addPage();
                 startY = 30;
             }
 
-            this.drawFlightBlock(doc, flightsArray[i], startX, startY);
+            // LEFT COLUMN (Hole 1)
+            this.drawFlightBlock(doc, leftFlights[i], 10, startY);
 
-            // Move Y only after completing a row (right column)
-            if (i % 2 === 1) {
-                startY += blockHeight;
-            }
+            // RIGHT COLUMN (Hole 10)
+            this.drawFlightBlock(doc, rightFlights[i], 102, startY);
+
+            startY += blockHeight;
         }
 
         doc.save(`Golf_Draws_${data.date}.pdf`);

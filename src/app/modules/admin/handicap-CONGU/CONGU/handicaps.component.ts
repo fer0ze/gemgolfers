@@ -296,10 +296,11 @@ export class HandicapsComponent implements OnInit {
 
             let startY = 40; // Start position for first table
             console.log(playersByCategory);
-            // playersByCategory.sort((a, b) => a - b);
+            //Need to sort categories by A to Z
+            // playersByCategory.sort((a, b) => a.localeCompare(b));
 
             // **Step 2: Iterate Over Categories**
-            Object.keys(playersByCategory).forEach((category, categoryIndex) => {
+            Object.keys(playersByCategory).sort().forEach((category, categoryIndex) => {
                 let players = playersByCategory[category];
 
                 // **Sort Players within the Category**
