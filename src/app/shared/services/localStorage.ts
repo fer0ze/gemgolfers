@@ -63,7 +63,7 @@ export class LocalStorageService {
     isTournamentManager(): boolean {
         let loggedInuser = this.get(Constants.LOGGED_IN_USER);
         if (loggedInuser && loggedInuser.roles) {
-            return loggedInuser.roles.some((r: any) =>  r.name === 'TournamentManager');
+            return loggedInuser.roles.some((r: any) => r.name === 'TournamentManager');
         }
         return false;
     }
@@ -90,7 +90,7 @@ export class LocalStorageService {
             : '';
         if (user.roles && user.roles.length > 0) {
             user.roles.forEach((r: any) => {
-                if (r.role) {
+                if (r.role && r.role?.name != 'User') {
                     let module = r.role?.access?.module;
                     roles.push(r.role);
                     r.role?.access?.forEach((a: any) => {

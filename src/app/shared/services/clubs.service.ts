@@ -128,6 +128,155 @@ export class ClubsService {
         });
     });
   }
+  // ── Club Management ───────────────────────────────────────────────────────
+
+  getClubAdmins(clubId: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetClubAdmins,
+          variables: { clubId },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => resolve(data));
+    });
+  }
+
+  getAllRoles(): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetAllRoles,
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => resolve(data));
+    });
+  }
+
+  searchPlayerByEmail(email: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.SearchPlayerByEmail,
+          variables: { email: `%${email}%` },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => resolve(data));
+    });
+  }
+
+  setPlayerAdminClub(playerId: string, adminClubId: string | null): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.SetPlayerAdminClub,
+          variables: { playerId, adminClubId },
+        })
+        .subscribe(
+          () => resolve(true),
+          () => resolve(false),
+        );
+    });
+  }
+
+  insertUserRole(userId: string, roleId: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.InsertUserRole,
+          variables: { userId, roleId },
+        })
+        .subscribe(
+          () => resolve(true),
+          () => resolve(false),
+        );
+    });
+  }
+
+  removeUserRoles(userId: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.RemoveUserRoles,
+          variables: { userId },
+        })
+        .subscribe(
+          () => resolve(true),
+          () => resolve(false),
+        );
+    });
+  }
+
+  // ── Club Stats & Pagination ───────────────────────────────────────────────
+
+  getClubStatsByClubId(clubId: string): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetClubStatsByClubId,
+          variables: { clubId },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => {
+          resolve(data);
+        });
+    });
+  }
+
+  getClubTournamentsPaginated(clubId: string, limit: number, offset: number): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetClubTournamentsPaginated,
+          variables: { clubId, limit, offset },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => {
+          resolve(data);
+        });
+    });
+  }
+
+  getClubDailyRoundsPaginated(clubId: string, limit: number, offset: number): Promise<any> {
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetClubDailyRoundsPaginated,
+          variables: { clubId, limit, offset },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => {
+          resolve(data);
+        });
+    });
+  }
+
+  getClubMembersPaginated(clubId: string, limit: number, offset: number, search?: string): Promise<any> {
+    const where: any = {
+      membership: { clubId: { _eq: clubId } },
+    };
+    if (search && search.trim()) {
+      const s = `%${search.trim()}%`;
+      where._or = [
+        { firstName: { _ilike: s } },
+        { lastName: { _ilike: s } },
+        { email: { _ilike: s } },
+        { membershipNumber: { _ilike: s } },
+      ];
+    }
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetClubMembersPaginated,
+          variables: { where, limit, offset },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => {
+          resolve(data);
+        });
+    });
+  }
+
   getClubMemberAggregateByCategroyDashBoardAll(): Promise<any> {
     return new Promise((resolve) => {
       this.apollo

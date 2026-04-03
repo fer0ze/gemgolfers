@@ -47,6 +47,7 @@ export class NavigationService {
                     // console.log(this._loggedInUser);
 
                     const userModuleAccess = this._loggedInUser.modules.map(m => m.id);
+                    const isSuperAdmin = this._localStorage.isSuperAdmin();
 
                     // Filter navigation
                     const filteredDefaultNavigation = navigation['default']
@@ -54,9 +55,11 @@ export class NavigationService {
 
                             // If nav item has children, filter them
                             if (navItem.children?.length) {
-                                const filteredChildren = navItem.children.filter(child =>
-                                    userModuleAccess.includes(child.moduleId)
-                                );
+                                const filteredChildren = navItem.children.filter(child => {
+                                    if (child.meta?.superAdminOnly && !isSuperAdmin) return false;
+                                    if (child.meta?.superAdminOnly && isSuperAdmin) return true;
+                                    return userModuleAccess.includes(child.moduleId);
+                                });
 
                                 // Return updated item with filtered children
                                 return {

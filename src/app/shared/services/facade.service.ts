@@ -107,6 +107,42 @@ export class FacadeService {
     return this.clubService.getClubMemberAggregateByCategroyDashBoardAll();
   }
 
+  // Club Management
+  getClubAdmins(clubId: string) {
+    return this.clubService.getClubAdmins(clubId);
+  }
+  getAllRoles() {
+    return this.clubService.getAllRoles();
+  }
+  searchPlayerByEmail(email: string) {
+    return this.clubService.searchPlayerByEmail(email);
+  }
+  setPlayerAdminClub(playerId: string, adminClubId: string | null) {
+    return this.clubService.setPlayerAdminClub(playerId, adminClubId);
+  }
+  insertUserRole(userId: string, roleId: number) {
+    return this.clubService.insertUserRole(userId, roleId);
+  }
+  removeUserRoles(userId: string) {
+    return this.clubService.removeUserRoles(userId);
+  }
+
+  getClubStatsByClubId(clubId: string) {
+    return this.clubService.getClubStatsByClubId(clubId);
+  }
+
+  getClubMembersPaginated(clubId: string, limit: number, offset: number, search?: string) {
+    return this.clubService.getClubMembersPaginated(clubId, limit, offset, search);
+  }
+
+  getClubTournamentsPaginated(clubId: string, limit: number, offset: number) {
+    return this.clubService.getClubTournamentsPaginated(clubId, limit, offset);
+  }
+
+  getClubDailyRoundsPaginated(clubId: string, limit: number, offset: number) {
+    return this.clubService.getClubDailyRoundsPaginated(clubId, limit, offset);
+  }
+
   private _courseService: CoursesService;
 
   public get courseService(): CoursesService {
@@ -230,6 +266,10 @@ export class FacadeService {
   }
   getPlayersListMerge() {
     return this.playerService.getPlayersListMerge();
+  }
+
+  getPlayersPaginated(where: any, limit: number, offset: number) {
+    return this.playerService.getPlayersPaginated(where, limit, offset);
   }
 
   getPlayersListByClub(id: string) {

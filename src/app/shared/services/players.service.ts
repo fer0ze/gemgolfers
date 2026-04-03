@@ -20,6 +20,18 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class PlayersService {
     constructor(private apollo: Apollo, private storage: AngularFireStorage, private afAuth: AngularFireAuth) { }
 
+    public getPlayersPaginated(where: any, limit: number, offset: number): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .watchQuery<any>({
+                    query: Query.GetPlayersPaginated,
+                    variables: { where, limit, offset },
+                    fetchPolicy: 'network-only',
+                })
+                .valueChanges.subscribe(({ data }) => resolve(data));
+        });
+    }
+
     public getPlayersList(): Promise<any> {
         return new Promise((resolve) => {
             this.apollo
@@ -254,6 +266,7 @@ export class PlayersService {
                                     _eq: id,
                                 },
                             },
+                            playerCategory: { _nin: ["Professionals", "Caddie", "Senior Professionals"] }
                         },
                     },
                 })

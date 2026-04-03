@@ -1,100 +1,161 @@
-<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
-    <div
-        class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
-        <div class="w-full max-w-80 sm:w-80 mx-auto -mt-4 sm:mx-0">
-            <!-- <div class="-mb-18">
-                <img src="assets/images/logo/Blue and Green Golf Club Sports Logo (1).svg">
-            </div> -->
+<div class="flex min-h-screen w-full">
+
+    <!-- Left Panel: Login Form -->
+    <div class="flex flex-col items-center justify-center w-full md:w-1/2 bg-white px-8 py-12 lg:px-16">
+        <div class="w-full max-w-sm">
+
+            <!-- Logo -->
+            <div class="flex justify-center mb-10">
+                <img src="assets/images/logo/gem-logo.png" alt="GEMGolfers" class="h-30 w-auto object-contain">
+            </div>
 
             <!-- Title -->
-            <div class="mt-8 text-5xl font-extrabold tracking-tight leading-tight">
-                Sign in
-            </div>
-            <div class="flex items-baseline mt-0.5 font-medium">
-               
-                <div>Don't have an account?</div>
-                <a
-                    class="ml-1 text-primary-500 hover:underline"
-                    [routerLink]="['/sign-up']">Sign up
-                </a>
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Sign in</h1>
+                <div class="mt-2 h-1 w-12 rounded-full" style="background-color: #004987;"></div>
             </div>
 
             <!-- Alert -->
-            <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+            <fuse-alert class="mb-6" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
                 [type]="alert.type" [@shake]="alert.type === 'error'">
                 {{ alert.message }}
             </fuse-alert>
 
             <!-- Sign in form -->
-            <form class="mt-8" [formGroup]="signInForm" #signInNgForm="ngForm">
+            <form [formGroup]="signInForm" #signInNgForm="ngForm">
+
                 <!-- Email field -->
-                <mat-form-field class="w-full">
-                    <mat-label>Email address</mat-label>
-                    <input id="email" matInput [formControlName]="'email'" />
-                    <mat-error *ngIf="signInForm.get('email').hasError('required')">
-                        Email address is required
-                    </mat-error>
-                    <mat-error *ngIf="signInForm.get('email').hasError('email')">
-                        Please enter a valid email address
-                    </mat-error>
-                </mat-form-field>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                        Email Address <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <input
+                            type="email"
+                            id="email"
+                            [formControlName]="'email'"
+                            placeholder="Enter your email"
+                            class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400
+                                   focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                            [class.border-red-400]="signInForm.get('email').invalid && signInForm.get('email').touched"
+                            style="--tw-ring-color: #004987;"
+                            [ngStyle]="{'--tw-ring-color': '#004987'}"
+                        />
+                    </div>
+                    <p *ngIf="signInForm.get('email').hasError('required') && signInForm.get('email').touched"
+                       class="mt-1 text-xs text-red-500">Email address is required</p>
+                    <p *ngIf="signInForm.get('email').hasError('email') && signInForm.get('email').touched"
+                       class="mt-1 text-xs text-red-500">Please enter a valid email address</p>
+                </div>
 
                 <!-- Password field -->
-                <mat-form-field class="w-full">
-                    <mat-label>Password</mat-label>
-                    <input id="password" matInput type="password" [formControlName]="'password'" #passwordField />
-                    <button mat-icon-button type="button" (click)="
-                            passwordField.type === 'password'
-                                ? (passwordField.type = 'text')
-                                : (passwordField.type = 'password')
-                        " matSuffix>
-                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
-                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
-                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
-                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
-                    </button>
-                    <mat-error> Password is required </mat-error>
-                </mat-form-field>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                        Password <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <input
+                            [type]="showPassword ? 'text' : 'password'"
+                            id="password"
+                            [formControlName]="'password'"
+                            placeholder="Enter your password"
+                            #passwordField
+                            class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400
+                                   focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                            [class.border-red-400]="signInForm.get('password').invalid && signInForm.get('password').touched"
+                        />
+                        <button type="button" (click)="showPassword = !showPassword"
+                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                            <svg *ngIf="!showPassword" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            <svg *ngIf="showPassword" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p *ngIf="signInForm.get('password').invalid && signInForm.get('password').touched"
+                       class="mt-1 text-xs text-red-500">Password is required</p>
+                </div>
 
-                <!-- Actions -->
-                <div class="inline-flex items-end justify-between w-full mt-1.5">
-                    <mat-checkbox [color]="'primary'" [formControlName]="'rememberMe'">
-                        Remember me
-                    </mat-checkbox>
-                    <a
-                        class="text-md font-medium text-primary-500 hover:underline"
-                        [routerLink]="['/forgot-password']">Forgot password?
+                <!-- Remember me + Forgot password -->
+                <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" [formControlName]="'rememberMe'"
+                            class="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                            style="accent-color: #004987;">
+                        <span class="text-sm text-gray-600">Remember me</span>
+                    </label>
+                    <a [routerLink]="['/forgot-password']"
+                        class="text-sm font-semibold hover:underline transition-colors"
+                        style="color: #004987;">
+                        Forgot Password?
                     </a>
                 </div>
 
-                <!-- Submit button -->
-                <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
-                    [disabled]="signInForm.disabled" (click)="signIn()">
-                    <span *ngIf="!signInForm.disabled"> Sign in </span>
-                    <mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24"
-                        [mode]="'indeterminate'"></mat-progress-spinner>
+                <!-- Sign in button -->
+                <button type="button"
+                    (click)="signIn()"
+                    [disabled]="signInForm.disabled"
+                    class="w-full py-3.5 px-4 rounded-2xl text-white text-sm font-bold tracking-wide transition-all duration-200
+                           flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                    style="background-color: #004987;">
+                    <span *ngIf="!signInForm.disabled">Sign in</span>
+                    <svg *ngIf="signInForm.disabled" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </button>
 
+                <!-- Sign up link -->
+                <p class="text-center mt-5 text-sm text-gray-500">
+                    Don't have an account?
+                    <a [routerLink]="['/sign-up']" class="font-bold hover:underline ml-1" style="color: #004987;">Sign up</a>
+                </p>
 
             </form>
         </div>
     </div>
-    <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden dark:border-l"
-        style="background-color: #004987; color: white ;">
-        <div class="z-10 relative w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none ">
-                <div>Welcome to</div>
-                <div>Gemgolfers</div>
+
+    <!-- Right Panel: Background Image -->
+    <div class="hidden md:flex flex-1 relative bg-cover bg-center bg-no-repeat"
+         style="background-image: url('assets/images/logo/golf-bg.jpg');">
+
+        <!-- Dark overlay for readability -->
+        <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(0,73,135,0.35) 0%, rgba(0,30,60,0.30) 100%);"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 flex flex-col items-center justify-center w-full p-16 text-white text-center">
+            <div class="mb-6">
+                <svg class="w-16 h-16 mx-auto opacity-80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
+                </svg>
             </div>
-            <div class="mt-6 text-lg tracking-tight leading-6 ">
-                Gemgolers helps Golf Players to organize their Golf and add some
-                extra abilities to enjoy the game.
-            </div>
-            <div class="flex items-center mt-8">
-                <div class="font-medium tracking-tight ">
-                    More than 17k people joined us, it's your turn
-                </div>
+            <h2 class="text-5xl font-extrabold leading-tight mb-4 drop-shadow-lg">
+                Welcome to<br>
+                <span class="text-green-300">Gemgolfers</span>
+            </h2>
+            <p class="text-lg text-white/85 leading-relaxed max-w-md mb-6 drop-shadow">
+                Gemgolers helps Golf Players to organize their Golf and add some extra abilities to enjoy the game.
+            </p>
+            <div class="flex items-center gap-3 bg-white/15 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+                <svg class="w-5 h-5 text-green-300 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-sm font-medium text-white/90">More than 17k people joined us, it's your turn</span>
             </div>
         </div>
     </div>
+
 </div>

@@ -88,6 +88,50 @@
                             </mat-form-field>
                         </div>
 
+                        <!-- Password (add mode only) -->
+                        <ng-container *ngIf="!editMode">
+                            <div class="sm:col-span-2">
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Password</mat-label>
+                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                                    <input matInput formControlName="password"
+                                        [type]="showPassword ? 'text' : 'password'"
+                                        placeholder="Min. 8 characters" />
+                                    <button mat-icon-button matSuffix type="button"
+                                        (click)="showPassword = !showPassword"
+                                        class="text-gray-400 hover:text-gray-600">
+                                        <mat-icon class="icon-size-5">
+                                            {{ showPassword ? 'visibility_off' : 'visibility' }}
+                                        </mat-icon>
+                                    </button>
+                                    <mat-hint>Set the player's login password</mat-hint>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>Confirm Password</mat-label>
+                                    <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                        [svgIcon]="'heroicons_solid:lock-closed'"></mat-icon>
+                                    <input matInput formControlName="confirmPassword"
+                                        [type]="showConfirmPassword ? 'text' : 'password'"
+                                        placeholder="Re-enter password" />
+                                    <button mat-icon-button matSuffix type="button"
+                                        (click)="showConfirmPassword = !showConfirmPassword"
+                                        class="text-gray-400 hover:text-gray-600">
+                                        <mat-icon class="icon-size-5">
+                                            {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
+                                        </mat-icon>
+                                    </button>
+                                    <mat-error
+                                        *ngIf="contactForm.get('confirmPassword').value && contactForm.get('password').value !== contactForm.get('confirmPassword').value">
+                                        Passwords do not match
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
+
                         <!-- Membership -->
                         <div *ngIf="this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()"
                             class="sm:col-span-2">

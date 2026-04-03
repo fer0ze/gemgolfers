@@ -359,35 +359,35 @@ export class DailyStarterReportComponent implements OnInit {
         /* =======================
            Split Left / Right
         ======================= */
-        // const leftFlights = flightsArray.filter(f => f.startingHole < 10);
-        // const rightFlights = flightsArray.filter(f => f.startingHole >= 10);
+        const leftFlights = flightsArray.filter(f => f.startingHole < 10);
+        const rightFlights = flightsArray.filter(f => f.startingHole >= 10);
 
-        // const maxFlights = Math.max(leftFlights.length, rightFlights.length);
-        // while (leftFlights.length < maxFlights) leftFlights.push(null);
-        // while (rightFlights.length < maxFlights) rightFlights.push(null);
+        const maxFlights = Math.max(leftFlights.length, rightFlights.length);
+
+        // make arrays equal length
+        while (leftFlights.length < maxFlights) leftFlights.push(null);
+        while (rightFlights.length < maxFlights) rightFlights.push(null);
 
         /* =======================
            Layout Settings
         ======================= */
         let startY = 30;
         const blockHeight = 42;
-        const blockWidth = 92;
 
-        for (let i = 0; i < flightsArray.length; i++) {
-            const startX = (i % 2 === 0) ? 10 : 10 + blockWidth;
+        for (let i = 0; i < maxFlights; i++) {
 
-            // Page break (only check when starting a new row)
-            if (i % 2 === 0 && startY + blockHeight > pageHeight - 10) {
+            if (startY + blockHeight > pageHeight - 10) {
                 doc.addPage();
                 startY = 30;
             }
 
-            this.drawFlightBlock(doc, flightsArray[i], startX, startY);
+            // LEFT COLUMN (Hole 1)
+            this.drawFlightBlock(doc, leftFlights[i], 10, startY);
 
-            // Move Y only after completing a row (right column)
-            if (i % 2 === 1) {
-                startY += blockHeight;
-            }
+            // RIGHT COLUMN (Hole 10)
+            this.drawFlightBlock(doc, rightFlights[i], 102, startY);
+
+            startY += blockHeight;
         }
 
         doc.save(`Golf_Draws_${data.date}.pdf`);
@@ -402,18 +402,20 @@ export class DailyStarterReportComponent implements OnInit {
         doc.rect(startX, startY, 90, 8, 'F');
 
         doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10);
+        doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
-        doc.text('Time', startX + 4, startY + 5);
-        doc.text('Group', startX + 15, startY + 5);
+        doc.text('Time', startX + 2, startY + 5);
+        doc.text('Group', startX + 10, startY + 5);
+        doc.text('Tee', startX + 20, startY + 5);
         doc.text('Players', startX + 29, startY + 5);
         doc.text('Hc.', startX + 77, startY + 5);
 
         doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.text(General.formatTime(flight.time), startX + 4, startY + 14);
-        doc.text(flight.flightNumber, startX + 15, startY + 14);
+        doc.text(General.formatTime(flight.time), startX + 2, startY + 14);
+        doc.text(flight.flightNumber, startX + 10, startY + 14);
+        doc.text(flight.startingHole.toString(), startX + 20, startY + 14);
 
         const maxLineWidth = 44;
         const lineHeight = 6;

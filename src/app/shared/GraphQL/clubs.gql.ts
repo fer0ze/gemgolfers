@@ -380,6 +380,196 @@ export const getAllFeedbackByUserId = gql`
 `;
 
 
+// ── Club Management (admins) ────────────────────────────────────────────────
+
+export const GetClubAdmins = gql`
+    query GetClubAdmins($clubId: String!) {
+        player(
+            where: { adminClubId: { _eq: $clubId } }
+            order_by: { firstName: asc }
+        ) {
+            id
+            firstName
+            lastName
+            fullName
+            email
+            phone
+            adminClubId
+            roles {
+                userId
+                roleId
+                role { id name }
+            }
+        }
+    }
+`;
+
+export const GetAllRoles = gql`
+    query GetAllRoles {
+        role(
+            where: { name: { _nin: ["SuperAdmin", "User"] } }
+            order_by: { name: asc }
+        ) {
+            id
+            name
+        }
+    }
+`;
+
+export const SearchPlayerByEmail = gql`
+    query SearchPlayerByEmail($email: String!) {
+        player(
+            where: { email: { _ilike: $email } }
+            limit: 5
+        ) {
+            id
+            firstName
+            lastName
+            fullName
+            email
+            phone
+            adminClubId
+            roles {
+                userId
+                roleId
+                role { id name }
+            }
+        }
+    }
+`;
+
+export const SetPlayerAdminClub = gql`
+    mutation SetPlayerAdminClub($playerId: String!, $adminClubId: String) {
+        update_player(
+            where: { id: { _eq: $playerId } }
+            _set: { adminClubId: $adminClubId }
+        ) {
+            affected_rows
+        }
+    }
+`;
+
+export const InsertUserRole = gql`
+    mutation InsertUserRole($userId: String!, $roleId: Int!) {
+        insert_user_roles(objects: [{ userId: $userId, roleId: $roleId }]) {
+            affected_rows
+        }
+    }
+`;
+
+export const RemoveUserRoles = gql`
+    mutation RemoveUserRoles($userId: String!) {
+        delete_user_roles(where: { userId: { _eq: $userId } }) {
+            affected_rows
+        }
+    }
+`;
+
+// ── Club Stats & Pagination ─────────────────────────────────────────────────
+
+export const GetClubStatsByClubId = gql`
+    query GetClubStatsByClubId($clubId: String!) {
+        tournament_aggregate(
+            where: { clubId: { _eq: $clubId }, singleRound: { _eq: false } }
+        ) {
+            aggregate {
+                count
+                sum {
+                    noOfRounds
+                }
+            }
+            nodes {
+                activeRound
+                noOfRounds
+            }
+        }
+        single_rounds: tournament_aggregate(
+            where: { clubId: { _eq: $clubId }, singleRound: { _eq: true } }
+        ) {
+            aggregate {
+                count
+            }
+        }
+    }
+`;
+
+export const GetClubTournamentsPaginated = gql`
+    query GetClubTournamentsPaginated($clubId: String!, $limit: Int!, $offset: Int!) {
+        tournament_aggregate(
+            where: { clubId: { _eq: $clubId }, singleRound: { _eq: false } }
+        ) {
+            aggregate { count }
+        }
+        tournament(
+            where: { clubId: { _eq: $clubId }, singleRound: { _eq: false } }
+            order_by: { startDate: desc }
+            limit: $limit
+            offset: $offset
+        ) {
+            id
+            title
+            matchFormat
+            noOfRounds
+            activeRound
+            startDate
+            endDate
+            started
+            course { name }
+        }
+    }
+`;
+
+export const GetClubDailyRoundsPaginated = gql`
+    query GetClubDailyRoundsPaginated($clubId: String!, $limit: Int!, $offset: Int!) {
+        tournament_aggregate(
+            where: { clubId: { _eq: $clubId }, singleRound: { _eq: true } }
+        ) {
+            aggregate { count }
+        }
+        tournament(
+            where: { clubId: { _eq: $clubId }, singleRound: { _eq: true } }
+            order_by: { startDate: desc }
+            limit: $limit
+            offset: $offset
+        ) {
+            id
+            title
+            matchFormat
+            startDate
+            endDate
+            started
+            activeRound
+            noOfRounds
+            course { name }
+        }
+    }
+`;
+
+export const GetClubMembersPaginated = gql`
+    query GetClubMembersPaginated(
+        $where: player_bool_exp!
+        $limit: Int!
+        $offset: Int!
+    ) {
+        player_aggregate(where: $where) {
+            aggregate {
+                count
+            }
+        }
+        player(where: $where, order_by: { firstName: asc }, limit: $limit, offset: $offset) {
+            id
+            firstName
+            lastName
+            playerCategory
+            handicap
+            handicapWhsIndex
+            email
+            phone
+            membershipNumber
+        }
+    }
+`;
+
 export const getAllCoursesRequest = gql`
     query getAllCoursesRequest {
         course_request(order_by: { createdAt: desc }) {

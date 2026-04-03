@@ -73,6 +73,8 @@ export class ContactsDetailsComponent implements OnInit {
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     clubTitle: string;
     editMode: boolean = false;
+    showPassword: boolean = false;
+    showConfirmPassword: boolean = false;
     save: boolean = false;
     golfClubs: Club[] = [];
     tagsEditMode: boolean = false;
@@ -154,6 +156,8 @@ export class ContactsDetailsComponent implements OnInit {
                 membershipNo: new FormControl(''),
                 status: new FormControl('false', [Validators.required]),
                 notes: new FormControl(''),
+                password: new FormControl('', !this.editMode ? [Validators.required, Validators.minLength(8)] : []),
+                confirmPassword: new FormControl('', !this.editMode ? [Validators.required] : []),
             });
             this.playerCategories = this._facadeService.getPlayerCategories();
             if (this._localStorage.isClubAdmin()) {
@@ -299,101 +303,101 @@ export class ContactsDetailsComponent implements OnInit {
             // Get the contact object
 
             const contact = this.contactForm.getRawValue();
-            if (this.contactForm.valid) {
-                if (contact.email)
-                    checkEmail = <Player>(
-                        await this._facadeService.getPlayerByEmail(contact.email)
-                    );
+            // if (this.contactForm.valid) {
+            //     if (contact.email)
+            //         checkEmail = <Player>(
+            //             await this._facadeService.getPlayerByEmail(contact.email)
+            //         );
 
-                if (contact.phoneNumbers)
-                    checkPhone = <Player>(
-                        await this._facadeService.getPlayerByPhone(
-                            contact.phoneNumbers
-                        )
-                    );
+            //     if (contact.phoneNumbers)
+            //         checkPhone = <Player>(
+            //             await this._facadeService.getPlayerByPhone(
+            //                 contact.phoneNumbers
+            //             )
+            //         );
 
-                console.log(checkEmail);
-                if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
+            //     console.log(checkEmail);
+            //     if (checkEmail.length > 0) emailPlayerId = checkEmail[0].id;
 
-                if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
+            //     if (checkPhone.length > 0) phonePlayerId = checkPhone[0].id;
 
-                if (
-                    checkEmail.length > 0 &&
-                    emailPlayerId !== '' &&
-                    emailPlayerId !== this.playerID
-                ) {
-                    const confirmation = this._fuseConfirmationService.open({
-                        title: 'Duplicate Email',
-                        message: 'Player already exist!. Do you want to add this player to your club?',
-                        actions: {
-                            confirm: {
-                                label: 'Yes',
-                            },
-                        },
-                    }).afterClosed().subscribe(async (result) => {
-                        if (result === 'confirmed') {
-                            let clubMember: any[] = [];
-                            clubMember.push({
-                                clubId: this.loggedInuser.adminClubId,
-                                suspended: false,
-                                playerId: checkEmail[0].id
-                            })
-                            let response = await this._facadeService.insertClubMember(clubMember);
-                            if (response) {
-                                this.save = true;
-                                this.snackBar.open('Player has been added.', 'x', {
-                                    duration: 1000,
-                                });
-                                this.reset();
-                                this._router.navigate(['/players']);
-                            }
-                        }
-                    });
+            //     if (
+            //         checkEmail.length > 0 &&
+            //         emailPlayerId !== '' &&
+            //         emailPlayerId !== this.playerID
+            //     ) {
+            //         const confirmation = this._fuseConfirmationService.open({
+            //             title: 'Duplicate Email',
+            //             message: 'Player already exist!. Do you want to add this player to your club?',
+            //             actions: {
+            //                 confirm: {
+            //                     label: 'Yes',
+            //                 },
+            //             },
+            //         }).afterClosed().subscribe(async (result) => {
+            //             if (result === 'confirmed') {
+            //                 let clubMember: any[] = [];
+            //                 clubMember.push({
+            //                     clubId: this.loggedInuser.adminClubId,
+            //                     suspended: false,
+            //                     playerId: checkEmail[0].id
+            //                 })
+            //                 let response = await this._facadeService.insertClubMember(clubMember);
+            //                 if (response) {
+            //                     this.save = true;
+            //                     this.snackBar.open('Player has been added.', 'x', {
+            //                         duration: 1000,
+            //                     });
+            //                     this.reset();
+            //                     this._router.navigate(['/players']);
+            //                 }
+            //             }
+            //         });
 
 
-                    return;
-                } else if (
-                    checkPhone.length > 0 &&
-                    phonePlayerId !== '' &&
-                    phonePlayerId !== this.playerID
-                ) {
-                    const confirmation = this._fuseConfirmationService.open({
-                        title: 'Duplicate Number',
-                        message: 'Player already exist!. Do you want to add this player to your club?',
-                        actions: {
-                            confirm: {
-                                label: 'Yes',
-                            },
-                        },
-                    }).afterClosed().subscribe(async (result) => {
-                        if (result === 'confirmed') {
-                            let clubMember: any[] = [];
-                            clubMember.push({
-                                clubId: this.loggedInuser.adminClubId,
-                                suspended: false,
-                                playerId: checkEmail[0].id
-                            })
-                            let response = await this._facadeService.insertClubMember(clubMember);
-                            if (response) {
-                                this.save = true;
-                                this.snackBar.open('Player has been added.', 'x', {
-                                    duration: 1000,
-                                });
-                                this.reset();
-                                this._router.navigate(['/players']);
-                            }
-                        }
-                    });
+            //         return;
+            //     } else if (
+            //         checkPhone.length > 0 &&
+            //         phonePlayerId !== '' &&
+            //         phonePlayerId !== this.playerID
+            //     ) {
+            //         const confirmation = this._fuseConfirmationService.open({
+            //             title: 'Duplicate Number',
+            //             message: 'Player already exist!. Do you want to add this player to your club?',
+            //             actions: {
+            //                 confirm: {
+            //                     label: 'Yes',
+            //                 },
+            //             },
+            //         }).afterClosed().subscribe(async (result) => {
+            //             if (result === 'confirmed') {
+            //                 let clubMember: any[] = [];
+            //                 clubMember.push({
+            //                     clubId: this.loggedInuser.adminClubId,
+            //                     suspended: false,
+            //                     playerId: checkEmail[0].id
+            //                 })
+            //                 let response = await this._facadeService.insertClubMember(clubMember);
+            //                 if (response) {
+            //                     this.save = true;
+            //                     this.snackBar.open('Player has been added.', 'x', {
+            //                         duration: 1000,
+            //                     });
+            //                     this.reset();
+            //                     this._router.navigate(['/players']);
+            //                 }
+            //             }
+            //         });
 
-                    return;
-                } else if (
-                    (checkEmail.length > 0 && this.playerID) ||
-                    (checkPhone.length > 0 && this.playerID)
-                ) {
-                    newFlag = false;
-                } else {
-                }
-            }
+            //         return;
+            //     } else if (
+            //         (checkEmail.length > 0 && this.playerID) ||
+            //         (checkPhone.length > 0 && this.playerID)
+            //     ) {
+            //         newFlag = false;
+            //     } else {
+            //     }
+            // }
             let clubMember: ClubMembership[] = [];
             let UniqueId: string = '';
             let GEMId: string = '';
@@ -453,8 +457,16 @@ export class ContactsDetailsComponent implements OnInit {
                 membershipNumber: contact.membershipNo,
                 homeClubId: clubMember[0].clubId ?? '',
             };
-            let password = `${player.firstName}123`;
-            //console.log(contact);
+            let password = this.contactForm.get('password').value || `${player.firstName}123`;
+
+            // Validate passwords match for new players
+            if (!this.editMode) {
+                const confirmPwd = this.contactForm.get('confirmPassword').value;
+                if (password !== confirmPwd) {
+                    this.snackBar.open('Passwords do not match.', 'x', { duration: 3000 });
+                    return;
+                }
+            }
 
             if (!this.editMode) {
                 if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {

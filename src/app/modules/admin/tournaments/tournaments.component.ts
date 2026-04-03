@@ -89,6 +89,7 @@ export class TournamentsComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     tourId: string = '';
+    isListView: boolean = false;
     constructor(
         private location: Router,
         public snackBar: MatSnackBar, private _tourService: TourService,
@@ -140,7 +141,7 @@ export class TournamentsComponent implements OnInit {
                     await this.facadeService.getTournamentsListForCompleted(
                         todayDate
                     );
-                this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently);
                 //console.log(this.Tournaments);
                 this.copiedcompletedTournaments = this.Tournaments;
                 this.dataSource = new MatTableDataSource(this.Tournaments);
@@ -155,7 +156,7 @@ export class TournamentsComponent implements OnInit {
                         this.loggedInuser.adminClubId
                     );
 
-                this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently);
                 this.copiedcompletedTournaments = this.Tournaments;
                 this.isIncompletedLoading = false;
                 this.isLoading = false;
@@ -171,7 +172,7 @@ export class TournamentsComponent implements OnInit {
                         this.loggedInuser.id
                     );
 
-                this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+                this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently);
                 this.copiedcompletedTournaments = this.Tournaments;
                 this.isIncompletedLoading = false;
                 this.isLoading = false;
@@ -190,7 +191,7 @@ export class TournamentsComponent implements OnInit {
                                 this.tourId
                             );
 
-                        this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
+                        this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently[0].tournaments);
                         this.copiedcompletedTournaments = this.Tournaments;
                         this.isIncompletedLoading = false;
                         this.isLoading = false;
@@ -208,7 +209,7 @@ export class TournamentsComponent implements OnInit {
                                 this.tourId
                             );
 
-                        this.Tournaments = dataTournamentsForCompleted.CompletedRecently[0].tournaments;
+                        this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently[0].tournaments);
                         this.copiedcompletedTournaments = this.Tournaments;
                         this.isIncompletedLoading = false;
                         this.isLoading = false;
@@ -232,6 +233,15 @@ export class TournamentsComponent implements OnInit {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    private sortByDateDesc(tournaments: any[]): any[] {
+        if (!tournaments) return [];
+        return [...tournaments].sort((a, b) => {
+            const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
+            const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
+            return dateB - dateA;
+        });
     }
     filterByCategory($event) {
         //console.log($event);
@@ -311,7 +321,7 @@ export class TournamentsComponent implements OnInit {
             ////console.log(dataTournaments);
             this.isIncompletedLoading = false;
             this.isLoadingUpComing = false;
-            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently);
             this.copiedcompletedTournaments = this.Tournaments;
             this.dataSource = new MatTableDataSource(this.Tournaments);
             this.isLoading = false;
@@ -343,7 +353,7 @@ export class TournamentsComponent implements OnInit {
                 );
             //console.log(dataTournamentsLive);
 
-            this.Tournaments = dataTournamentsLive.ActiveTournaments;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsLive.ActiveTournaments);
             this.copiedTournamentsUpComing = this.Tournaments;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -366,7 +376,7 @@ export class TournamentsComponent implements OnInit {
                 );
             //console.log(dataTournamentsLive);
 
-            this.Tournaments = dataTournamentsLive.Scheduled;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsLive.Scheduled);
             this.copiedTournamentsSchedule = this.Tournaments;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -389,7 +399,7 @@ export class TournamentsComponent implements OnInit {
                     todayDate,
                     this.loggedInuser.adminClubId
                 );
-            this.Tournaments = dataTournamentsLive.Incomplete;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsLive.Incomplete);
             this.copiedTournamentsIncomplete = this.Tournaments;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -413,7 +423,7 @@ export class TournamentsComponent implements OnInit {
             ////console.log(dataTournaments);
             this.isIncompletedLoading = false;
             this.isLoadingUpComing = false;
-            this.Tournaments = dataTournamentsForCompleted.CompletedRecently;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsForCompleted.CompletedRecently);
             this.copiedcompletedTournaments = this.Tournaments;
             this.dataSource = new MatTableDataSource(this.Tournaments);
             this.isLoading = false;
@@ -444,7 +454,7 @@ export class TournamentsComponent implements OnInit {
                 );
             //console.log(dataTournamentsForLive);
 
-            this.Tournaments = dataTournamentsForLive.ActiveTournaments;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsForLive.ActiveTournaments);
             this.copiedTournamentsUpComing = this.Tournaments;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
@@ -489,7 +499,7 @@ export class TournamentsComponent implements OnInit {
                 await this.facadeService.getTournamentsListForIncompleteByAdmin(
                     todayDate
                 );
-            this.Tournaments = dataTournamentsForIncomplete.Scheduled;
+            this.Tournaments = this.sortByDateDesc(dataTournamentsForIncomplete.Scheduled);
             this.copiedTournamentsIncomplete = this.Tournaments;
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());

@@ -191,6 +191,17 @@ export interface AddDailyRound {
 export const INDIVIDUAL_FORMATS_INFO: Record<string, string> = {
     STROKE_PLAY: "Simply calculate the player gross score and net score as it comes.",
 
+    STABLEFORD: `Stableford Leaderboard is calculated on Net Score and points are awarded as below.
+
+Simply calculate the player points after checking the net score on each hole.
+
+Double Eagle: 5 points
+Eagle: 4 points
+Birdie: 3 points
+Par: 2 points
+Bogey: 1 point
+Double Bogey or more: 0 points`,
+
     STABLE_FORD: `Stableford Leaderboard is calculated on Net Score and points are awarded as below.
 
 Simply calculate the player points after checking the net score on each hole.
@@ -204,7 +215,9 @@ Double Bogey or more: 0 points`,
 
     "STROKE_PLAY / STABLEFORD": `StrokePlay: Simply calculate the player gross score and net score as it comes.
 
-Stableford: Stableford Leaderboard is calculated on Net Score and points are awarded:
+Stableford: Stableford Leaderboard is calculated on Net Score and points are awarded as below.
+
+Simply calculate the player points after checking the net score on each hole.
 
 Double Eagle: 5 points
 Eagle: 4 points
@@ -213,25 +226,58 @@ Par: 2 points
 Bogey: 1 point
 Double Bogey or more: 0 points`,
 
-    NASSAU: `It is a Matchplay format and is played on Net Score in a 4 ball...`,
+    NASSAU: `It is a Matchplay format and is played on Net Score in a 4 ball, with 2 teams of 2 players each. With Singles Matchplay against both players of the other team and a 4 ball best ball between the teams. The following matches are in force:
 
-    MODIFIED_STABLEFORD: `Modified Stableford Leaderboard is calculated on Net Score...`,
+- Front Nine Singles
+- Front Nine Four Ball
+- Back Nine Singles
+- Back Nine Four Ball
+- 18 Holes Singles
+- 18 Holes Four Ball`,
 
-    SPLIT_SIXES: `Played on Net Score in a 3 ball group...`,
+    MODIFIED_STABLEFORD: `Modified Stableford Leaderboard is calculated on Net Score and points are awarded as below:
 
-    RYDER_CUP: `Calculate the team score in two ways...`,
+Simply calculate the player points after checking the net score on each hole.
 
-    SHAMBLES: `In Shambles, we have pairs...`,
+Double Eagle: 8 points
+Eagle: 5 points
+Birdie: 2 points
+Par: 0 points
+Bogey: -1 point
+Double Bogey or more: -3 points`,
 
-    TWO_BALL_BEST_BALL: `In TWO Ball Best Ball, we have pairs...`,
+    SPLIT_SIXES: `Played on Net Score in a 3 ball group, with 6 points awarded at each hole:
 
-    TEXAS_SCRAMBLE: `In Texas Scramble, we combine handicap...`,
+4 points for winner
+2 points for 2nd position
+0 points for 3rd position
 
-    BEST_TWO: `BEST TWO and BEST THREE formats...`,
+In case 2 or 3 players have the same net score, the total points are equally divided. The player with the maximum points at the end of the round is the winner.`,
 
-    BEST_THREE: `BEST TWO and BEST THREE formats...`,
+    RYDER_CUP: `Calculate the team score in two ways:
 
-    GREENSOME: "",
+(1) Singles: Compare each team player's net score hole-wise with their opponent on the flight and give 1 point to the player with the lowest net score.
 
-    FOURSOME: ""
+(2) 4 Ball: Calculate both teams' players' best net score on each hole in the flight, compare them, and award points according to the point allocation.`,
+
+    SHAMBLES: `In Shambles, we have pairs. We calculate the gross score and net score by comparing each pair's player lowest score in the flight.`,
+
+    TWO_BALL_BEST_BALL: `In TWO Ball Best Ball, we have pairs. We calculate the gross score and net score by comparing each pair's player lowest score in the flight.`,
+
+    TEXAS_SCRAMBLE: `In Texas Scramble, we have a flight with names and one score for each hole on the flight. We then calculate the gross and net according to the handicap allocation.
+
+We combine all players' handicaps then divide based on the number of players in the flight:
+- 4 players: handicap = combinedHandicap / 10
+- 3 players: handicap = combinedHandicap / 8
+- 2 players: handicap = combinedHandicap / 6
+
+Then convert the divided handicap according to the Handicap Allocation.`,
+
+    BEST_TWO: `In BEST TWO format, we have teams. We calculate the gross under and net under total for each team player, select the lowest gross under of 2 players, and sum their gross under and net under to display on the leaderboard.`,
+
+    BEST_THREE: `In BEST THREE format, we have teams. We calculate the gross under and net under total for each team player, select the lowest gross under of 3 players, and sum their gross under and net under to display on the leaderboard.`,
+
+    GREENSOME: "A pairs format where both players tee off, then select the best drive. The player whose drive was not selected plays the second shot, and thereafter alternate shots until the hole is complete.",
+
+    FOURSOME: "A pairs format where two players play as a team with one ball, taking alternate shots throughout the round. One player tees off on odd-numbered holes and the other on even-numbered holes."
 };

@@ -300,7 +300,7 @@ export class HandicapsComponent implements OnInit {
             // playersByCategory.sort((a, b) => a - b);
 
             // **Step 2: Iterate Over Categories**
-            Object.keys(playersByCategory).forEach((category, categoryIndex) => {
+            Object.keys(playersByCategory).sort().forEach((category, categoryIndex) => {
                 let players = playersByCategory[category];
 
                 // **Sort Players within the Category**

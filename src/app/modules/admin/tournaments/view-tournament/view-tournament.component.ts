@@ -52,6 +52,7 @@ import { DialogAddPlayerComponent } from '../../dialogs/dialog-add-player/dialog
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { DialogEditPlayerHandicapComponent } from '../../dialogs/dialog-edit-player-handicap/dialog-edit-player-handicap.component';
+import * as XLSX from 'xlsx';
 
 @Component({
     standalone: false,
@@ -103,6 +104,10 @@ export class ViewTournamentComponent implements OnInit {
     allPlayers: Player[] = [];
     membersStats: any[] = [];
     topMembers: any[] = [];
+    topPlayersScoreType: 'gross' | 'net' = 'gross';
+    highlightedFlightId: string = null;
+    showResultSheetMenu = false;
+    isGeneratingResultSheet = false;
     tournamentCourses: any[] = [];
     topMembers1: any[] = [];
     topMembers2: any[] = [];
@@ -433,8 +438,9 @@ export class ViewTournamentComponent implements OnInit {
                 //     );
                 // }
                 this.calculatePlayersCount();
-                this.getRoundStats(this.activeRound);
-                this.calculateStatistics(this.activeRound);
+                const effectiveRound = Math.min(this.activeRound, this.noOfRounds);
+                this.getRoundStats(effectiveRound);
+                this.calculateStatistics(effectiveRound);
                 this.getTournamentMembers();
                 this.rounds = [];
 
@@ -621,34 +627,100 @@ export class ViewTournamentComponent implements OnInit {
                 totalPlayer = [...this.dataFullTournament['TournamentQL'][0]['members']];
             }
 
-            // for (const c of this.FlightsQL) {
-            //     for (let obj of c['MembersQL']) {
-            //         totalPlayer.push(obj);
-            //     }
-            // }
-            // console.log(totalPlayer);
-            totalPlayer.sort(this.ComparatorHandicap);
-            let count = 0;
+            // Build scored player list from all flights
+            const handicapAllocation = this.getHandicapAllocation ? this.getHandicapAllocation() : 'full';
+            const allFlights = this.fullTournament.FlightsQL.filter((a) => round ? a.flightRound == round : true);
+            const scoredPlayers: any[] = [];
+            for (const flight of allFlights) {
+                for (const member of (flight.MembersQL || [])) {
+                    const scores: any[] = member.ScoresQL || [];
+                    let grossTotal = 0;
+                    let netTotal = 0;
+                    let scoreHandicap = 0;
+                    for (const score of scores) {
+                        const gross = score.grossScore || 0;
+                        if (gross <= 0) continue;
+                        grossTotal += gross;
+                        if (score.playerHandicap) scoreHandicap = score.playerHandicap;
+                    }
+                    netTotal = grossTotal > 0 ? grossTotal - scoreHandicap : 0;
+                    scoredPlayers.push({
+                        id: member.playerId,
+                        title: member.PlayerQL['firstName'] + ' ' + member.PlayerQL['lastName'],
+                        handicap: member.PlayerQL['handicap'],
+                        category: member.PlayerQL['playerCategory'],
+                        class: member.PlayerQL['playerCategory'],
+                        grossScore: grossTotal,
+                        netScore: netTotal,
+                        flightId: flight.id,
+                    });
+                }
+            }
 
-            for (const c of totalPlayer) {
-                if (count < 10) {
-                    let obj = {
+            // If we have scores, sort by score; otherwise fall back to handicap
+            if (scoredPlayers.length > 0) {
+                const hasScores = scoredPlayers.some(p => p.grossScore > 0);
+                if (hasScores) {
+                    if (this.topPlayersScoreType === 'net') {
+                        scoredPlayers.sort((a, b) => (a.netScore || 999) - (b.netScore || 999));
+                    } else {
+                        scoredPlayers.sort((a, b) => (a.grossScore || 999) - (b.grossScore || 999));
+                    }
+                    // Remove duplicates by player id (player may appear in multiple flights)
+                    const seen = new Set();
+                    for (const p of scoredPlayers) {
+                        if (seen.has(p.id)) continue;
+                        seen.add(p.id);
+                        if (!hasScores || p.grossScore > 0) this.topMembers.push(p);
+                        if (this.topMembers.length >= 10) break;
+                    }
+                } else {
+                    totalPlayer.sort(this.ComparatorHandicap);
+                    let count = 0;
+                    for (const c of totalPlayer) {
+                        if (count >= 10) break;
+                        this.topMembers.push({
+                            id: c.playerId,
+                            title: c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                            handicap: c.PlayerQL['handicap'],
+                            category: c.PlayerQL['playerCategory'],
+                            class: c.PlayerQL['playerCategory'],
+                            grossScore: 0,
+                            netScore: 0,
+                        });
+                        count++;
+                    }
+                }
+            } else {
+                totalPlayer.sort(this.ComparatorHandicap);
+                let count = 0;
+                for (const c of totalPlayer) {
+                    if (count >= 10) break;
+                    this.topMembers.push({
                         id: c.playerId,
-                        title:
-                            c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
+                        title: c.PlayerQL['firstName'] + ' ' + c.PlayerQL['lastName'],
                         handicap: c.PlayerQL['handicap'],
                         category: c.PlayerQL['playerCategory'],
                         class: c.PlayerQL['playerCategory'],
-                    };
-                    this.topMembers.push(obj);
+                        grossScore: 0,
+                        netScore: 0,
+                    });
+                    count++;
                 }
-                count++;
             }
-            //console.log(this.topMembers);
-            // this.dataSourceMembersStatus = new MatTableDataSource(this.topMembers);
         } catch (error) {
             this.logger.log('Getting Tournaments Data Failed', "error", error.toString());
         }
+    }
+
+    toggleTopPlayersScoreType(type: 'gross' | 'net') {
+        this.topPlayersScoreType = type;
+        this.calculateStatistics(Math.min(this.activeRound, this.noOfRounds));
+    }
+
+    navigateToPlayerFlight(player: any) {
+        this.highlightedFlightId = player.flightId || null;
+        this.setPrimaryTab('Scores');
     }
 
     public onChangeGross(event) {
@@ -706,8 +778,8 @@ export class ViewTournamentComponent implements OnInit {
 
     setPrimaryTab(tab: string) {
         this.activeTab = tab;
-        this.calculateStatistics(this.activeRound);
-        this.getRoundStats(this.activeRound);
+        this.calculateStatistics(Math.min(this.activeRound, this.noOfRounds));
+        this.getRoundStats(Math.min(this.activeRound, this.noOfRounds));
     }
 
     activePrimaryTab() {
@@ -3677,5 +3749,517 @@ export class ViewTournamentComponent implements OnInit {
             }
         });
         return boolean;
+    }
+
+    // -----------------------------------------------------------------------
+    // Result Sheet Generation
+    // -----------------------------------------------------------------------
+
+    private ordinalSuffix(n: number): string {
+        const s = ['th', 'st', 'nd', 'rd'];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    }
+
+    buildResultSheetData() {
+        const tournament = this.fullTournament;
+        if (!tournament) return { categories: [], completedRounds: [], pars: Array(18).fill(0) };
+
+        const allFlights: any[] = tournament.FlightsQL || [];
+
+        // Determine completed rounds (rounds that have at least one score)
+        const completedRounds: number[] = [];
+        for (let r = 1; r <= this.noOfRounds; r++) {
+            const hasScores = allFlights
+                .filter(f => f.flightRound === r)
+                .some(f => (f.MembersQL || []).some(m => m.ScoresQL && m.ScoresQL.length > 0));
+            if (hasScores) completedRounds.push(r);
+        }
+
+        // Get par values – prefer CoursesQL hole data, fall back to scores
+        const pars: number[] = Array(18).fill(0);
+        const courseHoles = tournament.CoursesQL?.[0]?.course?.HolesQL;
+        if (courseHoles) {
+            for (const hole of courseHoles) {
+                if (hole.holeNo >= 1 && hole.holeNo <= 18) pars[hole.holeNo - 1] = hole.par || 0;
+            }
+        }
+        if (pars.every(p => p === 0)) {
+            for (const flight of allFlights) {
+                for (const member of (flight.MembersQL || [])) {
+                    for (const score of (member.ScoresQL || [])) {
+                        const h = score.hole?.holeNo;
+                        if (h >= 1 && h <= 18 && score.hole?.par) pars[h - 1] = score.hole.par;
+                    }
+                }
+            }
+        }
+
+        // Build player map: playerId → aggregated data
+        const playerMap = new Map<string, any>();
+
+        for (const round of completedRounds) {
+            const roundFlights = allFlights.filter(f => f.flightRound === round);
+            for (const flight of roundFlights) {
+                for (const member of (flight.MembersQL || [])) {
+                    const scores: any[] = member.ScoresQL || [];
+                    if (scores.length === 0) continue;
+
+                    const playerId = member.playerId;
+                    const player = member.PlayerQL;
+                    const clubName = player?.membership?.[0]?.club?.name || '';
+
+                    const sortedScores = [...scores].sort((a, b) => (a.hole?.holeNo || 0) - (b.hole?.holeNo || 0));
+
+                    const front9: number[] = Array(9).fill(0);
+                    const back9: number[] = Array(9).fill(0);
+                    let playerHandicap = 0;
+
+                    for (const score of sortedScores) {
+                        const holeNo = score.hole?.holeNo;
+                        if (score.playerHandicap != null) playerHandicap = score.playerHandicap;
+                        if (holeNo >= 1 && holeNo <= 9) front9[holeNo - 1] = score.grossScore || 0;
+                        else if (holeNo >= 10 && holeNo <= 18) back9[holeNo - 10] = score.grossScore || 0;
+                    }
+
+                    const out = front9.reduce((a, b) => a + b, 0);
+                    const inn = back9.reduce((a, b) => a + b, 0);
+                    const dayGross = out + inn;
+                    const dayNet = dayGross > 0 ? Math.max(0, dayGross - playerHandicap) : 0;
+
+                    if (!playerMap.has(playerId)) {
+                        playerMap.set(playerId, {
+                            id: playerId,
+                            name: `${player?.firstName || ''} ${player?.lastName || ''}`.trim(),
+                            hcp: player?.handicap ?? '',
+                            club: clubName,
+                            category: player?.playerCategory || 'General',
+                            rounds: {}
+                        });
+                    }
+                    playerMap.get(playerId)!.rounds[round] = { front9, back9, out, in: inn, dayGross, dayNet };
+                }
+            }
+        }
+
+        // Compute totals
+        const players = Array.from(playerMap.values());
+        for (const p of players) {
+            p.totalGross = completedRounds.reduce((sum, r) => sum + (p.rounds[r]?.dayGross || 0), 0);
+            p.totalNet = completedRounds.reduce((sum, r) => sum + (p.rounds[r]?.dayNet || 0), 0);
+        }
+
+        // Group by category and assign positions
+        const categoryMap = new Map<string, any[]>();
+        for (const p of players) {
+            if (!categoryMap.has(p.category)) categoryMap.set(p.category, []);
+            categoryMap.get(p.category)!.push(p);
+        }
+
+        const categories: { name: string; players: any[] }[] = [];
+        for (const [catName, catPlayers] of categoryMap) {
+            const byGross = catPlayers.filter(p => p.totalGross > 0).sort((a, b) => a.totalGross - b.totalGross);
+            const byNet = catPlayers.filter(p => p.totalNet > 0).sort((a, b) => a.totalNet - b.totalNet);
+            byGross.forEach((p, i) => { p.grossPos = i + 1; });
+            byNet.forEach((p, i) => { p.netPos = i + 1; });
+            catPlayers.sort((a, b) => {
+                if (!a.totalGross && !b.totalGross) return 0;
+                if (!a.totalGross) return 1;
+                if (!b.totalGross) return -1;
+                return a.totalGross - b.totalGross;
+            });
+            categories.push({ name: catName, players: catPlayers });
+        }
+
+        return { categories, completedRounds, pars };
+    }
+
+    async generateResultSheetPDF() {
+        this.isGeneratingResultSheet = true;
+        this.showResultSheetMenu = false;
+        try {
+            const { categories, completedRounds, pars } = this.buildResultSheetData();
+            if (completedRounds.length === 0) {
+                this.snackBar.open('No completed rounds with scores found.', 'Close', { duration: 3000 });
+                return;
+            }
+
+            const tournamentTitle = (this.fullTournament.title || 'Tournament').toString();
+            const numRounds = completedRounds.length;
+
+            // Dynamically size the page width so all round columns fit
+            const pageWidth = Math.max(297, 90 + 159 * numRounds + 26);
+            const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [210, pageWidth] });
+            const usableWidth = pageWidth - 28;
+
+            // Tournament title
+            doc.setFontSize(13);
+            doc.setFont('helvetica', 'bold');
+            doc.text(tournamentTitle.toUpperCase(), pageWidth / 2, 12, { align: 'center' });
+
+            let startY = 16;
+
+            for (let ci = 0; ci < categories.length; ci++) {
+                const cat = categories[ci];
+                if (ci > 0) { doc.addPage(); startY = 16; }
+
+                // Category bar
+                doc.setFillColor(41, 128, 185);
+                doc.rect(14, startY, usableWidth, 7, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(9);
+                doc.text(`RESULT – ${cat.name.toUpperCase()}`, pageWidth / 2, startY + 4.5, { align: 'center' });
+                doc.setTextColor(0, 0, 0);
+                startY += 9;
+
+                const parOut = pars.slice(0, 9).reduce((a, b) => a + b, 0);
+                const parIn = pars.slice(9, 18).reduce((a, b) => a + b, 0);
+
+                const header1: string[] = ['', '', '', ''];
+                const header2: string[] = ['S#', 'NAME', 'HCP', 'CLUB'];
+                const parRow: (string | number)[] = ['PAR', '', '', ''];
+
+                for (const r of completedRounds) {
+                    header1.push(`ROUND ${r}`, ...Array(21).fill(''));
+                    header2.push('H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'OUT',
+                        'H10', 'H11', 'H12', 'H13', 'H14', 'H15', 'H16', 'H17', 'H18', 'IN',
+                        `DAY ${r} GROSS`, `DAY ${r} NET`);
+                    parRow.push(...pars.slice(0, 9), parOut, ...pars.slice(9, 18), parIn, '', '');
+                }
+                header2.push('TOTAL GROSS', 'TOTAL NET');
+                parRow.push('', '');
+
+                const body: any[][] = [];
+                cat.players.forEach((p, idx) => {
+                    const row: any[] = [idx + 1, p.name, p.hcp, p.club];
+                    for (const r of completedRounds) {
+                        const rd = p.rounds[r];
+                        if (rd) {
+                            row.push(...rd.front9.map(s => s || ''), rd.out || '',
+                                ...rd.back9.map(s => s || ''), rd.in || '',
+                                rd.dayGross || '', rd.dayNet || '');
+                        } else {
+                            row.push(...Array(22).fill(''));
+                        }
+                    }
+                    row.push(p.totalGross || '', p.totalNet || '');
+                    body.push(row);
+                });
+
+                // Column widths
+                const colStyles: any = {
+                    0: { cellWidth: 7 }, 1: { cellWidth: 30 }, 2: { cellWidth: 8 }, 3: { cellWidth: 20 }
+                };
+                let ci2 = 4;
+                for (const _r of completedRounds) {
+                    for (let h = 0; h < 9; h++) colStyles[ci2++] = { cellWidth: 6.5 };
+                    colStyles[ci2++] = { cellWidth: 8 };
+                    for (let h = 0; h < 9; h++) colStyles[ci2++] = { cellWidth: 6.5 };
+                    colStyles[ci2++] = { cellWidth: 8 };
+                    colStyles[ci2++] = { cellWidth: 12 };
+                    colStyles[ci2++] = { cellWidth: 12 };
+                }
+                colStyles[ci2++] = { cellWidth: 13 };
+                colStyles[ci2++] = { cellWidth: 13 };
+                colStyles[1] = { ...colStyles[1], halign: 'left' };
+                colStyles[3] = { ...colStyles[3], halign: 'left' };
+
+                (doc as any).autoTable({
+                    startY,
+                    head: [header1, header2, parRow],
+                    body,
+                    theme: 'grid',
+                    headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 6.5, halign: 'center', cellPadding: 1 },
+                    bodyStyles: { fontSize: 6.5, halign: 'center', cellPadding: 1 },
+                    columnStyles: colStyles,
+                    tableWidth: usableWidth,
+                });
+
+                let finalY = (doc as any).lastAutoTable.finalY + 5;
+
+                // Positions table
+                const topGross = cat.players.filter(p => p.grossPos).sort((a, b) => a.grossPos - b.grossPos).slice(0, 3);
+                const topNet = cat.players.filter(p => p.netPos).sort((a, b) => a.netPos - b.netPos).slice(0, 3);
+                const posBody: any[][] = [
+                    ...topGross.map(p => [`${this.ordinalSuffix(p.grossPos)} Gross`, p.name, p.hcp, p.club, p.totalGross, '']),
+                    ...topNet.map(p => [`${this.ordinalSuffix(p.netPos)} Net`, p.name, p.hcp, p.club, '', p.totalNet]),
+                ];
+                if (posBody.length > 0) {
+                    (doc as any).autoTable({
+                        startY: finalY,
+                        head: [['Position', 'Name', 'HCP', 'Club', 'Gross', 'Net']],
+                        body: posBody,
+                        theme: 'grid',
+                        headStyles: { fillColor: [200, 200, 200], textColor: 0, fontSize: 7, halign: 'center', cellPadding: 1 },
+                        bodyStyles: { fontSize: 7, cellPadding: 1 },
+                        columnStyles: { 1: { halign: 'left' }, 3: { halign: 'left' } },
+                        tableWidth: 100,
+                        margin: { left: 14 },
+                    });
+                }
+            }
+
+            doc.save(`${tournamentTitle}_Results.pdf`);
+        } finally {
+            this.isGeneratingResultSheet = false;
+        }
+    }
+
+    async generateResultSheetExcel() {
+        this.isGeneratingResultSheet = true;
+        this.showResultSheetMenu = false;
+        try {
+            const { categories, completedRounds, pars } = this.buildResultSheetData();
+            if (completedRounds.length === 0) {
+                this.snackBar.open('No completed rounds with scores found.', 'Close', { duration: 3000 });
+                return;
+            }
+
+            const ExcelJS = (await import('exceljs')).default;
+            const tournamentTitle = (this.fullTournament.title || 'Tournament').toString();
+            const parOut = pars.slice(0, 9).reduce((a, b) => a + b, 0);
+            const parIn = pars.slice(9, 18).reduce((a, b) => a + b, 0);
+
+            const wb = new ExcelJS.Workbook();
+            wb.creator = 'GemGolfers';
+            wb.created = new Date();
+
+            // Helper for solid fill
+            const fill = (argb: string): any => ({ type: 'pattern', pattern: 'solid', fgColor: { argb } });
+            const font = (opts: any): any => opts;
+            const border = (style: string = 'thin', argb: string = 'FFCCCCCC'): any =>
+                ({ top: { style, color: { argb } }, bottom: { style, color: { argb } }, left: { style, color: { argb } }, right: { style, color: { argb } } });
+
+            for (const cat of categories) {
+                // Sheet name max 31 chars
+                const sheetName = cat.name.length > 31 ? cat.name.substring(0, 28) + '...' : cat.name;
+                const ws = wb.addWorksheet(sheetName);
+
+                const numRoundCols = completedRounds.length * 22;
+                const totalCols = 4 + numRoundCols + 2;
+
+                // Column widths
+                const cols: any[] = [{ width: 5 }, { width: 28 }, { width: 7 }, { width: 18 }];
+                for (let r = 0; r < completedRounds.length; r++) {
+                    for (let h = 0; h < 9; h++) cols.push({ width: 5.5 });
+                    cols.push({ width: 7 });
+                    for (let h = 0; h < 9; h++) cols.push({ width: 5.5 });
+                    cols.push({ width: 7 });
+                    cols.push({ width: 13 });
+                    cols.push({ width: 13 });
+                }
+                cols.push({ width: 14 }, { width: 14 });
+                ws.columns = cols;
+
+                // ── Row 1: Tournament title ──────────────────────────────────
+                const titleRow = ws.addRow([tournamentTitle.toUpperCase()]);
+                ws.mergeCells(1, 1, 1, totalCols);
+                const tc = titleRow.getCell(1);
+                tc.font = font({ bold: true, size: 14, color: { argb: 'FFFFFFFF' } });
+                tc.fill = fill('FF175F9D');
+                tc.alignment = { horizontal: 'center', vertical: 'middle' };
+                titleRow.height = 24;
+
+                // ── Row 2: Category header ───────────────────────────────────
+                const catRow = ws.addRow([`RESULT – ${cat.name.toUpperCase()}`]);
+                ws.mergeCells(2, 1, 2, totalCols);
+                const cc = catRow.getCell(1);
+                cc.font = font({ bold: true, size: 12, color: { argb: 'FFFFFFFF' } });
+                cc.fill = fill('FF2980B9');
+                cc.alignment = { horizontal: 'center', vertical: 'middle' };
+                catRow.height = 20;
+
+                // ── Row 3: Round group headers ───────────────────────────────
+                const rGroupVals: any[] = ['', '', '', ''];
+                for (const r of completedRounds) {
+                    rGroupVals.push(`ROUND ${r}`);
+                    for (let i = 0; i < 21; i++) rGroupVals.push('');
+                }
+                rGroupVals.push('', '');
+                const rGroupRow = ws.addRow(rGroupVals);
+                rGroupRow.height = 18;
+                let rStart = 5;
+                for (const r of completedRounds) {
+                    ws.mergeCells(3, rStart, 3, rStart + 21);
+                    const rc = rGroupRow.getCell(rStart);
+                    rc.font = font({ bold: true, size: 10, color: { argb: 'FFFFFFFF' } });
+                    rc.fill = fill('FF5DADE2');
+                    rc.alignment = { horizontal: 'center', vertical: 'middle' };
+                    rStart += 22;
+                }
+
+                // ── Row 4: Column headers ────────────────────────────────────
+                const colHdrVals: any[] = ['S#', 'NAME', 'HCP', 'CLUB'];
+                for (const r of completedRounds) {
+                    colHdrVals.push('H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'OUT',
+                        'H10', 'H11', 'H12', 'H13', 'H14', 'H15', 'H16', 'H17', 'H18', 'IN',
+                        `DAY ${r}\nGROSS`, `DAY ${r}\nNET`);
+                }
+                colHdrVals.push('TOTAL\nGROSS', 'TOTAL\nNET');
+                const colHdrRow = ws.addRow(colHdrVals);
+                colHdrRow.height = 28;
+                colHdrRow.eachCell({ includeEmpty: true }, (cell, colNum) => {
+                    if (colNum > totalCols) return;
+                    cell.font = font({ bold: true, size: 8.5, color: { argb: 'FFFFFFFF' } });
+                    cell.fill = fill('FF1A5276');
+                    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+                    cell.border = border('thin', 'FF2980B9');
+                });
+                // TOTAL columns get green header
+                colHdrRow.getCell(totalCols - 1).fill = fill('FF1E8449');
+                colHdrRow.getCell(totalCols).fill = fill('FF1E8449');
+
+                // ── Row 5: PAR row ───────────────────────────────────────────
+                const parVals: any[] = ['PAR', '', '', ''];
+                for (const _r of completedRounds) {
+                    parVals.push(...pars.slice(0, 9), parOut, ...pars.slice(9, 18), parIn, '', '');
+                }
+                parVals.push('', '');
+                const parRowObj = ws.addRow(parVals);
+                parRowObj.height = 15;
+                parRowObj.eachCell({ includeEmpty: true }, (cell, colNum) => {
+                    if (colNum > totalCols) return;
+                    cell.font = font({ bold: true, size: 9, color: { argb: 'FF000000' } });
+                    cell.fill = fill('FFD7DBDD');
+                    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+                    cell.border = { bottom: { style: 'medium', color: { argb: 'FF95A5A6' } } };
+                });
+                parRowObj.getCell(1).alignment = { horizontal: 'left', vertical: 'middle' };
+
+                // Medal/position background colors (gold, silver, bronze)
+                const medalBgs = ['FFFFF9C4', 'FFE8E8E8', 'FFFDE3C0'];
+
+                // ── Player rows ──────────────────────────────────────────────
+                cat.players.forEach((p, idx) => {
+                    const rowVals: any[] = [idx + 1, p.name, p.hcp, p.club];
+                    for (const r of completedRounds) {
+                        const rd = p.rounds[r];
+                        if (rd) {
+                            rowVals.push(
+                                ...rd.front9.map((s: number) => s || ''), rd.out || '',
+                                ...rd.back9.map((s: number) => s || ''), rd.in || '',
+                                rd.dayGross || '', rd.dayNet || ''
+                            );
+                        } else {
+                            rowVals.push(...Array(22).fill(''));
+                        }
+                    }
+                    rowVals.push(p.totalGross || '', p.totalNet || '');
+
+                    const playerRow = ws.addRow(rowVals);
+                    playerRow.height = 15;
+                    const rowBg = idx % 2 === 0 ? 'FFFFFFFF' : 'FFF2F3F4';
+
+                    playerRow.eachCell({ includeEmpty: true }, (cell, colNum) => {
+                        if (colNum > totalCols) return;
+                        cell.font = font({ size: 9 });
+                        cell.fill = fill(rowBg);
+                        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+                        cell.border = border('hair');
+                    });
+
+                    // Left-align name and club
+                    playerRow.getCell(2).alignment = { horizontal: 'left', vertical: 'middle' };
+                    playerRow.getCell(4).alignment = { horizontal: 'left', vertical: 'middle' };
+
+                    // Color OUT / IN / DAY columns per round
+                    let colIdx = 5;
+                    for (const _r of completedRounds) {
+                        // OUT
+                        const outC = playerRow.getCell(colIdx + 9);
+                        outC.fill = fill('FFD6EAF8'); outC.font = font({ bold: true, size: 9 });
+                        // IN
+                        const inC = playerRow.getCell(colIdx + 19);
+                        inC.fill = fill('FFD6EAF8'); inC.font = font({ bold: true, size: 9 });
+                        // DAY GROSS
+                        const dgC = playerRow.getCell(colIdx + 20);
+                        dgC.fill = fill('FFD5E8D4'); dgC.font = font({ bold: true, size: 9 });
+                        // DAY NET
+                        const dnC = playerRow.getCell(colIdx + 21);
+                        dnC.fill = fill('FFD5E8D4'); dnC.font = font({ bold: true, size: 9 });
+                        colIdx += 22;
+                    }
+
+                    // TOTAL GROSS / TOTAL NET – dark green with white text
+                    const tgC = playerRow.getCell(totalCols - 1);
+                    tgC.fill = fill('FF27AE60'); tgC.font = font({ bold: true, size: 9, color: { argb: 'FFFFFFFF' } });
+                    const tnC = playerRow.getCell(totalCols);
+                    tnC.fill = fill('FF27AE60'); tnC.font = font({ bold: true, size: 9, color: { argb: 'FFFFFFFF' } });
+
+                    // Medal for top-3 gross
+                    if (p.grossPos && p.grossPos <= 3) {
+                        playerRow.getCell(1).fill = fill(medalBgs[p.grossPos - 1]);
+                        playerRow.getCell(1).font = font({ bold: true, size: 9 });
+                    }
+                });
+
+                // ── Positions summary ────────────────────────────────────────
+                ws.addRow([]);
+
+                const posTitleRow = ws.addRow(['POSITIONS']);
+                ws.mergeCells(ws.rowCount, 1, ws.rowCount, 6);
+                posTitleRow.getCell(1).font = font({ bold: true, size: 10, color: { argb: 'FFFFFFFF' } });
+                posTitleRow.getCell(1).fill = fill('FF2C3E50');
+                posTitleRow.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+                posTitleRow.height = 16;
+
+                const posHdrRow = ws.addRow(['POSITION', 'NAME', 'HCP', 'CLUB', 'GROSS', 'NET']);
+                posHdrRow.height = 14;
+                posHdrRow.eachCell({ includeEmpty: true }, (cell, colNum) => {
+                    if (colNum > 6) return;
+                    cell.font = font({ bold: true, size: 9, color: { argb: 'FFFFFFFF' } });
+                    cell.fill = fill('FF566573');
+                    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+                });
+
+                const topGross = cat.players.filter((p: any) => p.grossPos).sort((a: any, b: any) => a.grossPos - b.grossPos).slice(0, 3);
+                const topNet = cat.players.filter((p: any) => p.netPos).sort((a: any, b: any) => a.netPos - b.netPos).slice(0, 3);
+
+                topGross.forEach((p: any, i: number) => {
+                    const row = ws.addRow([`${this.ordinalSuffix(p.grossPos)} GROSS`, p.name, p.hcp, p.club, p.totalGross, '']);
+                    row.height = 14;
+                    row.getCell(1).fill = fill(medalBgs[i]);
+                    row.getCell(1).font = font({ bold: true, size: 9 });
+                    row.getCell(2).font = font({ bold: true, size: 9 });
+                    row.getCell(5).font = font({ bold: true, size: 9 });
+                    row.eachCell({ includeEmpty: true }, (cell, colNum) => {
+                        if (colNum > 6) return;
+                        cell.alignment = { horizontal: colNum <= 4 ? 'left' : 'center', vertical: 'middle' };
+                        cell.border = border('hair');
+                    });
+                });
+
+                topNet.forEach((p: any, i: number) => {
+                    const row = ws.addRow([`${this.ordinalSuffix(p.netPos)} NET`, p.name, p.hcp, p.club, '', p.totalNet]);
+                    row.height = 14;
+                    row.getCell(1).fill = fill(medalBgs[i]);
+                    row.getCell(1).font = font({ bold: true, size: 9 });
+                    row.getCell(2).font = font({ bold: true, size: 9 });
+                    row.getCell(6).font = font({ bold: true, size: 9 });
+                    row.eachCell({ includeEmpty: true }, (cell, colNum) => {
+                        if (colNum > 6) return;
+                        cell.alignment = { horizontal: colNum <= 4 ? 'left' : 'center', vertical: 'middle' };
+                        cell.border = border('hair');
+                    });
+                });
+
+                // Freeze first 5 rows and first 4 columns
+                ws.views = [{ state: 'frozen', xSplit: 4, ySplit: 5 }];
+            }
+
+            // Write buffer and trigger browser download
+            const buffer = await wb.xlsx.writeBuffer();
+            const blob = new Blob([buffer as ArrayBuffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${tournamentTitle}_Results.xlsx`;
+            a.click();
+            URL.revokeObjectURL(url);
+        } finally {
+            this.isGeneratingResultSheet = false;
+        }
     }
 }

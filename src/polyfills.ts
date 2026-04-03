@@ -50,3 +50,8 @@ import 'zone.js';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// Polyfills required by ExcelJS in browser
+import { Buffer } from 'buffer';
+(window as any).Buffer = Buffer;
+(window as any).process = { env: {} };

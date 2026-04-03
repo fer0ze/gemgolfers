@@ -39,6 +39,9 @@ export class MatchplayComponent implements OnInit, OnChanges {
     courseID: string;
     @Input()
     activeRound: number;
+    @Input()
+    highlightFlightId: string = null;
+    highlightedFlightId: string = null;
     myPlayer: Player;
     isLoading: Boolean = true;
     loggedInuser: UserSessionModel;
@@ -257,11 +260,11 @@ export class MatchplayComponent implements OnInit, OnChanges {
             this.activeRound = changes['activeRound'].currentValue;
             this.flightRound = changes['activeRound'].currentValue;
             this.changeRound({ round: this.activeRound });
-            // console.log('Active round changed:', changes['activeRound'].currentValue);
-            // Reload data / logic here
         }
 
-        // changes.prop contains the old and the new value...
+        if (changes['highlightFlightId'] && changes['highlightFlightId'].currentValue) {
+            this.highlightedFlightId = changes['highlightFlightId'].currentValue;
+        }
     }
 
     changeFlight(item) {
@@ -1231,6 +1234,13 @@ export class MatchplayComponent implements OnInit, OnChanges {
             console.log(this.flightPlayers);
             this.logger.log('Getting Tournament Score Data Successfully.', "info",);
             this.active = true;
+            if (this.highlightedFlightId) {
+                setTimeout(() => {
+                    const el = document.getElementById('flight-' + this.highlightedFlightId);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setTimeout(() => { this.highlightedFlightId = null; }, 2500);
+                }, 100);
+            }
         } catch (error) {
             this.logger.log('Getting Tournament Score Data Failed', "error", error.toString());
         }

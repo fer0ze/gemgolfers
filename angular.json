@@ -37,7 +37,9 @@
                             "crypto-js/enc-base64",
                             "flat",
                             "moment",
-                            "quill"
+                            "quill",
+                            "exceljs",
+                            "buffer"
                         ],
                         "assets": [
                             "src/favicon-16x16.png",
@@ -99,6 +101,9 @@
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "proxyConfig": "proxy.conf.json"
+                    },
                     "configurations": {
                         "production": {
                           "buildTarget": "fuse:build:production"

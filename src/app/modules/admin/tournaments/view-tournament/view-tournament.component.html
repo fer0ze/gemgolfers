@@ -5,11 +5,6 @@
         <div
             class="flex flex-col text-white bg-[#175f9d] p-4 rounded-lg sm:flex-row justify-between items-start sm:items-center mb-8">
             <div>
-                <a [routerLink]="['/tournaments']"
-                    class="flex items-center text-sm text-white hover:text-emerald-600 mb-2 transition-colors">
-                    <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
-                    Back to Tournaments
-                </a>
                 <h1 class="text-4xl font-bold text-white"> {{ fullTournament?.title }}
                     <button mat-icon-button (click)="
                                                     redirectToTournamentSetup()
@@ -31,9 +26,9 @@
                 <div class="relative flex w-40 items-center">
 
                     <input type="text" id="first_name" [value]="joiningCode" readonly
-                        class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        class="w-full pl-3 pr-12 py-2 text-base bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <label for="first_name"
-                        class="absolute text-sm text-white duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-[#175f9d] px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
+                        class="absolute text-base font-semibold text-white duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-[#175f9d] px-2 peer-focus:px-2 peer-focus:text-emerald-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">Joining
                         Code</label>
 
                     <button (click)="copyLink()"
@@ -173,12 +168,6 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Amateurs</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.AmateursCount }}</p>
-                    <p class="text-sm font-medium mt-1 line-clamp-2">
-                        Date:
-                        <span class="text-xs " *ngFor="let s of AmateursPlayingDates; let last = last">
-                            {{ s.dates }}<span *ngIf="!last">, </span>
-                        </span>
-                    </p>
 
 
 
@@ -196,13 +185,6 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Seniors</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.SeniorsCount }}</p>
-                    <p class="text-sm font-medium mt-1 line-clamp-2">
-                        Date:
-                        <span class="text-xs" *ngFor="let s of SeniorsPlayingDates; let last = last">
-                            {{ s.dates }}<span *ngIf="!last">, </span>
-                        </span>
-
-                    </p>
                 </div>
             </div>
             <div *ngIf="this.LadiesCount>0"
@@ -215,13 +197,6 @@
                 <div>
                     <p class="text-sm font-medium text-gray-500"> Ladies</p>
                     <p class="text-2xl font-bold text-gray-900"> {{ this.LadiesCount }}</p>
-                    <p class="text-sm font-medium mt-1 line-clamp-2">
-                        Date:
-                        <span class="text-xs" *ngFor="let s of LadiesPlayingDates; let last = last">
-                            {{ s.dates }}<span *ngIf="!last">, </span>
-                        </span>
-
-                    </p>
                 </div>
             </div>
             <div *ngIf="this.JuniorsCount>0"
@@ -317,7 +292,7 @@
           activePrimaryTab() === tab
             ? 'border-emerald-500 text-emerald-600'
             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-        " class="whitespace-nowrap py-3 px-1 border-b-2 font-semibold text-md transition-colors focus:outline-none">
+        " class="whitespace-nowrap py-3 px-1 border-b-2 font-semibold text-lg transition-colors focus:outline-none">
                         {{ tab }}
                     </button>
 
@@ -332,6 +307,36 @@
 
             <!-- Buttons: show only for the active round -->
             <div class="flex items-center justify-end gap-3 mb-4">
+                <!-- Result Sheet download -->
+                <div class="relative">
+                    <button (click)="showResultSheetMenu = !showResultSheetMenu"
+                        class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Result Sheet
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div *ngIf="showResultSheetMenu"
+                        class="absolute right-0 mt-1 w-44 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                        <button (click)="generateResultSheetPDF()"
+                            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 rounded-t-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            Download PDF
+                        </button>
+                        <button (click)="generateResultSheetExcel()"
+                            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 rounded-b-lg border-t border-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Download Excel
+                        </button>
+                    </div>
+                </div>
                 <button *ngIf="currentRound < noOfRounds && activeRound== currentRound" (click)="closeRound()"
                     class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                     <mat-icon class="icon-size-4 text-primary pt-2"
@@ -342,7 +347,7 @@
                 <button *ngIf="activeRound > 1" (click)="undoRound()"
                     class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                     <mat-icon class="icon-size-4 text-warn pt-1" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
-                    Undo Round {{activeRound}}
+                    Undo Round {{activeRound - 1}}
                 </button>
 
                 <button *ngIf="activeRound === noOfRounds" (click)="closeRound()"
@@ -359,33 +364,46 @@
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Top Players -->
                     <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Top Players</h2>
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold text-gray-900">Top Players</h2>
+                            <div class="flex rounded-lg overflow-hidden border border-gray-200 text-sm font-semibold">
+                                <button (click)="toggleTopPlayersScoreType('gross')"
+                                    [ngClass]="topPlayersScoreType === 'gross' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
+                                    class="px-3 py-1 transition-colors">Gross</button>
+                                <button (click)="toggleTopPlayersScoreType('net')"
+                                    [ngClass]="topPlayersScoreType === 'net' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
+                                    class="px-3 py-1 border-l border-gray-200 transition-colors">Net</button>
+                            </div>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead>
                                     <tr class="text-sm text-gray-500 uppercase border-b border-gray-200">
+                                        <th class="py-3 px-4 font-semibold">#</th>
                                         <th class="py-3 px-4 font-semibold">Name</th>
                                         <th class="py-3 px-4 font-semibold">Category</th>
-                                        <th class="py-3 px-4 font-semibold">Handicap</th>
+                                        <th class="py-3 px-4 font-semibold">Score</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
-                                    <ng-container *ngFor="let player of topMembers;">
+                                    <ng-container *ngFor="let player of topMembers; let i = index">
                                         <tr>
-                                            <td class="py-3 px-4 text-md font-medium text-gray-800">{{ player.title }}
-                                            </td>
+                                            <td class="py-3 px-4 text-sm font-bold text-gray-400">{{ i + 1 }}</td>
+                                            <td class="py-3 px-4 text-md font-medium text-emerald-700 underline cursor-pointer hover:text-emerald-900 transition-colors" (click)="navigateToPlayerFlight(player)">{{ player.title }}</td>
                                             <td class="py-3 px-4 text-md">
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800">
                                                     {{ player.category }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 px-4 text-md text-gray-600 font-medium">HC: {{
-                                                player.handicap
-                                                }}</td>
+                                            <td class="py-3 px-4 text-md font-bold text-emerald-600">
+                                                <ng-container *ngIf="topPlayersScoreType === 'gross' && player.grossScore > 0">{{ player.grossScore }}</ng-container>
+                                                <ng-container *ngIf="topPlayersScoreType === 'net' && player.netScore > 0">{{ player.netScore }}</ng-container>
+                                                <ng-container *ngIf="(topPlayersScoreType === 'gross' && !player.grossScore) || (topPlayersScoreType === 'net' && !player.netScore)">
+                                                    <span class="text-gray-400 font-normal text-sm">HC: {{ player.handicap }}</span>
+                                                </ng-container>
+                                            </td>
                                         </tr>
                                     </ng-container>
-
                                 </tbody>
                             </table>
                         </div>
@@ -410,7 +428,7 @@
                     <div class="bg-white p-6 rounded-lg shadow-sm">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Groups</h2>
                         <div class="space-y-3">
-                            <div *ngFor="let group of FlightsQL;"
+                            <div *ngFor="let group of FlightsQL;" (click)="setPrimaryTab('Groups')"
                                 class="flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
                                 <div>
                                     <p class="font-semibold text-md text-gray-800"> Group No:{{group.flightNo}}</p>
@@ -493,7 +511,7 @@
         <div *ngIf="activePrimaryTab() === 'Scores'">
             <div class="w-full">
                 <app-matchplay [activeRound]="activeRound" [tournamentID]="tournamentID"
-                    [courseID]="this.fullTournament.courseId"></app-matchplay>
+                    [courseID]="this.fullTournament.courseId" [highlightFlightId]="highlightedFlightId"></app-matchplay>
             </div>
         </div>
 
@@ -653,53 +671,62 @@
             <h2 class="text-xl font-bold text-gray-900 mb-6">Group Scores</h2>
             <div class="space-y-8">
                 @for (group of groupScores(); track group.name) {
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div class="flex justify-between items-center mb-4">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg w-full" style="min-width:0">
+                    <div class="flex justify-between items-center p-4 pb-2">
                         <h3 class="font-bold text-lg text-gray-800">{{ group.name }}</h3>
-                        <span class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
-                            group.time }}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">{{
+                                group.time }}</span>
+                            <button
+                                class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                Save Scores
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full min-w-[800px] text-sm text-left">
+                    <div class="overflow-x-auto px-4" style="min-width:0; max-width:100%">
+                        <table class="text-xs text-left" style="min-width:680px; width:100%">
                             <thead class="text-xs text-gray-500 uppercase bg-gray-100">
                                 <tr>
-                                    <th class="py-2 px-2 font-semibold sticky left-0 bg-gray-100 min-w-[200px]">Player
-                                    </th>
+                                    <th class="py-1.5 px-2 font-semibold bg-gray-100 w-36">Player</th>
                                     @for(hole of [1,2,3,4,5,6,7,8,9]; track hole) {
-                                    <th class="py-2 px-1 font-semibold text-center w-10">{{ hole }}</th>
+                                    <th class="py-1.5 px-0 font-semibold text-center w-7">{{ hole }}</th>
                                     }
-                                    <th class="py-2 px-2 font-semibold text-center bg-gray-200">OUT</th>
+                                    <th class="py-1.5 px-0 font-semibold text-center bg-gray-200 w-8">OUT</th>
                                     @for(hole of [10,11,12,13,14,15,16,17,18]; track hole) {
-                                    <th class="py-2 px-1 font-semibold text-center w-10">{{ hole }}</th>
+                                    <th class="py-1.5 px-0 font-semibold text-center w-7">{{ hole }}</th>
                                     }
-                                    <th class="py-2 px-2 font-semibold text-center bg-gray-200">IN</th>
-                                    <th class="py-2 px-2 font-semibold text-center bg-gray-200">TOTAL</th>
+                                    <th class="py-1.5 px-0 font-semibold text-center bg-gray-200 w-8">IN</th>
+                                    <th class="py-1.5 px-0 font-semibold text-center bg-gray-200 w-9">TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 @for(player of group.players; track player.name) {
                                 <tr class="bg-white">
-                                    <td
-                                        class="py-2 px-2 font-medium text-gray-800 whitespace-nowrap sticky left-0 bg-white min-w-[200px]">
+                                    <td class="py-1 px-2 font-medium text-gray-800 truncate w-36">
                                         {{ player.name }}</td>
                                     @for (score of player.scores.slice(0, 9); track $index) {
-                                    <td class="p-1">
+                                    <td class="p-0.5">
                                         <input type="number" [value]="score"
                                             (change)="updateScoreByName(player.name, $index, $event)"
-                                            class="w-10 text-center bg-white rounded-sm py-1 font-medium border border-gray-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                            class="w-full text-center bg-white rounded-sm py-1 font-medium border border-gray-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
                                     </td>
                                     }
-                                    <td class="py-2 px-2 font-bold text-center bg-gray-50">{{ player.outScore }}</td>
+                                    <td class="py-1 px-0 font-bold text-center bg-gray-50 text-xs">{{ player.outScore }}</td>
                                     @for (score of player.scores.slice(9, 18); track $index) {
-                                    <td class="p-1">
+                                    <td class="p-0.5">
                                         <input type="number" [value]="score"
                                             (change)="updateScoreByName(player.name, $index + 9, $event)"
-                                            class="w-10 text-center bg-white rounded-sm py-1 font-medium border border-gray-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                            class="w-full text-center bg-white rounded-sm py-1 font-medium border border-gray-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
                                     </td>
                                     }
-                                    <td class="py-2 px-2 font-bold text-center bg-gray-50">{{ player.inScore }}</td>
-                                    <td class="py-2 px-2 font-bold text-emerald-600 text-center bg-gray-50">{{
+                                    <td class="py-1 px-0 font-bold text-center bg-gray-50 text-xs">{{ player.inScore }}</td>
+                                    <td class="py-1 px-0 font-bold text-emerald-600 text-center bg-gray-50 text-xs">{{
                                         player.total }}</td>
                                 </tr>
                                 }
@@ -707,17 +734,6 @@
                         </table>
                     </div>
 
-                    <div class="flex justify-end mt-4">
-                        <button
-                            class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            Save Scores
-                        </button>
-                    </div>
                 </div>
                 }
             </div>

@@ -1,31 +1,26 @@
 import {
     Component,
     OnInit,
+    OnDestroy,
     ViewChild,
     ViewEncapsulation,
     ChangeDetectionStrategy,
-    AfterViewInit,
     ChangeDetectorRef,
     ElementRef,
 } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Subject, takeUntil, Observable, of, switchMap } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
 import { jsPDF } from 'jspdf';
-import { query } from '@angular/animations';
 import { MatDrawer } from '@angular/material/sidenav';
-import {
-    Constants,
-    UniqueIdGenerator,
-    generateGemId,
-} from '../../../shared/classes/general';
+import { Constants, UniqueIdGenerator, generateGemId } from '../../../shared/classes/general';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClubMembership, Player, UserSessionModel } from 'app/shared/models/player.model';
 import { read, utils } from 'xlsx';
@@ -36,6 +31,17 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { LogsService } from 'app/shared/services/logs.service';
 import { SelectionModel } from '@angular/cdk/collections';
 
+const CATEGORIES = [
+    'Amateurs',
+    'Senior Amateurs',
+    'Veterans',
+    'Junior Amateurs',
+    'Ladies',
+    'Professionals',
+    'Senior Professionals',
+    'Caddie',
+];
+
 @Component({
     standalone: false,
     selector: 'app-players',
@@ -43,49 +49,53 @@ import { SelectionModel } from '@angular/cdk/collections';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlayersComponent implements OnInit {
+export class PlayersComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
-    @ViewChild('event') aName: ElementRef;
-    drawerMode: 'side' | 'over';
-    playersDataSource: MatTableDataSource<any>;
-    searchInputControl: UntypedFormControl = new UntypedFormControl();
-    selection = new SelectionModel<any>(true, []);
-    displayNoRecords: boolean = true;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-    Players: any = [];
-    playersTableColumns: string[] = [
-        'id',
-        'Name',
-        'Phone',
-        'Email',
-        'MembershipNo',
-        'Category',
-        'Handicap',
-        'club',
-        'createdAt',
-        // 'Status',
-        'view',
-        'Edit',
-        'Delete',
-    ];
-    tourID: string = '';
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    count: any = 0;
-    showTable: Promise<any>;
+    @ViewChild('fileInput') fileInputVariable: ElementRef;
+
+    drawerMode: 'side' | 'over';
+
+    // ── Table data ─────────────────────────────────────────────────────────────
+    players: any[] = [];
+    totalCount: number = 0;
+    isLoading: boolean = false;
+
+    playersTableColumns: string[] = [
+        'id', 'Name', 'Phone', 'Email', 'MembershipNo',
+        'Category', 'Handicap', 'club', 'createdAt', 'view', 'Edit', 'Delete',
+    ];
+
+    // ── Pagination ─────────────────────────────────────────────────────────────
+    pageSize: number = 25;
+    pageIndex: number = 0;
+
+    // ── Filters ────────────────────────────────────────────────────────────────
+    searchInputControl: UntypedFormControl = new UntypedFormControl('');
+    selectedCategory: string = '';
+    selectedClubSearch: string = '';
+    readonly categories = CATEGORIES;
+
+    // ── Selection (bulk ops) ───────────────────────────────────────────────────
+    selection = new SelectionModel<any>(true, []);
+
+    // ── Role / user session ────────────────────────────────────────────────────
     loggedInuser: UserSessionModel;
-    TablePlayers: any = [];
-    sorting: any = '';
-    public name: any = '';
+    tourID: string = '';
+    isSuperAdmin: boolean = false;
+    isClubAdmin: boolean = false;
+
+    // ── Excel import ───────────────────────────────────────────────────────────
     file: File;
     arrayBuffer: any;
     playersData: any;
     savePlayers: any[] = [];
-
     duplicatePlayers: any[] = [];
     importingList = false;
-    @ViewChild('fileInput') fileInputVariable: ElementRef;
-    //contacts$: Observable<Contact[]>;
+
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     constructor(
         private _facadeService: FacadeService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
@@ -96,706 +106,340 @@ export class PlayersComponent implements OnInit {
         private _handicapServise: HandicapService,
         public dialog: MatDialog,
         public _localStorage: LocalStorageService,
-        private logger: LogsService
-    ) { }
+        private logger: LogsService,
+    ) {}
+
     ngOnInit(): void {
+        this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
+        this.isSuperAdmin = this._localStorage.isSuperAdmin();
+        this.isClubAdmin = this._localStorage.isClubAdmin();
+
+        // For TourAdmin/LeagueAdmin keep old path
+        if (!this.isSuperAdmin && !this.isClubAdmin) {
+            this.fetchLegacyData();
+            return;
+        }
+
+        this.loadPlayers();
+
+        // Debounced search
+        this.searchInputControl.valueChanges.pipe(
+            takeUntil(this._unsubscribeAll),
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe(() => {
+            this.pageIndex = 0;
+            this.loadPlayers();
+        });
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
+    // ── Data loading ───────────────────────────────────────────────────────────
+
+    async loadPlayers(): Promise<void> {
+        this.isLoading = true;
+        this._changeDetectorRef.markForCheck();
         try {
-            this.logger.log('Admin comes to Players Page', "info");
-            this.logger.log('Getting Players Data', "info");
-            this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
-            this.fecthData();
-            this.showTable = Promise.resolve(true);
-            this.logger.log('Getting Players Data SuccessFull', "info");
-        } catch (error) {
-            this.logger.log('Getting Players Data Failed', "error", error.toString());
-        }
-
-
-    }
-
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.playersDataSource.filter = filterValue;
-        if (this.playersDataSource.filteredData.length == 0) {
-            this.displayNoRecords = false;
-        } else {
-            this.displayNoRecords = true;
-        }
-    }
-
-    async fecthData() {
-        let data: any;
-        if (this._localStorage.isSuperAdmin()) {
-            //data = await this._facadeService.getPlayersList();
-            of(this.Players)
-                .pipe(
-                    switchMap(() => this._facadeService.getPlayersList())
-                )
-                .subscribe(
-                    async (data) => {
-                        this.count = data.player.length;
-                        //console.log(data);
-                        this.Players = data.player;
-                        for (let obj of this.Players) {
-                            let Fname = obj.firstName
-                                ? obj.firstName.trim()
-                                : obj.firstName;
-                            let Lname = obj.lastName
-                                ? obj.lastName.trim()
-                                : obj.lastName;
-                            let newobj = {
-                                id: obj.id,
-                                Name: Fname + ' ' + Lname,
-                                Phone: obj.phone,
-                                Email: obj.email,
-                                createdAt: obj.createdAt,
-                                MembershipNo: obj.membershipNumber,
-                                Category:
-                                    obj.playerCategory == 'Senior'
-                                        ? 'Senior Amateurs'
-                                        : obj.playerCategory,
-                                Handicap: obj.handicap,
-                                // Status: obj.membershipQL,
-                                club: obj?.membershipQL[0]?.club?.name ?? '-',
-                            };
-                            this.TablePlayers.push(newobj);
-                        }
-                        this.playersDataSource = new MatTableDataSource(
-                            this.TablePlayers
-                        );
-                        this.playersDataSource.paginator = this.paginator;
-                        this.playersDataSource.sort = this.sort;
-                    },
-                    (error) => console.log('error')
-                );
-        } else if (this._localStorage.isClubAdmin()) {
-            data = await this._facadeService.getPlayersListByClub(
-                this.loggedInuser.adminClubId
+            const where = this.buildWhere();
+            const result = await this._facadeService.getPlayersPaginated(
+                where, this.pageSize, this.pageIndex * this.pageSize,
             );
-            this.count = data.player.length;
-            this.Players = data.player;
-            //console.log(data);
-            for (let obj of this.Players) {
-                let clubName = obj?.membershipQL?.filter(a => a.clubId == this.loggedInuser?.adminClubId).map(b => b?.club?.name);
-                let Fname = obj.firstName
-                    ? obj.firstName.trim()
-                    : obj.firstName;
-                let Lname = obj.lastName ? obj.lastName.trim() : obj.lastName;
-                let newobj = {
-                    id: obj.id,
-                    Name: Fname + ' ' + Lname,
-                    Phone: obj.phone,
-                    Email: obj.email,
-                    createdAt: obj.createdAt,
-                    MembershipNo: obj.membershipNumber,
-                    Category:
-                        obj.playerCategory == 'Senior'
-                            ? 'Senior Amateurs'
-                            : obj.playerCategory,
-                    Handicap: obj.handicap,
-                    // Status: obj.membershipQL,
-                    club: clubName ?? '-',
-                };
-                this.TablePlayers.push(newobj);
-            }
-        } else {
-            let state = this._localStorage.get(Constants.STATE);
-            if (state == Constants.TOUR) {
-                this.tourID = this._localStorage.get(Constants.TOUR_ID);
-                data = await this._facadeService.getPlayersListByTour(
-                    this.tourID
-                );
-                //console.log(data);
-                this.count = data.tour_member.length;
-                this.Players = data.tour_member;
-                for (let obj of this.Players) {
-                    let Fname = obj.player.firstName
-                        ? obj.player.firstName.trim()
-                        : obj.player.firstName;
-                    let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
-                    let newobj = {
-                        id: obj.player.id,
-                        Name: Fname + ' ' + Lname,
-                        Phone: obj.player.phone,
-                        Email: obj.player.email,
-                        createdAt: obj.player.createdAt,
-                        MembershipNo: obj.player.membershipNumber,
-                        Category:
-                            obj.player.playerCategory == 'Senior'
-                                ? 'Senior Amateurs'
-                                : obj.player.playerCategory,
-                        Handicap: obj.player.handicap,
-                        // Status: obj.player.membershipQL,
-                        // club: obj.player.membershipQL[0]?.club?.name ?? '-',
-                    };
-                    this.TablePlayers.push(newobj);
-                }
-            } else if (state == Constants.LEAGUE) {
-                this.tourID = this._localStorage.get(Constants.LEAGUE_ID);
-                data = await this._facadeService.getPlayersListByLeague(
-                    this.tourID
-                );
-                //console.log(data);
-                this.count = data.league_member.length;
-                this.Players = data.league_member;
-                for (let obj of this.Players) {
-                    let Fname = obj.player.firstName
-                        ? obj.player.firstName.trim()
-                        : obj.player.firstName;
-                    let Lname = obj.player.lastName ? obj.player.lastName.trim() : obj.player.lastName;
-                    let newobj = {
-                        id: obj.player.id,
-                        Name: Fname + ' ' + Lname,
-                        Phone: obj.player.phone,
-                        Email: obj.player.email,
-                        createdAt: obj.player.createdAt,
-                        MembershipNo: obj.player.membershipNumber,
-                        Category:
-                            obj.player.playerCategory == 'Senior'
-                                ? 'Senior Amateurs'
-                                : obj.player.playerCategory,
-                        Handicap: obj.player.handicap,
-                        // Status: obj.player.membershipQL,
-                        // club: obj.player.membershipQL[0]?.club?.name ?? '-',
-                    };
-                    this.TablePlayers.push(newobj);
-                }
-            }
+            this.totalCount = result?.player_aggregate?.aggregate?.count || 0;
+            this.players = (result?.player || []).map((p: any) => ({
+                id: p.id,
+                Name: ((p.firstName || '').trim() + ' ' + (p.lastName || '').trim()).trim(),
+                Phone: p.phone,
+                Email: p.email,
+                createdAt: p.createdAt,
+                MembershipNo: p.membershipNumber,
+                Category: p.playerCategory === 'Senior' ? 'Senior Amateurs' : p.playerCategory,
+                Handicap: p.handicap,
+                club: p.membershipQL?.[0]?.club?.name ?? '—',
+                homeClubId: p.membershipQL?.[0]?.clubId,
+            }));
+            this.selection.clear();
+        } catch (err) {
+            console.error(err);
+        } finally {
+            this.isLoading = false;
+            this._changeDetectorRef.markForCheck();
         }
-        this.playersDataSource = new MatTableDataSource(this.TablePlayers);
-        this.playersDataSource.paginator = this.paginator;
-        this.playersDataSource.sort = this.sort;
     }
 
-    /**
-     * Create contact
-     */
-    createPlayer(): void {
-        // let id = UniqueIdGenerator.generate();
+    private buildWhere(): any {
+        const conditions: any[] = [];
 
-        this._router.navigate(['./add'], {
-            relativeTo: this._activatedRoute,
-        });
-        // });
-        // Go to the new contact
+        // ClubAdmin is always restricted to their club
+        if (this.isClubAdmin) {
+            conditions.push({ membership: { clubId: { _eq: this.loggedInuser.adminClubId } } });
+        }
 
-        // Mark for check
+        // Search across name, email, membership number
+        const search = (this.searchInputControl.value || '').trim();
+        if (search) {
+            const s = `%${search}%`;
+            conditions.push({
+                _or: [
+                    { firstName: { _ilike: s } },
+                    { lastName: { _ilike: s } },
+                    { email: { _ilike: s } },
+                    { membershipNumber: { _ilike: s } },
+                ],
+            });
+        }
+
+        // Category filter
+        if (this.selectedCategory) {
+            conditions.push({ playerCategory: { _eq: this.selectedCategory } });
+        }
+
+        // SuperAdmin: optional club name search
+        if (this.isSuperAdmin && this.selectedClubSearch?.trim()) {
+            conditions.push({
+                membership: { club: { name: { _ilike: `%${this.selectedClubSearch.trim()}%` } } },
+            });
+        }
+
+        return conditions.length > 0 ? { _and: conditions } : {};
+    }
+
+    onPageChange(event: PageEvent): void {
+        this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
+        this.loadPlayers();
+    }
+
+    applyCategory(category: string): void {
+        this.selectedCategory = category;
+        this.pageIndex = 0;
+        this.loadPlayers();
+    }
+
+    applyClubSearch(): void {
+        this.pageIndex = 0;
+        this.loadPlayers();
+    }
+
+    clearFilters(): void {
+        this.searchInputControl.setValue('', { emitEvent: false });
+        this.selectedCategory = '';
+        this.selectedClubSearch = '';
+        this.pageIndex = 0;
+        this.loadPlayers();
+    }
+
+    get hasActiveFilters(): boolean {
+        return !!(
+            (this.searchInputControl.value || '').trim() ||
+            this.selectedCategory ||
+            this.selectedClubSearch
+        );
+    }
+
+    // ── Legacy path (TourAdmin / LeagueAdmin) ──────────────────────────────────
+
+    async fetchLegacyData(): Promise<void> {
+        this.isLoading = true;
         this._changeDetectorRef.markForCheck();
-    }
-
-    async deletePlayer(player: any, index: any) {
+        let legacyPlayers: any[] = [];
         try {
-            this.logger.log('Players Delete Dialog Open', "info", player.toString());
-            const dialogRef = this.dialog.open(DialogOverviewComponent, {
-                width: '350px',
-                data: 'Do you want to delete the player?',
-            });
-            dialogRef.afterClosed().subscribe(async (result) => {
-                if (result) {
-                    index = this.playersDataSource.data.findIndex(
-                        (Player) => Player.id === player.id
-                    );
-
-                    let response = await this._facadeService.deletePlayer(
-                        player.homeClubId,
-                        player.id
-                    );
-                    if (response) {
-                        if (index !== -1) {
-                            this.snackBar.open('Player has been deleted.', 'x', {
-                                duration: 5000,
-                            });
-                            this.playersDataSource.data.splice(index, 1);
-                            this.playersDataSource._updateChangeSubscription();
-                        }
-                        this.logger.log('Players is Deleted', "info", player.toString());
-                        // this._changeDetectorRef.markForCheck();
-                    }
-                }
-            });
-        } catch (error) {
-            this.logger.log('Player Deleting Failed', "error", error.toString());
+            let state = this._localStorage.get(Constants.STATE);
+            if (state === Constants.TOUR) {
+                this.tourID = this._localStorage.get(Constants.TOUR_ID);
+                const data = await this._facadeService.getPlayersListByTour(this.tourID);
+                legacyPlayers = (data?.tour_member || []).map((obj: any) => ({
+                    id: obj.player.id,
+                    Name: ((obj.player.firstName || '').trim() + ' ' + (obj.player.lastName || '').trim()).trim(),
+                    Phone: obj.player.phone,
+                    Email: obj.player.email,
+                    createdAt: obj.player.createdAt,
+                    MembershipNo: obj.player.membershipNumber,
+                    Category: obj.player.playerCategory === 'Senior' ? 'Senior Amateurs' : obj.player.playerCategory,
+                    Handicap: obj.player.handicap,
+                    club: '—',
+                }));
+                this.totalCount = legacyPlayers.length;
+            } else if (state === Constants.LEAGUE) {
+                this.tourID = this._localStorage.get(Constants.LEAGUE_ID);
+                const data = await this._facadeService.getPlayersListByLeague(this.tourID);
+                legacyPlayers = (data?.league_member || []).map((obj: any) => ({
+                    id: obj.player.id,
+                    Name: ((obj.player.firstName || '').trim() + ' ' + (obj.player.lastName || '').trim()).trim(),
+                    Phone: obj.player.phone,
+                    Email: obj.player.email,
+                    createdAt: obj.player.createdAt,
+                    MembershipNo: obj.player.membershipNumber,
+                    Category: obj.player.playerCategory === 'Senior' ? 'Senior Amateurs' : obj.player.playerCategory,
+                    Handicap: obj.player.handicap,
+                    club: '—',
+                }));
+                this.totalCount = legacyPlayers.length;
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            this.players = legacyPlayers;
+            this.isLoading = false;
+            this._changeDetectorRef.markForCheck();
         }
     }
-    onBackdropClicked(): void {
-        // Go back to the list
-        this._router.navigate(['/players']);
 
-        // Mark for check
+    // ── Table actions ──────────────────────────────────────────────────────────
+
+    createPlayer(): void {
+        this._router.navigate(['./add'], { relativeTo: this._activatedRoute });
         this._changeDetectorRef.markForCheck();
     }
+
     updatePlayer(id: string): void {
-        this.logger.log('Players Edit Page Open', "info", id.toString());
-        this._router.navigate(['./view/', id], {
-            relativeTo: this._activatedRoute,
-        });
-        // });
-        // Go to the new contact
-
-        // Mark for check
+        this._router.navigate(['./view/', id], { relativeTo: this._activatedRoute });
         this._changeDetectorRef.markForCheck();
     }
+
     viewProfile(id: string): void {
-        this.logger.log('Players View Profile Page Open', "info", id.toString());
         this._router.navigate(['/players/viewProfile/' + id]);
     }
 
-    downloadAllPlayers(): void {
-        try {
-            this.logger.log('Download All Players Button Click', "info");
-            let doc = new jsPDF();
-
-            let col = [
-                'Sr.',
-                'Name',
-                'Phone',
-                'Email',
-                'Mem/No',
-                'Category',
-                'Handicap',
-            ];
-            var rows = [];
-            doc.setFontSize(18);
-            doc.text('Leaderboard Scores:', 15, 15);
-            doc.setFontSize(11);
-            doc.setTextColor(100);
-            var sortarray = [...this.Players];
-            if (this.sorting == 'desc') {
-                if (this.name == 'Name') {
-                    sortarray.sort(this.ComparatordscN);
-                } else if (this.name == 'Email') {
-                    sortarray.sort(this.ComparatordscE);
-                } else if (this.name == 'Membership') {
-                    sortarray.sort(this.ComparatordscM);
-                } else if (this.name == 'Category') {
-                    sortarray.sort(this.ComparatordscC);
-                } else if (this.name == 'Handicap') {
-                    sortarray.sort(this.ComparatordscH);
-                }
-            } else if (this.sorting == 'asc') {
-                if (this.name == 'Name') {
-                    sortarray.sort(this.ComparatorascN);
-                } else if (this.name == 'Email') {
-                    sortarray.sort(this.ComparatorascE);
-                } else if (this.name == 'Membership') {
-                    sortarray.sort(this.ComparatorascM);
-                } else if (this.name == 'Category') {
-                    sortarray.sort(this.ComparatorascC);
-                } else if (this.name == 'Handicap') {
-                    sortarray.sort(this.ComparatorascH);
+    async deletePlayer(player: any): Promise<void> {
+        const dialogRef = this.dialog.open(DialogOverviewComponent, {
+            width: '350px',
+            data: 'Do you want to delete the player?',
+        });
+        dialogRef.afterClosed().subscribe(async (confirmed) => {
+            if (confirmed) {
+                const response = await this._facadeService.deletePlayer(player.homeClubId, player.id);
+                if (response) {
+                    this.snackBar.open('Player has been deleted.', 'x', { duration: 5000 });
+                    this.loadPlayers();
                 }
             }
-            let count = 0;
-            sortarray.forEach((element) => {
-                count++;
-                var temp = [
-                    count,
-
-                    element.firstName + ' ' + element.lastName,
-                    element.phone,
-                    element.email,
-                    element.membershipNumber,
-                    element.playerCategory,
-                    element.handicap,
-                ];
-                rows.push(temp);
-            });
-            // From HTML
-            (doc as any).autoTable(col, rows, {
-                startY: 25,
-                theme: 'grid',
-                columnStyles: {
-                    0: { cellWidth: 12 },
-                    1: { cellWidth: 35 },
-                    2: { cellWidth: 30 },
-                    3: { cellWidth: 45 },
-                    4: { cellWidth: 20 },
-                    5: { cellWidth: 30 },
-                    6: { cellWidth: 20 },
-
-                    // etc
-                },
-            });
-
-            // Open PDF document in new tab
-            doc.save('Club-Players.pdf');
-            this.logger.log('Downloading All Players Successfully', "info");
-        } catch (error) {
-            this.logger.log('Download All Players Function Failed', "error", error.toString());
-        }
-
-    }
-
-    isAllSelected() {
-        ////console.log(this.dataSource);
-        if (this.playersDataSource) {
-            const numSelected = this.selection.selected.length;
-            const numRows = this.playersDataSource.data.length;
-            return numSelected === numRows;
-        }
-    }
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-        //console.log(this.selection);
-        //console.log(this.selection.selected.length);
-        this.isAllSelected()
-            ? this.selection.clear()
-            : this.playersDataSource.data.forEach((row) =>
-                this.selection.select(row)
-            );
-    }
-
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: any): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-        }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'
-            } player ${row.firstName} ${row.lastName}`;
-    }
-
-    exportToExcel(): void {
-
-        const data = this.playersDataSource.data.map((item) => {
-            // Create a new object without the 'Details' column
-            const { id, Status, Sr, view, Edit, Delete, ...filteredItem } = item;
-            return filteredItem;
         });
-
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Report');
-
-        // Export the Excel file
-        XLSX.writeFile(wb, 'Players_report.xlsx');
-
     }
 
-    async verifyUserEmails() {
-        const data = this.selection.selected.map((item) => {
-            // Create a new object without the 'Details' column
-            const { Email } = item;
-            return Email;
-        });
-        console.log(data);
-        let res = await this._facadeService.verifyUserEmails(data);
-        if (res) {
-            this.snackBar.open('Player emails have been verified.', 'x', {
-                duration: 5000,
-            });
+    // ── Selection ──────────────────────────────────────────────────────────────
+
+    isAllSelected(): boolean {
+        return this.players.length > 0 &&
+            this.selection.selected.length === this.players.length;
+    }
+
+    masterToggle(): void {
+        if (this.isAllSelected()) {
             this.selection.clear();
         } else {
-            this.snackBar.open('Error! Try Again later.', 'x', {
-                duration: 5000,
-            });
+            this.players.forEach(row => this.selection.select(row));
+        }
+    }
+
+    checkboxLabel(row?: any): string {
+        if (!row) return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} player ${row.Name}`;
+    }
+
+    // ── Bulk operations ────────────────────────────────────────────────────────
+
+    exportToExcel(): void {
+        const data = this.players.map(({ id, view, Edit, Delete, homeClubId, ...rest }) => rest);
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Players');
+        XLSX.writeFile(wb, 'Players_report.xlsx');
+    }
+
+    async verifyUserEmails(): Promise<void> {
+        const emails = this.selection.selected.map(item => item.Email);
+        const res = await this._facadeService.verifyUserEmails(emails);
+        if (res) {
+            this.snackBar.open('Player emails have been verified.', 'x', { duration: 5000 });
+            this.selection.clear();
+        } else {
+            this.snackBar.open('Error! Try Again later.', 'x', { duration: 5000 });
         }
     }
 
     sendResetPasswordEmail(): void {
-
-        let selectionArray = this.selection.selected;
-        this._facadeService.executeSendResetEmailInBulk(selectionArray).subscribe((res) => {
-            //console.log(res);
-
-            this.snackBar.open("Password reset email has been sent successfully.", "close", {
-                duration: 3000,
-            });
+        this._facadeService.executeSendResetEmailInBulk(this.selection.selected).subscribe(() => {
+            this.snackBar.open('Password reset email sent successfully.', 'close', { duration: 3000 });
             this.selection.clear();
         });
-
     }
 
-    public onSortChanged(e) {
-        this.sorting = e.direction;
-        this.name = e.active;
-        this.logger.log('Sorting Function Click on Players Table', "info", this.name);
+    downloadPDF(): void {
+        const doc = new jsPDF();
+        const col = ['Sr.', 'Name', 'Phone', 'Email', 'Mem/No', 'Category', 'Handicap'];
+        const rows = this.players.map((p, i) => [
+            i + 1, p.Name, p.Phone || '', p.Email || '',
+            p.MembershipNo || '', p.Category || '', p.Handicap ?? '',
+        ]);
+        doc.setFontSize(18);
+        doc.text('Players List', 15, 15);
+        (doc as any).autoTable(col, rows, { startY: 25, theme: 'grid' });
+        doc.save('Players.pdf');
     }
 
-    public ComparatordscN(a, b) {
-        if (a['firstName'] > b['firstName']) return -1;
-        if (a['firstName'] < b['firstName']) return 1;
+    // ── Excel import (unchanged logic) ─────────────────────────────────────────
 
-        return 0;
-    }
-    public ComparatorascN(a, b) {
-        if (a['firstName'] < b['firstName']) return -1;
-        if (a['firstName'] > b['firstName']) return 1;
-
-        return 0;
-    }
-    public ComparatordscE(a, b) {
-        if (a['email'] > b['email']) return -1;
-        if (a['email'] < b['email']) return 1;
-
-        return 0;
-    }
-    public ComparatorascE(a, b) {
-        if (a['email'] < b['email']) return -1;
-        if (a['email'] > b['email']) return 1;
-
-        return 0;
-    }
-    public ComparatordscM(a, b) {
-        if (a['membershipNumber'] > b['membershipNumber']) return -1;
-        if (a['membershipNumber'] < b['membershipNumber']) return 1;
-
-        return 0;
-    }
-    public ComparatorascM(a, b) {
-        if (a['membershipNumber'] < b['membershipNumber']) return -1;
-        if (a['membershipNumber'] > b['membershipNumber']) return 1;
-
-        return 0;
-    }
-    public ComparatordscC(a, b) {
-        if (a['playerCategory'] > b['playerCategory']) return -1;
-        if (a['playerCategory'] < b['playerCategory']) return 1;
-
-        return 0;
-    }
-    public ComparatorascC(a, b) {
-        if (a['playerCategory'] < b['playerCategory']) return -1;
-        if (a['playerCategory'] > b['playerCategory']) return 1;
-
-        return 0;
-    }
-    public ComparatordscH(a, b) {
-        if (a['handicap'] > b['handicap']) return -1;
-        if (a['handicap'] < b['handicap']) return 1;
-
-        return 0;
-    }
-    public ComparatorascH(a, b) {
-        if (a['handicap'] < b['handicap']) return -1;
-        if (a['handicap'] > b['handicap']) return 1;
-
-        return 0;
-    }
-    onFileChange(event) {
-        // this.logger.log(this.file);
-        if (event.target.files.length > 0) {
-            this.file = event.target.files[0];
-            // this.logger.log(this.file);
-        }
+    onFileChange(event: any): void {
+        if (event.target.files.length > 0) this.file = event.target.files[0];
     }
 
-    parseFlightsData(event) {
-        let fileReader = new FileReader();
+    parseFlightsData(event: any): void {
         this.playersData = [];
-        if (event.target.files.length > 0) {
-            this.file = event.target.files[0];
-            // this.logger.log(this.file);
-        }
+        if (event.target.files.length > 0) this.file = event.target.files[0];
+        const fileReader = new FileReader();
         fileReader.onload = (e) => {
             this.arrayBuffer = fileReader.result;
-            var data = new Uint8Array(this.arrayBuffer);
-            var arr = new Array();
-            for (var i = 0; i != data.length; ++i)
-                arr[i] = String.fromCharCode(data[i]);
-            var bstr = arr.join('');
-            var workbook = read(bstr, { type: 'binary' });
-            var first_sheet_name = workbook.SheetNames[0];
-            var worksheet = workbook.Sheets[first_sheet_name];
-            this.playersData = utils.sheet_to_json(worksheet, {
-                raw: true,
-                defval: '',
-            });
-
-            // this.logger.log(this.playersData);
-            //console.log(this.playersData);
-
+            const data = new Uint8Array(this.arrayBuffer as ArrayBuffer);
+            const arr = Array.from(data).map(c => String.fromCharCode(c));
+            const bstr = arr.join('');
+            const workbook = read(bstr, { type: 'binary' });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            this.playersData = utils.sheet_to_json(worksheet, { raw: true, defval: '' });
             this.importExcelData();
-            //this.providerservice.importexcel(this.exceljsondata).subscribe(data=>{
-            //})
         };
         fileReader.readAsArrayBuffer(this.file);
     }
 
-    async importExcelData() {
+    async importExcelData(): Promise<void> {
         try {
             this.importingList = true;
-
             this.savePlayers = [];
             this.duplicatePlayers = [];
-            let clubMember: ClubMembership[] = [];
+            const clubMember: ClubMembership[] = [];
 
-            // for (let p of this.playersData) {
-            //   // this.logger.logObject(p);
-            //   console.log(p);
-
-            //   let exist: any = [];
-
-            //   if (p.membershipNumber) {
-            //     // this.logger.log(p.membershipNumber);
-            //     console.log(p.membershipNumber);
-
-            //     exist = await this.facadeService.getPlayerByMembershipNumber(
-            //       p.membershipNumber.toString()
-            //     );
-
-            //     if (exist.length > 0) {
-            //       if (exist[0].handicapQL.length > 0) {
-            //         let handicapHistory = exist[0].handicapQL;
-            //         let lastTournamentID =
-            //           handicapHistory[handicapHistory.length - 1].tournamentId;
-            //         console.log(lastTournamentID);
-
-            //         const handicapChangeLog =
-            //           await this.facadeService.updateLastHandicap(
-            //             exist[0].id,
-            //             lastTournamentID,
-            //             p.handicap
-            //           );
-            //         console.log(handicapChangeLog);
-            //       }
-
-            //       let succes = await this.facadeService.updatePlayerHandicap(
-            //         exist[0].id,
-            //         p.handicap
-            //       );
-
-            //       this.duplicatePlayers.push(exist);
-            //       //continue;
-            //     }
-            //   }
-            // }
-            // console.log(this.duplicatePlayers);
-
-            for (let p of this.playersData) {
-                // this.logger.logObject(p);
-                console.log(p);
-
-                let exist: any = [];
-
-                // if (p.membershipNumber) {
-                //     // this.logger.log(p.membershipNumber);
-                //     console.log(p.membershipNumber);
-
-                //     exist = await this.facadeService.getPlayerByMembershipNumber(
-                //         p.membershipNumber.toString()
-                //     );
-
-                //     if (exist.length > 0) {
-                //         this.duplicatePlayers.push(p);
-                //         //continue;
-                //     }
-                // }
-
-                // if (p.phone && exist.length == 0) {
-                //     // this.logger.log(p.phone);
-                //     console.log(p.phone);
-                //     let phone;
-                //     if (p.phone.toString().indexOf("+92") === 0) {
-                //         phone = p.phone.toString();
-                //     } else if (p.phone.toString().indexOf("0") === 0) {
-                //         phone = p.phone.toString().replace(0, "+92");
-                //     } else if (p.phone.toString().indexOf("3") === 0) {
-                //         phone = "+92" + p.phone.toString();
-                //     }
-                //     console.log(phone);
-
-                //     exist = await this.facadeService.getPlayerByPhone(phone);
-                //     // p.phone.toString().indexOf("+") !== -1
-                //     // ? p.phone.toString()
-                //     // : "+" + p.phone.toString()
-                //     if (exist.length > 0) {
-                //         this.duplicatePlayers.push(p);
-                //         //continue;
-                //     }
-                // }
-
-                // if (p.email && exist.length == 0) {
-                //     exist = await this.facadeService.getPlayerByEmail(p.email.toString());
-
-                //     if (exist.length > 0) {
-                //         // this.logger.log("email yes");
-                //         console.log("email Yes");
-
-                //         this.duplicatePlayers.push(p);
-                //         //continue;
-                //     }
-                // }
-
-                // this.logger.log(exist);
-                console.log(exist);
-
-                let UniqueId: string =
-                    exist && exist.length > 0
-                        ? exist[0].id
-                        : UniqueIdGenerator.generate();
-
-                //if(p.club) {
-
-                let member: any = {
-                    clubId: this.loggedInuser.adminClubId,
-                    playerId: UniqueId,
-                };
-
-                clubMember.push(member);
-                //}
-
-                let player: any = {
+            for (const p of this.playersData) {
+                const UniqueId = UniqueIdGenerator.generate();
+                clubMember.push({ clubId: this.loggedInuser.adminClubId, playerId: UniqueId } as any);
+                this.savePlayers.push({
                     id: UniqueId,
-                    adminClubId: null,
-                    firebaseUid: null,
-                    fcmToken: null,
+                    adminClubId: null, firebaseUid: null, fcmToken: null,
                     gemId: generateGemId.generate(UniqueId),
-                    firstName: p.firstName,
-                    lastName: p.lastName,
-                    gender: p.gender ? p.gender : null,
-                    dob: p.dob ? p.dob : null,
-                    picture: p.picture ? p.picture : null,
-                    email: p.email ? p.email : null,
-                    phone: p.phone ? p.phone : null,
-                    playerCategory: p.category ? p.category : null,
-                    handicap: p.hc ? p.hc : 0,
-                    online: false,
-                    countryCode: p.code ? p.code : null,
-                    extraData: p.extra ? p.extra : null,
-                    membershipNumber: p.membershipNumber,
-                    userRole: 3,
-                    membership: null,
-                };
-
-                this.savePlayers.push(player);
+                    firstName: p.firstName, lastName: p.lastName,
+                    gender: p.gender || null, dob: p.dob || null, picture: p.picture || null,
+                    email: p.email || null, phone: p.phone || null,
+                    playerCategory: p.category || null, handicap: p.hc || 0,
+                    online: false, countryCode: p.code || null, extraData: p.extra || null,
+                    membershipNumber: p.membershipNumber, userRole: 3, membership: null,
+                });
             }
 
-            // this.logger.log(this.savePlayers);
-            // this.logger.log(this.duplicatePlayers);
-            console.log(this.savePlayers);
-
-            let status = await this._facadeService.importPlayerList(
-                this.savePlayers,
-                clubMember
-            );
-
+            const status = await this._facadeService.importPlayerList(this.savePlayers, clubMember);
             if (status) {
-                let newProfiles =
-                    Number(this.savePlayers.length) -
-                    Number(this.duplicatePlayers.length);
+                const newProfiles = Math.max(0, this.savePlayers.length - this.duplicatePlayers.length);
                 this.snackBar.open(
-                    (newProfiles < 0 ? 0 : newProfiles) +
-                    " players have been created. " +
-                    this.duplicatePlayers.length +
-                    " player(s) were already exist.",
-                    "x",
-                    {
-                        duration: 5000,
-                    }
+                    `${newProfiles} players created. ${this.duplicatePlayers.length} already existed.`,
+                    'x', { duration: 5000 },
                 );
-
                 this.importingList = false;
-                this.file = null;
-                this.fileInputVariable.nativeElement.value = "";
-
-                await this.delay(5000);
-                //window.location.reload();
+                this.fileInputVariable.nativeElement.value = '';
+                await this.delay(2000);
+                this.loadPlayers();
             } else {
-                this.snackBar.open("There was an Error while loading file", "x", {
-                    duration: 3000,
-                });
+                this.snackBar.open('Error while loading file', 'x', { duration: 3000 });
                 this.importingList = false;
             }
         } catch {
@@ -803,7 +447,7 @@ export class PlayersComponent implements OnInit {
         }
     }
 
-    delay(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+    delay(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

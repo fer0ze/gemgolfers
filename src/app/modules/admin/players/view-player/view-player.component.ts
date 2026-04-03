@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe, formatDate, Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import {
     IPlayerHandicapWhs,
     Player,
@@ -32,6 +33,7 @@ import { ApexOptions } from 'ng-apexcharts';
 import { HandicapService } from 'app/shared/services/handicap.service';
 import { DialogMergeComponent } from '../../dialogs/dialog-merge-profile/dialog-merge.component';
 import { LocalStorageService } from 'app/shared/services/localStorage';
+import { environment } from 'environments/environment';
 import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
@@ -117,6 +119,15 @@ export class ViewPlayerComponent implements OnInit {
     handicapsToUse: number;
     personLeads: any;
     showdata: Promise<boolean>;
+
+    // ── Password Reset ────────────────────────────────────────────────────
+    showPasswordResetModal = false;
+    resetPassword = '';
+    resetConfirmPassword = '';
+    showResetPassword = false;
+    showResetConfirmPassword = false;
+    isResettingPassword = false;
+    resetPasswordError = '';
     // @ViewChild(MatPaginator) Wpaginator: MatPaginator;
     // @ViewChild(MatSort) Wsort: MatSort;
     // @ViewChild('fileInput') WfileInputVariable: ElementRef;
@@ -142,7 +153,10 @@ export class ViewPlayerComponent implements OnInit {
         public dialog: MatDialog,
         public facadeService: FacadeService,
         private handicapService: HandicapService,
-        private datepipe: DatePipe, private _localStorage: LocalStorageService, private logger: LogsService
+        private datepipe: DatePipe,
+        private _localStorage: LocalStorageService,
+        private logger: LogsService,
+        private http: HttpClient
     ) { }
 
     // bar chart
@@ -1151,6 +1165,61 @@ export class ViewPlayerComponent implements OnInit {
     //         ratingsPro.courseRating.toDouble(), ratingsPro.coursePar).roundToInt()}"
     //     return
     // }
+
+    openPasswordResetModal() {
+        this.resetPassword = '';
+        this.resetConfirmPassword = '';
+        this.resetPasswordError = '';
+        this.showResetPassword = false;
+        this.showResetConfirmPassword = false;
+        this.showPasswordResetModal = true;
+    }
+
+    closePasswordResetModal() {
+        this.showPasswordResetModal = false;
+        this.resetPassword = '';
+        this.resetConfirmPassword = '';
+        this.resetPasswordError = '';
+    }
+
+    async submitPasswordReset() {
+        this.resetPasswordError = '';
+
+        if (!this.resetPassword || this.resetPassword.length < 8) {
+            this.resetPasswordError = 'Password must be at least 8 characters.';
+            return;
+        }
+        if (this.resetPassword !== this.resetConfirmPassword) {
+            this.resetPasswordError = 'Passwords do not match.';
+            return;
+        }
+
+        const email = this.currentPlayer[0]?.email;
+        if (!email) {
+            this.resetPasswordError = 'Player email not found.';
+            return;
+        }
+
+        this.isResettingPassword = true;
+        try {
+            await this.http.post(
+                `${environment.firebaseAdminUrl}/firebaseAdminSDK`,
+                {
+                    request: {
+                        type: 'update',
+                        UsersData: { email, password: this.resetPassword }
+                    }
+                }
+            ).toPromise();
+
+            this.closePasswordResetModal();
+            this.snackBar.open('Password reset successfully.', 'Close', { duration: 3000 });
+        } catch (err) {
+            this.resetPasswordError = 'Failed to reset password. Please try again.';
+        } finally {
+            this.isResettingPassword = false;
+        }
+    }
 }
 //this.topDiff=this.topDiff[5].handicapDifferential;
 ////console.log("TopDiffer"+this.topDiff[5].handicapDifferential)

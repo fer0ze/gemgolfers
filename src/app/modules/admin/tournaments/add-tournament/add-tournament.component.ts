@@ -105,6 +105,7 @@ export class AddTournamentComponent implements OnInit {
     memberSelection = new SelectionModel<Player>(true, []);
     memberTMSelection = new SelectionModel<Player>(true, []);
     isLoading = true;
+    isTournamentLoading = false;
     duplicatePlayers = [];
     intervalPerFlight = 0;
     stepTitle: string = 'Tournament Setup Form';
@@ -356,6 +357,11 @@ export class AddTournamentComponent implements OnInit {
             .observe('(min-width: 800px)')
             .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
+        // Set loading immediately if editing an existing tournament
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+            this.isTournamentLoading = true;
+        }
     }
 
 
@@ -374,7 +380,7 @@ export class AddTournamentComponent implements OnInit {
         // }
 
         this.bannerForm = this._formBuilder.group({
-            repetitions: [1, [Validators.required, Validators.min(1)]],
+            repetitions: [5, [Validators.required, Validators.min(1)]],
             startIndex: [0, [Validators.required, Validators.min(0)]]
         });
 
@@ -486,50 +492,47 @@ export class AddTournamentComponent implements OnInit {
             this.Categories.push(checkBoxCat);
         }
 
-        if (this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()) {
-            let dataClubs = await this.facadeService.getClubList();
-            this.Clubs = dataClubs.club;
-        }
-
-        let dataCourses = await this.facadeService.getApprovedCoursesList();
-        this.Courses = dataCourses.course;
-        // this.Categories =  this.facadeService.getPlayerCategories();
-        this._courseHoles = this.facadeService.getCourseHoles('');
-        ////console.log(this.Categories);
-
-
-        //console.log(playerCategoryList);
-
-        //this._courseHoles = this.facadeService.getCourseHoles('');
-
-        let today: Date = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
-        // this.courseFormGroup
-        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
-        /*
-    this.nameFormGroup = this._formBuilder.group({
-      firstNameCtrl: ['', Validators.required],
-      lastNameCtrl: ['', Validators.required],
-    });
-    
-    this.emailFormGroup = this._formBuilder.group({
-      emailCtrl: ['', Validators.email]
-    });
-    */
-
         this.route.paramMap.subscribe((params) => {
             this.tournamentID = params.get('id');
         });
+
+        this._courseHoles = this.facadeService.getCourseHoles('');
+
+        let today: Date = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let yyyy = today.getFullYear();
+        let todayDate: Date = General.parseToDate(mm + '/' + dd + '/' + yyyy);
+
+        // Run all independent API calls in parallel
+        const parallelCalls: Promise<any>[] = [
+            this.facadeService.getApprovedCoursesList(),
+        ];
+        if (this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()) {
+            parallelCalls.push(this.facadeService.getClubList());
+        }
+        if (this.tournamentID) {
+            parallelCalls.push(this.facadeService.getTournamentByID(this.tournamentID));
+        }
+
+        const results = await Promise.all(parallelCalls);
+
+        this.Courses = results[0].course;
+        let resultIdx = 1;
+        if (this._localStorage.isSuperAdmin() || this._localStorage.isClubAdmin()) {
+            this.Clubs = results[resultIdx].club;
+            resultIdx++;
+        }
+
+        let tournamentInfo: any = null;
+        if (this.tournamentID) {
+            tournamentInfo = results[resultIdx];
+        }
 
         if (this.tournamentID) {
             this.registrationLink = 'https://app.gemgolfers.com/signUpForm/' + this.tournamentID;
             this.joinCode = '';
             this.valid1.reset();
-            let tournamentInfo = await this.facadeService.getTournamentByID(
-                this.tournamentID
-            );
             this.editTournament = true;
             //console.log(tournamentInfo);
             this.currentTournament =
@@ -763,7 +766,8 @@ export class AddTournamentComponent implements OnInit {
                 } else if (this._localStorage.isSuperAdmin() && this.loggedInuser.adminClubId) {
                     selectedClubId = this.formArray.get([0]).value.clubsFormCtrl.id;
                 }
-                this.refreshPlayerList(selectedClubId)
+                // Defer player list loading so the form shows immediately
+                setTimeout(() => this.refreshPlayerList(selectedClubId), 0);
                 // this.clubMembers = [];
                 // //console.log(selectedClubId);
                 // let clubMembersData: any =
@@ -884,6 +888,7 @@ export class AddTournamentComponent implements OnInit {
                 //const chkArray = <FormArray>this.formArray.get([0]).get("clubctgies");
                 //chkArray.push(new FormControl({ id: 1, name: "Amateurs", checked: false }));
             }
+            this.isTournamentLoading = false;
         } else {
             // for (let p of playerCategoryList) {
             //     let checkBoxCat: any = {

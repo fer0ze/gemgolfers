@@ -23,7 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { PlayersComponent } from './players.component';
 import { ContactsDetailsComponent } from './details/details.component';
 import { playerRoutes } from './players.routing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ViewPlayerComponent } from './view-player/view-player.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -55,6 +55,7 @@ import { PlayerResolver } from './players.resolver';
         MatMenuModule,
         MatProgressBarModule,
         MatDialogModule,
+        FormsModule,
         ReactiveFormsModule,
         MatRadioModule,
         MatRippleModule,

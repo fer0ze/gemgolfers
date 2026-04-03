@@ -297,6 +297,13 @@ export const appRoutes: Route[] = [
                     ).then((m) => m.MergeProfilesModule),
             },
             {
+                path: 'clubs',
+                loadChildren: () =>
+                    import('app/modules/admin/clubs/clubs.module').then(
+                        (m) => m.ClubsModule
+                    ),
+            },
+            {
                 path: 'tours',
                 loadChildren: () =>
                     import(

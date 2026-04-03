@@ -399,6 +399,32 @@ export const MergePlayers = gql`
     }
 `;
 
+export const GetPlayersPaginated = gql`
+    query GetPlayersPaginated($where: player_bool_exp!, $limit: Int!, $offset: Int!) {
+        player_aggregate(where: $where) {
+            aggregate { count }
+        }
+        player(where: $where, order_by: { firstName: asc }, limit: $limit, offset: $offset) {
+            id
+            firstName
+            lastName
+            playerCategory
+            handicap
+            createdAt
+            handicapWhsIndex
+            phone
+            email
+            membershipNumber
+            membershipQL: membership {
+                clubId
+                playerId
+                suspended
+                club { id name }
+            }
+        }
+    }
+`;
+
 export const GetPlayersByClub = gql`
     query PostsGetQuery($where: player_bool_exp!) {
         AggregateQL: player_aggregate(where: $where) {
@@ -1307,6 +1333,7 @@ export const PlayerFlightScoresQuery = gql`
             handicap
             countryCode
             gender
+            email
         }
         HandicapQL: player_handicap(
             where: { playerId: { _eq: $playerId } }

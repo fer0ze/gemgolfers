@@ -1,0 +1,10 @@
+{
+    "/firebase-admin-api": {
+        "target": "https://firebaseadminsdk-169533098123.us-central1.run.app",
+        "secure": true,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/firebase-admin-api": ""
+        }
+    }
+}

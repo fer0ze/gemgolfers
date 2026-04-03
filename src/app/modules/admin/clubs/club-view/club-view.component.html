@@ -1,0 +1,461 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-6 border-b bg-card shadow-sm">
+        <div class="flex items-center gap-4">
+            <button (click)="goBack()" mat-icon-button class="text-gray-500 hover:text-gray-800 transition-colors">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div *ngIf="club">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg font-bold shadow-md flex-shrink-0"
+                        style="background: linear-gradient(135deg, #004987, #006fcc);">
+                        {{ club.name?.charAt(0)?.toUpperCase() || 'C' }}
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold tracking-tight leading-none">{{ club.name }}</h1>
+                        <p class="mt-0.5 text-secondary text-sm flex items-center gap-1">
+                            <mat-icon class="icon-size-4">location_on</mat-icon>
+                            {{ club.address || 'No address' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!club && !isLoading" class="text-gray-500 text-sm">Club not found</div>
+        </div>
+        <button *ngIf="club" (click)="editClub()"
+            class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all active:scale-95"
+            style="background-color: #004987;">
+            <mat-icon class="icon-size-4">edit</mat-icon>
+            Edit Club
+        </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-24 gap-4">
+        <mat-spinner [diameter]="44"></mat-spinner>
+        <p class="text-sm text-secondary">Loading club details...</p>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading && club" class="flex flex-col gap-6 p-6">
+
+        <!-- Club Info Strip -->
+        <div class="bg-card rounded-2xl border border-gray-100 shadow-sm px-6 py-4 flex flex-wrap gap-6">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <mat-icon class="icon-size-4 text-gray-400">email</mat-icon>
+                <span>{{ club.email || 'No email' }}</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <mat-icon class="icon-size-4 text-gray-400">phone</mat-icon>
+                <span>{{ club.phone || 'No phone' }}</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <mat-icon class="icon-size-4 text-gray-400">golf_course</mat-icon>
+                <span>{{ totalCourses }} Course{{ totalCourses !== 1 ? 's' : '' }}</span>
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <!-- Total Members -->
+            <div class="bg-card rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #EFF6FF;">
+                    <mat-icon style="color: #3B82F6;">group</mat-icon>
+                </div>
+                <div>
+                    <p class="text-3xl font-extrabold text-gray-900">{{ totalMembers }}</p>
+                    <p class="text-sm text-secondary mt-0.5">Total Members</p>
+                </div>
+            </div>
+
+            <!-- Tournaments — clickable -->
+            <div (click)="togglePanel('tournaments')"
+                class="bg-card rounded-2xl border shadow-sm p-5 flex flex-col gap-3 cursor-pointer transition-all hover:shadow-md active:scale-95"
+                [class.border-green-300]="activePanelTab === 'tournaments'"
+                [class.border-gray-100]="activePanelTab !== 'tournaments'"
+                [style.background-color]="activePanelTab === 'tournaments' ? '#F0FDF4' : ''">
+                <div class="flex items-center justify-between">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #F0FDF4;">
+                        <mat-icon style="color: #10B981;">emoji_events</mat-icon>
+                    </div>
+                    <mat-icon class="text-gray-400 transition-transform"
+                        [class.rotate-180]="activePanelTab === 'tournaments'">expand_more</mat-icon>
+                </div>
+                <div>
+                    <p class="text-3xl font-extrabold text-gray-900">{{ totalTournaments }}</p>
+                    <p class="text-sm text-secondary mt-0.5">Tournaments</p>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="bg-card rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #FFF7ED;">
+                    <mat-icon style="color: #F59E0B;">check_circle</mat-icon>
+                </div>
+                <div>
+                    <p class="text-3xl font-extrabold text-gray-900">{{ completedTournaments }}</p>
+                    <p class="text-sm text-secondary mt-0.5">Completed</p>
+                </div>
+            </div>
+
+            <!-- Daily Rounds — clickable -->
+            <div (click)="togglePanel('dailyRounds')"
+                class="bg-card rounded-2xl border shadow-sm p-5 flex flex-col gap-3 cursor-pointer transition-all hover:shadow-md active:scale-95"
+                [class.border-purple-300]="activePanelTab === 'dailyRounds'"
+                [class.border-gray-100]="activePanelTab !== 'dailyRounds'"
+                [style.background-color]="activePanelTab === 'dailyRounds' ? '#FAF5FF' : ''">
+                <div class="flex items-center justify-between">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: #FAF5FF;">
+                        <mat-icon style="color: #8B5CF6;">sports_golf</mat-icon>
+                    </div>
+                    <mat-icon class="text-gray-400 transition-transform"
+                        [class.rotate-180]="activePanelTab === 'dailyRounds'">expand_more</mat-icon>
+                </div>
+                <div>
+                    <p class="text-3xl font-extrabold text-gray-900">{{ totalSingleRounds }}</p>
+                    <p class="text-sm text-secondary mt-0.5">Daily Rounds</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── Tournaments Panel ─────────────────────────────────────────────── -->
+        <div *ngIf="activePanelTab === 'tournaments'"
+            class="bg-card rounded-2xl border border-green-100 shadow-sm overflow-hidden">
+
+            <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-green-50">
+                <mat-icon style="color: #10B981;">emoji_events</mat-icon>
+                <div>
+                    <h3 class="text-base font-bold text-gray-800">Tournaments</h3>
+                    <p class="text-xs text-secondary">{{ tournamentsTotal }} multi-round tournaments</p>
+                </div>
+            </div>
+
+            <div *ngIf="tourIsLoading" class="flex items-center justify-center py-10">
+                <mat-spinner [diameter]="32"></mat-spinner>
+            </div>
+
+            <table *ngIf="!tourIsLoading" mat-table [dataSource]="tournamentList" class="w-full">
+
+                <!-- Index -->
+                <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef class="w-10 text-xs font-semibold text-gray-500 uppercase">#</th>
+                    <td mat-cell *matCellDef="let row; let i = index" class="text-sm text-gray-400">
+                        {{ tourPageIndex * tourPageSize + i + 1 }}
+                    </td>
+                </ng-container>
+
+                <!-- Title -->
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Tournament</th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="text-sm font-semibold text-gray-800">{{ row.title }}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Course -->
+                <ng-container matColumnDef="course">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Course</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-600">{{ row.course?.name || '—' }}</td>
+                </ng-container>
+
+                <!-- Format -->
+                <ng-container matColumnDef="format">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Format</th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                            {{ row.matchFormat || '—' }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Rounds -->
+                <ng-container matColumnDef="rounds">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase text-center">Rounds</th>
+                    <td mat-cell *matCellDef="let row" class="text-center text-sm text-gray-600">
+                        {{ row.activeRound > row.noOfRounds ? row.noOfRounds : (row.activeRound || 1) }}/{{ row.noOfRounds }}
+                    </td>
+                </ng-container>
+
+                <!-- Date -->
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Date</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-600">
+                        {{ row.startDate | date:'dd MMM yyyy' }}
+                    </td>
+                </ng-container>
+
+                <!-- Status -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="getTournamentStatus(row) as s">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" [ngClass]="s.classes">
+                                {{ s.label }}
+                            </span>
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <!-- Action -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase text-right">Action</th>
+                    <td mat-cell *matCellDef="let row" class="text-right">
+                        <button mat-icon-button [matTooltip]="'View Tournament'" (click)="viewTournament(row.id)"
+                            class="text-gray-400 hover:text-green-600 transition-colors">
+                            <mat-icon class="icon-size-5">open_in_new</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="tourDisplayedColumns" class="bg-gray-50"></tr>
+                <tr mat-row *matRowDef="let row; columns: tourDisplayedColumns;"
+                    (click)="viewTournament(row.id)"
+                    class="hover:bg-green-50 transition-colors border-b border-gray-50 last:border-0 cursor-pointer"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center py-10 text-gray-400" [attr.colspan]="tourDisplayedColumns.length">
+                        <mat-icon class="icon-size-10 mb-2 opacity-30">emoji_events</mat-icon>
+                        <p class="text-sm">No tournaments found</p>
+                    </td>
+                </tr>
+
+            </table>
+
+            <mat-paginator
+                [length]="tournamentsTotal"
+                [pageSize]="tourPageSize"
+                [pageIndex]="tourPageIndex"
+                [pageSizeOptions]="[10, 25, 50]"
+                (page)="onTourPageChange($event)"
+                showFirstLastButtons
+                class="border-t border-gray-100">
+            </mat-paginator>
+        </div>
+
+        <!-- ── Daily Rounds Panel ────────────────────────────────────────────── -->
+        <div *ngIf="activePanelTab === 'dailyRounds'"
+            class="bg-card rounded-2xl border border-purple-100 shadow-sm overflow-hidden">
+
+            <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-purple-50">
+                <mat-icon style="color: #8B5CF6;">sports_golf</mat-icon>
+                <div>
+                    <h3 class="text-base font-bold text-gray-800">Daily Rounds</h3>
+                    <p class="text-xs text-secondary">{{ dailyRoundsTotal }} single-round events</p>
+                </div>
+            </div>
+
+            <div *ngIf="drIsLoading" class="flex items-center justify-center py-10">
+                <mat-spinner [diameter]="32"></mat-spinner>
+            </div>
+
+            <table *ngIf="!drIsLoading" mat-table [dataSource]="dailyRoundsList" class="w-full">
+
+                <!-- Index -->
+                <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef class="w-10 text-xs font-semibold text-gray-500 uppercase">#</th>
+                    <td mat-cell *matCellDef="let row; let i = index" class="text-sm text-gray-400">
+                        {{ drPageIndex * drPageSize + i + 1 }}
+                    </td>
+                </ng-container>
+
+                <!-- Title -->
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Round Name</th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="text-sm font-semibold text-gray-800">{{ row.title }}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Course -->
+                <ng-container matColumnDef="course">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Course</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-600">{{ row.course?.name || '—' }}</td>
+                </ng-container>
+
+                <!-- Format -->
+                <ng-container matColumnDef="format">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Format</th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                            {{ row.matchFormat || '—' }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Date -->
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Date</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-600">
+                        {{ row.startDate | date:'dd MMM yyyy' }}
+                    </td>
+                </ng-container>
+
+                <!-- Status -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="getDailyRoundStatus(row) as s">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" [ngClass]="s.classes">
+                                {{ s.label }}
+                            </span>
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <!-- Action -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase text-right">Action</th>
+                    <td mat-cell *matCellDef="let row" class="text-right">
+                        <button mat-icon-button [matTooltip]="'View Round'" (click)="viewTournament(row.id)"
+                            class="text-gray-400 hover:text-purple-600 transition-colors">
+                            <mat-icon class="icon-size-5">open_in_new</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="drDisplayedColumns" class="bg-gray-50"></tr>
+                <tr mat-row *matRowDef="let row; columns: drDisplayedColumns;"
+                    (click)="viewTournament(row.id)"
+                    class="hover:bg-purple-50 transition-colors border-b border-gray-50 last:border-0 cursor-pointer"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center py-10 text-gray-400" [attr.colspan]="drDisplayedColumns.length">
+                        <mat-icon class="icon-size-10 mb-2 opacity-30">sports_golf</mat-icon>
+                        <p class="text-sm">No daily rounds found</p>
+                    </td>
+                </tr>
+
+            </table>
+
+            <mat-paginator
+                [length]="dailyRoundsTotal"
+                [pageSize]="drPageSize"
+                [pageIndex]="drPageIndex"
+                [pageSizeOptions]="[10, 25, 50]"
+                (page)="onDrPageChange($event)"
+                showFirstLastButtons
+                class="border-t border-gray-100">
+            </mat-paginator>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div *ngIf="categoryStats.length > 0" class="bg-card rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">Member Categories</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+                <div *ngFor="let cat of categoryStats"
+                    class="flex flex-col items-center justify-center p-3 rounded-xl border text-center"
+                    [style.border-color]="cat.color + '40'"
+                    [style.background-color]="cat.color + '10'">
+                    <p class="text-2xl font-extrabold" [style.color]="cat.color">{{ cat.count }}</p>
+                    <p class="text-xs font-medium text-gray-600 mt-1 leading-tight">{{ cat.label }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Table -->
+        <div class="bg-card rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100">
+                <div>
+                    <h3 class="text-base font-bold text-gray-800">Club Members</h3>
+                    <p class="text-xs text-secondary mt-0.5">{{ totalMembers }} registered members</p>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 min-w-64">
+                    <mat-icon class="icon-size-4 text-gray-400 mr-2">search</mat-icon>
+                    <input [formControl]="searchControl" placeholder="Search members..."
+                        class="flex-1 bg-transparent text-sm outline-none text-gray-700 placeholder-gray-400" />
+                    <button *ngIf="searchControl.value" (click)="searchControl.setValue('')"
+                        class="ml-1 text-gray-400 hover:text-gray-600">
+                        <mat-icon class="icon-size-4">close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="isMembersLoading" class="flex items-center justify-center py-10">
+                <mat-spinner [diameter]="32"></mat-spinner>
+            </div>
+
+            <table *ngIf="!isMembersLoading" mat-table [dataSource]="members" class="w-full">
+
+                <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef class="w-10 text-xs font-semibold text-gray-500 uppercase">#</th>
+                    <td mat-cell *matCellDef="let row; let i = index" class="text-sm text-gray-400">
+                        {{ pageIndex * pageSize + i + 1 }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Name</th>
+                    <td mat-cell *matCellDef="let row">
+                        <div class="flex items-center gap-2.5 py-1.5">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                                style="background: linear-gradient(135deg, #004987, #3B82F6);">
+                                {{ row.name?.charAt(0)?.toUpperCase() || '?' }}
+                            </div>
+                            <span class="text-sm font-semibold text-gray-800">{{ row.name }}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Category</th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                            {{ row.category }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="handicap">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase text-center">Handicap</th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="inline-flex items-center justify-center w-10 h-8 rounded-lg text-sm font-bold bg-gray-100 text-gray-700">
+                            {{ row.handicap }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="membershipNumber">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">M.No</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-500 font-mono">{{ row.membershipNumber }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Email</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-600">{{ row.email }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="phone">
+                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase">Phone</th>
+                    <td mat-cell *matCellDef="let row" class="text-sm text-gray-600">{{ row.phone }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    class="hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center py-12 text-gray-400" [attr.colspan]="displayedColumns.length">
+                        <mat-icon class="icon-size-10 mb-2 opacity-30">person_off</mat-icon>
+                        <p class="text-sm">No members found</p>
+                    </td>
+                </tr>
+
+            </table>
+
+            <mat-paginator
+                [length]="membersTotal"
+                [pageSize]="pageSize"
+                [pageIndex]="pageIndex"
+                [pageSizeOptions]="[15, 25, 50, 100]"
+                (page)="onPageChange($event)"
+                showFirstLastButtons
+                class="border-t border-gray-100">
+            </mat-paginator>
+
+        </div>
+    </div>
+</div>

@@ -24,6 +24,7 @@ export class AuthSignInComponent implements OnInit {
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    showPassword: boolean = false;
     loggedInuser: any;
 
     /**
