@@ -512,7 +512,7 @@ export class AddTournamentComponent implements OnInit {
             parallelCalls.push(this.facadeService.getClubList());
         }
         if (this.tournamentID) {
-            parallelCalls.push(this.facadeService.getTournamentByID(this.tournamentID));
+            parallelCalls.push(this.facadeService.getTournamentByIDForSetup(this.tournamentID));
         }
 
         const results = await Promise.all(parallelCalls);
@@ -1012,6 +1012,36 @@ export class AddTournamentComponent implements OnInit {
             let step = this.steps.find(a => a.number == this.currentStep);
             this.currentTitle = step?.title;
         }
+    }
+
+    handleNextStep(): void {
+        switch (this.currentTitle) {
+            case 'Tournament Setup':
+                this.editTournament ? this.editTournaments() : this.createTournament();
+                break;
+            case 'Select Players':
+                this.saveTournamentMember();
+                break;
+            case 'Select Teams':
+                this.saveTournamentTeams();
+                break;
+            case 'Select Pairs':
+                this.goToStep('Groups Setup', 4);
+                break;
+            case 'Groups Setup':
+                this.getSelectedPlayers();
+                break;
+            case 'Banner Setup':
+                this.addBanner();
+                break;
+            case 'Review & Confirm':
+                this.createFlights();
+                break;
+        }
+    }
+
+    get nextStepLabel(): string {
+        return this.currentTitle === 'Review & Confirm' ? 'Start Tournament' : 'Next Step';
     }
 
     onFileSelected(event: any): void {
@@ -2112,16 +2142,57 @@ export class AddTournamentComponent implements OnInit {
                 }
 
             }
+            // ── Per-group tee & time assignment ──────────────────────────────
+            const flightSettings = FilteredFlight[0];
+            const startingHole: string = flightSettings.startingHole ?? '1';
+            const intervalMins: number = parseInt(flightSettings.flightsInterval) || 0;
+            const rawStartTime: string = flightSettings.flightStartTime ?? '08:00';
+
+            // Parse start time into a base Date so we can add minutes arithmetically
+            const baseDate = new Date(Constants.DEFAULT_DATE + ' ' + rawStartTime);
+
             let tempSelMembers: any[] = [];
             for (const index in selMembers) {
                 tempSelMembers = [];
                 tempSelMembers = selMembers;
-                tempSelMembers[index]['tee'] = flightTee;
-                tempSelMembers[index]['tee_id'] = 1;
+                const groupIdx = parseInt(index);
+
+                // ── Tee ──────────────────────────────────────────────────────
+                let groupTee: number;
+                if (startingHole === '1_10') {
+                    groupTee = groupIdx % 2 === 0 ? 1 : 10;
+                } else if (startingHole === '10') {
+                    groupTee = 10;
+                } else if (startingHole === 'shotgun') {
+                    // Cycle through holes 1-18
+                    groupTee = (groupIdx % 18) + 1;
+                } else {
+                    // '1' or anything else
+                    groupTee = 1;
+                }
+
+                // ── Time ─────────────────────────────────────────────────────
+                let groupTime: string;
+                if (this.atpTime) {
+                    groupTime = this.atpTime;
+                } else {
+                    let minutesToAdd: number;
+                    if (startingHole === '1_10') {
+                        // Two groups share the same slot, interval per pair
+                        minutesToAdd = Math.floor(groupIdx / 2) * intervalMins;
+                    } else {
+                        minutesToAdd = groupIdx * intervalMins;
+                    }
+                    const slotDate = new Date(baseDate.getTime() + minutesToAdd * 60000);
+                    const h = slotDate.getHours();
+                    const m = slotDate.getMinutes();
+                    groupTime = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
+                }
+
+                tempSelMembers[index]['tee'] = groupTee;
+                tempSelMembers[index]['tee_id'] = groupTee;
                 tempSelMembers[index]['name'] = 'Team' + index;
-                tempSelMembers[index]['time'] = this.atpTime
-                    ? this.atpTime
-                    : flightTime;
+                tempSelMembers[index]['time'] = groupTime;
                 selMembers = tempSelMembers;
             }
             //console.log(selMembers);
@@ -3248,8 +3319,7 @@ export class AddTournamentComponent implements OnInit {
             this.snackBar.open('Tournament has been updated.', 'x', {
                 duration: 5000,
             });
-            // stepper.next();
-            // this.router.navigate(['/tournaments/view/' + this.tournamentID]);
+            this.goToStep('Select Players', 2);
         } else {
             this.snackBar.open('Error! Try Again later.', 'x', {
                 duration: 5000,
@@ -3783,7 +3853,7 @@ export class AddTournamentComponent implements OnInit {
                 const founded = this.tournamentMembers.filter((a) => {
                     return a.id == selectionArray[index].id;
                 });
-                const founded2 = this.membersSource.data.filter((a) => {
+                const founded2 = (this.membersSource?.data || []).filter((a) => {
                     return a.id == selectionArray[index].id;
                 });
                 if (founded.length === 0 && founded2.length === 0) {

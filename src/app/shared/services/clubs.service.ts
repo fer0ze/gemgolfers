@@ -207,6 +207,21 @@ export class ClubsService {
     });
   }
 
+  getClubsPaginated(limit: number, offset: number, search: string): Promise<any> {
+    const s = search ? `%${search}%` : '%';
+    return new Promise((resolve) => {
+      this.apollo
+        .watchQuery<any>({
+          query: Query.GetClubsPaginated,
+          variables: { limit, offset, search: s },
+          fetchPolicy: 'network-only',
+        })
+        .valueChanges.subscribe(({ data }) => {
+          resolve(data);
+        });
+    });
+  }
+
   // ── Club Stats & Pagination ───────────────────────────────────────────────
 
   getClubStatsByClubId(clubId: string): Promise<any> {

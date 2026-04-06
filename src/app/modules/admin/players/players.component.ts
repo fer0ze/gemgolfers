@@ -144,23 +144,44 @@ export class PlayersComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this._changeDetectorRef.markForCheck();
         try {
-            const where = this.buildWhere();
-            const result = await this._facadeService.getPlayersPaginated(
-                where, this.pageSize, this.pageIndex * this.pageSize,
-            );
-            this.totalCount = result?.player_aggregate?.aggregate?.count || 0;
-            this.players = (result?.player || []).map((p: any) => ({
-                id: p.id,
-                Name: ((p.firstName || '').trim() + ' ' + (p.lastName || '').trim()).trim(),
-                Phone: p.phone,
-                Email: p.email,
-                createdAt: p.createdAt,
-                MembershipNo: p.membershipNumber,
-                Category: p.playerCategory === 'Senior' ? 'Senior Amateurs' : p.playerCategory,
-                Handicap: p.handicap,
-                club: p.membershipQL?.[0]?.club?.name ?? '—',
-                homeClubId: p.membershipQL?.[0]?.clubId,
-            }));
+            const baseWhere = this.buildWhere();
+            const namedWhere = this.withNameFilter(baseWhere, true);
+            const unnamedWhere = this.withNameFilter(baseWhere, false);
+            const offset = this.pageIndex * this.pageSize;
+
+            // Parallel: named players at current offset + unnamed aggregate (limit:1 for count only)
+            const [namedResult, unnamedAgg] = await Promise.all([
+                this._facadeService.getPlayersPaginated(namedWhere, this.pageSize, offset),
+                this._facadeService.getPlayersPaginated(unnamedWhere, 1, 0),
+            ]);
+
+            const namedCount = namedResult?.player_aggregate?.aggregate?.count || 0;
+            const unnamedCount = unnamedAgg?.player_aggregate?.aggregate?.count || 0;
+            this.totalCount = namedCount + unnamedCount;
+
+            let rawPlayers: any[];
+
+            if (offset < namedCount) {
+                const namedPlayers = namedResult?.player || [];
+                if (namedPlayers.length < this.pageSize && unnamedCount > 0) {
+                    // Page crosses the named/unnamed boundary — fill remainder with unnamed
+                    const unnamedResult = await this._facadeService.getPlayersPaginated(
+                        unnamedWhere, this.pageSize - namedPlayers.length, 0,
+                    );
+                    rawPlayers = [...namedPlayers, ...(unnamedResult?.player || [])];
+                } else {
+                    rawPlayers = namedPlayers;
+                }
+            } else {
+                // Current page is entirely in the unnamed section
+                const unnamedOffset = offset - namedCount;
+                const unnamedResult = await this._facadeService.getPlayersPaginated(
+                    unnamedWhere, this.pageSize, unnamedOffset,
+                );
+                rawPlayers = unnamedResult?.player || [];
+            }
+
+            this.players = rawPlayers.map(p => this.mapPlayer(p));
             this.selection.clear();
         } catch (err) {
             console.error(err);
@@ -168,6 +189,35 @@ export class PlayersComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this._changeDetectorRef.markForCheck();
         }
+    }
+
+    private withNameFilter(baseWhere: any, named: boolean): any {
+        const cond = named
+            ? { _or: [{ firstName: { _gt: '' } }, { lastName: { _gt: '' } }] }
+            : {
+                _and: [
+                    { _or: [{ firstName: { _is_null: true } }, { firstName: { _eq: '' } }] },
+                    { _or: [{ lastName: { _is_null: true } }, { lastName: { _eq: '' } }] },
+                ],
+              };
+        if (Object.keys(baseWhere).length === 0) return cond;
+        if (baseWhere._and) return { _and: [...baseWhere._and, cond] };
+        return { _and: [baseWhere, cond] };
+    }
+
+    private mapPlayer(p: any): any {
+        return {
+            id: p.id,
+            Name: ((p.firstName || '').trim() + ' ' + (p.lastName || '').trim()).trim(),
+            Phone: p.phone,
+            Email: p.email,
+            createdAt: p.createdAt,
+            MembershipNo: p.membershipNumber,
+            Category: p.playerCategory === 'Senior' ? 'Senior Amateurs' : p.playerCategory,
+            Handicap: p.handicap,
+            club: p.membershipQL?.[0]?.club?.name ?? '—',
+            homeClubId: p.membershipQL?.[0]?.clubId,
+        };
     }
 
     private buildWhere(): any {
@@ -282,7 +332,12 @@ export class PlayersComponent implements OnInit, OnDestroy {
         } catch (err) {
             console.error(err);
         } finally {
-            this.players = legacyPlayers;
+            this.players = legacyPlayers.sort((a, b) => {
+                if (!a.Name && !b.Name) return 0;
+                if (!a.Name) return 1;
+                if (!b.Name) return -1;
+                return a.Name.localeCompare(b.Name);
+            });
             this.isLoading = false;
             this._changeDetectorRef.markForCheck();
         }

@@ -1056,6 +1056,143 @@ export const GetUpCommingTournamentsByClub = gql`
     ${TournamentQL}
 `;
 
+export const GetTournamentByIDForSetup = gql`
+    query GetTournamentByIDForSetup($where: tournament_bool_exp!) {
+        tournament(where: $where) {
+            id
+            leagueId
+            tourId
+            clubId
+            courseId
+            secondFormat
+            skipCategory
+            adminId
+            inviteCode
+            title
+            courseHoleSets
+            teamMatch
+            pairsMatch
+            interLeague
+            publicTournament
+            confirmParticipants
+            noOfRounds
+            activeRound
+            matchFormat
+            tee
+            playingOnWhs
+            scoreManagement
+            scoreUpdateTime
+            leaderUpdateTime
+            startDate
+            endDate
+            started
+            invited
+            singleRound
+            pointsFormats
+            pointsValues
+            handicapAllocations
+            sponsorName
+            sponsorLogo
+            mobileLogoUrl
+            webLogoUrl
+            cutOffCriteria
+            prefix
+            multiFormat
+            marshalsStartWith
+            noOfMarshals
+            subTournament
+            courseHoleSetsInverted
+            isSetupComplete
+            currentTab
+            CourseQL: course {
+                ...CourseQL
+            }
+            CategoriesQL: categories {
+                id
+                tournamentId
+                category
+                flightSettings
+            }
+            members {
+                playerId
+                category
+                PlayerQL: player {
+                    id
+                    firstName
+                    lastName
+                    handicap
+                    playerCategory
+                    membershipNumber
+                }
+            }
+            leaderboard_ad {
+                tournamentId
+                ad
+                firstRow
+                repetitionInterval
+            }
+            teams {
+                id
+                adminId
+                tournamentId
+                name
+                color
+                teamMembers {
+                    teamId
+                    playerId
+                    player {
+                        id
+                        firstName
+                        lastName
+                        handicap
+                        playerCategory
+                        membershipNumber
+                    }
+                }
+            }
+            pairs {
+                id
+                tournamentId
+                flightId
+                pairName
+                member1Id
+                member2Id
+                player1 {
+                    id
+                    firstName
+                    lastName
+                }
+                player2 {
+                    id
+                    firstName
+                    lastName
+                }
+            }
+            flights {
+                id
+            }
+            opponents {
+                id
+                team1Id
+                team2Id
+                team1MemberId
+                team2MemberId
+            }
+            CoursesQL: tournament_round_courses {
+                tournamentId
+                round
+                courseId
+                courseHoleSets
+                inverted
+                course {
+                    ...CourseQL
+                }
+            }
+        }
+    }
+    ${CourseQL}
+`;
+
 export const GetTournamentByID = gql`
     query PostsGetQuery($where: tournament_bool_exp!) {
         tournament(where: $where) {

@@ -11,7 +11,7 @@
 
             <!-- Title -->
             <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Sign up</h1>
+                <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Sign up</h1>
                 <div class="mt-2 h-1 w-12 rounded-full" style="background-color: #004987;"></div>
             </div>
 
@@ -27,34 +27,34 @@
                 <!-- First + Last name row -->
                 <div class="flex gap-3 mb-4">
                     <div class="flex-1">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                        <label class="block text-base font-semibold text-gray-700 mb-1.5">
                             First name <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="firstName" [formControlName]="'firstName'"
                             placeholder="First name"
-                            class="block w-full px-3.5 py-3 border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400
+                            class="block w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base text-gray-900 placeholder-gray-400
                                    focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
                             [class.border-red-400]="signUpForm.get('firstName').invalid && signUpForm.get('firstName').touched" />
                         <p *ngIf="signUpForm.get('firstName').hasError('required') && signUpForm.get('firstName').touched"
-                           class="mt-1 text-xs text-red-500">Required</p>
+                           class="mt-1 text-sm text-red-500">Required</p>
                     </div>
                     <div class="flex-1">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                        <label class="block text-base font-semibold text-gray-700 mb-1.5">
                             Last name <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="lastName" [formControlName]="'lastName'"
                             placeholder="Last name"
-                            class="block w-full px-3.5 py-3 border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400
+                            class="block w-full px-3.5 py-3 border border-gray-300 rounded-xl text-base text-gray-900 placeholder-gray-400
                                    focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
                             [class.border-red-400]="signUpForm.get('lastName').invalid && signUpForm.get('lastName').touched" />
                         <p *ngIf="signUpForm.get('lastName').hasError('required') && signUpForm.get('lastName').touched"
-                           class="mt-1 text-xs text-red-500">Required</p>
+                           class="mt-1 text-sm text-red-500">Required</p>
                     </div>
                 </div>
 
                 <!-- Email field -->
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <label class="block text-base font-semibold text-gray-700 mb-1.5">
                         Email Address <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
@@ -65,19 +65,19 @@
                         </div>
                         <input type="email" id="email" [formControlName]="'email'"
                             placeholder="Enter your email"
-                            class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400
+                            class="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl text-base text-gray-900 placeholder-gray-400
                                    focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
                             [class.border-red-400]="signUpForm.get('email').invalid && signUpForm.get('email').touched" />
                     </div>
                     <p *ngIf="signUpForm.get('email').hasError('required') && signUpForm.get('email').touched"
-                       class="mt-1 text-xs text-red-500">Email address is required</p>
+                       class="mt-1 text-sm text-red-500">Email address is required</p>
                     <p *ngIf="signUpForm.get('email').hasError('email') && signUpForm.get('email').touched"
-                       class="mt-1 text-xs text-red-500">Please enter a valid email address</p>
+                       class="mt-1 text-sm text-red-500">Please enter a valid email address</p>
                 </div>
 
                 <!-- Password field -->
                 <div class="mb-5">
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <label class="block text-base font-semibold text-gray-700 mb-1.5">
                         Password <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
@@ -88,7 +88,7 @@
                         </div>
                         <input [type]="showPassword ? 'text' : 'password'" id="password" [formControlName]="'password'"
                             placeholder="Create a password"
-                            class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400
+                            class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl text-base text-gray-900 placeholder-gray-400
                                    focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
                             [class.border-red-400]="signUpForm.get('password').invalid && signUpForm.get('password').touched" />
                         <button type="button" (click)="showPassword = !showPassword"
@@ -103,7 +103,7 @@
                         </button>
                     </div>
                     <p *ngIf="signUpForm.get('password').invalid && signUpForm.get('password').touched"
-                       class="mt-1 text-xs text-red-500">Password is required</p>
+                       class="mt-1 text-sm text-red-500">Password is required</p>
                 </div>
 
                 <!-- Terms & Conditions -->
@@ -112,7 +112,7 @@
                         <input type="checkbox" [formControlName]="'agreements'"
                             class="mt-0.5 w-4 h-4 rounded border-gray-300 flex-shrink-0 cursor-pointer"
                             style="accent-color: #004987;">
-                        <span class="text-sm text-gray-600">
+                        <span class="text-base text-gray-600">
                             I agree to the
                             <a href="https://gemgolfers.com/terms-conditions/" target="_blank" rel="noopener noreferrer" class="font-semibold hover:underline" style="color: #004987;">Terms of Service</a>
                             and
@@ -120,12 +120,12 @@
                         </span>
                     </label>
                     <p *ngIf="signUpForm.get('agreements').invalid && signUpForm.get('agreements').touched"
-                       class="mt-1 text-xs text-red-500">You must accept the terms to continue</p>
+                       class="mt-1 text-sm text-red-500">You must accept the terms to continue</p>
                 </div>
 
                 <!-- Submit button -->
                 <button type="button" (click)="signUp()" [disabled]="signUpForm.disabled"
-                    class="w-full py-3.5 px-4 rounded-2xl text-white text-sm font-bold tracking-wide transition-all duration-200
+                    class="w-full py-3.5 px-4 rounded-2xl text-white text-base font-bold tracking-wide transition-all duration-200
                            flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                     style="background-color: #004987;">
                     <span *ngIf="!signUpForm.disabled">Create your free account</span>
@@ -136,7 +136,7 @@
                 </button>
 
                 <!-- Sign in link -->
-                <p class="text-center mt-5 text-sm text-gray-500">
+                <p class="text-center mt-5 text-base text-gray-500">
                     Already have an account?
                     <a [routerLink]="['/sign-in']" class="font-bold hover:underline ml-1" style="color: #004987;">Sign in</a>
                 </p>

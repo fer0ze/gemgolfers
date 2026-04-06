@@ -11,6 +11,9 @@ import {
 import * as Query from '../GraphQL/player.gql';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { environment } from 'environments/environment';
+import { initializeApp, deleteApp, FirebaseApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 //import { map } from "rxjs/operators";
 //import { toDate } from "@angular/common/src/i18n/format_date";
 
@@ -660,35 +663,31 @@ export class PlayersService {
     }
 
     updateUserInFireBase(email: string, password: string): Observable<boolean> {
+        // Create the new player's Firebase account using a SECONDARY app instance
+        // so the main app's AngularFireAuth session (the admin) is never disturbed.
         return new Observable<boolean>((observer) => {
-            this.apollo
-                .mutate<any>({
-                    mutation: Query.CreateAccountQL,
-                    variables: {
-                        request: {
-                            userUids: email,
-                            UsersData: {
-                                email: email,
-                                firstName: "",
-                                lastName: "",
-                                password: password, // Corrected password assignment
-                                photoURL: "",
-                                newEmail: "", // Adjusted photoURL assignment
-                            },
-                            type: "create"
-                        },
-                    },
+            const secondaryAppName = `secondary-${Date.now()}`;
+            const secondaryApp: FirebaseApp = initializeApp(environment.firebase, secondaryAppName);
+            const secondaryAuth = getAuth(secondaryApp);
+
+            createUserWithEmailAndPassword(secondaryAuth, email, password)
+                .then(() => {
+                    observer.next(true);
+                    observer.complete();
                 })
-                .subscribe(
-                    ({ data }) => {
-                        observer.next(true); // Emit true on success
-                        observer.complete(); // Complete the observable
-                    },
-                    (error) => {
+                .catch((error) => {
+                    if (error?.code === 'auth/email-already-in-use') {
+                        observer.next(true);
+                        observer.complete();
+                    } else {
                         observer.next(false);
-                        observer.error(error); // Emit error on failure
+                        observer.error(error);
                     }
-                );
+                })
+                .finally(() => {
+                    // Clean up the secondary app so it doesn't accumulate
+                    deleteApp(secondaryApp).catch(() => {});
+                });
         });
     }
 

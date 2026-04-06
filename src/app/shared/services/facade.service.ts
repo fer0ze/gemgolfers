@@ -127,6 +127,10 @@ export class FacadeService {
     return this.clubService.removeUserRoles(userId);
   }
 
+  getClubsPaginated(limit: number, offset: number, search: string) {
+    return this.clubService.getClubsPaginated(limit, offset, search);
+  }
+
   getClubStatsByClubId(clubId: string) {
     return this.clubService.getClubStatsByClubId(clubId);
   }
@@ -722,6 +726,9 @@ export class FacadeService {
 
   getTournamentByID(id: string) {
     return this.tournamentService.getTournamentByID(id);
+  }
+  getTournamentByIDForSetup(id: string) {
+    return this.tournamentService.getTournamentByIDForSetup(id);
   }
   getTournamentByIDForSignUpUsers(id: string) {
     return this.tournamentService.getTournamentByIDForSignUpUsers(id);

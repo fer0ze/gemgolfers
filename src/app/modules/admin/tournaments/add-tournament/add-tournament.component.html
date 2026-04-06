@@ -7,34 +7,45 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            <p class="text-gray-600 font-medium text-lg">Loading tournament details...</p>
+            <p class="text-gray-600 font-medium text-xl">Loading tournament details...</p>
         </div>
     </div>
 
     <div *ngIf="!isTournamentLoading" class="bg-white rounded-xl w-full shadow-lg h-full flex flex-col animate-fade-in overflow-hidden">
         <!-- Header -->
         <div class="p-6 md:p-8  border-b border-gray-200">
-            <a *ngIf="currentStep > 1" (click)="backStep()"
-                class="flex cursor-pointer items-center text-sm text-gray-500 hover:text-emerald-600 mb-2 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-                Back
-            </a>
-            <h1 class="text-4xl font-bold text-gray-900">
+            <div class="flex items-center justify-between mb-2">
+                <a *ngIf="currentStep > 1; else backSpacer" (click)="backStep()"
+                    class="flex cursor-pointer items-center text-base text-gray-500 hover:text-emerald-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                </a>
+                <ng-template #backSpacer><span></span></ng-template>
+                <button (click)="handleNextStep()"
+                    class="flex items-center gap-1 text-base text-gray-500 hover:text-emerald-600 transition-colors cursor-pointer">
+                    {{ nextStepLabel }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+            <h1 class="text-5xl font-bold text-gray-900">
                 {{ formGroup?.get('formArray')?.get('0')?.get('titleFormCtrl')?.value || 'Tournament Setup' }}
             </h1>
-            <div *ngIf="currentTournament" class="w-120">
+            <div *ngIf="currentTournament" class="w-full max-w-2xl">
 
                 <div class="relative flex items-center">
-                    <label for="first_name" class="absolute text-base font-semibold text-gray-600 duration-300 transform
+                    <label for="first_name" class="absolute text-lg font-semibold text-gray-600 duration-300 transform
                          -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 ">
                         SignUp Form Link
                     </label>
 
                     <input type="text" id="first_name" [value]="registrationLink" readonly
-                        class="w-full pl-3 pr-12 py-2.5 text-base bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        class="w-full pl-3 pr-12 py-2.5 text-lg bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <div
                         class="absolute flex gap-x-2 right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
@@ -61,13 +72,13 @@
                     </div>
                 </div>
                 <div *ngIf="joinCode" class="relative mt-2 flex items-center">
-                    <label for="first_name" class="absolute text-base font-semibold text-gray-600 duration-300 transform
+                    <label for="first_name" class="absolute text-lg font-semibold text-gray-600 duration-300 transform
                          -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 ">
                         Join Code
                     </label>
 
                     <input type="text" id="first_name" [value]="joinCode" readonly
-                        class=" pl-3 pr-12 py-2.5 text-base bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        class=" pl-3 pr-12 py-2.5 text-lg bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
 
                     <div class="-ml-12 flex gap-x-2p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
@@ -129,7 +140,7 @@
 
                         <!-- Text -->
                         <div class=" cursor-pointer" (click)="goToStep(step.title,step.number)">
-                            <p class="text-base font-semibold"
+                            <p class="text-lg font-semibold"
                                 [ngClass]="currentStep >= step.number || currentTournament ? 'text-gray-800' : 'text-gray-500'">
                                 {{ step.title }}
                             </p>
@@ -148,7 +159,7 @@
 
                             <!-- Basic Information -->
                             <section class="mb-6">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Basic Information</h3>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-6">Basic Information</h3>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
                                     <mat-form-field appearance="outline" class="w-full custom-mat-input"
@@ -171,7 +182,7 @@
 
                             <!-- Scheduling -->
                             <section class="mb-6">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Scheduling</h3>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-6">Scheduling</h3>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6">
                                     <mat-form-field appearance="outline" class="w-full custom-mat-input"
@@ -213,7 +224,7 @@
 
                             <!-- Format & Venue -->
                             <section class="mb-6" *ngIf="showMultipleCourses">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Multi Course Selection</h3>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-6">Multi Course Selection</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                                     <div formArrayName="courses"
                                         *ngFor="let url of courseFormGroup.controls; let i = index">
@@ -242,7 +253,7 @@
 
 
                             <section class="mb-6">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Format & Venue</h3>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-6">Format & Venue</h3>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
                                     <div class="flex flex-col gap-1">
@@ -276,7 +287,7 @@
                                             <span (click)="openFormatInfo(i)"
                                                 class="text-gray-600 items-center flex cursor-pointer gap-1 -mt-3">
                                                 <mat-icon style="font-size:18px;width:18px;height:18px;">info</mat-icon>
-                                                <span class="hover:underline text-base font-medium">Format Info</span>
+                                                <span class="hover:underline text-lg font-medium">Format Info</span>
                                             </span>
                                         </div>
                                         <!-- <div *ngFor="
@@ -389,7 +400,7 @@
                                                 <mat-hint align="end">
 
                                                     <div class="flex gap-x-2 items-center">
-                                                        <span class="text-blue-600 rounded-lg h-fit px-2 py-1 text-[13px] bg-blue-100
+                                                        <span class="text-blue-600 rounded-lg h-fit px-2 py-1 text-[15px] bg-blue-100
                                                         cursor-pointer hover:bg-blue-200" (click)="openAddCourse()">
                                                             + Add new course
                                                         </span>
@@ -423,7 +434,7 @@
                             </section>
                             <!-- Round Wise Point Formats -->
                             <section class="mb-6" *ngIf="this.showMatchPlay">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Round Wise Point Formats</h3>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-6">Round Wise Point Formats</h3>
                                 <div formArrayName="pointsFormats"
                                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                                     <ng-container *ngFor="let round of noOfRounds; let i = index">
@@ -445,8 +456,8 @@
                             </section>
 
                             <!-- <section *ngIf="showSubtournament" class="mb-6">
-                                <h3 class="text-xl font-bold text-gray-800 mb-1">Sub LeaderBoard Format</h3>
-                                <p class="text-sm text-gray-500 mb-6">Configure how sub leaderboard appears in the
+                                <h3 class="text-2xl font-bold text-gray-800 mb-1">Sub LeaderBoard Format</h3>
+                                <p class="text-base text-gray-500 mb-6">Configure how sub leaderboard appears in the
                                     tournament.
                                 </p>
 
@@ -504,7 +515,7 @@
                                 </div>
                             </section> -->
                             <section class="mb-6">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Score Management</h3>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-6">Score Management</h3>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                                     <mat-form-field appearance="outline" class="w-full custom-mat-input"
@@ -523,7 +534,7 @@
                                             <span (click)="openInfo('Only Players: Players enter their own scores via the app.\nOnly Scorers: Designated scorers enter scores on behalf of players.\nPlayers and Scorers: Both players and scorers can enter scores.')"
                                                 class="text-gray-600 items-center flex cursor-pointer gap-1 mt-1">
                                                 <mat-icon style="font-size:18px;width:18px;height:18px;">info</mat-icon>
-                                                <span class="hover:underline text-base font-medium">Score Info</span>
+                                                <span class="hover:underline text-lg font-medium">Score Info</span>
                                             </span>
                                         </mat-hint>
                                     </mat-form-field>
@@ -554,8 +565,8 @@
                             <section class="mb-6" *ngIf="this.showCat">
                                 <div class="flex justify-between">
                                     <div>
-                                        <h3 class="text-xl font-bold text-gray-800 mb-1">Player Categories</h3>
-                                        <!-- <p class="text-sm text-gray-500 mb-6">
+                                        <h3 class="text-2xl font-bold text-gray-800 mb-1">Player Categories</h3>
+                                        <!-- <p class="text-base text-gray-500 mb-6">
                                             Select all applicable categories for this tournament.
                                         </p> -->
 
@@ -578,10 +589,10 @@
                                         </mat-checkbox>
 
                                         <!-- Show date fields only if selected -->
-                                        <div *ngIf="cat.checked" class="mt-3 flex max-w-36 gap-2"
+                                        <div *ngIf="cat.checked" class="mt-3 flex flex-col gap-2 w-full"
                                             [formGroup]="clubctgies.at(i)">
 
-                                            <mat-form-field appearance="outline" class="w-full h-10 custom-mat-input">
+                                            <mat-form-field appearance="outline" class="w-full custom-mat-input">
                                                 <mat-label>Start Date</mat-label>
                                                 <input matInput [matDatepicker]="startPicker" [max]="maxDate"
                                                     [min]="minDate" formControlName="startDate"
@@ -591,7 +602,7 @@
                                                 <mat-datepicker #startPicker></mat-datepicker>
                                             </mat-form-field>
 
-                                            <mat-form-field appearance="outline" class="w-full h-10 custom-mat-input">
+                                            <mat-form-field appearance="outline" class="w-full custom-mat-input">
                                                 <mat-label>End Date</mat-label>
                                                 <input matInput [matDatepicker]="endPicker" [max]="maxDate"
                                                     [min]="minDate" (change)="updateCategoryDates(cat)"
@@ -614,7 +625,7 @@
                         class="mt-8 pt-6 border-t border-gray-200 flex justify-end items-center flex-shrink-0">
 
                         <div>
-                            <button (click)="createTournament()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="createTournament()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -623,7 +634,7 @@
                     <div *ngIf="editTournament"
                         class="mt-8 pt-6 border-t border-gray-200 flex justify-center items-center flex-shrink-0">
                         <div>
-                            <button (click)="editTournaments()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="editTournaments()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Save Changes</button>
@@ -655,14 +666,14 @@
                             <!-- Club Members -->
                             <div class="border w-full border-gray-200 rounded-lg p-4 flex flex-col">
                                 <div class="flex justify-between items-center mb-4">
-                                    <h3 class="font-bold text-lg text-gray-800">Roasters
+                                    <h3 class="font-bold text-xl text-gray-800">Roasters
                                     </h3>
                                     <div class="flex gap-2">
-                                        <button *ngIf="!hideClubs" (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                        <button *ngIf="!hideClubs" (click)="addPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                     font-semibold
                                     shadow-sm hover:bg-emerald-700 transition-colors">
                                             Add New</button>
-                                        <button *ngIf="hideClubs" (click)="searchPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                                        <button *ngIf="hideClubs" (click)="searchPlayer()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                     font-semibold
                                     shadow-sm hover:bg-emerald-700 transition-colors">
                                             Add Member</button>
@@ -739,7 +750,7 @@
                                                             {{ element.lastName | uppercase}}
 
                                                         </div>
-                                                        <div class="text-sm text-gray-700">
+                                                        <div class="text-base text-gray-700">
                                                             {{
                                                             element.playerCategory ==
                                                             "Seniors"
@@ -811,7 +822,7 @@
 
                                 <!-- Tournament Members -->
                                 <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
-                                    <h3 class="font-bold text-lg text-gray-800 mb-4">Tournament Participants</h3>
+                                    <h3 class="font-bold text-xl text-gray-800 mb-4">Tournament Participants</h3>
                                     <div *ngIf="!skipCat" class="flex">
                                         <div class="flex flex-wrap justify-start">
                                             <span *ngFor="let catCount of categoryCounts">
@@ -898,7 +909,7 @@
                                                                 {{ element.lastName | uppercase}}
 
                                                             </div>
-                                                            <div class="text-sm text-gray-700">
+                                                            <div class="text-base text-gray-700">
                                                                 {{
                                                                 element.playerCategory ==
                                                                 "Seniors"
@@ -940,11 +951,11 @@
                     <div class="mt-8 py-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
                         <div>
                             <button (click)="goToStep('Tournament Setup',1)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div>
-                            <button (click)="saveTournamentMember()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="saveTournamentMember()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -967,16 +978,16 @@
                                     d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900">Congratulations!</h3>
+                        <h3 class="text-3xl font-bold text-gray-900">Congratulations!</h3>
                         <p class="text-gray-600 mt-2">Your tournament has been successfully created.</p>
 
                         <div class="mt-6 text-left">
-                            <p class="text-sm font-medium text-gray-700 mb-2">Share this link with players to let
+                            <p class="text-base font-medium text-gray-700 mb-2">Share this link with players to let
                                 them
                                 sign up:</p>
                             <div class="relative flex items-center">
                                 <input type="text" [value]="registrationLink" readonly
-                                    class="w-full pl-3 pr-12 py-2 text-sm bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                    class="w-full pl-3 pr-12 py-2 text-base bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <button (click)="copyLink()"
                                     class="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-500 hover:bg-gray-200 transition-colors">
 
@@ -994,15 +1005,15 @@
 
                                 </button>
                             </div>
-                            <p *ngIf="copied" class="text-xs text-green-600 mt-1 text-center">Copied to clipboard!
+                            <p *ngIf="copied" class="text-base text-green-600 mt-1 text-center">Copied to clipboard!
                             </p>
 
                         </div>
 
                         <div class="mt-8">
-                            <p class="text-sm text-gray-500 mb-4">Or, you can proceed to add players yourself.</p>
+                            <p class="text-base text-gray-500 mb-4">Or, you can proceed to add players yourself.</p>
                             <button (click)="closePopupAndProceed()"
-                                class="w-full bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                                class="w-full bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-base font-semibold shadow-sm hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                                 Add Players Manually
                             </button>
                         </div>
@@ -1014,7 +1025,7 @@
                         <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 flex-1 h-0">
 
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
-                                <h3 class="font-bold text-lg text-gray-800 mb-4">Available Players</h3>
+                                <h3 class="font-bold text-xl text-gray-800 mb-4">Available Players</h3>
                                 <div class="relative mb-4">
                                     <mat-form-field appearance="outline" [floatLabel]="'always'"
                                         class="custom-mat-input w-full">
@@ -1073,7 +1084,7 @@
                                                             {{ element.lastName | uppercase}}
 
                                                         </div>
-                                                        <div class="text-sm text-gray-700">
+                                                        <div class="text-base text-gray-700">
                                                             {{
                                                             element.playerCategory ==
                                                             "Seniors"
@@ -1125,14 +1136,14 @@
 
                                         <button mat-raised-button color="primary" (click)="addTeam()"
                                             [disabled]="!teamForm.get('teamName')?.value?.trim()"
-                                            class="mt-1.5 text-sm font-semibold shadow-sm disabled:bg-gray-300 disabled:text-white">
+                                            class="mt-1.5 text-base font-semibold shadow-sm disabled:bg-gray-300 disabled:text-white">
                                             Create
                                         </button>
                                     </div>
 
                                     <!-- Team color selector -->
                                     <div class="mt-3">
-                                        <p class="text-xs text-gray-500 mb-2">Team Color</p>
+                                        <p class="text-base text-gray-500 mb-2">Team Color</p>
                                         <div class="flex flex-wrap gap-2">
                                             <button *ngFor="let color of teamColors" type="button"
                                                 (click)="selectColor(color)"
@@ -1171,7 +1182,7 @@
                                                     <!-- Player Slot 1 -->
 
                                                     <div *ngIf="team.members.length==0"
-                                                        class="flex justify-center items-center h-full min-h-[38px] p-2 rounded border-2 border-dashed border-gray-300 text-gray-400 text-sm">
+                                                        class="flex justify-center items-center h-full min-h-[38px] p-2 rounded border-2 border-dashed border-gray-300 text-gray-400 text-base">
                                                         Empty Slot</div>
 
                                                     <!-- Player Slot 2 -->
@@ -1195,7 +1206,7 @@
                                                 <div class="p-3 border-t bg-gray-50/50">
                                                     <button (click)="addSelectedPlayersToTeam(team.id)"
                                                         [disabled]="this.memberTMSelection.selected.length === 0"
-                                                        class="w-full text-sm bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
+                                                        class="w-full text-base bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
                                                         Add Selected Player(s)
                                                     </button>
                                                 </div>
@@ -1215,7 +1226,7 @@
                                                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.125-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.125-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                         </svg>
                                         <p class="font-semibold">No teams created yet.</p>
-                                        <p class="text-sm">Use the form above to start creating teams.</p>
+                                        <p class="text-base">Use the form above to start creating teams.</p>
                                     </div>
                                 </ng-template>
                             </div>
@@ -1224,11 +1235,11 @@
                     <div class="mt-8 py-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
                         <div>
                             <button (click)="goToStep('Select Players',2)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div>
-                            <button (click)="saveTournamentTeams()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="saveTournamentTeams()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -1240,7 +1251,7 @@
                         <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 flex-1 h-0">
 
                             <div class="border border-gray-200 rounded-lg p-4 flex flex-col">
-                                <h3 class="font-bold text-lg text-gray-800 mb-4">Available Players</h3>
+                                <h3 class="font-bold text-xl text-gray-800 mb-4">Available Players</h3>
                                 <div class="relative mb-4">
                                     <mat-form-field appearance="outline" [floatLabel]="'always'"
                                         class="custom-mat-input w-full">
@@ -1299,7 +1310,7 @@
                                                             {{ element.lastName | uppercase}}
 
                                                         </div>
-                                                        <div class="text-sm text-gray-700">
+                                                        <div class="text-base text-gray-700">
                                                             {{
                                                             element.playerCategory ==
                                                             "Seniors"
@@ -1351,14 +1362,14 @@
 
                                         <button mat-raised-button color="primary" (click)="addPairs()"
                                             [disabled]="!teamForm.get('teamName')?.value?.trim()"
-                                            class="mt-1.5 text-sm font-semibold shadow-sm disabled:bg-gray-300 disabled:text-white">
+                                            class="mt-1.5 text-base font-semibold shadow-sm disabled:bg-gray-300 disabled:text-white">
                                             Create
                                         </button>
                                     </div>
 
                                     <!-- Team color selector -->
                                     <!-- <div class="mt-3">
-                                        <p class="text-xs text-gray-500 mb-2">Team Color</p>
+                                        <p class="text-base text-gray-500 mb-2">Team Color</p>
                                         <div class="flex flex-wrap gap-2">
                                             <button *ngFor="let color of teamColors" type="button"
                                                 (click)="selectColor(color)"
@@ -1395,7 +1406,7 @@
                                                     <!-- Player Slot 1 -->
 
                                                     <div *ngIf="team.members.length==0"
-                                                        class="flex justify-center items-center h-full min-h-[38px] p-2 rounded border-2 border-dashed border-gray-300 text-gray-400 text-sm">
+                                                        class="flex justify-center items-center h-full min-h-[38px] p-2 rounded border-2 border-dashed border-gray-300 text-gray-400 text-base">
                                                         Empty Slot</div>
 
                                                     <!-- Player Slot 2 -->
@@ -1419,7 +1430,7 @@
                                                 <div class="p-3 border-t bg-gray-50/50">
                                                     <button (click)="addSelectedPlayersToPair(team.id)"
                                                         [disabled]="this.memberTMSelection.selected.length === 0"
-                                                        class="w-full text-sm bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
+                                                        class="w-full text-base bg-emerald-100 text-emerald-800 font-semibold px-2 py-2 rounded-md hover:bg-emerald-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-all">
                                                         Add Selected Player(s)
                                                     </button>
                                                 </div>
@@ -1439,7 +1450,7 @@
                                                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.125-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.125-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                         </svg>
                                         <p class="font-semibold">No pairs created yet.</p>
-                                        <p class="text-sm">Use the form above to start creating pairs.</p>
+                                        <p class="text-base">Use the form above to start creating pairs.</p>
                                     </div>
                                 </ng-template>
                             </div>
@@ -1448,11 +1459,11 @@
                     <div class="mt-8 py-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
                         <div>
                             <button (click)="goToStep('Select Players',2)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div>
-                            <button (click)="goToStep('Groups Setup',4)" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="goToStep('Groups Setup',4)" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -1465,7 +1476,7 @@
                             <div formGroupName="1" class="animate-fade-in mx-auto">
                                 <ng-container formArrayName="category">
                                     <div class="bg-white ">
-                                        <!-- <h3 class="font-bold text-xl text-gray-800 mb-8 text-center">Groups Setup</h3> -->
+                                        <!-- <h3 class="font-bold text-2xl text-gray-800 mb-8 text-center">Groups Setup</h3> -->
                                         <div class="flex flex-wrap gap-6">
                                             <div *ngFor="let url of categoryFormGroup.controls;let i = index">
                                                 <section [formGroupName]="i"
@@ -1475,7 +1486,7 @@
                                                     }">
                                                     <div class="flex items-center justify-between mb-4">
                                                         <div>
-                                                            <h3 class="text-xl font-bold text-gray-800 mb-1">
+                                                            <h3 class="text-2xl font-bold text-gray-800 mb-1">
                                                                 {{formArray.get([1]).get("category").value[i].name}}
                                                             </h3>
                                                         </div>
@@ -1573,16 +1584,16 @@
                     <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
                         <div *ngIf="this.showMatchPlay">
                             <button (click)="goToStep('Select Teams',3)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div *ngIf="!this.showMatchPlay">
                             <button (click)="goToStep('Select Players',2)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div>
-                            <button (click)="getSelectedPlayers()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="getSelectedPlayers()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -1598,9 +1609,9 @@
                             <div
                                 class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-6 mb-8">
                                 <div class="animate-fade-in">
-                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white leading-none">Banner
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white leading-none">Banner
                                         Setup</h3>
-                                    <p class="text-secondary text-sm mt-2">Configure your leaderboard banner and display
+                                    <p class="text-secondary text-base mt-2">Configure your leaderboard banner and display
                                         logic here.</p>
                                 </div>
 
@@ -1615,7 +1626,7 @@
                                     <!-- Left Side: Image Upload (Span 5) -->
                                     <div class="lg:col-span-5 flex flex-col">
                                         <label
-                                            class="text-sm font-bold uppercase tracking-widest text-primary/60 mb-3">Banner
+                                            class="text-base font-bold uppercase tracking-widest text-gray-900 mb-3">Banner
                                             Creative</label>
 
                                         <div class="relative group aspect-[16/6] flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-blue-50/50 hover:border-primary transition-all cursor-pointer overflow-hidden"
@@ -1632,7 +1643,7 @@
                                                     svgIcon="heroicons_outline:photo"></mat-icon>
                                                 <span class="text-md font-semibold text-gray-500">Click to upload banner
                                                     (PNG, JPG)</span>
-                                                <span class="text-[12px] text-gray-400 mt-1">Recommended size:
+                                                <span class="text-[14px] text-gray-400 mt-1">Recommended size:
                                                     1200x400px</span>
                                             </ng-container>
 
@@ -1644,7 +1655,7 @@
                                             <div *ngIf="bannerPreview"
                                                 class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                 <span
-                                                    class="text-white text-xs font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-md">Change
+                                                    class="text-white text-base font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-md">Change
                                                     Image</span>
                                             </div>
                                         </div>
@@ -1657,7 +1668,7 @@
                                             <!-- Repetition Interval -->
                                             <div class="flex flex-col">
                                                 <label
-                                                    class="text-sm font-bold uppercase tracking-widest text-primary/60 mb-3">Repetition
+                                                    class="text-base font-bold uppercase tracking-widest text-gray-900 mb-3">Repetition
                                                     Frequency</label>
                                                 <mat-form-field class="w-full" appearance="outline">
                                                     <mat-label>Repetition Interval</mat-label>
@@ -1672,7 +1683,7 @@
                                             <!-- First Ad Row -->
                                             <div class="flex flex-col">
                                                 <label
-                                                    class="text-sm font-bold uppercase tracking-widest text-primary/60 mb-3">Starting
+                                                    class="text-base font-bold uppercase tracking-widest text-gray-900 mb-3">Starting
                                                     Point</label>
                                                 <mat-form-field class="w-full" appearance="outline">
                                                     <mat-label>First Ad Row</mat-label>
@@ -1691,7 +1702,7 @@
                                             class="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-start border border-gray-100 dark:border-gray-800">
                                             <mat-icon class="icon-size-5 text-blue-500 mr-3"
                                                 svgIcon="heroicons_outline:information-circle"></mat-icon>
-                                            <div class="text-[11px] leading-relaxed text-secondary italic">
+                                            <div class="text-[13px] leading-relaxed text-secondary italic">
                                                 <span
                                                     class="font-bold text-gray-700 dark:text-gray-300 not-italic">Configuration
                                                     Logic:</span>
@@ -1720,16 +1731,16 @@
                     <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
                         <div *ngIf="this.showMatchPlay">
                             <button (click)="goToStep('Groups Setup',4)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div *ngIf="!this.showMatchPlay">
                             <button (click)="goToStep('Groups Setup',3)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div>
-                            <button (click)="addBanner()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="addBanner()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Next Step</button>
@@ -1739,14 +1750,14 @@
                 <div *ngIf="currentTitle === 'Review & Confirm'">
 
                     <div class="animate-fade-in">
-                        <!-- <h3 class="font-bold text-xl text-gray-800 mb-6">Groups/Flights Arrangement</h3> -->
+                        <!-- <h3 class="font-bold text-2xl text-gray-800 mb-6">Groups/Flights Arrangement</h3> -->
                         <div *ngIf="!showMatchPlay && !showShambles" class="space-y-6">
 
                             <div *ngFor="let m of selectedMembers; let k = index">
                                 <div cdkDropListGroup class="flex flex-col gap-4 items-start">
                                     <!-- Group Info -->
 
-                                    <p class="font-bold text-gray-800 text-xl">{{m.title}}</p>
+                                    <p class="font-bold text-gray-800 text-2xl">{{m.title}}</p>
 
                                     <div *ngFor="
                                             let tee of m.Members;
@@ -1755,23 +1766,13 @@
                                         <div class="flex items-start">
                                             <div
                                                 class="flex-shrink-0 mr-6 space-y-2 text-center bg-gray-50 p-3 rounded-md">
-                                                <p class="font-bold text-gray-800 text-lg">{{i+1}}</p>
+                                                <p class="font-bold text-gray-800 text-xl">{{i+1}}</p>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Tee:</span>
-                                                    {{getNextFlighttee(
-                                                    k,
-                                                    i,
-                                                    m.title,
-                                                    m.Members[i]
-                                                    )}}</div>
+                                                    {{m.Members[i].tee}}</div>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Time:</span>
-                                                    {{ getNextFlightTime(
-                                                    k,
-                                                    i,
-                                                    m.title,
-                                                    m.Members[i]
-                                                    )}}</div>
+                                                    {{m.Members[i].time}}</div>
                                                 <mat-form-field *ngIf="showTexas" [floatLabel]="'always'"
                                                     appearance="outline" class="w-full custom-mat-input">
                                                     <mat-label>Group Name</mat-label>
@@ -1789,7 +1790,7 @@
                                                 <div *ngFor="
                                             let player of tee;
                                             let j = index" cdkDrag [cdkDragData]="player"
-                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
+                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-xl">
                                                     <div>
                                                         <p class="font-semibold">{{player.firstName}}
                                                             {{player.lastName}}</p>
@@ -1814,7 +1815,7 @@
                                 <div cdkDropListGroup class="flex flex-col gap-4 items-start">
                                     <!-- Group Info -->
 
-                                    <p class="font-bold text-gray-800 text-xl">{{m.title}}</p>
+                                    <p class="font-bold text-gray-800 text-2xl">{{m.title}}</p>
 
                                     <div *ngFor="
                                             let tee of m.Members;
@@ -1823,23 +1824,13 @@
                                         <div class="flex items-start">
                                             <div
                                                 class="flex-shrink-0 mr-6 space-y-2 text-center bg-gray-50 p-3 rounded-md">
-                                                <p class="font-bold text-gray-800 text-lg">{{i+1}}</p>
+                                                <p class="font-bold text-gray-800 text-xl">{{i+1}}</p>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Tee:</span>
-                                                    {{getNextFlighttee(
-                                                    k,
-                                                    i,
-                                                    m.title,
-                                                    m.Members[i]
-                                                    )}}</div>
+                                                    {{m.Members[i].tee}}</div>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Time:</span>
-                                                    {{ getNextFlightTime(
-                                                    k,
-                                                    i,
-                                                    m.title,
-                                                    m.Members[i]
-                                                    )}}</div>
+                                                    {{m.Members[i].time}}</div>
                                             </div>
 
                                         </div>
@@ -1850,7 +1841,7 @@
                                                 [cdkDropListConnectedTo]="['teamA-' + (i-1), 'teamA-' + (i+1)]"
                                                 (cdkDropListDropped)="onPlayerDrop($event, 'A', i)"
                                                 class="grid grid-cols-1 gap-3">
-                                                <h4 class="font-bold text-base text-gray-800 mb-2 pb-2 border-b-2 flex items-center"
+                                                <h4 class="font-bold text-lg text-gray-800 mb-2 pb-2 border-b-2 flex items-center"
                                                     [style.border-color]="tee.teamA.teamColor">
                                                     <span class="w-3 h-3 rounded-full mr-2"
                                                         [style.background-color]="tee.teamA.teamColor"></span>
@@ -1859,7 +1850,7 @@
                                                 <div *ngFor="
                                             let player of tee.teamA.members;
                                             let j = index" cdkDrag [cdkDragData]="player"
-                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
+                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-xl">
                                                     <div>
                                                         <p class="font-semibold">{{player.firstName}}
                                                             {{player.lastName}}</p>
@@ -1873,13 +1864,13 @@
 
                                             </div>
                                         </div>
-                                        <div class="flex items-center text-gray-400 font-bold text-lg">VS</div>
+                                        <div class="flex items-center text-gray-400 font-bold text-xl">VS</div>
                                         <div class="flex-1">
                                             <div cdkDropList [cdkDropListData]="tee.teamB.members" [id]="'teamB-' + i"
                                                 [[cdkDropListConnectedTo]="['teamB-' + (i-1), 'teamA-' + (i+1)]"
                                                 (cdkDropListDropped)="onPlayerDrop($event, 'B', i)"
                                                 class="grid grid-cols-1 gap-3">
-                                                <h4 class="font-bold text-base text-gray-800 mb-2 pb-2 border-b-2 flex items-center"
+                                                <h4 class="font-bold text-lg text-gray-800 mb-2 pb-2 border-b-2 flex items-center"
                                                     [style.border-color]="tee.teamB.teamColor">
                                                     <span class="w-3 h-3 rounded-full mr-2"
                                                         [style.background-color]="tee.teamB.teamColor"></span>
@@ -1888,7 +1879,7 @@
                                                 <div *ngFor="
                                             let player of tee.teamB.members;
                                             let j = index" cdkDrag [cdkDragData]="player"
-                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
+                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-xl">
                                                     <div>
                                                         <p class="font-semibold">{{player.firstName}}
                                                             {{player.lastName}}</p>
@@ -1914,7 +1905,7 @@
                                 <div cdkDropListGroup class="flex flex-col gap-4 items-start">
                                     <!-- Group Info -->
 
-                                    <p class="font-bold text-gray-800 text-xl">{{m.title}}</p>
+                                    <p class="font-bold text-gray-800 text-2xl">{{m.title}}</p>
 
                                     <div *ngFor="
                                             let tee of m.Members;
@@ -1923,23 +1914,13 @@
                                         <div class="flex items-start">
                                             <div
                                                 class="flex-shrink-0 mr-6 space-y-2 text-center bg-gray-50 p-3 rounded-md">
-                                                <p class="font-bold text-gray-800 text-lg">{{i+1}}</p>
+                                                <p class="font-bold text-gray-800 text-xl">{{i+1}}</p>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Tee:</span>
-                                                    {{getNextFlighttee(
-                                                    k,
-                                                    i,
-                                                    m.title,
-                                                    m.Members[i]
-                                                    )}}</div>
+                                                    {{m.Members[i].tee}}</div>
                                                 <div class="text-md text-gray-500"><span
                                                         class="font-semibold">Time:</span>
-                                                    {{ getNextFlightTime(
-                                                    k,
-                                                    i,
-                                                    m.title,
-                                                    m.Members[i]
-                                                    )}}</div>
+                                                    {{m.Members[i].time}}</div>
                                             </div>
 
                                         </div>
@@ -1951,14 +1932,14 @@
                                                 (cdkDropListDropped)="onPlayerDrop($event, 'A', i)"
                                                 class="grid grid-cols-1 gap-3">
                                                 <h4
-                                                    class="font-bold text-base text-gray-800 mb-2 pb-2 border-b-2 flex items-center">
+                                                    class="font-bold text-lg text-gray-800 mb-2 pb-2 border-b-2 flex items-center">
                                                     <!-- <span class="w-3 h-3 rounded-full mr-2"></span> -->
                                                     {{tee.pairA.pairName}}
                                                 </h4>
                                                 <div *ngFor="
                                             let player of tee.pairA.members;
                                             let j = index" cdkDrag [cdkDragData]="player"
-                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
+                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-xl">
                                                     <div>
                                                         <p class="font-semibold">{{player.firstName}}
                                                             {{player.lastName}}</p>
@@ -1972,21 +1953,21 @@
 
                                             </div>
                                         </div>
-                                        <div class="flex items-center text-gray-400 font-bold text-lg">VS</div>
+                                        <div class="flex items-center text-gray-400 font-bold text-xl">VS</div>
                                         <div class="flex-1">
                                             <div cdkDropList [cdkDropListData]="tee.pairB.members" [id]="'pairB-' + i"
                                                 [[cdkDropListConnectedTo]="['pairB-' + (i-1), 'teamA-' + (i+1)]"
                                                 (cdkDropListDropped)="onPlayerDrop($event, 'B', i)"
                                                 class="grid grid-cols-1 gap-3">
                                                 <h4
-                                                    class="font-bold text-base text-gray-800 mb-2 pb-2 border-b-2 flex items-center">
+                                                    class="font-bold text-lg text-gray-800 mb-2 pb-2 border-b-2 flex items-center">
                                                     <!-- <span class="w-3 h-3 rounded-full mr-2"></span> -->
                                                     {{tee.pairB.pairName}}
                                                 </h4>
                                                 <div *ngFor="
                                             let player of tee.pairB.members;
                                             let j = index" cdkDrag [cdkDragData]="player"
-                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-lg">
+                                                    class="flex cursor-move justify-between items-center bg-emerald-50 text-emerald-900 p-3 rounded-md text-xl">
                                                     <div>
                                                         <p class="font-semibold">{{player.firstName}}
                                                             {{player.lastName}}</p>
@@ -2011,16 +1992,16 @@
 
                         <div *ngIf="this.showMatchPlay">
                             <button (click)="goToStep('Banner Setup',4)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div *ngIf="!this.showMatchPlay">
                             <button (click)="goToStep('Banner Setup',3)"
-                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-sm font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
+                                class="bg-white text-gray-700 px-4 py-2 rounded-lg flex items-center text-base font-semibold border border-gray-300 shadow-sm hover:bg-gray-50 transition-colors">Back</button>
 
                         </div>
                         <div>
-                            <button (click)="createFlights()" [disabled]="this.isCreatingFlights" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm
+                            <button (click)="createFlights()" [disabled]="this.isCreatingFlights" class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-base
                                 font-semibold
                                 shadow-sm hover:bg-emerald-700 transition-colors">
                                 Start Tournament</button>

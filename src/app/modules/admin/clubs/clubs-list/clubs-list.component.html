@@ -3,12 +3,12 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-6 border-b bg-card shadow-sm">
         <div>
-            <h1 class="text-3xl font-extrabold tracking-tight leading-none">Clubs Management</h1>
-            <p class="mt-1 text-secondary text-sm">Manage all clubs registered in the platform</p>
+            <h1 class="text-4xl font-extrabold tracking-tight leading-none">Clubs Management</h1>
+            <p class="mt-1 text-secondary text-base">Manage all clubs registered in the platform</p>
         </div>
         <button *ngIf="isSuperAdmin"
             (click)="addClub()"
-            class="mt-4 sm:mt-0 flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all active:scale-95"
+            class="mt-4 sm:mt-0 flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-base font-semibold shadow-md hover:shadow-lg transition-all active:scale-95"
             style="background-color: #004987;">
             <mat-icon class="icon-size-5">add</mat-icon>
             Add Club
@@ -23,13 +23,13 @@
             <div class="flex items-center flex-1 max-w-sm bg-white border border-gray-200 rounded-xl px-4 py-2.5 shadow-sm">
                 <mat-icon class="icon-size-5 text-gray-400 mr-2">search</mat-icon>
                 <input [formControl]="searchControl" placeholder="Search by name, email or address..."
-                    class="flex-1 bg-transparent text-sm outline-none text-gray-700 placeholder-gray-400" />
+                    class="flex-1 bg-transparent text-base outline-none text-gray-700 placeholder-gray-400" />
                 <button *ngIf="searchControl.value" (click)="searchControl.setValue('')"
                     class="ml-2 text-gray-400 hover:text-gray-600">
                     <mat-icon class="icon-size-4">close</mat-icon>
                 </button>
             </div>
-            <span class="text-sm text-secondary">{{ allClubs.length }} clubs total</span>
+            <span class="text-base text-secondary">{{ totalCount }} clubs total</span>
         </div>
 
         <!-- Loading -->
@@ -43,69 +43,67 @@
 
                 <!-- Index Column -->
                 <ng-container matColumnDef="index">
-                    <th mat-header-cell *matHeaderCellDef class="w-12 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
-                    <td mat-cell *matCellDef="let club; let i = index" class="text-sm text-gray-500">
+                    <th mat-header-cell *matHeaderCellDef class="w-12 text-sm font-semibold text-gray-500 uppercase tracking-wider">#</th>
+                    <td mat-cell *matCellDef="let club; let i = index" class="text-base text-gray-500">
                         {{ (paginator?.pageIndex || 0) * (paginator?.pageSize || 10) + i + 1 }}
                     </td>
                 </ng-container>
 
                 <!-- Name Column -->
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Club Name</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Club Name</th>
                     <td mat-cell *matCellDef="let club">
                         <div class="flex items-center gap-3 py-2">
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                            <img *ngIf="hasLogo(club)" [src]="club.logo" alt="{{ club.name }}"
+                                (error)="onLogoError(club.id)"
+                                class="w-10 h-10 rounded-lg object-contain flex-shrink-0 bg-white border border-gray-200">
+                            <div *ngIf="!hasLogo(club)" class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-base flex-shrink-0"
                                 style="background-color: #004987;">
                                 {{ club.name?.charAt(0)?.toUpperCase() || 'C' }}
                             </div>
-                            <span class="text-sm font-semibold text-gray-800">{{ club.name }}</span>
+                            <span class="text-base font-semibold text-gray-800">{{ club.name }}</span>
                         </div>
                     </td>
                 </ng-container>
 
                 <!-- Email Column -->
                 <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
-                    <td mat-cell *matCellDef="let club" class="text-sm text-gray-600">{{ club.email || '—' }}</td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Email</th>
+                    <td mat-cell *matCellDef="let club" class="text-base text-gray-600">{{ club.email || '—' }}</td>
                 </ng-container>
 
                 <!-- Phone Column -->
                 <ng-container matColumnDef="phone">
-                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone</th>
-                    <td mat-cell *matCellDef="let club" class="text-sm text-gray-600">{{ club.phone || '—' }}</td>
+                    <th mat-header-cell *matHeaderCellDef class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Phone</th>
+                    <td mat-cell *matCellDef="let club" class="text-base text-gray-600">{{ club.phone || '—' }}</td>
                 </ng-container>
 
-                <!-- Address Column -->
-                <ng-container matColumnDef="address">
-                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</th>
-                    <td mat-cell *matCellDef="let club" class="text-sm text-gray-600 max-w-xs truncate">{{ club.address || '—' }}</td>
-                </ng-container>
 
                 <!-- Members Column -->
                 <ng-container matColumnDef="members">
-                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Members</th>
+                    <th mat-header-cell *matHeaderCellDef class="text-sm font-semibold text-gray-500 uppercase tracking-wider text-center">Members</th>
                     <td mat-cell *matCellDef="let club" class="text-center">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-semibold bg-blue-50 text-blue-700">
                             <mat-icon class="icon-size-3.5">group</mat-icon>
-                            {{ club.members?.length || 0 }}
+                            {{ club.members_aggregate?.aggregate?.count || 0 }}
                         </span>
                     </td>
                 </ng-container>
 
                 <!-- Courses Column -->
                 <ng-container matColumnDef="courses">
-                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Courses</th>
+                    <th mat-header-cell *matHeaderCellDef class="text-sm font-semibold text-gray-500 uppercase tracking-wider text-center">Courses</th>
                     <td mat-cell *matCellDef="let club" class="text-center">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-semibold bg-green-50 text-green-700">
                             <mat-icon class="icon-size-3.5">golf_course</mat-icon>
-                            {{ club.courses?.length || 0 }}
+                            {{ club.courses_aggregate?.aggregate?.count || 0 }}
                         </span>
                     </td>
                 </ng-container>
 
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef class="text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                    <th mat-header-cell *matHeaderCellDef class="text-sm font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                     <td mat-cell *matCellDef="let club" class="text-right">
                         <div class="flex items-center justify-end gap-1">
                             <button mat-icon-button [matTooltip]="'View Details'"
@@ -135,13 +133,19 @@
                 <tr class="mat-row" *matNoDataRow>
                     <td class="mat-cell text-center py-12 text-gray-400" [attr.colspan]="displayedColumns.length">
                         <mat-icon class="icon-size-10 mb-2 opacity-30">business</mat-icon>
-                        <p class="text-sm">No clubs found</p>
+                        <p class="text-base">No clubs found</p>
                     </td>
                 </tr>
             </table>
 
-            <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="10"
-                showFirstLastButtons class="border-t border-gray-100">
+            <mat-paginator
+                [length]="totalCount"
+                [pageSize]="pageSize"
+                [pageIndex]="pageIndex"
+                [pageSizeOptions]="[10, 25, 50]"
+                (page)="onPageChange($event)"
+                showFirstLastButtons
+                class="border-t border-gray-100">
             </mat-paginator>
         </div>
 

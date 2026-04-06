@@ -404,7 +404,7 @@ export const GetPlayersPaginated = gql`
         player_aggregate(where: $where) {
             aggregate { count }
         }
-        player(where: $where, order_by: { firstName: asc }, limit: $limit, offset: $offset) {
+        player(where: $where, order_by: [{ firstName: asc_nulls_last }, { lastName: asc_nulls_last }], limit: $limit, offset: $offset) {
             id
             firstName
             lastName

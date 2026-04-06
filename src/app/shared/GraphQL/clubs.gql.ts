@@ -465,6 +465,41 @@ export const RemoveUserRoles = gql`
     }
 `;
 
+export const GetClubsPaginated = gql`
+    query GetClubsPaginated($limit: Int!, $offset: Int!, $search: String!) {
+        club_aggregate(where: {
+            _or: [
+                { name: { _ilike: $search } }
+                { email: { _ilike: $search } }
+                { address: { _ilike: $search } }
+            ]
+        }) {
+            aggregate { count }
+        }
+        club(
+            where: {
+                _or: [
+                    { name: { _ilike: $search } }
+                    { email: { _ilike: $search } }
+                    { address: { _ilike: $search } }
+                ]
+            }
+            order_by: { name: asc }
+            limit: $limit
+            offset: $offset
+        ) {
+            id
+            name
+            address
+            phone
+            email
+            logo
+            members_aggregate { aggregate { count } }
+            courses_aggregate { aggregate { count } }
+        }
+    }
+`;
+
 // ── Club Stats & Pagination ─────────────────────────────────────────────────
 
 export const GetClubStatsByClubId = gql`

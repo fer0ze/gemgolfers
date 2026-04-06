@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { FacadeService } from 'app/shared/services/facade.service';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-overview.component';
@@ -15,15 +17,22 @@ import { DialogOverviewComponent } from '../../dialogs/dialog-overview/dialog-ov
     selector: 'app-clubs-list',
     templateUrl: './clubs-list.component.html',
 })
-export class ClubsListComponent implements OnInit {
+export class ClubsListComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
     dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
-    displayedColumns: string[] = ['index', 'name', 'email', 'phone', 'address', 'members', 'courses', 'actions'];
+    displayedColumns: string[] = ['index', 'name', 'email', 'phone', 'members', 'courses', 'actions'];
     searchControl: UntypedFormControl = new UntypedFormControl('');
     isLoading: boolean = true;
-    allClubs: any[] = [];
+
+    totalCount: number = 0;
+    pageSize: number = 10;
+    pageIndex: number = 0;
+
+    brokenLogos = new Set<string>();
+
+    private destroy$ = new Subject<void>();
 
     constructor(
         private facadeService: FacadeService,
@@ -36,29 +45,52 @@ export class ClubsListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadClubs();
-        this.searchControl.valueChanges.subscribe(val => {
-            this.dataSource.filter = (val || '').trim().toLowerCase();
-        });
+        this.searchControl.valueChanges
+            .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
+            .subscribe(() => {
+                this.pageIndex = 0;
+                this.loadClubs();
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     async loadClubs(): Promise<void> {
         this.isLoading = true;
+        const search = (this.searchControl.value || '').trim();
         try {
-            const result = await this.facadeService.getClubList();
-            this.allClubs = result?.club || [];
-            this.dataSource = new MatTableDataSource(this.allClubs);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-            this.dataSource.filterPredicate = (data: any, filter: string) =>
-                (data.name || '').toLowerCase().includes(filter) ||
-                (data.email || '').toLowerCase().includes(filter) ||
-                (data.address || '').toLowerCase().includes(filter);
+            const result = await this.facadeService.getClubsPaginated(
+                this.pageSize,
+                this.pageIndex * this.pageSize,
+                search,
+            );
+            const clubs = result?.club || [];
+            this.totalCount = result?.club_aggregate?.aggregate?.count || 0;
+            this.dataSource = new MatTableDataSource(clubs);
         } catch (err) {
             this.snackBar.open('Failed to load clubs.', 'x', { duration: 3000 });
         } finally {
             this.isLoading = false;
             this.cdr.detectChanges();
         }
+    }
+
+    onPageChange(event: PageEvent): void {
+        this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
+        this.loadClubs();
+    }
+
+    hasLogo(club: any): boolean {
+        return !!club.logo && !this.brokenLogos.has(club.id);
+    }
+
+    onLogoError(clubId: string): void {
+        this.brokenLogos.add(clubId);
+        this.cdr.detectChanges();
     }
 
     addClub(): void {

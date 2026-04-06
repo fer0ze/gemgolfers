@@ -17,6 +17,7 @@ export class ClubViewComponent implements OnInit, OnDestroy {
     clubId: string;
     club: any = null;
     isLoading: boolean = true;
+    clubLogoError: boolean = false;
 
     // Stats
     totalMembers: number = 0;
@@ -272,6 +273,10 @@ export class ClubViewComponent implements OnInit, OnDestroy {
             email: p.email || '—',
             phone: p.phone || '—',
         }));
+    }
+
+    viewMember(playerId: string): void {
+        this.router.navigate(['/players/viewProfile', playerId]);
     }
 
     editClub(): void {

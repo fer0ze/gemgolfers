@@ -20,9 +20,8 @@
         <!-- User -->
         <div class="flex flex-col items-center w-full p-4">
             <div class="flex h-20 items-center px-8 pt-10 mb-12 w-full justify-center">
-                <img class="w-32 h-32 rounded-full" *ngIf="user.avatar && showAvatar" [src]="user.avatar" alt="User avatar">
-                <mat-icon class="icon-size-24" *ngIf="!showAvatar || !user.avatar"
-                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                <img class="w-32 h-32 rounded-lg object-contain" *ngIf="user.avatar && showAvatar" [src]="user.avatar" alt="User avatar">
+                <mat-icon class="icon-size-24" *ngIf="!showAvatar || !user.avatar" [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
             </div>
             <div class="flex flex-col items-center justify-center w-full mt-6">
                 <div

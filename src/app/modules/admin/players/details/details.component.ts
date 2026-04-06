@@ -470,26 +470,29 @@ export class ContactsDetailsComponent implements OnInit {
 
             if (!this.editMode) {
                 if (this._localStorage.isClubAdmin() || this._localStorage.isSuperAdmin()) {
-                    await this._facadeService.updateAccountInFirebase(player.email, password).subscribe(async (re) => {
-                        if (re) {
-                            this._facadeService.sendTransactionalEmail(player.email, player.firstName, password).subscribe();
-                            const isSuccess = <boolean>(
-                                await this._facadeService.AddPlayer(player)
-                            );
-                            if (isSuccess) {
-                                this.save = true;
-                                this.snackBar.open('Player has been created.', 'x', {
-                                    duration: 1000,
-                                });
-                                this.reset();
-                                this._router.navigate(['/players']);
+                    // AddPlayer must run FIRST while the admin Firebase session is still
+                    // active. Creating the Firebase user account (updateAccountInFirebase)
+                    // can change the current auth state to the new player, whose token
+                    // lacks Hasura JWT claims — causing the mutation to fail if run after.
+                    const isSuccess = <boolean>(await this._facadeService.AddPlayer(player));
+                    if (isSuccess) {
+                        // Now create the Firebase account (safe to do after Hasura write)
+                        this._facadeService.updateAccountInFirebase(player.email, password).subscribe((re) => {
+                            if (re) {
+                                this._facadeService.sendTransactionalEmail(player.email, player.firstName, password).subscribe();
                             }
-                        } else {
-                            this.snackBar.open('Error!. Please try again.', 'x', {
-                                duration: 1000,
-                            });
-                        }
-                    })
+                        });
+                        this.save = true;
+                        this.snackBar.open('Player has been created.', 'x', {
+                            duration: 1000,
+                        });
+                        this.reset();
+                        this._router.navigate(['/players']);
+                    } else {
+                        this.snackBar.open('Error!. Please try again.', 'x', {
+                            duration: 1000,
+                        });
+                    }
                 } else {
                     let state = this._localStorage.get(Constants.STATE);
                     if (state == Constants.TOUR) {
