@@ -1198,6 +1198,14 @@ export class FacadeService {
     return this.TeeTimeService.AddTeeTimeSchedule(teeTime);
   }
 
+  getTeeTimeById(id: string) {
+    return this.TeeTimeService.getTeeTimeById(id);
+  }
+
+  updateTeeTimeSchedule(teeTime: TeeTime, newSlots: any[]) {
+    return this.TeeTimeService.updateTeeTimeSchedule(teeTime, newSlots);
+  }
+
   getPlayerlistbyName(FirstName: string, LastName: string) {
     return this.playerService.getPlayerlistbyName(FirstName, LastName);
   }

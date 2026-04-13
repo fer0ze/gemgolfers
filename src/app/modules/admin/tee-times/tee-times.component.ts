@@ -174,6 +174,10 @@ export class TeeTimesComponent implements OnInit {
         this.location.navigate(['/teetimes/view-teetimes/' + date]);
     };
 
+    redirectToEdit = (id: string) => {
+        this.location.navigate(['/teetimes/edit/' + id]);
+    };
+
     deleteTeeTime(teeTime) {
 
         const confirmation = this._fuseConfirmationService.open({

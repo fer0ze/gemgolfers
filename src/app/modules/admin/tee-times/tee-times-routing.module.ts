@@ -16,6 +16,10 @@ const routes: Routes = [
     component: AddTeeTimesComponent
   },
   {
+    path: 'edit/:id',
+    component: AddTeeTimesComponent
+  },
+  {
     path: "view-teetimes/:id",
     component: ViewTeeTimeComponent,
   },

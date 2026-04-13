@@ -5,9 +5,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+    AbstractControl,
     FormArray,
     FormControl,
     FormBuilder,
+    ValidationErrors,
     Validators,
     FormGroup,
 } from '@angular/forms';
@@ -19,7 +21,7 @@ import {
     UniqueIdGenerator,
     Constants,
 } from '../../../../shared/classes/general';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Course } from 'app/shared/models/course.model';
 import { map, startWith } from 'rxjs';
@@ -50,12 +52,18 @@ export class AddTeeTimesComponent implements OnInit {
     guestTee: '1' | '10' = '1';
     hideClubs: boolean = true;
     isSaving: boolean = false;
+    isLoading: boolean = false;
     selectedOptions: any[] = [];
+    editMode: boolean = false;
+    editTeeTimeId: string | null = null;
+    bookedSlotsCount: number = 0;
+
     constructor(
         private fb: FormBuilder,
         private facadeService: FacadeService,
         public snackBar: MatSnackBar,
         private router: Router,
+        private route: ActivatedRoute,
         private _localStorage: LocalStorageService,
         private logger: LogsService,
     ) { }
@@ -135,6 +143,89 @@ export class AddTeeTimesComponent implements OnInit {
                 map((name) => (name ? this._filter(name) : this.Clubs.slice()))
             );
 
+        // Check if we are in edit mode
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+            this.editMode = true;
+            this.editTeeTimeId = id;
+            await this.loadTeeTimeForEdit(id);
+        }
+    }
+
+    async loadTeeTimeForEdit(id: string) {
+        try {
+            this.isLoading = true;
+            const data = await this.facadeService.getTeeTimeById(id);
+            const tt = data?.tee_time_booking?.[0];
+            if (!tt) { this.isLoading = false; return; }
+
+            // Count booked slots
+            this.bookedSlotsCount = tt.slots.filter((s: any) => s.flightId != null).length;
+
+            // Set simple fields
+            this.scheduleForm.patchValue({
+                teeDate: new Date(tt.teeDate),
+                bookingDate: new Date(tt.bookingDate),
+                teeBookingTime: tt.bookingTime,
+                interval: tt.interval,
+                noOfPlayers: String(tt.noOfPlayers),
+                allowNineHole: tt.allowNineHole,
+                club: tt.club,
+                courseName: tt.course,
+            });
+
+            // Load hole sets for the course, then rebuild timing array from slots
+            await new Promise<void>(resolve => {
+                this.facadeService.getCourseHoleSets(tt.course.id).subscribe((res: any) => {
+                    if (res?.course_hole_sets?.length > 0) {
+                        this.courseHoleSetNames = res.course_hole_sets.filter((h: any) => h.isActive);
+                    }
+                    resolve();
+                });
+            });
+
+            // Derive unique tee-box configurations from the existing slots
+            const seen = new Set<string>();
+            const timingGroups: { key: string; courseHoleSets: string; inverted: string; noOfHoles: number; displayName: string }[] = [];
+            for (const slot of tt.slots) {
+                const key = `${slot.courseHoleSets}_${slot.courseHoleSetsInverted}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    const holeSetMeta = this.courseHoleSetNames?.find(
+                        (h: any) => String(h.holeSets) === String(slot.courseHoleSets) &&
+                                    String(h.inverted) === String(slot.courseHoleSetsInverted)
+                    );
+                    timingGroups.push({
+                        key,
+                        courseHoleSets: String(slot.courseHoleSets),
+                        inverted: String(slot.courseHoleSetsInverted),
+                        noOfHoles: slot.noOfHoles ?? holeSetMeta?.noOfHoles ?? 18,
+                        displayName: holeSetMeta?.displayName ?? key,
+                    });
+                }
+            }
+
+            // Rebuild timing FormArray
+            const timingFA = this.scheduleForm.get('timing') as FormArray;
+            timingFA.clear();
+            for (const tg of timingGroups) {
+                const groupSlots = tt.slots.filter((s: any) =>
+                    String(s.courseHoleSets) === tg.courseHoleSets &&
+                    String(s.courseHoleSetsInverted) === tg.inverted
+                );
+                const times = groupSlots.map((s: any) => s.slotTime);
+                const startTime = times[0] ?? '';
+                const endTime = times[times.length - 1] ?? '';
+                const group = this.createTimingFormGroup(tg.displayName, tg.courseHoleSets, tg.inverted, tg.noOfHoles);
+                group.patchValue({ startTime, endTime });
+                timingFA.push(group);
+            }
+
+            this.isLoading = false;
+        } catch (err) {
+            this.isLoading = false;
+            console.error('loadTeeTimeForEdit error', err);
+        }
     }
 
     getSelectedCourse(course) {
@@ -177,24 +268,19 @@ export class AddTeeTimesComponent implements OnInit {
             this.isSaving = true;
             console.log(this.scheduleForm.value);
             let clubId: string = this.loggedInuser.adminClubId;
-            let isExist: TeeTime[] =
-                await this.facadeService.isTeeTimeDateExist(
-                    clubId,
-                    General.parseToDate(this.scheduleForm.value.teeDate)
-                );
 
-            //console.log(isExist['tee_time_booking']);
-
-            if (isExist['tee_time_booking'].length > 0) {
-                this.snackBar.open(
-                    'Selected date is already exist. Choose different.',
-                    'x',
-                    {
-                        duration: 5000,
-                    }
-                );
-                this.isSaving = false;
-                return false;
+            // In edit mode, skip the duplicate-date check
+            if (!this.editMode) {
+                let isExist: TeeTime[] =
+                    await this.facadeService.isTeeTimeDateExist(
+                        clubId,
+                        General.parseToDate(this.scheduleForm.value.teeDate)
+                    );
+                if (isExist['tee_time_booking'].length > 0) {
+                    this.snackBar.open('Selected date already exists. Choose a different date.', 'x', { duration: 5000 });
+                    this.isSaving = false;
+                    return false;
+                }
             }
 
             await this.generateTeeTimes();
@@ -219,7 +305,7 @@ export class AddTeeTimesComponent implements OnInit {
             }
             console.log(teeTimeSlots);
             const schedule: TeeTime = {
-                id: UniqueIdGenerator.generate(),
+                id: this.editMode ? this.editTeeTimeId : UniqueIdGenerator.generate(),
                 clubId: this.scheduleForm.value?.club.id,
                 courseId: this.scheduleForm.value?.courseName.id,
                 bookingDate: General.parseToDate(this.scheduleForm.value.bookingDate),
@@ -235,16 +321,21 @@ export class AddTeeTimesComponent implements OnInit {
 
             console.log(schedule);
 
-            let response = await this.facadeService.AddTeeTimeSchedule(schedule);
-
-            if (response) {
-                this.snackBar.open('Tee Time has been created.', 'x', {
-                    duration: 2000,
-                });
-
-                this.isSaving = false;
-                this.reset();
-                this.router.navigate(['/teetimes']);
+            if (this.editMode) {
+                const response = await this.facadeService.updateTeeTimeSchedule(schedule, teeTimeSlots);
+                if (response) {
+                    this.snackBar.open('Tee Time has been updated.', 'x', { duration: 2000 });
+                    this.isSaving = false;
+                    this.router.navigate(['/teetimes']);
+                }
+            } else {
+                let response = await this.facadeService.AddTeeTimeSchedule(schedule);
+                if (response) {
+                    this.snackBar.open('Tee Time has been created.', 'x', { duration: 2000 });
+                    this.isSaving = false;
+                    this.reset();
+                    this.router.navigate(['/teetimes']);
+                }
             }
         } catch {
             this.isSaving = false;
@@ -299,7 +390,7 @@ export class AddTeeTimesComponent implements OnInit {
             console.log(controls);
 
             this.teeSlots = [];
-            const createSlot = (courseHoleSets, inverted, startTime, endTime, guestHole, noOfHoles) => {
+            const createSlot = (courseHoleSets, inverted, startTime, endTime, guestHole, noOfHoles, breakPeriods: { breakStart: string, breakEnd: string }[] = []) => {
                 const baseDate = new Date(Constants.DEFAULT_DATE);
 
                 const s = this.parseTime(startTime);
@@ -311,22 +402,37 @@ export class AddTeeTimesComponent implements OnInit {
                 const endLimit = new Date(baseDate);
                 endLimit.setHours(e.hours, e.minutes, 0, 0);
 
+                // Pre-parse break periods into Date objects
+                const parsedBreaks = breakPeriods
+                    .filter(bp => bp.breakStart && bp.breakEnd)
+                    .map(bp => {
+                        const bsP = this.parseTime(bp.breakStart);
+                        const beP = this.parseTime(bp.breakEnd);
+                        const bStart = new Date(baseDate);
+                        bStart.setHours(bsP.hours, bsP.minutes, 0, 0);
+                        const bEnd = new Date(baseDate);
+                        bEnd.setHours(beP.hours, beP.minutes, 0, 0);
+                        return { bStart, bEnd };
+                    });
+
                 while (startLimit <= endLimit) {
-                    const h = startLimit.getHours();
-                    const m = startLimit.getMinutes();
-                    const time = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
-                    // const allowGuest = this.scheduleForm.value.allowGuest == '1' &&
-                    //     this.scheduleForm.value.guestTeeOneStartTime && hole == guestHole &&
-                    //     this.scheduleForm.value.guestTeeOneEndTime &&
-                    //     startLimit >= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneStartTime.substr(0, 5)) &&
-                    //     startLimit <= new Date(Constants.DEFAULT_DATE + ' ' + this.scheduleForm.value.guestTeeOneEndTime.substr(0, 5));
-                    if (noOfHoles == 18) {
-                        this.teeSlots.push({ courseHoleSets, startingHole: 10, inverted, time, guestHole, noOfHoles });
-                    }
-                    if (courseHoleSets === '2') {
-                        this.teeSlots.push({ courseHoleSets, startingHole: 10, inverted, time, guestHole, noOfHoles });
-                    } else {
-                        this.teeSlots.push({ courseHoleSets, startingHole: 1, inverted, time, guestHole, noOfHoles });
+                    // Skip slots that fall within any break period
+                    const inBreak = parsedBreaks.some(({ bStart, bEnd }) =>
+                        startLimit >= bStart && startLimit < bEnd
+                    );
+
+                    if (!inBreak) {
+                        const h = startLimit.getHours();
+                        const m = startLimit.getMinutes();
+                        const time = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2);
+                        if (noOfHoles == 18) {
+                            this.teeSlots.push({ courseHoleSets, startingHole: 10, inverted, time, guestHole, noOfHoles });
+                        }
+                        if (courseHoleSets === '2') {
+                            this.teeSlots.push({ courseHoleSets, startingHole: 10, inverted, time, guestHole, noOfHoles });
+                        } else {
+                            this.teeSlots.push({ courseHoleSets, startingHole: 1, inverted, time, guestHole, noOfHoles });
+                        }
                     }
                     startLimit.setMinutes(startLimit.getMinutes() + this.scheduleForm.value.interval);
                 }
@@ -345,7 +451,8 @@ export class AddTeeTimesComponent implements OnInit {
                 const startTime = form.get('startTime').value;
                 const endTime = form.get('endTime').value;
                 const noOfHoles = form.get('noOfHoles').value;
-                createSlot(courseHoleSets, inverted, startTime, endTime, false, noOfHoles);
+                const breakPeriods = (form.get('breakPeriods') as FormArray).value ?? [];
+                createSlot(courseHoleSets, inverted, startTime, endTime, false, noOfHoles, breakPeriods);
             })
             // guestTimingControls?.forEach((form) => {
             //     const courseHoleSets = form.get('courseHoleSets').value;
@@ -417,22 +524,100 @@ export class AddTeeTimesComponent implements OnInit {
     }
 
 
+    /** Validator attached to each break-period FormGroup.
+     *  Traverses up to the parent timing group to compare against startTime / endTime. */
+    breakPeriodValidator(group: AbstractControl): ValidationErrors | null {
+        const breakStart: string = group.get('breakStart')?.value;
+        const breakEnd: string   = group.get('breakEnd')?.value;
+
+        if (!breakStart && !breakEnd) return null;
+
+        // breakPeriod group → breakPeriods FormArray → timing FormGroup
+        const timingGroup = group.parent?.parent;
+        const startTime: string = timingGroup?.get('startTime')?.value;
+        const endTime: string   = timingGroup?.get('endTime')?.value;
+
+        if (!startTime || !endTime) return null;
+
+        const toMins = (t: { hours: number; minutes: number }) => t.hours * 60 + t.minutes;
+
+        try {
+            const errors: ValidationErrors = {};
+            const windowStart = toMins(this.parseTime(startTime));
+            const windowEnd   = toMins(this.parseTime(endTime));
+
+            if (breakStart && breakEnd) {
+                const bpStart = toMins(this.parseTime(breakStart));
+                const bpEnd   = toMins(this.parseTime(breakEnd));
+
+                if (bpStart >= bpEnd) {
+                    errors['breakOrder'] = true;
+                }
+                if (bpStart < windowStart) {
+                    errors['breakStartTooEarly'] = true;
+                }
+                if (bpEnd > windowEnd) {
+                    errors['breakEndTooLate'] = true;
+                }
+            } else if (breakStart) {
+                const bpStart = toMins(this.parseTime(breakStart));
+                if (bpStart < windowStart) errors['breakStartTooEarly'] = true;
+            } else if (breakEnd) {
+                const bpEnd = toMins(this.parseTime(breakEnd));
+                if (bpEnd > windowEnd) errors['breakEndTooLate'] = true;
+            }
+
+            return Object.keys(errors).length ? errors : null;
+        } catch {
+            return null;
+        }
+    }
+
     createTimingFormGroup(name: string, holeSet: string, inverted: string, noOfHoles: number): FormGroup {
-        return this.fb.group({
+        const group = this.fb.group({
             name: name,
             courseHoleSets: holeSet,
             inverted: inverted,
             startTime: '',
             endTime: '',
             noOfHoles: noOfHoles,
+            breakPeriods: this.fb.array([]),
         });
+
+        // When the main window times change, re-validate every existing break period
+        const revalidateBreaks = () => {
+            const breaks = group.get('breakPeriods') as FormArray;
+            breaks.controls.forEach(c => c.updateValueAndValidity({ emitEvent: false }));
+        };
+        group.get('startTime')!.valueChanges.subscribe(revalidateBreaks);
+        group.get('endTime')!.valueChanges.subscribe(revalidateBreaks);
+
+        return group;
     }
+
     // Getter for the timing FormArray
     get timingFormArray(): FormArray {
         return this.scheduleForm.get('timing') as FormArray;
     }
     get guestTimingFormArray(): FormArray {
         return this.scheduleForm.get('guestTiming') as FormArray;
+    }
+
+    getBreakPeriods(timingIndex: number): FormArray {
+        return this.timingFormArray.at(timingIndex).get('breakPeriods') as FormArray;
+    }
+
+    addBreakPeriod(timingIndex: number) {
+        this.getBreakPeriods(timingIndex).push(
+            this.fb.group(
+                { breakStart: [''], breakEnd: [''] },
+                { validators: (g) => this.breakPeriodValidator(g) }
+            )
+        );
+    }
+
+    removeBreakPeriod(timingIndex: number, breakIndex: number) {
+        this.getBreakPeriods(timingIndex).removeAt(breakIndex);
     }
     guestTeeChange(event: any) {
         const selectedValues = event.value; // Get the selected values from the event

@@ -353,6 +353,51 @@ export const AddTeeTimeSlotsQL = gql`
     }
   }
 `;
+export const GetTeeTimeByIdQL = gql`
+    query GetTeeTimeByIdQL($id: String!) {
+        tee_time_booking(where: { id: { _eq: $id } }) {
+            id
+            bookingDate
+            bookingTime
+            startTime
+            endTime
+            interval
+            teeDate
+            noOfPlayers
+            allowNineHole
+            club { id name }
+            course { id name }
+            slots(order_by: { slotTime: asc }) {
+                id
+                slotTime
+                flightId
+                courseHoleSets
+                courseHoleSetsInverted
+                startingHole
+                noOfHoles
+            }
+        }
+    }
+`;
+
+export const UpdateTeeTimeParentQL = gql`
+    mutation UpdateTeeTimeParentQL($id: String!, $set: tee_time_booking_set_input!) {
+        update_tee_time_booking(where: { id: { _eq: $id } }, _set: $set) {
+            affected_rows
+        }
+    }
+`;
+
+export const DeleteEmptyTeeSlotsQL = gql`
+    mutation DeleteEmptyTeeSlotsQL($bookingId: String!) {
+        delete_tee_time_booking_slot(
+            where: { bookingId: { _eq: $bookingId }, flightId: { _is_null: true } }
+        ) {
+            affected_rows
+        }
+    }
+`;
+
 export const Getfeedbacks = gql`
     query PostsGetQuery {
         feedback(order_by: { dateTime: desc }) {

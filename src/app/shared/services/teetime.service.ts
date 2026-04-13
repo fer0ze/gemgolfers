@@ -138,6 +138,55 @@ export class TeeTimeService {
     });
   }
 
+  public getTeeTimeById(id: string): Promise<any> {
+    return new Promise(resolve => {
+      this.apollo.subscribe<any>({
+        query: Query.GetTeeTimeByIdQL,
+        variables: { id }
+      }).subscribe(({ data }) => resolve(data));
+    });
+  }
+
+  public async updateTeeTimeSchedule(teeTime: TeeTime, newSlots: any[]): Promise<boolean> {
+    try {
+      // 1. Update parent record
+      await this.apollo.mutate<any>({
+        mutation: Query.UpdateTeeTimeParentQL,
+        variables: {
+          id: teeTime.id,
+          set: {
+            bookingDate: teeTime.bookingDate,
+            teeDate: teeTime.teeDate,
+            bookingTime: teeTime.bookingTime,
+            interval: teeTime.interval,
+            noOfPlayers: teeTime.noOfPlayers,
+            allowNineHole: teeTime.allowNineHole,
+          }
+        }
+      }).toPromise();
+
+      // 2. Delete all empty slots (no flight booked)
+      await this.apollo.mutate<any>({
+        mutation: Query.DeleteEmptyTeeSlotsQL,
+        variables: { bookingId: teeTime.id }
+      }).toPromise();
+
+      // 3. Insert new slots in chunks of 100
+      const slots = newSlots.map(slot => ({ ...slot, bookingId: teeTime.id }));
+      const chunkSize = 100;
+      for (let i = 0; i < slots.length; i += chunkSize) {
+        await this.apollo.mutate<any>({
+          mutation: Query.AddTeeTimeSlotsQL,
+          variables: { objects: slots.slice(i, i + chunkSize) }
+        }).toPromise();
+      }
+      return true;
+    } catch (error) {
+      console.error('updateTeeTimeSchedule failed:', error);
+      return false;
+    }
+  }
+
   public async AddTeeTimeSchedule(teeTime: TeeTime): Promise<boolean> {
     try {
       // 1️⃣ Insert parent (without slots)

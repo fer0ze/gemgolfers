@@ -6,7 +6,7 @@
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
                 <div class="text-4xl font-extrabold tracking-tight leading-none">
-                    Add Tee Booking
+                    {{ editMode ? 'Edit Tee Booking' : 'Add Tee Booking' }}
                 </div>
                 <!-- Close button -->
                 <div class="lg:hidden">
@@ -41,11 +41,27 @@
 
                 <!-- Panel title -->
                 <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
-                    Setup
+                    {{ editMode ? 'Edit Settings' : 'Setup' }}
                 </div>
             </div>
 
             <div class="w-full max-w-3xl">
+
+                <!-- Loading overlay -->
+                <div *ngIf="isLoading" class="flex items-center justify-center py-16">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                </div>
+
+                <!-- Booked slots warning (edit mode) -->
+                <div *ngIf="editMode && bookedSlotsCount > 0"
+                    class="mt-6 flex items-start gap-3 p-4 rounded-lg border border-amber-300 bg-amber-50 text-amber-800">
+                    <mat-icon class="icon-size-5 flex-shrink-0 mt-0.5 text-amber-500">warning</mat-icon>
+                    <div class="text-sm">
+                        <p class="font-semibold">{{ bookedSlotsCount }} slot(s) already have bookings.</p>
+                        <p class="mt-0.5 text-amber-700">Saving will regenerate empty slots based on your new settings. Booked slots will be preserved.</p>
+                    </div>
+                </div>
+
                 <div class="text-xl mt-8">Tee-Time</div>
                 <div class="text-secondary">
                     Following information is mandatory, be careful!
@@ -179,26 +195,100 @@
                             *ngFor="let timingGroup of timingFormArray.controls; let i = index">
                             <div [formGroupName]="i" class="border rounded-lg p-4 mb-4 bg-gray-50">
                                 <div class="text-lg font-semibold mb-3">{{ timingGroup.get('name').value }}</div>
+
+                                <!-- Start / End time -->
                                 <div class="grid sm:grid-cols-2 gap-4">
                                     <div>
                                         <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
                                             <mat-label>Start Time:</mat-label>
-                                            <input  matInput [ngxTimepicker]="timePicker1"
-                                                formControlName="startTime">
+                                            <input matInput [ngxTimepicker]="timePicker1" formControlName="startTime">
                                             <ngx-material-timepicker #timePicker1 format="24" [minutesGap]="5">
                                             </ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
                                     <div>
                                         <mat-form-field class="zero-padding fuse-mat-no-subscript w-full">
-                                            <mat-label>Last Time:</mat-label>
-                                            <input  matInput [ngxTimepicker]="timePicker2"
-                                                formControlName="endTime">
+                                            <mat-label>End Time:</mat-label>
+                                            <input matInput [ngxTimepicker]="timePicker2" formControlName="endTime">
                                             <ngx-material-timepicker #timePicker2 format="24" [minutesGap]="5">
                                             </ngx-material-timepicker>
                                         </mat-form-field>
                                     </div>
                                 </div>
+
+                                <!-- Break Periods -->
+                                <div class="mt-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-semibold text-gray-600 flex items-center gap-1.5">
+                                            <mat-icon class="icon-size-4 text-orange-500">block</mat-icon>
+                                            Break Periods
+                                            <span class="text-xs font-normal text-gray-400">(slots will be skipped during these windows)</span>
+                                        </span>
+                                        <button type="button" mat-stroked-button (click)="addBreakPeriod(i)"
+                                            class="text-xs h-8 leading-8">
+                                            <mat-icon class="icon-size-4">add</mat-icon>
+                                            Add Break
+                                        </button>
+                                    </div>
+
+                                    <div formArrayName="breakPeriods">
+                                        <div *ngFor="let bp of getBreakPeriods(i).controls; let j = index"
+                                            [formGroupName]="j"
+                                            class="mb-2">
+                                            <!-- Row -->
+                                            <div class="flex items-center gap-3 p-3 bg-white rounded-lg border transition-colors"
+                                                [class.border-orange-200]="bp.valid || bp.pristine"
+                                                [class.border-red-400]="bp.invalid && bp.dirty">
+                                                <mat-icon class="icon-size-4 flex-shrink-0 transition-colors"
+                                                    [class.text-orange-400]="bp.valid || bp.pristine"
+                                                    [class.text-red-500]="bp.invalid && bp.dirty">
+                                                    remove_circle_outline
+                                                </mat-icon>
+                                                <mat-form-field class="zero-padding fuse-mat-no-subscript flex-1">
+                                                    <mat-label>Break Start</mat-label>
+                                                    <input matInput [ngxTimepicker]="bpStart" formControlName="breakStart">
+                                                    <ngx-material-timepicker #bpStart format="24" [minutesGap]="5">
+                                                    </ngx-material-timepicker>
+                                                </mat-form-field>
+                                                <span class="text-gray-400 text-sm flex-shrink-0">→</span>
+                                                <mat-form-field class="zero-padding fuse-mat-no-subscript flex-1">
+                                                    <mat-label>Break End</mat-label>
+                                                    <input matInput [ngxTimepicker]="bpEnd" formControlName="breakEnd">
+                                                    <ngx-material-timepicker #bpEnd format="24" [minutesGap]="5">
+                                                    </ngx-material-timepicker>
+                                                </mat-form-field>
+                                                <button type="button" mat-icon-button (click)="removeBreakPeriod(i, j)"
+                                                    class="text-red-400 hover:text-red-600 flex-shrink-0">
+                                                    <mat-icon class="icon-size-4">close</mat-icon>
+                                                </button>
+                                            </div>
+                                            <!-- Inline error messages -->
+                                            <div *ngIf="bp.invalid && bp.dirty"
+                                                class="mt-1 ml-2 flex flex-col gap-0.5">
+                                                <span *ngIf="bp.errors?.['breakOrder']"
+                                                    class="text-xs text-red-500 flex items-center gap-1">
+                                                    <mat-icon class="icon-size-3">error_outline</mat-icon>
+                                                    Break start must be before break end.
+                                                </span>
+                                                <span *ngIf="bp.errors?.['breakStartTooEarly']"
+                                                    class="text-xs text-red-500 flex items-center gap-1">
+                                                    <mat-icon class="icon-size-3">error_outline</mat-icon>
+                                                    Break start must be within the tee time window.
+                                                </span>
+                                                <span *ngIf="bp.errors?.['breakEndTooLate']"
+                                                    class="text-xs text-red-500 flex items-center gap-1">
+                                                    <mat-icon class="icon-size-3">error_outline</mat-icon>
+                                                    Break end must be within the tee time window.
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p *ngIf="getBreakPeriods(i).length === 0"
+                                            class="text-xs text-gray-400 italic">
+                                            No break periods — all slots between start and end time will be created.
+                                        </p>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -289,7 +379,8 @@
                     <div class="flex items-center justify-end">
                         <button class="mx-2" mat-raised-button color="primary"
                             [disabled]="!scheduleForm.valid || isSaving">
-                            Save
+                            <mat-spinner *ngIf="isSaving" [diameter]="18" class="inline-block mr-2"></mat-spinner>
+                            {{ editMode ? 'Update' : 'Save' }}
                         </button>
                         <button mat-raised-button color="accent" [routerLinkActive]="'active'"
                             [routerLink]="['/teetimes']">
