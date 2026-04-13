@@ -1166,6 +1166,12 @@ export class ViewPlayerComponent implements OnInit {
     //     return
     // }
 
+    get hasValidEmail(): boolean {
+        const email = this.currentPlayer?.[0]?.email;
+        if (!email) return false;
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     openPasswordResetModal() {
         this.resetPassword = '';
         this.resetConfirmPassword = '';

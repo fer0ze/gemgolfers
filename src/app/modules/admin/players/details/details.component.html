@@ -250,22 +250,13 @@
                                     <div class="flex">
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                             <mat-label>Country</mat-label>
-                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="
-                                                    'heroicons_solid:cloud'
-                                                "></mat-icon>
-                                            <mat-select formControlName="country" placeholder="Country" class="mr-1.5">
-                                                <mat-option value="Pakistan">
-                                                    <span class="flex items-center">
-                                                        <span class="ml-2">Pakistan</span>
-                                                    </span>
+                                            <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:cloud'"></mat-icon>
+                                            <input matInput formControlName="country" placeholder="Search country..." [matAutocomplete]="countryAuto" />
+                                            <mat-autocomplete #countryAuto="matAutocomplete">
+                                                <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+                                                    {{ country }}
                                                 </mat-option>
-                                                <mat-option value="United Kingdom">
-                                                    <span class="flex items-center">
-                                                        <span class="ml-2">United
-                                                            Kingdom</span>
-                                                    </span>
-                                                </mat-option>
-                                            </mat-select>
+                                            </mat-autocomplete>
                                         </mat-form-field>
                                     </div>
                                 </ng-container>

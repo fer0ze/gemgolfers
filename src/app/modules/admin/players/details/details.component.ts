@@ -30,6 +30,7 @@ import { MatDrawer, MatDrawerToggleResult } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
     debounceTime,
+    firstValueFrom,
     map,
     Observable,
     startWith,
@@ -83,7 +84,6 @@ export class ContactsDetailsComponent implements OnInit {
     contactForm: FormGroup;
     hideClubs: boolean = true;
     contacts: any[];
-    countries: any[];
     playerID: any;
     cardsrc = 'assets/images/cards/01-320x200.png';
     avatarsrc = 'assets/images/avatars/male-04.jpg';
@@ -95,6 +95,42 @@ export class ContactsDetailsComponent implements OnInit {
     loggedInuser: UserSessionModel;
     handicapIndex: number = 0;
     filteredClubOptions: Observable<Club[]>;
+    filteredCountries: Observable<string[]>;
+
+    readonly allCountries: string[] = [
+        'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda',
+        'Argentina','Armenia','Australia','Austria','Azerbaijan','Bahamas','Bahrain',
+        'Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan',
+        'Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria',
+        'Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada',
+        'Central African Republic','Chad','Chile','China','Colombia','Comoros',
+        'Congo (Congo-Brazzaville)','Costa Rica','Croatia','Cuba','Cyprus',
+        'Czechia','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador',
+        'Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini',
+        'Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany',
+        'Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
+        'Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq',
+        'Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya',
+        'Kiribati','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho',
+        'Liberia','Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar',
+        'Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands',
+        'Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco',
+        'Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia','Nauru',
+        'Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria',
+        'North Korea','North Macedonia','Norway','Oman','Pakistan','Palau',
+        'Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines',
+        'Poland','Portugal','Qatar','Romania','Russia','Rwanda',
+        'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines',
+        'Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal',
+        'Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia',
+        'Solomon Islands','Somalia','South Africa','South Korea','South Sudan',
+        'Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
+        'Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga',
+        'Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda',
+        'Ukraine','United Arab Emirates','United Kingdom','United States',
+        'Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam',
+        'Yemen','Zambia','Zimbabwe',
+    ];
     /**
      * Constructor
      */
@@ -126,9 +162,8 @@ export class ContactsDetailsComponent implements OnInit {
         try {
 
 
-            this._activatedRoute.paramMap.subscribe(async (params) => {
-                this.playerID = params.get('id');
-            });
+            const params = await firstValueFrom(this._activatedRoute.paramMap);
+            this.playerID = params.get('id');
             this.logger.log('Admin comes to Player Edit Page', "info", this.playerID);
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             let dataClubs: any;
@@ -160,6 +195,15 @@ export class ContactsDetailsComponent implements OnInit {
                 confirmPassword: new FormControl('', !this.editMode ? [Validators.required] : []),
             });
             this.playerCategories = this._facadeService.getPlayerCategories();
+            this.filteredCountries = this.contactForm.get('country')!.valueChanges.pipe(
+                startWith(this.contactForm.get('country')!.value ?? ''),
+                map((value: string) => {
+                    const search = (value ?? '').toLowerCase();
+                    return search
+                        ? this.allCountries.filter(c => c.toLowerCase().includes(search))
+                        : this.allCountries.slice();
+                }),
+            );
             if (this._localStorage.isClubAdmin()) {
                 dataClubs = await this._facadeService.getClubByID(
                     this.loggedInuser.adminClubId
@@ -769,53 +813,39 @@ export class ContactsDetailsComponent implements OnInit {
                 await this._facadeService.getPlayerByIDDetailForm(
                     this.playerID
                 );
-
-            //console.log(this.currentPlayer);
-            this.logger.log('Getting Player Edit Profile Data Successfull', "info", this.currentPlayer.toString());
-            this.tournamentId =
-                this.currentPlayer.player[0].handicap_history !== undefined &&
-                    this.currentPlayer.player[0].handicap_history.length > 0
-                    ? this.currentPlayer.player[0].handicap_history[0]
-                        .tournamentId
-                    : null;
-
-            // let whsHandicaps = await this._facadeService.getPlayerWHS(
-            //     this.playerID
-            // );
-            // let whshandicap = whsHandicaps['PlayerQL'].HandicapHistoryWhsQL;
-            // //console.log(whshandicap);
+            this.logger.log('Getting Player Edit Profile Data Successfull', "info", this.currentPlayer?.toString());
         }
-        if (this.currentPlayer.player.length > 0) {
-            this.handicapsWhs = this.currentPlayer.player[0].handicapWhsIndex;
+        if (this.currentPlayer?.player?.length > 0) {
+            const player = this.currentPlayer.player[0];
+            this.handicapsWhs = player.handicapWhsIndex;
             this.editMode = true;
-            this.contactForm.setValue({
-                firstName: this.currentPlayer.player[0].firstName,
-                lastName: this.currentPlayer.player[0].lastName,
-                gender: this.currentPlayer.player[0].gender,
-                email: this.currentPlayer.player[0].email,
-                phoneNumbers: this.currentPlayer.player[0].phone,
-                dateOfBirth: this.currentPlayer.player[0].dob,
-                category: this.currentPlayer.player[0].playerCategory,
-                handicap: this.currentPlayer.player[0].handicap,
-                handicapWhsIndex: this.currentPlayer.player[0].handicapWhsIndex,
+            this.tournamentId =
+                player.handicap_history && player.handicap_history.length > 0
+                    ? player.handicap_history[0].tournamentId
+                    : null;
+            this.contactForm.get('password').clearValidators();
+            this.contactForm.get('password').updateValueAndValidity();
+            this.contactForm.get('confirmPassword').clearValidators();
+            this.contactForm.get('confirmPassword').updateValueAndValidity();
+            this.contactForm.patchValue({
+                firstName: player.firstName,
+                lastName: player.lastName,
+                gender: player.gender,
+                email: player.email,
+                phoneNumbers: player.phone,
+                dateOfBirth: player.dob,
+                category: player.playerCategory,
+                handicap: player.handicap,
+                handicapWhsIndex: player.handicapWhsIndex,
                 handicapWHS: 0,
-                country: this.currentPlayer.player[0].countryCode,
+                country: player.countryCode,
                 notes: '',
-                membershipNo: this.currentPlayer.player[0].membershipNumber,
-                club: this.currentPlayer.player[0].membership[0]
-                    ? this.currentPlayer.player[0].membership[0].club
-                    : '',
-                isClubAdmin: this.currentPlayer.player[0].adminClubId
-                    ? '1'
-                    : '0',
-                status:
-                    this.currentPlayer.player[0].membership[0] &&
-                        this.currentPlayer.player[0].membership[0].suspended
-                        ? 'true'
-                        : 'false',
+                membershipNo: player.membershipNumber,
+                club: player.membership[0] ? player.membership[0].club : '',
+                isClubAdmin: player.adminClubId ? '1' : '0',
+                status: player.membership[0] && player.membership[0].suspended ? 'true' : 'false',
             });
         }
-        // this.editMode=false;
         this._changeDetectorRef.markForCheck();
     }
 

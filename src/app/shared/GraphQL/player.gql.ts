@@ -856,6 +856,10 @@ export const getPlayerByIDDetailForm = gql`
             playerCategory
             countryCode
             membershipNumber
+            firebaseUid
+            fcmToken
+            gemId
+            adminClubId
             membership {
                 clubId
                 suspended
@@ -864,7 +868,7 @@ export const getPlayerByIDDetailForm = gql`
                     name
                 }
             }
-            handicap_history(order_by: { playedAt: desc }, limit: 1) {
+            handicap_history(order_by: [{ tournament: { startDate: desc } }], limit: 1) {
                 tournamentId
             }
         }
