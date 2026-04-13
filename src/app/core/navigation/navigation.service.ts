@@ -48,6 +48,7 @@ export class NavigationService {
 
                     const userModuleAccess = this._loggedInUser.modules.map(m => m.id);
                     const isSuperAdmin = this._localStorage.isSuperAdmin();
+                    const isClubAdmin = this._localStorage.isClubAdmin();
 
                     // Filter navigation
                     const filteredDefaultNavigation = navigation['default']
@@ -56,8 +57,10 @@ export class NavigationService {
                             // If nav item has children, filter them
                             if (navItem.children?.length) {
                                 const filteredChildren = navItem.children.filter(child => {
-                                    if (child.meta?.superAdminOnly && !isSuperAdmin) return false;
-                                    if (child.meta?.superAdminOnly && isSuperAdmin) return true;
+                                    // superAdminOnly: visible to super admins only
+                                    if (child.meta?.superAdminOnly) return isSuperAdmin;
+                                    // adminOnly: visible to super admins and club admins
+                                    if (child.meta?.adminOnly) return isSuperAdmin || isClubAdmin;
                                     return userModuleAccess.includes(child.moduleId);
                                 });
 

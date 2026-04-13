@@ -313,7 +313,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:table',
                 link: '/mergeProfile',
                 moduleId: 'b43c9cdd-050b-4967-9161-9ab27b8a2109',
-                meta: { superAdminOnly: true },
+                meta: { adminOnly: true },
             },
         ],
     },
@@ -372,7 +372,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:table',
                 link: '/mergeProfile',
                 moduleId: 'af0df7bf-f5e9-447b-bba7-6c69bceea3e8',
-                meta: { superAdminOnly: true },
+                meta: { adminOnly: true },
             },
             {
                 id: 'feedback.news',
