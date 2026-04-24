@@ -290,6 +290,7 @@ export const getCourseHole = gql`
                 id
                 holeNo
                 par
+                indexWomen
                 index
                 holeSetId
                 greenStartLat

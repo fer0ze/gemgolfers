@@ -77,6 +77,7 @@ export class ViewCourseComponent implements OnInit {
         yardage: null,
         par: null,
         index: null,
+        indexForW: null,
         teeDistances: {},
     }));
     holeSetfor18 = Array(9).fill(null).map((_, index) => ({
@@ -85,6 +86,7 @@ export class ViewCourseComponent implements OnInit {
         yardage: null,
         par: null,
         index: null,
+        indexForW: null,
         teeDistances: {},
     }));
     holeSetfor27 = Array(9).fill(null).map((_, index) => ({
@@ -93,6 +95,7 @@ export class ViewCourseComponent implements OnInit {
         yardage: null,
         par: null,
         index: null,
+        indexForW: null,
         teeDistances: {},
     }));
     holeSetfor36 = Array(9).fill(null).map((_, index) => ({
@@ -101,6 +104,7 @@ export class ViewCourseComponent implements OnInit {
         yardage: null,
         par: null,
         index: null,
+        indexForW: null,
         teeDistances: {},
     }));
     holeSetforSelect = [];
@@ -820,12 +824,16 @@ export class ViewCourseComponent implements OnInit {
                 this.setName9 = holes['HolesQL'][0].displayName;
                 for (let index = 0; index <= 8; index++) {
                     let hazards = holeCount[index].hazards;
+                    if (holeCount[index].indexWomen != null) {
+                        this.showholeindexforWomen = true;
+                    }
                     let hole: any = {
                         displayName: holes['HolesQL'][0].displayName,
                         id: holeCount[index].id,
                         holeNo: holeCount[index].holeNo,
                         par: holeCount[index].par,
                         index: holeCount[index].index,
+                        indexForW: holeCount[index].indexWomen,
                         holeSetId: holeCount[index].holeSetId,
                         teeDistances: {},
                         tee_lat_long: {},
@@ -864,6 +872,7 @@ export class ViewCourseComponent implements OnInit {
                         holeNo: holeCount[index].holeNo,
                         par: holeCount[index].par,
                         index: holeCount[index].index,
+                        indexForW: holeCount[index].indexWomen,
                         holeSetId: holeCount[index].holeSetId,
                         teeDistances: {},
                         tee_lat_long: {},
@@ -901,6 +910,7 @@ export class ViewCourseComponent implements OnInit {
                         holeNo: holeCount[index].holeNo,
                         par: holeCount[index].par,
                         index: holeCount[index].index,
+                        indexForW: holeCount[index].indexWomen,
                         holeSetId: holeCount[index].holeSetId,
                         teeDistances: {},
                         tee_lat_long: {},
@@ -938,6 +948,7 @@ export class ViewCourseComponent implements OnInit {
                         holeNo: holeCount[index].holeNo,
                         par: holeCount[index].par,
                         index: holeCount[index].index,
+                        indexForW: holeCount[index].indexWomen,
                         holeSetId: holeCount[index].holeSetId,
                         teeDistances: {},
                         tee_lat_long: {},
@@ -1265,6 +1276,9 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor9) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor9[index]['index'] = val;
+                    if (this.showholeindexforWomen) {
+                        this.holeSetfor9[index]['indexForW'] = val;
+                    }
                     break;
                 }
                 index++;
@@ -1279,6 +1293,10 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor18) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor18[index]['index'] = val;
+                    if (this.showholeindexforWomen) {
+                        this.holeSetfor18[index]['indexForW'] = val;
+                    }
+
                     break;
                 }
                 index++;
@@ -1293,6 +1311,10 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor27) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor27[index]['index'] = val;
+                    if (this.showholeindexforWomen) {
+                        this.holeSetfor27[index]['indexForW'] = val;
+                    }
+
                     break;
                 }
                 index++;
@@ -1307,6 +1329,10 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor36) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor36[index]['index'] = val;
+                    if (this.showholeindexforWomen) {
+                        this.holeSetfor36[index]['indexForW'] = val;
+                    }
+
                     break;
                 }
                 index++;
@@ -1355,12 +1381,14 @@ export class ViewCourseComponent implements OnInit {
             }
         }
     }
+
+
     /**
    * selectionChange
 event   */
-    public selectionChange(event) {
-        if (event == 1) {
-            this.showholeindexforWomen = true;
+    public addLadiesIndex() {
+        this.showholeindexforWomen = !this.showholeindexforWomen;
+        if (this.showholeindexforWomen) {
             this.holeSetfor9.forEach(function (element) {
                 element['indexForW'] = null;
             });
@@ -1373,9 +1401,7 @@ event   */
             this.holeSetfor36.forEach(function (element) {
                 element['indexForW'] = null;
             });
-            //console.log(this.holeSetfor9);
         } else {
-            this.showholeindexforWomen = false;
             this.holeSetfor9.forEach(function (element) {
                 delete element['indexForW'];
             });
@@ -1439,121 +1465,121 @@ event   */
             }
             console.log(holeObj);
 
-            if (this.showholeindexforWomen == false) {
-                let count = holeObj.length / 9;
-                let set = 1;
-                this.id = [];
-                let name = this.setName9;
-                for (let index = 1; index <= count; index++) {
-                    if (index == 2) {
-                        set = 2;
-                        name = this.setName18;
-                    } else if (index == 3) {
-                        set = 4;
-                        name = this.setName27;
-                    } else if (index == 4) {
-                        set = 8;
-                        name = this.setName36;
-                    }
-                    var ids = General.generateUUID();
-                    this.id.push(ids);
-                    let holeSet = {
-                        id: ids,
-                        holeSets: set,
-                        courseId: this.courseID,
-                        inverted: false,
-                        noOfHoles: 9,
-                        displayName: name,
-                        frontId: set,
-                        backId: null,
-                    };
-                    holesSet.push(holeSet);
+            // if (this.showholeindexforWomen == false) {
+            let count = holeObj.length / 9;
+            let set = 1;
+            this.id = [];
+            let name = this.setName9;
+            for (let index = 1; index <= count; index++) {
+                if (index == 2) {
+                    set = 2;
+                    name = this.setName18;
+                } else if (index == 3) {
+                    set = 4;
+                    name = this.setName27;
+                } else if (index == 4) {
+                    set = 8;
+                    name = this.setName36;
                 }
-                let number = 0;
-                let counter = 0;
-                for (let obj of holeObj) {
-                    let holeYards: any = General.getTeeYard(obj.teeDistances, this.Tee, this.courseID, obj.id);
-                    // let holeHazards = obj.hazards;
-                    // const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
-                    let tee = {
-                        id: obj.id,
-                        courseId: this.courseID,
-                        holeNo: obj.holeNo,
-                        teeDistances: {},
-                        teeLatLongs: {},
-                        indexWomen: null,
-                        par: obj.par ? obj.par : 0,
-                        index: obj.index ? obj.index : 0,
-                        holeSetId: this.id[counter],
-                        greenStartLat: null,
-                        greenStartLong: null,
-                        greenCenterLat: null,
-                        greenCenterLong: null,
-                        greenEndLat: null,
-                        greenEndLong: null,
-                        // meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
-                    };
-
-                    number++;
-                    if (number % 9 == 0) {
-                        counter++;
-                    }
-                    holesToSave.push(tee);
-                    holesYardageToSave.push(holeYards);
-                    // holeHazardsToSave.push(General.getHazards(obj.hazards));
-                }
-            } else {
-                let count = holeObj.length / 9;
-                let set = 1;
-                this.id = [];
-                let name = this.setName9;
-                for (let index = 1; index <= count; index++) {
-                    if (index == 2) {
-                        set = 2;
-                        name = this.setName18;
-                    } else if (index == 3) {
-                        set = 4;
-                        name = this.setName27;
-                    } else if (index == 4) {
-                        set = 8;
-                        name = this.setName36;
-                    }
-                    var ids = General.generateUUID();
-                    this.id.push(ids);
-                    let holeSet = {
-                        id: ids,
-                        holeSets: set,
-                        courseId: this.courseID,
-                        inverted: false,
-                        noOfHoles: 9,
-                        displayName: name,
-                        frontId: set,
-                        backId: null,
-                    };
-                    holesSet.push(holeSet);
-                }
-                let number = 0;
-                let counter = 0;
-                for (let obj of holeObj) {
-                    // let roundTeeId: any = General.getPlayersTe(obj.Tee);
-                    let tee = {
-                        id: obj.id,
-                        courseId: this.courseID,
-                        holeNo: obj.holeNo,
-                        teeDistances: {},
-                        teeLatLongs: {},
-                        indexWomen: obj.indexForW,
-                        par: obj.par ? obj.par : 0,
-                        index: obj.index ? obj.index : 0,
-                        holeSetId: this.id[counter],
-                    };
-                    number++;
-                    if (number % 9 == 0) {
-                        counter++;
-                    }
-                    holesToSave.push(tee);
-                }
+                var ids = General.generateUUID();
+                this.id.push(ids);
+                let holeSet = {
+                    id: ids,
+                    holeSets: set,
+                    courseId: this.courseID,
+                    inverted: false,
+                    noOfHoles: 9,
+                    displayName: name,
+                    frontId: set,
+                    backId: null,
+                };
+                holesSet.push(holeSet);
             }
+            let number = 0;
+            let counter = 0;
+            for (let obj of holeObj) {
+                let holeYards: any = General.getTeeYard(obj.teeDistances, this.Tee, this.courseID, obj.id);
+                // let holeHazards = obj.hazards;
+                // const [startLat, startLng, centerLat, centerLng, endLat, endLng] = General.getHoleLatLong(obj.greenStartLatLong, obj.greenCenterLatLong, obj.greenEndLatLong);
+                let tee = {
+                    id: obj.id,
+                    courseId: this.courseID,
+                    holeNo: obj.holeNo,
+                    teeDistances: {},
+                    teeLatLongs: {},
+                    indexWomen: obj.indexForW,
+                    par: obj.par ? obj.par : 0,
+                    index: obj.index ? obj.index : 0,
+                    holeSetId: this.id[counter],
+                    greenStartLat: null,
+                    greenStartLong: null,
+                    greenCenterLat: null,
+                    greenCenterLong: null,
+                    greenEndLat: null,
+                    greenEndLong: null,
+                    // meta: { data: General.getTeeYards(obj.teeDistances, this.Tee,this.courseID) }
+                };
+
+                number++;
+                if (number % 9 == 0) {
+                    counter++;
+                }
+                holesToSave.push(tee);
+                holesYardageToSave.push(holeYards);
+                // holeHazardsToSave.push(General.getHazards(obj.hazards));
+            }
+            // } else {
+            // let count = holeObj.length / 9;
+            // let set = 1;
+            // this.id = [];
+            // let name = this.setName9;
+            // for (let index = 1; index <= count; index++) {
+            //     if (index == 2) {
+            //         set = 2;
+            //         name = this.setName18;
+            //     } else if (index == 3) {
+            //         set = 4;
+            //         name = this.setName27;
+            //     } else if (index == 4) {
+            //         set = 8;
+            //         name = this.setName36;
+            //     }
+            //     var ids = General.generateUUID();
+            //     this.id.push(ids);
+            //     let holeSet = {
+            //         id: ids,
+            //         holeSets: set,
+            //         courseId: this.courseID,
+            //         inverted: false,
+            //         noOfHoles: 9,
+            //         displayName: name,
+            //         frontId: set,
+            //         backId: null,
+            //     };
+            //     holesSet.push(holeSet);
+            // }
+            // let number = 0;
+            // let counter = 0;
+            // for (let obj of holeObj) {
+            //     // let roundTeeId: any = General.getPlayersTe(obj.Tee);
+            //     let tee = {
+            //         id: obj.id,
+            //         courseId: this.courseID,
+            //         holeNo: obj.holeNo,
+            //         teeDistances: {},
+            //         teeLatLongs: {},
+            //         indexWomen: obj.indexForW,
+            //         par: obj.par ? obj.par : 0,
+            //         index: obj.index ? obj.index : 0,
+            //         holeSetId: this.id[counter],
+            //     };
+            //     number++;
+            //     if (number % 9 == 0) {
+            //         counter++;
+            //     }
+            //     holesToSave.push(tee);
+            // }
+            // }
             //console.log(holesToSave);
             //console.log(holesSet);
             console.log(holesYardageToSave);

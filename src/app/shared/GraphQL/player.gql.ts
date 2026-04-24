@@ -23,6 +23,7 @@ export const GetPlayers = gql`
             handicapWhsIndex
             phone
             email
+            countryCode
             membershipNumber
             createdAt
             membershipQL: membership {
