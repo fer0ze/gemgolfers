@@ -1276,9 +1276,9 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor9) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor9[index]['index'] = val;
-                    if (this.showholeindexforWomen) {
-                        this.holeSetfor9[index]['indexForW'] = val;
-                    }
+                    // if (this.showholeindexforWomen) {
+                    //     this.holeSetfor9[index]['indexForW'] = val;
+                    // }
                     break;
                 }
                 index++;
@@ -1293,9 +1293,9 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor18) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor18[index]['index'] = val;
-                    if (this.showholeindexforWomen) {
-                        this.holeSetfor18[index]['indexForW'] = val;
-                    }
+                    // if (this.showholeindexforWomen) {
+                    //     this.holeSetfor18[index]['indexForW'] = val;
+                    // }
 
                     break;
                 }
@@ -1311,9 +1311,9 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor27) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor27[index]['index'] = val;
-                    if (this.showholeindexforWomen) {
-                        this.holeSetfor27[index]['indexForW'] = val;
-                    }
+                    // if (this.showholeindexforWomen) {
+                    //     this.holeSetfor27[index]['indexForW'] = val;
+                    // }
 
                     break;
                 }
@@ -1329,9 +1329,9 @@ export class ViewCourseComponent implements OnInit {
             for (let obj of this.holeSetfor36) {
                 if (holeNo == obj.holeNo) {
                     this.holeSetfor36[index]['index'] = val;
-                    if (this.showholeindexforWomen) {
-                        this.holeSetfor36[index]['indexForW'] = val;
-                    }
+                    // if (this.showholeindexforWomen) {
+                    //     this.holeSetfor36[index]['indexForW'] = val;
+                    // }
 
                     break;
                 }
@@ -1661,10 +1661,11 @@ event   */
                 this.initializeHoleSet();
             }
         } else {
+            this.Hole = [];
             for (let index = 0; index < 1; index++) {
                 this.Hole[this.Hole.length] = [];
                 this.Hole[this.Hole.length - 1]['id'] = UniqueIdGenerator.generate();
-                this.Hole[this.Hole.length - 1]['displayName'] = '';
+                this.Hole[this.Hole.length - 1]['displayName'] = 'Front-9 - Back-9';
                 this.Hole[this.Hole.length - 1]['frontId'] = '';
                 this.Hole[this.Hole.length - 1]['backId'] = '';
             }
@@ -1685,6 +1686,7 @@ event   */
         //console.log(this.Hole);
     }
     initializeHoleSet() {
+        this.Hole = [];
         this.Hole[this.Hole.length] = [];
         this.Hole[this.Hole.length - 1]['id'] = UniqueIdGenerator.generate();
         this.Hole[this.Hole.length - 1]['displayName'] = 'Front-9 - Back-9';
@@ -2105,17 +2107,33 @@ event   */
             // this.snackBar.open('Course-Rating has been Saved!', 'x', {
             //     duration: 5000,
             // });
-            if (this._localStorage.isSuperAdmin()) {
-                this.goToPanel('5')
-            } else if (this.loggedInuser) {
-                this.router.navigateByUrl('/courses2');
+            if (this._localStorage.isSuperAdmin() || this.loggedInuser) {
+
+                this._fuseConfirmationService.open({
+                    title: 'Course Saved Successfully',
+                    message: 'Our administrator will review your course and will activate the course.',
+                    icon: {
+                        name: 'thumb-up',
+                        color: 'primary',
+                    },
+                    actions: {
+                        cancel: {
+                            show: false,
+                        },
+                        confirm: {
+                            label: 'Close',
+                        },
+                    },
+                }).afterClosed().subscribe(() => {
+                    this.router.navigateByUrl('/courses2');
+                })
             } else {
                 if (!this.editForm) {
                     this._fuseConfirmationService.open({
                         title: 'Course Saved Successfully',
                         message: 'Our administrator will review your course and will activate the course.',
                         icon: {
-                            name: 'info',
+                            name: 'thumb-up',
                             color: 'primary',
                         },
                         actions: {
@@ -2135,7 +2153,7 @@ event   */
                         title: 'Course Updated Successfully',
                         message: 'Course has been updated successfully.',
                         icon: {
-                            name: 'info',
+                            name: 'thumb-up',
                             color: 'primary',
                         },
                         actions: {
