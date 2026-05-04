@@ -1417,6 +1417,24 @@ event   */
             //console.log(this.holeSetfor9);
         }
     }
+
+    removeLadiesIndex() {
+        this.showholeindexforWomen = !this.showholeindexforWomen;
+        this.holeSetfor9.forEach(function (element) {
+            delete element['indexForW'];
+        });
+        this.holeSetfor18.forEach(function (element) {
+            delete element['indexForW'];
+        });
+        this.holeSetfor27.forEach(function (element) {
+            delete element['indexForW'];
+        });
+        this.holeSetfor36.forEach(function (element) {
+            delete element['indexForW'];
+        });
+        //console.log(this.holeSetfor9);
+
+    }
     selectionChangeDistance(event) {
         //console.log(event);
 

@@ -1,54 +1,83 @@
 <div class="min-h-screen bg-gray-50 w-full sm:px-20 text-gray-800">
-
-
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
             <p class="text-md text-gray-600">
-                <span class="font-semibold">Note:</span> A quick reminder to set up your course and tee abbreviations.
-                The abbreviation can be used on reports such as the page composer, tee sheet and alpha list.
+                <span class="font-semibold">Note:</span> A quick reminder to set
+                up your course and tee abbreviations. The abbreviation can be
+                used on reports such as the page composer, tee sheet and alpha
+                list.
             </p>
         </div>
         <form [formGroup]="courseForm">
             <!-- Course Details Section -->
-            <div class="mt-6 bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-
+            <div
+                class="mt-6 bg-white p-6 border border-gray-200 rounded-lg shadow-sm"
+            >
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div>
                         <mat-form-field class="fuse-mat-no-subscript w-full">
                             <mat-label class="text-md">Course Name</mat-label>
-                            <input matInput type="text" placeholder="Course Name" formControlName="courseName" />
-                            <mat-icon class="primary-foreground" matSuffix></mat-icon>
+                            <input
+                                matInput
+                                type="text"
+                                placeholder="Course Name"
+                                formControlName="courseName"
+                            />
+                            <mat-icon
+                                class="primary-foreground"
+                                matSuffix
+                            ></mat-icon>
                             <mat-error>Course Name is required</mat-error>
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field class="fuse-mat-no-subscript w-full">
                             <mat-label class="text-md">Country</mat-label>
-                            <input type="text" placeholder="Select or type a country" matInput formControlName="country"
-                                [matAutocomplete]="auto" />
-                            <mat-autocomplete #auto="matAutocomplete"
-                                (optionSelected)="countrySelected($event.option.value)" [displayWith]="displayFn">
-                                <mat-option *ngFor="
-                                                                let option of listCountries
-                                                                    | async
-                                                            " [value]="option">
+                            <input
+                                type="text"
+                                placeholder="Select or type a country"
+                                matInput
+                                formControlName="country"
+                                [matAutocomplete]="auto"
+                            />
+                            <mat-autocomplete
+                                #auto="matAutocomplete"
+                                (optionSelected)="
+                                    countrySelected($event.option.value)
+                                "
+                                [displayWith]="displayFn"
+                            >
+                                <mat-option
+                                    *ngFor="let option of listCountries | async"
+                                    [value]="option"
+                                >
                                     {{ option.name }}
                                 </mat-option>
                             </mat-autocomplete>
 
-                            <mat-error *ngIf="country.invalid">Country Name is required</mat-error>
+                            <mat-error *ngIf="country.invalid"
+                                >Country Name is required</mat-error
+                            >
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field class="fuse-mat-no-subscript w-full">
                             <mat-label class="text-md">City</mat-label>
-                            <input type="text" placeholder="Select or type a city" matInput formControlName="city"
-                                [matAutocomplete]="auto1" />
-                            <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayCity">
-                                <mat-option *ngFor="
-                                                                let option of listCity
-                                                                    | async
-                                                            " [value]="option">
+                            <input
+                                type="text"
+                                placeholder="Select or type a city"
+                                matInput
+                                formControlName="city"
+                                [matAutocomplete]="auto1"
+                            />
+                            <mat-autocomplete
+                                #auto1="matAutocomplete"
+                                [displayWith]="displayCity"
+                            >
+                                <mat-option
+                                    *ngFor="let option of listCity | async"
+                                    [value]="option"
+                                >
                                     {{ option }}
                                 </mat-option>
                             </mat-autocomplete>
@@ -57,14 +86,19 @@
                                                         }}</mat-option>
                                                 </mat-select> -->
 
-                            <mat-error *ngIf="city.invalid">City Name is required</mat-error>
+                            <mat-error *ngIf="city.invalid"
+                                >City Name is required</mat-error
+                            >
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field class="fuse-mat-no-subscript w-full">
                             <mat-label class="text-md">Holes</mat-label>
-                            <mat-select placeholder="No of Holes" (selectionChange)="holesChange($event)"
-                                formControlName="noOfHoles">
+                            <mat-select
+                                placeholder="No of Holes"
+                                (selectionChange)="holesChange($event)"
+                                formControlName="noOfHoles"
+                            >
                                 <mat-option value="9">9</mat-option>
                                 <mat-option value="18">18</mat-option>
                                 <!-- <mat-option value="27">27</mat-option>
@@ -75,71 +109,130 @@
                         </mat-form-field>
                     </div>
                 </div>
-
             </div>
 
             <!-- Tees Section -->
-            <div *ngFor="let tee of Tee; let i = index"
-                class="mt-6 bg-white p-6 border border-gray-200 rounded-lg shadow-sm relative">
-
-                <h3 class="text-lg font-semibold text-gray-800 border-b pb-3 mb-4">
+            <div
+                *ngFor="let tee of Tee; let i = index"
+                class="mt-6 bg-white p-6 border border-gray-200 rounded-lg shadow-sm relative"
+            >
+                <h3
+                    class="text-lg font-semibold text-gray-800 border-b pb-3 mb-4"
+                >
                     Tee #{{ i + 1 }}
                 </h3>
 
                 <!-- Remove Button -->
-                <button *ngIf="Tee.length > 1" (click)="deleteTee(tee.id)"
-                    class="absolute top-4 right-4 text-gray-400 hover:text-red-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <button
+                    *ngIf="Tee.length > 1"
+                    (click)="deleteTee(tee.id)"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-red-600 transition-colors"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                     </svg>
                 </button>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
                     <!-- Tee Name -->
                     <div class="md:col-span-1 grid grid-cols-1 gap-6">
                         <div>
-                            <label [for]="'teeName' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'teeName' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 Tee
                             </label>
-                            <input type="text" [id]="'teeName' + i" [value]="tee.name_by_club"
+                            <input
+                                type="text"
+                                [id]="'teeName' + i"
+                                [value]="tee.name_by_club"
                                 (input)="onTeeName($event.target.value, tee.id)"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
                     </div>
 
                     <!-- 18 Hole Rating -->
                     <div class="md:col-span-2 grid grid-cols-2 gap-6">
                         <div>
-                            <label [for]="'rating18' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'rating18' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 18 Hole Rating
                             </label>
-                            <input type="number" min="1" [id]="'rating18' + i" [value]="tee['18_hole_course_rating'] || ''"
-                                (input)="updateTeeValue(tee.id, $event.target.value, '18_hole_course_rating')"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                            <input
+                                type="number"
+                                min="1"
+                                [id]="'rating18' + i"
+                                [value]="tee['18_hole_course_rating'] || ''"
+                                (input)="
+                                    updateTeeValue(
+                                        tee.id,
+                                        $event.target.value,
+                                        '18_hole_course_rating'
+                                    )
+                                "
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
 
                         <div>
-                            <label [for]="'slope18' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'slope18' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 18 Hole Slope
                             </label>
-                            <input type="number" min="1" [id]="'slope18' + i" [value]="tee['18_hole_slope_rating'] || ''"
-                                (input)="updateTeeValue(tee.id, $event.target.value, '18_hole_slope_rating')"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                            <input
+                                type="number"
+                                min="1"
+                                [id]="'slope18' + i"
+                                [value]="tee['18_hole_slope_rating'] || ''"
+                                (input)="
+                                    updateTeeValue(
+                                        tee.id,
+                                        $event.target.value,
+                                        '18_hole_slope_rating'
+                                    )
+                                "
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
                     </div>
 
                     <!-- Color -->
                     <div>
-                        <label [for]="'teeColor' + i" class="block text-md font-medium text-gray-700">
+                        <label
+                            [for]="'teeColor' + i"
+                            class="block text-md font-medium text-gray-700"
+                        >
                             Color
                         </label>
                         <div class="flex items-center mt-1">
-                            <input [id]="'teeColor' + i" type="color" [value]="tee.color"
-                                (input)="onTeeColor($event.target.value, tee.id)"
-                                class="w-12 border h-12 p-2 border-gray-300 rounded-md cursor-pointer">
+                            <input
+                                [id]="'teeColor' + i"
+                                type="color"
+                                [value]="tee.color"
+                                (input)="
+                                    onTeeColor($event.target.value, tee.id)
+                                "
+                                class="w-12 border h-12 p-2 border-gray-300 rounded-md cursor-pointer"
+                            />
                             <span class="ml-3 text-sm text-gray-500">
                                 Choose color for printed scorecards
                             </span>
@@ -150,60 +243,131 @@
                 <!-- Optional Ratings -->
                 <div class="mt-6 border-t pt-4">
                     <p class="text-md text-gray-500 mb-4">
-                        Rating and Slope for Front and Back is optional for 18 holes courses:
+                        Rating and Slope for Front and Back is optional for 18
+                        holes courses:
                     </p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                    >
                         <div>
-                            <label [for]="'ratingF9' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'ratingF9' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 Front 9 Rating
                             </label>
-                            <input type="number" min="1" [id]="'ratingF9' + i" [value]="tee['9_hole_front_course_rating'] || ''"
-                                (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_front_course_rating')"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                            <input
+                                type="number"
+                                min="1"
+                                [id]="'ratingF9' + i"
+                                [value]="
+                                    tee['9_hole_front_course_rating'] || ''
+                                "
+                                (input)="
+                                    updateTeeValue(
+                                        tee.id,
+                                        $event.target.value,
+                                        '9_hole_front_course_rating'
+                                    )
+                                "
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
 
                         <div>
-                            <label [for]="'slopeF9' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'slopeF9' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 Front 9 Slope
                             </label>
-                            <input type="number" min="1" [id]="'slopeF9' + i" [value]="tee['9_hole_front_slope_rating'] || ''"
-                                (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_front_slope_rating')"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                            <input
+                                type="number"
+                                min="1"
+                                [id]="'slopeF9' + i"
+                                [value]="tee['9_hole_front_slope_rating'] || ''"
+                                (input)="
+                                    updateTeeValue(
+                                        tee.id,
+                                        $event.target.value,
+                                        '9_hole_front_slope_rating'
+                                    )
+                                "
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
 
                         <div>
-                            <label [for]="'ratingB9' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'ratingB9' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 Back 9 Rating
                             </label>
-                            <input type="number" min="1" [id]="'ratingB9' + i" [value]="tee['9_hole_back_course_rating'] || ''"
-                                (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_back_course_rating')"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                            <input
+                                type="number"
+                                min="1"
+                                [id]="'ratingB9' + i"
+                                [value]="tee['9_hole_back_course_rating'] || ''"
+                                (input)="
+                                    updateTeeValue(
+                                        tee.id,
+                                        $event.target.value,
+                                        '9_hole_back_course_rating'
+                                    )
+                                "
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
 
                         <div>
-                            <label [for]="'slopeB9' + i" class="block text-md font-medium text-gray-700">
+                            <label
+                                [for]="'slopeB9' + i"
+                                class="block text-md font-medium text-gray-700"
+                            >
                                 Back 9 Slope
                             </label>
-                            <input type="number" min="1" [id]="'slopeB9' + i" [value]="tee['9_hole_back_slope_rating'] || ''"
-                                (input)="updateTeeValue(tee.id, $event.target.value, '9_hole_back_slope_rating')"
-                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md">
+                            <input
+                                type="number"
+                                min="1"
+                                [id]="'slopeB9' + i"
+                                [value]="tee['9_hole_back_slope_rating'] || ''"
+                                (input)="
+                                    updateTeeValue(
+                                        tee.id,
+                                        $event.target.value,
+                                        '9_hole_back_slope_rating'
+                                    )
+                                "
+                                class="mt-1 block w-full h-12 border pl-4 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-md"
+                            />
                         </div>
-
                     </div>
                 </div>
 
-
                 <div class="mt-6 border-t pt-4">
-                    <div class="mt-6 bg-white p-2 sm:p-6 border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
-                        <div class="grid gap-1 text-center text-sm"
-                            [ngStyle]="{'grid-template-columns': 'repeat(' + NoOfCols + ', 1fr)'}">
-
+                    <div
+                        class="mt-6 bg-white p-2 sm:p-6 border border-gray-200 rounded-lg shadow-sm overflow-x-auto"
+                    >
+                        <div
+                            class="grid gap-1 text-center text-sm"
+                            [ngStyle]="{
+                                'grid-template-columns':
+                                    'repeat(' + NoOfCols + ', 1fr)',
+                            }"
+                        >
                             <!-- Header Row -->
-                            <div class="font-semibold text-gray-700 p-2 text-left">Holes</div>
+                            <div
+                                class="font-semibold text-gray-700 p-2 text-left"
+                            >
+                                Holes
+                            </div>
 
-                            <div *ngFor="let hole of holeSetfor9" class="font-semibold text-gray-700 p-2">
+                            <div
+                                *ngFor="let hole of holeSetfor9"
+                                class="font-semibold text-gray-700 p-2"
+                            >
                                 {{ hole.holeNo }}
                             </div>
                             <ng-container>
@@ -212,12 +376,15 @@
                                 </div>
                             </ng-container>
                             <!-- <div class="font-semibold text-gray-700 p-2 bg-gray-100">Out</div> -->
-                            <ng-container *ngIf="NoOfHoles>9">
-                                <div *ngFor="let hole of holeSetfor18" class="font-semibold text-gray-700 p-2">
+                            <ng-container *ngIf="NoOfHoles > 9">
+                                <div
+                                    *ngFor="let hole of holeSetfor18"
+                                    class="font-semibold text-gray-700 p-2"
+                                >
                                     {{ hole.holeNo }}
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>9">
+                            <ng-container *ngIf="NoOfHoles > 9">
                                 <div class="font-semibold text-gray-700 p-2">
                                     In
                                 </div>
@@ -227,14 +394,20 @@
                                     Totals
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>18">
-                                <div *ngFor="let hole of holeSetfor27" class="font-semibold text-gray-700 p-2">
+                            <ng-container *ngIf="NoOfHoles > 18">
+                                <div
+                                    *ngFor="let hole of holeSetfor27"
+                                    class="font-semibold text-gray-700 p-2"
+                                >
                                     {{ hole.holeNo }}
                                 </div>
                             </ng-container>
 
-                            <ng-container *ngIf="NoOfHoles>28">
-                                <div *ngFor="let hole of holeSetfor36" class="font-semibold text-gray-700 p-2">
+                            <ng-container *ngIf="NoOfHoles > 28">
+                                <div
+                                    *ngFor="let hole of holeSetfor36"
+                                    class="font-semibold text-gray-700 p-2"
+                                >
                                     {{ hole.holeNo }}
                                 </div>
                             </ng-container>
@@ -243,54 +416,124 @@
                         <div class="font-semibold text-gray-700 p-2 bg-gray-200">Totals</div> -->
 
                             <!-- Yardage Row -->
-                            <div class="font-semibold text-gray-700 p-2 text-left">Yardage</div>
+                            <div
+                                class="font-semibold text-gray-700 p-2 text-left"
+                            >
+                                Yardage
+                            </div>
 
                             <ng-container>
-                                <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
-                                        (input)="onTeeInput($event.target.value,tee.tee_id,hole,9)"
-                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor9;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        [value]="hole.teeDistances[tee.tee_id]"
+                                        (input)="
+                                            onTeeInput(
+                                                $event.target.value,
+                                                tee.tee_id,
+                                                hole,
+                                                9
+                                            )
+                                        "
+                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
                             <ng-container>
-                                <input [value]="teeYardageFront9(tee)" readonly="true"
-                                    class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <input
+                                    [value]="teeYardageFront9(tee)"
+                                    readonly="true"
+                                    class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
 
-                            <ng-container *ngIf="NoOfHoles>10">
-                                <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
-                                        (input)="onTeeInput($event.target.value,tee.tee_id,hole,18)"
-                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 10">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor18;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        [value]="hole.teeDistances[tee.tee_id]"
+                                        (input)="
+                                            onTeeInput(
+                                                $event.target.value,
+                                                tee.tee_id,
+                                                hole,
+                                                18
+                                            )
+                                        "
+                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>10">
-                                <input [value]="teeYardageBack9(tee)" readonly="true"
-                                    class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 10">
+                                <input
+                                    [value]="teeYardageBack9(tee)"
+                                    readonly="true"
+                                    class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
                             <ng-container>
-                                <input [value]="teeYardageTotal(tee)" readonly="true"
-                                    class="w-full min-w-12text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <input
+                                    [value]="teeYardageTotal(tee)"
+                                    readonly="true"
+                                    class="w-full min-w-12text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>19">
-                                <ng-container *ngFor="let hole of holeSetfor27; let i = index">
-                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
-                                        (input)="onTeeInput($event.target.value,tee.tee_id,hole,27)"
-                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 19">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor27;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        [value]="hole.teeDistances[tee.tee_id]"
+                                        (input)="
+                                            onTeeInput(
+                                                $event.target.value,
+                                                tee.tee_id,
+                                                hole,
+                                                27
+                                            )
+                                        "
+                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>28">
-                                <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" min="1" [value]="hole.teeDistances[tee.tee_id] "
-                                        (input)="onTeeInput($event.target.value,tee.tee_id,hole,36)"
-                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 28">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor18;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        [value]="hole.teeDistances[tee.tee_id]"
+                                        (input)="
+                                            onTeeInput(
+                                                $event.target.value,
+                                                tee.tee_id,
+                                                hole,
+                                                36
+                                            )
+                                        "
+                                        class="w-full min-w-12 text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
 
@@ -301,90 +544,115 @@
                             class="w-full text-center border-gray-300 rounded-md shadow-sm bg-gray-200 p-1 font-bold"> -->
 
                             <!-- Par Row -->
-                            <div class="font-semibold text-gray-700 p-2 text-left">Par</div>
+                            <div
+                                class="font-semibold text-gray-700 p-2 text-left"
+                            >
+                                Par
+                            </div>
 
                             <ng-container>
-                                <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" min="1" value="{{
-                                                                hole['par']
-                                                            }}" (input)="
-                                                                onParInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            "
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor9;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value="{{ hole['par'] }}"
+                                        (input)="
+                                            onParInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
-
                             </ng-container>
                             <ng-container>
-                                <input [value]="totalParFront9()" readonly="true"
-                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <input
+                                    [value]="totalParFront9()"
+                                    readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>10">
-                                <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" min="1" value="{{
-                                                                hole['par']
-                                                            }}" (input)="
-                                                                onParInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            "
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 10">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor18;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value="{{ hole['par'] }}"
+                                        (input)="
+                                            onParInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
-
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>10">
-                                <input [value]="totalParBack9()" readonly="true"
-                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 10">
+                                <input
+                                    [value]="totalParBack9()"
+                                    readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
                             <ng-container>
-                                <input [value]="totalPar()" readonly="true"
-                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <input
+                                    [value]="totalPar()"
+                                    readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>19">
-                                <ng-container *ngFor="let hole of holeSetfor27; let i = index">
-                                    <input type="number" min="1" value="{{
-                                                                hole['par']
-                                                            }}" (input)="
-                                                                onParInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            "
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 19">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor27;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value="{{ hole['par'] }}"
+                                        (input)="
+                                            onParInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
-
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>28">
-                                <ng-container *ngFor="let hole of holeSetfor36; let i = index">
-                                    <input type="number" value="{{
-                                                                hole['par']
-                                                            }}" (input)="
-                                                                onParInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            "
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 28">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor36;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        value="{{ hole['par'] }}"
+                                        (input)="
+                                            onParInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
-
                             </ng-container>
 
                             <!-- <input type="number" [value]="back9Par()" readonly
@@ -394,148 +662,213 @@
                             class="w-full text-center border-gray-300 rounded-md shadow-sm bg-gray-200 p-1 font-bold"> -->
 
                             <!-- Handicap Row -->
-                            <div class="font-semibold text-gray-700 p-2 text-left">Index</div>
+                            <div
+                                class="font-semibold text-gray-700 p-2 text-left"
+                            >
+                                Index
+                            </div>
 
                             <ng-container>
-                                <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" min="1" (input)="
-                                                                onIndexInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            " value="{{
-                                                                hole['index']
-                                                            }}"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor9;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        (input)="
+                                            onIndexInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        value="{{ hole['index'] }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
                             <ng-container>
-                                <input readonly="true"
-                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <input
+                                    readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
-                           
-                            <ng-container *ngIf="NoOfHoles>10">
-                                <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" min="1" (input)="
-                                                                onIndexInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            " value="{{
-                                                                hole['index']
-                                                            }}"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
 
+                            <ng-container *ngIf="NoOfHoles > 10">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor18;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        (input)="
+                                            onIndexInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        value="{{ hole['index'] }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
 
-                            <ng-container *ngIf="NoOfHoles>10">
-                                <input readonly="true"
-                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 10">
+                                <input
+                                    readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
                             <ng-container>
-                                <input readonly="true"
-                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                                <input
+                                    readonly="true"
+                                    class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                />
                             </ng-container>
-                             <ng-container *ngIf="showholeindexforWomen">
-                                <div class="font-semibold min-w-28 text-gray-700 p-2 text-left">Index(Women)</div>
-                                <ng-container *ngFor="let hole of holeSetfor9; let i = index">
-                                    <input type="number" min="1" (input)="onIndexInputForWomen($event.target.value,hole.holeNo)" value="{{
-                                                                hole['indexForW']
-                                                            }}"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
-                                </ng-container> 
+                            <ng-container *ngIf="showholeindexforWomen">
+                                <div
+                                    class="font-semibold min-w-28 text-gray-700 p-2 text-left"
+                                >
+                                    Index(Women)
+                                </div>
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor9;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        (input)="
+                                            onIndexInputForWomen(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        value="{{ hole['indexForW'] }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
+                                </ng-container>
                                 <ng-container>
-                                    <input readonly="true"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-    
+                                    <input
+                                        readonly="true"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
-                             <ng-container *ngIf="showholeindexforWomen && NoOfHoles>10">
-                                <ng-container *ngFor="let hole of holeSetfor18; let i = index">
-                                    <input type="number" min="1" (input)="onIndexInputForWomen($event.target.value,hole.holeNo)" value="{{
-                                                                hole['indexForW']
-                                                            }}"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
-                                </ng-container> 
+                            <ng-container
+                                *ngIf="showholeindexforWomen && NoOfHoles > 10"
+                            >
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor18;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        (input)="
+                                            onIndexInputForWomen(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        value="{{ hole['indexForW'] }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
+                                </ng-container>
                                 <ng-container>
-                                    <input readonly="true"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-    
+                                    <input
+                                        readonly="true"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>19">
-                                <ng-container *ngFor="let hole of holeSetfor27; let i = index">
-                                    <input type="number" (input)="
-                                                                onIndexInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            " value="{{
-                                                                hole['index']
-                                                            }}"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 19">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor27;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        (input)="
+                                            onIndexInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        value="{{ hole['index'] }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
-                            <ng-container *ngIf="NoOfHoles>28">
-                                <ng-container *ngFor="let hole of holeSetfor36; let i = index">
-                                    <input type="number" (input)="
-                                                                onIndexInput(
-                                                                    $event
-                                                                        .target
-                                                                        .value,
-                                                                    hole.holeNo
-                                                                )
-                                                            " value="{{
-                                                                hole['index']
-                                                            }}"
-                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1">
-
+                            <ng-container *ngIf="NoOfHoles > 28">
+                                <ng-container
+                                    *ngFor="
+                                        let hole of holeSetfor36;
+                                        let i = index
+                                    "
+                                >
+                                    <input
+                                        type="number"
+                                        (input)="
+                                            onIndexInput(
+                                                $event.target.value,
+                                                hole.holeNo
+                                            )
+                                        "
+                                        value="{{ hole['index'] }}"
+                                        class="w-full text-center border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-1"
+                                    />
                                 </ng-container>
                             </ng-container>
-                            
-
 
                             <!-- <input type="number" [value]="back9Handicap()" readonly
                             class="w-full text-center border-gray-300 rounded-md shadow-sm bg-gray-100 p-1 font-semibold">
 
                         <input type="number" [value]="totalHandicap()" readonly
                             class="w-full text-center border-gray-300 rounded-md shadow-sm bg-gray-200 p-1 font-bold"> -->
-
                         </div>
                         <div class="flex justify-end mt-4">
-                            <button (click)="addLadiesIndex()"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
-                        Add Ladies Index
-                    </button>
-
+                            <button *ngIf="!showholeindexforWomen"
+                                (click)="addLadiesIndex()"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                            >
+                                Add Ladies Index
+                            </button>
+                            <button *ngIf="showholeindexforWomen"
+                                (click)="removeLadiesIndex()"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                            >
+                                Remove Ladies Index
+                            </button>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
-            <div class=" flex justify-between w-full mt-4">
-                <button (click)="addNewTee()"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+            <div class="flex justify-between w-full mt-4">
+                <button
+                    *ngIf="Tee.length < 7"
+                    (click)="addNewTee()"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                >
                     Add Another Tee
                 </button>
-                <button (click)="createCourse()" [disabled]="!courseForm.valid"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button
+                    (click)="createCourse()"
+                    [disabled]="!courseForm.valid"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                     Save Course
                 </button>
             </div>

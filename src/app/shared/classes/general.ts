@@ -241,9 +241,10 @@ export class General {
             { id: '2', name: 'Junior Girl(16-21)', result: 'LADIES' },
             { id: '2', name: 'Junior Gril(12-16)', result: 'LADIES' },
             { id: '2', name: 'Junior', result: 'LADIES' },
-            { id: '2', name: 'Juniors', result: 'LADIES' },
             { id: '3', name: 'Senior Amateurs', result: 'SENIORS' },
             { id: '3', name: 'Senior Professionals', result: 'SENIORS' },
+            { id: '6', name: 'CHAMPIONSHIP', result: 'CHAMPIONSHIP' },
+            { id: '7', name: 'JUNIORS', result: 'JUNIORS' },
         ];
         let ID = Course_Tee.find((element) => element.name == teeName);
 
@@ -393,6 +394,8 @@ export class General {
             { id: 3, name: 'SENIORS' },
             { id: 4, name: 'PROFESSIONALS' },
             { id: 5, name: 'VETERANS' },
+            { id: 6, name: 'CHAMPIONSHIP' },
+            { id: 7, name: 'JUNIORS' },
         ];
 
         return Course_Tee.find((element) => element.name == tee);
@@ -431,6 +434,8 @@ export class General {
             { id: 2, name: 'Seniors', tee_id: 'SENIORS', color: '#FFFFFF' },
             { id: 3, name: 'Amateurs', tee_id: 'AMATEURS', color: '#0000FF' },
             { id: 4, name: 'Veterans', tee_id: 'VETERANS', color: '#FFFF00' },
+            { id: 5, name: 'Juniors', tee_id: 'JUNIORS', color: '#6c4a08' },
+            { id: 6, name: 'Championship', tee_id: 'CHAMPIONSHIP', color: '#080a6c' },
         ];
 
         return Course_Tee.find((element) => element.id == Id);
@@ -442,6 +447,8 @@ export class General {
             { id: 2, name: 'Seniors', tee_id: 'SENIORS', color: '#FFFFFF' },
             { id: 3, name: 'Amateurs', tee_id: 'AMATEURS', color: '#0000FF' },
             { id: 4, name: 'Veterans', tee_id: 'VETERANS', color: '#FFFF00' },
+            { id: 5, name: 'Juniors', tee_id: 'JUNIORS', color: '#6c4a08' },
+            { id: 6, name: 'Championship', tee_id: 'CHAMPIONSHIP', color: '#080a6c' },
         ];
         let tee_id;
         Course_Tee.map(tee => {
