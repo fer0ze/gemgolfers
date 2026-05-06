@@ -603,12 +603,12 @@ export class ViewCourseComponent implements OnInit {
                     name_by_club: obj.name_by_club,
                     color: obj.color,
                     tee_id: obj['tee_name'].key,
-                    '18_hole_course_rating': this.coursRating.find(a => a.courseHoleSets == 3)?.courseRating ?? '',
-                    '18_hole_slope_rating': this.coursRating.find(a => a.courseHoleSets == 3)?.slopeRating ?? '',
-                    '9_hole_front_course_rating': this.coursRating.find(a => a.courseHoleSets == 1)?.courseRating ?? '',
-                    '9_hole_front_slope_rating': this.coursRating.find(a => a.courseHoleSets == 1)?.slopeRating ?? '',
-                    '9_hole_back_course_rating': this.coursRating.find(a => a.courseHoleSets == 2)?.courseRating ?? '',
-                    '9_hole_back_slope_rating': this.coursRating.find(a => a.courseHoleSets == 2)?.slopeRating ?? '',
+                    '18_hole_course_rating': this.coursRating.find(a => a.courseHoleSets == 3 && obj.tee_id==a.tee_id)?.courseRating ?? '',
+                    '18_hole_slope_rating': this.coursRating.find(a => a.courseHoleSets == 3 && obj.tee_id==a.tee_id)?.slopeRating ?? '',
+                    '9_hole_front_course_rating': this.coursRating.find(a => a.courseHoleSets == 1 && obj.tee_id==a.tee_id)?.courseRating ?? '',
+                    '9_hole_front_slope_rating': this.coursRating.find(a => a.courseHoleSets == 1 && obj.tee_id==a.tee_id)?.slopeRating ?? '',
+                    '9_hole_back_course_rating': this.coursRating.find(a => a.courseHoleSets == 2 && obj.tee_id==a.tee_id)?.courseRating ?? '',
+                    '9_hole_back_slope_rating': this.coursRating.find(a => a.courseHoleSets == 2 && obj.tee_id==a.tee_id)?.slopeRating ?? '',
                 };
                 this.Tee.push(tee);
             }
