@@ -12,6 +12,7 @@ import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
 import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -54,6 +55,7 @@ import { PlayerResolver } from './players.resolver';
         MatSnackBarModule,
         MatMenuModule,
         MatProgressBarModule,
+        MatProgressSpinnerModule,
         MatDialogModule,
         FormsModule,
         ReactiveFormsModule,

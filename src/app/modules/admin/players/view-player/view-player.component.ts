@@ -120,6 +120,16 @@ export class ViewPlayerComponent implements OnInit {
     personLeads: any;
     showdata: Promise<boolean>;
 
+    // ── Activity Log ──────────────────────────────────────────────────────
+    activityGroups: { date: string; dateKey: string; activities: any[] }[] = [];
+    activityLoading: boolean = false;
+    activityDateFilter: string = '';
+
+    get filteredActivityGroups() {
+        if (!this.activityDateFilter) return this.activityGroups;
+        return this.activityGroups.filter(g => g.dateKey === this.activityDateFilter);
+    }
+
     // ── Password Reset ────────────────────────────────────────────────────
     showPasswordResetModal = false;
     resetPassword = '';
@@ -700,9 +710,31 @@ export class ViewPlayerComponent implements OnInit {
                 this.location.back();
             }
             this.showdata = Promise.resolve(true);
+            this.loadPlayerActivity();
         } catch (error) {
             this.logger.log('Getting Players Data Failed', "error", error.toString());
         }
+    }
+
+    private loadPlayerActivity(): void {
+        this.activityLoading = true;
+        this.facadeService.getPlayerActivityByUserId(this.playerID).subscribe({
+            next: (logs: any[]) => {
+                const grouped: { [key: string]: { date: string; dateKey: string; activities: any[] } } = {};
+                for (const log of logs) {
+                    const d = new Date(log.dateTime);
+                    const dateKey = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                    const date = d.toLocaleDateString('en-GB', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+                    if (!grouped[dateKey]) grouped[dateKey] = { date, dateKey, activities: [] };
+                    grouped[dateKey].activities.push(log);
+                }
+                this.activityGroups = Object.values(grouped);
+                this.activityLoading = false;
+            },
+            error: () => { this.activityLoading = false; }
+        });
     }
 
     // events

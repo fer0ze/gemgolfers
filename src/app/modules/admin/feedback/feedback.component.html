@@ -38,7 +38,19 @@
                         </ng-container>
                     </div>
                 </div>
-                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3 flex-wrap gap-2">
+                    <button mat-stroked-button (click)="markAllAs('pending')"
+                        style="border-color:#f97316;color:#f97316">
+                        Mark All Pending
+                    </button>
+                    <button mat-stroked-button (click)="markAllAs('reviewing')"
+                        style="border-color:#3b82f6;color:#3b82f6">
+                        Mark All Reviewing
+                    </button>
+                    <button mat-stroked-button (click)="markAllAs('resolved')"
+                        style="border-color:#22c55e;color:#22c55e">
+                        Mark All Resolved
+                    </button>
                     <button class="bg-accent" mat-flat-button (click)="addNewFeedback()" [color]="'accent'">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                         <span class="ml-2">Add new</span>
@@ -143,13 +155,26 @@
                                 </td>
                             </ng-container>
 
+                            <!-- Status Column -->
+                            <ng-container matColumnDef="status">
+                                <th class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell *matHeaderCellDef>
+                                    Status
+                                </th>
+                                <td class="pr-6 whitespace-nowrap" mat-cell *matCellDef="let row">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white"
+                                        [style.background-color]="getStatusColor(row.status)">
+                                        {{ getStatusLabel(row.status) }}
+                                    </span>
+                                </td>
+                            </ng-container>
+
                             <ng-container matColumnDef="details">
                                 <th class="bg-gray-50 dark:bg-black dark:bg-opacity-5" mat-header-cell
                                     *matHeaderCellDef>
                                     Details
                                 </th>
                                 <td class="pr-6 font-medium whitespace-nowrap cursor-pointer" mat-cell *matCellDef="let row">
-                                    <button mat-icon-button color="primary" (click)="showMessage(row.message)">
+                                    <button mat-icon-button color="primary" (click)="openDetail(row); $event.stopPropagation()">
                                         <mat-icon class="mat-18">reorder</mat-icon>
                                     </button>
                                 </td>
@@ -166,7 +191,7 @@
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr class="order-row h-16 hover:bg-gray-100 cursor-pointer" mat-row
-                                *matRowDef="let row; columns: displayedColumns" (click)="showMessage(row.message)"></tr>
+                                *matRowDef="let row; columns: displayedColumns" (click)="openDetail(row)"></tr>
                         </table>
 
                         <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>

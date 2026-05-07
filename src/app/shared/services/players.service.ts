@@ -1780,4 +1780,32 @@ export class PlayersService {
             catchError(() => of(false))
         );
     }
+
+    public getPlayersListByTournament(id: string): Promise<any> {
+        return new Promise((resolve) => {
+            this.apollo
+                .subscribe({
+                    query: Query.GetPlayersByTournament,
+                    variables: {
+                        where: { tournamentId: { _eq: id } },
+                    },
+                })
+                .subscribe(({ data }) => {
+                    if (!data) {
+                        resolve(null);
+                    } else {
+                        resolve(data);
+                    }
+                });
+        });
+    }
+
+    public getPlayerActivityByUserId(userId: string): Observable<any[]> {
+        return this.apollo
+            .subscribe({
+                query: Query.GetPlayerActivityByUserId,
+                variables: { userId },
+            })
+            .pipe(map((res: any) => res.data?.user_activity_log || []));
+    }
 }

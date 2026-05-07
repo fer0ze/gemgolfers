@@ -1,39 +1,122 @@
-<!-- Message only -->
-<div *ngIf="showMessage" mat-dialog-content>
-  <h4>{{ data?.message }}</h4>
-</div>
-
-<!-- Feedback form -->
-<div *ngIf="!showMessage" mat-dialog-content>
-  <div class="mb-4">
-    <h2 class="text-2xl font-semibold">We’d love your feedback</h2>
-    <p class="text-sm text-gray-500">
-      Report a bug, request a feature, or share general feedback
-    </p>
+<!-- ── Detail view ─────────────────────────────────────────────────────────── -->
+<ng-container *ngIf="isDetailView">
+  <div class="flex items-center justify-between px-6 pt-6 pb-2">
+    <h2 class="text-xl font-bold tracking-tight">Feedback Detail</h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <form [formGroup]="feedbackForm" class="flex flex-col gap-4">
-    <mat-form-field appearance="outline" class="w-full" [floatLabel]="'always'">
-      <mat-label>Feedback Type</mat-label>
-      <mat-select formControlName="type">
-        <mat-option value="GENERAL_FEEDBACK">General Feedback</mat-option>
-        <mat-option value="BUG_REPORT">Report a Bug</mat-option>
-        <mat-option value="FEATURE_REQUEST">Feature Request / Enhancement</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-dialog-content class="px-6 pb-2" style="max-height:75vh;overflow-y:auto">
 
-    <mat-form-field appearance="outline" [floatLabel]="'always'" class="w-full">
-      <mat-label>Message</mat-label>
-      <textarea matInput rows="4" formControlName="message"></textarea>
-    </mat-form-field>
-  </form>
-</div>
+    <!-- Player card -->
+    <div class="flex items-start gap-4 p-4 rounded-xl mb-4"
+         style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15)">
+      <!-- Avatar -->
+      <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+           style="background:#6366f1">
+        {{ getInitials() }}
+      </div>
+      <!-- Info -->
+      <div class="flex-auto min-w-0">
+        <div class="text-base font-semibold leading-tight truncate">
+          {{ data.feedback.player?.firstName }} {{ data.feedback.player?.lastName }}
+        </div>
+        <div class="text-sm text-secondary mt-0.5">
+          <span *ngIf="data.feedback.player?.homeClub?.name"
+                class="inline-flex items-center gap-1 font-medium"
+                style="color:#6366f1">
+            <mat-icon style="font-size:14px;width:14px;height:14px;line-height:14px">sports_golf</mat-icon>
+            {{ data.feedback.player.homeClub.name }}
+            <span *ngIf="data.feedback.player.homeClub.abbr" class="text-xs text-secondary">({{ data.feedback.player.homeClub.abbr }})</span>
+          </span>
+        </div>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-secondary">
+          <span *ngIf="data.feedback.player?.email" class="flex items-center gap-1">
+            <mat-icon style="font-size:14px;width:14px;height:14px;line-height:14px">email</mat-icon>
+            {{ data.feedback.player.email }}
+          </span>
+          <span *ngIf="data.feedback.player?.phone" class="flex items-center gap-1">
+            <mat-icon style="font-size:14px;width:14px;height:14px;line-height:14px">phone</mat-icon>
+            {{ data.feedback.player.phone }}
+          </span>
+        </div>
+      </div>
+    </div>
 
+    <!-- Feedback meta row -->
+    <div class="flex items-center gap-3 mb-3 flex-wrap">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+        {{ data.feedback.type | titlecase }}
+      </span>
+      <span class="text-xs text-secondary">
+        {{ data.feedback.dateTime | date:'MMM dd, yyyy · h:mm a' }}
+      </span>
+    </div>
 
-<!-- Actions -->
-<div mat-dialog-actions align="end" *ngIf="!showMessage">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" [disabled]="feedbackForm.invalid" (click)="submitFeedback()">
-    Submit
-  </button>
-</div>
+    <!-- Message -->
+    <div class="p-4 rounded-xl text-sm leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap mb-5"
+         style="background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.08)">
+      {{ data.feedback.message }}
+    </div>
+
+    <!-- Status selector -->
+    <div class="mb-2">
+      <div class="text-xs font-semibold text-secondary uppercase tracking-wider mb-2">Update Status</div>
+      <div class="flex gap-2 flex-wrap">
+        <button *ngFor="let s of statuses" mat-stroked-button
+                [style.border-color]="s.color"
+                [style.color]="selectedStatus === s.value ? 'white' : s.color"
+                [style.background-color]="selectedStatus === s.value ? s.color : 'transparent'"
+                (click)="selectedStatus = s.value"
+                class="rounded-full text-sm font-medium transition-colors">
+          {{ s.label }}
+        </button>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="px-6 pb-4">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="saving" (click)="saveStatus()">
+      <mat-icon *ngIf="saving" class="animate-spin">refresh</mat-icon>
+      {{ saving ? 'Saving…' : 'Save Status' }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<!-- ── Add feedback form ───────────────────────────────────────────────────── -->
+<ng-container *ngIf="!isDetailView">
+  <div mat-dialog-content>
+    <div class="mb-4">
+      <h2 class="text-2xl font-semibold">We'd love your feedback</h2>
+      <p class="text-sm text-gray-500">
+        Report a bug, request a feature, or share general feedback
+      </p>
+    </div>
+
+    <form [formGroup]="feedbackForm" class="flex flex-col gap-4">
+      <mat-form-field appearance="outline" class="w-full" [floatLabel]="'always'">
+        <mat-label>Feedback Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="GENERAL_FEEDBACK">General Feedback</mat-option>
+          <mat-option value="BUG_REPORT">Report a Bug</mat-option>
+          <mat-option value="FEATURE_REQUEST">Feature Request / Enhancement</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" [floatLabel]="'always'" class="w-full">
+        <mat-label>Message</mat-label>
+        <textarea matInput rows="4" formControlName="message"></textarea>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="feedbackForm.invalid" (click)="submitFeedback()">
+      Submit
+    </button>
+  </div>
+</ng-container>

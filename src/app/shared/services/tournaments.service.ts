@@ -2146,4 +2146,31 @@ export class TournamentsService {
                 });
         });
     }
+
+    public searchTournamentsByTitle(title: string): Observable<any[]> {
+        return this.apollo
+            .subscribe({
+                query: Query.SearchTournamentsByTitle,
+                variables: { title: `%${title}%` },
+            })
+            .pipe(map((res: any) => res.data?.tournament || []));
+    }
+
+    public searchLeaguesByName(name: string): Observable<any[]> {
+        return this.apollo
+            .subscribe({
+                query: Query.SearchLeaguesByName,
+                variables: { name: `%${name}%` },
+            })
+            .pipe(map((res: any) => res.data?.league || []));
+    }
+
+    public searchToursByName(name: string): Observable<any[]> {
+        return this.apollo
+            .subscribe({
+                query: Query.SearchToursByName,
+                variables: { name: `%${name}%` },
+            })
+            .pipe(map((res: any) => res.data?.tour || []));
+    }
 }

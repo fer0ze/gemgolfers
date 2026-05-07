@@ -13,8 +13,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FacadeService } from 'app/shared/services/facade.service';
-import { Subject } from 'rxjs';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject, Observable, of } from 'rxjs';
+import { takeUntil, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { UntypedFormControl } from '@angular/forms';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import 'jspdf-autotable';
@@ -74,8 +74,30 @@ export class PlayersComponent implements OnInit, OnDestroy {
     // ── Filters ────────────────────────────────────────────────────────────────
     searchInputControl: UntypedFormControl = new UntypedFormControl('');
     selectedCategory: string = '';
-    selectedClubSearch: string = '';
     readonly categories = CATEGORIES;
+    selectedRoundsFilter: string = ''; // '', '0', '1', '2', '3', '3+'
+    readonly roundsOptions = [
+        { value: '0',  label: 'Never played' },
+        { value: '1',  label: '1 round' },
+        { value: '2',  label: '2 rounds' },
+        { value: '3',  label: '3 rounds' },
+        { value: '3+', label: '3+ rounds' },
+    ];
+
+    // Autocomplete entity filters (only one active at a time)
+    clubFilterControl: UntypedFormControl = new UntypedFormControl();
+    tournamentFilterControl: UntypedFormControl = new UntypedFormControl();
+    leagueFilterControl: UntypedFormControl = new UntypedFormControl();
+    tourFilterControl: UntypedFormControl = new UntypedFormControl();
+
+    filteredClubs$: Observable<any[]> = of([]);
+    filteredTournaments$: Observable<any[]> = of([]);
+    filteredLeagues$: Observable<any[]> = of([]);
+    filteredTours$: Observable<any[]> = of([]);
+
+    isEntityFiltered: boolean = false;
+    entityFilterLoading: boolean = false;
+    private _allEntityPlayers: any[] = [];
 
     // ── Selection (bulk ops) ───────────────────────────────────────────────────
     selection = new SelectionModel<any>(true, []);
@@ -131,6 +153,40 @@ export class PlayersComponent implements OnInit, OnDestroy {
             this.pageIndex = 0;
             this.loadPlayers();
         });
+
+        // Autocomplete observables
+        this.filteredClubs$ = this.clubFilterControl.valueChanges.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap((val) => {
+                if (!val || typeof val !== 'string' || val.trim().length < 1) return of([]);
+                return this._facadeService.searchClubsByName(val.trim());
+            })
+        );
+        this.filteredTournaments$ = this.tournamentFilterControl.valueChanges.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap((val) => {
+                if (!val || typeof val !== 'string' || val.trim().length < 1) return of([]);
+                return this._facadeService.searchTournamentsByTitle(val.trim());
+            })
+        );
+        this.filteredLeagues$ = this.leagueFilterControl.valueChanges.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap((val) => {
+                if (!val || typeof val !== 'string' || val.trim().length < 1) return of([]);
+                return this._facadeService.searchLeaguesByName(val.trim());
+            })
+        );
+        this.filteredTours$ = this.tourFilterControl.valueChanges.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            switchMap((val) => {
+                if (!val || typeof val !== 'string' || val.trim().length < 1) return of([]);
+                return this._facadeService.searchToursByName(val.trim());
+            })
+        );
     }
 
     ngOnDestroy(): void {
@@ -236,6 +292,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
                 _or: [
                     { firstName: { _ilike: s } },
                     { lastName: { _ilike: s } },
+                    { fullName: { _ilike: s } },
                     { email: { _ilike: s } },
                     { membershipNumber: { _ilike: s } },
                 ],
@@ -247,20 +304,42 @@ export class PlayersComponent implements OnInit, OnDestroy {
             conditions.push({ playerCategory: { _eq: this.selectedCategory } });
         }
 
-        // SuperAdmin: optional club name search
-        if (this.isSuperAdmin && this.selectedClubSearch?.trim()) {
-            conditions.push({
-                membership: { club: { name: { _ilike: `%${this.selectedClubSearch.trim()}%` } } },
-            });
+        // Rounds played filter (uses flights_played_aggregate)
+        if (this.selectedRoundsFilter === '0') {
+            conditions.push({ _not: { flights_played: {} } });
+        } else if (this.selectedRoundsFilter === '1') {
+            conditions.push({ flights_played_aggregate: { count: { predicate: { _eq: 1 } } } });
+        } else if (this.selectedRoundsFilter === '2') {
+            conditions.push({ flights_played_aggregate: { count: { predicate: { _eq: 2 } } } });
+        } else if (this.selectedRoundsFilter === '3') {
+            conditions.push({ flights_played_aggregate: { count: { predicate: { _eq: 3 } } } });
+        } else if (this.selectedRoundsFilter === '3+') {
+            conditions.push({ flights_played_aggregate: { count: { predicate: { _gt: 3 } } } });
         }
 
         return conditions.length > 0 ? { _and: conditions } : {};
     }
 
+    applyRoundsFilter(value: string): void {
+        this.selectedRoundsFilter = this.selectedRoundsFilter === value ? '' : value;
+        this.pageIndex = 0;
+        this.loadPlayers();
+    }
+
     onPageChange(event: PageEvent): void {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
-        this.loadPlayers();
+        if (this.isEntityFiltered) {
+            this._sliceEntityPage();
+        } else {
+            this.loadPlayers();
+        }
+    }
+
+    private _sliceEntityPage(): void {
+        const start = this.pageIndex * this.pageSize;
+        this.players = this._allEntityPlayers.slice(start, start + this.pageSize);
+        this._changeDetectorRef.markForCheck();
     }
 
     applyCategory(category: string): void {
@@ -277,7 +356,10 @@ export class PlayersComponent implements OnInit, OnDestroy {
     clearFilters(): void {
         this.searchInputControl.setValue('', { emitEvent: false });
         this.selectedCategory = '';
-        this.selectedClubSearch = '';
+        this.selectedRoundsFilter = '';
+        this._clearEntityFilters();
+        this.isEntityFiltered = false;
+        this._allEntityPlayers = [];
         this.pageIndex = 0;
         this.loadPlayers();
     }
@@ -286,8 +368,97 @@ export class PlayersComponent implements OnInit, OnDestroy {
         return !!(
             (this.searchInputControl.value || '').trim() ||
             this.selectedCategory ||
-            this.selectedClubSearch
+            this.selectedRoundsFilter ||
+            this.isEntityFiltered
         );
+    }
+
+    displayEntityName(entity: any): string {
+        if (!entity) return '';
+        return entity.name || entity.title || '';
+    }
+
+    private _clearEntityFilters(): void {
+        this.clubFilterControl.setValue('', { emitEvent: false });
+        this.tournamentFilterControl.setValue('', { emitEvent: false });
+        this.leagueFilterControl.setValue('', { emitEvent: false });
+        this.tourFilterControl.setValue('', { emitEvent: false });
+    }
+
+    private _clearOtherEntityFilters(active: string): void {
+        if (active !== 'club') this.clubFilterControl.setValue('', { emitEvent: false });
+        if (active !== 'tournament') this.tournamentFilterControl.setValue('', { emitEvent: false });
+        if (active !== 'league') this.leagueFilterControl.setValue('', { emitEvent: false });
+        if (active !== 'tour') this.tourFilterControl.setValue('', { emitEvent: false });
+    }
+
+    private _applyEntityPlayers(rawPlayers: any[]): void {
+        this._allEntityPlayers = rawPlayers.map(p => this.mapPlayer(p));
+        this.totalCount = this._allEntityPlayers.length;
+        this.pageIndex = 0;
+        this.isEntityFiltered = true;
+        this.isLoading = false;
+        this.entityFilterLoading = false;
+        this._sliceEntityPage();
+    }
+
+    async onClubSelected(club: any): Promise<void> {
+        this._clearOtherEntityFilters('club');
+        this.entityFilterLoading = true;
+        this._changeDetectorRef.markForCheck();
+        try {
+            const data = await this._facadeService.getPlayersListByClub(club.id);
+            this._applyEntityPlayers(data?.player || []);
+        } catch (err) {
+            console.error(err);
+            this.entityFilterLoading = false;
+            this._changeDetectorRef.markForCheck();
+        }
+    }
+
+    async onTournamentSelected(tournament: any): Promise<void> {
+        this._clearOtherEntityFilters('tournament');
+        this.entityFilterLoading = true;
+        this._changeDetectorRef.markForCheck();
+        try {
+            const data = await this._facadeService.getPlayersListByTournament(tournament.id);
+            const players = (data?.tournament_member || []).map((m: any) => m.player).filter(Boolean);
+            this._applyEntityPlayers(players);
+        } catch (err) {
+            console.error(err);
+            this.entityFilterLoading = false;
+            this._changeDetectorRef.markForCheck();
+        }
+    }
+
+    async onLeagueSelected(league: any): Promise<void> {
+        this._clearOtherEntityFilters('league');
+        this.entityFilterLoading = true;
+        this._changeDetectorRef.markForCheck();
+        try {
+            const data = await this._facadeService.getPlayersListByLeague(league.id);
+            const players = (data?.league_member || []).map((m: any) => m.player).filter(Boolean);
+            this._applyEntityPlayers(players);
+        } catch (err) {
+            console.error(err);
+            this.entityFilterLoading = false;
+            this._changeDetectorRef.markForCheck();
+        }
+    }
+
+    async onTourSelected(tour: any): Promise<void> {
+        this._clearOtherEntityFilters('tour');
+        this.entityFilterLoading = true;
+        this._changeDetectorRef.markForCheck();
+        try {
+            const data = await this._facadeService.getPlayersListByTour(tour.id);
+            const players = (data?.tour_member || []).map((m: any) => m.player).filter(Boolean);
+            this._applyEntityPlayers(players);
+        } catch (err) {
+            console.error(err);
+            this.entityFilterLoading = false;
+            this._changeDetectorRef.markForCheck();
+        }
     }
 
     // ── Legacy path (TourAdmin / LeagueAdmin) ──────────────────────────────────

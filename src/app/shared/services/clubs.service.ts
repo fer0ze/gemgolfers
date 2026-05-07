@@ -515,6 +515,34 @@ export class ClubsService {
         });
     });
   }
+  public updateFeedbackStatus(id: string, status: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.UpdateFeedbackStatus,
+          variables: { id, status },
+        })
+        .subscribe(
+          () => resolve(true),
+          () => resolve(false),
+        );
+    });
+  }
+
+  public updateAllFeedbackStatus(status: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.apollo
+        .mutate<any>({
+          mutation: Query.UpdateAllFeedbackStatus,
+          variables: { status },
+        })
+        .subscribe(
+          () => resolve(true),
+          () => resolve(false),
+        );
+    });
+  }
+
   public getAllCoursesRequest(): Promise<any> {
     return new Promise((resolve) => {
       this.apollo
@@ -534,7 +562,7 @@ export class ClubsService {
   /*
   public getClubsList(): any {
     const clubsObservable = new Observable(observer => {
-           
+
                observer.next(this.apollo.watchQuery<any>({
                 query: Query.GetClubs
                 })
@@ -542,9 +570,18 @@ export class ClubsService {
                 .subscribe(({ data }) => {
                     return data;
                 }));
-           
+
     });
 
     return clubsObservable;
 } */
+
+  public searchClubsByName(name: string): Observable<any[]> {
+    return this.apollo
+      .subscribe({
+        query: Query.SearchClubsByName,
+        variables: { name: `%${name}%` },
+      })
+      .pipe(map((res: any) => res.data?.club || []));
+  }
 }

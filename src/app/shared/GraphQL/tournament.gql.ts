@@ -3152,3 +3152,30 @@ export const getAllAdmin = gql`
         }
     }
 `;
+
+export const SearchTournamentsByTitle = gql`
+    query SearchTournamentsByTitle($title: String!) {
+        tournament(where: { title: { _ilike: $title } }, order_by: { title: asc }, limit: 10) {
+            id
+            title
+        }
+    }
+`;
+
+export const SearchLeaguesByName = gql`
+    query SearchLeaguesByName($name: String!) {
+        league(where: { name: { _ilike: $name } }, order_by: { name: asc }, limit: 10) {
+            id
+            name
+        }
+    }
+`;
+
+export const SearchToursByName = gql`
+    query SearchToursByName($name: String!) {
+        tour(where: { name: { _ilike: $name } }, order_by: { name: asc }, limit: 10) {
+            id
+            name
+        }
+    }
+`;

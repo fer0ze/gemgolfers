@@ -407,6 +407,19 @@ export const Getfeedbacks = gql`
             contact
             message
             dateTime
+            status
+            player {
+                id
+                firstName
+                lastName
+                email
+                phone
+                homeClub {
+                    id
+                    name
+                    abbr
+                }
+            }
         }
     }
 `;
@@ -420,6 +433,35 @@ export const getAllFeedbackByUserId = gql`
             contact
             message
             dateTime
+            status
+            player {
+                id
+                firstName
+                lastName
+                email
+                phone
+                homeClub {
+                    id
+                    name
+                    abbr
+                }
+            }
+        }
+    }
+`;
+
+export const UpdateFeedbackStatus = gql`
+    mutation UpdateFeedbackStatus($id: String!, $status: String!) {
+        update_feedback(where: { id: { _eq: $id } }, _set: { status: $status }) {
+            affected_rows
+        }
+    }
+`;
+
+export const UpdateAllFeedbackStatus = gql`
+    mutation UpdateAllFeedbackStatus($status: String!) {
+        update_feedback(where: {}, _set: { status: $status }) {
+            affected_rows
         }
     }
 `;
@@ -665,6 +707,15 @@ export const getAllCoursesRequest = gql`
                 phone
                 email
             }
+        }
+    }
+`;
+
+export const SearchClubsByName = gql`
+    query SearchClubsByName($name: String!) {
+        club(where: { name: { _ilike: $name } }, order_by: { name: asc }, limit: 10) {
+            id
+            name
         }
     }
 `;

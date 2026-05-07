@@ -50,6 +50,9 @@ export class FacadeService {
   getPGFClubList(id: string) {
     return this.clubService.getPGFClubsList(id);
   }
+  searchClubsByName(name: string) {
+    return this.clubService.searchClubsByName(name);
+  }
 
   AddClub(club: Club) {
     return this.clubService.AddClub(club);
@@ -66,6 +69,12 @@ export class FacadeService {
   }
   getAllFeedbackByUserId(userId: string) {
     return this.clubService.getAllFeedbackByUserId(userId);
+  }
+  updateFeedbackStatus(id: string, status: string) {
+    return this.clubService.updateFeedbackStatus(id, status);
+  }
+  updateAllFeedbackStatus(status: string) {
+    return this.clubService.updateAllFeedbackStatus(status);
   }
   getAllCoursesRequest() {
     return this.clubService.getAllCoursesRequest();
@@ -290,6 +299,12 @@ export class FacadeService {
   }
   getPlayersListForTournament(id: string) {
     return this.playerService.getPlayersListForTournament(id);
+  }
+  getPlayersListByTournament(id: string) {
+    return this.playerService.getPlayersListByTournament(id);
+  }
+  getPlayerActivityByUserId(userId: string) {
+    return this.playerService.getPlayerActivityByUserId(userId);
   }
   getPlayersListByClubCONGU(id: string) {
     return this.playerService.getPlayersListByClubCONGU(id);
@@ -585,6 +600,15 @@ export class FacadeService {
   }
   getToursListByDate(fromDate?: any, toDate?: any) {
     return this.tournamentService.getToursListByDate(fromDate, toDate);
+  }
+  searchTournamentsByTitle(title: string) {
+    return this.tournamentService.searchTournamentsByTitle(title);
+  }
+  searchLeaguesByName(name: string) {
+    return this.tournamentService.searchLeaguesByName(name);
+  }
+  searchToursByName(name: string) {
+    return this.tournamentService.searchToursByName(name);
   }
   getLeaguesReport() {
     return this.tournamentService.getLeaguesReport();

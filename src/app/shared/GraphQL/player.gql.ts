@@ -1985,3 +1985,50 @@ export const playerUpdatedHandicapWHSReportAdmin = gql`
     }
     ${PlayerHandicapWhsQL}
 `;
+
+export const GetPlayersByTournament = gql`
+    query GetPlayersByTournament($where: tournament_member_bool_exp!) {
+        tournament_member(where: $where) {
+            tournamentId
+            playerId
+            player {
+                id
+                firstName
+                lastName
+                playerCategory
+                handicap
+                createdAt
+                phone
+                email
+                membershipNumber
+                membershipQL: membership {
+                    clubId
+                    suspended
+                    club {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+    }
+`;
+
+
+export const GetPlayerActivityByUserId = gql`
+    query GetPlayerActivityByUserId($userId: String!) {
+        user_activity_log(
+            where: { userId: { _eq: $userId } }
+            order_by: { dateTime: desc }
+        ) {
+            id
+            activityType
+            userId
+            name
+            email
+            dateTime
+            description
+            ipAddress
+        }
+    }
+`;
