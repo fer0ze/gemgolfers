@@ -268,51 +268,72 @@ export class ViewTeeTimeComponent implements OnInit {
         //console.log(newDate);
         this.fDate = newDate.toString().substring(0, 16);
         console.log(dataPlayers);
-        if (dataPlayers) {
-            for (let slot of dataPlayers.TournamentsQL[0].slots) {
-                let membersTable = new MatTableDataSource(this.getMembers(slot.FlightsQL));
-                // console.log(membersTable);
+        if (dataPlayers?.TournamentsQL?.length) {
 
-                membersTable.paginator = this.paginator;
-                membersTable.sort = this.sort;
-                let teeTimeObj = {
-                    id: slot.id,
-                    title: 'Tee-' + slot.startingHole,
-                    slotTime: this.convertToAMPMFormat(slot.slotTime),
-                    slotTimes: (slot.slotTime),
-                    joinedMembers: slot.joinedMembers,
-                    members: membersTable.data.length > 0 ? membersTable : undefined,
-                    flightId: slot.flightId,
-                    noOfPlayers: dataPlayers.TournamentsQL[0].noOfPlayers,
-                    status: this.getStatus(dataPlayers.TournamentsQL[0].noOfPlayers, slot.joinedMembers),
-                    courseHoleSets: slot.courseHoleSets,
-                    noOfHoles: slot.noOfHoles,
-                    startingHole: slot.startingHole,
-                    available: slot.available,
-                    admin: slot?.FlightsQL?.admin?.fullName ?? '',
-                    courseHoleSetsInverted: slot.courseHoleSetsInverted,
-                    displayName: this.getSelectedHoleSet(slot.courseHoleSets, slot.courseHoleSetsInverted),
-                    // status:this.getStatus(dataPlayers.TournamentQL[0].noOfPlayers,slot.joinedMembers)
+            this.teeTimes = [];
+
+            for (let tournament of dataPlayers.TournamentsQL) {
+
+                for (let slot of tournament.slots) {
+
+                    let membersTable = new MatTableDataSource(
+                        this.getMembers(slot.FlightsQL)
+                    );
+
+                    membersTable.paginator = this.paginator;
+                    membersTable.sort = this.sort;
+
+                    let teeTimeObj = {
+                        id: slot.id,
+                        title: 'Tee-' + slot.startingHole,
+                        slotTime: this.convertToAMPMFormat(slot.slotTime),
+                        slotTimes: slot.slotTime,
+                        joinedMembers: slot.joinedMembers,
+                        members: membersTable.data.length > 0 ? membersTable : undefined,
+                        flightId: slot.flightId,
+                        noOfPlayers: tournament.noOfPlayers,
+                        status: this.getStatus(
+                            tournament.noOfPlayers,
+                            slot.joinedMembers
+                        ),
+                        courseHoleSets: slot.courseHoleSets,
+                        noOfHoles: slot.noOfHoles,
+                        startingHole: slot.startingHole,
+                        available: slot.available,
+                        admin: slot?.FlightsQL?.admin?.fullName ?? '',
+                        courseHoleSetsInverted: slot.courseHoleSetsInverted,
+                        displayName: this.getSelectedHoleSet(
+                            slot.courseHoleSets,
+                            slot.courseHoleSetsInverted
+                        ),
+
+                        // Optional: add tournament info
+                        tournamentId: tournament.id,
+                        tournamentName: tournament.name
+                    };
+
+                    this.teeTimes.push(teeTimeObj);
                 }
-                this.teeTimes.push(teeTimeObj);
             }
+
             this.teeTimes.sort((a, b) => {
-                // Compare slotTime first
-                const timeA = new Date(`1970-01-01T${a.slotTimes}00`);
-                const timeB = new Date(`1970-01-01T${b.slotTimes}00`);
+
+                const timeA = new Date(`1970-01-01T${a.slotTimes}:00`);
+                const timeB = new Date(`1970-01-01T${b.slotTimes}:00`);
 
                 if (timeA.getTime() !== timeB.getTime()) {
                     return timeA.getTime() - timeB.getTime();
                 }
 
-                // If times are equal, sort by courseHoleSets
                 if (a.courseHoleSets < b.courseHoleSets) return -1;
                 if (a.courseHoleSets > b.courseHoleSets) return 1;
+
                 return 0;
             });
-            this.copyTeeTimes = this.teeTimes;
-            console.log(this.teeTimes);
 
+            this.copyTeeTimes = [...this.teeTimes];
+
+            console.log(this.teeTimes);
         }
     }
 

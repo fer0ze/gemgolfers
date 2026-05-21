@@ -271,16 +271,16 @@ export class AddTeeTimesComponent implements OnInit {
 
             // In edit mode, skip the duplicate-date check
             if (!this.editMode) {
-                let isExist: TeeTime[] =
-                    await this.facadeService.isTeeTimeDateExist(
-                        clubId,
-                        General.parseToDate(this.scheduleForm.value.teeDate)
-                    );
-                if (isExist['tee_time_booking'].length > 0) {
-                    this.snackBar.open('Selected date already exists. Choose a different date.', 'x', { duration: 5000 });
-                    this.isSaving = false;
-                    return false;
-                }
+                // let isExist: TeeTime[] =
+                //     await this.facadeService.isTeeTimeDateExist(
+                //         clubId,
+                //         General.parseToDate(this.scheduleForm.value.teeDate)
+                //     );
+                // if (isExist['tee_time_booking'].length > 0) {
+                //     this.snackBar.open('Selected date already exists. Choose a different date.', 'x', { duration: 5000 });
+                //     this.isSaving = false;
+                //     return false;
+                // }
             }
 
             await this.generateTeeTimes();
