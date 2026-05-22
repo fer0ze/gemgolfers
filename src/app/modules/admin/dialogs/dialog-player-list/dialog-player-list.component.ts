@@ -218,8 +218,12 @@ export class DialogPlayerListComponent implements OnInit {
                 )
             );
             // this.player = matchingList['Result'];
-            //console.log(matchingList['Result']);
-
+            console.log(matchingList['Result']);
+            if (this._localStorage.isClubAdmin()) {
+                matchingList['Result'] = matchingList['Result'].filter((a) => {
+                    return a?.membership.some((b) => b?.club?.id == this.loggedInuser.adminClubId);
+                });
+            }
             this.setDataSource(matchingList['Result']);
 
             // if (this.player[0]) {
