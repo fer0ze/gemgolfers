@@ -24,9 +24,11 @@
         </div> -->
 
 
+        <div class="flex items-center justify-between gap-4">
 
-        <h2 class="text-xl font-bold text-gray-900 mb-4">Group Scores</h2>
-        <!-- <div class="flex items-center justify-end gap-3">
+
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Group Scores</h2>
+            <!-- <div class="flex items-center justify-end gap-3">
             <button *ngIf="selectedMembers.length == 0" (click)="createAutoFlights()"
                 class="bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                 Create Auto-Groups</button>
@@ -35,10 +37,29 @@
                 Add New Group</button>
 
         </div> -->
+        @if(!showHoles){
+            <div class="flex items-center gap-2 mt-4 md:mt-0">
+                <div class="flex-auto">
+                    <form class="example-container" [formGroup]="filters">
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
+                            <input matInput formControlName="name" [autocomplete]="'off'" placeholder="Search Player" />
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button mat-mini-fab color="primary" (click)="filterPlayerFlight(true)">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <button mat-mini-fab (click)="filterPlayerFlight(false)">
+                        <mat-icon>clear</mat-icon>
+                    </button>
+                </div>
+            </div>
+        }
+        </div>
         <div *ngIf="flightPlayers.length > 0" class="grid grid-cols-1 gap-6">
 
-            <div *ngFor="let flight of flightPlayers; let i = index"
-                [id]="'flight-' + flight.flightId"
+            <div *ngFor="let flight of flightPlayers; let i = index" [id]="'flight-' + flight.flightId"
                 [ngClass]="highlightedFlightId === flight.flightId ? 'ring-2 ring-emerald-500 ring-offset-2 bg-emerald-50' : 'bg-gray-50'"
                 class="border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-700">
                 <div class="flex justify-between items-center mb-3">
@@ -47,8 +68,7 @@
                         class="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13l4 4L19 7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                         Save Scores
                     </button>
@@ -56,6 +76,8 @@
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[800px] text-sm text-left">
                         <thead class="text-xs text-gray-500 uppercase bg-gray-100">
+                            @if(showHoles){
+
                             <tr>
                                 <th class="py-2 px-2 font-semibold sticky left-0 bg-gray-100 min-w-[200px]">Hole. No
                                 </th>
@@ -63,40 +85,41 @@
                                     class="py-2 px-1 font-semibold text-center w-10">{{ hole?.holeNo }}</th>
 
                                 <th *ngIf="
-                                                flight.header.courseHoles9
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">OUT</th>
+                                                    flight.header.courseHoles9
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">OUT</th>
                                 <th *ngFor="
-                                                let hole of flight.header
-                                                    .courseHoles18
-                                            " class="py-2 px-1 font-semibold text-center w-10">{{ hole?.holeNo }}</th>
+                                                    let hole of flight.header
+                                                        .courseHoles18
+                                                " class="py-2 px-1 font-semibold text-center w-10">{{ hole?.holeNo }}
+                                </th>
 
                                 <th *ngIf="
-                                                flight.header.courseHoles18
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">IN</th>
+                                                    flight.header.courseHoles18
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">IN</th>
                                 <th *ngFor="
-                                                let hole of flight.header
-                                                    .courseHoles27
-                                            " class="py-2 px-1 font-semibold text-center w-10">
+                                                    let hole of flight.header
+                                                        .courseHoles27
+                                                " class="py-2 px-1 font-semibold text-center w-10">
                                     {{ hole?.holeNo }}
                                 </th>
                                 <th *ngIf="
-                                                flight.header.courseHoles27
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">
+                                                    flight.header.courseHoles27
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">
                                     OUT
                                 </th>
                                 <th *ngFor="
-                                                let hole of flight.header
-                                                    .courseHoles36
-                                            " lass="py-2 px-1 font-semibold text-center w-10">
+                                                    let hole of flight.header
+                                                        .courseHoles36
+                                                " lass="py-2 px-1 font-semibold text-center w-10">
                                     {{ hole?.holeNo }}
                                 </th>
                                 <th *ngIf="
-                                                flight.header.courseHoles36
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">
+                                                    flight.header.courseHoles36
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">
                                     IN
                                 </th>
                                 <th class="py-2 px-2 font-semibold text-center bg-gray-200">TOTAL</th>
@@ -108,47 +131,48 @@
                                     class="py-2 px-1 font-semibold text-center w-10">{{ hole?.par }}</th>
 
                                 <th *ngIf="
-                                                flight.header.courseHoles9
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{
+                                                    flight.header.courseHoles9
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">{{
                                     flight.header.par9 }}</th>
                                 <th *ngFor="
-                                                let hole of flight.header
-                                                    .courseHoles18
-                                            " class="py-2 px-1 font-semibold text-center w-10">{{ hole?.par }}</th>
+                                                    let hole of flight.header
+                                                        .courseHoles18
+                                                " class="py-2 px-1 font-semibold text-center w-10">{{ hole?.par }}</th>
 
                                 <th *ngIf="
-                                                flight.header.courseHoles18
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">{{
+                                                    flight.header.courseHoles18
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">{{
                                     flight.header.par18 }}</th>
                                 <th *ngFor="
-                                                let hole of flight.header
-                                                    .courseHoles27
-                                            " class="py-2 px-1 font-semibold text-center w-10">
+                                                    let hole of flight.header
+                                                        .courseHoles27
+                                                " class="py-2 px-1 font-semibold text-center w-10">
                                     {{ hole?.par }}
                                 </th>
                                 <th *ngIf="
-                                                flight.header.courseHoles27
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">
+                                                    flight.header.courseHoles27
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">
                                     {{ flight.header.par27 }}
                                 </th>
                                 <th *ngFor="
-                                                let hole of flight.header
-                                                    .courseHoles36
-                                            " lass="py-2 px-1 font-semibold text-center w-10">
+                                                    let hole of flight.header
+                                                        .courseHoles36
+                                                " lass="py-2 px-1 font-semibold text-center w-10">
                                     {{ hole?.par }}
                                 </th>
                                 <th *ngIf="
-                                                flight.header.courseHoles36
-                                                    .length > 0
-                                            " class="py-2 px-2 font-semibold text-center bg-gray-200">
+                                                    flight.header.courseHoles36
+                                                        .length > 0
+                                                " class="py-2 px-2 font-semibold text-center bg-gray-200">
                                     {{ flight.header.par36 }}
                                 </th>
                                 <th class="py-2 px-2 font-semibold text-center bg-gray-200">{{ flight.header.parTotal }}
                                 </th>
                             </tr>
+                            }
                         </thead>
                         <tbody *ngIf="!this.showTaxes" class="divide-y divide-gray-200">
                             <tr *ngFor="let item of flight" class="bg-white">
@@ -170,11 +194,12 @@
                                             }})
 
                                         </span>
-                                        <mat-icon matTooltip="Score Saved"
-                                            *ngIf="item.scoreSaved" class="text-emerald-600 icon-size-4" [svgIcon]="'heroicons_solid:badge-check'"></mat-icon>
+                                        <mat-icon matTooltip="Score Saved" *ngIf="item.scoreSaved"
+                                            class="text-emerald-600 icon-size-4"
+                                            [svgIcon]="'heroicons_solid:badge-check'"></mat-icon>
                                     </span>
                                 </td>
-                                <td  *ngFor="
+                                <td *ngFor="
                                                 let score of item.Hole9Scores;
                                                 let i = index
                                             " class="p-1">
@@ -207,7 +232,7 @@
                                                 flight.header.courseHoles18
                                                     .length > 0
                                             ">
-                                    <td  *ngFor="let score of item.Hole18Scores;
+                                    <td *ngFor="let score of item.Hole18Scores;
                                                     let i = index
                                                 " class="p-1">
                                         <input (input)="
@@ -264,7 +289,7 @@
 
                                     </span>
                                 </td>
-                                <td  *ngFor="
+                                <td *ngFor="
                                                 let score of flight.Hole9Scores;
                                                 let i = index
                                             " class="p-1">
@@ -297,7 +322,7 @@
                                                 flight.header.courseHoles18
                                                     .length > 0
                                             ">
-                                    <td  *ngFor="let score of flight.Hole18Scores;
+                                    <td *ngFor="let score of flight.Hole18Scores;
                                                     let i = index
                                                 " class="p-1">
                                         <input (input)="

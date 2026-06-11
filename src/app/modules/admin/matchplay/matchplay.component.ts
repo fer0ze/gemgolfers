@@ -71,6 +71,7 @@ export class MatchplayComponent implements OnInit, OnChanges {
     showRound2: boolean = false;
     showRound3: boolean = false;
     showRound4: boolean = false;
+    showHoles: boolean = true;
     selectedIndex: any = 0;
     noOfRounds: any = 0;
     constructor(
@@ -91,7 +92,9 @@ export class MatchplayComponent implements OnInit, OnChanges {
             this.loggedInuser = this._localStorage.get(Constants.LOGGED_IN_USER);
             this.logger.log('Admin comes to Tournament Score Page', "info");
             this.logger.log('Getting Tournament Score Data', "info", this.tournamentID);
-
+            if (this.loggedInuser && this.loggedInuser.adminClubId == '-L5D7VIovp6LD8Ij7Q3r') {
+                this.showHoles = false;
+            }
             this.filters = this._formBuilder.group({
                 name: [null, Validators.compose([Validators.required])],
             });
@@ -294,19 +297,27 @@ export class MatchplayComponent implements OnInit, OnChanges {
     }
 
     filterPlayerFlight(query) {
-        if (query.length > 3) {
-            this.filterPlayer = query;
-        } else {
+        if (query) {
+            this.filterPlayer = this.filters.get('name').value;
+        }
+        else {
             this.filterPlayer = '';
             this.filters.reset();
         }
+        // if (query.length > 3) {
+        //     this.filterPlayer = query;
+        // } else {
+        //     this.filterPlayer = '';
+        //     this.filters.reset();
+        // }
 
         this.selectedTeamName = true;
         this.roundFlights = [];
         //this.scoreHeader = [];
 
         this.flightPlayers = [];
-        this.parseSubscriptionResponse();
+
+        this.parseSubscriptionResponse(true);
     }
 
     async changeRound(item) {
@@ -637,12 +648,22 @@ export class MatchplayComponent implements OnInit, OnChanges {
     }
 
 
-    private parseSubscriptionResponse(): boolean {
+    private async parseSubscriptionResponse(flag: boolean = false) {
         try {
             if (this.matchPlayData == null) {
                 return false;
             }
-            let tournamentData: any = this.matchPlayData;
+            let tournamentData: any;
+            if (flag) {
+                let dataLeaderboard =
+                    await this.facadeService.MatchPlayDataQueryShort(
+                        '-L6WPki8tSDZ1IAAoRXZ',
+                        this.tournamentID
+                    );
+                tournamentData = dataLeaderboard.TournamentQL;
+            } else {
+                tournamentData = this.matchPlayData;
+            }
 
             if (tournamentData.noOfRounds > 0) {
                 if (this.ddSelectedFlight != '0') {
@@ -685,35 +706,39 @@ export class MatchplayComponent implements OnInit, OnChanges {
                 ////console.log(this.roundFlights);
                 //console.log(this.filterPlayer);
                 if (!this.showTaxes && this.filterPlayer != '') {
+                    const searchTerm = this.filterPlayer.toLowerCase().trim();
+
                     var filteredArray: any = this.roundFlights
                         .filter((element) =>
-                            element.MembersQL.some(
-                                (MembersQL) =>
-                                    MembersQL.PlayerQL.firstName
-                                        .toLowerCase()
-                                        .includes(
-                                            this.filterPlayer.toLowerCase()
-                                        ) ||
-                                    MembersQL.PlayerQL.lastName
-                                        .toLowerCase()
-                                        .includes(this.filterPlayer.toLowerCase())
-                            )
+                            element.MembersQL.some((MembersQL) => {
+                                const firstName = MembersQL.PlayerQL.firstName.toLowerCase();
+                                const lastName = MembersQL.PlayerQL.lastName.toLowerCase();
+                                const fullName = `${firstName} ${lastName}`;
+                                const fullNameReversed = `${lastName} ${firstName}`;
+
+                                return (
+                                    firstName.includes(searchTerm) ||
+                                    lastName.includes(searchTerm) ||
+                                    fullName.includes(searchTerm) ||          // "ali akel"
+                                    fullNameReversed.includes(searchTerm)     // "akel ali"
+                                );
+                            })
                         )
                         .map((element) => {
                             let n = Object.assign({}, element, {
-                                MembersQL: element.MembersQL.filter(
-                                    (subElement) =>
-                                        subElement.PlayerQL.firstName
-                                            .toLowerCase()
-                                            .includes(
-                                                this.filterPlayer.toLowerCase()
-                                            ) ||
-                                        subElement.PlayerQL.lastName
-                                            .toLowerCase()
-                                            .includes(
-                                                this.filterPlayer.toLowerCase()
-                                            )
-                                ),
+                                MembersQL: element.MembersQL.filter((subElement) => {
+                                    const firstName = subElement.PlayerQL.firstName.toLowerCase();
+                                    const lastName = subElement.PlayerQL.lastName.toLowerCase();
+                                    const fullName = `${firstName} ${lastName}`;
+                                    const fullNameReversed = `${lastName} ${firstName}`;
+
+                                    return (
+                                        firstName.includes(searchTerm) ||
+                                        lastName.includes(searchTerm) ||
+                                        fullName.includes(searchTerm) ||
+                                        fullNameReversed.includes(searchTerm)
+                                    );
+                                }),
                             });
                             return n;
                         });
@@ -796,12 +821,12 @@ export class MatchplayComponent implements OnInit, OnChanges {
             const memberToPair = new Map();
 
             if (this.matchPlayData?.pairs?.length) {
-                for (const p of this.matchPlayData.pairs) {
+                for (const p of this.matchPlayData?.pairs) {
                     pairLookup.set(p.id, p);
                 }
             }
 
-            for (const p of this.matchPlayData.pairs) {
+            for (const p of this.matchPlayData?.pairs) {
                 memberToPair.set(p.member1Id, p);
                 memberToPair.set(p.member2Id, p);
             }
