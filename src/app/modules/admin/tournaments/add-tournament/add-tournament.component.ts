@@ -969,7 +969,7 @@ export class AddTournamentComponent implements OnInit {
         if (this._localStorage.isClubAdmin()) {
             this.formArray.get([0]).get('clubsFormCtrl').clearValidators();
             this.formArray
-                .get([0])
+                .get([0]) 
                 .get('clubsFormCtrl')
                 .updateValueAndValidity();
         }
