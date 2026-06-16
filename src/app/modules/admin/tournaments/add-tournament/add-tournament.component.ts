@@ -941,6 +941,29 @@ export class AddTournamentComponent implements OnInit {
         if (!this.tournamentID) {
             this.maxDate = new Date(currentYear + 1, 11, 31);
             this.minDate = todayDate;
+
+            // Pre-select course for club admins
+            if (this._localStorage.isClubAdmin() && this.loggedInuser?.adminClubId) {
+                // Find a course associated with the club admin's club
+                const clubAdminCourse = this.Courses.find(
+                    (course) => course.clubId === this.loggedInuser.adminClubId
+                );
+
+                if (clubAdminCourse) {
+                    // Set the course as default
+                    this.formArray
+                        .get([0])
+                        .get('courseInfo')!
+                        .get([0])
+                        .get('courseName')
+                        .setValue({
+                            name: clubAdminCourse.name,
+                            id: clubAdminCourse.id,
+                        });
+                    console.log('Pre-selected course for club admin:', clubAdminCourse.name);
+                    this.getSelectedCourses(clubAdminCourse);
+                }
+            }
         }
 
         if (this._localStorage.isClubAdmin()) {
@@ -1610,7 +1633,7 @@ export class AddTournamentComponent implements OnInit {
 
                 // 🔹 Fallback: use first one if not found
                 const selectedSet = defaultHoleSet || sets[0];
-                
+
                 // 🔹 Set the value directly in the form
                 this.formArray.get([0]).get('courseHoleSet').setValue(
                     selectedSet.holeSets + '_' + selectedSet.inverted
