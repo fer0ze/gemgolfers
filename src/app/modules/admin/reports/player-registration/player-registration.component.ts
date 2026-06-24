@@ -10,6 +10,7 @@ import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Constants } from 'app/shared/classes/general';
 import { PlayerRegistrationService } from './player-registration.service';
 import { PlayerRegistrationFormComponent } from './player-registration-form/player-registration-form.component';
+import { LogsService } from 'app/shared/services/logs.service';
 
 @Component({
   selector: 'app-player-registration',
@@ -46,20 +47,24 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
     private _playerRegistrationService: PlayerRegistrationService,
     private _localStorage: LocalStorageService,
     private _dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _logger: LogsService
   ) {
     this.dataSource = new MatTableDataSource<any>([]);
   }
 
   ngOnInit(): void {
+    this._logger.log('PlayerRegistrationComponent initialized', "info");
     this.loggedInUser = this._localStorage.get(Constants.LOGGED_IN_USER);
     this.clubId = this.loggedInUser?.clubId || '';
+    this._logger.log(`Logged in user: ${this.loggedInUser?.id}, Club ID: ${this.clubId}`, "info");
 
     // Initialize filter form with current date
     const today = new Date();
     this.filterForm = this.fb.group({
       selectedDate: [today, [Validators.required]],
     });
+    this._logger.log('Filter form initialized with todays date', "info", today.toISOString());
 
     // Set min and max dates for date picker
     this.minDate = new Date(2000, 0, 1);
@@ -73,6 +78,7 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.isLoading = false;
+        this._logger.log(`Guest entries updated. Total entries: ${entries.length}`, "info");
       });
 
     // Load initial data
@@ -82,6 +88,7 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this._logger.log('Paginator and sort initialized after view init', "info");
   }
 
   /**
@@ -89,10 +96,12 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
    */
   loadGuestEntries(): void {
     this.isLoading = true;
+    this._logger.log('Loading guest entries...', "info");
     const selectedDate = this.filterForm.get('selectedDate')?.value;
     
     if (selectedDate) {
       const dateString = this.formatDate(selectedDate);
+      this._logger.log(`Fetching guest entries for date: ${dateString}`, "info");
       this._playerRegistrationService
         .getGuestEntries(this.clubId, dateString)
         .pipe(takeUntil(this._unsubscribeAll))
@@ -101,9 +110,11 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
             this.dataSource.data = entries;
             this.totalAmountToday = entries.reduce((sum, entry) => sum + (entry.amount || 0), 0);
             this.isLoading = false;
+            this._logger.log(`Successfully loaded ${entries.length} guest entries. Total amount: ${this.totalAmountToday}`, "info");
           },
           error: (error) => {
             console.error('Error loading guest entries:', error);
+            this._logger.log(`Error loading guest entries: ${error.message}`, "error", error);
             this._snackBar.open('Error loading data', 'Close', {
               duration: 3000,
               horizontalPosition: 'end',
@@ -113,6 +124,8 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
             this.isLoading = false;
           },
         });
+    } else {
+      this._logger.log('No date selected for loading guest entries.', "warn");
     }
   }
 
@@ -131,6 +144,8 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
    * Open add/edit form dialog
    */
   openFormDialog(entry?: any): void {
+    const dialogTitle = entry ? 'Edit Guest Entry' : 'Add New Guest Entry';
+    this._logger.log(`Opening form dialog for: ${dialogTitle}`, "info", entry);
     const dialogRef = this._dialog.open(PlayerRegistrationFormComponent, {
       width: '500px',
       data: {
@@ -145,12 +160,15 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.loadGuestEntries();
+        this._logger.log(`Guest entry form dialog closed with success. Result:`, "info", result);
         this._snackBar.open('Guest entry saved successfully', 'Close', {
           duration: 3000,
           horizontalPosition: 'end',
           verticalPosition: 'top',
           panelClass: ['success-snackbar'],
         });
+      } else {
+        this._logger.log('Guest entry form dialog closed without saving.', "info");
       }
     });
   }
@@ -159,11 +177,13 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
    * Delete guest entry
    */
   deleteEntry(entry: any): void {
+    this._logger.log(`Attempting to delete guest entry with ID: ${entry.id}`, "warn", entry);
     if (confirm('Are you sure you want to delete this entry?')) {
       this.isLoading = true;
       const dateString = this.formatDate(
         this.filterForm.get('selectedDate')?.value
       );
+      this._logger.log(`User confirmed deletion for entry ID: ${entry.id} on date: ${dateString}`, "warn");
 
       this._playerRegistrationService
         .deleteGuestEntry(entry.id, this.clubId, dateString)
@@ -171,6 +191,7 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
         .subscribe({
           next: () => {
             this.loadGuestEntries();
+            this._logger.log(`Successfully deleted guest entry with ID: ${entry.id}`, "info");
             this._snackBar.open('Guest entry deleted successfully', 'Close', {
               duration: 3000,
               horizontalPosition: 'end',
@@ -180,6 +201,7 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
           },
           error: (error) => {
             console.error('Error deleting entry:', error);
+            this._logger.log(`Error deleting guest entry ID ${entry.id}: ${error.message}`, "error", error);
             this._snackBar.open('Error deleting entry', 'Close', {
               duration: 3000,
               horizontalPosition: 'end',
@@ -189,6 +211,8 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
             this.isLoading = false;
           },
         });
+    } else {
+      this._logger.log(`User cancelled deletion for entry ID: ${entry.id}`, "info");
     }
   }
 
@@ -196,6 +220,7 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
    * Apply date filter
    */
   applyFilter(): void {
+    this._logger.log('Applying date filter.', "info", this.filterForm.get('selectedDate')?.value);
     this.loadGuestEntries();
   }
 
@@ -205,10 +230,12 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
   resetFilter(): void {
     const today = new Date();
     this.filterForm.patchValue({ selectedDate: today });
+    this._logger.log('Resetting filter to today date.', "info", today.toISOString());
     this.loadGuestEntries();
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.complete();
+    this._logger.log('PlayerRegistrationComponent destroyed.', "info");
   }
 }
