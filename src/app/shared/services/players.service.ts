@@ -385,7 +385,6 @@ export class PlayersService {
                                         },
                                     ],
                                 },
-
                                 {
                                     flights_played: {
                                         flight: { date: { _gte: toDate } },
