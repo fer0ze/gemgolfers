@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { LocalStorageService } from 'app/shared/services/localStorage';
 import { Constants } from 'app/shared/classes/general';
 import { PlayerRegistrationService } from './player-registration.service';
@@ -63,6 +63,7 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
     const today = new Date();
     this.filterForm = this.fb.group({
       selectedDate: [today, [Validators.required]],
+      searchInputControl: [''],
     });
     this._logger.log('Filter form initialized with todays date', "info", today.toISOString());
 
@@ -79,6 +80,17 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
         this.isLoading = false;
         this._logger.log(`Guest entries updated. Total entries: ${entries.length}`, "info");
+      });
+
+    // Listen for search input changes
+    this.filterForm.get('searchInputControl')?.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe((value) => {
+        this.applySearchFilter(value);
       });
 
     // Load initial data
@@ -225,13 +237,27 @@ export class PlayerRegistrationComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Apply search filter to the data source.
+   * @param filterValue The value to filter by.
+   */
+  applySearchFilter(filterValue: string): void {
+    this._logger.log(`Applying search filter: ${filterValue}`, "info");
+    this.dataSource.filter = filterValue.trim();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+ 
+  /**
    * Reset filter to today's date
    */
   resetFilter(): void {
     const today = new Date();
-    this.filterForm.patchValue({ selectedDate: today });
-    this._logger.log('Resetting filter to today date.', "info", today.toISOString());
+    this.filterForm.patchValue({ selectedDate: today, searchInputControl: '' });
+    this._logger.log('Resetting filter to todays date.', "info", today.toISOString());
     this.loadGuestEntries();
+    this.applySearchFilter(''); // Also clear the search filter
   }
 
   ngOnDestroy(): void {
