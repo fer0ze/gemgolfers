@@ -1254,6 +1254,25 @@ export class PlayersService {
         });
     }
 
+    public createClubMemberSubscription(subscription: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apollo.mutate<any>({
+                mutation: Query.CreateClubMemberSubscription,
+                variables: {
+                    object: subscription,
+                },
+            }).subscribe({
+                next: ({ data }) => {
+                    resolve(data.insert_club_member_subscription_one);
+                },
+                error: (error) => {
+                    console.error('Error creating club member subscription:', error);
+                    reject(error);
+                }
+            });
+        });
+    }
+
     updatePlayer(player: Player): Promise<boolean> {
         //console.log(player.id);
         return new Promise((resolve) => {
