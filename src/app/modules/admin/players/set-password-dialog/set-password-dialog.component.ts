@@ -62,7 +62,8 @@ export class SetPasswordDialogComponent implements OnInit {
                     const password = user.passwordControl.value;
                     await this._facadeService.updateAccountInFirebase(user.Email, password).subscribe();
                     user.status = '';
-                    user.message = 'Password updated successfully.'; 
+                    this._facadeService.sendTransactionalEmail(user.Email, user.Name, password).subscribe();
+                    user.message = 'Password updated successfully.';
                 } catch (error) {
                     user.status = 'error';
                     user.message = `Failed to update password: ${error.message}`;
