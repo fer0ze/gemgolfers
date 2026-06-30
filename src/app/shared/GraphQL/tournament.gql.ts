@@ -515,6 +515,29 @@ export const getTourMembers = gql`
         }
     }
 `;
+
+export const GetTourByIdQL = gql`
+    query GetTourByIdQL($id: String!) {
+        tour(where: { id: { _eq: $id } }) {
+            id
+            name
+            startDate
+            endDate
+            tournaments {
+                id
+                title
+            }
+            members {
+                playerId
+                player {
+                    id
+                    firstName
+                    lastName
+                }
+            }
+        }
+    }
+`;
 export const getLeageLeaderBoards = gql`
     query getLeagues($leagueId: String!) {
         LeaderBoardQL: mvp_leaderboard(
@@ -2984,6 +3007,28 @@ export const getTours = gql`
     query getTourDashboard($adminId: String!) {
         tour(
             where: { adminId: { _eq: $adminId } }
+            order_by: [{ dateCreated: desc }]
+        ) {
+            id
+            name
+            logo
+            dateCreated
+            startDate
+            endDate
+            tournaments {
+                id
+                leagueId
+                title
+            }
+            members {
+                playerId
+            }
+        }
+    }
+`;
+export const getAllTours = gql`
+    query getTourDashboard {
+        tour(
             order_by: [{ dateCreated: desc }]
         ) {
             id
