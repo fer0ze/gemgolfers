@@ -620,6 +620,9 @@ export class FacadeService {
   getLeaguesByClub(id: string) {
     return this.tournamentService.getLeaguesByClub(id);
   }
+  getLeagueById(id: string) {
+    return this.tournamentService.getLeagueById(id);
+  }
   getLeaguesMembers(id: string) {
     return this.tournamentService.getLeaguesMembers(id);
   }

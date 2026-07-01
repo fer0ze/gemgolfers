@@ -480,6 +480,21 @@ export const getLeaguesByClub = gql`
         }
     }
 `;
+export const getLeagueById = gql`
+    query getLeagueById($id: String!) {
+        league(where: { id: { _eq: $id } }) {
+            id
+            name
+            dateCreated
+            members {
+                playerId
+            }
+            tournaments {
+                id
+            }
+        }
+    }
+`;
 export const getLeaguesMembers = gql`
     query getLeaguesMembers($adminId: String!) {
         league(where: { id: { _eq: $adminId } }) {
