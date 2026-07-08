@@ -532,6 +532,7 @@ export const CreateClubMemberSubscription = gql`
             createdAt
             type
             startDate
+            amount
         }
     }
 `;
