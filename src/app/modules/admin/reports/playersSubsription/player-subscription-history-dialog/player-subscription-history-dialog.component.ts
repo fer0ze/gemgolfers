@@ -16,7 +16,7 @@ export class PlayerSubscriptionHistoryDialogComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    displayedColumns: string[] = ['firstName', 'membershipNumber', 'type', 'amount', 'startDate', 'dueDate', 'createdAt'];
+    displayedColumns: string[] = ['firstName', 'membershipNumber', 'amountWithGst', 'amountWithoutGst', 'locker', 'capitation', 'startDate', 'dueDate', 'createdAt'];
     dataSource: MatTableDataSource<any>;
     isLoading = true;
 
@@ -40,7 +40,10 @@ export class PlayerSubscriptionHistoryDialogComponent implements OnInit {
             createdAt
             type
             startDate
-            amount
+            capitation
+            amountWithGst
+            amountWithoutGst
+            locker
             }
         }
     `;

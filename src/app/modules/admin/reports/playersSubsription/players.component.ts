@@ -34,6 +34,11 @@ import { SelectMonthYearDialogComponent } from './select-month-year-dialog/selec
 import { LogsService } from 'app/shared/services/logs.service';
 import { SelectionModel } from '@angular/cdk/collections';
 
+const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 const CATEGORIES = [
     'Amateurs',
     'Senior Amateurs',
@@ -748,42 +753,74 @@ export class PlayersComponent implements OnInit, OnDestroy {
                     const capitation = this.parseNumber(rowKeys['capitation']);
 
                     // Use amtWithGst as primary amount, otherwise fallback to withoutGst
-                    const amountToSave = amtWithGst || withoutGst;
+                    // const amountToSave = amtWithGst;
 
-                    const monthNames = [
-                        'January', 'February', 'March', 'April', 'May', 'June',
-                        'July', 'August', 'September', 'October', 'November', 'December'
-                    ];
+
+
                     const selectedMonthName = monthNames[month];
+                    const startDate = `${year}-${(month + 1).toString().padStart(2, '0')}-01`;
 
-                    // Add entry to subscription table for existing player
-                    const newSubscription = {
+                    // Check if a subscription already exists for this player and month/year
+                    const existingSubscriptionResponse = await this._facadeService.getClubMemberSubscription(
+                        existingPlayer.id,
+                        this.loggedInuser.adminClubId,
+                        startDate
+                    );
+                    const existingSubscription = existingSubscriptionResponse?.[0];
+
+                    const subscriptionData = {
                         playerId: existingPlayer.id,
-                        clubId: this.loggedInuser.adminClubId, // Assuming admin's clubId for subscription
-                        dueDate: dueDate, 
+                        clubId: this.loggedInuser.adminClubId,
+                        dueDate: dueDate,
                         createdAt: new Date().toISOString(),
-                        startDate: `${year}-${(month + 1).toString().padStart(2, '0')}-01`, // First day of selected month
+                        startDate: startDate,
                         type: `${selectedMonthName} ${year} Subscription`,
-                        amount: amountToSave,
+                        amountWithGst: amtWithGst,
+                        locker: locker,
+                        capitation: capitation,
+                        amountWithoutGst: withoutGst,
                     };
 
-                    // Assuming a new method in FacadeService to create a single subscription
-                    const createSubscriptionStatus = await this._facadeService.createClubMemberSubscription(newSubscription);
-
-                    if (createSubscriptionStatus) {
-                        importResults.push({
-                            row: rowNumber,
-                            membershipNumber: membershipNumber,
-                            status: 'success',
-                            message: `Subscription added with amount ${amountToSave}.`,
-                        });
+                    if (existingSubscription) {
+                        // Update existing subscription
+                        const updateSubscriptionStatus = await this._facadeService.updateClubMemberSubscription(
+                            existingSubscription.id,
+                            subscriptionData
+                        );
+                        if (updateSubscriptionStatus) {
+                            importResults.push({
+                                row: rowNumber,
+                                membershipNumber: membershipNumber,
+                                status: 'success',
+                                message: `Subscription updated with amount ${amtWithGst}. (ID: ${existingSubscription.id})`,
+                            });
+                        } else {
+                            importResults.push({
+                                row: rowNumber,
+                                membershipNumber: membershipNumber,
+                                status: 'error',
+                                message: 'Failed to update subscription for existing player.',
+                            });
+                        }
                     } else {
-                        importResults.push({
-                            row: rowNumber,
-                            membershipNumber: membershipNumber,
-                            status: 'error',
-                            message: 'Failed to add subscription for existing player.',
-                        });
+                        // Create new subscription
+                        const createSubscriptionStatus = await this._facadeService.createClubMemberSubscription(subscriptionData);
+
+                        if (createSubscriptionStatus) {
+                            importResults.push({
+                                row: rowNumber,
+                                membershipNumber: membershipNumber,
+                                status: 'success',
+                                message: `Subscription added with amount ${amtWithGst}.`,
+                            });
+                        } else {
+                            importResults.push({
+                                row: rowNumber,
+                                membershipNumber: membershipNumber,
+                                status: 'error',
+                                message: 'Failed to add subscription for existing player.',
+                            });
+                        }
                     }
                 } else {
                     // Player not found, record error and skip
