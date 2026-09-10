@@ -150,6 +150,7 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     selectedPlayers: { flightIndex: number, playerIndex: number }[] = [];
     showSwapFlightsButton: boolean = false;
     showSwapPlayersButton: boolean = false;
+    showMovePlayerButton: boolean = false;
     constructor(
         private _localStorage: LocalStorageService,
         private logger: LogsService,
@@ -956,6 +957,9 @@ export class FlightManagementComponent implements OnInit, OnChanges {
     }
 
     drop(event: CdkDragDrop<string[]>) {
+        this.selectedFlights = [];
+        this.selectedPlayers = [];
+        this.updateSwapButtonVisibility();
         if (event.previousContainer === event.container) {
             moveItemInArray(
                 event.container.data,
@@ -1167,6 +1171,17 @@ export class FlightManagementComponent implements OnInit, OnChanges {
         this.showSwapFlightsButton = this.selectedFlights.length === 2;
         this.showSwapPlayersButton = this.selectedPlayers.length === 2 &&
             this.selectedPlayers[0].flightIndex !== this.selectedPlayers[1].flightIndex;
+        this.showMovePlayerButton = this.selectedFlights.length === 0 &&
+            this.selectedPlayers.length === 1;
+    }
+
+    moveSelectedPlayer() {
+        if (this.selectedPlayers.length !== 1) {
+            this.snackBar.open('Please select exactly one player to move.', 'x', { duration: 3000 });
+            return;
+        }
+        const { flightIndex, playerIndex } = this.selectedPlayers[0];
+        this.movePlayer(flightIndex, playerIndex);
     }
 
     swapSelectedFlights() {
@@ -2614,16 +2629,16 @@ export class FlightManagementComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                //console.log(result);
-                //let player: Player = this.selectedMembers[flight][cplayer];
-                ////console.log(player);
+                if (result - 1 === flight) {
+                    this.snackBar.open('Player is already in this group.', 'x', { duration: 3000 });
+                    return;
+                }
                 this.selectedMembers[flight].splice(cplayer, 1);
-                ////console.log(this.selectedMembers);
-                this.selectedMembers[result - 1].splice(
-                    this.selectedMembers[result - 1].length - 3,
-                    0,
-                    player
-                );
+                this.selectedMembers[result - 1].push(player);
+                this.snackBar.open('Player moved successfully.', 'x', { duration: 3000 });
+                this.selectedFlights = [];
+                this.selectedPlayers = [];
+                this.updateSwapButtonVisibility();
             } else {
                 ////console.log("cancel delete action");
             }
